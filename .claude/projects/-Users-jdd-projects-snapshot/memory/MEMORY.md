@@ -6,3 +6,4 @@
 - [Bunshot Plugin Roadmap](bunshot_plugin_roadmap.md) — Planned plugins: chat, notifications, oauth-server, transcode, game, MCP, LLM
 - [Data Generation Layer](data_generation_layer.md) — 12-op declarative entity/adapter code gen spec for bunshot
 - [Snapshot Roadmap](snapshot_roadmap.md) — Frontend features needed: offline docs, selective hooks, multi-client, apps-in-apps, config components, SSR
+- [Oneshot Vision](oneshot_vision.md) — Orchestrator CLI unifying bunshot + snapshot + infra into single full-stack DX
