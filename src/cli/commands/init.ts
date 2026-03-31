@@ -188,7 +188,26 @@ export default defineConfig({
       const mainTsx = `import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { Provider as JotaiProvider } from "jotai"
-import { AppRoot } from "./generated/app"
+import { AppRoot, componentRegistry, manifestRegistry } from "./generated/app"
+
+// ── Register custom components, guards, and layouts here ─────────────────────
+// These run before AppRoot renders, so all manifest references resolve correctly.
+//
+// Example: custom component
+//   import { MyWidget } from "./components/MyWidget"
+//   import { myWidgetSchema } from "./components/MyWidget.schema"
+//   componentRegistry.register("my-widget", MyWidget, myWidgetSchema)
+//
+// Example: custom guard
+//   manifestRegistry.register("guard", "admin-only", () => async ({ context }) => {
+//     const roles = context.getUserRoles()
+//     if (!roles.includes("admin")) throw redirect({ to: "/403" })
+//   })
+//
+// Example: custom layout
+//   import { DashboardLayout } from "./layouts/DashboardLayout"
+//   import { dashboardLayoutSchema } from "./layouts/DashboardLayout.schema"
+//   componentRegistry.register("dashboard-layout", DashboardLayout, dashboardLayoutSchema)
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
