@@ -15,8 +15,7 @@
  * Strategy: simulate the createSnapshot closure directly — no React rendering,
  * no jsdom, no @testing-library/react. The test environment is node.
  */
-
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SseManager } from "../manager";
 import type { SseConnectionStatus } from "../manager";
 
@@ -81,10 +80,7 @@ interface RegistryEntry {
   url: string;
 }
 
-function buildSseRegistry(
-  apiUrl: string,
-  endpointPaths: string[],
-): Map<string, RegistryEntry> {
+function buildSseRegistry(apiUrl: string, endpointPaths: string[]): Map<string, RegistryEntry> {
   const registry = new Map<string, RegistryEntry>();
   for (const path of endpointPaths) {
     const url = `${apiUrl}${path}`;
@@ -169,11 +165,7 @@ describe("createSnapshot SSE — no SSE config", () => {
     const registry = new Map<string, RegistryEntry>();
     const useSseEvent = buildUseSseEvent(registry);
     const { useEffect, runEffects } = makeUseEffect();
-    const result = useSseEvent(
-      FEED_PATH,
-      "community:thread.created",
-      useEffect,
-    );
+    const result = useSseEvent(FEED_PATH, "community:thread.created", useEffect);
     runEffects();
     expect(result.data).toBeNull();
     expect(result.status).toBe("closed");
@@ -219,9 +211,7 @@ describe("createSnapshot SSE — single endpoint", () => {
 
     // Get the wrapped handler registered via addEventListener
     const addCalls = es.addEventListener.mock.calls;
-    const wrappedEntry = addCalls.find(
-      (args: unknown[]) => args[0] === "community:thread.created",
-    );
+    const wrappedEntry = addCalls.find((args: unknown[]) => args[0] === "community:thread.created");
     expect(wrappedEntry).toBeDefined();
 
     // Simulate message
@@ -277,9 +267,7 @@ describe("createSnapshot SSE — multiple endpoints", () => {
     const registry = buildSseRegistry(API_URL, [FEED_PATH, ADMIN_PATH]);
     const useSSE = buildUseSSE(registry);
 
-    const feedEs = MockEventSource.instances.find((es) =>
-      es.url.includes("feed"),
-    )!;
+    const feedEs = MockEventSource.instances.find((es) => es.url.includes("feed"))!;
     feedEs.simulateOpen();
 
     expect(useSSE(FEED_PATH).status).toBe("open");
@@ -292,16 +280,10 @@ describe("createSnapshot SSE — multiple endpoints", () => {
     const feedHandler = vi.fn();
     const adminHandler = vi.fn();
 
-    registry
-      .get(FEED_PATH)!
-      .manager.on("community:thread.created", feedHandler);
-    registry
-      .get(ADMIN_PATH)!
-      .manager.on("community:thread.created", adminHandler);
+    registry.get(FEED_PATH)!.manager.on("community:thread.created", feedHandler);
+    registry.get(ADMIN_PATH)!.manager.on("community:thread.created", adminHandler);
 
-    const feedEs = MockEventSource.instances.find((es) =>
-      es.url.includes("feed"),
-    )!;
+    const feedEs = MockEventSource.instances.find((es) => es.url.includes("feed"))!;
     feedEs.simulateMessage("community:thread.created", { id: "feed-event" });
 
     expect(feedHandler).toHaveBeenCalledWith({ id: "feed-event" });

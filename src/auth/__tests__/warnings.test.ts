@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { warnOnce, _resetWarnings } from "../warnings";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { _resetWarnings, warnOnce } from "../warnings";
 
 describe("warnOnce", () => {
   let warnSpy: ReturnType<typeof vi.spyOn>;

@@ -13,10 +13,7 @@ export function generateTsConfigRoot(): string {
     JSON.stringify(
       {
         files: [],
-        references: [
-          { path: "./tsconfig.app.json" },
-          { path: "./tsconfig.node.json" },
-        ],
+        references: [{ path: "./tsconfig.app.json" }, { path: "./tsconfig.node.json" }],
         compilerOptions: { paths },
       },
       null,

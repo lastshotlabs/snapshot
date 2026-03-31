@@ -1,6 +1,6 @@
 import path from "node:path";
 import type { Plugin } from "vite";
-import { runSync, consoleLogger, type SyncOptions } from "../cli/sync";
+import { type SyncOptions, consoleLogger, runSync } from "../cli/sync";
 
 export interface SnapshotSyncOptions {
   /** URL of the bunshot backend. Falls back to VITE_API_URL env var. */

@@ -68,9 +68,7 @@ export interface ComponentRegistry {
  * Creates a new component registry. Optionally backed by a parent for
  * hierarchical composition.
  */
-export function createComponentRegistry(
-  parent?: ComponentRegistry,
-): ComponentRegistry {
+export function createComponentRegistry(parent?: ComponentRegistry): ComponentRegistry {
   const entries = new Map<string, ComponentEntry>();
 
   const registry: ComponentRegistry = {

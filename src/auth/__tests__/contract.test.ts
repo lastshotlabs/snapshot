@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { defaultContract, mergeContract } from "../contract";
 
 describe("defaultContract", () => {
@@ -65,8 +65,6 @@ describe("mergeContract", () => {
     });
     expect(merged.sessionRevoke("xyz")).toBe("/v2/sessions/xyz");
     // Other functions unchanged
-    expect(merged.webauthnRemoveCredential("cred-1")).toBe(
-      "/auth/mfa/webauthn/credentials/cred-1",
-    );
+    expect(merged.webauthnRemoveCredential("cred-1")).toBe("/auth/mfa/webauthn/credentials/cred-1");
   });
 });

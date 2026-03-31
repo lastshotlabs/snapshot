@@ -1,14 +1,14 @@
-import { tokenSetSchema, type TokenSet, type TokenCategory } from "./schema";
+import { type TokenCategory, type TokenSet, tokenSetSchema } from "./schema";
 import type {
-  ColorTokens,
-  SpacingTokens,
-  RadiusTokens,
-  TypographyTokens,
-  ShadowTokens,
   BreakpointTokens,
-  ZIndexTokens,
-  TransitionTokens,
+  ColorTokens,
   InteractionTokens,
+  RadiusTokens,
+  ShadowTokens,
+  SpacingTokens,
+  TransitionTokens,
+  TypographyTokens,
+  ZIndexTokens,
 } from "./schema";
 
 // ── Deep merge utility ───────────────────────────────────────────────────────
@@ -17,10 +17,7 @@ type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
 };
 
-function deepMerge<T extends Record<string, unknown>>(
-  base: T,
-  override: DeepPartial<T>,
-): T {
+function deepMerge<T extends Record<string, unknown>>(base: T, override: DeepPartial<T>): T {
   const result = { ...base };
   for (const key of Object.keys(override) as (keyof T)[]) {
     const overrideVal = override[key];
@@ -514,8 +511,7 @@ const interactionPresets: CategoryPresetMap<InteractionTokens> = {
     "hover:scale-up": "scale(1.03)",
     "press:scale-down": "scale(0.97)",
     "press:darken": "brightness(0.88)",
-    "focus:ring":
-      "0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring)",
+    "focus:ring": "0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring)",
     "focus:outline": "2px solid var(--color-ring)",
     "enter:fade-in": "fade-in 150ms ease-out",
     "enter:slide-up": "slide-up 200ms ease-out",
@@ -528,8 +524,7 @@ const interactionPresets: CategoryPresetMap<InteractionTokens> = {
     "hover:scale-up": "scale(1.015)",
     "press:scale-down": "scale(0.985)",
     "press:darken": "brightness(0.92)",
-    "focus:ring":
-      "0 0 0 1px var(--color-background), 0 0 0 3px var(--color-ring)",
+    "focus:ring": "0 0 0 1px var(--color-background), 0 0 0 3px var(--color-ring)",
     "focus:outline": "1.5px solid var(--color-ring)",
     "enter:fade-in": "fade-in 200ms ease-out",
     "enter:slide-up": "slide-up 250ms ease-out",
@@ -640,9 +635,7 @@ export function createTokens(config: CreateTokensConfig = {}): TokenSet {
   // Resolve each category
   const resolved: Record<string, unknown> = {};
   for (const [category, presetKey] of Object.entries(categorySelections)) {
-    const registry = categoryPresets[
-      category as TokenCategory
-    ] as CategoryPresetMap<unknown>;
+    const registry = categoryPresets[category as TokenCategory] as CategoryPresetMap<unknown>;
     const preset = registry[presetKey];
     if (!preset) {
       const available = Object.keys(registry).join(", ");
@@ -662,12 +655,8 @@ export function createTokens(config: CreateTokensConfig = {}): TokenSet {
   // Validate
   const result = tokenSetSchema.safeParse(tokenSet);
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => `  ${i.path.join(".")}: ${i.message}`)
-      .join("\n");
-    throw new Error(
-      `[snapshot] Invalid token set after resolution:\n${issues}`,
-    );
+    const issues = result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n");
+    throw new Error(`[snapshot] Invalid token set after resolution:\n${issues}`);
   }
 
   return result.data;

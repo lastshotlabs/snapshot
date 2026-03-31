@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * Convert a URL-safe base64 string to a Uint8Array.
@@ -15,12 +15,7 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
   return outputArray;
 }
 
-export type PushState =
-  | "unsupported"
-  | "denied"
-  | "pending"
-  | "subscribed"
-  | "unsubscribed";
+export type PushState = "unsupported" | "denied" | "pending" | "subscribed" | "unsubscribed";
 
 export interface UsePushNotificationsOpts {
   /** URL to fetch the VAPID public key from. Default: '/__push/vapid-public-key' */
@@ -52,11 +47,8 @@ export interface UsePushNotificationsResult {
  * Service worker setup: copy sw.js from node_modules/@lastshotlabs/snapshot/dist/sw.js
  * to your project's public/sw.js, OR use `snapshot init` which scaffolds it automatically.
  */
-export function usePushNotifications(
-  opts?: UsePushNotificationsOpts,
-): UsePushNotificationsResult {
-  const vapidPublicKeyUrl =
-    opts?.vapidPublicKeyUrl ?? "/__push/vapid-public-key";
+export function usePushNotifications(opts?: UsePushNotificationsOpts): UsePushNotificationsResult {
+  const vapidPublicKeyUrl = opts?.vapidPublicKeyUrl ?? "/__push/vapid-public-key";
   const subscribeUrl = opts?.subscribeUrl ?? "/__push/subscribe";
   const swPath = opts?.swPath ?? "/sw.js";
 
@@ -73,8 +65,7 @@ export function usePushNotifications(
   });
 
   const [permission, setPermission] = useState<NotificationPermission>(() => {
-    if (typeof window === "undefined" || !("Notification" in window))
-      return "default";
+    if (typeof window === "undefined" || !("Notification" in window)) return "default";
     return Notification.permission;
   });
 
@@ -103,8 +94,7 @@ export function usePushNotifications(
     const registration = await navigator.serviceWorker.ready;
 
     const keyRes = await fetch(vapidPublicKeyUrl);
-    if (!keyRes.ok)
-      throw new Error(`Failed to fetch VAPID public key: ${keyRes.status}`);
+    if (!keyRes.ok) throw new Error(`Failed to fetch VAPID public key: ${keyRes.status}`);
     const { publicKey } = (await keyRes.json()) as { publicKey: string };
 
     const keyBytes = urlBase64ToUint8Array(publicKey);
@@ -127,8 +117,7 @@ export function usePushNotifications(
       }),
     });
 
-    if (!res.ok)
-      throw new Error(`Failed to save push subscription: ${res.status}`);
+    if (!res.ok) throw new Error(`Failed to save push subscription: ${res.status}`);
     setState("subscribed");
   }, [isSupported, vapidPublicKeyUrl, subscribeUrl, swPath]);
 

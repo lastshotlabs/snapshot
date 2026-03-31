@@ -12,9 +12,7 @@ interface WsConfig {
 }
 type EventHandler<T = unknown> = (data: T) => void;
 
-export class WebSocketManager<
-  TEvents extends Record<string, unknown> = Record<string, unknown>,
-> {
+export class WebSocketManager<TEvents extends Record<string, unknown> = Record<string, unknown>> {
   private ws: WebSocket | null = null;
   private readonly rooms = new Set<string>();
   private readonly listeners = new Map<string, Set<EventHandler>>();
@@ -48,10 +46,7 @@ export class WebSocketManager<
     this.connect();
 
     if (this.reconnectOnFocus) {
-      document.addEventListener(
-        "visibilitychange",
-        this.handleVisibilityChange,
-      );
+      document.addEventListener("visibilitychange", this.handleVisibilityChange);
     }
   }
 
@@ -60,11 +55,7 @@ export class WebSocketManager<
   }
 
   private handleVisibilityChange = () => {
-    if (
-      document.visibilityState === "visible" &&
-      !this.isConnected &&
-      !this.destroyed
-    ) {
+    if (document.visibilityState === "visible" && !this.isConnected && !this.destroyed) {
       this.reconnect();
     }
   };
@@ -84,9 +75,7 @@ export class WebSocketManager<
       this.clearReconnectTimer();
       this.onConnected?.();
       // Re-subscribe to all tracked rooms after reconnect
-      this.rooms.forEach((room) =>
-        this.sendMessage({ action: "subscribe", room }),
-      );
+      this.rooms.forEach((room) => this.sendMessage({ action: "subscribe", room }));
     };
 
     this.ws.onclose = () => {
@@ -107,9 +96,7 @@ export class WebSocketManager<
           event?: string;
           [key: string]: unknown;
         };
-        const handlers = this.listeners.get(
-          message["event"] ?? message["type"] ?? "",
-        );
+        const handlers = this.listeners.get(message["event"] ?? message["type"] ?? "");
         handlers?.forEach((h) => h(message));
       } catch {
         // Ignore unparseable messages
@@ -197,10 +184,7 @@ export class WebSocketManager<
   disconnect() {
     this.destroyed = true;
     this.clearReconnectTimer();
-    document.removeEventListener(
-      "visibilitychange",
-      this.handleVisibilityChange,
-    );
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
     if (this.ws) {
       this.ws.onclose = null;
       this.ws.close();

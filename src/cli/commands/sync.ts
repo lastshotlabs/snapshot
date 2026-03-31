@@ -1,11 +1,10 @@
+import { intro } from "@clack/prompts";
 import { Command, Flags } from "@oclif/core";
 import process from "node:process";
-import { intro } from "@clack/prompts";
 import { runSync } from "../sync.js";
 
 export default class Sync extends Command {
-  static override description =
-    "Sync OpenAPI schema to TypeScript types and React Query hooks";
+  static override description = "Sync OpenAPI schema to TypeScript types and React Query hooks";
   static override examples = [
     "<%= config.bin %> sync --api http://localhost:3000",
     "<%= config.bin %> sync --file ./schema.json --zod",

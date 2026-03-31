@@ -1,8 +1,8 @@
 import { useAtom } from "jotai";
-import { WebSocketManager } from "../ws/manager";
+import type { SocketHook } from "../types";
 import { wsManagerAtom } from "../ws/atom";
 import { createWsHooks } from "../ws/hook";
-import type { SocketHook } from "../types";
+import { WebSocketManager } from "../ws/manager";
 import type { SnapshotPlugin, SnapshotPluginContext } from "./types";
 
 // ── WS plugin config ─────────────────────────────────────────────────────────
@@ -28,19 +28,15 @@ export interface WsPluginHooks<
 > {
   useSocket: () => SocketHook<TWSEvents>;
   useRoom: (room: string) => { isSubscribed: boolean };
-  useRoomEvent: <T>(
-    room: string,
-    event: string,
-    handler: (data: T) => void,
-  ) => void;
+  useRoomEvent: <T>(room: string, event: string, handler: (data: T) => void) => void;
   useWebSocketManager: () => WebSocketManager<TWSEvents> | null;
 }
 
 // ── Factory ──────────────────────────────────────────────────────────────────
 
-export function createWsPlugin<
-  TWSEvents extends Record<string, unknown> = Record<string, unknown>,
->(pluginConfig: WsPluginConfig): SnapshotPlugin<WsPluginHooks<TWSEvents>> {
+export function createWsPlugin<TWSEvents extends Record<string, unknown> = Record<string, unknown>>(
+  pluginConfig: WsPluginConfig,
+): SnapshotPlugin<WsPluginHooks<TWSEvents>> {
   let wsManager: WebSocketManager<TWSEvents> | null = null;
 
   return {

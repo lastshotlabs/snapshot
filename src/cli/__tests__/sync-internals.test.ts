@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { _testing } from "../sync";
 
 const {
@@ -31,15 +31,11 @@ describe("schemaToTs", () => {
   });
 
   it("converts array of strings", () => {
-    expect(schemaToTs({ type: "array", items: { type: "string" } })).toBe(
-      "string[]",
-    );
+    expect(schemaToTs({ type: "array", items: { type: "string" } })).toBe("string[]");
   });
 
   it("converts nullable string", () => {
-    expect(schemaToTs({ type: "string", nullable: true })).toBe(
-      "string | null",
-    );
+    expect(schemaToTs({ type: "string", nullable: true })).toBe("string | null");
   });
 
   it("converts enum", () => {
@@ -66,10 +62,7 @@ describe("schemaToTs", () => {
 
   it("converts allOf", () => {
     const result = schemaToTs({
-      allOf: [
-        { $ref: "#/components/schemas/Base" },
-        { $ref: "#/components/schemas/Extra" },
-      ],
+      allOf: [{ $ref: "#/components/schemas/Base" }, { $ref: "#/components/schemas/Extra" }],
     });
     expect(result).toBe("Base & Extra");
   });
@@ -134,9 +127,7 @@ describe("hookName", () => {
   });
 
   it("does not double-suffix if name already ends with Mutation", () => {
-    expect(hookName("post", "createUserMutation")).toBe(
-      "useCreateUserMutation",
-    );
+    expect(hookName("post", "createUserMutation")).toBe("useCreateUserMutation");
   });
 });
 

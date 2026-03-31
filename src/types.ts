@@ -103,6 +103,29 @@ export interface MfaMethodsResponse {
   methods: MfaMethod[];
 }
 
+// ── Magic link types ─────────────────────────────────────────────────────────
+
+export interface MagicLinkRequestBody {
+  email: string;
+}
+
+export interface MagicLinkVerifyBody {
+  token: string;
+}
+
+// ── Step-up auth types ───────────────────────────────────────────────────────
+
+export interface ReauthVerifyBody {
+  password?: string;
+  code?: string;
+  method?: MfaMethod;
+}
+
+export interface ReauthVerifyResponse {
+  verified: boolean;
+  reauthToken: string;
+}
+
 // ── Account types ─────────────────────────────────────────────────────────────
 
 export interface ResetPasswordBody {
@@ -143,15 +166,6 @@ export interface Session {
 // ── OAuth types ───────────────────────────────────────────────────────────────
 
 export type OAuthProvider = "google" | "apple" | "microsoft" | "github";
-export interface OAuthExchangeBody {
-  code: string;
-}
-export interface OAuthExchangeResponse {
-  token: string;
-  userId: string;
-  email?: string;
-  refreshToken?: string;
-}
 
 // ── WebAuthn types ────────────────────────────────────────────────────────────
 
@@ -205,17 +219,6 @@ export interface SseEndpointConfig {
   onClosed?: () => void;
 }
 
-/**
- * SSE configuration. Each key is an endpoint path that must start with `/__sse/`.
- * The value is per-endpoint options. One EventSource is created per endpoint.
- *
- * reconnectOnLogin: whether to reconnect all endpoints on login success (default true).
- */
-export interface SseConfig {
-  endpoints: Record<string, SseEndpointConfig>;
-  reconnectOnLogin?: boolean; // default true
-}
-
 /** Return type of useSSE(endpoint) */
 export interface SseHookResult {
   status: SseConnectionStatus;
@@ -235,14 +238,8 @@ export interface SocketHook<TEvents = Record<string, unknown>> {
   subscribe: (room: string) => void;
   unsubscribe: (room: string) => void;
   getRooms: () => string[];
-  on: <K extends keyof TEvents>(
-    event: K,
-    handler: (data: TEvents[K]) => void,
-  ) => void;
-  off: <K extends keyof TEvents>(
-    event: K,
-    handler: (data: TEvents[K]) => void,
-  ) => void;
+  on: <K extends keyof TEvents>(event: K, handler: (data: TEvents[K]) => void) => void;
+  off: <K extends keyof TEvents>(event: K, handler: (data: TEvents[K]) => void) => void;
   reconnect: () => void;
 }
 

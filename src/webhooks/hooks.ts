@@ -1,27 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
+import type { PaginatedResponse } from "../community/types";
 import type {
-  WebhookEndpointResponse,
   CreateWebhookEndpointBody,
-  UpdateWebhookEndpointBody,
-  WebhookDeliveryResponse,
   ListWebhookDeliveriesParams,
   TestWebhookBody,
+  UpdateWebhookEndpointBody,
+  WebhookDeliveryResponse,
+  WebhookEndpointResponse,
 } from "./types";
-import type { PaginatedResponse } from "../community/types";
 
 // ── Cache key helpers ──────────────────────────────────────────────────────────
 
 const keys = {
   endpoints: () => ["webhooks", "endpoints"] as const,
-  endpoint: (endpointId: string) =>
-    ["webhooks", "endpoints", endpointId] as const,
-  deliveries: (endpointId: string) =>
-    ["webhooks", "deliveries", endpointId] as const,
-  deliveryDetail: (deliveryId: string) =>
-    ["webhooks", "deliveries", "detail", deliveryId] as const,
+  endpoint: (endpointId: string) => ["webhooks", "endpoints", endpointId] as const,
+  deliveries: (endpointId: string) => ["webhooks", "deliveries", endpointId] as const,
+  deliveryDetail: (deliveryId: string) => ["webhooks", "deliveries", "detail", deliveryId] as const,
 };
 
 // ── Factory ───────────────────────────────────────────────────────────────────
@@ -45,21 +42,15 @@ export function createWebhookHooks({
   function useWebhookEndpoint(endpointId: string) {
     return useQuery<WebhookEndpointResponse, ApiError>({
       queryKey: keys.endpoint(endpointId),
-      queryFn: () =>
-        api.get<WebhookEndpointResponse>(`/webhooks/endpoints/${endpointId}`),
+      queryFn: () => api.get<WebhookEndpointResponse>(`/webhooks/endpoints/${endpointId}`),
       enabled: !!endpointId,
     });
   }
 
   function useCreateWebhookEndpoint() {
     const queryClient = useQueryClient();
-    return useMutation<
-      WebhookEndpointResponse,
-      ApiError,
-      CreateWebhookEndpointBody
-    >({
-      mutationFn: (body) =>
-        api.post<WebhookEndpointResponse>("/webhooks/endpoints", body),
+    return useMutation<WebhookEndpointResponse, ApiError, CreateWebhookEndpointBody>({
+      mutationFn: (body) => api.post<WebhookEndpointResponse>("/webhooks/endpoints", body),
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.endpoints() });
       },
@@ -74,10 +65,7 @@ export function createWebhookHooks({
       { endpointId: string } & UpdateWebhookEndpointBody
     >({
       mutationFn: ({ endpointId, ...body }) =>
-        api.patch<WebhookEndpointResponse>(
-          `/webhooks/endpoints/${endpointId}`,
-          body,
-        ),
+        api.patch<WebhookEndpointResponse>(`/webhooks/endpoints/${endpointId}`, body),
       onSuccess: (_data, { endpointId }) => {
         void queryClient.invalidateQueries({ queryKey: keys.endpoints() });
         void queryClient.invalidateQueries({
@@ -90,8 +78,7 @@ export function createWebhookHooks({
   function useDeleteWebhookEndpoint() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { endpointId: string }>({
-      mutationFn: ({ endpointId }) =>
-        api.delete<void>(`/webhooks/endpoints/${endpointId}`),
+      mutationFn: ({ endpointId }) => api.delete<void>(`/webhooks/endpoints/${endpointId}`),
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.endpoints() });
       },
@@ -100,11 +87,7 @@ export function createWebhookHooks({
 
   // ── Deliveries ────────────────────────────────────────────────────────────────
 
-  function useWebhookDeliveries({
-    endpointId,
-    page,
-    pageSize,
-  }: ListWebhookDeliveriesParams) {
+  function useWebhookDeliveries({ endpointId, page, pageSize }: ListWebhookDeliveriesParams) {
     const query = `?page=${page ?? 1}&pageSize=${pageSize ?? 20}`;
     return useQuery<PaginatedResponse<WebhookDeliveryResponse>, ApiError>({
       queryKey: keys.deliveries(endpointId),
@@ -119,8 +102,7 @@ export function createWebhookHooks({
   function useWebhookDelivery(deliveryId: string) {
     return useQuery<WebhookDeliveryResponse, ApiError>({
       queryKey: keys.deliveryDetail(deliveryId),
-      queryFn: () =>
-        api.get<WebhookDeliveryResponse>(`/webhooks/deliveries/${deliveryId}`),
+      queryFn: () => api.get<WebhookDeliveryResponse>(`/webhooks/deliveries/${deliveryId}`),
       enabled: !!deliveryId,
     });
   }
@@ -129,11 +111,7 @@ export function createWebhookHooks({
 
   function useTestWebhookEndpoint() {
     const queryClient = useQueryClient();
-    return useMutation<
-      void,
-      ApiError,
-      { endpointId: string } & TestWebhookBody
-    >({
+    return useMutation<void, ApiError, { endpointId: string } & TestWebhookBody>({
       mutationFn: ({ endpointId, ...body }) =>
         api.post<void>(`/webhooks/endpoints/${endpointId}/test`, body),
       onSuccess: (_data, { endpointId }) => {

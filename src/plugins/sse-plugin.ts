@@ -1,11 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SseManager } from "../sse/manager";
 import type { SseConnectionStatus } from "../sse/manager";
-import type {
-  SseEndpointConfig,
-  SseHookResult,
-  SseEventHookResult,
-} from "../types";
+import type { SseEndpointConfig, SseEventHookResult, SseHookResult } from "../types";
 import type { SnapshotPlugin, SnapshotPluginContext } from "./types";
 
 // ── SSE plugin config ────────────────────────────────────────────────────────
@@ -27,31 +23,20 @@ export const SSE_SHARED_KEY = "sse" as const;
 
 export interface SsePluginHooks {
   useSSE(endpoint: string): SseHookResult;
-  useSseEvent<T = unknown>(
-    endpoint: string,
-    event: string,
-  ): SseEventHookResult<T>;
-  onSseEvent(
-    endpoint: string,
-    event: string,
-    handler: (payload: unknown) => void,
-  ): () => void;
+  useSseEvent<T = unknown>(endpoint: string, event: string): SseEventHookResult<T>;
+  onSseEvent(endpoint: string, event: string, handler: (payload: unknown) => void): () => void;
 }
 
 // ── Factory ──────────────────────────────────────────────────────────────────
 
-export function createSsePlugin(
-  pluginConfig: SsePluginConfig,
-): SnapshotPlugin<SsePluginHooks> {
+export function createSsePlugin(pluginConfig: SsePluginConfig): SnapshotPlugin<SsePluginHooks> {
   const sseRegistry = new Map<string, { manager: SseManager; url: string }>();
 
   return {
     name: "sse",
 
     setup(ctx: SnapshotPluginContext) {
-      for (const [path, endpointCfg] of Object.entries(
-        pluginConfig.endpoints,
-      )) {
+      for (const [path, endpointCfg] of Object.entries(pluginConfig.endpoints)) {
         const url = `${ctx.config.apiUrl}${path}`;
         const manager = new SseManager({
           withCredentials: endpointCfg.withCredentials,
@@ -95,7 +80,7 @@ export function createSsePlugin(
           if (!entry) return;
           const { manager } = entry;
 
-          const es = (manager as unknown as { es: EventSource | null }).es;
+          const es = manager.eventSource;
           if (!es) {
             setStatus(manager.state);
             return;
@@ -117,10 +102,7 @@ export function createSsePlugin(
         return { status };
       }
 
-      function useSseEvent<T = unknown>(
-        endpoint: string,
-        event: string,
-      ): SseEventHookResult<T> {
+      function useSseEvent<T = unknown>(endpoint: string, event: string): SseEventHookResult<T> {
         const entry = sseRegistry.get(endpoint);
         const [data, setData] = useState<T | null>(null);
         const [status, setStatus] = useState<SseConnectionStatus>(
@@ -141,7 +123,7 @@ export function createSsePlugin(
           manager.on(event, handler);
           setStatus(manager.state);
 
-          const es = (manager as unknown as { es: EventSource | null }).es;
+          const es = manager.eventSource;
           const onOpen = () => setStatus("open");
           const onError = () => setStatus(manager.state);
 

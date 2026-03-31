@@ -1,9 +1,9 @@
-import { redirect } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
+import { redirect } from "@tanstack/react-router";
 import type { ApiClient } from "../api/client";
+import type { AuthContract } from "../auth/contract";
 import { warnOnce } from "../auth/warnings";
 import type { AuthUser } from "../types";
-import type { AuthContract } from "../auth/contract";
 
 interface RouterContext {
   context: { queryClient: QueryClient };
@@ -19,11 +19,7 @@ interface LoaderConfig {
   staleTime?: number;
 }
 
-export function createLoaders(
-  config: LoaderConfig,
-  api: ApiClient,
-  contract: AuthContract,
-) {
+export function createLoaders(config: LoaderConfig, api: ApiClient, contract: AuthContract) {
   const staleTime = config.staleTime ?? 5 * 60 * 1000;
 
   async function fetchUser(queryClient: QueryClient): Promise<AuthUser | null> {
@@ -53,9 +49,7 @@ export function createLoaders(
     }
   }
 
-  async function protectedBeforeLoad({
-    context,
-  }: RouterContext): Promise<void> {
+  async function protectedBeforeLoad({ context }: RouterContext): Promise<void> {
     const user = await fetchUser(context.queryClient);
 
     if (!user) {

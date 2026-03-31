@@ -12,7 +12,6 @@ export interface ManagedUserCapabilities {
   canListSessions: boolean
   canRevokeAllSessions: boolean
   canRevokeSingleSession: boolean
-  // Provider names (optional for backward compatibility with older backends)
   accessProvider?: string
   managedUserProvider?: string
   [key: string]: boolean | string | undefined
@@ -51,7 +50,6 @@ export function CapabilitiesProvider({ children }: { children: React.ReactNode }
         setCapabilities({ ...defaultCapabilities, ...data })
       })
       .catch(() => {
-        // Capabilities unavailable — all boolean gates default to false
         setCapabilities(defaultCapabilities)
       })
       .finally(() => {
@@ -73,31 +71,55 @@ export function useCapabilities(): CapabilitiesContextValue {
 }
 
 export function generateSnapshotLib(config: AdminScaffoldConfig): string {
+  const imports: string[] = ["createSnapshot", "createAuthPlugin"];
+  const plugins: string[] = [];
+
+  plugins.push(`  createAuthPlugin({
+    loginPath: '/auth/login',
+    homePath: '/users',
+    forbiddenPath: '/403',
+  }),`);
+
+  if (config.webhookAdminPages) {
+    imports.push("createWebhookPlugin");
+    plugins.push("  createWebhookPlugin(),");
+  }
+
   const webhookExports = config.webhookAdminPages
-    ? `  useWebhookEndpoints,\n  useWebhookEndpoint,\n  useWebhookDeliveries,\n  useCreateWebhookEndpoint,\n  useUpdateWebhookEndpoint,\n  useDeleteWebhookEndpoint,\n  useTestWebhookEndpoint,`
+    ? `
+  // Webhooks
+  useWebhookEndpoints,
+  useWebhookEndpoint,
+  useWebhookDeliveries,
+  useCreateWebhookEndpoint,
+  useUpdateWebhookEndpoint,
+  useDeleteWebhookEndpoint,
+  useTestWebhookEndpoint,`
     : "";
 
-  return `import { createSnapshot } from '@lastshotlabs/snapshot'
+  return `import { ${imports.join(", ")} } from '@lastshotlabs/snapshot'
 
-export const snapshot = createSnapshot({
-  apiUrl: import.meta.env.VITE_API_URL,
-  loginPath: '/auth/login',
-  homePath: '/users',
-  forbiddenPath: '/403',
-})
+export const snapshot = createSnapshot(
+  {
+    apiUrl: import.meta.env.VITE_API_URL,
+  },
+${plugins.join("\n")}
+)
 
 export const {
+  // Core
   useUser,
   useLogin,
   useLogout,
   useTheme,
-${webhookExports}
-  protectedBeforeLoad,
-  guestBeforeLoad,
   QueryProvider,
   api,
   queryClient,
   tokenStorage,
+
+  // Routing
+  protectedBeforeLoad,
+  guestBeforeLoad,${webhookExports}
 } = snapshot
 `;
 }

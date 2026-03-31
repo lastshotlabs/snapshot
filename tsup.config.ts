@@ -1,10 +1,16 @@
 import { defineConfig } from "tsup";
-import pkg from "./package.json" assert { type: "json" };
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig([
   // Library build
   {
-    entry: ["src/index.ts"],
+    entry: [
+      "src/index.ts",
+      "src/tokens/index.ts",
+      "src/components/index.ts",
+      "src/manifest/index.ts",
+      "src/generation/index.ts",
+    ],
     format: ["esm", "cjs"],
     dts: true,
     sourcemap: true,
@@ -63,6 +69,7 @@ export default defineConfig([
     entry: {
       "cli/commands/init": "src/cli/commands/init.ts",
       "cli/commands/sync": "src/cli/commands/sync.ts",
+      "cli/commands/generate": "src/cli/commands/generate.ts",
     },
     format: ["esm"],
     dts: false,

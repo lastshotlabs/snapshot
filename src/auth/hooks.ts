@@ -1,24 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useSetAtom } from "jotai";
 import type { WritableAtom } from "jotai";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
-import type { TokenStorage } from "./storage";
+import type { AuthContract } from "../auth/contract";
 import type {
   AuthUser,
+  ForgotPasswordBody,
   LoginBody,
-  LoginVars,
-  LoginResult,
   LoginResponse,
+  LoginResult,
+  LoginVars,
   LogoutVars,
+  MfaChallenge,
   RegisterBody,
   RegisterVars,
-  ForgotPasswordBody,
-  MfaChallenge,
 } from "../types";
 import { isMfaChallenge } from "../types";
-import type { AuthContract } from "../auth/contract";
+import type { TokenStorage } from "./storage";
 
 const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
@@ -35,11 +35,7 @@ interface AuthHooksOptions {
     onLogoutSuccess?: () => void;
   };
   contract: AuthContract;
-  pendingMfaChallengeAtom: WritableAtom<
-    MfaChallenge | null,
-    [MfaChallenge | null],
-    void
-  >;
+  pendingMfaChallengeAtom: WritableAtom<MfaChallenge | null, [MfaChallenge | null], void>;
   onLoginSuccess?: () => void; // called by createSnapshot to trigger WS/SSE reconnect
   onLogoutSuccess?: () => void; // called by createSnapshot to trigger SSE close
 }
@@ -79,10 +75,7 @@ export function createAuthHooks({
     const setMfaChallenge = useSetAtom(pendingMfaChallengeAtom);
     return useMutation<LoginResult, ApiError, LoginVars>({
       mutationFn: async ({ redirectTo: _, ...body }) => {
-        const res = await api.post<LoginResponse>(
-          contract.endpoints.login,
-          body,
-        );
+        const res = await api.post<LoginResponse>(contract.endpoints.login, body);
 
         // MFA challenge — do NOT store token or fetch /auth/me
         if (res.mfaRequired) {
@@ -129,8 +122,7 @@ export function createAuthHooks({
       queryClient.clear();
       config.onLogoutSuccess?.();
       onLogoutSuccess?.(); // transport-level cleanup hook (e.g. SSE close)
-      const to =
-        (vars as LogoutVars | undefined)?.redirectTo ?? config.loginPath;
+      const to = (vars as LogoutVars | undefined)?.redirectTo ?? config.loginPath;
       if (to) navigate({ to });
     }
 
@@ -148,10 +140,7 @@ export function createAuthHooks({
     const navigate = useNavigate();
     return useMutation<AuthUser, ApiError, RegisterVars>({
       mutationFn: async ({ redirectTo: _, ...body }) => {
-        const res = await api.post<Record<string, unknown>>(
-          contract.endpoints.register,
-          body,
-        );
+        const res = await api.post<Record<string, unknown>>(contract.endpoints.register, body);
         if (config.auth !== "cookie") {
           if (res && typeof res["token"] === "string") {
             storage.set(res["token"]);
@@ -173,8 +162,7 @@ export function createAuthHooks({
 
   function useForgotPassword() {
     return useMutation<void, ApiError, ForgotPasswordBody>({
-      mutationFn: (body) =>
-        api.post<void>(contract.endpoints.forgotPassword, body),
+      mutationFn: (body) => api.post<void>(contract.endpoints.forgotPassword, body),
     });
   }
 

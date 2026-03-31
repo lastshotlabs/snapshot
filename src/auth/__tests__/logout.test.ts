@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { createAuthHooks } from "../hooks";
+import { act, renderHook } from "@testing-library/react";
 import { atom } from "jotai";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MfaChallenge } from "../../types";
+import { createAuthHooks } from "../hooks";
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createWebAuthnHooks } from "../webauthn-hooks";
 import { atom } from "jotai";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MfaChallenge } from "../../types";
+import { createWebAuthnHooks } from "../webauthn-hooks";
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 

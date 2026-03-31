@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SseManager } from "../manager";
 
 // ── Mock EventSource ──────────────────────────────────────────────────────────
@@ -62,10 +62,7 @@ describe("SseManager", () => {
       manager.connect("http://localhost/__sse/feed");
 
       const es = MockEventSource.instances[0];
-      expect(es.addEventListener).toHaveBeenCalledWith(
-        "test:event",
-        expect.any(Function),
-      );
+      expect(es.addEventListener).toHaveBeenCalledWith("test:event", expect.any(Function));
     });
   });
 
@@ -78,10 +75,7 @@ describe("SseManager", () => {
       const handler = vi.fn();
       manager.on("test:event", handler);
 
-      expect(es.addEventListener).toHaveBeenCalledWith(
-        "test:event",
-        expect.any(Function),
-      );
+      expect(es.addEventListener).toHaveBeenCalledWith("test:event", expect.any(Function));
     });
 
     it("handler receives parsed payload from MessageEvent", () => {
@@ -108,10 +102,7 @@ describe("SseManager", () => {
       manager.off("test:event", handler);
 
       const es = MockEventSource.instances[0];
-      expect(es.removeEventListener).toHaveBeenCalledWith(
-        "test:event",
-        expect.any(Function),
-      );
+      expect(es.removeEventListener).toHaveBeenCalledWith("test:event", expect.any(Function));
     });
 
     it("is a no-op for an unregistered handler", () => {
@@ -169,10 +160,7 @@ describe("SseManager", () => {
       manager.connect("http://localhost/__sse/feed");
 
       const second = MockEventSource.instances[1];
-      expect(second.addEventListener).toHaveBeenCalledWith(
-        "test:event",
-        expect.any(Function),
-      );
+      expect(second.addEventListener).toHaveBeenCalledWith("test:event", expect.any(Function));
     });
 
     it("fires onClosed callback", () => {
@@ -266,9 +254,7 @@ describe("SseManager", () => {
       // Manually call the wrapped handler with malformed JSON
       const es = MockEventSource.instances[0];
       const addCalls = es.addEventListener.mock.calls;
-      const [, wrappedHandler] = addCalls.find(
-        ([name]) => name === "test:event",
-      )!;
+      const [, wrappedHandler] = addCalls.find(([name]) => name === "test:event")!;
       const badEvent = Object.assign(new Event("test:event"), {
         data: "{not-json}",
       }) as MessageEvent;

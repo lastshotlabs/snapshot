@@ -77,9 +77,7 @@ export interface SnapshotPluginContext {
  *
  * @template THooks The hooks object this plugin contributes to the instance.
  */
-export interface SnapshotPlugin<
-  THooks extends Record<string, unknown> = Record<string, unknown>,
-> {
+export interface SnapshotPlugin<THooks extends Record<string, unknown> = Record<string, unknown>> {
   /** Unique plugin name. Used for dependency resolution and shared state keys. */
   readonly name: string;
 
@@ -127,8 +125,7 @@ export interface SnapshotCorePrimitives {
 // ── Type utilities ───────────────────────────────────────────────────────────
 
 /** Extract the hooks type from a plugin. */
-export type PluginHooks<P> =
-  P extends SnapshotPlugin<infer THooks> ? THooks : never;
+export type PluginHooks<P> = P extends SnapshotPlugin<infer THooks> ? THooks : never;
 
 /**
  * Given a tuple of plugins, compute the intersection of all their hook types.
@@ -136,15 +133,14 @@ export type PluginHooks<P> =
  * [AuthPlugin, WsPlugin, CommunityPlugin] =>
  *   AuthPluginHooks & WsPluginHooks & CommunityPluginHooks
  */
-export type MergePluginHooks<T extends readonly SnapshotPlugin[]> =
-  T extends readonly [
-    infer First,
-    ...infer Rest extends readonly SnapshotPlugin[],
-  ]
-    ? PluginHooks<First> & MergePluginHooks<Rest>
-    : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-      {};
+export type MergePluginHooks<T extends readonly SnapshotPlugin[]> = T extends readonly [
+  infer First,
+  ...infer Rest extends readonly SnapshotPlugin[],
+]
+  ? PluginHooks<First> & MergePluginHooks<Rest>
+  : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    {};
 
 /** The final instance type: core primitives + all plugin hooks merged. */
-export type SnapshotInstance<TPlugins extends readonly SnapshotPlugin[]> =
-  SnapshotCorePrimitives & MergePluginHooks<TPlugins>;
+export type SnapshotInstance<TPlugins extends readonly SnapshotPlugin[]> = SnapshotCorePrimitives &
+  MergePluginHooks<TPlugins>;

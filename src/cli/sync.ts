@@ -1,7 +1,7 @@
+import { log, spinner } from "@clack/prompts";
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createHash } from "node:crypto";
-import { log, spinner } from "@clack/prompts";
 
 // ─── OpenAPI 3.x types (minimal) ─────────────────────────────────────────────
 
@@ -123,10 +123,7 @@ interface SyncConfig {
 
 async function readSyncConfig(cwd: string): Promise<SyncConfig> {
   try {
-    const content = await fs.readFile(
-      path.join(cwd, "snapshot.config.json"),
-      "utf8",
-    );
+    const content = await fs.readFile(path.join(cwd, "snapshot.config.json"), "utf8");
     return JSON.parse(content) as SyncConfig;
   } catch {
     /* not found */
@@ -145,10 +142,7 @@ async function readSyncConfig(cwd: string): Promise<SyncConfig> {
 function resolveBackendDirs(
   cwd: string,
   backend: BackendConfig,
-  globalOpts: Pick<
-    SyncOptions,
-    "apiDir" | "hooksDir" | "typesPath" | "snapshotImport"
-  >,
+  globalOpts: Pick<SyncOptions, "apiDir" | "hooksDir" | "typesPath" | "snapshotImport">,
   isMulti: boolean,
 ): {
   apiDir: string;
@@ -172,20 +166,10 @@ function resolveBackendDirs(
   }
 
   return {
-    apiDir: path.resolve(
-      cwd,
-      backend.apiDir ?? globalOpts.apiDir ?? defaultApiDir,
-    ),
-    hooksDir: path.resolve(
-      cwd,
-      backend.hooksDir ?? globalOpts.hooksDir ?? defaultHooksDir,
-    ),
-    typesFile: path.resolve(
-      cwd,
-      backend.typesPath ?? globalOpts.typesPath ?? defaultTypesPath,
-    ),
-    snapshotImport:
-      backend.snapshotImport ?? globalOpts.snapshotImport ?? "@lib/snapshot",
+    apiDir: path.resolve(cwd, backend.apiDir ?? globalOpts.apiDir ?? defaultApiDir),
+    hooksDir: path.resolve(cwd, backend.hooksDir ?? globalOpts.hooksDir ?? defaultHooksDir),
+    typesFile: path.resolve(cwd, backend.typesPath ?? globalOpts.typesPath ?? defaultTypesPath),
+    snapshotImport: backend.snapshotImport ?? globalOpts.snapshotImport ?? "@lib/snapshot",
   };
 }
 
@@ -222,9 +206,7 @@ export function pathPatternToRegex(pattern: string): RegExp {
       continue;
     } else {
       // Escape regex special chars, but treat {param} as a wildcard segment
-      const escaped = part
-        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-        .replace(/\\{[^}]+\\}/g, "[^/]+");
+      const escaped = part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\{[^}]+\\}/g, "[^/]+");
       regParts.push("/" + escaped);
     }
   }
@@ -235,10 +217,7 @@ export function pathPatternToRegex(pattern: string): RegExp {
  * Returns true if the path matches any of the given glob patterns.
  * An empty or undefined pattern array matches nothing.
  */
-export function matchesAnyPattern(
-  apiPath: string,
-  patterns: string[] | undefined,
-): boolean {
+export function matchesAnyPattern(apiPath: string, patterns: string[] | undefined): boolean {
   if (!patterns || patterns.length === 0) return false;
   return patterns.some((p) => pathPatternToRegex(p).test(apiPath));
 }
@@ -302,9 +281,7 @@ function schemaToTs(schema: SchemaObject, depth = 0): string {
 
   if (schema.enum) {
     return schema.enum
-      .map((v) =>
-        v === null ? "null" : typeof v === "string" ? `'${v}'` : String(v),
-      )
+      .map((v) => (v === null ? "null" : typeof v === "string" ? `'${v}'` : String(v)))
       .join(" | ");
   }
 
@@ -314,16 +291,10 @@ function schemaToTs(schema: SchemaObject, depth = 0): string {
   }
 
   if (schema.oneOf || schema.anyOf) {
-    return (schema.oneOf ?? schema.anyOf)!
-      .map((s) => schemaToTs(s, depth))
-      .join(" | ");
+    return (schema.oneOf ?? schema.anyOf)!.map((s) => schemaToTs(s, depth)).join(" | ");
   }
 
-  const types = Array.isArray(schema.type)
-    ? schema.type
-    : schema.type
-      ? [schema.type]
-      : [];
+  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
   const isNullable = schema.nullable === true || types.includes("null");
   const baseTypes = types.filter((t) => t !== "null");
 
@@ -332,11 +303,7 @@ function schemaToTs(schema: SchemaObject, depth = 0): string {
   if (baseTypes.includes("array") || schema.items) {
     const item = schema.items ? schemaToTs(schema.items, depth) : "unknown";
     base = item.includes(" | ") ? `(${item})[]` : `${item}[]`;
-  } else if (
-    baseTypes.includes("object") ||
-    schema.properties ||
-    schema.additionalProperties
-  ) {
+  } else if (baseTypes.includes("object") || schema.properties || schema.additionalProperties) {
     if (schema.properties && Object.keys(schema.properties).length > 0) {
       const ind = "  ".repeat(depth + 1);
       const close = "  ".repeat(depth);
@@ -347,10 +314,7 @@ function schemaToTs(schema: SchemaObject, depth = 0): string {
         return `${ind}${safeProp}${opt}: ${schemaToTs(val, depth + 1)}${valNull}`;
       });
       base = `{\n${lines.join("\n")}\n${close}}`;
-    } else if (
-      schema.additionalProperties &&
-      typeof schema.additionalProperties === "object"
-    ) {
+    } else if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
       base = `Record<string, ${schemaToTs(schema.additionalProperties, depth)}>`;
     } else {
       base = "Record<string, unknown>";
@@ -390,19 +354,14 @@ function schemaToZod(
       return `z.enum([${schema.enum.map((v) => `'${v}'`).join(", ")}])`;
     }
     const literals = schema.enum.map((v) =>
-      v === null
-        ? "z.null()"
-        : `z.literal(${typeof v === "string" ? `'${v}'` : String(v)})`,
+      v === null ? "z.null()" : `z.literal(${typeof v === "string" ? `'${v}'` : String(v)})`,
     );
     return `z.union([${literals.join(", ")}])`;
   }
 
   if (schema.allOf) {
-    if (schema.allOf.length === 1)
-      return schemaToZod(schema.allOf[0]!, componentSchemas, visiting);
-    const parts = schema.allOf.map((s) =>
-      schemaToZod(s, componentSchemas, visiting),
-    );
+    if (schema.allOf.length === 1) return schemaToZod(schema.allOf[0]!, componentSchemas, visiting);
+    const parts = schema.allOf.map((s) => schemaToZod(s, componentSchemas, visiting));
     return parts.reduce((acc, cur) => `z.intersection(${acc}, ${cur})`);
   }
 
@@ -411,11 +370,7 @@ function schemaToZod(
     return `z.union([${arr.map((s) => schemaToZod(s, componentSchemas, visiting)).join(", ")}])`;
   }
 
-  const types = Array.isArray(schema.type)
-    ? schema.type
-    : schema.type
-      ? [schema.type]
-      : [];
+  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
   const isNullable = schema.nullable === true || types.includes("null");
   const baseTypes = types.filter((t) => t !== "null");
 
@@ -426,11 +381,7 @@ function schemaToZod(
       ? schemaToZod(schema.items, componentSchemas, visiting)
       : "z.unknown()";
     base = `z.array(${item})`;
-  } else if (
-    baseTypes.includes("object") ||
-    schema.properties ||
-    schema.additionalProperties
-  ) {
+  } else if (baseTypes.includes("object") || schema.properties || schema.additionalProperties) {
     if (schema.properties && Object.keys(schema.properties).length > 0) {
       const props = Object.entries(schema.properties).map(([key, val]) => {
         const zodVal = schemaToZod(val, componentSchemas, visiting);
@@ -440,10 +391,7 @@ function schemaToZod(
         return `  ${safeProp}: ${zodVal}${nullable}${opt},`;
       });
       base = `z.object({\n${props.join("\n")}\n})`;
-    } else if (
-      schema.additionalProperties &&
-      typeof schema.additionalProperties === "object"
-    ) {
+    } else if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
       base = `z.record(z.string(), ${schemaToZod(schema.additionalProperties, componentSchemas, visiting)})`;
     } else {
       base = "z.record(z.string(), z.unknown())";
@@ -467,10 +415,7 @@ function generateTypesContent(
   schemas: Record<string, SchemaObject>,
   hasPaginated: boolean,
 ): string {
-  const lines: string[] = [
-    "// Generated by bunx snapshot sync. Do not edit manually.",
-    "",
-  ];
+  const lines: string[] = ["// Generated by bunx snapshot sync. Do not edit manually.", ""];
 
   if (hasPaginated) {
     lines.push(`export interface PaginatedResponse<T> {`);
@@ -488,14 +433,8 @@ function generateTypesContent(
     const isObject =
       schema.type === "object" ||
       !!schema.properties ||
-      (Array.isArray(schema.type) &&
-        (schema.type as string[]).includes("object"));
-    const isComplex =
-      schema.enum ||
-      schema.oneOf ||
-      schema.anyOf ||
-      schema.allOf ||
-      schema.$ref;
+      (Array.isArray(schema.type) && (schema.type as string[]).includes("object"));
+    const isComplex = schema.enum || schema.oneOf || schema.anyOf || schema.allOf || schema.$ref;
 
     if (isObject && !isComplex) {
       const ind = "  ";
@@ -503,20 +442,13 @@ function generateTypesContent(
         ? Object.entries(schema.properties).map(([key, val]) => {
             const opt = schema.required?.includes(key) ? "" : "?";
             const valNull = val.nullable ? " | null" : "";
-            const comment = val.description
-              ? `  /** ${val.description} */\n`
-              : "";
+            const comment = val.description ? `  /** ${val.description} */\n` : "";
             const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key;
             return `${comment}${ind}${safeProp}${opt}: ${schemaToTs(val, 1)}${valNull}`;
           })
         : [];
-      if (
-        schema.additionalProperties &&
-        typeof schema.additionalProperties === "object"
-      ) {
-        lines.push(
-          `export interface ${name} extends Record<string, unknown> {`,
-        );
+      if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
+        lines.push(`export interface ${name} extends Record<string, unknown> {`);
       } else {
         lines.push(`export interface ${name} {`);
       }
@@ -547,11 +479,7 @@ function toCamelCase(str: string): string {
 }
 
 /** Derives the name for the plain async function export. operationId sanitized to camelCase when present. */
-function plainFnName(
-  method: string,
-  pathStr: string,
-  operationId?: string,
-): string {
+function plainFnName(method: string, pathStr: string, operationId?: string): string {
   if (operationId) return toCamelCase(operationId);
   const segs = pathStr
     .split("/")
@@ -570,18 +498,14 @@ function plainFnName(
 function hookName(method: string, fnName: string): string {
   const isQuery = method === "get";
   const pascal = fnName.charAt(0).toUpperCase() + fnName.slice(1);
-  if (pascal.endsWith("Query") || pascal.endsWith("Mutation"))
-    return `use${pascal}`;
+  if (pascal.endsWith("Query") || pascal.endsWith("Mutation")) return `use${pascal}`;
   return `use${pascal}${isQuery ? "Query" : "Mutation"}`;
 }
 
-function successSchema(
-  responses: Record<string, ResponseObj>,
-): SchemaObject | null {
+function successSchema(responses: Record<string, ResponseObj>): SchemaObject | null {
   for (const code of ["200", "201", "202"]) {
     const r = responses[code];
-    if (r?.content?.["application/json"]?.schema)
-      return r.content["application/json"].schema;
+    if (r?.content?.["application/json"]?.schema) return r.content["application/json"].schema;
   }
   return null;
 }
@@ -606,10 +530,7 @@ function rawPathTemplate(pathStr: string, pathParams: Parameter[]): string {
 }
 
 /** URL template with pagination query string appended (always a template literal) */
-function paginatedUrlTemplate(
-  pathStr: string,
-  pathParams: Parameter[],
-): string {
+function paginatedUrlTemplate(pathStr: string, pathParams: Parameter[]): string {
   if (pathParams.length === 0) {
     return `\`${pathStr}?page=\${page}&perPage=\${perPage}\``;
   }
@@ -622,9 +543,7 @@ function queryKey(pathStr: string, queryParams: Parameter[] = []): string {
     .split("/")
     .filter(Boolean)
     .map((seg) =>
-      seg.startsWith("{") && seg.endsWith("}")
-        ? `params.${seg.slice(1, -1)}`
-        : `'${seg}'`,
+      seg.startsWith("{") && seg.endsWith("}") ? `params.${seg.slice(1, -1)}` : `'${seg}'`,
     );
   for (const p of queryParams) {
     parts.push(`params.${p.name}`);
@@ -637,15 +556,12 @@ function paramType(p: Parameter): string {
 }
 
 /** Detects bunshot's pagination envelope: { data: T[], total: number, ... } */
-function isPaginatedSchema(
-  schema: SchemaObject,
-): { itemSchema: SchemaObject } | null {
+function isPaginatedSchema(schema: SchemaObject): { itemSchema: SchemaObject } | null {
   if (!schema.properties) return null;
   const { data, total } = schema.properties;
   // Accept array type OR items presence (handles $ref-typed arrays without explicit type)
   if (!data || (!data.items && data.type !== "array")) return null;
-  if (!total || !["integer", "number"].includes(total.type as string))
-    return null;
+  if (!total || !["integer", "number"].includes(total.type as string)) return null;
   const itemSchema = data.items ?? {}; // empty schema → schemaToTs returns 'unknown'
   return { itemSchema };
 }
@@ -675,8 +591,7 @@ function generateOperation(
   const allParams = [
     ...pathLevelParams,
     ...(op.parameters ?? []).filter(
-      (p) =>
-        !pathLevelParams.find((pp) => pp.name === p.name && pp.in === p.in),
+      (p) => !pathLevelParams.find((pp) => pp.name === p.name && pp.in === p.in),
     ),
   ];
   const pathParams = allParams.filter((p) => p.in === "path");
@@ -688,8 +603,7 @@ function generateOperation(
   const name = hookName(method, fnName);
 
   const successSch = successSchema(op.responses);
-  const paginatedResult =
-    isQuery && successSch ? isPaginatedSchema(successSch) : null;
+  const paginatedResult = isQuery && successSch ? isPaginatedSchema(successSch) : null;
   const isPaginated = paginatedResult !== null;
 
   const respType = (() => {
@@ -710,18 +624,12 @@ function generateOperation(
   const jsdocParts: string[] = [];
   if (op.deprecated) jsdocParts.push("@deprecated");
   if (op.summary) jsdocParts.push(op.summary);
-  if (nonJsonType)
-    jsdocParts.push(
-      `NOTE: request body is ${nonJsonType} — body typed as void`,
-    );
-  const jsdoc =
-    jsdocParts.length > 0 ? `/** ${jsdocParts.join(" — ")} */\n` : "";
+  if (nonJsonType) jsdocParts.push(`NOTE: request body is ${nonJsonType} — body typed as void`);
+  const jsdoc = jsdocParts.length > 0 ? `/** ${jsdocParts.join(" — ")} */\n` : "";
 
   // ── Paginated GET ─────────────────────────────────────────────────────────
   if (isPaginated) {
-    const pathArgsStr = pathParams
-      .map((p) => `${p.name}: ${paramType(p)}`)
-      .join(", ");
+    const pathArgsStr = pathParams.map((p) => `${p.name}: ${paramType(p)}`).join(", ");
     const pathArgsWithComma = pathArgsStr ? `${pathArgsStr}, ` : "";
     const paginatedUrl = paginatedUrlTemplate(pathStr, pathParams);
 
@@ -733,9 +641,7 @@ function generateOperation(
       .split("/")
       .filter(Boolean)
       .map((seg) =>
-        seg.startsWith("{") && seg.endsWith("}")
-          ? `params.${seg.slice(1, -1)}`
-          : `'${seg}'`,
+        seg.startsWith("{") && seg.endsWith("}") ? `params.${seg.slice(1, -1)}` : `'${seg}'`,
       );
     const paginatedQueryKey = `[${[...pathKeyParts, "params.page ?? 1", "params.perPage ?? 20"].join(", ")}]`;
 
@@ -749,8 +655,7 @@ function generateOperation(
       : `params.page ?? 1, params.perPage ?? 20`;
 
     const hookLines: string[] = [];
-    if (jsdocParts.length > 0)
-      hookLines.push(`/** ${jsdocParts.join(" — ")} */`);
+    if (jsdocParts.length > 0) hookLines.push(`/** ${jsdocParts.join(" — ")} */`);
     hookLines.push(`export function ${name}(`);
     hookLines.push(`  params: ${paramsType} = {},`);
     hookLines.push(
@@ -776,9 +681,7 @@ function generateOperation(
   const fnArgParts = [
     ...pathParams.map((p) => `${p.name}: ${paramType(p)}`),
     ...(!isQuery && hasBody ? [`body: ${bodyType}`] : []),
-    ...queryParams.map(
-      (p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`,
-    ),
+    ...queryParams.map((p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`),
   ];
   const fnArgs = fnArgParts.join(", ");
 
@@ -822,17 +725,12 @@ function generateOperation(
   if (isQuery) {
     const paramFields = [
       ...pathParams.map((p) => `${p.name}: ${paramType(p)}`),
-      ...queryParams.map(
-        (p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`,
-      ),
+      ...queryParams.map((p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`),
     ];
     const hasAnyParams = paramFields.length > 0;
-    const allParamsOptional =
-      pathParams.length === 0 && queryParams.every((p) => !p.required);
+    const allParamsOptional = pathParams.length === 0 && queryParams.every((p) => !p.required);
     const paramsDefault = hasAnyParams && allParamsOptional ? " = {}" : "";
-    const paramsArg = hasAnyParams
-      ? `params: { ${paramFields.join("; ")} }${paramsDefault}, `
-      : "";
+    const paramsArg = hasAnyParams ? `params: { ${paramFields.join("; ")} }${paramsDefault}, ` : "";
     const allCallArgs = [
       ...pathParams.map((p) => `params.${p.name}`),
       ...queryParams.map((p) => `params.${p.name}`),
@@ -887,9 +785,7 @@ function generateOperation(
       `  options?: UseMutationOptions<${respType}, ApiError, ${variablesType}> & { invalidateKeys?: QueryKey[] }`,
     );
     lines.push(`) {`);
-    lines.push(
-      `  const { invalidateKeys, ...mutationOptions } = options ?? {}`,
-    );
+    lines.push(`  const { invalidateKeys, ...mutationOptions } = options ?? {}`);
     lines.push(`  const queryClient = useQueryClient()`);
     lines.push(`  return useMutation({`);
     lines.push(`    mutationFn: ${mutationFnExpr},`);
@@ -911,8 +807,7 @@ function generateOperation(
     const bodySchema = requestBodySchema(op.requestBody);
     if (bodySchema) {
       const zodSchemaName = `${fnName}Schema`;
-      const zodTypeName =
-        fnName.charAt(0).toUpperCase() + fnName.slice(1) + "Input";
+      const zodTypeName = fnName.charAt(0).toUpperCase() + fnName.slice(1) + "Input";
       const zodSchemaStr = schemaToZod(bodySchema, componentSchemas);
       apiParts.push(
         `/** Zod schema for ${name} form validation */\n` +
@@ -960,8 +855,7 @@ function collectTagRefs(ops: TaggedOp[]): Set<string> {
     const s = successSchema(operation.responses);
     if (!s) continue;
     const pagResult = isPaginatedSchema(s);
-    if (pagResult)
-      collectRefs(pagResult.itemSchema).forEach((r) => typeRefs.add(r));
+    if (pagResult) collectRefs(pagResult.itemSchema).forEach((r) => typeRefs.add(r));
   }
   return typeRefs;
 }
@@ -983,14 +877,7 @@ function generateTagFiles(
   const typeRefs = collectTagRefs(ops);
 
   const generated = ops.map(({ method, pathStr, operation, pathLevelParams }) =>
-    generateOperation(
-      method,
-      pathStr,
-      operation,
-      pathLevelParams,
-      componentSchemas,
-      zod,
-    ),
+    generateOperation(method, pathStr, operation, pathLevelParams, componentSchemas, zod),
   );
 
   const hasPaginated = generated.some((g) => g.isPaginated);
@@ -1008,9 +895,7 @@ function generateTagFiles(
   ];
   if (hasZod) apiLines.push("import { z } from 'zod'");
   if (localTypeImports.length > 0) {
-    apiLines.push(
-      `import type { ${localTypeImports.join(", ")} } from '${ip.typesRelForApi}'`,
-    );
+    apiLines.push(`import type { ${localTypeImports.join(", ")} } from '${ip.typesRelForApi}'`);
   }
   apiLines.push("");
   for (const { apiCode } of generated) {
@@ -1024,12 +909,7 @@ function generateTagFiles(
   const rqImports: string[] = [];
   if (hasQueries) rqImports.push("useQuery", "type UseQueryOptions");
   if (hasMutations)
-    rqImports.push(
-      "useMutation",
-      "useQueryClient",
-      "type UseMutationOptions",
-      "type QueryKey",
-    );
+    rqImports.push("useMutation", "useQueryClient", "type UseMutationOptions", "type QueryKey");
 
   const hooksLines: string[] = [
     "// Generated by bunx snapshot sync. Do not edit manually.",
@@ -1039,9 +919,7 @@ function generateTagFiles(
     `import { ${allFnNames.join(", ")} } from '${ip.apiRelBase}/${slug}'`,
   ];
   if (localTypeImports.length > 0) {
-    hooksLines.push(
-      `import type { ${localTypeImports.join(", ")} } from '${ip.typesRelForHooks}'`,
-    );
+    hooksLines.push(`import type { ${localTypeImports.join(", ")} } from '${ip.typesRelForHooks}'`);
   }
   hooksLines.push("");
   for (const { hookCode } of generated) {
@@ -1080,8 +958,7 @@ async function loadSchema(opts: SyncOptions): Promise<OpenAPISchema> {
     return JSON.parse(content) as OpenAPISchema;
   }
 
-  let apiUrl =
-    opts.apiUrl ?? process.env["VITE_API_URL"] ?? (await readEnvUrl(opts.cwd));
+  let apiUrl = opts.apiUrl ?? process.env["VITE_API_URL"] ?? (await readEnvUrl(opts.cwd));
 
   if (!apiUrl) {
     throw new Error(
@@ -1093,9 +970,7 @@ async function loadSchema(opts: SyncOptions): Promise<OpenAPISchema> {
 
   const res = await fetch(`${apiUrl}/openapi.json`);
   if (!res.ok) {
-    const err = new Error(
-      `Server returned ${res.status} for ${apiUrl}/openapi.json`,
-    );
+    const err = new Error(`Server returned ${res.status} for ${apiUrl}/openapi.json`);
     (err as Error & { status: number }).status = res.status;
     throw err;
   }
@@ -1155,9 +1030,7 @@ async function runSyncOnce(
     if (err instanceof Error && "status" in err) {
       const status = (err as Error & { status: number }).status;
       if (status === 401 || status === 403) {
-        logger.info(
-          "Tip: check your bunshot config — /openapi.json may require authentication",
-        );
+        logger.info("Tip: check your bunshot config — /openapi.json may require authentication");
       }
     }
     throw err;
@@ -1173,18 +1046,12 @@ async function runSyncOnce(
   const rawPaths = schema.paths ?? {};
   const effectiveInclude = backend.include ?? opts.include;
   const effectiveExclude = backend.exclude ?? opts.exclude;
-  const filteredPaths = filterPaths(
-    rawPaths,
-    effectiveInclude,
-    effectiveExclude,
-  );
+  const filteredPaths = filterPaths(rawPaths, effectiveInclude, effectiveExclude);
 
   const totalCount = Object.keys(rawPaths).length;
   const filteredCount = Object.keys(filteredPaths).length;
   if (filteredCount < totalCount) {
-    logger.info(
-      `Filtered ${totalCount} paths → ${filteredCount} (include/exclude rules)`,
-    );
+    logger.info(`Filtered ${totalCount} paths → ${filteredCount} (include/exclude rules)`);
   }
 
   // ── Group operations by tag ───────────────────────────────────────────────
@@ -1244,12 +1111,8 @@ async function runSyncOnce(
     if (hasPaginated) globalHasPaginated = true;
     await fs.writeFile(path.join(apiDir, fileName), apiContent, "utf8");
     await fs.writeFile(path.join(hooksDir, fileName), hooksContent, "utf8");
-    const apiRel = path
-      .relative(cwd, path.join(apiDir, fileName))
-      .replace(/\\/g, "/");
-    const hooksRel = path
-      .relative(cwd, path.join(hooksDir, fileName))
-      .replace(/\\/g, "/");
+    const apiRel = path.relative(cwd, path.join(apiDir, fileName)).replace(/\\/g, "/");
+    const hooksRel = path.relative(cwd, path.join(hooksDir, fileName)).replace(/\\/g, "/");
     logger.success(`${apiRel} + ${hooksRel} — ${ops.length} operation(s)`);
   }
 
@@ -1265,10 +1128,7 @@ async function runSyncOnce(
       logger.warn(`${typesRel} — 0 schemas in spec, keeping existing file`);
     }
   } else {
-    const typesContent = generateTypesContent(
-      componentSchemas,
-      globalHasPaginated,
-    );
+    const typesContent = generateTypesContent(componentSchemas, globalHasPaginated);
     await fs.writeFile(typesFile, typesContent, "utf8");
     const typesRel = path.relative(cwd, typesFile).replace(/\\/g, "/");
     logger.success(`${typesRel} — ${schemaCount} type(s)`);
@@ -1280,9 +1140,7 @@ export async function runSync(opts: SyncOptions): Promise<void> {
   const fileConfig = await readSyncConfig(opts.cwd);
 
   const backends: BackendConfig[] =
-    fileConfig.backends && fileConfig.backends.length > 0
-      ? fileConfig.backends
-      : [fileConfig];
+    fileConfig.backends && fileConfig.backends.length > 0 ? fileConfig.backends : [fileConfig];
   const isMulti = !!(fileConfig.backends && fileConfig.backends.length > 0);
 
   const runAll = async () => {
@@ -1314,9 +1172,7 @@ export async function runSync(opts: SyncOptions): Promise<void> {
     }
   }
 
-  const pollMs = backends.some((b) => b.filePath ?? opts.filePath)
-    ? 1000
-    : 3000;
+  const pollMs = backends.some((b) => b.filePath ?? opts.filePath) ? 1000 : 3000;
 
   const interval = setInterval(async () => {
     for (let i = 0; i < backends.length; i++) {

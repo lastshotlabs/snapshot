@@ -23,6 +23,11 @@ export class SseManager {
     return this._state;
   }
 
+  /** Exposes the underlying EventSource for status monitoring. Read-only. */
+  get eventSource(): EventSource | null {
+    return this.es;
+  }
+
   connect(url: string): void {
     // 1. If es already exists, close it silently (no onClosed — this is internal replacement)
     if (this.es !== null) {

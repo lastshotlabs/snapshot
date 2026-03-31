@@ -25,10 +25,7 @@ export { createSsePlugin } from "./plugins/sse-plugin";
 export type { SsePluginConfig, SsePluginHooks } from "./plugins/sse-plugin";
 
 export { createCommunityPlugin } from "./plugins/community-plugin";
-export type {
-  CommunityPluginConfig,
-  CommunityPluginHooks,
-} from "./plugins/community-plugin";
+export type { CommunityPluginConfig, CommunityPluginHooks } from "./plugins/community-plugin";
 
 export { createWebhookPlugin } from "./plugins/webhook-plugin";
 
@@ -74,9 +71,11 @@ export type {
   RefreshTokenBody,
   RefreshTokenResponse,
   Session,
+  MagicLinkRequestBody,
+  MagicLinkVerifyBody,
+  ReauthVerifyBody,
+  ReauthVerifyResponse,
   OAuthProvider,
-  OAuthExchangeBody,
-  OAuthExchangeResponse,
   WebAuthnRegisterOptionsResponse,
   WebAuthnRegisterBody,
   WebAuthnCredential,
@@ -99,18 +98,9 @@ export type { TokenStorage } from "./auth/storage";
 export type { ApiClient, ApiClientConfig } from "./api/client";
 export type { WebSocketManager } from "./ws/manager";
 export type { SseConnectionStatus } from "./sse/manager";
-export type {
-  AuthContract,
-  AuthContractConfig,
-  AuthEndpoints,
-  AuthHeaders,
-} from "./auth/contract";
+export type { AuthContract, AuthContractConfig, AuthEndpoints, AuthHeaders } from "./auth/contract";
 export { usePushNotifications } from "./push/hook";
-export type {
-  UsePushNotificationsOpts,
-  UsePushNotificationsResult,
-  PushState,
-} from "./push/hook";
+export type { UsePushNotificationsOpts, UsePushNotificationsResult, PushState } from "./push/hook";
 
 // ── Community types ──────────────────────────────────────────────────────────
 export { communityContract } from "./community/contract";

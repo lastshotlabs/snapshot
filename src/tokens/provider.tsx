@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
-import type { TokenSet } from "./schema";
 import { resolveTokensToCSS } from "./resolve";
+import type { TokenSet } from "./schema";
 
 const STYLE_ID = "snapshot-tokens";
 
@@ -20,13 +20,7 @@ const STYLE_ID = "snapshot-tokens";
  * </TokenProvider>
  * ```
  */
-export function TokenProvider({
-  tokens,
-  children,
-}: {
-  tokens: TokenSet;
-  children: ReactNode;
-}) {
+export function TokenProvider({ tokens, children }: { tokens: TokenSet; children: ReactNode }) {
   const cssRef = useRef<string>("");
 
   useEffect(() => {

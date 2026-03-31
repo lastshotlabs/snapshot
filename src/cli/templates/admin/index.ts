@@ -7,11 +7,7 @@ export {
   generateGitignore,
 } from "./config";
 
-export {
-  generateCapabilitiesLib,
-  generateSnapshotLib,
-  generateRouterLib,
-} from "./lib";
+export { generateCapabilitiesLib, generateSnapshotLib, generateRouterLib } from "./lib";
 
 export {
   generateAdminLayoutComponent,

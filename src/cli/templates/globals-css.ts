@@ -157,13 +157,12 @@ const VIBRANT_DARK = `
     --chart-4: oklch(0.68 0.16 160);
     --chart-5: oklch(0.65 0.18 40);`;
 
-const THEMES: Record<ScaffoldConfig["theme"], { light: string; dark: string }> =
-  {
-    default: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
-    dark: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
-    minimal: { light: MINIMAL_LIGHT, dark: MINIMAL_DARK },
-    vibrant: { light: VIBRANT_LIGHT, dark: VIBRANT_DARK },
-  };
+const THEMES: Record<ScaffoldConfig["theme"], { light: string; dark: string }> = {
+  default: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
+  dark: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
+  minimal: { light: MINIMAL_LIGHT, dark: MINIMAL_DARK },
+  vibrant: { light: VIBRANT_LIGHT, dark: VIBRANT_DARK },
+};
 
 export function generateGlobalsCss(config: ScaffoldConfig): string {
   const { light, dark } = THEMES[config.theme];

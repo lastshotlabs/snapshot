@@ -12,6 +12,26 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/tokens/index.js",
+      "require": "./dist/tokens/index.cjs"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js",
+      "require": "./dist/components/index.cjs"
+    },
+    "./manifest": {
+      "types": "./dist/manifest/index.d.ts",
+      "import": "./dist/manifest/index.js",
+      "require": "./dist/manifest/index.cjs"
+    },
+    "./generation": {
+      "types": "./dist/generation/index.d.ts",
+      "import": "./dist/generation/index.js",
+      "require": "./dist/generation/index.cjs"
+    },
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js",
@@ -37,7 +57,9 @@
     "dev": "tsup --watch",
     "test": "vitest run",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",
@@ -52,9 +74,6 @@
   "peerDependenciesMeta": {
     "vite": {
       "optional": true
-    },
-    "zod": {
-      "optional": true
     }
   },
   "devDependencies": {
@@ -65,11 +84,13 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@unhead/react": "^2.0.0",
+    "eslint": "^10.1.0",
     "jotai": "^2.0.0",
     "oclif": "^4.22.96",
     "prettier": "^3.8.1",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
+    "typescript-eslint": "^8.57.2",
     "vite": "^8.0.0",
     "vitest": "^3.0.0"
   },

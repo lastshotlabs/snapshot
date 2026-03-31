@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as fsPromises from "node:fs/promises";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { runSync } from "../../cli/sync";
+import { snapshotSync } from "../index";
 
 vi.mock("../../cli/sync", () => ({
   runSync: vi.fn().mockResolvedValue(undefined),
@@ -8,10 +11,6 @@ vi.mock("../../cli/sync", () => ({
 vi.mock("node:fs/promises", () => ({
   access: vi.fn(),
 }));
-
-import { snapshotSync } from "../index";
-import { runSync } from "../../cli/sync";
-import * as fsPromises from "node:fs/promises";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -26,9 +25,7 @@ describe("snapshotSync plugin", () => {
     await (plugin as any).buildStart({});
 
     expect(runSync).not.toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("schema.json"),
-    );
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("schema.json"));
     warnSpy.mockRestore();
   });
 

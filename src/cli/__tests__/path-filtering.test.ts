@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { pathPatternToRegex, matchesAnyPattern, filterPaths } from "../sync";
+import { describe, expect, it } from "vitest";
+import { filterPaths, matchesAnyPattern, pathPatternToRegex } from "../sync";
 
 // ── pathPatternToRegex ───────────────────────────────────────────────────────
 
@@ -76,15 +76,11 @@ describe("matchesAnyPattern", () => {
   });
 
   it("returns true if any pattern matches", () => {
-    expect(matchesAnyPattern("/auth/login", ["/users/**", "/auth/**"])).toBe(
-      true,
-    );
+    expect(matchesAnyPattern("/auth/login", ["/users/**", "/auth/**"])).toBe(true);
   });
 
   it("returns false if no pattern matches", () => {
-    expect(matchesAnyPattern("/admin/users", ["/users/**", "/auth/**"])).toBe(
-      false,
-    );
+    expect(matchesAnyPattern("/admin/users", ["/users/**", "/auth/**"])).toBe(false);
   });
 });
 
@@ -128,16 +124,8 @@ describe("filterPaths", () => {
 
   it("applies exclude after include", () => {
     // Include everything under /users and /auth, but exclude /auth/register
-    const result = filterPaths(
-      paths,
-      ["/auth/**", "/users/**"],
-      ["/auth/register"],
-    );
-    expect(Object.keys(result).sort()).toEqual([
-      "/auth/login",
-      "/users",
-      "/users/{id}",
-    ]);
+    const result = filterPaths(paths, ["/auth/**", "/users/**"], ["/auth/register"]);
+    expect(Object.keys(result).sort()).toEqual(["/auth/login", "/users", "/users/{id}"]);
   });
 
   it("returns empty when include matches nothing", () => {

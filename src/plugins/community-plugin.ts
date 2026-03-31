@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createCommunityHooks } from "../community/hooks";
 import type { CommunityHooks } from "../community/hooks";
 import type { SseManager } from "../sse/manager";
@@ -7,8 +7,8 @@ import type {
   UseCommunityNotificationsOpts,
   UseCommunityNotificationsResult,
 } from "../types";
-import type { SnapshotPlugin, SnapshotPluginContext } from "./types";
 import { SSE_SHARED_KEY, type SseSharedState } from "./sse-plugin";
+import type { SnapshotPlugin, SnapshotPluginContext } from "./types";
 
 // ── Community plugin config ──────────────────────────────────────────────────
 
@@ -44,11 +44,8 @@ export function createCommunityPlugin(
       });
 
       // Build notifications hook only if SSE plugin registered the notifications endpoint
-      const sseShared = ctx.shared.get(SSE_SHARED_KEY) as
-        | SseSharedState
-        | undefined;
-      const notifEndpoint =
-        pluginConfig.notifications?.sseEndpoint ?? "/__sse/notifications";
+      const sseShared = ctx.shared.get(SSE_SHARED_KEY) as SseSharedState | undefined;
+      const notifEndpoint = pluginConfig.notifications?.sseEndpoint ?? "/__sse/notifications";
       const sseRegistry = sseShared?.registry;
 
       if (!sseRegistry?.has(notifEndpoint)) {
@@ -62,17 +59,11 @@ export function createCommunityPlugin(
         opts?: UseCommunityNotificationsOpts,
       ): UseCommunityNotificationsResult {
         const apiBase =
-          opts?.apiBase ??
-          pluginConfig.notifications?.apiBase ??
-          "/community/notifications";
-        const [notifications, setNotifications] = useState<
-          CommunityNotification[]
-        >([]);
+          opts?.apiBase ?? pluginConfig.notifications?.apiBase ?? "/community/notifications";
+        const [notifications, setNotifications] = useState<CommunityNotification[]>([]);
         const [isConnected, setIsConnected] = useState(false);
 
-        const fetchNotifications = useCallback(async (): Promise<
-          CommunityNotification[]
-        > => {
+        const fetchNotifications = useCallback(async (): Promise<CommunityNotification[]> => {
           try {
             const result = await ctx.api.get<{
               items: CommunityNotification[];
@@ -126,19 +117,11 @@ export function createCommunityPlugin(
           unreadCount: notifications.filter((n) => !n.read).length,
           isConnected,
           markRead: async (id: string) => {
-            await ctx.api.put<{ success: boolean }>(
-              `${apiBase}/${id}/read`,
-              undefined,
-            );
-            setNotifications((prev) =>
-              prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-            );
+            await ctx.api.put<{ success: boolean }>(`${apiBase}/${id}/read`, undefined);
+            setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
           },
           markAllRead: async () => {
-            await ctx.api.post<{ success: boolean }>(
-              `${apiBase}/read-all`,
-              undefined,
-            );
+            await ctx.api.post<{ success: boolean }>(`${apiBase}/read-all`, undefined);
             setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
           },
         };

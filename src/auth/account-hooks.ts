@@ -1,20 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
-import type { TokenStorage } from "./storage";
+import type { AuthContract } from "../auth/contract";
 import type {
-  ResetPasswordBody,
-  VerifyEmailBody,
-  ResendVerificationBody,
-  SetPasswordBody,
   DeleteAccountBody,
+  MagicLinkRequestBody,
+  MagicLinkVerifyBody,
+  ReauthVerifyBody,
+  ReauthVerifyResponse,
   RefreshTokenBody,
   RefreshTokenResponse,
+  ResendVerificationBody,
+  ResetPasswordBody,
   Session,
+  SetPasswordBody,
+  VerifyEmailBody,
 } from "../types";
-import type { AuthContract } from "../auth/contract";
+import type { TokenStorage } from "./storage";
 
 interface AccountHooksOptions {
   api: ApiClient;
@@ -35,40 +39,33 @@ export function createAccountHooks({
 }: AccountHooksOptions) {
   function useResetPassword() {
     return useMutation<{ message: string }, ApiError, ResetPasswordBody>({
-      mutationFn: (body) =>
-        api.post<{ message: string }>(contract.endpoints.resetPassword, body),
+      mutationFn: (body) => api.post<{ message: string }>(contract.endpoints.resetPassword, body),
     });
   }
 
   function useVerifyEmail() {
     return useMutation<{ message: string }, ApiError, VerifyEmailBody>({
-      mutationFn: (body) =>
-        api.post<{ message: string }>(contract.endpoints.verifyEmail, body),
+      mutationFn: (body) => api.post<{ message: string }>(contract.endpoints.verifyEmail, body),
     });
   }
 
   function useResendVerification() {
     return useMutation<{ message: string }, ApiError, ResendVerificationBody>({
       mutationFn: (body) =>
-        api.post<{ message: string }>(
-          contract.endpoints.resendVerification,
-          body,
-        ),
+        api.post<{ message: string }>(contract.endpoints.resendVerification, body),
     });
   }
 
   function useSetPassword() {
     return useMutation<{ message: string }, ApiError, SetPasswordBody>({
-      mutationFn: (body) =>
-        api.post<{ message: string }>(contract.endpoints.setPassword, body),
+      mutationFn: (body) => api.post<{ message: string }>(contract.endpoints.setPassword, body),
     });
   }
 
   function useDeleteAccount() {
     const navigate = useNavigate();
     return useMutation<void, ApiError, DeleteAccountBody | void>({
-      mutationFn: (body) =>
-        api.delete<void>(contract.endpoints.deleteAccount, body ?? {}),
+      mutationFn: (body) => api.delete<void>(contract.endpoints.deleteAccount, body ?? {}),
       onSuccess: () => {
         storage.clear();
         storage.clearRefreshToken();
@@ -81,37 +78,26 @@ export function createAccountHooks({
 
   function useCancelDeletion() {
     return useMutation<{ message: string }, ApiError, void>({
-      mutationFn: () =>
-        api.post<{ message: string }>(contract.endpoints.cancelDeletion, {}),
+      mutationFn: () => api.post<{ message: string }>(contract.endpoints.cancelDeletion, {}),
     });
   }
 
   function useRefreshToken() {
-    return useMutation<RefreshTokenResponse, ApiError, RefreshTokenBody | void>(
-      {
-        mutationFn: (body) =>
-          api.post<RefreshTokenResponse>(
-            contract.endpoints.refresh,
-            body ?? {},
-          ),
-        onSuccess: (data) => {
-          storage.set(data.token);
-          if (data.refreshToken) {
-            storage.setRefreshToken(data.refreshToken);
-          }
-        },
+    return useMutation<RefreshTokenResponse, ApiError, RefreshTokenBody | void>({
+      mutationFn: (body) => api.post<RefreshTokenResponse>(contract.endpoints.refresh, body ?? {}),
+      onSuccess: (data) => {
+        storage.set(data.token);
+        if (data.refreshToken) {
+          storage.setRefreshToken(data.refreshToken);
+        }
       },
-    );
+    });
   }
 
   function useSessions() {
-    const { data, isLoading, isError } = useQuery<
-      { sessions: Session[] },
-      ApiError
-    >({
+    const { data, isLoading, isError } = useQuery<{ sessions: Session[] }, ApiError>({
       queryKey: ["auth", "sessions"],
-      queryFn: () =>
-        api.get<{ sessions: Session[] }>(contract.endpoints.sessions),
+      queryFn: () => api.get<{ sessions: Session[] }>(contract.endpoints.sessions),
     });
     return { sessions: data?.sessions ?? [], isLoading, isError };
   }
@@ -119,11 +105,35 @@ export function createAccountHooks({
   function useRevokeSession() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, string>({
-      mutationFn: (sessionId) =>
-        api.delete<void>(contract.sessionRevoke(sessionId), {}),
+      mutationFn: (sessionId) => api.delete<void>(contract.sessionRevoke(sessionId), {}),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["auth", "sessions"] });
       },
+    });
+  }
+
+  function useMagicLinkRequest() {
+    return useMutation<{ message: string }, ApiError, MagicLinkRequestBody>({
+      mutationFn: (body) =>
+        api.post<{ message: string }>(contract.endpoints.magicLinkRequest, body),
+    });
+  }
+
+  function useMagicLinkVerify() {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    return useMutation<{ token: string }, ApiError, MagicLinkVerifyBody>({
+      mutationFn: (body) => api.post<{ token: string }>(contract.endpoints.magicLinkVerify, body),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+        if (config.loginPath) navigate({ to: "/" });
+      },
+    });
+  }
+
+  function useReauthVerify() {
+    return useMutation<ReauthVerifyResponse, ApiError, ReauthVerifyBody>({
+      mutationFn: (body) => api.post<ReauthVerifyResponse>(contract.endpoints.reauthVerify, body),
     });
   }
 
@@ -137,5 +147,8 @@ export function createAccountHooks({
     useRefreshToken,
     useSessions,
     useRevokeSession,
+    useMagicLinkRequest,
+    useMagicLinkVerify,
+    useReauthVerify,
   };
 }

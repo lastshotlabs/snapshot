@@ -1,114 +1,198 @@
 import type { ScaffoldConfig } from "../types";
 
 export function generateSnapshotLib(config: ScaffoldConfig): string {
-  const wsConfig = config.webSocket
-    ? `
-  ws: {
+  const imports: string[] = ["createSnapshot", "createAuthPlugin"];
+  const plugins: string[] = [];
+
+  // Auth plugin
+  const authConfigParts: string[] = [
+    "    loginPath: '/auth/login',",
+    "    homePath: '/',",
+    "    forbiddenPath: '/403',",
+  ];
+  if (config.mfaPages) {
+    authConfigParts.push("    mfaPath: '/auth/mfa-verify',");
+    authConfigParts.push("    mfaSetupPath: '/mfa-setup',");
+  }
+  plugins.push(`  createAuthPlugin({\n${authConfigParts.join("\n")}\n  }),`);
+
+  // WS plugin
+  if (config.webSocket) {
+    imports.push("createWsPlugin");
+    plugins.push(`  createWsPlugin({
     url: import.meta.env.VITE_WS_URL,
     reconnectOnLogin: true,
     reconnectOnFocus: true,
-  },`
-    : "";
+  }),`);
+  }
 
-  const sseConfig = config.sse
-    ? `\n  sse: {\n    // Add /__sse/ endpoint keys here. Example: '/__sse/feed': true\n    endpoints: {},\n  },`
-    : "";
+  // SSE plugin
+  if (config.sse) {
+    imports.push("createSsePlugin");
+    plugins.push(`  createSsePlugin({
+    endpoints: {},
+  }),`);
+  }
 
-  const mfaConfig = config.mfaPages
-    ? `
-  mfaPath: '/auth/mfa-verify',
-  mfaSetupPath: '/mfa-setup',`
-    : "";
-
-  const wsExports = config.webSocket
-    ? `  useSocket,
-  useRoom,
-  useRoomEvent,
-  useWebSocketManager,`
-    : "";
-
-  const mfaExports = config.mfaPages
-    ? `  useMfaVerify,
-  useMfaSetup,
-  useMfaVerifySetup,
-  useMfaDisable,
-  useMfaRecoveryCodes,
-  useMfaResend,
-  useMfaMethods,
-  useMfaEmailOtpEnable,
-  useMfaEmailOtpVerifySetup,
-  useMfaEmailOtpDisable,
-  usePendingMfaChallenge,
-  isMfaChallenge,
-  useWebAuthnRegisterOptions,
-  useWebAuthnRegister,
-  useWebAuthnCredentials,
-  useWebAuthnRemoveCredential,
-  useWebAuthnDisable,`
-    : "";
-
-  const authPageExports = config.authPages
-    ? `  useResetPassword,
-  useVerifyEmail,
-  useResendVerification,`
-    : "";
+  // Community plugin
+  if (config.communityPages) {
+    imports.push("createCommunityPlugin");
+    plugins.push("  createCommunityPlugin(),");
+  }
 
   const bearerTokenLine =
     config.securityProfile === "prototype"
-      ? `\n  // WARNING: Static API credentials are not supported in production browser deployments.\n  bearerToken: import.meta.env.VITE_BEARER_TOKEN,`
+      ? `\n    bearerToken: import.meta.env.VITE_BEARER_TOKEN,`
       : "";
 
-  const oauthExchangeExport =
-    config.securityProfile === "prototype" ? `  useOAuthExchange,\n` : "";
+  // ── Build re-exports based on enabled features ─────────────────────────
 
-  const passkeyExports = config.passkeyPages
-    ? `  usePasskeyLoginOptions,\n  usePasskeyLogin,\n`
-    : "";
+  const exports: string[] = [
+    "  // Core",
+    "  useTheme,",
+    "  QueryProvider,",
+    "  api,",
+    "  queryClient,",
+    "  tokenStorage,",
+    "",
+    "  // Auth",
+    "  useUser,",
+    "  useLogin,",
+    "  useLogout,",
+    "  useRegister,",
+    "  useForgotPassword,",
+    "  useSetPassword,",
+    "  useDeleteAccount,",
+    "  useCancelDeletion,",
+    "  useRefreshToken,",
+    "  useSessions,",
+    "  useRevokeSession,",
+    "  getOAuthUrl,",
+    "  getLinkUrl,",
+    "  useOAuthUnlink,",
+    "  formatAuthError,",
+    "  protectedBeforeLoad,",
+    "  guestBeforeLoad,",
+    "  useMagicLinkRequest,",
+    "  useMagicLinkVerify,",
+    "  useReauthVerify,",
+  ];
 
-  const communityExports = config.communityPages
-    ? `  useContainers,\n  useContainer,\n  useContainerThreads,\n  useContainerThread,\n  useCreateContainer,\n  useUpdateContainer,\n  useDeleteContainer,\n  useCreateThread,\n  useUpdateThread,\n  useDeleteThread,\n  usePublishThread,\n  useLockThread,\n  usePinThread,\n  useUnpinThread,\n  useThreadReplies,\n  useReply,\n  useCreateReply,\n  useUpdateReply,\n  useDeleteReply,\n  useThreadReactions,\n  useReplyReactions,\n  useAddThreadReaction,\n  useRemoveThreadReaction,\n  useAddReplyReaction,\n  useRemoveReplyReaction,\n  useContainerMembers,\n  useContainerModerators,\n  useContainerOwners,\n  useAddMember,\n  useRemoveMember,\n  useAssignModerator,\n  useRemoveModerator,\n  useAssignOwner,\n  useRemoveOwner,\n  useNotifications,\n  useNotificationsUnreadCount,\n  useMarkNotificationRead,\n  useMarkAllNotificationsRead,\n  useReports,\n  useReport,\n  useCreateReport,\n  useResolveReport,\n  useDismissReport,\n  useBans,\n  useCheckBan,\n  useCreateBan,\n  useRemoveBan,\n  useSearchThreads,\n  useSearchReplies,`
-    : "";
+  if (config.mfaPages) {
+    exports.push(
+      "",
+      "  // MFA",
+      "  usePendingMfaChallenge,",
+      "  isMfaChallenge,",
+      "  useMfaVerify,",
+      "  useMfaSetup,",
+      "  useMfaVerifySetup,",
+      "  useMfaDisable,",
+      "  useMfaRecoveryCodes,",
+      "  useMfaResend,",
+      "  useMfaMethods,",
+      "  useMfaEmailOtpEnable,",
+      "  useMfaEmailOtpVerifySetup,",
+      "  useMfaEmailOtpDisable,",
+    );
+  }
 
-  const sseExports = config.sse ? `  useSSE,\n  useSseEvent,` : "";
+  if (config.passkeyPages) {
+    exports.push(
+      "",
+      "  // Passkeys / WebAuthn",
+      "  usePasskeyLoginOptions,",
+      "  usePasskeyLogin,",
+      "  useWebAuthnRegisterOptions,",
+      "  useWebAuthnRegister,",
+      "  useWebAuthnCredentials,",
+      "  useWebAuthnRemoveCredential,",
+      "  useWebAuthnDisable,",
+    );
+  }
 
-  return `import { createSnapshot } from '@lastshotlabs/snapshot'
+  if (config.webSocket) {
+    exports.push(
+      "",
+      "  // WebSocket",
+      "  useSocket,",
+      "  useRoom,",
+      "  useRoomEvent,",
+      "  useWebSocketManager,",
+    );
+  }
 
-export const snapshot = createSnapshot({
-  apiUrl: import.meta.env.VITE_API_URL,${bearerTokenLine}
-  loginPath: '/auth/login',
-  homePath: '/',
-  forbiddenPath: '/403',${wsConfig}${sseConfig}${mfaConfig}
-})
+  if (config.sse) {
+    exports.push("", "  // SSE", "  useSSE,", "  useSseEvent,");
+  }
+
+  if (config.communityPages) {
+    exports.push(
+      "",
+      "  // Community",
+      "  useContainers,",
+      "  useContainer,",
+      "  useContainerThreads,",
+      "  useContainerThread,",
+      "  useCreateContainer,",
+      "  useUpdateContainer,",
+      "  useDeleteContainer,",
+      "  useCreateThread,",
+      "  useUpdateThread,",
+      "  useDeleteThread,",
+      "  usePublishThread,",
+      "  useLockThread,",
+      "  usePinThread,",
+      "  useUnpinThread,",
+      "  useThreadReplies,",
+      "  useReply,",
+      "  useCreateReply,",
+      "  useUpdateReply,",
+      "  useDeleteReply,",
+      "  useThreadReactions,",
+      "  useReplyReactions,",
+      "  useAddThreadReaction,",
+      "  useRemoveThreadReaction,",
+      "  useAddReplyReaction,",
+      "  useRemoveReplyReaction,",
+      "  useContainerMembers,",
+      "  useContainerModerators,",
+      "  useContainerOwners,",
+      "  useAddMember,",
+      "  useRemoveMember,",
+      "  useAssignModerator,",
+      "  useRemoveModerator,",
+      "  useAssignOwner,",
+      "  useRemoveOwner,",
+      "  useNotifications,",
+      "  useNotificationsUnreadCount,",
+      "  useMarkNotificationRead,",
+      "  useMarkAllNotificationsRead,",
+      "  useReports,",
+      "  useReport,",
+      "  useCreateReport,",
+      "  useResolveReport,",
+      "  useDismissReport,",
+      "  useBans,",
+      "  useCheckBan,",
+      "  useCreateBan,",
+      "  useRemoveBan,",
+      "  useSearchThreads,",
+      "  useSearchReplies,",
+    );
+  }
+
+  return `import { ${imports.join(", ")} } from '@lastshotlabs/snapshot'
+
+export const snapshot = createSnapshot(
+  {
+    apiUrl: import.meta.env.VITE_API_URL,${bearerTokenLine}
+  },
+${plugins.join("\n")}
+)
 
 export const {
-  useUser,
-  useLogin,
-  useLogout,
-  useRegister,
-  useForgotPassword,
-${passkeyExports}${wsExports}
-${sseExports}
-${mfaExports}
-${authPageExports}
-  useSetPassword,
-  useDeleteAccount,
-  useCancelDeletion,
-  useRefreshToken,
-  useSessions,
-  useRevokeSession,
-${oauthExchangeExport}  getOAuthUrl,
-  getLinkUrl,
-  useOAuthUnlink,
-  useTheme,
-  formatAuthError,
-  useCommunityNotifications,
-${communityExports}
-  protectedBeforeLoad,
-  guestBeforeLoad,
-  QueryProvider,
-  api,
-  queryClient,
-  tokenStorage,
+${exports.join("\n")}
 } = snapshot
 `;
 }

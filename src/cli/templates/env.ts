@@ -1,9 +1,7 @@
 import type { ScaffoldConfig } from "../types";
 
 export function generateEnv(config: ScaffoldConfig): string {
-  const wsLine = config.webSocket
-    ? "\nVITE_WS_URL=ws://localhost:3000/chat"
-    : "";
+  const wsLine = config.webSocket ? "\nVITE_WS_URL=ws://localhost:3000/chat" : "";
 
   if (config.securityProfile === "hardened") {
     return `VITE_API_URL=http://localhost:3000${wsLine}

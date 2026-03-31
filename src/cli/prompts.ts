@@ -1,7 +1,7 @@
+import { confirm, isCancel, multiselect, select, text } from "@clack/prompts";
 import path from "node:path";
-import { text, select, multiselect, confirm, isCancel } from "@clack/prompts";
-import { slugify } from "./utils";
 import type { ScaffoldConfig } from "./types";
+import { slugify } from "./utils";
 
 export const RECOMMENDED_COMPONENTS = [
   "button",
@@ -43,9 +43,7 @@ interface PromptOptions {
   skipPrompts: boolean;
 }
 
-export async function runPrompts(
-  opts: PromptOptions,
-): Promise<ScaffoldConfig | null> {
+export async function runPrompts(opts: PromptOptions): Promise<ScaffoldConfig | null> {
   const { projectNameArg, outputDirArg, skipPrompts } = opts;
 
   // Project name — always prompt if not provided via arg
@@ -217,8 +215,7 @@ export async function runPrompts(
 
   // Mail plugin (bunshot-mail)
   const mailVal = await confirm({
-    message:
-      "Scaffold bunshot-mail plugin config? (Resend + auth delivery events)",
+    message: "Scaffold bunshot-mail plugin config? (Resend + auth delivery events)",
     initialValue: false,
   });
   if (isCancel(mailVal)) return null;

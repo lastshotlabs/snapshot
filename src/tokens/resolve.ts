@@ -1,4 +1,5 @@
-import type { TokenSet, ColorPair } from "./schema";
+import { categoryPrefixes } from "./prefixes";
+import type { TokenSet } from "./schema";
 
 // ── CSS variable generation ──────────────────────────────────────────────────
 
@@ -43,11 +44,7 @@ function flattenTokens(
       }
 
       // Recurse into nested objects
-      const nested = flattenTokens(
-        record,
-        prefix ? `${prefix}-${key}` : key,
-        mode,
-      );
+      const nested = flattenTokens(record, prefix ? `${prefix}-${key}` : key, mode);
       for (const [k, v] of nested) {
         vars.set(k, v);
       }
@@ -56,19 +53,6 @@ function flattenTokens(
 
   return vars;
 }
-
-/** Map category names to CSS variable prefixes. */
-const categoryPrefixes: Record<string, string> = {
-  colors: "color",
-  spacing: "spacing",
-  radius: "radius",
-  typography: "typography",
-  shadows: "shadow",
-  breakpoints: "breakpoint",
-  zIndex: "z",
-  transitions: "transition",
-  interactions: "interaction",
-};
 
 /**
  * Generates CSS custom properties from a token set.
@@ -90,16 +74,8 @@ export function resolveTokensToCSS(tokens: TokenSet): string {
 
     if (category === "colors") {
       // Colors have light/dark pairs — resolve both modes
-      const lightColors = flattenTokens(
-        values as Record<string, unknown>,
-        prefix,
-        "light",
-      );
-      const darkColors = flattenTokens(
-        values as Record<string, unknown>,
-        prefix,
-        "dark",
-      );
+      const lightColors = flattenTokens(values as Record<string, unknown>, prefix, "light");
+      const darkColors = flattenTokens(values as Record<string, unknown>, prefix, "dark");
 
       for (const [k, v] of lightColors) lightVars.set(k, v);
       for (const [k, v] of darkColors) {
@@ -107,11 +83,7 @@ export function resolveTokensToCSS(tokens: TokenSet): string {
       }
     } else {
       // Non-color tokens are mode-independent
-      const flat = flattenTokens(
-        values as Record<string, unknown>,
-        prefix,
-        "light",
-      );
+      const flat = flattenTokens(values as Record<string, unknown>, prefix, "light");
       for (const [k, v] of flat) lightVars.set(k, v);
     }
   }

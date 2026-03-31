@@ -1,7 +1,7 @@
-import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { wsManagerAtom } from "./atom";
+import { useAtomValue } from "jotai";
 import type { SocketHook } from "../types";
+import { wsManagerAtom } from "./atom";
 import type { WebSocketManager } from "./manager";
 
 export function createWsHooks<TEvents extends Record<string, unknown>>() {
@@ -11,9 +11,7 @@ export function createWsHooks<TEvents extends Record<string, unknown>>() {
 
   function useSocket(): SocketHook<TEvents> {
     const manager = useWebSocketManager();
-    const [isConnected, setIsConnected] = useState(
-      manager?.isConnected ?? false,
-    );
+    const [isConnected, setIsConnected] = useState(manager?.isConnected ?? false);
 
     useEffect(() => {
       if (!manager) return;
@@ -54,34 +52,22 @@ export function createWsHooks<TEvents extends Record<string, unknown>>() {
     return { isSubscribed };
   }
 
-  function useRoomEvent<T>(
-    room: string,
-    event: string,
-    handler: (data: T) => void,
-  ): void {
+  function useRoomEvent<T>(room: string, event: string, handler: (data: T) => void): void {
     const manager = useWebSocketManager();
 
     useEffect(() => {
       if (!manager) return;
 
       // Scoped: only handle events tagged to this room
-      const scoped = (
-        data: { room?: string; payload?: T } & Record<string, unknown>,
-      ) => {
+      const scoped = (data: { room?: string; payload?: T } & Record<string, unknown>) => {
         if (data["room"] === room) {
           handler(("payload" in data ? data["payload"] : data) as T);
         }
       };
 
-      manager.on(
-        event as keyof TEvents,
-        scoped as (data: TEvents[keyof TEvents]) => void,
-      );
+      manager.on(event as keyof TEvents, scoped as (data: TEvents[keyof TEvents]) => void);
       return () => {
-        manager.off(
-          event as keyof TEvents,
-          scoped as (data: TEvents[keyof TEvents]) => void,
-        );
+        manager.off(event as keyof TEvents, scoped as (data: TEvents[keyof TEvents]) => void);
       };
     }, [room, event, handler, manager]);
   }

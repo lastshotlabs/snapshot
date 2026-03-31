@@ -32,7 +32,9 @@ export interface AuthEndpoints {
   webauthnDisable: string;
   passkeyLoginOptions: string;
   passkeyLogin: string;
-  oauthExchange: string;
+  magicLinkRequest: string;
+  magicLinkVerify: string;
+  reauthVerify: string;
 }
 
 export interface AuthHeaders {
@@ -97,7 +99,9 @@ export function defaultContract(apiUrl: string): AuthContract {
       webauthnDisable: "/auth/mfa/webauthn",
       passkeyLoginOptions: "/auth/passkey/login-options",
       passkeyLogin: "/auth/passkey/login",
-      oauthExchange: "/auth/oauth/exchange",
+      magicLinkRequest: "/auth/magic-link/request",
+      magicLinkVerify: "/auth/magic-link/verify",
+      reauthVerify: "/auth/reauth/verify",
     },
     sessionRevoke: (id) => `/auth/sessions/${id}`,
     webauthnRemoveCredential: (id) => `/auth/mfa/webauthn/credentials/${id}`,
@@ -112,17 +116,13 @@ export function defaultContract(apiUrl: string): AuthContract {
   };
 }
 
-export function mergeContract(
-  apiUrl: string,
-  partial?: AuthContractConfig,
-): AuthContract {
+export function mergeContract(apiUrl: string, partial?: AuthContractConfig): AuthContract {
   const def = defaultContract(apiUrl);
   if (!partial) return def;
   return {
     endpoints: { ...def.endpoints, ...partial.endpoints },
     sessionRevoke: partial.sessionRevoke ?? def.sessionRevoke,
-    webauthnRemoveCredential:
-      partial.webauthnRemoveCredential ?? def.webauthnRemoveCredential,
+    webauthnRemoveCredential: partial.webauthnRemoveCredential ?? def.webauthnRemoveCredential,
     oauthUrl: partial.oauthUrl ?? def.oauthUrl,
     oauthLinkUrl: partial.oauthLinkUrl ?? def.oauthLinkUrl,
     oauthUnlink: partial.oauthUnlink ?? def.oauthUnlink,

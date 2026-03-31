@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import path from "node:path";
 import fs from "node:fs/promises";
 import os from "node:os";
+import path from "node:path";
+import { describe, expect, it } from "vitest";
 
 // sync.ts exports: runSync, consoleLogger, SyncLogger (interface), BackendConfig (interface), SyncOptions (interface)
 // The internal functions (generateOperation, generateTagFiles, schemaToTs, etc.) are NOT exported.
@@ -47,14 +47,9 @@ describe("runSync integration", () => {
   it("generates output files from a local schema fixture", async () => {
     const { runSync } = await import("../sync");
 
-    const tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "snapshot-sync-test-"),
-    );
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "snapshot-sync-test-"));
 
-    const fixtureSchema = path.resolve(
-      __dirname,
-      "fixtures/sample-schema.json",
-    );
+    const fixtureSchema = path.resolve(__dirname, "fixtures/sample-schema.json");
 
     try {
       await runSync({

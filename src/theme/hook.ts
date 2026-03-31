@@ -1,6 +1,6 @@
-import { atomWithStorage } from "jotai/utils";
+import { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { atomWithStorage } from "jotai/utils";
 
 type Theme = "light" | "dark";
 
@@ -8,29 +8,29 @@ const getInitialTheme = (): Theme => {
   if (typeof window === "undefined") return "light";
   const stored = localStorage.getItem("snapshot-theme") as Theme | null;
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 };
 
 const themeAtom = atomWithStorage<Theme>("snapshot-theme", getInitialTheme());
 
-// Inject a one-time style rule so we can suppress transitions during theme swap
-let styleInjected = false;
-function ensureNoTransitionStyle() {
-  if (styleInjected || typeof document === "undefined") return;
-  const style = document.createElement("style");
-  style.textContent =
-    ".no-transition, .no-transition * { transition: none !important; }";
-  document.head.appendChild(style);
-  styleInjected = true;
-}
+const STYLE_ID = "snapshot-no-transition";
 
 export function useTheme() {
   const [theme, setTheme] = useAtom(themeAtom);
+  const styleInjected = useRef(false);
 
   useEffect(() => {
-    ensureNoTransitionStyle();
+    // Inject a one-time style rule so we can suppress transitions during theme swap
+    if (!styleInjected.current && typeof document !== "undefined") {
+      if (!document.getElementById(STYLE_ID)) {
+        const style = document.createElement("style");
+        style.id = STYLE_ID;
+        style.textContent = ".no-transition, .no-transition * { transition: none !important; }";
+        document.head.appendChild(style);
+      }
+      styleInjected.current = true;
+    }
+
     const root = document.documentElement;
 
     // Suppress CSS transitions so hundreds of elements don't animate at once

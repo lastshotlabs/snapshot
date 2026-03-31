@@ -1,19 +1,19 @@
-import { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
+import { QueryClient } from "@tanstack/react-query";
 import { ApiClient } from "./api/client";
 import { createTokenStorage } from "./auth/storage";
 import { warnOnce } from "./auth/warnings";
-import { useTheme } from "./theme/hook";
-import { QueryProviderInner } from "./providers/QueryProvider";
 import { sortPlugins } from "./plugins/registry";
 import type {
-  SnapshotPlugin,
-  SnapshotPluginContext,
   SnapshotCallbacks,
   SnapshotCoreConfig,
   SnapshotCorePrimitives,
   SnapshotInstance,
+  SnapshotPlugin,
+  SnapshotPluginContext,
 } from "./plugins/types";
+import { QueryProviderInner } from "./providers/QueryProvider";
+import { useTheme } from "./theme/hook";
 
 /**
  * Creates a snapshot instance with the given core config and plugins.
@@ -116,9 +116,7 @@ export function createSnapshot<const TPlugins extends SnapshotPlugin[]>(
   // ── Core primitives ────────────────────────────────────────────────────────
 
   function QueryProvider({ children }: { children: ReactNode }) {
-    return (
-      <QueryProviderInner client={queryClient}>{children}</QueryProviderInner>
-    );
+    return <QueryProviderInner client={queryClient}>{children}</QueryProviderInner>;
   }
 
   function teardown() {

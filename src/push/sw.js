@@ -37,8 +37,7 @@ self.addEventListener("pushsubscriptionchange", (event) => {
     self.registration.pushManager
       .subscribe({
         userVisibleOnly: true,
-        applicationServerKey:
-          event.oldSubscription?.options.applicationServerKey,
+        applicationServerKey: event.oldSubscription?.options.applicationServerKey,
       })
       .then((newSubscription) => {
         const subJson = newSubscription.toJSON();

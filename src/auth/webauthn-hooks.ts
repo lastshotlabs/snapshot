@@ -1,24 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useSetAtom } from "jotai";
 import type { WritableAtom } from "jotai";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
+import type { AuthContract } from "../auth/contract";
 import type { TokenStorage } from "../auth/storage";
 import type {
   AuthUser,
-  WebAuthnRegisterOptionsResponse,
-  WebAuthnRegisterBody,
-  WebAuthnCredential,
+  LoginResponse,
+  LoginResult,
+  MfaChallenge,
   PasskeyLoginOptionsBody,
   PasskeyLoginOptionsResponse,
   PasskeyLoginVars,
-  LoginResult,
-  LoginResponse,
-  MfaChallenge,
+  WebAuthnCredential,
+  WebAuthnRegisterBody,
+  WebAuthnRegisterOptionsResponse,
 } from "../types";
 import { isMfaChallenge } from "../types";
-import type { AuthContract } from "../auth/contract";
 
 const WEBAUTHN_CREDENTIALS_KEY = ["auth", "webauthn", "credentials"] as const;
 
@@ -27,11 +27,7 @@ interface WebAuthnHooksOptions {
   storage: TokenStorage;
   config: { auth?: "cookie" | "token"; mfaPath?: string; homePath?: string };
   contract: AuthContract;
-  pendingMfaChallengeAtom: WritableAtom<
-    MfaChallenge | null,
-    [MfaChallenge | null],
-    void
-  >;
+  pendingMfaChallengeAtom: WritableAtom<MfaChallenge | null, [MfaChallenge | null], void>;
   onLoginSuccess?: () => void;
 }
 
@@ -46,10 +42,7 @@ export function createWebAuthnHooks({
   function useWebAuthnRegisterOptions() {
     return useMutation<WebAuthnRegisterOptionsResponse, ApiError, void>({
       mutationFn: () =>
-        api.post<WebAuthnRegisterOptionsResponse>(
-          contract.endpoints.webauthnRegisterOptions,
-          {},
-        ),
+        api.post<WebAuthnRegisterOptionsResponse>(contract.endpoints.webauthnRegisterOptions, {}),
     });
   }
 
@@ -57,10 +50,7 @@ export function createWebAuthnHooks({
     const queryClient = useQueryClient();
     return useMutation<{ message: string }, ApiError, WebAuthnRegisterBody>({
       mutationFn: (body) =>
-        api.post<{ message: string }>(
-          contract.endpoints.webauthnRegister,
-          body,
-        ),
+        api.post<{ message: string }>(contract.endpoints.webauthnRegister, body),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: WEBAUTHN_CREDENTIALS_KEY });
       },
@@ -68,15 +58,10 @@ export function createWebAuthnHooks({
   }
 
   function useWebAuthnCredentials() {
-    const { data, isLoading, isError } = useQuery<
-      { credentials: WebAuthnCredential[] },
-      ApiError
-    >({
+    const { data, isLoading, isError } = useQuery<{ credentials: WebAuthnCredential[] }, ApiError>({
       queryKey: WEBAUTHN_CREDENTIALS_KEY,
       queryFn: () =>
-        api.get<{ credentials: WebAuthnCredential[] }>(
-          contract.endpoints.webauthnCredentials,
-        ),
+        api.get<{ credentials: WebAuthnCredential[] }>(contract.endpoints.webauthnCredentials),
     });
     return { credentials: data?.credentials ?? [], isLoading, isError };
   }
@@ -85,9 +70,7 @@ export function createWebAuthnHooks({
     const queryClient = useQueryClient();
     return useMutation<{ message: string }, ApiError, string>({
       mutationFn: (credentialId) =>
-        api.delete<{ message: string }>(
-          contract.webauthnRemoveCredential(credentialId),
-        ),
+        api.delete<{ message: string }>(contract.webauthnRemoveCredential(credentialId)),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: WEBAUTHN_CREDENTIALS_KEY });
       },
@@ -96,22 +79,14 @@ export function createWebAuthnHooks({
 
   function useWebAuthnDisable() {
     return useMutation<{ message: string }, ApiError, void>({
-      mutationFn: () =>
-        api.delete<{ message: string }>(contract.endpoints.webauthnDisable, {}),
+      mutationFn: () => api.delete<{ message: string }>(contract.endpoints.webauthnDisable, {}),
     });
   }
 
   function usePasskeyLoginOptions() {
-    return useMutation<
-      PasskeyLoginOptionsResponse,
-      ApiError,
-      PasskeyLoginOptionsBody
-    >({
+    return useMutation<PasskeyLoginOptionsResponse, ApiError, PasskeyLoginOptionsBody>({
       mutationFn: (body) =>
-        api.post<PasskeyLoginOptionsResponse>(
-          contract.endpoints.passkeyLoginOptions,
-          body,
-        ),
+        api.post<PasskeyLoginOptionsResponse>(contract.endpoints.passkeyLoginOptions, body),
     });
   }
 
@@ -121,10 +96,7 @@ export function createWebAuthnHooks({
     const setMfaChallenge = useSetAtom(pendingMfaChallengeAtom);
     return useMutation<LoginResult, ApiError, PasskeyLoginVars>({
       mutationFn: async ({ redirectTo: _, ...body }) => {
-        const response = await api.post<LoginResponse>(
-          contract.endpoints.passkeyLogin,
-          body,
-        );
+        const response = await api.post<LoginResponse>(contract.endpoints.passkeyLogin, body);
         if (response.mfaRequired && response.mfaToken && response.mfaMethods) {
           return {
             mfaToken: response.mfaToken,

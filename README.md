@@ -256,9 +256,9 @@ declare module "@tanstack/react-router" {
 // src/main.tsx
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider } from "@tanstack/react-router";
-import { QueryProvider } from "@lib/snapshot";
 import { router } from "@lib/router";
+import { QueryProvider } from "@lib/snapshot";
+import { RouterProvider } from "@tanstack/react-router";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -275,24 +275,22 @@ createRoot(document.getElementById("root")!).render(
 
 ```tsx
 // src/routes/__root.tsx
-import { createRootRouteWithContext } from "@tanstack/react-router";
-import { HeadProvider } from "@unhead/react";
-import { Outlet } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
+import { createRootRouteWithContext } from "@tanstack/react-router";
+import { Outlet } from "@tanstack/react-router";
+import { HeadProvider } from "@unhead/react";
 
 function RootDocument() {
   return <Outlet />;
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
-  {
-    component: () => (
-      <HeadProvider>
-        <RootDocument />
-      </HeadProvider>
-    ),
-  },
-);
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  component: () => (
+    <HeadProvider>
+      <RootDocument />
+    </HeadProvider>
+  ),
+});
 ```
 
 ### 5. Generate typed API hooks
@@ -611,7 +609,7 @@ MFA is fully opt-in. If your bunshot backend has MFA configured, snapshot provid
 When a user with MFA enabled logs in, `useLogin` returns an `MfaChallenge` instead of an `AuthUser`. Use `isMfaChallenge` to distinguish:
 
 ```tsx
-import { useLogin, isMfaChallenge } from "@lib/snapshot";
+import { isMfaChallenge, useLogin } from "@lib/snapshot";
 
 function LoginPage() {
   const login = useLogin();
@@ -637,11 +635,7 @@ If `mfaPath` is set in `createSnapshot` config, the redirect happens automatical
 The MFA challenge is held in memory by the snapshot instance after `useLogin` redirects. Read it on the MFA page with `usePendingMfaChallenge`:
 
 ```tsx
-import {
-  useMfaVerify,
-  useMfaResend,
-  usePendingMfaChallenge,
-} from "@lib/snapshot";
+import { useMfaResend, useMfaVerify, usePendingMfaChallenge } from "@lib/snapshot";
 import { Link } from "@tanstack/react-router";
 
 function MfaVerifyPage() {
@@ -669,10 +663,7 @@ function MfaVerifyPage() {
       <input name="code" inputMode="numeric" maxLength={6} />
       <button disabled={verify.isPending}>Verify</button>
       {verify.isError && <p>{verify.error.message}</p>}
-      <button
-        type="button"
-        onClick={() => resend.mutate({ mfaToken: pendingChallenge.mfaToken })}
-      >
+      <button type="button" onClick={() => resend.mutate({ mfaToken: pendingChallenge.mfaToken })}>
         Resend email code
       </button>
     </form>
@@ -726,9 +717,9 @@ regenerate.mutate({ code: "123456" }); // requires TOTP code
 
 ```tsx
 import {
+  useMfaEmailOtpDisable,
   useMfaEmailOtpEnable,
   useMfaEmailOtpVerifySetup,
-  useMfaEmailOtpDisable,
 } from "@lib/snapshot";
 
 // Enable: sends verification code to user's email
@@ -772,15 +763,15 @@ createSnapshot({
 
 ```tsx
 import {
-  useSetPassword,
-  useDeleteAccount,
   useCancelDeletion,
+  useDeleteAccount,
   useRefreshToken,
-  useSessions,
-  useRevokeSession,
-  useResetPassword,
-  useVerifyEmail,
   useResendVerification,
+  useResetPassword,
+  useRevokeSession,
+  useSessions,
+  useSetPassword,
+  useVerifyEmail,
 } from "@lib/snapshot";
 
 // Set or change password
@@ -829,7 +820,7 @@ resendVerification.mutate({ email });
 OAuth initiation is a simple redirect — no hook needed. Call `getOAuthUrl` and navigate:
 
 ```ts
-import { getOAuthUrl, getLinkUrl } from "@lib/snapshot";
+import { getLinkUrl, getOAuthUrl } from "@lib/snapshot";
 
 // Redirect to OAuth provider sign-in
 window.location.href = getOAuthUrl("google"); // → {apiUrl}/auth/google
@@ -845,8 +836,8 @@ After the OAuth flow completes, the provider redirects back to your callback pag
 ```tsx
 // Hardened OAuth callback — passive, no exchange step
 import { useEffect } from "react";
+import { queryClient, useUser } from "@lib/snapshot";
 import { useNavigate } from "@tanstack/react-router";
-import { useUser, queryClient } from "@lib/snapshot";
 
 function OAuthCallbackPage() {
   const { error } = Route.useSearch(); // only { success?, error? } in search params
@@ -899,11 +890,11 @@ WebAuthn registration requires `@simplewebauthn/browser` on the client side to c
 
 ```ts
 import {
-  useWebAuthnRegisterOptions,
-  useWebAuthnRegister,
   useWebAuthnCredentials,
-  useWebAuthnRemoveCredential,
   useWebAuthnDisable,
+  useWebAuthnRegister,
+  useWebAuthnRegisterOptions,
+  useWebAuthnRemoveCredential,
 } from "@lib/snapshot";
 import { startRegistration } from "@simplewebauthn/browser";
 
@@ -946,11 +937,7 @@ disable.mutate();
 Passkeys (Windows Hello, Face ID, Touch ID) as a **passwordless first-factor** — no password, no MFA prompt. Requires bunshot `mfa.webauthn.allowPasswordlessLogin: true` on the server.
 
 ```ts
-import {
-  usePasskeyLoginOptions,
-  usePasskeyLogin,
-  isMfaChallenge,
-} from "@lib/snapshot";
+import { isMfaChallenge, usePasskeyLogin, usePasskeyLoginOptions } from "@lib/snapshot";
 import { startAuthentication } from "@simplewebauthn/browser";
 
 function usePasskeySignIn() {
@@ -1000,8 +987,9 @@ async function handlePasskeyLogin(email?: string) {
     }
     // Network error or token expiry (410 / challenge-not-found) — retry once with fresh challenge
     if (err.status === 410 || err.name === "NetworkError") {
-      const { options: freshOptions, passkeyToken: freshToken } =
-        await getOptions.mutateAsync({ email });
+      const { options: freshOptions, passkeyToken: freshToken } = await getOptions.mutateAsync({
+        email,
+      });
       const assertionResponse = await startAuthentication(freshOptions);
       await login.mutateAsync({ passkeyToken: freshToken, assertionResponse });
       return;
@@ -1205,8 +1193,8 @@ Assign `protectedBeforeLoad` and `guestBeforeLoad` in your route files:
 
 ```ts
 // src/routes/dashboard.tsx — authenticated users only
-import { createFileRoute } from "@tanstack/react-router";
 import { protectedBeforeLoad } from "@lib/snapshot";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: protectedBeforeLoad,
@@ -1216,8 +1204,8 @@ export const Route = createFileRoute("/dashboard")({
 
 ```ts
 // src/routes/login.tsx — redirect to home if already logged in
-import { createFileRoute } from "@tanstack/react-router";
 import { guestBeforeLoad } from "@lib/snapshot";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: guestBeforeLoad,
@@ -1352,8 +1340,8 @@ function ChatRoom({ roomId }: { roomId: string }) {
 Use `useWebSocketManager` for direct access to the `WebSocketManager` instance:
 
 ```ts
+import { useEffect, useState } from "react";
 import { useWebSocketManager } from "@lib/snapshot";
-import { useState, useEffect } from "react";
 
 export function usePresence(roomId: string) {
   const manager = useWebSocketManager();
@@ -1669,11 +1657,7 @@ import { useTheme } from "@lib/snapshot";
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
-  return (
-    <button onClick={toggle}>
-      {theme === "dark" ? "Light mode" : "Dark mode"}
-    </button>
-  );
+  return <button onClick={toggle}>{theme === "dark" ? "Light mode" : "Dark mode"}</button>;
 }
 ```
 
@@ -1709,8 +1693,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export function useImpersonate() {
   return useMutation({
-    mutationFn: (userId: string) =>
-      api.post<{ token: string }>("/admin/impersonate", { userId }),
+    mutationFn: (userId: string) => api.post<{ token: string }>("/admin/impersonate", { userId }),
     onSuccess: ({ token }) => tokenStorage.set(token),
   });
 }
@@ -1726,9 +1709,9 @@ All hooks and primitives returned by `createSnapshot` are designed for compositi
 
 ```ts
 // src/store/products.ts
-import { atom } from "jotai";
-import { api } from "@lib/snapshot";
 import type { Product } from "@/types/api";
+import { api } from "@lib/snapshot";
+import { atom } from "jotai";
 
 const selectedIdAtom = atom<string | null>(null);
 
@@ -1744,9 +1727,9 @@ export const selectedProductAtom = atom(async (get) => {
 
 ```ts
 // src/hooks/useProducts.ts
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import type { CreateProductBody, Product } from "@/types/api";
 import { api } from "@lib/snapshot";
-import type { Product, CreateProductBody } from "@/types/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useProducts() {
   return useQuery({
@@ -1758,8 +1741,7 @@ export function useProducts() {
 export function useCreateProduct() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (body: CreateProductBody) =>
-      api.post<Product>("/products", body),
+    mutationFn: (body: CreateProductBody) => api.post<Product>("/products", body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
   });
 }
@@ -1884,38 +1866,34 @@ export type UserRole = "admin" | "member" | "guest";
 
 ```ts
 // Generated by bunx snapshot sync. Do not edit manually.
-
 import { api } from "@lib/snapshot";
-import type { User, CreateUserBody } from "../types/api";
+import type { CreateUserBody, User } from "../types/api";
 
 /** List all users */
 export const listUsers = (): Promise<User[]> => api.get<User[]>("/users");
 
 /** Get user by ID */
-export const getUser = (id: string): Promise<User> =>
-  api.get<User>(`/users/${id}`);
+export const getUser = (id: string): Promise<User> => api.get<User>(`/users/${id}`);
 
 /** Create a user */
-export const createUser = (body: CreateUserBody): Promise<User> =>
-  api.post<User>("/users", body);
+export const createUser = (body: CreateUserBody): Promise<User> => api.post<User>("/users", body);
 ```
 
 **`src/hooks/api/{tag}.ts`** — one file per OpenAPI tag containing TanStack Query hooks. Imports plain functions from `../../api/{tag}`.
 
 ```ts
 // Generated by bunx snapshot sync. Do not edit manually.
-
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  type UseQueryOptions,
-  type UseMutationOptions,
-  type QueryKey,
-} from "@tanstack/react-query";
 import { ApiError } from "@lastshotlabs/snapshot";
-import { listUsers, getUser, createUser } from "../../api/users";
-import type { User, CreateUserBody } from "../../types/api";
+import {
+  type QueryKey,
+  type UseMutationOptions,
+  type UseQueryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { createUser, getUser, listUsers } from "../../api/users";
+import type { CreateUserBody, User } from "../../types/api";
 
 /** List all users */
 export function useListUsersQuery(
@@ -1952,9 +1930,7 @@ export function useCreateUserMutation(
     mutationFn: createUser,
     ...mutationOptions,
     onSuccess: (...args) => {
-      invalidateKeys?.forEach((key) =>
-        queryClient.invalidateQueries({ queryKey: key }),
-      );
+      invalidateKeys?.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
       mutationOptions.onSuccess?.(...args);
     },
   });
@@ -1971,11 +1947,9 @@ export const updateUser = (id: string, body: UpdateUserBody): Promise<User> =>
   api.put<User>(`/users/${id}`, body);
 
 export function useUpdateUserMutation(
-  options?: UseMutationOptions<
-    User,
-    ApiError,
-    { id: string; body: UpdateUserBody }
-  > & { invalidateKeys?: QueryKey[] },
+  options?: UseMutationOptions<User, ApiError, { id: string; body: UpdateUserBody }> & {
+    invalidateKeys?: QueryKey[];
+  },
 ) {
   const { invalidateKeys, ...mutationOptions } = options ?? {};
   const queryClient = useQueryClient();
@@ -1983,9 +1957,7 @@ export function useUpdateUserMutation(
     mutationFn: (vars) => updateUser(vars.id, vars.body),
     ...mutationOptions,
     onSuccess: (...args) => {
-      invalidateKeys?.forEach((key) =>
-        queryClient.invalidateQueries({ queryKey: key }),
-      );
+      invalidateKeys?.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
       mutationOptions.onSuccess?.(...args);
     },
   });
@@ -2039,18 +2011,12 @@ When an endpoint returns a bunshot pagination envelope (`{ data: T[], total: num
 
 ```ts
 // Generated for GET /users (paginated response)
-export const listUsers = (
-  page = 1,
-  perPage = 20,
-): Promise<PaginatedResponse<User>> =>
+export const listUsers = (page = 1, perPage = 20): Promise<PaginatedResponse<User>> =>
   api.get<PaginatedResponse<User>>(`/users?page=${page}&perPage=${perPage}`);
 
 export function useListUsersQuery(
   params: { page?: number; perPage?: number } = {},
-  options?: Omit<
-    UseQueryOptions<PaginatedResponse<User>, ApiError>,
-    "queryKey" | "queryFn"
-  >,
+  options?: Omit<UseQueryOptions<PaginatedResponse<User>, ApiError>, "queryKey" | "queryFn">,
 ) {
   return useQuery({
     queryKey: ["users", params.page ?? 1, params.perPage ?? 20],
@@ -2078,8 +2044,8 @@ export type CreateUserInput = z.infer<typeof createUserSchema>;
 Usage with `react-hook-form`:
 
 ```ts
-import { createUserSchema, type CreateUserInput } from "@api/users";
 import { useForm } from "react-hook-form";
+import { type CreateUserInput, createUserSchema } from "@api/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const form = useForm<CreateUserInput>({
@@ -2128,8 +2094,8 @@ Plain functions live in `src/api/` with no React dependencies — import them di
 
 ```ts
 // src/store/users.ts
-import { atom } from "jotai";
 import { getUser } from "@api/users";
+import { atom } from "jotai";
 
 const selectedIdAtom = atom<string | null>(null);
 

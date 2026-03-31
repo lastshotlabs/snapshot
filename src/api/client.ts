@@ -1,9 +1,9 @@
-import { ApiError } from "./error";
+import type { AuthContract } from "../auth/contract";
 import { getCsrfToken, isMutatingMethod } from "../auth/csrf";
+import type { TokenStorage } from "../auth/storage";
 import { warnOnce } from "../auth/warnings";
 import type { RequestOptions } from "../types";
-import type { TokenStorage } from "../auth/storage";
-import type { AuthContract } from "../auth/contract";
+import { ApiError } from "./error";
 
 // ── Config ───────────────────────────────────────────────────────────────────
 
@@ -60,17 +60,12 @@ export class ApiClient {
     onForbidden?: () => void;
     onMfaSetupRequired?: () => void;
   }) {
-    if (callbacks.onUnauthenticated)
-      this.onUnauthenticated = callbacks.onUnauthenticated;
+    if (callbacks.onUnauthenticated) this.onUnauthenticated = callbacks.onUnauthenticated;
     if (callbacks.onForbidden) this.onForbidden = callbacks.onForbidden;
-    if (callbacks.onMfaSetupRequired)
-      this.onMfaSetupRequired = callbacks.onMfaSetupRequired;
+    if (callbacks.onMfaSetupRequired) this.onMfaSetupRequired = callbacks.onMfaSetupRequired;
   }
 
-  private buildHeaders(
-    method: string,
-    overrides?: Record<string, string>,
-  ): Record<string, string> {
+  private buildHeaders(method: string, overrides?: Record<string, string>): Record<string, string> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       ...overrides,
@@ -175,15 +170,12 @@ export class ApiClient {
 
       if (refreshToken && refreshEndpoint && path !== refreshEndpoint) {
         try {
-          const refreshResponse = await fetch(
-            `${this.baseUrl}${refreshEndpoint}`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ refreshToken }),
-              credentials: "include",
-            },
-          );
+          const refreshResponse = await fetch(`${this.baseUrl}${refreshEndpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken }),
+            credentials: "include",
+          });
 
           if (refreshResponse.ok) {
             const refreshData = await refreshResponse.json();
@@ -191,12 +183,7 @@ export class ApiClient {
             if (refreshData.refreshToken) {
               this.storage?.setRefreshToken(refreshData.refreshToken);
             }
-            const retryResponse = await this.rawFetch(
-              method,
-              path,
-              body,
-              options,
-            );
+            const retryResponse = await this.rawFetch(method, path, body, options);
             return this.handleResponse<T>(retryResponse);
           }
         } catch {
@@ -230,11 +217,7 @@ export class ApiClient {
     return this.request<T>("PATCH", path, body, options);
   }
 
-  delete<T>(
-    path: string,
-    body?: unknown,
-    options?: RequestOptions,
-  ): Promise<T> {
+  delete<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
     return this.request<T>("DELETE", path, body, options);
   }
 }

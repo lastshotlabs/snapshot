@@ -1,19 +1,5 @@
-import type { TokenSet, TokenCategory, BreakpointTokens } from "./schema";
-
-// ── CSS variable reference ───────────────────────────────────────────────────
-
-/** Maps token category names to their CSS variable prefix. */
-const prefixMap: Record<string, string> = {
-  colors: "color",
-  spacing: "spacing",
-  radius: "radius",
-  typography: "typography",
-  shadows: "shadow",
-  breakpoints: "breakpoint",
-  zIndex: "z",
-  transitions: "transition",
-  interactions: "interaction",
-};
+import { categoryPrefixes as prefixMap } from "./prefixes";
+import type { BreakpointTokens, TokenSet } from "./schema";
 
 /**
  * Returns a CSS `var()` reference for a token path.
@@ -69,22 +55,14 @@ export function tokenValue(
 
   let current: unknown = tokens;
   for (const part of parts) {
-    if (
-      current === null ||
-      current === undefined ||
-      typeof current !== "object"
-    ) {
-      throw new Error(
-        `[snapshot] Token path "${path}" not found — failed at "${part}".`,
-      );
+    if (current === null || current === undefined || typeof current !== "object") {
+      throw new Error(`[snapshot] Token path "${path}" not found — failed at "${part}".`);
     }
     current = (current as Record<string, unknown>)[part];
   }
 
   if (current === null || current === undefined) {
-    throw new Error(
-      `[snapshot] Token path "${path}" resolved to null/undefined.`,
-    );
+    throw new Error(`[snapshot] Token path "${path}" resolved to null/undefined.`);
   }
 
   // Handle ColorPair objects
@@ -115,9 +93,7 @@ export function tokenValue(
  * const gap: ResponsiveValue<string> = { default: 'sm', md: 'md', lg: 'lg' }
  * ```
  */
-export type ResponsiveValue<T> =
-  | T
-  | ({ default: T } & Partial<Record<keyof BreakpointTokens, T>>);
+export type ResponsiveValue<T> = T | ({ default: T } & Partial<Record<keyof BreakpointTokens, T>>);
 
 /**
  * Resolves a responsive value into an array of `{ breakpoint, value }` entries.

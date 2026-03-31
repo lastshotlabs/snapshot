@@ -1,48 +1,46 @@
+import { log, spinner } from "@clack/prompts";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { log, spinner } from "@clack/prompts";
+import {
+  generateAdminLayoutComponent,
+  generateAuditLogPageComponent,
+  generateAuditLogRoute,
+  generateAuthenticatedRoute,
+  generateCapabilitiesLib,
+  generateCapabilitiesPageComponent,
+  generateCapabilitiesRoute,
+  generateCapabilityContextComponent,
+  generateEnvFile,
+  generateGitignore,
+  generateGroupsPageComponent,
+  generateGroupsRoute,
+  generateIndexRoute,
+  generateOrgsPageComponent,
+  generateOrgsRoute,
+  generatePackageJson,
+  generateRootRoute,
+  generateRouterLib,
+  generateSnapshotConfig,
+  generateSnapshotLib,
+  generateTsConfig,
+  generateUserAuditLogPageComponent,
+  generateUserAuditLogRoute,
+  generateUserDetailPageComponent,
+  generateUserDetailRoute,
+  generateUserSessionsPageComponent,
+  generateUserSessionsRoute,
+  generateUsersPageComponent,
+  generateUsersRoute,
+  generateViteConfig,
+  generateWebhookDetailPageComponent,
+  generateWebhookDetailRoute,
+  generateWebhooksPageComponent,
+  generateWebhooksRoute,
+} from "./templates/admin";
 import type { AdminScaffoldConfig } from "./types";
 import { exec } from "./utils";
-import {
-  generatePackageJson,
-  generateTsConfig,
-  generateViteConfig,
-  generateEnvFile,
-  generateSnapshotConfig,
-  generateGitignore,
-  generateCapabilitiesLib,
-  generateSnapshotLib,
-  generateRouterLib,
-  generateAdminLayoutComponent,
-  generateCapabilityContextComponent,
-  generateUsersPageComponent,
-  generateUserDetailPageComponent,
-  generateUserSessionsPageComponent,
-  generateUserAuditLogPageComponent,
-  generateAuditLogPageComponent,
-  generateGroupsPageComponent,
-  generateOrgsPageComponent,
-  generateCapabilitiesPageComponent,
-  generateRootRoute,
-  generateIndexRoute,
-  generateAuthenticatedRoute,
-  generateUsersRoute,
-  generateUserDetailRoute,
-  generateUserSessionsRoute,
-  generateUserAuditLogRoute,
-  generateAuditLogRoute,
-  generateGroupsRoute,
-  generateOrgsRoute,
-  generateCapabilitiesRoute,
-  generateWebhooksPageComponent,
-  generateWebhookDetailPageComponent,
-  generateWebhooksRoute,
-  generateWebhookDetailRoute,
-} from "./templates/admin";
 
-export async function scaffoldAdmin(
-  config: AdminScaffoldConfig,
-): Promise<void> {
+export async function scaffoldAdmin(config: AdminScaffoldConfig): Promise<void> {
   const outDir = config.dir;
 
   async function write(relPath: string, content: string): Promise<void> {
@@ -67,86 +65,38 @@ export async function scaffoldAdmin(
   await write("src/lib/capabilities.ts", generateCapabilitiesLib());
 
   // Source: components
-  await write(
-    "src/components/admin/AdminLayout.tsx",
-    generateAdminLayoutComponent(),
-  );
-  await write(
-    "src/components/admin/CapabilityGate.tsx",
-    generateCapabilityContextComponent(),
-  );
+  await write("src/components/admin/AdminLayout.tsx", generateAdminLayoutComponent());
+  await write("src/components/admin/CapabilityGate.tsx", generateCapabilityContextComponent());
 
   // Source: pages
   await write("src/pages/admin/UsersPage.tsx", generateUsersPageComponent());
-  await write(
-    "src/pages/admin/UserDetailPage.tsx",
-    generateUserDetailPageComponent(),
-  );
-  await write(
-    "src/pages/admin/UserSessionsPage.tsx",
-    generateUserSessionsPageComponent(),
-  );
-  await write(
-    "src/pages/admin/UserAuditLogPage.tsx",
-    generateUserAuditLogPageComponent(),
-  );
-  await write(
-    "src/pages/admin/AuditLogPage.tsx",
-    generateAuditLogPageComponent(),
-  );
+  await write("src/pages/admin/UserDetailPage.tsx", generateUserDetailPageComponent());
+  await write("src/pages/admin/UserSessionsPage.tsx", generateUserSessionsPageComponent());
+  await write("src/pages/admin/UserAuditLogPage.tsx", generateUserAuditLogPageComponent());
+  await write("src/pages/admin/AuditLogPage.tsx", generateAuditLogPageComponent());
   await write("src/pages/admin/GroupsPage.tsx", generateGroupsPageComponent());
   await write("src/pages/admin/OrgsPage.tsx", generateOrgsPageComponent());
-  await write(
-    "src/pages/admin/CapabilitiesPage.tsx",
-    generateCapabilitiesPageComponent(),
-  );
+  await write("src/pages/admin/CapabilitiesPage.tsx", generateCapabilitiesPageComponent());
 
   // Source: routes
   await write("src/routes/__root.tsx", generateRootRoute());
   await write("src/routes/index.tsx", generateIndexRoute());
   await write("src/routes/_authenticated.tsx", generateAuthenticatedRoute());
   await write("src/routes/_authenticated/users.tsx", generateUsersRoute());
-  await write(
-    "src/routes/_authenticated/users.$userId.tsx",
-    generateUserDetailRoute(),
-  );
-  await write(
-    "src/routes/_authenticated/users.$userId.sessions.tsx",
-    generateUserSessionsRoute(),
-  );
-  await write(
-    "src/routes/_authenticated/users.$userId.audit-log.tsx",
-    generateUserAuditLogRoute(),
-  );
-  await write(
-    "src/routes/_authenticated/audit-log.tsx",
-    generateAuditLogRoute(),
-  );
+  await write("src/routes/_authenticated/users.$userId.tsx", generateUserDetailRoute());
+  await write("src/routes/_authenticated/users.$userId.sessions.tsx", generateUserSessionsRoute());
+  await write("src/routes/_authenticated/users.$userId.audit-log.tsx", generateUserAuditLogRoute());
+  await write("src/routes/_authenticated/audit-log.tsx", generateAuditLogRoute());
   await write("src/routes/_authenticated/groups.tsx", generateGroupsRoute());
   await write("src/routes/_authenticated/orgs.tsx", generateOrgsRoute());
-  await write(
-    "src/routes/_authenticated/capabilities.tsx",
-    generateCapabilitiesRoute(),
-  );
+  await write("src/routes/_authenticated/capabilities.tsx", generateCapabilitiesRoute());
 
   // Webhook admin pages (optional)
   if (config.webhookAdminPages) {
-    await write(
-      "src/pages/admin/WebhooksPage.tsx",
-      generateWebhooksPageComponent(),
-    );
-    await write(
-      "src/pages/admin/WebhookDetailPage.tsx",
-      generateWebhookDetailPageComponent(),
-    );
-    await write(
-      "src/routes/_authenticated/webhooks.tsx",
-      generateWebhooksRoute(),
-    );
-    await write(
-      "src/routes/_authenticated/webhooks.$endpointId.tsx",
-      generateWebhookDetailRoute(),
-    );
+    await write("src/pages/admin/WebhooksPage.tsx", generateWebhooksPageComponent());
+    await write("src/pages/admin/WebhookDetailPage.tsx", generateWebhookDetailPageComponent());
+    await write("src/routes/_authenticated/webhooks.tsx", generateWebhooksRoute());
+    await write("src/routes/_authenticated/webhooks.$endpointId.tsx", generateWebhookDetailRoute());
   }
 
   // Placeholder directories
@@ -172,8 +122,7 @@ export async function scaffoldAdmin(
       s.stop("Git repository initialised");
     } catch (err) {
       s.stop("Git init failed");
-      const stderr = (err as NodeJS.ErrnoException & { stderr?: Buffer })
-        ?.stderr;
+      const stderr = (err as NodeJS.ErrnoException & { stderr?: Buffer })?.stderr;
       log.warn(`Git init failed: ${stderr?.toString() ?? String(err)}`);
     }
   }

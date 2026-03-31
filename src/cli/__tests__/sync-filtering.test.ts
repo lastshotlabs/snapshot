@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import path from "node:path";
 import fs from "node:fs/promises";
 import os from "node:os";
+import path from "node:path";
+import { describe, expect, it } from "vitest";
 
 const silentLogger = {
   info: () => {},
@@ -15,9 +15,7 @@ const fixtureSchema = path.resolve(__dirname, "fixtures/multi-tag-schema.json");
 describe("runSync with include/exclude filtering", () => {
   it("generates only included paths", async () => {
     const { runSync } = await import("../sync");
-    const tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "snapshot-sync-filter-"),
-    );
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "snapshot-sync-filter-"));
 
     try {
       await runSync({
@@ -59,9 +57,7 @@ describe("runSync with include/exclude filtering", () => {
 
   it("excludes specified paths", async () => {
     const { runSync } = await import("../sync");
-    const tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "snapshot-sync-exclude-"),
-    );
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "snapshot-sync-exclude-"));
 
     try {
       await runSync({
@@ -85,9 +81,7 @@ describe("runSync with include/exclude filtering", () => {
 
   it("generates all files when no filters specified", async () => {
     const { runSync } = await import("../sync");
-    const tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "snapshot-sync-nofilter-"),
-    );
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "snapshot-sync-nofilter-"));
 
     try {
       await runSync({
@@ -110,9 +104,7 @@ describe("runSync with include/exclude filtering", () => {
 
   it("supports per-backend include/exclude via config", async () => {
     const { runSync } = await import("../sync");
-    const tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "snapshot-sync-backend-"),
-    );
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "snapshot-sync-backend-"));
 
     // Write a snapshot.config.json with per-backend filtering
     await fs.writeFile(

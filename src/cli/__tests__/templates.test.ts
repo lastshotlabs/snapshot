@@ -1,8 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+// ── index-html ─────────────────────────────────────────────────────────────────
 
+import { generateIndexHtml } from "../templates/index-html";
+// ── sidebar nav ───────────────────────────────────────────────────────────────
+
+import { generateRootLayoutSidebar, generateSidebarNav } from "../templates/layouts/sidebar";
+// ── auth-mfa-verify ────────────────────────────────────────────────────────────
+
+import { generateMfaVerifyPageComponent } from "../templates/pages/auth-mfa-verify";
 // ── auth-passkey-manage ────────────────────────────────────────────────────────
 
 import { generatePasskeyManagePageComponent } from "../templates/pages/auth-passkey-manage";
+import type { ScaffoldConfig } from "../types";
 
 describe("auth-passkey-manage", () => {
   it("uses credentials.credentials (not credentials.data)", () => {
@@ -17,11 +26,6 @@ describe("auth-passkey-manage", () => {
     expect(output).not.toContain("remove.mutate({ credentialId");
   });
 });
-
-// ── auth-mfa-verify ────────────────────────────────────────────────────────────
-
-import { generateMfaVerifyPageComponent } from "../templates/pages/auth-mfa-verify";
-import type { ScaffoldConfig } from "../types";
 
 describe("auth-mfa-verify", () => {
   const config: ScaffoldConfig = {
@@ -47,10 +51,6 @@ describe("auth-mfa-verify", () => {
     expect(output).toMatch(/includes\('emailOtp'\)/);
   });
 });
-
-// ── index-html ─────────────────────────────────────────────────────────────────
-
-import { generateIndexHtml } from "../templates/index-html";
 
 describe("index-html", () => {
   const baseConfig: ScaffoldConfig = {
@@ -82,13 +82,6 @@ describe("index-html", () => {
     expect(output).not.toMatch(/getItem\('theme'\)/);
   });
 });
-
-// ── sidebar nav ───────────────────────────────────────────────────────────────
-
-import {
-  generateSidebarNav,
-  generateRootLayoutSidebar,
-} from "../templates/layouts/sidebar";
 
 describe("sidebar nav", () => {
   it("does NOT contain '/settings'", () => {
@@ -173,10 +166,6 @@ describe("scaffold favicon", () => {
 
     await scaffold(config);
 
-    expect(
-      writtenPaths.some((p) =>
-        p.replace(/\\/g, "/").includes("public/vite.svg"),
-      ),
-    ).toBe(true);
+    expect(writtenPaths.some((p) => p.replace(/\\/g, "/").includes("public/vite.svg"))).toBe(true);
   });
 });

@@ -26,15 +26,59 @@ The bunshot backend framework has a config generation layer (manifest schema, ha
 
 # Architecture
 
-- **Factory pattern throughout** — `createSnapshot()` creates all hooks/managers/clients via closure. All sub-modules use factory functions.
-- **Peer dependencies** — React, TanStack Query, TanStack Router, jotai, @unhead/react. Optional: vite, zod.
-- **Build** — tsup with 4 entry points: library (ESM+CJS), CLI, CLI commands, Vite plugin.
+## Plugin System
+
+- `createSnapshot(coreConfig, ...plugins)` — core config is minimal (apiUrl, auth mode, query options). Everything else is a plugin.
+- Each plugin has: `name`, optional `dependencies`, `setup(ctx)` (phase 1: infra), `createHooks(ctx)` (phase 2: hooks), `teardown()`.
+- Cross-plugin communication via callback arrays (`ctx.callbacks.onLoginSuccess`, `ctx.callbacks.onLogoutSuccess`). No direct references between plugins.
+- Shared state via `ctx.shared` Map for plugin-to-plugin data handoff (e.g., auth stores MFA atom, SSE stores registry).
+- Return type is inferred from registered plugins via `SnapshotInstance<TPlugins>`.
+
+## Plugins
+
+- `createAuthPlugin(config)` — auth, MFA, OAuth, WebAuthn, account hooks, routing guards, error formatting
+- `createWsPlugin<TWSEvents>(config)` — WebSocket manager + hooks
+- `createSsePlugin(config)` — SSE managers per endpoint + hooks
+- `createCommunityPlugin(config?)` — community hooks + optional SSE notifications
+- `createWebhookPlugin()` — webhook hooks
+- `createPushPlugin(config?)` — push notification hook
+
+## Token System
+
+- 9 token categories: colors, spacing, radius, typography, shadows, breakpoints, zIndex, transitions, interactions
+- 3-level composition: full presets → category presets → value overrides
+- Extensible registries: `registerCategoryPreset()`, `registerFullPreset()`
+- CSS generation: `resolveTokensToCSS()` produces `:root` + `.dark` custom properties
+- React provider: `<TokenProvider tokens={...}>`
+
+## Component Library
+
+- Hierarchical component registry: `createComponentRegistry()`, `.extend()`, `.resolve(name)`
+- Every component has: `.tsx` implementation + `.schema.ts` Zod config schema
+- Data binding: `useDataSource(api, config)` fetches from endpoint refs, resolves `{ from: "id" }` params
+- Inter-component communication: page context via jotai atoms, `usePublishValue(id, value)`, `usePageValue(id)`
+- Action system: 9-action vocabulary (navigate, api, open-modal, refresh, etc.), `executeAction(action, ctx)`
+- ComponentRenderer: walks config tree, resolves from registry, renders React tree
+
+## Manifest & Generation
+
+- Frontend manifest schema: Zod-validated, covers theme, auth screens, nav, pages, features, api, ws, sse, environments
+- Constraint engine: 8 pluggable rules (data-source-required, nav-path-exists, component-id-unique, etc.)
+- Audit suite: 7 rules across accessibility, UX, performance, security, consistency
+- Handler registry: categories (component, layout, action, validator, formatter, guard), hierarchical composition
+- Generation pipeline: validate → constrain → audit → generate (pages, routes, theme CSS)
+
+## Build & Exports
+
+- **tsup** with entry points: library, tokens, components, manifest, generation, CLI, Vite plugin
+- **Peer dependencies** — React, TanStack Query, TanStack Router, jotai, @unhead/react, zod. Optional: vite.
 - **Tests** — vitest, node environment.
 
 # Subpath Exports
 
-- `@lastshotlabs/snapshot` — createSnapshot, hooks, types (existing)
-- `@lastshotlabs/snapshot/tokens` — design token system
-- `@lastshotlabs/snapshot/components` — component library + registry
-- `@lastshotlabs/snapshot/manifest` — manifest schema, constraints, audits, registry
-- `@lastshotlabs/snapshot/generation` — generator pipeline
+- `@lastshotlabs/snapshot` — createSnapshot, plugin factories, auth types, community/webhook types
+- `@lastshotlabs/snapshot/tokens` — token schema, presets, CSS generation, provider, utilities
+- `@lastshotlabs/snapshot/components` — registry, data binding, page context, actions, renderer
+- `@lastshotlabs/snapshot/manifest` — manifest schema, constraints, audits, handler registry
+- `@lastshotlabs/snapshot/generation` — generateApp pipeline, page/route/theme generators
+- `@lastshotlabs/snapshot/vite` — Vite plugin for schema sync

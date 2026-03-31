@@ -1,59 +1,61 @@
+import type { UseMutationResult } from "@tanstack/react-query";
 import { atom, useAtomValue } from "jotai";
 import type { WritableAtom } from "jotai";
-import type { UseMutationResult } from "@tanstack/react-query";
+import type { ApiError } from "../api/error";
+import { createAccountHooks } from "../auth/account-hooks";
 import { mergeContract } from "../auth/contract";
 import type { AuthContract } from "../auth/contract";
+import { createAuthErrorFormatter } from "../auth/error-format";
 import { createAuthHooks } from "../auth/hooks";
 import { createMfaHooks } from "../auth/mfa-hooks";
-import { createAccountHooks } from "../auth/account-hooks";
 import { createOAuthHooks } from "../auth/oauth-hooks";
+import type { TokenStorage } from "../auth/storage";
 import { createWebAuthnHooks } from "../auth/webauthn-hooks";
 import { createLoaders } from "../routing/loaders";
-import { createAuthErrorFormatter } from "../auth/error-format";
 import { isMfaChallenge } from "../types";
 import type {
+  AuthContractConfig,
+  AuthErrorConfig,
+  AuthErrorContext,
   AuthUser,
+  DeleteAccountBody,
+  ForgotPasswordBody,
   LoginResult,
   LoginVars,
   LogoutVars,
-  ForgotPasswordBody,
-  RegisterVars,
+  MagicLinkRequestBody,
+  MagicLinkVerifyBody,
   MfaChallenge,
-  MfaVerifyBody,
-  MfaSetupResponse,
-  MfaVerifySetupBody,
-  MfaVerifySetupResponse,
   MfaDisableBody,
-  MfaRecoveryCodesBody,
-  MfaRecoveryCodesResponse,
+  MfaEmailOtpDisableBody,
   MfaEmailOtpEnableResponse,
   MfaEmailOtpVerifySetupBody,
-  MfaEmailOtpDisableBody,
-  MfaResendBody,
   MfaMethod,
-  ResetPasswordBody,
-  VerifyEmailBody,
-  ResendVerificationBody,
-  SetPasswordBody,
-  DeleteAccountBody,
-  RefreshTokenBody,
-  RefreshTokenResponse,
-  Session,
+  MfaRecoveryCodesBody,
+  MfaRecoveryCodesResponse,
+  MfaResendBody,
+  MfaSetupResponse,
+  MfaVerifyBody,
+  MfaVerifySetupBody,
+  MfaVerifySetupResponse,
   OAuthProvider,
-  OAuthExchangeBody,
-  OAuthExchangeResponse,
-  WebAuthnRegisterOptionsResponse,
-  WebAuthnRegisterBody,
-  WebAuthnCredential,
   PasskeyLoginOptionsBody,
   PasskeyLoginOptionsResponse,
   PasskeyLoginVars,
-  AuthErrorContext,
-  AuthErrorConfig,
-  AuthContractConfig,
+  ReauthVerifyBody,
+  ReauthVerifyResponse,
+  RefreshTokenBody,
+  RefreshTokenResponse,
+  RegisterVars,
+  ResendVerificationBody,
+  ResetPasswordBody,
+  Session,
+  SetPasswordBody,
+  VerifyEmailBody,
+  WebAuthnCredential,
+  WebAuthnRegisterBody,
+  WebAuthnRegisterOptionsResponse,
 } from "../types";
-import type { ApiError } from "../api/error";
-import type { TokenStorage } from "../auth/storage";
 import type { SnapshotPlugin, SnapshotPluginContext } from "./types";
 
 // ── Auth plugin config ───────────────────────────────────────────────────────
@@ -74,11 +76,7 @@ export interface AuthPluginConfig {
 // ── Shared state ─────────────────────────────────────────────────────────────
 
 export interface AuthSharedState {
-  pendingMfaChallengeAtom: WritableAtom<
-    MfaChallenge | null,
-    [MfaChallenge | null],
-    void
-  >;
+  pendingMfaChallengeAtom: WritableAtom<MfaChallenge | null, [MfaChallenge | null], void>;
   contract: AuthContract;
   tokenStorage: TokenStorage;
 }
@@ -96,39 +94,19 @@ export interface AuthPluginHooks {
   useLogin: () => UseMutationResult<LoginResult, ApiError, LoginVars>;
   useLogout: () => UseMutationResult<void, ApiError, LogoutVars | void>;
   useRegister: () => UseMutationResult<AuthUser, ApiError, RegisterVars>;
-  useForgotPassword: () => UseMutationResult<
-    void,
-    ApiError,
-    ForgotPasswordBody
-  >;
+  useForgotPassword: () => UseMutationResult<void, ApiError, ForgotPasswordBody>;
 
   usePendingMfaChallenge: () => MfaChallenge | null;
-  useMfaVerify: () => UseMutationResult<
-    AuthUser,
-    ApiError,
-    Omit<MfaVerifyBody, "mfaToken">
-  >;
+  useMfaVerify: () => UseMutationResult<AuthUser, ApiError, Omit<MfaVerifyBody, "mfaToken">>;
   useMfaSetup: () => UseMutationResult<MfaSetupResponse, ApiError, void>;
-  useMfaVerifySetup: () => UseMutationResult<
-    MfaVerifySetupResponse,
-    ApiError,
-    MfaVerifySetupBody
-  >;
-  useMfaDisable: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    MfaDisableBody
-  >;
+  useMfaVerifySetup: () => UseMutationResult<MfaVerifySetupResponse, ApiError, MfaVerifySetupBody>;
+  useMfaDisable: () => UseMutationResult<{ message: string }, ApiError, MfaDisableBody>;
   useMfaRecoveryCodes: () => UseMutationResult<
     MfaRecoveryCodesResponse,
     ApiError,
     MfaRecoveryCodesBody
   >;
-  useMfaEmailOtpEnable: () => UseMutationResult<
-    MfaEmailOtpEnableResponse,
-    ApiError,
-    void
-  >;
+  useMfaEmailOtpEnable: () => UseMutationResult<MfaEmailOtpEnableResponse, ApiError, void>;
   useMfaEmailOtpVerifySetup: () => UseMutationResult<
     MfaVerifySetupResponse,
     ApiError,
@@ -139,11 +117,7 @@ export interface AuthPluginHooks {
     ApiError,
     MfaEmailOtpDisableBody
   >;
-  useMfaResend: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    MfaResendBody
-  >;
+  useMfaResend: () => UseMutationResult<{ message: string }, ApiError, MfaResendBody>;
   useMfaMethods: () => {
     methods: MfaMethod[] | null;
     isLoading: boolean;
@@ -151,53 +125,27 @@ export interface AuthPluginHooks {
   };
   isMfaChallenge: typeof isMfaChallenge;
 
-  useResetPassword: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    ResetPasswordBody
-  >;
-  useVerifyEmail: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    VerifyEmailBody
-  >;
+  useResetPassword: () => UseMutationResult<{ message: string }, ApiError, ResetPasswordBody>;
+  useVerifyEmail: () => UseMutationResult<{ message: string }, ApiError, VerifyEmailBody>;
   useResendVerification: () => UseMutationResult<
     { message: string },
     ApiError,
     ResendVerificationBody
   >;
-  useSetPassword: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    SetPasswordBody
-  >;
-  useDeleteAccount: () => UseMutationResult<
-    void,
-    ApiError,
-    DeleteAccountBody | void
-  >;
-  useCancelDeletion: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    void
-  >;
-  useRefreshToken: () => UseMutationResult<
-    RefreshTokenResponse,
-    ApiError,
-    RefreshTokenBody | void
-  >;
+  useSetPassword: () => UseMutationResult<{ message: string }, ApiError, SetPasswordBody>;
+  useDeleteAccount: () => UseMutationResult<void, ApiError, DeleteAccountBody | void>;
+  useCancelDeletion: () => UseMutationResult<{ message: string }, ApiError, void>;
+  useRefreshToken: () => UseMutationResult<RefreshTokenResponse, ApiError, RefreshTokenBody | void>;
   useSessions: () => {
     sessions: Session[];
     isLoading: boolean;
     isError: boolean;
   };
   useRevokeSession: () => UseMutationResult<void, ApiError, string>;
+  useMagicLinkRequest: () => UseMutationResult<{ message: string }, ApiError, MagicLinkRequestBody>;
+  useMagicLinkVerify: () => UseMutationResult<{ token: string }, ApiError, MagicLinkVerifyBody>;
+  useReauthVerify: () => UseMutationResult<ReauthVerifyResponse, ApiError, ReauthVerifyBody>;
 
-  useOAuthExchange: () => UseMutationResult<
-    OAuthExchangeResponse,
-    ApiError,
-    OAuthExchangeBody
-  >;
   useOAuthUnlink: () => UseMutationResult<void, ApiError, OAuthProvider>;
   getOAuthUrl: (provider: OAuthProvider) => string;
   getLinkUrl: (provider: OAuthProvider) => string;
@@ -207,36 +155,20 @@ export interface AuthPluginHooks {
     ApiError,
     void
   >;
-  useWebAuthnRegister: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    WebAuthnRegisterBody
-  >;
+  useWebAuthnRegister: () => UseMutationResult<{ message: string }, ApiError, WebAuthnRegisterBody>;
   useWebAuthnCredentials: () => {
     credentials: WebAuthnCredential[];
     isLoading: boolean;
     isError: boolean;
   };
-  useWebAuthnRemoveCredential: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    string
-  >;
-  useWebAuthnDisable: () => UseMutationResult<
-    { message: string },
-    ApiError,
-    void
-  >;
+  useWebAuthnRemoveCredential: () => UseMutationResult<{ message: string }, ApiError, string>;
+  useWebAuthnDisable: () => UseMutationResult<{ message: string }, ApiError, void>;
   usePasskeyLoginOptions: () => UseMutationResult<
     PasskeyLoginOptionsResponse,
     ApiError,
     PasskeyLoginOptionsBody
   >;
-  usePasskeyLogin: () => UseMutationResult<
-    LoginResult,
-    ApiError,
-    PasskeyLoginVars
-  >;
+  usePasskeyLogin: () => UseMutationResult<LoginResult, ApiError, PasskeyLoginVars>;
 
   formatAuthError: (error: ApiError, context: AuthErrorContext) => string;
   protectedBeforeLoad: (ctx: {
@@ -279,8 +211,9 @@ export function createAuthPlugin(
     },
 
     createHooks(ctx: SnapshotPluginContext): AuthPluginHooks {
-      const { pendingMfaChallengeAtom, contract, tokenStorage } =
-        ctx.shared.get(AUTH_SHARED_KEY) as AuthSharedState;
+      const { pendingMfaChallengeAtom, contract, tokenStorage } = ctx.shared.get(
+        AUTH_SHARED_KEY,
+      ) as AuthSharedState;
 
       // Cross-plugin callback dispatch — invokes all registered listeners
       const onLoginSuccess = () => {
@@ -335,10 +268,7 @@ export function createAuthPlugin(
 
       const oauthHooks = createOAuthHooks({
         api: ctx.api,
-        storage: tokenStorage,
-        config: { auth: ctx.config.auth, homePath: pluginConfig.homePath },
         contract,
-        onLoginSuccess,
       });
 
       const webAuthnHooks = createWebAuthnHooks({

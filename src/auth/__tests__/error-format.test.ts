@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { formatAuthError, createAuthErrorFormatter } from "../error-format";
-import type { AuthErrorContext, AuthErrorConfig } from "../../types";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { AuthErrorConfig, AuthErrorContext } from "../../types";
+import { createAuthErrorFormatter, formatAuthError } from "../error-format";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -29,9 +29,7 @@ describe("formatAuthError", () => {
   it("returns default safe message per context on non-localhost", () => {
     const err = makeError("email not found");
     expect(formatAuthError(err, "login")).toBe("Invalid email or password.");
-    expect(formatAuthError(err, "register")).toBe(
-      "Unable to create account. Please try again.",
-    );
+    expect(formatAuthError(err, "register")).toBe("Unable to create account. Please try again.");
     expect(formatAuthError(err, "forgot-password")).toBe(
       "If that email is registered, you'll receive a password reset link shortly.",
     );
@@ -60,9 +58,7 @@ describe("formatAuthError", () => {
     const config: AuthErrorConfig = {
       messages: { login: "Wrong credentials, try again" },
     };
-    expect(formatAuthError(err, "login", config)).toBe(
-      "Wrong credentials, try again",
-    );
+    expect(formatAuthError(err, "login", config)).toBe("Wrong credentials, try again");
     // Other contexts still use defaults
     expect(formatAuthError(err, "register", config)).toBe(
       "Unable to create account. Please try again.",

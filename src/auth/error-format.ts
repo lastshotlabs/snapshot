@@ -1,22 +1,18 @@
 import type { ApiError } from "../api/error";
-import type { AuthErrorContext, AuthErrorConfig } from "../types";
+import type { AuthErrorConfig, AuthErrorContext } from "../types";
 
 const DEFAULT_MESSAGES: Record<AuthErrorContext, string> = {
   login: "Invalid email or password.",
   register: "Unable to create account. Please try again.",
-  "forgot-password":
-    "If that email is registered, you'll receive a password reset link shortly.",
+  "forgot-password": "If that email is registered, you'll receive a password reset link shortly.",
   "reset-password": "Unable to reset password. The link may have expired.",
-  "verify-email":
-    "Unable to verify email. The link may have expired or already been used.",
+  "verify-email": "Unable to verify email. The link may have expired or already been used.",
 };
 
 function isLocalhost(): boolean {
   if (typeof window === "undefined") return false;
   const { hostname } = window.location;
-  return (
-    hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1"
-  );
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 }
 
 export function formatAuthError(

@@ -35,9 +35,7 @@ export function validatePlugins(plugins: readonly SnapshotPlugin[]): void {
  * Ensures every plugin runs after its dependencies.
  * Throws on circular dependencies.
  */
-export function sortPlugins(
-  plugins: readonly SnapshotPlugin[],
-): SnapshotPlugin[] {
+export function sortPlugins(plugins: readonly SnapshotPlugin[]): SnapshotPlugin[] {
   validatePlugins(plugins);
 
   const byName = new Map(plugins.map((p) => [p.name, p]));
@@ -48,9 +46,7 @@ export function sortPlugins(
   function visit(plugin: SnapshotPlugin): void {
     if (visited.has(plugin.name)) return;
     if (visiting.has(plugin.name)) {
-      throw new Error(
-        `[snapshot] Circular plugin dependency detected: "${plugin.name}"`,
-      );
+      throw new Error(`[snapshot] Circular plugin dependency detected: "${plugin.name}"`);
     }
 
     visiting.add(plugin.name);
