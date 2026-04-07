@@ -104,9 +104,46 @@ export type {
 } from "./ui/actions/index";
 
 // Manifest & Rendering
-// export { ManifestApp } from './ui/manifest/manifest-app'
-// export { PageRenderer } from './ui/manifest/page-renderer'
-// export { manifestSchema } from './ui/manifest/schema'
+export {
+  registerComponent,
+  getRegisteredComponent,
+  getRegisteredTypes,
+  registerComponentSchema,
+  getComponentSchema,
+  componentConfigSchema,
+  baseComponentConfigSchema,
+  fromRefSchema,
+  ComponentRenderer,
+} from "./ui/manifest/index";
+export type {
+  ConfigDrivenComponent,
+  ComponentConfig,
+} from "./ui/manifest/index";
+
+// Components — Modal
+export {
+  ModalComponent,
+  modalConfigSchema,
+} from "./ui/components/overlay/modal";
+export type { ModalConfig } from "./ui/components/overlay/modal";
+
+// Components — Drawer
+export {
+  DrawerComponent,
+  drawerConfigSchema,
+} from "./ui/components/overlay/drawer";
+export type { DrawerConfig } from "./ui/components/overlay/drawer";
+
+// Components — Tabs
+export {
+  TabsComponent,
+  tabsConfigSchema,
+  tabConfigSchema,
+} from "./ui/components/navigation/tabs";
+export type { TabsConfig, TabConfig } from "./ui/components/navigation/tabs";
+
+// Register all built-in components
+import "./ui/components/register";
 
 // Headless Hooks (Level 2/3)
 // export { useDataTable } from './ui/hooks/use-data-table'
