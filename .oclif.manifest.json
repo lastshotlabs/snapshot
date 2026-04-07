@@ -49,12 +49,7 @@
       "strict": true,
       "enableJsonFlag": false,
       "isESM": true,
-      "relativePath": [
-        "dist",
-        "cli",
-        "commands",
-        "init.js"
-      ]
+      "relativePath": ["dist", "cli", "commands", "init.js"]
     },
     "sync": {
       "aliases": [],
@@ -131,12 +126,7 @@
       "strict": true,
       "enableJsonFlag": false,
       "isESM": true,
-      "relativePath": [
-        "dist",
-        "cli",
-        "commands",
-        "sync.js"
-      ]
+      "relativePath": ["dist", "cli", "commands", "sync.js"]
     }
   },
   "version": "0.1.0"

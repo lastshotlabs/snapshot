@@ -200,6 +200,15 @@ export type {
   UseDataTableResult,
 } from "./ui/components/data/data-table/types";
 
+// DetailCard
+export { DetailCard } from "./ui/components/data/detail-card/index";
+export { detailCardConfigSchema } from "./ui/components/data/detail-card/schema";
+export { useDetailCard } from "./ui/components/data/detail-card/hook";
+export type {
+  DetailCardConfig,
+  UseDetailCardResult,
+} from "./ui/components/data/detail-card/types";
+
 // Headless Hooks (Level 2/3)
 // export { useDataTable } from './ui/hooks/use-data-table'
 // export { useAutoForm } from './ui/hooks/use-auto-form'
