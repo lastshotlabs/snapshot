@@ -1,83 +1,83 @@
-import fs from 'node:fs/promises'
-import path from 'node:path'
-import { createHash } from 'node:crypto'
-import { log, spinner } from '@clack/prompts'
+import fs from "node:fs/promises";
+import path from "node:path";
+import { createHash } from "node:crypto";
+import { log, spinner } from "@clack/prompts";
 
 // ─── OpenAPI 3.x types (minimal) ─────────────────────────────────────────────
 
 interface OpenAPISchema {
-  openapi: string
-  info: { title: string; version: string }
-  paths: Record<string, PathItem>
+  openapi: string;
+  info: { title: string; version: string };
+  paths: Record<string, PathItem>;
   components?: {
-    schemas?: Record<string, SchemaObject>
-  }
+    schemas?: Record<string, SchemaObject>;
+  };
 }
 
 interface PathItem {
-  get?: Operation
-  post?: Operation
-  put?: Operation
-  patch?: Operation
-  delete?: Operation
-  parameters?: Parameter[]
+  get?: Operation;
+  post?: Operation;
+  put?: Operation;
+  patch?: Operation;
+  delete?: Operation;
+  parameters?: Parameter[];
 }
 
 interface Operation {
-  operationId?: string
-  tags?: string[]
-  summary?: string
-  description?: string
-  parameters?: Parameter[]
-  requestBody?: RequestBody
-  responses: Record<string, ResponseObj>
-  deprecated?: boolean
+  operationId?: string;
+  tags?: string[];
+  summary?: string;
+  description?: string;
+  parameters?: Parameter[];
+  requestBody?: RequestBody;
+  responses: Record<string, ResponseObj>;
+  deprecated?: boolean;
 }
 
 interface Parameter {
-  name: string
-  in: 'path' | 'query' | 'header' | 'cookie'
-  required?: boolean
-  schema?: SchemaObject
-  description?: string
+  name: string;
+  in: "path" | "query" | "header" | "cookie";
+  required?: boolean;
+  schema?: SchemaObject;
+  description?: string;
 }
 
 interface RequestBody {
-  required?: boolean
-  description?: string
-  content: Record<string, { schema?: SchemaObject }>
+  required?: boolean;
+  description?: string;
+  content: Record<string, { schema?: SchemaObject }>;
 }
 
 interface ResponseObj {
-  description?: string
-  content?: Record<string, { schema?: SchemaObject }>
+  description?: string;
+  content?: Record<string, { schema?: SchemaObject }>;
 }
 
 interface SchemaObject {
-  type?: string | string[]
-  properties?: Record<string, SchemaObject>
-  items?: SchemaObject
-  required?: string[]
-  $ref?: string
-  oneOf?: SchemaObject[]
-  anyOf?: SchemaObject[]
-  allOf?: SchemaObject[]
-  enum?: (string | number | boolean | null)[]
-  additionalProperties?: boolean | SchemaObject
-  nullable?: boolean
-  description?: string
-  format?: string
-  title?: string
-  default?: unknown
+  type?: string | string[];
+  properties?: Record<string, SchemaObject>;
+  items?: SchemaObject;
+  required?: string[];
+  $ref?: string;
+  oneOf?: SchemaObject[];
+  anyOf?: SchemaObject[];
+  allOf?: SchemaObject[];
+  enum?: (string | number | boolean | null)[];
+  additionalProperties?: boolean | SchemaObject;
+  nullable?: boolean;
+  description?: string;
+  format?: string;
+  title?: string;
+  default?: unknown;
 }
 
 // ─── Logger ───────────────────────────────────────────────────────────────────
 
 export interface SyncLogger {
-  info(msg: string): void
-  success(msg: string): void
-  warn(msg: string): void
-  error(msg: string): void
+  info(msg: string): void;
+  success(msg: string): void;
+  warn(msg: string): void;
+  error(msg: string): void;
 }
 
 const clackLogger: SyncLogger = {
@@ -85,172 +85,212 @@ const clackLogger: SyncLogger = {
   success: (msg) => log.success(msg),
   warn: (msg) => log.warn(msg),
   error: (msg) => log.error(msg),
-}
+};
 
 export const consoleLogger: SyncLogger = {
   info: (msg) => console.log(`[snapshot] ${msg}`),
   success: (msg) => console.log(`[snapshot] ✓ ${msg}`),
   warn: (msg) => console.warn(`[snapshot] ⚠ ${msg}`),
   error: (msg) => console.error(`[snapshot] ✗ ${msg}`),
-}
+};
 
 // ─── Sync config ──────────────────────────────────────────────────────────────
 
 export interface BackendConfig {
-  name?: string
-  apiUrl?: string
-  filePath?: string
-  apiDir?: string
-  hooksDir?: string
-  typesPath?: string
-  snapshotImport?: string
-  zod?: boolean
+  name?: string;
+  apiUrl?: string;
+  filePath?: string;
+  apiDir?: string;
+  hooksDir?: string;
+  typesPath?: string;
+  snapshotImport?: string;
+  zod?: boolean;
 }
 
 interface SyncConfig {
   // Flat single-backend fields (backward compat)
-  apiDir?: string
-  hooksDir?: string
-  typesPath?: string
-  snapshotImport?: string
+  apiDir?: string;
+  hooksDir?: string;
+  typesPath?: string;
+  snapshotImport?: string;
   // Multi-backend
-  backends?: BackendConfig[]
+  backends?: BackendConfig[];
 }
 
 async function readSyncConfig(cwd: string): Promise<SyncConfig> {
   try {
-    const content = await fs.readFile(path.join(cwd, 'snapshot.config.json'), 'utf8')
-    return JSON.parse(content) as SyncConfig
-  } catch { /* not found */ }
+    const content = await fs.readFile(
+      path.join(cwd, "snapshot.config.json"),
+      "utf8",
+    );
+    return JSON.parse(content) as SyncConfig;
+  } catch {
+    /* not found */
+  }
   try {
-    const content = await fs.readFile(path.join(cwd, 'package.json'), 'utf8')
-    const pkg = JSON.parse(content) as { snapshot?: SyncConfig }
-    return pkg.snapshot ?? {}
-  } catch { /* not found */ }
-  return {}
+    const content = await fs.readFile(path.join(cwd, "package.json"), "utf8");
+    const pkg = JSON.parse(content) as { snapshot?: SyncConfig };
+    return pkg.snapshot ?? {};
+  } catch {
+    /* not found */
+  }
+  return {};
 }
 
 /** Derives default output dirs for a backend, using name-based paths in multi-backend mode. */
 function resolveBackendDirs(
   cwd: string,
   backend: BackendConfig,
-  globalOpts: Pick<SyncOptions, 'apiDir' | 'hooksDir' | 'typesPath' | 'snapshotImport'>,
+  globalOpts: Pick<
+    SyncOptions,
+    "apiDir" | "hooksDir" | "typesPath" | "snapshotImport"
+  >,
   isMulti: boolean,
-): { apiDir: string; hooksDir: string; typesFile: string; snapshotImport: string } {
-  let defaultApiDir: string
-  let defaultHooksDir: string
-  let defaultTypesPath: string
+): {
+  apiDir: string;
+  hooksDir: string;
+  typesFile: string;
+  snapshotImport: string;
+} {
+  let defaultApiDir: string;
+  let defaultHooksDir: string;
+  let defaultTypesPath: string;
 
   if (isMulti && backend.name) {
-    const slug = backend.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-    defaultApiDir = `src/api/${slug}`
-    defaultHooksDir = `src/hooks/${slug}`
-    defaultTypesPath = `src/types/${slug}-api.ts`
+    const slug = backend.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    defaultApiDir = `src/api/${slug}`;
+    defaultHooksDir = `src/hooks/${slug}`;
+    defaultTypesPath = `src/types/${slug}-api.ts`;
   } else {
-    defaultApiDir = 'src/api'
-    defaultHooksDir = 'src/hooks/api'
-    defaultTypesPath = 'src/types/api.ts'
+    defaultApiDir = "src/api";
+    defaultHooksDir = "src/hooks/api";
+    defaultTypesPath = "src/types/api.ts";
   }
 
   return {
-    apiDir: path.resolve(cwd, backend.apiDir ?? globalOpts.apiDir ?? defaultApiDir),
-    hooksDir: path.resolve(cwd, backend.hooksDir ?? globalOpts.hooksDir ?? defaultHooksDir),
-    typesFile: path.resolve(cwd, backend.typesPath ?? globalOpts.typesPath ?? defaultTypesPath),
-    snapshotImport: backend.snapshotImport ?? globalOpts.snapshotImport ?? '@lib/snapshot',
-  }
+    apiDir: path.resolve(
+      cwd,
+      backend.apiDir ?? globalOpts.apiDir ?? defaultApiDir,
+    ),
+    hooksDir: path.resolve(
+      cwd,
+      backend.hooksDir ?? globalOpts.hooksDir ?? defaultHooksDir,
+    ),
+    typesFile: path.resolve(
+      cwd,
+      backend.typesPath ?? globalOpts.typesPath ?? defaultTypesPath,
+    ),
+    snapshotImport:
+      backend.snapshotImport ?? globalOpts.snapshotImport ?? "@lib/snapshot",
+  };
 }
 
 /** Computes a relative import path from a source directory to a target file/dir, stripping `.ts` extension. */
 function toRelativeImport(fromDir: string, toPath: string): string {
-  let rel = path.relative(fromDir, toPath).replace(/\\/g, '/')
-  if (!rel.startsWith('.')) rel = './' + rel
-  return rel.replace(/\.ts$/, '')
+  let rel = path.relative(fromDir, toPath).replace(/\\/g, "/");
+  if (!rel.startsWith(".")) rel = "./" + rel;
+  return rel.replace(/\.ts$/, "");
 }
 
 // ─── Schema hash ──────────────────────────────────────────────────────────────
 
 function schemaHash(schema: OpenAPISchema): string {
-  return createHash('sha1').update(JSON.stringify(schema)).digest('hex')
+  return createHash("sha1").update(JSON.stringify(schema)).digest("hex");
 }
 
 // ─── Schema → TypeScript ──────────────────────────────────────────────────────
 
 function refName(ref: string): string {
-  return ref.replace('#/components/schemas/', '')
+  return ref.replace("#/components/schemas/", "");
 }
 
 function collectRefs(schema: SchemaObject): Set<string> {
-  const refs = new Set<string>()
+  const refs = new Set<string>();
   if (schema.$ref) {
-    refs.add(refName(schema.$ref))
-    return refs
+    refs.add(refName(schema.$ref));
+    return refs;
   }
-  if (schema.items) collectRefs(schema.items).forEach((r) => refs.add(r))
+  if (schema.items) collectRefs(schema.items).forEach((r) => refs.add(r));
   if (schema.properties) {
     for (const prop of Object.values(schema.properties)) {
-      collectRefs(prop).forEach((r) => refs.add(r))
+      collectRefs(prop).forEach((r) => refs.add(r));
     }
   }
   for (const arr of [schema.oneOf, schema.anyOf, schema.allOf]) {
-    if (arr) for (const s of arr) collectRefs(s).forEach((r) => refs.add(r))
+    if (arr) for (const s of arr) collectRefs(s).forEach((r) => refs.add(r));
   }
-  return refs
+  return refs;
 }
 
 function schemaToTs(schema: SchemaObject, depth = 0): string {
-  if (schema.$ref) return refName(schema.$ref)
+  if (schema.$ref) return refName(schema.$ref);
 
   if (schema.enum) {
     return schema.enum
-      .map((v) => (v === null ? 'null' : typeof v === 'string' ? `'${v}'` : String(v)))
-      .join(' | ')
+      .map((v) =>
+        v === null ? "null" : typeof v === "string" ? `'${v}'` : String(v),
+      )
+      .join(" | ");
   }
 
   if (schema.allOf) {
-    const parts = schema.allOf.map((s) => schemaToTs(s, depth))
-    return parts.length === 1 ? parts[0]! : parts.join(' & ')
+    const parts = schema.allOf.map((s) => schemaToTs(s, depth));
+    return parts.length === 1 ? parts[0]! : parts.join(" & ");
   }
 
   if (schema.oneOf || schema.anyOf) {
-    return (schema.oneOf ?? schema.anyOf)!.map((s) => schemaToTs(s, depth)).join(' | ')
+    return (schema.oneOf ?? schema.anyOf)!
+      .map((s) => schemaToTs(s, depth))
+      .join(" | ");
   }
 
-  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : []
-  const isNullable = schema.nullable === true || types.includes('null')
-  const baseTypes = types.filter((t) => t !== 'null')
+  const types = Array.isArray(schema.type)
+    ? schema.type
+    : schema.type
+      ? [schema.type]
+      : [];
+  const isNullable = schema.nullable === true || types.includes("null");
+  const baseTypes = types.filter((t) => t !== "null");
 
-  let base: string
+  let base: string;
 
-  if (baseTypes.includes('array') || schema.items) {
-    const item = schema.items ? schemaToTs(schema.items, depth) : 'unknown'
-    base = item.includes(' | ') ? `(${item})[]` : `${item}[]`
-  } else if (baseTypes.includes('object') || schema.properties || schema.additionalProperties) {
+  if (baseTypes.includes("array") || schema.items) {
+    const item = schema.items ? schemaToTs(schema.items, depth) : "unknown";
+    base = item.includes(" | ") ? `(${item})[]` : `${item}[]`;
+  } else if (
+    baseTypes.includes("object") ||
+    schema.properties ||
+    schema.additionalProperties
+  ) {
     if (schema.properties && Object.keys(schema.properties).length > 0) {
-      const ind = '  '.repeat(depth + 1)
-      const close = '  '.repeat(depth)
+      const ind = "  ".repeat(depth + 1);
+      const close = "  ".repeat(depth);
       const lines = Object.entries(schema.properties).map(([key, val]) => {
-        const opt = schema.required?.includes(key) ? '' : '?'
-        const valNull = val.nullable ? ' | null' : ''
-        const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key
-        return `${ind}${safeProp}${opt}: ${schemaToTs(val, depth + 1)}${valNull}`
-      })
-      base = `{\n${lines.join('\n')}\n${close}}`
-    } else if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
-      base = `Record<string, ${schemaToTs(schema.additionalProperties, depth)}>`
+        const opt = schema.required?.includes(key) ? "" : "?";
+        const valNull = val.nullable ? " | null" : "";
+        const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key;
+        return `${ind}${safeProp}${opt}: ${schemaToTs(val, depth + 1)}${valNull}`;
+      });
+      base = `{\n${lines.join("\n")}\n${close}}`;
+    } else if (
+      schema.additionalProperties &&
+      typeof schema.additionalProperties === "object"
+    ) {
+      base = `Record<string, ${schemaToTs(schema.additionalProperties, depth)}>`;
     } else {
-      base = 'Record<string, unknown>'
+      base = "Record<string, unknown>";
     }
-  } else if (baseTypes.includes('string')) {
-    base = 'string'
-  } else if (baseTypes.includes('integer') || baseTypes.includes('number')) {
-    base = 'number'
-  } else if (baseTypes.includes('boolean')) {
-    base = 'boolean'
+  } else if (baseTypes.includes("string")) {
+    base = "string";
+  } else if (baseTypes.includes("integer") || baseTypes.includes("number")) {
+    base = "number";
+  } else if (baseTypes.includes("boolean")) {
+    base = "boolean";
   } else {
-    base = 'unknown'
+    base = "unknown";
   }
 
-  return isNullable ? `${base} | null` : base
+  return isNullable ? `${base} | null` : base;
 }
 
 // ─── Schema → Zod ─────────────────────────────────────────────────────────────
@@ -261,71 +301,89 @@ function schemaToZod(
   visiting = new Set<string>(),
 ): string {
   if (schema.$ref) {
-    const name = refName(schema.$ref)
-    if (visiting.has(name)) return 'z.unknown()' // cycle guard
-    const resolved = componentSchemas[name]
+    const name = refName(schema.$ref);
+    if (visiting.has(name)) return "z.unknown()"; // cycle guard
+    const resolved = componentSchemas[name];
     return resolved
       ? schemaToZod(resolved, componentSchemas, new Set([...visiting, name]))
-      : 'z.unknown()'
+      : "z.unknown()";
   }
 
   if (schema.enum) {
-    const allStrings = schema.enum.every((v) => typeof v === 'string')
+    const allStrings = schema.enum.every((v) => typeof v === "string");
     if (allStrings && schema.enum.length > 0) {
-      return `z.enum([${schema.enum.map((v) => `'${v}'`).join(', ')}])`
+      return `z.enum([${schema.enum.map((v) => `'${v}'`).join(", ")}])`;
     }
     const literals = schema.enum.map((v) =>
-      v === null ? 'z.null()' : `z.literal(${typeof v === 'string' ? `'${v}'` : String(v)})`,
-    )
-    return `z.union([${literals.join(', ')}])`
+      v === null
+        ? "z.null()"
+        : `z.literal(${typeof v === "string" ? `'${v}'` : String(v)})`,
+    );
+    return `z.union([${literals.join(", ")}])`;
   }
 
   if (schema.allOf) {
-    if (schema.allOf.length === 1) return schemaToZod(schema.allOf[0]!, componentSchemas, visiting)
-    const parts = schema.allOf.map((s) => schemaToZod(s, componentSchemas, visiting))
-    return parts.reduce((acc, cur) => `z.intersection(${acc}, ${cur})`)
+    if (schema.allOf.length === 1)
+      return schemaToZod(schema.allOf[0]!, componentSchemas, visiting);
+    const parts = schema.allOf.map((s) =>
+      schemaToZod(s, componentSchemas, visiting),
+    );
+    return parts.reduce((acc, cur) => `z.intersection(${acc}, ${cur})`);
   }
 
   if (schema.oneOf || schema.anyOf) {
-    const arr = (schema.oneOf ?? schema.anyOf)!
-    return `z.union([${arr.map((s) => schemaToZod(s, componentSchemas, visiting)).join(', ')}])`
+    const arr = (schema.oneOf ?? schema.anyOf)!;
+    return `z.union([${arr.map((s) => schemaToZod(s, componentSchemas, visiting)).join(", ")}])`;
   }
 
-  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : []
-  const isNullable = schema.nullable === true || types.includes('null')
-  const baseTypes = types.filter((t) => t !== 'null')
+  const types = Array.isArray(schema.type)
+    ? schema.type
+    : schema.type
+      ? [schema.type]
+      : [];
+  const isNullable = schema.nullable === true || types.includes("null");
+  const baseTypes = types.filter((t) => t !== "null");
 
-  let base: string
+  let base: string;
 
-  if (baseTypes.includes('array') || schema.items) {
-    const item = schema.items ? schemaToZod(schema.items, componentSchemas, visiting) : 'z.unknown()'
-    base = `z.array(${item})`
-  } else if (baseTypes.includes('object') || schema.properties || schema.additionalProperties) {
+  if (baseTypes.includes("array") || schema.items) {
+    const item = schema.items
+      ? schemaToZod(schema.items, componentSchemas, visiting)
+      : "z.unknown()";
+    base = `z.array(${item})`;
+  } else if (
+    baseTypes.includes("object") ||
+    schema.properties ||
+    schema.additionalProperties
+  ) {
     if (schema.properties && Object.keys(schema.properties).length > 0) {
       const props = Object.entries(schema.properties).map(([key, val]) => {
-        const zodVal = schemaToZod(val, componentSchemas, visiting)
-        const nullable = val.nullable ? '.nullable()' : ''
-        const opt = schema.required?.includes(key) ? '' : '.optional()'
-        const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key
-        return `  ${safeProp}: ${zodVal}${nullable}${opt},`
-      })
-      base = `z.object({\n${props.join('\n')}\n})`
-    } else if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
-      base = `z.record(z.string(), ${schemaToZod(schema.additionalProperties, componentSchemas, visiting)})`
+        const zodVal = schemaToZod(val, componentSchemas, visiting);
+        const nullable = val.nullable ? ".nullable()" : "";
+        const opt = schema.required?.includes(key) ? "" : ".optional()";
+        const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key;
+        return `  ${safeProp}: ${zodVal}${nullable}${opt},`;
+      });
+      base = `z.object({\n${props.join("\n")}\n})`;
+    } else if (
+      schema.additionalProperties &&
+      typeof schema.additionalProperties === "object"
+    ) {
+      base = `z.record(z.string(), ${schemaToZod(schema.additionalProperties, componentSchemas, visiting)})`;
     } else {
-      base = 'z.record(z.string(), z.unknown())'
+      base = "z.record(z.string(), z.unknown())";
     }
-  } else if (baseTypes.includes('string')) {
-    base = 'z.string()'
-  } else if (baseTypes.includes('integer') || baseTypes.includes('number')) {
-    base = 'z.number()'
-  } else if (baseTypes.includes('boolean')) {
-    base = 'z.boolean()'
+  } else if (baseTypes.includes("string")) {
+    base = "z.string()";
+  } else if (baseTypes.includes("integer") || baseTypes.includes("number")) {
+    base = "z.number()";
+  } else if (baseTypes.includes("boolean")) {
+    base = "z.boolean()";
   } else {
-    base = 'z.unknown()'
+    base = "z.unknown()";
   }
 
-  return isNullable ? `${base}.nullable()` : base
+  return isNullable ? `${base}.nullable()` : base;
 }
 
 // ─── Types file ───────────────────────────────────────────────────────────────
@@ -335,167 +393,193 @@ function generateTypesContent(
   hasPaginated: boolean,
 ): string {
   const lines: string[] = [
-    '// Generated by bunx snapshot sync. Do not edit manually.',
-    '',
-  ]
+    "// Generated by bunx snapshot sync. Do not edit manually.",
+    "",
+  ];
 
   if (hasPaginated) {
-    lines.push(`export interface PaginatedResponse<T> {`)
-    lines.push(`  data: T[]`)
-    lines.push(`  total: number`)
-    lines.push(`  page: number`)
-    lines.push(`  perPage: number`)
-    lines.push(`}`)
-    lines.push('')
+    lines.push(`export interface PaginatedResponse<T> {`);
+    lines.push(`  data: T[]`);
+    lines.push(`  total: number`);
+    lines.push(`  page: number`);
+    lines.push(`  perPage: number`);
+    lines.push(`}`);
+    lines.push("");
   }
 
   for (const [name, schema] of Object.entries(schemas)) {
-    if (schema.description) lines.push(`/** ${schema.description} */`)
+    if (schema.description) lines.push(`/** ${schema.description} */`);
 
     const isObject =
-      schema.type === 'object' ||
+      schema.type === "object" ||
       !!schema.properties ||
-      (Array.isArray(schema.type) && (schema.type as string[]).includes('object'))
+      (Array.isArray(schema.type) &&
+        (schema.type as string[]).includes("object"));
     const isComplex =
-      schema.enum || schema.oneOf || schema.anyOf || schema.allOf || schema.$ref
+      schema.enum ||
+      schema.oneOf ||
+      schema.anyOf ||
+      schema.allOf ||
+      schema.$ref;
 
     if (isObject && !isComplex) {
-      const ind = '  '
+      const ind = "  ";
       const props = schema.properties
         ? Object.entries(schema.properties).map(([key, val]) => {
-            const opt = schema.required?.includes(key) ? '' : '?'
-            const valNull = val.nullable ? ' | null' : ''
-            const comment = val.description ? `  /** ${val.description} */\n` : ''
-            const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key
-            return `${comment}${ind}${safeProp}${opt}: ${schemaToTs(val, 1)}${valNull}`
+            const opt = schema.required?.includes(key) ? "" : "?";
+            const valNull = val.nullable ? " | null" : "";
+            const comment = val.description
+              ? `  /** ${val.description} */\n`
+              : "";
+            const safeProp = /[^a-zA-Z0-9_$]/.test(key) ? `'${key}'` : key;
+            return `${comment}${ind}${safeProp}${opt}: ${schemaToTs(val, 1)}${valNull}`;
           })
-        : []
-      if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
-        lines.push(`export interface ${name} extends Record<string, unknown> {`)
+        : [];
+      if (
+        schema.additionalProperties &&
+        typeof schema.additionalProperties === "object"
+      ) {
+        lines.push(
+          `export interface ${name} extends Record<string, unknown> {`,
+        );
       } else {
-        lines.push(`export interface ${name} {`)
+        lines.push(`export interface ${name} {`);
       }
-      lines.push(...props)
-      lines.push('}')
+      lines.push(...props);
+      lines.push("}");
     } else {
-      lines.push(`export type ${name} = ${schemaToTs(schema)}`)
+      lines.push(`export type ${name} = ${schemaToTs(schema)}`);
     }
 
-    lines.push('')
+    lines.push("");
   }
 
-  return lines.join('\n')
+  return lines.join("\n");
 }
 
 // ─── Hook generation ──────────────────────────────────────────────────────────
 
 interface TaggedOp {
-  method: string
-  pathStr: string
-  operation: Operation
-  pathLevelParams: Parameter[]
+  method: string;
+  pathStr: string;
+  operation: Operation;
+  pathLevelParams: Parameter[];
 }
 
 /** Converts a kebab-case or hyphenated string to camelCase. */
 function toCamelCase(str: string): string {
-  return str.replace(/[-_]([a-zA-Z0-9])/g, (_, c: string) => c.toUpperCase())
+  return str.replace(/[-_]([a-zA-Z0-9])/g, (_, c: string) => c.toUpperCase());
 }
 
 /** Derives the name for the plain async function export. operationId sanitized to camelCase when present. */
-function plainFnName(method: string, pathStr: string, operationId?: string): string {
-  if (operationId) return toCamelCase(operationId)
+function plainFnName(
+  method: string,
+  pathStr: string,
+  operationId?: string,
+): string {
+  if (operationId) return toCamelCase(operationId);
   const segs = pathStr
-    .split('/')
+    .split("/")
     .filter(Boolean)
     .map((seg) => {
-      if (seg.startsWith('{') && seg.endsWith('}')) {
-        const n = seg.slice(1, -1)
-        return 'By' + n.charAt(0).toUpperCase() + n.slice(1)
+      if (seg.startsWith("{") && seg.endsWith("}")) {
+        const n = seg.slice(1, -1);
+        return "By" + n.charAt(0).toUpperCase() + n.slice(1);
       }
-      const camel = toCamelCase(seg)
-      return camel.charAt(0).toUpperCase() + camel.slice(1)
-    })
-  return method + segs.join('')
+      const camel = toCamelCase(seg);
+      return camel.charAt(0).toUpperCase() + camel.slice(1);
+    });
+  return method + segs.join("");
 }
 
 function hookName(method: string, fnName: string): string {
-  const isQuery = method === 'get'
-  const pascal = fnName.charAt(0).toUpperCase() + fnName.slice(1)
-  if (pascal.endsWith('Query') || pascal.endsWith('Mutation')) return `use${pascal}`
-  return `use${pascal}${isQuery ? 'Query' : 'Mutation'}`
+  const isQuery = method === "get";
+  const pascal = fnName.charAt(0).toUpperCase() + fnName.slice(1);
+  if (pascal.endsWith("Query") || pascal.endsWith("Mutation"))
+    return `use${pascal}`;
+  return `use${pascal}${isQuery ? "Query" : "Mutation"}`;
 }
 
-function successSchema(responses: Record<string, ResponseObj>): SchemaObject | null {
-  for (const code of ['200', '201', '202']) {
-    const r = responses[code]
-    if (r?.content?.['application/json']?.schema) return r.content['application/json'].schema
+function successSchema(
+  responses: Record<string, ResponseObj>,
+): SchemaObject | null {
+  for (const code of ["200", "201", "202"]) {
+    const r = responses[code];
+    if (r?.content?.["application/json"]?.schema)
+      return r.content["application/json"].schema;
   }
-  return null
+  return null;
 }
 
 function requestBodySchema(rb?: RequestBody): SchemaObject | null {
-  if (!rb) return null
-  return rb.content?.['application/json']?.schema ?? null
+  if (!rb) return null;
+  return rb.content?.["application/json"]?.schema ?? null;
 }
 
 /** Returns the non-JSON content type if the request body exists but has no application/json entry. */
 function nonJsonBodyContentType(rb?: RequestBody): string | null {
-  if (!rb?.content) return null
-  if ('application/json' in rb.content) return null
-  return Object.keys(rb.content)[0] ?? null
+  if (!rb?.content) return null;
+  if ("application/json" in rb.content) return null;
+  return Object.keys(rb.content)[0] ?? null;
 }
 
 /** Template for plain async fns — bare arg names, no `params.` prefix */
 function rawPathTemplate(pathStr: string, pathParams: Parameter[]): string {
-  if (pathParams.length === 0) return `'${pathStr}'`
-  const tpl = pathStr.replace(/\{([^}]+)\}/g, (_, n) => `\${${n}}`)
-  return `\`${tpl}\``
+  if (pathParams.length === 0) return `'${pathStr}'`;
+  const tpl = pathStr.replace(/\{([^}]+)\}/g, (_, n) => `\${${n}}`);
+  return `\`${tpl}\``;
 }
 
 /** URL template with pagination query string appended (always a template literal) */
-function paginatedUrlTemplate(pathStr: string, pathParams: Parameter[]): string {
+function paginatedUrlTemplate(
+  pathStr: string,
+  pathParams: Parameter[],
+): string {
   if (pathParams.length === 0) {
-    return `\`${pathStr}?page=\${page}&perPage=\${perPage}\``
+    return `\`${pathStr}?page=\${page}&perPage=\${perPage}\``;
   }
-  const tpl = pathStr.replace(/\{([^}]+)\}/g, (_, n) => `\${${n}}`)
-  return `\`${tpl}?page=\${page}&perPage=\${perPage}\``
+  const tpl = pathStr.replace(/\{([^}]+)\}/g, (_, n) => `\${${n}}`);
+  return `\`${tpl}?page=\${page}&perPage=\${perPage}\``;
 }
 
 function queryKey(pathStr: string, queryParams: Parameter[] = []): string {
   const parts = pathStr
-    .split('/')
+    .split("/")
     .filter(Boolean)
     .map((seg) =>
-      seg.startsWith('{') && seg.endsWith('}')
+      seg.startsWith("{") && seg.endsWith("}")
         ? `params.${seg.slice(1, -1)}`
         : `'${seg}'`,
-    )
+    );
   for (const p of queryParams) {
-    parts.push(`params.${p.name}`)
+    parts.push(`params.${p.name}`);
   }
-  return `[${parts.join(', ')}]`
+  return `[${parts.join(", ")}]`;
 }
 
 function paramType(p: Parameter): string {
-  return schemaToTs(p.schema ?? { type: 'string' })
+  return schemaToTs(p.schema ?? { type: "string" });
 }
 
 /** Detects bunshot's pagination envelope: { data: T[], total: number, ... } */
-function isPaginatedSchema(schema: SchemaObject): { itemSchema: SchemaObject } | null {
-  if (!schema.properties) return null
-  const { data, total } = schema.properties
+function isPaginatedSchema(
+  schema: SchemaObject,
+): { itemSchema: SchemaObject } | null {
+  if (!schema.properties) return null;
+  const { data, total } = schema.properties;
   // Accept array type OR items presence (handles $ref-typed arrays without explicit type)
-  if (!data || (!data.items && data.type !== 'array')) return null
-  if (!total || !['integer', 'number'].includes(total.type as string)) return null
-  const itemSchema = data.items ?? {} // empty schema → schemaToTs returns 'unknown'
-  return { itemSchema }
+  if (!data || (!data.items && data.type !== "array")) return null;
+  if (!total || !["integer", "number"].includes(total.type as string))
+    return null;
+  const itemSchema = data.items ?? {}; // empty schema → schemaToTs returns 'unknown'
+  return { itemSchema };
 }
 
 interface GeneratedOperation {
-  apiCode: string    // plain async function (no React deps)
-  hookCode: string   // TanStack Query hook
-  fnNames: string[]  // exported function names (for import in hooks file)
-  isPaginated: boolean
+  apiCode: string; // plain async function (no React deps)
+  hookCode: string; // TanStack Query hook
+  fnNames: string[]; // exported function names (for import in hooks file)
+  isPaginated: boolean;
 }
 
 /**
@@ -511,265 +595,300 @@ function generateOperation(
   componentSchemas: Record<string, SchemaObject>,
   zod?: boolean,
 ): GeneratedOperation {
-  const isQuery = method === 'get'
+  const isQuery = method === "get";
 
   const allParams = [
     ...pathLevelParams,
     ...(op.parameters ?? []).filter(
-      (p) => !pathLevelParams.find((pp) => pp.name === p.name && pp.in === p.in),
+      (p) =>
+        !pathLevelParams.find((pp) => pp.name === p.name && pp.in === p.in),
     ),
-  ]
-  const pathParams = allParams.filter((p) => p.in === 'path')
-  const queryParams = allParams.filter((p) => p.in === 'query')
-  const hasPathParams = pathParams.length > 0
-  const hasQueryParams = queryParams.length > 0
+  ];
+  const pathParams = allParams.filter((p) => p.in === "path");
+  const queryParams = allParams.filter((p) => p.in === "query");
+  const hasPathParams = pathParams.length > 0;
+  const hasQueryParams = queryParams.length > 0;
 
-  const fnName = plainFnName(method, pathStr, op.operationId)
-  const name = hookName(method, fnName)
+  const fnName = plainFnName(method, pathStr, op.operationId);
+  const name = hookName(method, fnName);
 
-  const successSch = successSchema(op.responses)
-  const paginatedResult = isQuery && successSch ? isPaginatedSchema(successSch) : null
-  const isPaginated = paginatedResult !== null
+  const successSch = successSchema(op.responses);
+  const paginatedResult =
+    isQuery && successSch ? isPaginatedSchema(successSch) : null;
+  const isPaginated = paginatedResult !== null;
 
   const respType = (() => {
     if (isPaginated && paginatedResult) {
-      return `PaginatedResponse<${schemaToTs(paginatedResult.itemSchema)}>`
+      return `PaginatedResponse<${schemaToTs(paginatedResult.itemSchema)}>`;
     }
-    return successSch ? schemaToTs(successSch) : 'void'
-  })()
+    return successSch ? schemaToTs(successSch) : "void";
+  })();
 
   const bodyType = (() => {
-    const s = requestBodySchema(op.requestBody)
-    return s ? schemaToTs(s) : 'void'
-  })()
+    const s = requestBodySchema(op.requestBody);
+    return s ? schemaToTs(s) : "void";
+  })();
 
-  const hasBody = bodyType !== 'void'
+  const hasBody = bodyType !== "void";
 
-  const nonJsonType = nonJsonBodyContentType(op.requestBody)
-  const jsdocParts: string[] = []
-  if (op.deprecated) jsdocParts.push('@deprecated')
-  if (op.summary) jsdocParts.push(op.summary)
-  if (nonJsonType) jsdocParts.push(`NOTE: request body is ${nonJsonType} — body typed as void`)
-  const jsdoc = jsdocParts.length > 0 ? `/** ${jsdocParts.join(' — ')} */\n` : ''
+  const nonJsonType = nonJsonBodyContentType(op.requestBody);
+  const jsdocParts: string[] = [];
+  if (op.deprecated) jsdocParts.push("@deprecated");
+  if (op.summary) jsdocParts.push(op.summary);
+  if (nonJsonType)
+    jsdocParts.push(
+      `NOTE: request body is ${nonJsonType} — body typed as void`,
+    );
+  const jsdoc =
+    jsdocParts.length > 0 ? `/** ${jsdocParts.join(" — ")} */\n` : "";
 
   // ── Paginated GET ─────────────────────────────────────────────────────────
   if (isPaginated) {
-    const pathArgsStr = pathParams.map((p) => `${p.name}: ${paramType(p)}`).join(', ')
-    const pathArgsWithComma = pathArgsStr ? `${pathArgsStr}, ` : ''
-    const paginatedUrl = paginatedUrlTemplate(pathStr, pathParams)
+    const pathArgsStr = pathParams
+      .map((p) => `${p.name}: ${paramType(p)}`)
+      .join(", ");
+    const pathArgsWithComma = pathArgsStr ? `${pathArgsStr}, ` : "";
+    const paginatedUrl = paginatedUrlTemplate(pathStr, pathParams);
 
     const plainFn =
       `${jsdoc}export const ${fnName} = (${pathArgsWithComma}page = 1, perPage = 20): Promise<${respType}> =>\n` +
-      `  api.get<${respType}>(${paginatedUrl})`
+      `  api.get<${respType}>(${paginatedUrl})`;
 
     const pathKeyParts = pathStr
-      .split('/')
+      .split("/")
       .filter(Boolean)
       .map((seg) =>
-        seg.startsWith('{') && seg.endsWith('}') ? `params.${seg.slice(1, -1)}` : `'${seg}'`,
-      )
-    const paginatedQueryKey = `[${[...pathKeyParts, 'params.page ?? 1', 'params.perPage ?? 20'].join(', ')}]`
+        seg.startsWith("{") && seg.endsWith("}")
+          ? `params.${seg.slice(1, -1)}`
+          : `'${seg}'`,
+      );
+    const paginatedQueryKey = `[${[...pathKeyParts, "params.page ?? 1", "params.perPage ?? 20"].join(", ")}]`;
 
     const paramsType = hasPathParams
-      ? `{ ${pathParams.map((p) => `${p.name}: ${paramType(p)}`).join('; ')}; page?: number; perPage?: number }`
-      : `{ page?: number; perPage?: number }`
+      ? `{ ${pathParams.map((p) => `${p.name}: ${paramType(p)}`).join("; ")}; page?: number; perPage?: number }`
+      : `{ page?: number; perPage?: number }`;
 
-    const callPathArgs = pathParams.map((p) => `params.${p.name}`).join(', ')
+    const callPathArgs = pathParams.map((p) => `params.${p.name}`).join(", ");
     const callAllArgs = callPathArgs
       ? `${callPathArgs}, params.page ?? 1, params.perPage ?? 20`
-      : `params.page ?? 1, params.perPage ?? 20`
+      : `params.page ?? 1, params.perPage ?? 20`;
 
-    const hookLines: string[] = []
-    if (jsdocParts.length > 0) hookLines.push(`/** ${jsdocParts.join(' — ')} */`)
-    hookLines.push(`export function ${name}(`)
-    hookLines.push(`  params: ${paramsType} = {},`)
+    const hookLines: string[] = [];
+    if (jsdocParts.length > 0)
+      hookLines.push(`/** ${jsdocParts.join(" — ")} */`);
+    hookLines.push(`export function ${name}(`);
+    hookLines.push(`  params: ${paramsType} = {},`);
     hookLines.push(
       `  options?: Omit<UseQueryOptions<${respType}, ApiError>, 'queryKey' | 'queryFn'>`,
-    )
-    hookLines.push(`) {`)
-    hookLines.push(`  return useQuery({`)
-    hookLines.push(`    queryKey: ${paginatedQueryKey},`)
-    hookLines.push(`    queryFn: () => ${fnName}(${callAllArgs}),`)
-    hookLines.push(`    ...options,`)
-    hookLines.push(`  })`)
-    hookLines.push(`}`)
+    );
+    hookLines.push(`) {`);
+    hookLines.push(`  return useQuery({`);
+    hookLines.push(`    queryKey: ${paginatedQueryKey},`);
+    hookLines.push(`    queryFn: () => ${fnName}(${callAllArgs}),`);
+    hookLines.push(`    ...options,`);
+    hookLines.push(`  })`);
+    hookLines.push(`}`);
 
-    return { apiCode: plainFn, hookCode: hookLines.join('\n'), fnNames: [fnName], isPaginated: true }
+    return {
+      apiCode: plainFn,
+      hookCode: hookLines.join("\n"),
+      fnNames: [fnName],
+      isPaginated: true,
+    };
   }
 
   // ── Plain function (layer 1) ──────────────────────────────────────────────
   const fnArgParts = [
     ...pathParams.map((p) => `${p.name}: ${paramType(p)}`),
     ...(!isQuery && hasBody ? [`body: ${bodyType}`] : []),
-    ...queryParams.map((p) => `${p.name}${p.required ? '' : '?'}: ${paramType(p)}`),
-  ]
-  const fnArgs = fnArgParts.join(', ')
+    ...queryParams.map(
+      (p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`,
+    ),
+  ];
+  const fnArgs = fnArgParts.join(", ");
 
-  let plainFn: string
+  let plainFn: string;
   if (hasQueryParams) {
-    const pathTpl = pathStr.replace(/\{([^}]+)\}/g, (_, n) => `\${${n}}`)
+    const pathTpl = pathStr.replace(/\{([^}]+)\}/g, (_, n) => `\${${n}}`);
     const qSetLines = queryParams.map((p) =>
       p.required
         ? `  _q.set('${p.name}', String(${p.name}))`
         : `  if (${p.name} != null) _q.set('${p.name}', String(${p.name}))`,
-    )
-    const urlExpr = `\`${pathTpl}?\${_q}\``
-    const needsBody = method !== 'get' && method !== 'delete'
+    );
+    const urlExpr = `\`${pathTpl}?\${_q}\``;
+    const needsBody = method !== "get" && method !== "delete";
     const returnCall = hasBody
       ? `return api.${method}<${respType}>(${urlExpr}, body)`
       : needsBody
         ? `return api.${method}<${respType}>(${urlExpr}, undefined)`
-        : `return api.${method}<${respType}>(${urlExpr})`
+        : `return api.${method}<${respType}>(${urlExpr})`;
     plainFn =
       `${jsdoc}export const ${fnName} = (${fnArgs}): Promise<${respType}> => {\n` +
       `  const _q = new URLSearchParams()\n` +
-      qSetLines.join('\n') + '\n' +
+      qSetLines.join("\n") +
+      "\n" +
       `  ${returnCall}\n` +
-      `}`
+      `}`;
   } else {
-    const rawUrl = rawPathTemplate(pathStr, pathParams)
-    const needsBody = method !== 'get' && method !== 'delete'
+    const rawUrl = rawPathTemplate(pathStr, pathParams);
+    const needsBody = method !== "get" && method !== "delete";
     const apiCall = hasBody
       ? `api.${method}<${respType}>(${rawUrl}, body)`
       : needsBody
         ? `api.${method}<${respType}>(${rawUrl}, undefined)`
-        : `api.${method}<${respType}>(${rawUrl})`
-    plainFn = `${jsdoc}export const ${fnName} = (${fnArgs}): Promise<${respType}> =>\n  ${apiCall}`
+        : `api.${method}<${respType}>(${rawUrl})`;
+    plainFn = `${jsdoc}export const ${fnName} = (${fnArgs}): Promise<${respType}> =>\n  ${apiCall}`;
   }
 
   // ── Hook (layer 2) ────────────────────────────────────────────────────────
-  const lines: string[] = []
-  if (jsdocParts.length > 0) lines.push(`/** ${jsdocParts.join(' — ')} */`)
+  const lines: string[] = [];
+  if (jsdocParts.length > 0) lines.push(`/** ${jsdocParts.join(" — ")} */`);
 
   if (isQuery) {
     const paramFields = [
       ...pathParams.map((p) => `${p.name}: ${paramType(p)}`),
-      ...queryParams.map((p) => `${p.name}${p.required ? '' : '?'}: ${paramType(p)}`),
-    ]
-    const hasAnyParams = paramFields.length > 0
-    const allParamsOptional = pathParams.length === 0 && queryParams.every((p) => !p.required)
-    const paramsDefault = hasAnyParams && allParamsOptional ? ' = {}' : ''
-    const paramsArg = hasAnyParams ? `params: { ${paramFields.join('; ')} }${paramsDefault}, ` : ''
+      ...queryParams.map(
+        (p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`,
+      ),
+    ];
+    const hasAnyParams = paramFields.length > 0;
+    const allParamsOptional =
+      pathParams.length === 0 && queryParams.every((p) => !p.required);
+    const paramsDefault = hasAnyParams && allParamsOptional ? " = {}" : "";
+    const paramsArg = hasAnyParams
+      ? `params: { ${paramFields.join("; ")} }${paramsDefault}, `
+      : "";
     const allCallArgs = [
       ...pathParams.map((p) => `params.${p.name}`),
       ...queryParams.map((p) => `params.${p.name}`),
-    ]
-    lines.push(`export function ${name}(`)
+    ];
+    lines.push(`export function ${name}(`);
     lines.push(
       `  ${paramsArg}options?: Omit<UseQueryOptions<${respType}, ApiError>, 'queryKey' | 'queryFn'>`,
-    )
-    lines.push(`) {`)
-    lines.push(`  return useQuery({`)
-    lines.push(`    queryKey: ${queryKey(pathStr, queryParams)},`)
+    );
+    lines.push(`) {`);
+    lines.push(`  return useQuery({`);
+    lines.push(`    queryKey: ${queryKey(pathStr, queryParams)},`);
     if (allCallArgs.length > 0) {
-      lines.push(`    queryFn: () => ${fnName}(${allCallArgs.join(', ')}),`)
+      lines.push(`    queryFn: () => ${fnName}(${allCallArgs.join(", ")}),`);
     } else {
-      lines.push(`    queryFn: ${fnName},`)
+      lines.push(`    queryFn: ${fnName},`);
     }
-    lines.push(`    ...options,`)
-    lines.push(`  })`)
-    lines.push(`}`)
+    lines.push(`    ...options,`);
+    lines.push(`  })`);
+    lines.push(`}`);
   } else {
-    let variablesType: string
-    let mutationFnExpr: string
+    let variablesType: string;
+    let mutationFnExpr: string;
 
     const mutationQueryFields = queryParams.map(
-      (p) => `${p.name}${p.required ? '' : '?'}: ${paramType(p)}`,
-    )
-    const queryCallArgs = queryParams.map((p) => `vars.${p.name}`)
+      (p) => `${p.name}${p.required ? "" : "?"}: ${paramType(p)}`,
+    );
+    const queryCallArgs = queryParams.map((p) => `vars.${p.name}`);
 
     if (!hasPathParams && !hasBody && !hasQueryParams) {
-      variablesType = 'void'
-      mutationFnExpr = `() => ${fnName}()`
+      variablesType = "void";
+      mutationFnExpr = `() => ${fnName}()`;
     } else if (!hasPathParams && !hasQueryParams) {
-      variablesType = bodyType
-      mutationFnExpr = fnName
+      variablesType = bodyType;
+      mutationFnExpr = fnName;
     } else {
       const fields = [
         ...pathParams.map((p) => `${p.name}: ${paramType(p)}`),
         ...(hasBody ? [`body: ${bodyType}`] : []),
         ...mutationQueryFields,
-      ]
-      variablesType = `{ ${fields.join('; ')} }`
+      ];
+      variablesType = `{ ${fields.join("; ")} }`;
       const callArgs = [
         ...pathParams.map((p) => `vars.${p.name}`),
         ...(hasBody ? [`vars.body`] : []),
         ...queryCallArgs,
-      ]
-      mutationFnExpr = `(vars) => ${fnName}(${callArgs.join(', ')})`
+      ];
+      mutationFnExpr = `(vars) => ${fnName}(${callArgs.join(", ")})`;
     }
 
-    lines.push(`export function ${name}(`)
+    lines.push(`export function ${name}(`);
     lines.push(
       `  options?: UseMutationOptions<${respType}, ApiError, ${variablesType}> & { invalidateKeys?: QueryKey[] }`,
-    )
-    lines.push(`) {`)
-    lines.push(`  const { invalidateKeys, ...mutationOptions } = options ?? {}`)
-    lines.push(`  const queryClient = useQueryClient()`)
-    lines.push(`  return useMutation({`)
-    lines.push(`    mutationFn: ${mutationFnExpr},`)
-    lines.push(`    ...mutationOptions,`)
-    lines.push(`    onSuccess: (...args) => {`)
-    lines.push(`      invalidateKeys?.forEach((key) => queryClient.invalidateQueries({ queryKey: key }))`)
-    lines.push(`      mutationOptions.onSuccess?.(...args)`)
-    lines.push(`    },`)
-    lines.push(`  })`)
-    lines.push(`}`)
+    );
+    lines.push(`) {`);
+    lines.push(
+      `  const { invalidateKeys, ...mutationOptions } = options ?? {}`,
+    );
+    lines.push(`  const queryClient = useQueryClient()`);
+    lines.push(`  return useMutation({`);
+    lines.push(`    mutationFn: ${mutationFnExpr},`);
+    lines.push(`    ...mutationOptions,`);
+    lines.push(`    onSuccess: (...args) => {`);
+    lines.push(
+      `      invalidateKeys?.forEach((key) => queryClient.invalidateQueries({ queryKey: key }))`,
+    );
+    lines.push(`      mutationOptions.onSuccess?.(...args)`);
+    lines.push(`    },`);
+    lines.push(`  })`);
+    lines.push(`}`);
   }
 
   // ── Zod schema (mutations with JSON body only) — lives in the api file ──────
-  const apiParts: string[] = [plainFn]
+  const apiParts: string[] = [plainFn];
 
   if (!isQuery && hasBody && zod) {
-    const bodySchema = requestBodySchema(op.requestBody)
+    const bodySchema = requestBodySchema(op.requestBody);
     if (bodySchema) {
-      const zodSchemaName = `${fnName}Schema`
-      const zodTypeName = fnName.charAt(0).toUpperCase() + fnName.slice(1) + 'Input'
-      const zodSchemaStr = schemaToZod(bodySchema, componentSchemas)
+      const zodSchemaName = `${fnName}Schema`;
+      const zodTypeName =
+        fnName.charAt(0).toUpperCase() + fnName.slice(1) + "Input";
+      const zodSchemaStr = schemaToZod(bodySchema, componentSchemas);
       apiParts.push(
         `/** Zod schema for ${name} form validation */\n` +
           `export const ${zodSchemaName} = ${zodSchemaStr}\n` +
           `export type ${zodTypeName} = z.infer<typeof ${zodSchemaName}>`,
-      )
+      );
     }
   }
 
-  return { apiCode: apiParts.join('\n\n'), hookCode: lines.join('\n'), fnNames: [fnName], isPaginated: false }
+  return {
+    apiCode: apiParts.join("\n\n"),
+    hookCode: lines.join("\n"),
+    fnNames: [fnName],
+    isPaginated: false,
+  };
 }
 
 interface ImportPaths {
-  snapshotImport: string   // e.g. '@lib/snapshot'
-  typesRelForApi: string   // e.g. '../types/api'
-  typesRelForHooks: string // e.g. '../../types/api'
-  apiRelBase: string       // e.g. '../../api'
+  snapshotImport: string; // e.g. '@lib/snapshot'
+  typesRelForApi: string; // e.g. '../types/api'
+  typesRelForHooks: string; // e.g. '../../types/api'
+  apiRelBase: string; // e.g. '../../api'
 }
 
 interface GeneratedTagFiles {
-  apiContent: string
-  hooksContent: string
-  hasPaginated: boolean
+  apiContent: string;
+  hooksContent: string;
+  hasPaginated: boolean;
 }
 
 function collectTagRefs(ops: TaggedOp[]): Set<string> {
-  const typeRefs = new Set<string>()
+  const typeRefs = new Set<string>();
   for (const { operation, pathLevelParams } of ops) {
-    const s = successSchema(operation.responses)
-    if (s) collectRefs(s).forEach((r) => typeRefs.add(r))
-    const b = requestBodySchema(operation.requestBody)
-    if (b) collectRefs(b).forEach((r) => typeRefs.add(r))
+    const s = successSchema(operation.responses);
+    if (s) collectRefs(s).forEach((r) => typeRefs.add(r));
+    const b = requestBodySchema(operation.requestBody);
+    if (b) collectRefs(b).forEach((r) => typeRefs.add(r));
     for (const p of [...(operation.parameters ?? []), ...pathLevelParams]) {
-      if (p.schema) collectRefs(p.schema).forEach((r) => typeRefs.add(r))
+      if (p.schema) collectRefs(p.schema).forEach((r) => typeRefs.add(r));
     }
   }
   // Paginated item schemas
   for (const { method, operation } of ops) {
-    if (method !== 'get') continue
-    const s = successSchema(operation.responses)
-    if (!s) continue
-    const pagResult = isPaginatedSchema(s)
-    if (pagResult) collectRefs(pagResult.itemSchema).forEach((r) => typeRefs.add(r))
+    if (method !== "get") continue;
+    const s = successSchema(operation.responses);
+    if (!s) continue;
+    const pagResult = isPaginatedSchema(s);
+    if (pagResult)
+      collectRefs(pagResult.itemSchema).forEach((r) => typeRefs.add(r));
   }
-  return typeRefs
+  return typeRefs;
 }
 
 function generateTagFiles(
@@ -780,131 +899,148 @@ function generateTagFiles(
   importPaths?: ImportPaths,
 ): GeneratedTagFiles {
   const ip: ImportPaths = importPaths ?? {
-    snapshotImport: '@lib/snapshot',
-    typesRelForApi: '../types/api',
-    typesRelForHooks: '../../types/api',
-    apiRelBase: '../../api',
-  }
+    snapshotImport: "@lib/snapshot",
+    typesRelForApi: "../types/api",
+    typesRelForHooks: "../../types/api",
+    apiRelBase: "../../api",
+  };
 
-  const typeRefs = collectTagRefs(ops)
+  const typeRefs = collectTagRefs(ops);
 
   const generated = ops.map(({ method, pathStr, operation, pathLevelParams }) =>
-    generateOperation(method, pathStr, operation, pathLevelParams, componentSchemas, zod),
-  )
+    generateOperation(
+      method,
+      pathStr,
+      operation,
+      pathLevelParams,
+      componentSchemas,
+      zod,
+    ),
+  );
 
-  const hasPaginated = generated.some((g) => g.isPaginated)
-  const hasZod = zod && generated.some((g) => g.apiCode.includes('z.infer'))
-  const allFnNames = generated.flatMap((g) => g.fnNames)
+  const hasPaginated = generated.some((g) => g.isPaginated);
+  const hasZod = zod && generated.some((g) => g.apiCode.includes("z.infer"));
+  const allFnNames = generated.flatMap((g) => g.fnNames);
 
-  const localTypeImports: string[] = [...typeRefs].sort()
-  if (hasPaginated) localTypeImports.unshift('PaginatedResponse')
+  const localTypeImports: string[] = [...typeRefs].sort();
+  if (hasPaginated) localTypeImports.unshift("PaginatedResponse");
 
   // ── API file (src/api/{slug}.ts) ──────────────────────────────────────────
   const apiLines: string[] = [
-    '// Generated by bunx snapshot sync. Do not edit manually.',
-    '',
+    "// Generated by bunx snapshot sync. Do not edit manually.",
+    "",
     `import { api } from '${ip.snapshotImport}'`,
-  ]
-  if (hasZod) apiLines.push("import { z } from 'zod'")
+  ];
+  if (hasZod) apiLines.push("import { z } from 'zod'");
   if (localTypeImports.length > 0) {
-    apiLines.push(`import type { ${localTypeImports.join(', ')} } from '${ip.typesRelForApi}'`)
+    apiLines.push(
+      `import type { ${localTypeImports.join(", ")} } from '${ip.typesRelForApi}'`,
+    );
   }
-  apiLines.push('')
+  apiLines.push("");
   for (const { apiCode } of generated) {
-    apiLines.push(apiCode)
-    apiLines.push('')
+    apiLines.push(apiCode);
+    apiLines.push("");
   }
 
   // ── Hooks file (src/hooks/api/{slug}.ts) ─────────────────────────────────
-  const hasQueries = ops.some(({ method }) => method === 'get')
-  const hasMutations = ops.some(({ method }) => method !== 'get')
-  const rqImports: string[] = []
-  if (hasQueries) rqImports.push('useQuery', 'type UseQueryOptions')
-  if (hasMutations) rqImports.push('useMutation', 'useQueryClient', 'type UseMutationOptions', 'type QueryKey')
+  const hasQueries = ops.some(({ method }) => method === "get");
+  const hasMutations = ops.some(({ method }) => method !== "get");
+  const rqImports: string[] = [];
+  if (hasQueries) rqImports.push("useQuery", "type UseQueryOptions");
+  if (hasMutations)
+    rqImports.push(
+      "useMutation",
+      "useQueryClient",
+      "type UseMutationOptions",
+      "type QueryKey",
+    );
 
   const hooksLines: string[] = [
-    '// Generated by bunx snapshot sync. Do not edit manually.',
-    '',
-    `import { ${rqImports.join(', ')} } from '@tanstack/react-query'`,
+    "// Generated by bunx snapshot sync. Do not edit manually.",
+    "",
+    `import { ${rqImports.join(", ")} } from '@tanstack/react-query'`,
     "import { ApiError } from '@lastshotlabs/snapshot'",
-    `import { ${allFnNames.join(', ')} } from '${ip.apiRelBase}/${slug}'`,
-  ]
+    `import { ${allFnNames.join(", ")} } from '${ip.apiRelBase}/${slug}'`,
+  ];
   if (localTypeImports.length > 0) {
-    hooksLines.push(`import type { ${localTypeImports.join(', ')} } from '${ip.typesRelForHooks}'`)
+    hooksLines.push(
+      `import type { ${localTypeImports.join(", ")} } from '${ip.typesRelForHooks}'`,
+    );
   }
-  hooksLines.push('')
+  hooksLines.push("");
   for (const { hookCode } of generated) {
-    hooksLines.push(hookCode)
-    hooksLines.push('')
+    hooksLines.push(hookCode);
+    hooksLines.push("");
   }
 
   return {
-    apiContent: apiLines.join('\n'),
-    hooksContent: hooksLines.join('\n'),
+    apiContent: apiLines.join("\n"),
+    hooksContent: hooksLines.join("\n"),
     hasPaginated,
-  }
+  };
 }
 
 // ─── .env reader ─────────────────────────────────────────────────────────────
 
 async function readEnvUrl(cwd: string): Promise<string | undefined> {
   try {
-    const content = await fs.readFile(path.join(cwd, '.env'), 'utf8')
-    for (const line of content.split('\n')) {
-      const m = line.match(/^VITE_API_URL\s*=\s*(.+)$/)
-      if (m) return m[1]!.trim().replace(/^["']|["']$/g, '')
+    const content = await fs.readFile(path.join(cwd, ".env"), "utf8");
+    for (const line of content.split("\n")) {
+      const m = line.match(/^VITE_API_URL\s*=\s*(.+)$/);
+      if (m) return m[1]!.trim().replace(/^["']|["']$/g, "");
     }
   } catch {
     // .env doesn't exist or can't be read
   }
-  return undefined
+  return undefined;
 }
 
 // ─── Schema loader ────────────────────────────────────────────────────────────
 
 async function loadSchema(opts: SyncOptions): Promise<OpenAPISchema> {
   if (opts.filePath) {
-    const abs = path.resolve(opts.cwd, opts.filePath)
-    const content = await fs.readFile(abs, 'utf8')
-    return JSON.parse(content) as OpenAPISchema
+    const abs = path.resolve(opts.cwd, opts.filePath);
+    const content = await fs.readFile(abs, "utf8");
+    return JSON.parse(content) as OpenAPISchema;
   }
 
   let apiUrl =
-    opts.apiUrl ??
-    process.env['VITE_API_URL'] ??
-    (await readEnvUrl(opts.cwd))
+    opts.apiUrl ?? process.env["VITE_API_URL"] ?? (await readEnvUrl(opts.cwd));
 
   if (!apiUrl) {
     throw new Error(
-      'No API URL found. Pass --api <url>, --file <path>, or set VITE_API_URL in .env',
-    )
+      "No API URL found. Pass --api <url>, --file <path>, or set VITE_API_URL in .env",
+    );
   }
 
-  apiUrl = apiUrl.replace(/\/$/, '')
+  apiUrl = apiUrl.replace(/\/$/, "");
 
-  const res = await fetch(`${apiUrl}/openapi.json`)
+  const res = await fetch(`${apiUrl}/openapi.json`);
   if (!res.ok) {
-    const err = new Error(`Server returned ${res.status} for ${apiUrl}/openapi.json`)
-    ;(err as Error & { status: number }).status = res.status
-    throw err
+    const err = new Error(
+      `Server returned ${res.status} for ${apiUrl}/openapi.json`,
+    );
+    (err as Error & { status: number }).status = res.status;
+    throw err;
   }
-  return (await res.json()) as OpenAPISchema
+  return (await res.json()) as OpenAPISchema;
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export interface SyncOptions {
-  apiUrl?: string
-  filePath?: string
-  cwd: string
-  watch?: boolean
-  zod?: boolean
-  apiDir?: string
-  hooksDir?: string
-  typesPath?: string
-  snapshotImport?: string
+  apiUrl?: string;
+  filePath?: string;
+  cwd: string;
+  watch?: boolean;
+  zod?: boolean;
+  apiDir?: string;
+  hooksDir?: string;
+  typesPath?: string;
+  snapshotImport?: string;
   /** Logger implementation. Defaults to clack (terminal UI). Pass consoleLogger for Vite plugin. */
-  logger?: SyncLogger
+  logger?: SyncLogger;
 }
 
 async function runSyncOnce(
@@ -913,159 +1049,403 @@ async function runSyncOnce(
   backend: BackendConfig,
   isMulti: boolean,
 ): Promise<void> {
-  const { cwd } = opts
+  const { cwd } = opts;
 
-  const sp = spinner()
+  const sp = spinner();
 
   // ── Load schema ───────────────────────────────────────────────────────────
-  let schema: OpenAPISchema
+  let schema: OpenAPISchema;
 
-  const effectiveFilePath = backend.filePath ?? opts.filePath
+  const effectiveFilePath = backend.filePath ?? opts.filePath;
   if (effectiveFilePath) {
-    sp.start(`Reading schema from ${effectiveFilePath}`)
+    sp.start(`Reading schema from ${effectiveFilePath}`);
   } else {
-    sp.start('Fetching schema...')
+    sp.start("Fetching schema...");
   }
 
   try {
-    schema = await loadSchema({ ...opts, apiUrl: backend.apiUrl ?? opts.apiUrl, filePath: backend.filePath ?? opts.filePath })
+    schema = await loadSchema({
+      ...opts,
+      apiUrl: backend.apiUrl ?? opts.apiUrl,
+      filePath: backend.filePath ?? opts.filePath,
+    });
   } catch (err) {
-    sp.stop('Failed')
-    const msg = err instanceof Error ? err.message : String(err)
-    logger.error(msg)
-    if (err instanceof Error && 'status' in err) {
-      const status = (err as Error & { status: number }).status
+    sp.stop("Failed");
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error(msg);
+    if (err instanceof Error && "status" in err) {
+      const status = (err as Error & { status: number }).status;
       if (status === 401 || status === 403) {
-        logger.info('Tip: check your bunshot config — /openapi.json may require authentication')
+        logger.info(
+          "Tip: check your bunshot config — /openapi.json may require authentication",
+        );
       }
     }
-    throw err
+    throw err;
   }
 
-  const title = schema.info?.title ?? 'API'
-  const version = schema.info?.version ?? ''
-  sp.stop(`Schema: ${title}${version ? ` ${version}` : ''}`)
+  const title = schema.info?.title ?? "API";
+  const version = schema.info?.version ?? "";
+  sp.stop(`Schema: ${title}${version ? ` ${version}` : ""}`);
 
-  const componentSchemas = schema.components?.schemas ?? {}
+  const componentSchemas = schema.components?.schemas ?? {};
 
   // ── Group operations by tag ───────────────────────────────────────────────
-  const byTag = new Map<string, TaggedOp[]>()
+  const byTag = new Map<string, TaggedOp[]>();
 
   for (const [pathStr, pathItem] of Object.entries(schema.paths ?? {})) {
-    const pathLevelParams: Parameter[] = pathItem.parameters ?? []
+    const pathLevelParams: Parameter[] = pathItem.parameters ?? [];
 
-    for (const method of ['get', 'post', 'put', 'patch', 'delete'] as const) {
-      const operation = pathItem[method]
-      if (!operation) continue
-      const tag = operation.tags?.[0] ?? 'index'
-      if (!byTag.has(tag)) byTag.set(tag, [])
-      byTag.get(tag)!.push({ method, pathStr, operation, pathLevelParams })
+    for (const method of ["get", "post", "put", "patch", "delete"] as const) {
+      const operation = pathItem[method];
+      if (!operation) continue;
+      const tag = operation.tags?.[0] ?? "index";
+      if (!byTag.has(tag)) byTag.set(tag, []);
+      byTag.get(tag)!.push({ method, pathStr, operation, pathLevelParams });
     }
   }
 
   // ── Generate hook files ───────────────────────────────────────────────────
   if (byTag.size === 0) {
-    logger.warn('No operations found in schema — no hook files generated')
+    logger.warn("No operations found in schema — no hook files generated");
     // Still write the types file (may have component schemas)
   }
 
-  const { apiDir, hooksDir, typesFile, snapshotImport } = resolveBackendDirs(cwd, backend, opts, isMulti)
+  const { apiDir, hooksDir, typesFile, snapshotImport } = resolveBackendDirs(
+    cwd,
+    backend,
+    opts,
+    isMulti,
+  );
 
   const importPaths: ImportPaths = {
     snapshotImport,
     typesRelForApi: toRelativeImport(apiDir, typesFile),
     typesRelForHooks: toRelativeImport(hooksDir, typesFile),
     apiRelBase: toRelativeImport(hooksDir, apiDir),
-  }
+  };
 
-  await fs.mkdir(apiDir, { recursive: true })
-  await fs.mkdir(hooksDir, { recursive: true })
-  await fs.mkdir(path.dirname(typesFile), { recursive: true })
+  await fs.mkdir(apiDir, { recursive: true });
+  await fs.mkdir(hooksDir, { recursive: true });
+  await fs.mkdir(path.dirname(typesFile), { recursive: true });
 
-  let globalHasPaginated = false
+  let globalHasPaginated = false;
 
   for (const [tag, ops] of byTag.entries()) {
-    const slug = tag.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-    const fileName = `${slug}.ts`
-    const { apiContent, hooksContent, hasPaginated } = generateTagFiles(ops, slug, componentSchemas, backend.zod ?? opts.zod, importPaths)
-    if (hasPaginated) globalHasPaginated = true
-    await fs.writeFile(path.join(apiDir, fileName), apiContent, 'utf8')
-    await fs.writeFile(path.join(hooksDir, fileName), hooksContent, 'utf8')
-    const apiRel = path.relative(cwd, path.join(apiDir, fileName)).replace(/\\/g, '/')
-    const hooksRel = path.relative(cwd, path.join(hooksDir, fileName)).replace(/\\/g, '/')
-    logger.success(`${apiRel} + ${hooksRel} — ${ops.length} operation(s)`)
+    const slug = tag
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    const fileName = `${slug}.ts`;
+    const { apiContent, hooksContent, hasPaginated } = generateTagFiles(
+      ops,
+      slug,
+      componentSchemas,
+      backend.zod ?? opts.zod,
+      importPaths,
+    );
+    if (hasPaginated) globalHasPaginated = true;
+    await fs.writeFile(path.join(apiDir, fileName), apiContent, "utf8");
+    await fs.writeFile(path.join(hooksDir, fileName), hooksContent, "utf8");
+    const apiRel = path
+      .relative(cwd, path.join(apiDir, fileName))
+      .replace(/\\/g, "/");
+    const hooksRel = path
+      .relative(cwd, path.join(hooksDir, fileName))
+      .replace(/\\/g, "/");
+    logger.success(`${apiRel} + ${hooksRel} — ${ops.length} operation(s)`);
   }
 
   // ── Write types file ──────────────────────────────────────────────────────
-  const schemaCount = Object.keys(componentSchemas).length
+  const schemaCount = Object.keys(componentSchemas).length;
   if (schemaCount === 0) {
-    const exists = await fs.access(typesFile).then(() => true).catch(() => false)
+    const exists = await fs
+      .access(typesFile)
+      .then(() => true)
+      .catch(() => false);
     if (exists) {
-      const typesRel = path.relative(cwd, typesFile).replace(/\\/g, '/')
-      logger.warn(`${typesRel} — 0 schemas in spec, keeping existing file`)
+      const typesRel = path.relative(cwd, typesFile).replace(/\\/g, "/");
+      logger.warn(`${typesRel} — 0 schemas in spec, keeping existing file`);
     }
   } else {
-    const typesContent = generateTypesContent(componentSchemas, globalHasPaginated)
-    await fs.writeFile(typesFile, typesContent, 'utf8')
-    const typesRel = path.relative(cwd, typesFile).replace(/\\/g, '/')
-    logger.success(`${typesRel} — ${schemaCount} type(s)`)
+    const typesContent = generateTypesContent(
+      componentSchemas,
+      globalHasPaginated,
+    );
+    await fs.writeFile(typesFile, typesContent, "utf8");
+    const typesRel = path.relative(cwd, typesFile).replace(/\\/g, "/");
+    logger.success(`${typesRel} — ${schemaCount} type(s)`);
+  }
+}
+
+// ─── Manifest processing ─────────────────────────────────────────────────────
+
+import { manifestConfigSchema } from "../ui/manifest/schema";
+import { resolveTokens } from "../ui/tokens/resolve";
+import type { ThemeConfig } from "../ui/tokens/types";
+
+// Re-export manifest types for consumers
+type ManifestConfig = import("../ui/manifest/types").ManifestConfig;
+type PageConfig = import("../ui/manifest/types").PageConfig;
+type NavItem = import("../ui/manifest/types").NavItem;
+
+/**
+ * Reads and validates `snapshot.manifest.json` from the given directory.
+ * Returns null if the file does not exist. Throws if the file exists but is invalid.
+ *
+ * @param cwd - The directory to search for `snapshot.manifest.json`
+ * @returns The parsed and validated manifest config, or null if not found
+ */
+export async function readManifest(
+  cwd: string,
+): Promise<ManifestConfig | null> {
+  const manifestPath = path.join(cwd, "snapshot.manifest.json");
+  let content: string;
+  try {
+    content = await fs.readFile(manifestPath, "utf8");
+  } catch {
+    return null;
+  }
+  const raw = JSON.parse(content) as unknown;
+  const result = manifestConfigSchema.safeParse(raw);
+  if (!result.success) {
+    const issues = result.error.issues
+      .map((i) => `  - ${i.path.join(".")}: ${i.message}`)
+      .join("\n");
+    throw new Error(`Invalid snapshot.manifest.json:\n${issues}`);
+  }
+  return result.data as ManifestConfig;
+}
+
+/**
+ * Generates a CSS string of design tokens from a theme configuration.
+ * Delegates to the token resolution pipeline.
+ *
+ * @param theme - Theme configuration from the manifest
+ * @returns CSS string with custom properties in :root and .dark selectors
+ */
+export function generateThemeCss(theme: ThemeConfig): string {
+  return resolveTokens(theme);
+}
+
+/**
+ * Generates a TanStack Router route file that renders a page from config.
+ *
+ * @param pagePath - The URL path for this page (e.g. "/dashboard")
+ * @param page - The page configuration from the manifest
+ * @returns TypeScript source for the route file
+ */
+export function generateRouteFile(pagePath: string, page: PageConfig): string {
+  const config = JSON.stringify(page, null, 2);
+  const routeId =
+    pagePath === "/"
+      ? "index"
+      : pagePath.replace(/^\//, "").replace(/\//g, ".");
+
+  return [
+    "// This file is auto-generated by snapshot sync. Do not edit.",
+    "",
+    "import { createFileRoute } from '@tanstack/react-router'",
+    "import { PageRenderer } from '@lastshotlabs/snapshot/ui'",
+    "",
+    `const pageConfig = ${config} as const`,
+    "",
+    `export const Route = createFileRoute('${pagePath}')({`,
+    "  component: function Page() {",
+    "    return <PageRenderer page={pageConfig} />",
+    "  },",
+    "})",
+    "",
+  ].join("\n");
+}
+
+/**
+ * Generates a nav component file from navigation items.
+ *
+ * @param nav - Array of navigation items from the manifest
+ * @returns TypeScript source for the nav component
+ */
+export function generateNavFile(nav: NavItem[]): string {
+  const navJson = JSON.stringify(nav, null, 2);
+
+  return [
+    "// This file is auto-generated by snapshot sync. Do not edit.",
+    "",
+    "import { Link } from '@tanstack/react-router'",
+    "",
+    `const navItems = ${navJson}`,
+    "",
+    "interface NavItemType {",
+    "  label: string",
+    "  path: string",
+    "  icon?: string",
+    "  children?: NavItemType[]",
+    "}",
+    "",
+    "function NavLink({ item }: { item: NavItemType }) {",
+    "  return (",
+    "    <li>",
+    "      <Link to={item.path}>{item.label}</Link>",
+    "      {item.children && item.children.length > 0 && (",
+    "        <ul>",
+    "          {item.children.map((child: NavItemType) => (",
+    "            <NavLink key={child.path} item={child} />",
+    "          ))}",
+    "        </ul>",
+    "      )}",
+    "    </li>",
+    "  )",
+    "}",
+    "",
+    "export function Nav() {",
+    "  return (",
+    '    <nav data-snapshot-component="nav">',
+    "      <ul>",
+    "        {navItems.map((item: NavItemType) => (",
+    "          <NavLink key={item.path} item={item} />",
+    "        ))}",
+    "      </ul>",
+    "    </nav>",
+    "  )",
+    "}",
+    "",
+  ].join("\n");
+}
+
+/**
+ * Processes the manifest file and generates theme CSS, route files, and nav component.
+ * Called from `runSync` after the OpenAPI sync flow.
+ *
+ * @param cwd - The project root directory
+ * @param logger - Logger instance for output messages
+ */
+export async function processManifest(
+  cwd: string,
+  logger: SyncLogger,
+): Promise<void> {
+  const manifest = await readManifest(cwd);
+  if (!manifest) return;
+
+  logger.info("Processing snapshot.manifest.json...");
+
+  // Theme → CSS tokens
+  if (manifest.theme) {
+    const css = generateThemeCss(manifest.theme);
+    const cssDir = path.join(cwd, "src", "styles");
+    await fs.mkdir(cssDir, { recursive: true });
+    const cssPath = path.join(cssDir, "snapshot-tokens.css");
+    await fs.writeFile(
+      cssPath,
+      `/* This file is auto-generated by snapshot sync. Do not edit. */\n${css}`,
+      "utf8",
+    );
+    const rel = path.relative(cwd, cssPath).replace(/\\/g, "/");
+    logger.success(`${rel} — theme tokens`);
+  }
+
+  // Pages → route files
+  if (manifest.pages) {
+    const routesDir = path.join(cwd, "src", "routes");
+    await fs.mkdir(routesDir, { recursive: true });
+
+    for (const [pagePath, page] of Object.entries(manifest.pages)) {
+      const routeContent = generateRouteFile(pagePath, page as PageConfig);
+      const fileName =
+        pagePath === "/"
+          ? "index.tsx"
+          : `${pagePath.replace(/^\//, "").replace(/\//g, ".")}.tsx`;
+      const routeFile = path.join(routesDir, fileName);
+      await fs.writeFile(routeFile, routeContent, "utf8");
+      const rel = path.relative(cwd, routeFile).replace(/\\/g, "/");
+      logger.success(`${rel} — page route`);
+    }
+  }
+
+  // Nav → component
+  if (manifest.nav) {
+    const navDir = path.join(cwd, "src", "components", "generated");
+    await fs.mkdir(navDir, { recursive: true });
+    const navContent = generateNavFile(manifest.nav as NavItem[]);
+    const navPath = path.join(navDir, "nav.tsx");
+    await fs.writeFile(navPath, navContent, "utf8");
+    const rel = path.relative(cwd, navPath).replace(/\\/g, "/");
+    logger.success(`${rel} — navigation`);
   }
 }
 
 export async function runSync(opts: SyncOptions): Promise<void> {
-  const logger = opts.logger ?? clackLogger
-  const fileConfig = await readSyncConfig(opts.cwd)
+  const logger = opts.logger ?? clackLogger;
+  const fileConfig = await readSyncConfig(opts.cwd);
 
-  const backends: BackendConfig[] = fileConfig.backends && fileConfig.backends.length > 0
-    ? fileConfig.backends
-    : [fileConfig]
-  const isMulti = !!(fileConfig.backends && fileConfig.backends.length > 0)
+  const backends: BackendConfig[] =
+    fileConfig.backends && fileConfig.backends.length > 0
+      ? fileConfig.backends
+      : [fileConfig];
+  const isMulti = !!(fileConfig.backends && fileConfig.backends.length > 0);
 
   const runAll = async () => {
     for (const backend of backends) {
-      if (isMulti && backend.name) logger.info(`── ${backend.name} ──`)
-      await runSyncOnce(opts, logger, backend, isMulti)
+      if (isMulti && backend.name) logger.info(`── ${backend.name} ──`);
+      await runSyncOnce(opts, logger, backend, isMulti);
     }
+  };
+
+  await runAll();
+
+  // Process manifest file (theme, pages, nav)
+  try {
+    await processManifest(opts.cwd, logger);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error(msg);
   }
 
-  await runAll()
+  if (!opts.watch) return;
 
-  if (!opts.watch) return
-
-  logger.info('Watching for schema changes... (Ctrl+C to stop)')
+  logger.info("Watching for schema changes... (Ctrl+C to stop)");
 
   // Seed hashes per backend
-  const lastHashes = new Map<number, string>()
+  const lastHashes = new Map<number, string>();
   for (let i = 0; i < backends.length; i++) {
-    const b = backends[i]!
+    const b = backends[i]!;
     try {
-      const schema = await loadSchema({ ...opts, apiUrl: b.apiUrl ?? opts.apiUrl, filePath: b.filePath ?? opts.filePath })
-      lastHashes.set(i, schemaHash(schema))
+      const schema = await loadSchema({
+        ...opts,
+        apiUrl: b.apiUrl ?? opts.apiUrl,
+        filePath: b.filePath ?? opts.filePath,
+      });
+      lastHashes.set(i, schemaHash(schema));
     } catch {
-      lastHashes.set(i, '')
+      lastHashes.set(i, "");
     }
   }
 
-  const pollMs = backends.some((b) => b.filePath ?? opts.filePath) ? 1000 : 3000
+  const pollMs = backends.some((b) => b.filePath ?? opts.filePath)
+    ? 1000
+    : 3000;
 
   const interval = setInterval(async () => {
     for (let i = 0; i < backends.length; i++) {
-      const b = backends[i]!
+      const b = backends[i]!;
       try {
-        const schema = await loadSchema({ ...opts, apiUrl: b.apiUrl ?? opts.apiUrl, filePath: b.filePath ?? opts.filePath })
-        const h = schemaHash(schema)
-        if (h === lastHashes.get(i)) continue
-        lastHashes.set(i, h)
-        if (isMulti && b.name) logger.info(`── ${b.name} (changed) ──`)
-        await runSyncOnce(opts, logger, b, isMulti)
+        const schema = await loadSchema({
+          ...opts,
+          apiUrl: b.apiUrl ?? opts.apiUrl,
+          filePath: b.filePath ?? opts.filePath,
+        });
+        const h = schemaHash(schema);
+        if (h === lastHashes.get(i)) continue;
+        lastHashes.set(i, h);
+        if (isMulti && b.name) logger.info(`── ${b.name} (changed) ──`);
+        await runSyncOnce(opts, logger, b, isMulti);
       } catch (e) {
-        logger.error(e instanceof Error ? e.message : String(e))
+        logger.error(e instanceof Error ? e.message : String(e));
       }
     }
-  }, pollMs)
+  }, pollMs);
 
-  process.on('SIGINT', () => {
-    clearInterval(interval)
-    process.exit(0)
-  })
+  process.on("SIGINT", () => {
+    clearInterval(interval);
+    process.exit(0);
+  });
 }

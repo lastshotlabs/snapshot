@@ -182,8 +182,8 @@ Per-component styling knobs, scoped via `[data-snapshot-component]` selectors:
 {
   components: {
     card: { shadow: "md", padding: "comfortable", border: true },
-    table: { striped: true, density: "compact", hoverRow: true },
-    button: { weight: "bold", uppercase: true },
+    table: { striped: true, density: "compact", hoverRow: true, headerBackground: true, borderStyle: "horizontal" },
+    button: { weight: "bold", uppercase: true, iconSize: "md" },
     input: { size: "lg", variant: "filled" },
     modal: { overlay: "blur", animation: "slide-up" },
     nav: { variant: "bordered", activeIndicator: "dot" },
@@ -192,6 +192,8 @@ Per-component styling knobs, scoped via `[data-snapshot-component]` selectors:
   }
 }
 ```
+
+See [customization.md](./customization.md) for the full list of component token values.
 
 ## Resolution Order
 
