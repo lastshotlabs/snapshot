@@ -84,6 +84,8 @@ export default defineConfig([
     entry: {
       'cli/commands/init': 'src/cli/commands/init.ts',
       'cli/commands/sync': 'src/cli/commands/sync.ts',
+      'cli/commands/manifest/init': 'src/cli/commands/manifest/init.ts',
+      'cli/commands/manifest/validate': 'src/cli/commands/manifest/validate.ts',
     },
     format: ['esm'],
     dts: false,

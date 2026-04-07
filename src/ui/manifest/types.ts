@@ -66,13 +66,21 @@ export interface RowConfig extends BaseComponentConfig {
   children: ComponentConfig[];
 }
 
-/** Union of all component configs. */
+/**
+ * Union of all component configs.
+ *
+ * Structural types (row, heading, button, select, custom) are listed explicitly.
+ * Registered components (stat-card, data-table, modal, etc.) are validated at
+ * runtime by the dynamic schema registry and typed as BaseComponentConfig with
+ * additional fields via the index signature.
+ */
 export type ComponentConfig =
   | RowConfig
   | HeadingConfig
   | ButtonConfig
   | SelectConfig
-  | CustomComponentConfig;
+  | CustomComponentConfig
+  | (BaseComponentConfig & Record<string, unknown>);
 
 // ── Non-schema types ────────────────────────────────────────────────────────
 

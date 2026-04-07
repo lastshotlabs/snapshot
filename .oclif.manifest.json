@@ -137,6 +137,75 @@
         "commands",
         "sync.js"
       ]
+    },
+    "manifest:init": {
+      "aliases": [],
+      "args": {},
+      "description": "Create a snapshot.manifest.json file",
+      "examples": [
+        "<%= config.bin %> manifest init",
+        "<%= config.bin %> manifest init --yes"
+      ],
+      "flags": {
+        "yes": {
+          "char": "y",
+          "description": "Skip prompts, use defaults",
+          "name": "yes",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "manifest:init",
+      "pluginAlias": "@lastshotlabs/snapshot",
+      "pluginName": "@lastshotlabs/snapshot",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "cli",
+        "commands",
+        "manifest",
+        "init.js"
+      ]
+    },
+    "manifest:validate": {
+      "aliases": [],
+      "args": {},
+      "description": "Validate a snapshot.manifest.json file",
+      "examples": [
+        "<%= config.bin %> manifest validate",
+        "<%= config.bin %> manifest validate --path ./custom-manifest.json"
+      ],
+      "flags": {
+        "path": {
+          "description": "Path to manifest file",
+          "name": "path",
+          "default": "snapshot.manifest.json",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "manifest:validate",
+      "pluginAlias": "@lastshotlabs/snapshot",
+      "pluginName": "@lastshotlabs/snapshot",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "cli",
+        "commands",
+        "manifest",
+        "validate.js"
+      ]
     }
   },
   "version": "0.1.0"
