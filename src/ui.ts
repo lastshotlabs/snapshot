@@ -103,6 +103,21 @@ export type {
   ConfirmManager,
 } from "./ui/actions/index";
 
+// Components — StatCard
+export {
+  StatCard,
+  statCardConfigSchema,
+  trendConfigSchema,
+} from "./ui/components/data/stat-card/index";
+export type {
+  StatCardConfig,
+  UseStatCardResult,
+} from "./ui/components/data/stat-card/index";
+
+// Shared component utilities
+export { useComponentData } from "./ui/components/_base/use-component-data";
+export type { ComponentDataResult } from "./ui/components/_base/use-component-data";
+
 // Manifest & Rendering
 // export { ManifestApp } from './ui/manifest/manifest-app'
 // export { PageRenderer } from './ui/manifest/page-renderer'
