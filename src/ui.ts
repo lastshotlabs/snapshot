@@ -104,15 +104,47 @@ export type {
 } from "./ui/actions/index";
 
 // Manifest & Rendering
-// export { ManifestApp } from './ui/manifest/manifest-app'
-// export { PageRenderer } from './ui/manifest/page-renderer'
-// export { manifestSchema } from './ui/manifest/schema'
+export {
+  ManifestApp,
+  PageRenderer,
+  ComponentRenderer,
+  registerComponent,
+  registerComponentSchema,
+  getRegisteredSchemaTypes,
+  injectStyleSheet,
+  manifestConfigSchema,
+  pageConfigSchema,
+  componentConfigSchema,
+  navItemSchema,
+  authScreenConfigSchema,
+  baseComponentConfigSchema,
+  rowConfigSchema,
+  headingConfigSchema,
+  buttonConfigSchema,
+  selectConfigSchema,
+  customComponentConfigSchema,
+  fromRefSchema,
+} from "./ui/manifest/index";
+export type {
+  ManifestConfig,
+  NavItem,
+  AuthScreenConfig,
+  PageConfig,
+  BaseComponentConfig,
+  RowConfig,
+  HeadingConfig,
+  ButtonConfig,
+  SelectConfig,
+  CustomComponentConfig,
+  ComponentConfig,
+  ManifestAppProps,
+  ConfigDrivenComponent,
+  ComponentRendererProps,
+  PageRendererProps,
+} from "./ui/manifest/index";
 
 // Headless Hooks (Level 2/3)
 // export { useDataTable } from './ui/hooks/use-data-table'
 // export { useAutoForm } from './ui/hooks/use-auto-form'
 // export { usePageContext } from './ui/hooks/use-page-context'
 // export { useAppContext } from './ui/hooks/use-app-context'
-
-// Types
-// export type { ManifestConfig, PageConfig } from './ui/manifest/types'
