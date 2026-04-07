@@ -10,9 +10,38 @@
  */
 
 // Tokens & Flavors
-// export { resolveTokens } from './ui/tokens/resolve'
-// export { useTokenEditor } from './ui/tokens/editor'
-// export { defineFlavor, builtInFlavors } from './ui/tokens/flavors'
+export { resolveTokens } from "./ui/tokens/resolve";
+export { useTokenEditor } from "./ui/tokens/editor";
+export { defineFlavor, getFlavor, getAllFlavors } from "./ui/tokens/flavors";
+export {
+  themeColorsSchema,
+  radiusSchema,
+  spacingSchema,
+  fontSchema,
+  componentTokensSchema,
+  themeConfigSchema,
+} from "./ui/tokens/schema";
+export {
+  hexToOklch,
+  hslToOklch,
+  oklchToString,
+  oklchToHex,
+  deriveForeground,
+  deriveDarkVariant,
+  colorToOklch,
+  parseOklchString,
+} from "./ui/tokens/color";
+export type {
+  ThemeConfig,
+  ThemeColors,
+  Flavor,
+  ComponentTokens,
+  TokenEditor,
+  RadiusScale,
+  SpacingScale,
+  FontConfig,
+  Responsive,
+} from "./ui/tokens/types";
 
 // Context & Data Binding
 // export { PageContext, createPageContext } from './ui/context/page-context'
@@ -33,6 +62,5 @@
 // export { useAppContext } from './ui/hooks/use-app-context'
 
 // Types
-// export type { ThemeConfig, FlavorConfig } from './ui/tokens/types'
 // export type { ActionConfig } from './ui/actions/types'
 // export type { ManifestConfig, PageConfig } from './ui/manifest/types'
