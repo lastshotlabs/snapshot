@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateMfaSetupPageComponent(_config: ScaffoldConfig): string {
   return `import { useState } from 'react'
@@ -125,5 +125,5 @@ export function MfaSetupPage() {
     </Card>
   )
 }
-`
+`;
 }

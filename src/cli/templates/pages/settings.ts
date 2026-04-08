@@ -33,5 +33,5 @@ export function SettingsPage() {
     </Card>
   )
 }
-`
+`;
 }

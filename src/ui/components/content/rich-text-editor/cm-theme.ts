@@ -110,7 +110,10 @@ const snHighlightStyle = HighlightStyle.define([
     color: "var(--sn-syn-number, #0550ae)",
   },
   {
-    tag: [tags.function(tags.variableName), tags.function(tags.definition(tags.variableName))],
+    tag: [
+      tags.function(tags.variableName),
+      tags.function(tags.definition(tags.variableName)),
+    ],
     color: "var(--sn-syn-function, #8250df)",
   },
   {

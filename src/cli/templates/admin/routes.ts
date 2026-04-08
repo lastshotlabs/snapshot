@@ -15,7 +15,7 @@ export const Route = createRootRouteWithContext<{
     </QueryProvider>
   ),
 })
-`
+`;
 }
 
 export function generateIndexRoute(): string {
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/')({
     throw redirect({ to: '/users' })
   },
 })
-`
+`;
 }
 
 export function generateAuthenticatedRoute(): string {
@@ -38,7 +38,7 @@ export const Route = createFileRoute('/_authenticated')({
   beforeLoad: protectedBeforeLoad,
   component: AdminLayout,
 })
-`
+`;
 }
 
 export function generateUsersRoute(): string {
@@ -48,7 +48,7 @@ import { UsersPage } from '@pages/admin/UsersPage'
 export const Route = createFileRoute('/_authenticated/users')({
   component: UsersPage,
 })
-`
+`;
 }
 
 export function generateUserDetailRoute(): string {
@@ -58,7 +58,7 @@ import { UserDetailPage } from '@pages/admin/UserDetailPage'
 export const Route = createFileRoute('/_authenticated/users/\$userId')({
   component: UserDetailPage,
 })
-`
+`;
 }
 
 export function generateUserSessionsRoute(): string {
@@ -68,7 +68,7 @@ import { UserSessionsPage } from '@pages/admin/UserSessionsPage'
 export const Route = createFileRoute('/_authenticated/users/\$userId/sessions')({
   component: UserSessionsPage,
 })
-`
+`;
 }
 
 export function generateUserAuditLogRoute(): string {
@@ -78,7 +78,7 @@ import { UserAuditLogPage } from '@pages/admin/UserAuditLogPage'
 export const Route = createFileRoute('/_authenticated/users/\$userId/audit-log')({
   component: UserAuditLogPage,
 })
-`
+`;
 }
 
 export function generateAuditLogRoute(): string {
@@ -88,7 +88,7 @@ import { AuditLogPage } from '@pages/admin/AuditLogPage'
 export const Route = createFileRoute('/_authenticated/audit-log')({
   component: AuditLogPage,
 })
-`
+`;
 }
 
 export function generateGroupsRoute(): string {
@@ -98,7 +98,7 @@ import { GroupsPage } from '@pages/admin/GroupsPage'
 export const Route = createFileRoute('/_authenticated/groups')({
   component: GroupsPage,
 })
-`
+`;
 }
 
 export function generateOrgsRoute(): string {
@@ -108,7 +108,7 @@ import { OrgsPage } from '@pages/admin/OrgsPage'
 export const Route = createFileRoute('/_authenticated/orgs')({
   component: OrgsPage,
 })
-`
+`;
 }
 
 export function generateCapabilitiesRoute(): string {
@@ -118,5 +118,5 @@ import { CapabilitiesPage } from '@pages/admin/CapabilitiesPage'
 export const Route = createFileRoute('/_authenticated/capabilities')({
   component: CapabilitiesPage,
 })
-`
+`;
 }

@@ -35,7 +35,6 @@ export function Stepper({ config }: { config: StepperConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
 
   // Sync with external activeStep changes
   useEffect(() => {
@@ -56,6 +55,8 @@ export function Stepper({ config }: { config: StepperConfig }) {
     }
   }, [publish, currentStep, config.steps]);
 
+  if (visible === false) return null;
+
   const orientation = config.orientation ?? "horizontal";
   const variant = config.variant ?? "default";
   const clickable = config.clickable ?? false;
@@ -74,7 +75,22 @@ export function Stepper({ config }: { config: StepperConfig }) {
       data-snapshot-component="stepper"
       data-testid="stepper"
       className={config.className}
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="stepper"] [role="button"]:hover {
+          opacity: var(--sn-opacity-hover, 0.8);
+        }
+        [data-snapshot-component="stepper"] [role="button"]:focus {
+          outline: none;
+        }
+        [data-snapshot-component="stepper"] [role="button"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+      `}</style>
       {/* Step indicators */}
       <div
         data-testid="stepper-track"
@@ -273,6 +289,8 @@ export function Stepper({ config }: { config: StepperConfig }) {
                     fontWeight: "var(--sn-font-weight-semibold, 600)",
                     flexShrink: 0,
                     cursor: clickable ? "pointer" : undefined,
+                    transition:
+                      "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                     backgroundColor: isCompleted
                       ? "var(--sn-color-success, #16a34a)"
                       : isActive
@@ -285,11 +303,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
                         : "var(--sn-color-secondary-foreground, #374151)",
                   }}
                 >
-                  {isCompleted
-                    ? "\u2713"
-                    : step.icon
-                      ? step.icon
-                      : index + 1}
+                  {isCompleted ? "\u2713" : step.icon ? step.icon : index + 1}
                 </div>
 
                 {/* Trailing connector (not for last step) */}

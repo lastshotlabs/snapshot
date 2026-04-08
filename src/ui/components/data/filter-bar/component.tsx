@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { usePublish } from "../../../context/hooks";
+import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import type { FilterBarConfig } from "./types";
@@ -18,6 +18,7 @@ type FilterState = Record<string, string | string[]>;
 export function FilterBar({ config }: { config: FilterBarConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
+  const visible = useSubscribe(config.visible ?? true);
 
   const showSearch = config.showSearch !== false;
   const filters = config.filters ?? [];
@@ -69,7 +70,9 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
         const newState = { ...prev };
 
         if (multiple) {
-          const current = Array.isArray(prev[key]) ? [...(prev[key] as string[])] : [];
+          const current = Array.isArray(prev[key])
+            ? [...(prev[key] as string[])]
+            : [];
           const idx = current.indexOf(value);
           if (idx >= 0) {
             current.splice(idx, 1);
@@ -175,8 +178,20 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
     return current === value;
   };
 
+  // Close dropdown on Escape key
+  useEffect(() => {
+    if (!openDropdown) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [openDropdown]);
+
   // Visibility check
-  if (config.visible === false) return null;
+  if (visible === false) return null;
 
   return (
     <div
@@ -186,8 +201,46 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
         display: "flex",
         flexDirection: "column",
         gap: "var(--sn-spacing-sm, 0.5rem)",
+        ...(config.style as React.CSSProperties),
       }}
     >
+      {/* Hover/focus styles */}
+      <style>{`
+[data-snapshot-component="filter-bar"] [data-testid^="filter-button-"]:hover {
+  opacity: var(--sn-opacity-hover, 0.85);
+}
+[data-snapshot-component="filter-bar"] [data-testid^="filter-button-"]:focus {
+  outline: none;
+}
+[data-snapshot-component="filter-bar"] [data-testid^="filter-button-"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="filter-bar"] [role="option"]:focus {
+  outline: none;
+}
+[data-snapshot-component="filter-bar"] [role="option"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="filter-bar"] [data-testid="filter-bar-search"]:focus {
+  outline: none;
+}
+[data-snapshot-component="filter-bar"] [data-testid="filter-bar-search"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="filter-bar"] [data-testid="filter-bar-clear"]:hover {
+  color: var(--sn-color-foreground, #111);
+}
+[data-snapshot-component="filter-bar"] [data-testid="filter-bar-clear"]:focus {
+  outline: none;
+}
+[data-snapshot-component="filter-bar"] [data-testid="filter-bar-clear"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+`}</style>
       {/* Top row: search + filter buttons */}
       <div
         style={{
@@ -256,9 +309,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
             >
               <button
                 type="button"
-                onClick={() =>
-                  setOpenDropdown(isActive ? null : filter.key)
-                }
+                onClick={() => setOpenDropdown(isActive ? null : filter.key)}
                 data-testid={`filter-button-${filter.key}`}
                 style={{
                   display: "flex",
@@ -280,11 +331,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                 }}
               >
                 <span>{filter.label}</span>
-                <Icon
-                  name="chevron-down"
-                  size={12}
-                  color="currentColor"
-                />
+                <Icon name="chevron-down" size={12} color="currentColor" />
               </button>
 
               {/* Dropdown options */}
@@ -299,8 +346,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                     zIndex: "var(--sn-z-index-dropdown, 30)",
                     minWidth: "150px",
                     backgroundColor: "var(--sn-color-popover, #fff)",
-                    border:
-                      "1px solid var(--sn-color-border, #e5e7eb)",
+                    border: "1px solid var(--sn-color-border, #e5e7eb)",
                     borderRadius: "var(--sn-radius-md, 0.375rem)",
                     boxShadow:
                       "var(--sn-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1))",
@@ -336,10 +382,8 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                             ? "var(--sn-color-accent, #f3f4f6)"
                             : "none",
                           cursor: "pointer",
-                          fontSize:
-                            "var(--sn-font-size-sm, 0.875rem)",
-                          color:
-                            "var(--sn-color-popover-foreground, #111)",
+                          fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                          color: "var(--sn-color-popover-foreground, #111)",
                           textAlign: "left",
                           whiteSpace: "nowrap",
                         }}
@@ -368,8 +412,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                               width: "14px",
                               height: "14px",
                               border: `1px solid ${selected ? "var(--sn-color-primary, #2563eb)" : "var(--sn-color-border, #e5e7eb)"}`,
-                              borderRadius:
-                                "var(--sn-radius-xs, 0.125rem)",
+                              borderRadius: "var(--sn-radius-xs, 0.125rem)",
                               backgroundColor: selected
                                 ? "var(--sn-color-primary, #2563eb)"
                                 : "transparent",

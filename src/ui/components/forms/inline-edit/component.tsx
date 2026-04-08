@@ -99,8 +99,20 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
         display: "inline-flex",
         alignItems: "center",
         minWidth: 0,
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
+      <style>{`
+        [data-snapshot-component="inline-edit"] [data-testid="inline-edit-display"]:focus { outline: none; }
+        [data-snapshot-component="inline-edit"] [data-testid="inline-edit-display"]:hover {
+          background-color: var(--sn-color-muted, #f9fafb);
+        }
+        [data-snapshot-component="inline-edit"] [data-testid="inline-edit-display"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+      `}</style>
+
       {editing ? (
         /* Edit mode */
         <input

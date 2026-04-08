@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateMfaVerifyPageComponent(config: ScaffoldConfig): string {
   // Both hardened and prototype use the in-memory pending challenge flow
@@ -99,5 +99,5 @@ export function MfaVerifyPage() {
     </Card>
   )
 }
-`
+`;
 }

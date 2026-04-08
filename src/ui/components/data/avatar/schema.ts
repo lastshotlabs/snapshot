@@ -1,7 +1,5 @@
 import { z } from "zod";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the Avatar component.

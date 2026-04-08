@@ -1,27 +1,29 @@
-import { useAtomValue } from 'jotai'
-import { useEffect, useState } from 'react'
-import { wsManagerAtom } from './atom'
-import type { SocketHook } from '../types'
-import type { WebSocketManager } from './manager'
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
+import { wsManagerAtom } from "./atom";
+import type { SocketHook } from "../types";
+import type { WebSocketManager } from "./manager";
 
 export function createWsHooks<TEvents extends Record<string, unknown>>() {
   function useWebSocketManager(): WebSocketManager<TEvents> | null {
-    return useAtomValue(wsManagerAtom) as WebSocketManager<TEvents> | null
+    return useAtomValue(wsManagerAtom) as WebSocketManager<TEvents> | null;
   }
 
   function useSocket(): SocketHook<TEvents> {
-    const manager = useWebSocketManager()
-    const [isConnected, setIsConnected] = useState(manager?.isConnected ?? false)
+    const manager = useWebSocketManager();
+    const [isConnected, setIsConnected] = useState(
+      manager?.isConnected ?? false,
+    );
 
     useEffect(() => {
-      if (!manager) return
+      if (!manager) return;
 
       const interval = setInterval(() => {
-        setIsConnected(manager.isConnected)
-      }, 500)
+        setIsConnected(manager.isConnected);
+      }, 500);
 
-      return () => clearInterval(interval)
-    }, [manager])
+      return () => clearInterval(interval);
+    }, [manager]);
 
     return {
       isConnected,
@@ -32,24 +34,24 @@ export function createWsHooks<TEvents extends Record<string, unknown>>() {
       on: (event, handler) => manager?.on(event, handler),
       off: (event, handler) => manager?.off(event, handler),
       reconnect: () => manager?.reconnect(),
-    }
+    };
   }
 
   function useRoom(room: string): { isSubscribed: boolean } {
-    const manager = useWebSocketManager()
-    const [isSubscribed, setIsSubscribed] = useState(false)
+    const manager = useWebSocketManager();
+    const [isSubscribed, setIsSubscribed] = useState(false);
 
     useEffect(() => {
-      if (!manager) return
-      manager.subscribe(room)
-      setIsSubscribed(true)
+      if (!manager) return;
+      manager.subscribe(room);
+      setIsSubscribed(true);
       return () => {
-        manager.unsubscribe(room)
-        setIsSubscribed(false)
-      }
-    }, [room, manager])
+        manager.unsubscribe(room);
+        setIsSubscribed(false);
+      };
+    }, [room, manager]);
 
-    return { isSubscribed }
+    return { isSubscribed };
   }
 
   function useRoomEvent<T>(
@@ -57,24 +59,32 @@ export function createWsHooks<TEvents extends Record<string, unknown>>() {
     event: string,
     handler: (data: T) => void,
   ): void {
-    const manager = useWebSocketManager()
+    const manager = useWebSocketManager();
 
     useEffect(() => {
-      if (!manager) return
+      if (!manager) return;
 
       // Scoped: only handle events tagged to this room
-      const scoped = (data: { room?: string; payload?: T } & Record<string, unknown>) => {
-        if (data['room'] === room) {
-          handler(('payload' in data ? data['payload'] : data) as T)
+      const scoped = (
+        data: { room?: string; payload?: T } & Record<string, unknown>,
+      ) => {
+        if (data["room"] === room) {
+          handler(("payload" in data ? data["payload"] : data) as T);
         }
-      }
+      };
 
-      manager.on(event as keyof TEvents, scoped as (data: TEvents[keyof TEvents]) => void)
+      manager.on(
+        event as keyof TEvents,
+        scoped as (data: TEvents[keyof TEvents]) => void,
+      );
       return () => {
-        manager.off(event as keyof TEvents, scoped as (data: TEvents[keyof TEvents]) => void)
-      }
-    }, [room, event, handler, manager])
+        manager.off(
+          event as keyof TEvents,
+          scoped as (data: TEvents[keyof TEvents]) => void,
+        );
+      };
+    }, [room, event, handler, manager]);
   }
 
-  return { useWebSocketManager, useSocket, useRoom, useRoomEvent }
+  return { useWebSocketManager, useSocket, useRoom, useRoomEvent };
 }

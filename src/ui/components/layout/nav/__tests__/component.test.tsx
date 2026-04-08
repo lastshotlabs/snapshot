@@ -251,16 +251,16 @@ describe("Nav component", () => {
       ) as HTMLButtonElement;
       const nav = container.querySelector('[data-snapshot-component="nav"]');
 
-      // Initially collapsed (default)
-      expect(nav?.getAttribute("data-collapsed")).toBe("true");
-
-      // Toggle open
-      fireEvent.click(toggle);
+      // Initially expanded (isCollapsed defaults to false)
       expect(nav?.getAttribute("data-collapsed")).toBeNull();
 
-      // Toggle closed
+      // Toggle collapsed
       fireEvent.click(toggle);
       expect(nav?.getAttribute("data-collapsed")).toBe("true");
+
+      // Toggle open again
+      fireEvent.click(toggle);
+      expect(nav?.getAttribute("data-collapsed")).toBeNull();
     });
   });
 

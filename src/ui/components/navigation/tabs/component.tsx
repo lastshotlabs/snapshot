@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
+import { Icon } from "../../../icons/icon";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
 import { useTabs } from "./hook";
@@ -40,7 +41,8 @@ const VARIANT_STYLES: Record<
       fontSize: "var(--sn-font-size-sm, 0.875rem)",
       opacity: disabled ? 0.5 : 1,
       marginBottom: "-1px",
-      transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      transition:
+        "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
     }),
   },
   underline: {
@@ -69,7 +71,8 @@ const VARIANT_STYLES: Record<
       fontSize: "var(--sn-font-size-sm, 0.875rem)",
       opacity: disabled ? 0.5 : 1,
       marginBottom: "-2px",
-      transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      transition:
+        "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
     }),
   },
   pills: {
@@ -94,7 +97,8 @@ const VARIANT_STYLES: Record<
         : "var(--sn-font-weight-normal, 400)",
       fontSize: "var(--sn-font-size-sm, 0.875rem)",
       opacity: disabled ? 0.5 : 1,
-      transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      transition:
+        "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
     }),
   },
 };
@@ -119,10 +123,64 @@ export function TabsComponent({ config }: { config: TabsConfig }) {
   const mountedRef = useRef<Set<number>>(new Set([config.defaultTab ?? 0]));
   mountedRef.current.add(activeTab);
 
+  /** Keyboard navigation for the tablist (ArrowLeft / ArrowRight). */
+  const handleTablistKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      e.preventDefault();
+
+      const enabledIndices = tabs
+        .map((t, i) => (!t.disabled ? i : -1))
+        .filter((i) => i !== -1);
+      if (enabledIndices.length === 0) return;
+
+      const currentPos = enabledIndices.indexOf(activeTab);
+      let nextPos: number;
+      if (e.key === "ArrowRight") {
+        nextPos =
+          currentPos === -1 ? 0 : (currentPos + 1) % enabledIndices.length;
+      } else {
+        nextPos = currentPos <= 0 ? enabledIndices.length - 1 : currentPos - 1;
+      }
+      const nextIndex = enabledIndices[nextPos]!;
+      setActiveTab(nextIndex);
+
+      // Focus the newly active tab button
+      const tablist = e.currentTarget;
+      const buttons =
+        tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+      buttons[nextIndex]?.focus();
+    },
+    [tabs, activeTab, setActiveTab],
+  );
+
   return (
-    <div data-snapshot-component="tabs" data-testid="tabs">
+    <div
+      data-snapshot-component="tabs"
+      data-testid="tabs"
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
+    >
+      <style>{`
+        [data-snapshot-component="tabs"] [role="tab"]:not([aria-disabled="true"]):hover {
+          background: color-mix(in oklch, var(--sn-color-muted) 50%, transparent);
+        }
+        [data-snapshot-component="tabs"] [role="tab"]:focus {
+          outline: none;
+        }
+        [data-snapshot-component="tabs"] [role="tab"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+      `}</style>
       {/* Tab Bar */}
-      <div role="tablist" data-snapshot-tabs-bar="" style={barStyle}>
+      <div
+        role="tablist"
+        data-snapshot-tabs-bar=""
+        style={barStyle}
+        onKeyDown={handleTablistKeyDown}
+      >
         {tabs.map((tab, index) => (
           <button
             key={index}
@@ -131,6 +189,7 @@ export function TabsComponent({ config }: { config: TabsConfig }) {
             aria-selected={index === activeTab}
             aria-disabled={tab.disabled}
             disabled={tab.disabled}
+            tabIndex={index === activeTab ? 0 : -1}
             onClick={() => setActiveTab(index)}
             data-snapshot-tab=""
             data-active={index === activeTab ? "" : undefined}
@@ -139,9 +198,13 @@ export function TabsComponent({ config }: { config: TabsConfig }) {
             {tab.icon && (
               <span
                 data-snapshot-tab-icon=""
-                style={{ marginRight: "var(--sn-spacing-xs, 0.25rem)" }}
+                style={{
+                  marginRight: "var(--sn-spacing-xs, 0.25rem)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
               >
-                {tab.icon}
+                <Icon name={tab.icon} size={16} />
               </span>
             )}
             {tab.label}

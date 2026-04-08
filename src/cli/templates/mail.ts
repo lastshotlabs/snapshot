@@ -81,5 +81,5 @@ export const mailPlugin = createMailPlugin({
     },
   ],
 })
-`
+`;
 }

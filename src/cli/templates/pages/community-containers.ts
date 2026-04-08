@@ -37,7 +37,7 @@ export function CommunityContainersPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateCommunityThreadListPageComponent(): string {
@@ -86,7 +86,7 @@ export function CommunityThreadListPage({ containerId }: Props) {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateCommunityThreadPageComponent(): string {
@@ -167,5 +167,5 @@ export function CommunityThreadPage({ threadId, containerId }: Props) {
     </div>
   )
 }
-`
+`;
 }

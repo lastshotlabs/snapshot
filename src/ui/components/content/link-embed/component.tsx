@@ -158,8 +158,12 @@ function GenericCard({
   const favicon = meta?.favicon;
   const color = meta?.color;
 
-  // If we have oEmbed HTML, render it in an iframe
+  // If we have oEmbed HTML, sanitize and render it
   if (meta?.html) {
+    const sanitizeOEmbed = (html: string) =>
+      html
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+        .replace(/\son\w+="[^"]*"/g, "");
     return (
       <div
         style={{
@@ -167,7 +171,7 @@ function GenericCard({
           overflow: "hidden",
           border: "1px solid var(--sn-color-border, #e5e7eb)",
         }}
-        dangerouslySetInnerHTML={{ __html: meta.html }}
+        dangerouslySetInnerHTML={{ __html: sanitizeOEmbed(meta.html) }}
       />
     );
   }
@@ -324,8 +328,7 @@ export function LinkEmbed({ config }: { config: LinkEmbedConfig }) {
 
   // Determine the platform label for the header
   const platform = platformInfo?.platform ?? "generic";
-  const platformName =
-    config.meta?.siteName ?? PLATFORM_NAMES[platform] ?? "";
+  const platformName = config.meta?.siteName ?? PLATFORM_NAMES[platform] ?? "";
   const accentColor =
     config.meta?.color ?? PLATFORM_COLORS[platform] ?? undefined;
 
@@ -337,6 +340,7 @@ export function LinkEmbed({ config }: { config: LinkEmbedConfig }) {
       className={config.className}
       style={{
         maxWidth: config.maxWidth ?? "100%",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
       {/* Platform-specific iframe embeds */}

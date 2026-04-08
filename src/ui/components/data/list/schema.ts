@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { baseComponentConfigSchema, fromRefSchema } from "../../../manifest/schema";
+import {
+  baseComponentConfigSchema,
+  fromRefSchema,
+} from "../../../manifest/schema";
 import { actionSchema } from "../../../actions/types";
 
 /**

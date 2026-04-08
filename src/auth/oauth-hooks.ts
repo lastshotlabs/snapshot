@@ -1,34 +1,40 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
-import type { ApiClient } from '../api/client'
-import type { ApiError } from '../api/error'
-import type { TokenStorage } from './storage'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import type { ApiClient } from "../api/client";
+import type { ApiError } from "../api/error";
+import type { TokenStorage } from "./storage";
 import type {
   SnapshotConfig,
   AuthUser,
   OAuthProvider,
   OAuthExchangeBody,
   OAuthExchangeResponse,
-} from '../types'
-import type { AuthContract } from '../auth/contract'
+} from "../types";
+import type { AuthContract } from "../auth/contract";
 
-const AUTH_QUERY_KEY = ['auth', 'me'] as const
+const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
 interface OAuthHooksOptions {
-  api: ApiClient
-  storage: TokenStorage
-  config: Pick<SnapshotConfig, 'auth' | 'homePath'>
-  contract: AuthContract
-  onLoginSuccess?: () => void
+  api: ApiClient;
+  storage: TokenStorage;
+  config: Pick<SnapshotConfig, "auth" | "homePath">;
+  contract: AuthContract;
+  onLoginSuccess?: () => void;
 }
 
-export function createOAuthHooks({ api, storage, config, contract, onLoginSuccess }: OAuthHooksOptions) {
+export function createOAuthHooks({
+  api,
+  storage,
+  config,
+  contract,
+  onLoginSuccess,
+}: OAuthHooksOptions) {
   function getOAuthUrl(provider: OAuthProvider): string {
-    return contract.oauthUrl(provider)
+    return contract.oauthUrl(provider);
   }
 
   function getLinkUrl(provider: OAuthProvider): string {
-    return contract.oauthLinkUrl(provider)
+    return contract.oauthLinkUrl(provider);
   }
 
   /**
@@ -38,33 +44,35 @@ export function createOAuthHooks({ api, storage, config, contract, onLoginSucces
    * is needed. This hook will be removed in the next major version.
    */
   function useOAuthExchange() {
-    const queryClient = useQueryClient()
-    const navigate = useNavigate()
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
     return useMutation<OAuthExchangeResponse, ApiError, OAuthExchangeBody>({
-      mutationFn: (body) => api.post<OAuthExchangeResponse>(contract.endpoints.oauthExchange, body),
+      mutationFn: (body) =>
+        api.post<OAuthExchangeResponse>(contract.endpoints.oauthExchange, body),
       onSuccess: async (data) => {
-        if (config.auth !== 'cookie' && data.token) {
-          storage.set(data.token)
+        if (config.auth !== "cookie" && data.token) {
+          storage.set(data.token);
           if (data.refreshToken) {
-            storage.setRefreshToken(data.refreshToken)
+            storage.setRefreshToken(data.refreshToken);
           }
         }
-        const user = await api.get<AuthUser>(contract.endpoints.me)
-        queryClient.setQueryData(AUTH_QUERY_KEY, user)
-        onLoginSuccess?.()
-        if (config.homePath) navigate({ to: config.homePath })
+        const user = await api.get<AuthUser>(contract.endpoints.me);
+        queryClient.setQueryData(AUTH_QUERY_KEY, user);
+        onLoginSuccess?.();
+        if (config.homePath) navigate({ to: config.homePath });
       },
-    })
+    });
   }
 
   function useOAuthUnlink() {
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
     return useMutation<void, ApiError, OAuthProvider>({
-      mutationFn: (provider) => api.delete<void>(contract.oauthUnlink(provider), {}),
+      mutationFn: (provider) =>
+        api.delete<void>(contract.oauthUnlink(provider), {}),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: AUTH_QUERY_KEY })
+        queryClient.invalidateQueries({ queryKey: AUTH_QUERY_KEY });
       },
-    })
+    });
   }
 
   return {
@@ -72,5 +80,5 @@ export function createOAuthHooks({ api, storage, config, contract, onLoginSucces
     getLinkUrl,
     useOAuthExchange,
     useOAuthUnlink,
-  }
+  };
 }

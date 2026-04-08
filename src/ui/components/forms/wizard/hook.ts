@@ -88,7 +88,7 @@ function hasErrors(errors: Record<string, string | undefined>): boolean {
 export function useWizard(config: WizardConfig): UseWizardResult {
   const api = useContext(SnapshotApiContext);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [stepValues, setStepValues] = useState<Record<string, unknown>>({});

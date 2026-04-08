@@ -154,13 +154,15 @@ function Heading({ config }: { config: Record<string, unknown> }) {
     <Tag
       style={{
         fontSize: HEADING_SIZE[level],
-        fontWeight: level <= 2
-          ? "var(--sn-font-weight-bold, 700)"
-          : "var(--sn-font-weight-semibold, 600)",
+        fontWeight:
+          level <= 2
+            ? "var(--sn-font-weight-bold, 700)"
+            : "var(--sn-font-weight-semibold, 600)",
         lineHeight: "var(--sn-leading-tight, 1.25)",
-        letterSpacing: level <= 2
-          ? "var(--sn-tracking-tight, -0.025em)"
-          : "var(--sn-tracking-normal, 0)",
+        letterSpacing:
+          level <= 2
+            ? "var(--sn-tracking-tight, -0.025em)"
+            : "var(--sn-tracking-normal, 0)",
         color: "var(--sn-color-foreground, #111827)",
       }}
     >
@@ -217,9 +219,15 @@ function Button({ config }: { config: Record<string, unknown> }) {
   };
 
   const sizeStyles: Record<string, CSSProperties> = {
-    sm: { padding: "0.25rem 0.5rem", fontSize: "var(--sn-font-size-sm, 0.875rem)" },
+    sm: {
+      padding: "0.25rem 0.5rem",
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+    },
     md: { padding: "0.5rem 1rem", fontSize: "var(--sn-font-size-md, 1rem)" },
-    lg: { padding: "0.75rem 1.5rem", fontSize: "var(--sn-font-size-lg, 1.125rem)" },
+    lg: {
+      padding: "0.75rem 1.5rem",
+      fontSize: "var(--sn-font-size-lg, 1.125rem)",
+    },
     icon: {
       padding: "0.5rem",
       fontSize: "var(--sn-font-size-md, 1rem)",

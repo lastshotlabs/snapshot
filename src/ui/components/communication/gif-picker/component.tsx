@@ -1,6 +1,16 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+} from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
-import { useActionExecutor } from "../../../actions/executor";
+import {
+  useActionExecutor,
+  SnapshotApiContext,
+} from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import type { GifPickerConfig, GifEntry } from "./types";
 
@@ -14,6 +24,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
+  const api = useContext(SnapshotApiContext);
 
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<GifEntry[]>([]);
@@ -42,9 +53,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
   // Fetch GIFs from API
   const fetchGifs = useCallback(
     async (query: string) => {
-      const endpoint = query
-        ? config.searchEndpoint
-        : config.trendingEndpoint;
+      const endpoint = query ? config.searchEndpoint : config.trendingEndpoint;
       if (!endpoint) return;
 
       setLoading(true);
@@ -54,14 +63,17 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
           ? `${endpoint}${separator}q=${encodeURIComponent(query)}`
           : endpoint;
 
-        // Use fetch directly — this goes through the backend proxy
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error("Failed to fetch GIFs");
-        const data = await resp.json();
+        // Use the API client to route through the backend proxy
+        if (!api) throw new Error("No API client available");
+        const raw = await api.get(url);
+        const data = raw as Record<string, unknown>;
 
         const items = Array.isArray(data)
-          ? data
-          : data.results ?? data.data ?? data.gifs ?? [];
+          ? (data as Record<string, unknown>[])
+          : ((data.results ?? data.data ?? data.gifs ?? []) as Record<
+              string,
+              unknown
+            >[]);
 
         setResults(
           items.map((item: Record<string, unknown>, i: number) => ({
@@ -80,6 +92,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
       }
     },
     [
+      api,
       config.searchEndpoint,
       config.trendingEndpoint,
       urlField,
@@ -125,8 +138,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
 
   if (visible === false) return null;
 
-  const displayGifs =
-    staticGifs.length > 0 ? staticGifs : results;
+  const displayGifs = staticGifs.length > 0 ? staticGifs : results;
 
   return (
     <div
@@ -140,6 +152,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
         overflow: "hidden",
         width: "100%",
         maxWidth: "400px",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Hover/transition styles */}
@@ -217,7 +230,12 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
               justifyContent: "center",
             }}
           >
-            <span style={{ animation: "sn-gif-spinner 1s linear infinite", display: "inline-flex" }}>
+            <span
+              style={{
+                animation: "sn-gif-spinner 1s linear infinite",
+                display: "inline-flex",
+              }}
+            >
               <Icon name="loader" size={20} />
             </span>
           </div>

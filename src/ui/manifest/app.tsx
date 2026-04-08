@@ -9,6 +9,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createSnapshot } from "../../create-snapshot";
 import { AppContextProvider } from "../context/index";
+import { SnapshotApiContext } from "../actions/executor";
 import { resolveTokens } from "../tokens/resolve";
 import { PageRenderer } from "./renderer";
 import type { ManifestConfig, ManifestAppProps } from "./types";
@@ -122,9 +123,11 @@ export function ManifestApp({
 
   return (
     <snapshot.QueryProvider>
-      <AppContextProvider globals={manifest.globals} api={snapshot.api}>
-        <ManifestRouter manifest={manifest} />
-      </AppContextProvider>
+      <SnapshotApiContext.Provider value={snapshot.api}>
+        <AppContextProvider globals={manifest.globals} api={snapshot.api}>
+          <ManifestRouter manifest={manifest} />
+        </AppContextProvider>
+      </SnapshotApiContext.Provider>
     </snapshot.QueryProvider>
   );
 }

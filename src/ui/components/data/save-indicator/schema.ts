@@ -1,7 +1,5 @@
 import { z } from "zod";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the SaveIndicator component.
@@ -24,7 +22,10 @@ export const saveIndicatorConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("save-indicator"),
     /** Current save status. Supports FromRef for reactive binding. */
-    status: z.union([z.enum(["idle", "saving", "saved", "error"]), fromRefSchema]),
+    status: z.union([
+      z.enum(["idle", "saving", "saved", "error"]),
+      fromRefSchema,
+    ]),
     /** Text shown in saved state. Default: "Saved". */
     savedText: z.string().optional(),
     /** Text shown in saving state. Default: "Saving...". */

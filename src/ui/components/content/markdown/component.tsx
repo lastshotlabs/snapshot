@@ -200,7 +200,7 @@ const markdownComponents: Components = {
         marginTop: 0,
         marginBottom: "var(--sn-spacing-md, 0.75rem)",
         fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        lineHeight: 1.6,
+        lineHeight: "var(--sn-leading-relaxed, 1.75)",
       }}
     >
       {children}
@@ -218,7 +218,7 @@ const markdownComponents: Components = {
             color: "var(--sn-color-foreground, #111827)",
             padding: "0.15em 0.4em",
             borderRadius: "var(--sn-radius-sm, 0.25rem)",
-            fontSize: "0.9em",
+            fontSize: "var(--sn-font-size-sm, 0.875rem)",
             fontFamily: "var(--sn-font-mono, monospace)",
           }}
         >
@@ -241,7 +241,12 @@ const markdownComponents: Components = {
     );
   },
   table: ({ children, ...props }) => (
-    <div style={{ overflowX: "auto", marginBottom: "var(--sn-spacing-md, 0.75rem)" }}>
+    <div
+      style={{
+        overflowX: "auto",
+        marginBottom: "var(--sn-spacing-md, 0.75rem)",
+      }}
+    >
       <table
         {...props}
         style={{

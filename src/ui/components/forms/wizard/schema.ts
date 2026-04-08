@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { orFromRef } from "../../_base/types";
 import { fieldConfigSchema } from "../auto-form/schema";
 
 /**
@@ -58,8 +59,16 @@ export const wizardStepSchema = z.object({
  * ```
  */
 export const wizardSchema = z.object({
+  /** Component type discriminator. */
+  type: z.literal("wizard"),
   /** Optional component id — publishes accumulated form data to the page context. */
   id: z.string().optional(),
+  /** Whether the component is visible. Can be a FromRef for conditional rendering. */
+  visible: orFromRef(z.boolean()).optional(),
+  /** CSS class name(s) to apply to the component wrapper. */
+  className: z.string().optional(),
+  /** Inline style overrides as a CSS property map. */
+  style: z.record(z.union([z.string(), z.number()])).optional(),
   /** Ordered list of wizard steps. */
   steps: z.array(wizardStepSchema).min(1),
   /** Endpoint to POST all accumulated data to on final step submission. */

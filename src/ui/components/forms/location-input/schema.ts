@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/** Schema for a FromRef value. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the LocationInput component.

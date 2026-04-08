@@ -125,10 +125,11 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 50,
+        zIndex: "var(--sn-z-index-modal, 40)" as unknown as number,
         display: "flex",
         alignItems: size === "full" ? "stretch" : "center",
         justifyContent: "center",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
       {/* Overlay */}
@@ -170,6 +171,25 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
           transition: `opacity ${ANIMATION_DURATION}ms ease, transform ${ANIMATION_DURATION}ms cubic-bezier(0.32, 0.72, 0, 1)`,
         }}
       >
+        <style>{`
+          [data-snapshot-component="modal"] [data-snapshot-modal-close]:focus { outline: none; }
+          [data-snapshot-component="modal"] [data-snapshot-modal-close]:hover {
+            background-color: var(--sn-color-secondary, #f3f4f6);
+          }
+          [data-snapshot-component="modal"] [data-snapshot-modal-close]:focus-visible {
+            outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+            outline-offset: var(--sn-ring-offset, 2px);
+          }
+          [data-snapshot-component="modal"] [data-snapshot-modal-footer] button:focus { outline: none; }
+          [data-snapshot-component="modal"] [data-snapshot-modal-footer] button:hover {
+            opacity: var(--sn-opacity-hover, 0.9);
+          }
+          [data-snapshot-component="modal"] [data-snapshot-modal-footer] button:focus-visible {
+            outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+            outline-offset: var(--sn-ring-offset, 2px);
+          }
+        `}</style>
+
         {/* Header */}
         {title && (
           <div
@@ -206,7 +226,7 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
                 padding: "var(--sn-spacing-xs, 0.25rem)",
                 borderRadius: "var(--sn-radius-sm, 0.25rem)",
                 color: "var(--sn-color-muted-foreground, #6b7280)",
-                fontSize: "1.25rem",
+                fontSize: "var(--sn-font-size-lg, 1.125rem)",
                 lineHeight: 1,
               }}
             >

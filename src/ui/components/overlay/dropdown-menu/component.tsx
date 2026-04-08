@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
+import { Icon } from "../../../icons/index";
 import type { DropdownMenuConfig } from "./types";
 
 const ANIMATION_DURATION = 150;
@@ -64,9 +65,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
 
   // Collect actionable item indices for keyboard navigation
   const actionableIndices = config.items
-    .map((item, i) =>
-      item.type === "item" && !item.disabled ? i : -1,
-    )
+    .map((item, i) => (item.type === "item" && !item.disabled ? i : -1))
     .filter((i) => i !== -1);
 
   const open = useCallback(() => {
@@ -184,8 +183,29 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
       data-snapshot-component="dropdown-menu"
       data-testid="dropdown-menu"
       className={config.className}
-      style={{ position: "relative", display: "inline-block" }}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="dropdown-menu"] > button:focus { outline: none; }
+        [data-snapshot-component="dropdown-menu"] > button:hover {
+          filter: brightness(0.95);
+        }
+        [data-snapshot-component="dropdown-menu"] > button:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+        [data-snapshot-component="dropdown-menu"] [role="menuitem"]:focus { outline: none; }
+        [data-snapshot-component="dropdown-menu"] [role="menuitem"]:hover {
+          background-color: var(--sn-color-secondary, #f3f4f6);
+        }
+        [data-snapshot-component="dropdown-menu"] [role="menuitem"]:focus-visible {
+          background-color: var(--sn-color-secondary, #f3f4f6);
+        }
+      `}</style>
       {/* Trigger button */}
       <button
         type="button"
@@ -196,8 +216,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
         aria-expanded={isOpen}
         style={{
           ...VARIANT_STYLES[variant],
-          padding:
-            "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+          padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
           borderRadius: "var(--sn-radius-md, 0.375rem)",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           cursor: "pointer",
@@ -208,9 +227,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
           lineHeight: 1.5,
         }}
       >
-        {config.trigger.icon && (
-          <span aria-hidden="true">{config.trigger.icon}</span>
-        )}
+        {config.trigger.icon && <Icon name={config.trigger.icon} size={16} />}
         {config.trigger.label && <span>{config.trigger.label}</span>}
       </button>
 
@@ -225,7 +242,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
             position: "absolute",
             ...alignStyle,
             ...sideStyle,
-            zIndex: 50,
+            zIndex: "var(--sn-z-index-dropdown, 10)" as unknown as number,
             minWidth: "180px",
             backgroundColor: "var(--sn-color-card, #ffffff)",
             border: "1px solid var(--sn-color-border, #e5e7eb)",
@@ -307,20 +324,11 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
                   alignItems: "center",
                   gap: "var(--sn-spacing-xs, 0.25rem)",
                   userSelect: "none",
-                  transition: "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                  transition:
+                    "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                 }}
               >
-                {entry.icon && (
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {entry.icon}
-                  </span>
-                )}
+                {entry.icon && <Icon name={entry.icon} size={16} />}
                 <span>{entry.label}</span>
               </div>
             );

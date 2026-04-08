@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../types'
+import type { ScaffoldConfig } from "../types";
 
 // shadcn v4 neutral palette (default + dark themes)
 const NEUTRAL_LIGHT = `
@@ -25,7 +25,7 @@ const NEUTRAL_LIGHT = `
     --chart-2: oklch(0.6 0.118 184.704);
     --chart-3: oklch(0.398 0.07 227.392);
     --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);`
+    --chart-5: oklch(0.769 0.188 70.08);`;
 
 const NEUTRAL_DARK = `
     --background: oklch(0.145 0 0);
@@ -50,7 +50,7 @@ const NEUTRAL_DARK = `
     --chart-2: oklch(0.696 0.17 162.48);
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);`
+    --chart-5: oklch(0.645 0.246 16.439);`;
 
 // Slate/muted palette (minimal theme)
 const MINIMAL_LIGHT = `
@@ -77,7 +77,7 @@ const MINIMAL_LIGHT = `
     --chart-2: oklch(0.6 0.1 180);
     --chart-3: oklch(0.5 0.08 220);
     --chart-4: oklch(0.65 0.09 200);
-    --chart-5: oklch(0.45 0.1 260);`
+    --chart-5: oklch(0.45 0.1 260);`;
 
 const MINIMAL_DARK = `
     --background: oklch(0.15 0.01 264);
@@ -103,7 +103,7 @@ const MINIMAL_DARK = `
     --chart-2: oklch(0.6 0.1 180);
     --chart-3: oklch(0.65 0.09 200);
     --chart-4: oklch(0.5 0.08 220);
-    --chart-5: oklch(0.45 0.1 260);`
+    --chart-5: oklch(0.45 0.1 260);`;
 
 // Violet/indigo saturated palette (vibrant theme)
 const VIBRANT_LIGHT = `
@@ -130,7 +130,7 @@ const VIBRANT_LIGHT = `
     --chart-2: oklch(0.6 0.2 200);
     --chart-3: oklch(0.55 0.22 310);
     --chart-4: oklch(0.65 0.18 160);
-    --chart-5: oklch(0.58 0.2 40);`
+    --chart-5: oklch(0.58 0.2 40);`;
 
 const VIBRANT_DARK = `
     --background: oklch(0.13 0.03 285);
@@ -155,20 +155,18 @@ const VIBRANT_DARK = `
     --chart-2: oklch(0.65 0.18 200);
     --chart-3: oklch(0.62 0.2 310);
     --chart-4: oklch(0.68 0.16 160);
-    --chart-5: oklch(0.65 0.18 40);`
+    --chart-5: oklch(0.65 0.18 40);`;
 
-const THEMES: Record<
-  ScaffoldConfig['theme'],
-  { light: string; dark: string }
-> = {
-  default: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
-  dark: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
-  minimal: { light: MINIMAL_LIGHT, dark: MINIMAL_DARK },
-  vibrant: { light: VIBRANT_LIGHT, dark: VIBRANT_DARK },
-}
+const THEMES: Record<ScaffoldConfig["theme"], { light: string; dark: string }> =
+  {
+    default: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
+    dark: { light: NEUTRAL_LIGHT, dark: NEUTRAL_DARK },
+    minimal: { light: MINIMAL_LIGHT, dark: MINIMAL_DARK },
+    vibrant: { light: VIBRANT_LIGHT, dark: VIBRANT_DARK },
+  };
 
 export function generateGlobalsCss(config: ScaffoldConfig): string {
-  const { light, dark } = THEMES[config.theme]
+  const { light, dark } = THEMES[config.theme];
   return `@import "tailwindcss";
 
 @theme {
@@ -213,5 +211,5 @@ export function generateGlobalsCss(config: ScaffoldConfig): string {
     color-scheme: dark;
   }
 }
-`
+`;
 }

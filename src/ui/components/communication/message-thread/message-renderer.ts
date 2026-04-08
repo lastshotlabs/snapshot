@@ -31,7 +31,15 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
   span: new Set(["data-mention", "class"]),
   code: new Set(["class"]),
   pre: new Set(["class"]),
-  img: new Set(["src", "alt", "title", "class", "width", "height", "draggable"]),
+  img: new Set([
+    "src",
+    "alt",
+    "title",
+    "class",
+    "width",
+    "height",
+    "draggable",
+  ]),
   div: new Set(["class", "data-embed-url", "data-platform"]),
   mark: new Set(["class"]),
 };
@@ -82,12 +90,17 @@ export function sanitizeMessageHtml(html: string): string {
     if (allowedAttrs) {
       for (const attr of Array.from(el.attributes)) {
         if (allowedAttrs.has(attr.name)) {
-          // Block javascript: URLs in href and src
-          if (
-            (attr.name === "href" || attr.name === "src") &&
-            attr.value.trim().toLowerCase().startsWith("javascript:")
-          ) {
-            continue;
+          // Block dangerous URL protocols in href and src
+          if (attr.name === "href" || attr.name === "src") {
+            const normalized = attr.value.trim().toLowerCase();
+            if (
+              normalized.startsWith("javascript:") ||
+              normalized.startsWith("data:") ||
+              normalized.startsWith("vbscript:") ||
+              normalized.startsWith("blob:")
+            ) {
+              continue;
+            }
           }
           attrs += ` ${attr.name}="${escapeAttr(attr.value)}"`;
         }

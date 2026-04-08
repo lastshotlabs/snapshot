@@ -95,7 +95,7 @@ export function WebhooksPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateWebhookDetailPageComponent(): string {
@@ -185,7 +185,7 @@ export function WebhookDetailPage({ endpointId }: Props) {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateWebhooksRoute(): string {
@@ -195,7 +195,7 @@ import { WebhooksPage } from '@pages/admin/WebhooksPage'
 export const Route = createFileRoute('/_authenticated/webhooks')({
   component: WebhooksPage,
 })
-`
+`;
 }
 
 export function generateWebhookDetailRoute(): string {
@@ -208,5 +208,5 @@ export const Route = createFileRoute('/_authenticated/webhooks/$endpointId')({
     return <WebhookDetailPage endpointId={endpointId} />
   },
 })
-`
+`;
 }

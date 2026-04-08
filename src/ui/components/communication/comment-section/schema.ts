@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the CommentSection component.
@@ -41,9 +39,7 @@ export const commentSectionConfigSchema = z
     /** Placeholder for the comment input. Default: "Write a comment...". */
     inputPlaceholder: z.string().optional(),
     /** Features enabled in the comment input. */
-    inputFeatures: z
-      .array(z.string())
-      .optional(),
+    inputFeatures: z.array(z.string()).optional(),
     /** Action dispatched when posting a new comment. */
     submitAction: actionSchema.optional(),
     /** Action dispatched when deleting a comment. */

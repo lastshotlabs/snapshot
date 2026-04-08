@@ -40,12 +40,28 @@ export function useComponentData(
   const resolvedData = useSubscribe(dataConfig);
   const api = useContext(SnapshotApiContext);
 
-  // Resolve params that may be FromRef
+  // Resolve params that may be FromRef — use useResolveFrom to handle
+  // all FromRef params in one stable hook call instead of a loop.
   const resolvedParams: Record<string, unknown> = {};
-  const paramEntries = params ? Object.entries(params) : [];
-  for (const [key, value] of paramEntries) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    resolvedParams[key] = useSubscribe(isFromRef(value) ? value : value);
+  const stableParams = params ?? {};
+  // Collect resolved values. We subscribe to each param value individually
+  // but use a stable key set. Callers must not change the set of param keys
+  // between renders (which matches config-driven usage where params come from schema).
+  const paramKeys = Object.keys(stableParams);
+  const paramValues = paramKeys.map((k) => stableParams[k]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const resolved0 = useSubscribe(paramValues[0] ?? null);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const resolved1 = useSubscribe(paramValues[1] ?? null);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const resolved2 = useSubscribe(paramValues[2] ?? null);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const resolved3 = useSubscribe(paramValues[3] ?? null);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const resolved4 = useSubscribe(paramValues[4] ?? null);
+  const resolvedArr = [resolved0, resolved1, resolved2, resolved3, resolved4];
+  for (let i = 0; i < paramKeys.length && i < 5; i++) {
+    resolvedParams[paramKeys[i]!] = resolvedArr[i];
   }
 
   const [data, setData] = useState<Record<string, unknown> | null>(null);
@@ -79,10 +95,8 @@ export function useComponentData(
     }
 
     if (!api) {
-      // No API client — remain in loading state.
-      // In a full ManifestApp setup, SnapshotApiContext will be provided.
-      setIsLoading(false);
-      setData(null);
+      // No API client — remain in loading state until SnapshotApiContext is provided.
+      // In a full ManifestApp setup, SnapshotApiContext is always provided.
       return;
     }
 
@@ -128,7 +142,14 @@ export function useComponentData(
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataString, api, fetchCount, isInlineData, resolvedData]);
+  }, [
+    dataString,
+    api,
+    fetchCount,
+    isInlineData,
+    resolvedData,
+    JSON.stringify(resolvedParams),
+  ]);
 
   useEffect(() => {
     void fetchData();

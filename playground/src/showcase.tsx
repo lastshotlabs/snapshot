@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
   ComponentRenderer,
   PageContextProvider,
-
   crudPage,
   dashboardPage,
   settingsPage,
   usePublish,
-
 } from "@lastshotlabs/snapshot/ui";
 
 type Page =
@@ -24,7 +22,6 @@ type Page =
   | "presets"
   | "feed-chart-wizard";
 
-
 const PAGES: { key: Page; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
   { key: "data", label: "Data Display" },
@@ -39,7 +36,6 @@ const PAGES: { key: Page; label: string }[] = [
 
   { key: "presets", label: "Presets" },
   { key: "feed-chart-wizard", label: "Feed / Chart / Wizard" },
-
 ];
 
 // ── Dashboard page configs ──────────────────────────────────────────────
@@ -702,13 +698,37 @@ const sortableListDemo = {
   type: "list",
   variant: "card",
   sortable: true,
-  reorderAction: { type: "toast", message: "List reordered!", variant: "success" },
+  reorderAction: {
+    type: "toast",
+    message: "List reordered!",
+    variant: "success",
+  },
   items: [
-    { title: "1. Design tokens", description: "Set up the color, spacing, and typography system", icon: "palette" },
-    { title: "2. Component library", description: "Build all config-driven components", icon: "layout-dashboard" },
-    { title: "3. Responsive system", description: "Add breakpoint hooks and media queries", icon: "smartphone" },
-    { title: "4. Drag and drop", description: "Enable reordering with @dnd-kit", icon: "grip-vertical" },
-    { title: "5. Testing", description: "Write schema + rendering tests", icon: "check-circle" },
+    {
+      title: "1. Design tokens",
+      description: "Set up the color, spacing, and typography system",
+      icon: "palette",
+    },
+    {
+      title: "2. Component library",
+      description: "Build all config-driven components",
+      icon: "layout-dashboard",
+    },
+    {
+      title: "3. Responsive system",
+      description: "Add breakpoint hooks and media queries",
+      icon: "smartphone",
+    },
+    {
+      title: "4. Drag and drop",
+      description: "Enable reordering with @dnd-kit",
+      icon: "grip-vertical",
+    },
+    {
+      title: "5. Testing",
+      description: "Write schema + rendering tests",
+      icon: "check-circle",
+    },
   ],
 };
 
@@ -1926,7 +1946,6 @@ function StructuralPage() {
   );
 }
 
-
 // ── Preset page configs ───────────────────────────────────────────────────────
 
 const usersPresetPage = crudPage({
@@ -2514,7 +2533,6 @@ function FeedChartWizardPage() {
           </FeedDataProvider>
         </FeedDataProvider>
       </FeedDataProvider>
-
     </PageWrapper>
   );
 }
@@ -2548,7 +2566,6 @@ export function ComponentShowcase() {
 
       {page === "presets" && <PresetsPage />}
       {page === "feed-chart-wizard" && <FeedChartWizardPage />}
-
     </>
   );
 }

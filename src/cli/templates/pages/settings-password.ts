@@ -49,5 +49,5 @@ export function SettingsPasswordPage() {
     </Card>
   )
 }
-`
+`;
 }

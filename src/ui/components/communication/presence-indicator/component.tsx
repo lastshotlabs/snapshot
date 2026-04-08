@@ -61,11 +61,14 @@ export function PresenceIndicator({
     <div
       data-snapshot-component="presence-indicator"
       data-testid="presence-indicator"
+      role="status"
+      aria-label={displayLabel}
       className={config.className}
       style={{
         display: "inline-flex",
         alignItems: "center",
         gap: "var(--sn-spacing-xs, 0.25rem)",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {showDot && (

@@ -105,6 +105,7 @@ const PLACEMENT_STYLES: Record<
 export function TooltipComponent({ config }: { config: TooltipConfig }) {
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tooltipId = React.useId();
   const placement = config.placement ?? "top";
   const delay = config.delay ?? 300;
 
@@ -126,6 +127,16 @@ export function TooltipComponent({ config }: { config: TooltipConfig }) {
     setVisible(false);
   }, []);
 
+  // Dismiss on Escape key
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape" && visible) {
+        hide();
+      }
+    },
+    [visible, hide],
+  );
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
@@ -140,27 +151,29 @@ export function TooltipComponent({ config }: { config: TooltipConfig }) {
       data-snapshot-component="tooltip"
       data-testid="tooltip"
       className={config.className}
+      aria-describedby={visible ? tooltipId : undefined}
       onMouseEnter={show}
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
+      onKeyDown={handleKeyDown}
       style={{
         position: "relative",
         display: "inline-block",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Trigger content */}
       {config.content.map((child, index) => (
         <ComponentRenderer
-          key={
-            (child as ComponentConfig).id ?? `tooltip-child-${index}`
-          }
+          key={(child as ComponentConfig).id ?? `tooltip-child-${index}`}
           config={child as ComponentConfig}
         />
       ))}
 
       {/* Tooltip popup */}
       <div
+        id={tooltipId}
         role="tooltip"
         data-testid="tooltip-popup"
         style={{

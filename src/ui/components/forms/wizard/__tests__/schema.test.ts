@@ -8,6 +8,7 @@ describe("wizardSchema", () => {
   };
 
   const baseConfig = {
+    type: "wizard" as const,
     steps: [baseStep],
   };
 
@@ -34,6 +35,7 @@ describe("wizardSchema", () => {
 
   it("accepts a full config", () => {
     const result = wizardSchema.safeParse({
+      type: "wizard",
       id: "onboarding",
       steps: [
         {
@@ -60,6 +62,7 @@ describe("wizardSchema", () => {
 
   it("accepts a step with all field types", () => {
     const result = wizardSchema.safeParse({
+      type: "wizard",
       steps: [
         {
           title: "Fields",
@@ -90,12 +93,13 @@ describe("wizardSchema", () => {
   });
 
   it("rejects empty steps array", () => {
-    const result = wizardSchema.safeParse({ steps: [] });
+    const result = wizardSchema.safeParse({ type: "wizard", steps: [] });
     expect(result.success).toBe(false);
   });
 
   it("rejects step missing title", () => {
     const result = wizardSchema.safeParse({
+      type: "wizard",
       steps: [{ fields: [] }],
     });
     expect(result.success).toBe(false);
@@ -103,6 +107,7 @@ describe("wizardSchema", () => {
 
   it("rejects field with invalid type", () => {
     const result = wizardSchema.safeParse({
+      type: "wizard",
       steps: [
         {
           title: "Step",

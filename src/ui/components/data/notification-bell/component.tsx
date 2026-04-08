@@ -13,9 +13,27 @@ const SIZE_MAP = {
 
 /** Badge font sizes per size variant. */
 const BADGE_SIZE_MAP = {
-  sm: { fontSize: "9px", minWidth: "14px", height: "14px", padding: "0 3px", offset: "-4px" },
-  md: { fontSize: "10px", minWidth: "16px", height: "16px", padding: "0 4px", offset: "-5px" },
-  lg: { fontSize: "11px", minWidth: "18px", height: "18px", padding: "0 5px", offset: "-6px" },
+  sm: {
+    fontSize: "9px",
+    minWidth: "14px",
+    height: "14px",
+    padding: "0 3px",
+    offset: "-4px",
+  },
+  md: {
+    fontSize: "10px",
+    minWidth: "16px",
+    height: "16px",
+    padding: "0 4px",
+    offset: "-5px",
+  },
+  lg: {
+    fontSize: "11px",
+    minWidth: "18px",
+    height: "18px",
+    padding: "0 5px",
+    offset: "-6px",
+  },
 } as const;
 
 /**
@@ -36,7 +54,11 @@ const BADGE_SIZE_MAP = {
  * }
  * ```
  */
-export function NotificationBell({ config }: { config: NotificationBellConfig }) {
+export function NotificationBell({
+  config,
+}: {
+  config: NotificationBellConfig;
+}) {
   const resolvedCount = useSubscribe(config.count ?? 0) as number;
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
@@ -65,57 +87,68 @@ export function NotificationBell({ config }: { config: NotificationBellConfig })
   };
 
   return (
-    <button
+    <div
       data-snapshot-component="notification-bell"
-      data-testid="notification-bell"
-      className={config.className}
-      onClick={handleClick}
-      aria-label={
-        showBadge
-          ? `Notifications (${resolvedCount} unread)`
-          : "Notifications"
-      }
       style={{
         display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        background: "transparent",
-        border: "none",
-        cursor: "pointer",
-        padding: "var(--sn-spacing-xs, 0.25rem)",
-        borderRadius: "var(--sn-radius-sm, 0.25rem)",
-        color: "var(--sn-color-foreground, #111827)",
+        ...(config.style as React.CSSProperties),
       }}
     >
-      <Icon name="bell" size={iconSize} />
+      <style>{`
+[data-snapshot-component="notification-bell"] button:focus { outline: none; }
+[data-snapshot-component="notification-bell"] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+      `}</style>
+      <button
+        data-testid="notification-bell"
+        className={config.className}
+        onClick={handleClick}
+        aria-label={
+          showBadge
+            ? `Notifications (${resolvedCount} unread)`
+            : "Notifications"
+        }
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          padding: "var(--sn-spacing-xs, 0.25rem)",
+          borderRadius: "var(--sn-radius-sm, 0.25rem)",
+          color: "var(--sn-color-foreground, #111827)",
+        }}
+      >
+        <Icon name="bell" size={iconSize} />
 
-      {/* Badge */}
-      {showBadge && (
-        <span
-          data-testid="notification-badge"
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: badge.offset,
-            right: badge.offset,
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minWidth: badge.minWidth,
-            height: badge.height,
-            padding: badge.padding,
-            fontSize: badge.fontSize,
-            fontWeight: "var(--sn-font-weight-bold, 700)" as string,
-            lineHeight: 1,
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            backgroundColor: "var(--sn-color-destructive, #ef4444)",
-            color: "var(--sn-color-destructive-foreground, #ffffff)",
-          }}
-        >
-          {displayCount}
-        </span>
-      )}
-    </button>
+        {/* Badge */}
+        {showBadge && (
+          <span
+            data-testid="notification-badge"
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: badge.offset,
+              right: badge.offset,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: badge.minWidth,
+              height: badge.height,
+              padding: badge.padding,
+              fontSize: badge.fontSize,
+              fontWeight: "var(--sn-font-weight-bold, 700)" as string,
+              lineHeight: 1,
+              borderRadius: "var(--sn-radius-full, 9999px)",
+              backgroundColor: "var(--sn-color-destructive, #ef4444)",
+              color: "var(--sn-color-destructive-foreground, #ffffff)",
+            }}
+          >
+            {displayCount}
+          </span>
+        )}
+      </button>
+    </div>
   );
 }

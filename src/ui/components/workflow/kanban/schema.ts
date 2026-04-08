@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/** A reference to another component's published value. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a Kanban board column definition.

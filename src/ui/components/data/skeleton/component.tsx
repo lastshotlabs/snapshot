@@ -39,9 +39,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
   const animated = config.animated ?? true;
   const lines = config.lines ?? 3;
 
-  const animationStyle = animated
-    ? "sn-pulse 2s ease-in-out infinite"
-    : "none";
+  const animationStyle = animated ? "sn-pulse 2s ease-in-out infinite" : "none";
 
   const baseStyle: React.CSSProperties = {
     backgroundColor: "var(--sn-color-muted, #e5e7eb)",
@@ -59,6 +57,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
           flexDirection: "column",
           gap: "var(--sn-spacing-sm, 0.5rem)",
           width: toCss(config.width, "100%"),
+          ...(config.style as React.CSSProperties),
         }}
       >
         {animated && (
@@ -91,6 +90,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
         data-snapshot-component="skeleton"
         data-testid="skeleton"
         className={config.className}
+        style={config.style as React.CSSProperties}
       >
         {animated && (
           <style>{`
@@ -119,6 +119,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
         data-snapshot-component="skeleton"
         data-testid="skeleton"
         className={config.className}
+        style={config.style as React.CSSProperties}
       >
         {animated && (
           <style>{`
@@ -156,6 +157,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
         display: "flex",
         flexDirection: "column",
         gap: "var(--sn-spacing-md, 1rem)",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {animated && (

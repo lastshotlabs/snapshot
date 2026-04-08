@@ -70,6 +70,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
     <div
       data-snapshot-component="chat-window"
       data-testid="chat-window"
+      aria-label="Chat"
       className={config.className}
       style={{
         display: "flex",
@@ -79,6 +80,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Header */}
@@ -89,8 +91,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
             display: "flex",
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
-            padding:
-              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
             borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
             backgroundColor: "var(--sn-color-card, #ffffff)",
             flexShrink: 0,
@@ -131,7 +132,14 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
       )}
 
       {/* Message thread */}
-      <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <MessageThread
           config={{
             ...threadConfig,

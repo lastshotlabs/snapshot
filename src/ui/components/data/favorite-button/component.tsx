@@ -63,33 +63,39 @@ export function FavoriteButton({ config }: { config: FavoriteButtonConfig }) {
   };
 
   return (
-    <>
-    <style>{`[data-snapshot-component="favorite-button"]:hover { background-color: var(--sn-color-secondary, #f3f4f6); }`}</style>
-    <button
+    <div
       data-snapshot-component="favorite-button"
-      data-testid="favorite-button"
-      data-active={active}
-      className={config.className}
-      onClick={handleToggle}
-      aria-label={active ? "Remove from favorites" : "Add to favorites"}
-      aria-pressed={active}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "transparent",
-        border: "none",
-        cursor: "pointer",
-        padding: "var(--sn-spacing-xs, 0.25rem)",
-        borderRadius: "var(--sn-radius-sm, 0.25rem)",
-        color: active
-          ? "var(--sn-color-warning, #f59e0b)"
-          : "var(--sn-color-muted-foreground, #6b7280)",
-        transition: `color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)`,
-      }}
+      style={config.style as React.CSSProperties}
     >
-      <Icon name="star" size={iconSize} />
-    </button>
-    </>
+      <style>{`
+[data-snapshot-component="favorite-button"] button:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
+[data-snapshot-component="favorite-button"] button:focus { outline: none; }
+[data-snapshot-component="favorite-button"] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+      `}</style>
+      <button
+        data-testid="favorite-button"
+        data-active={active}
+        className={config.className}
+        onClick={handleToggle}
+        aria-label={active ? "Remove from favorites" : "Add to favorites"}
+        aria-pressed={active}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          padding: "var(--sn-spacing-xs, 0.25rem)",
+          borderRadius: "var(--sn-radius-sm, 0.25rem)",
+          color: active
+            ? "var(--sn-color-warning, #f59e0b)"
+            : "var(--sn-color-muted-foreground, #6b7280)",
+          transition: `color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)`,
+        }}
+      >
+        <Icon name="star" size={iconSize} />
+      </button>
+    </div>
   );
 }

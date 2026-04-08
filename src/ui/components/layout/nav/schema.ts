@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/**
- * Schema for a FromRef value — references another component's published value.
- */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Base nav item schema (without recursive children).
@@ -88,6 +84,8 @@ export const navConfigSchema = z
   .object({
     /** Component type discriminator. */
     type: z.literal("nav"),
+    /** Optional component id for context publishing. */
+    id: z.string().optional(),
     /** Navigation items. */
     items: z.array(navItemSchema),
     /** Whether the sidebar is collapsible on mobile. Default: true. */
@@ -96,6 +94,8 @@ export const navConfigSchema = z
     userMenu: z.union([z.boolean(), userMenuConfigSchema]).optional(),
     /** Logo / brand element. */
     logo: logoConfigSchema.optional(),
+    /** Optional inline styles applied to the root nav element. */
+    style: z.record(z.union([z.string(), z.number()])).optional(),
   })
   .strict();
 

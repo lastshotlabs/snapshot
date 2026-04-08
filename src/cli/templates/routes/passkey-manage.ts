@@ -5,5 +5,5 @@ import { PasskeyManagePage } from '@pages/auth/PasskeyManagePage'
 export const Route = createFileRoute('/_authenticated/passkey')({
   component: PasskeyManagePage,
 })
-`
+`;
 }

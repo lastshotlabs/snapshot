@@ -6,17 +6,17 @@ modals, toasts, confirmations, and data flow. Actions compose into chains.
 
 ## Action Types
 
-| Type          | Purpose                               |
-| ------------- | ------------------------------------- |
-| `navigate`    | Navigate to a route                   |
-| `api`         | Call an API endpoint                  |
-| `open-modal`  | Open a modal/drawer by id            |
-| `close-modal` | Close a modal (by id or topmost)      |
-| `refresh`     | Re-fetch a component's data           |
+| Type          | Purpose                                 |
+| ------------- | --------------------------------------- |
+| `navigate`    | Navigate to a route                     |
+| `api`         | Call an API endpoint                    |
+| `open-modal`  | Open a modal/drawer by id               |
+| `close-modal` | Close a modal (by id or topmost)        |
+| `refresh`     | Re-fetch a component's data             |
 | `set-value`   | Set another component's published value |
-| `download`    | Download a file from an endpoint      |
-| `confirm`     | Show a confirmation dialog            |
-| `toast`       | Show a toast notification             |
+| `download`    | Download a file from an endpoint        |
+| `confirm`     | Show a confirmation dialog              |
+| `toast`       | Show a toast notification               |
 
 ## Usage
 

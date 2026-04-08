@@ -155,15 +155,20 @@ describe("useTokenEditor", () => {
   });
 
   describe("setFlavor", () => {
-    it("applies a flavor's tokens as inline styles", () => {
+    it("applies a flavor's tokens via injected style element", () => {
       const { result } = renderHook(() => useTokenEditor());
 
       act(() => {
         result.current.setFlavor("violet");
       });
 
-      // Should have set multiple properties
-      expect(setPropertySpy).toHaveBeenCalled();
+      // setFlavor now regenerates full CSS via resolveTokens() and injects
+      // it into a <style id="snapshot-tokens"> element instead of using
+      // inline styles on document.documentElement.
+      const styleEl = document.getElementById("snapshot-tokens");
+      expect(styleEl).not.toBeNull();
+      expect(styleEl?.textContent).toContain(":root");
+      expect(styleEl?.textContent).toContain("--sn-color-primary");
       expect(result.current.currentFlavor()).toBe("violet");
     });
 

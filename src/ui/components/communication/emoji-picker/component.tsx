@@ -105,7 +105,9 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
 
   const handleSelect = useCallback(
     (emoji: EmojiEntry) => {
-      const custom = (emoji as unknown as Record<string, unknown>)._custom as CustomEmoji | undefined;
+      const custom = (emoji as unknown as Record<string, unknown>)._custom as
+        | CustomEmoji
+        | undefined;
       const payload = custom
         ? {
             emoji: `:${custom.shortcode}:`,
@@ -142,13 +144,21 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
         overflow: "hidden",
         width: "100%",
         maxWidth: `${perRow * 2.25 + 1.5}rem`,
+        ...(config.style as React.CSSProperties),
       }}
     >
-      {/* Hover/transition styles */}
+      {/* Hover/transition/focus styles */}
       <style>{`
 [data-snapshot-component="emoji-picker"] [data-emoji-btn]:hover {
   background-color: var(--sn-color-accent, #f3f4f6);
   transform: scale(1.15);
+}
+[data-snapshot-component="emoji-picker"] [data-emoji-btn]:focus {
+  outline: none;
+}
+[data-snapshot-component="emoji-picker"] [data-emoji-btn]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
 }
 [data-snapshot-component="emoji-picker"] [data-cat-tab]:hover {
   background-color: var(--sn-color-accent, #f3f4f6);
@@ -156,8 +166,19 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
 [data-snapshot-component="emoji-picker"] [data-cat-tab][data-active]:hover {
   background-color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 85%, black);
 }
+[data-snapshot-component="emoji-picker"] [data-cat-tab]:focus {
+  outline: none;
+}
+[data-snapshot-component="emoji-picker"] [data-cat-tab]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
 [data-snapshot-component="emoji-picker"] [data-testid="emoji-search"]:focus {
   outline: none;
+}
+[data-snapshot-component="emoji-picker"] [data-testid="emoji-search"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
 }
 `}</style>
       {/* Custom emoji CSS */}
@@ -238,7 +259,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                   ? "var(--sn-color-primary-foreground, #ffffff)"
                   : "var(--sn-color-muted-foreground, #6b7280)",
               cursor: "pointer",
-              transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+              transition:
+                "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
             }}
           >
             <Icon name={CATEGORY_ICONS[cat] ?? "hash"} size={14} />
@@ -279,7 +301,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                 }}
               >
                 {cat.emojis.map((emoji) => {
-                  const custom = (emoji as unknown as Record<string, unknown>)._custom as CustomEmoji | undefined;
+                  const custom = (emoji as unknown as Record<string, unknown>)
+                    ._custom as CustomEmoji | undefined;
                   return (
                     <button
                       key={emoji.name}
@@ -298,7 +321,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                         backgroundColor: "transparent",
                         cursor: "pointer",
                         fontSize: "1.25rem",
-                        transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                        transition:
+                          "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                       }}
                     >
                       {custom ? (

@@ -292,7 +292,9 @@ body {
   font-size: var(--sn-font-size-sm, 0.875rem);
   line-height: 1.5;
   width: 100%;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 [data-snapshot-component="form"] input:focus,
@@ -300,7 +302,8 @@ body {
 [data-snapshot-component="form"] select:focus {
   outline: none;
   border-color: var(--sn-color-primary, #2563eb);
-  box-shadow: 0 0 0 2px color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent);
 }
 
 [data-snapshot-component="form"] textarea {
@@ -308,7 +311,9 @@ body {
   resize: vertical;
 }
 
-[data-snapshot-component="form"] [data-sn-field] label:has(input[type="checkbox"]) {
+[data-snapshot-component="form"]
+  [data-sn-field]
+  label:has(input[type="checkbox"]) {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;

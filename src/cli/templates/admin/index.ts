@@ -5,13 +5,13 @@ export {
   generateEnvFile,
   generateSnapshotConfig,
   generateGitignore,
-} from './config'
+} from "./config";
 
 export {
   generateCapabilitiesLib,
   generateSnapshotLib,
   generateRouterLib,
-} from './lib'
+} from "./lib";
 
 export {
   generateAdminLayoutComponent,
@@ -24,7 +24,7 @@ export {
   generateGroupsPageComponent,
   generateOrgsPageComponent,
   generateCapabilitiesPageComponent,
-} from './pages'
+} from "./pages";
 
 export {
   generateRootRoute,
@@ -38,11 +38,11 @@ export {
   generateGroupsRoute,
   generateOrgsRoute,
   generateCapabilitiesRoute,
-} from './routes'
+} from "./routes";
 
 export {
   generateWebhooksPageComponent,
   generateWebhookDetailPageComponent,
   generateWebhooksRoute,
   generateWebhookDetailRoute,
-} from './webhooks'
+} from "./webhooks";

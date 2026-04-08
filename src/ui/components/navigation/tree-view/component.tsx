@@ -73,7 +73,7 @@ function TreeNode({
           }
         }}
         role={selectable ? "treeitem" : undefined}
-        tabIndex={isDisabled ? -1 : 0}
+        tabIndex={isDisabled ? -1 : isSelected ? 0 : -1}
         aria-expanded={hasChildren ? isExpanded : undefined}
         aria-selected={selectable ? isSelected : undefined}
         aria-disabled={isDisabled}
@@ -81,8 +81,7 @@ function TreeNode({
           display: "flex",
           alignItems: "center",
           gap: "var(--sn-spacing-xs, 0.25rem)",
-          padding:
-            "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+          padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
           paddingLeft: `calc(${depth} * var(--sn-spacing-lg, 1.5rem) + var(--sn-spacing-sm, 0.5rem))`,
           cursor: isDisabled ? "not-allowed" : "pointer",
           opacity: isDisabled ? 0.5 : 1,
@@ -128,7 +127,8 @@ function TreeNode({
               width: 16,
               height: 16,
               flexShrink: 0,
-              transition: "transform 150ms ease",
+              transition:
+                "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
               transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
               fontSize: "var(--sn-font-size-xs, 0.75rem)",
               color: "var(--sn-color-muted-foreground, #6b7280)",
@@ -251,7 +251,6 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
 
   const selectable = config.selectable ?? true;
   const multiSelect = config.multiSelect ?? false;
@@ -341,6 +340,8 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
     },
     [selectable, multiSelect, config.action, execute],
   );
+
+  if (visible === false) return null;
 
   // Loading state
   if (isLoading && hasEndpoint) {
@@ -452,7 +453,29 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
       data-testid="tree-view"
       className={config.className}
       role="tree"
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="tree-view"] [data-testid="tree-node-row"]:not([aria-disabled="true"]):hover {
+          background: var(--sn-color-secondary, #f3f4f6);
+        }
+        [data-snapshot-component="tree-view"] [data-testid="tree-node-row"]:focus {
+          outline: none;
+        }
+        [data-snapshot-component="tree-view"] [data-testid="tree-node-row"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+        [data-snapshot-component="tree-view"] [data-testid="tree-chevron"]:focus {
+          outline: none;
+        }
+        [data-snapshot-component="tree-view"] [data-testid="tree-chevron"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+      `}</style>
       {items.map((item, index) => {
         const pathKey = `root-${index}`;
         return (

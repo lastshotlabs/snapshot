@@ -26,12 +26,12 @@ A snapshot manifest is a JSON file (`snapshot.manifest.json`) with four top-leve
 }
 ```
 
-| Section   | Purpose |
-|-----------|---------|
+| Section   | Purpose                                                                 |
+| --------- | ----------------------------------------------------------------------- |
 | `theme`   | Design tokens: flavor, colors, radius, spacing, fonts, component tokens |
-| `globals` | App-wide reactive state (persists across routes) |
-| `nav`     | Sidebar / top-nav items with icons, badges, and role-based visibility |
-| `pages`   | Route-keyed page definitions containing component trees |
+| `globals` | App-wide reactive state (persists across routes)                        |
+| `nav`     | Sidebar / top-nav items with icons, badges, and role-based visibility   |
+| `pages`   | Route-keyed page definitions containing component trees                 |
 
 ## Create a Manifest
 
@@ -60,11 +60,15 @@ npx snapshot manifest init
     { "label": "Dashboard", "path": "/", "icon": "LayoutDashboard" },
     { "label": "Users", "path": "/users", "icon": "Users" },
     {
-      "label": "Settings", "path": "/settings", "icon": "Settings",
+      "label": "Settings",
+      "path": "/settings",
+      "icon": "Settings",
       "roles": ["admin"]
     },
     {
-      "label": "Cart", "path": "/cart", "icon": "ShoppingCart",
+      "label": "Cart",
+      "path": "/cart",
+      "icon": "ShoppingCart",
       "badge": { "from": "global.cart.items.length" }
     }
   ],
@@ -179,10 +183,22 @@ npx snapshot manifest init
               "label": "Delete",
               "icon": "Trash2",
               "action": [
-                { "type": "confirm", "message": "Delete {name}?", "variant": "destructive" },
-                { "type": "api", "method": "DELETE", "endpoint": "/api/users/{id}" },
+                {
+                  "type": "confirm",
+                  "message": "Delete {name}?",
+                  "variant": "destructive"
+                },
+                {
+                  "type": "api",
+                  "method": "DELETE",
+                  "endpoint": "/api/users/{id}"
+                },
                 { "type": "refresh", "target": "users-table" },
-                { "type": "toast", "message": "User deleted", "variant": "success" }
+                {
+                  "type": "toast",
+                  "message": "User deleted",
+                  "variant": "success"
+                }
               ]
             }
           ],
@@ -191,7 +207,11 @@ npx snapshot manifest init
               "label": "Delete {count} users",
               "action": [
                 { "type": "confirm", "message": "Delete {count} users?" },
-                { "type": "api", "method": "POST", "endpoint": "/api/users/bulk-delete" },
+                {
+                  "type": "api",
+                  "method": "POST",
+                  "endpoint": "/api/users/bulk-delete"
+                },
                 { "type": "refresh", "target": "users-table" }
               ]
             }
@@ -228,18 +248,31 @@ npx snapshot manifest init
               "submit": "/api/users",
               "method": "POST",
               "fields": [
-                { "name": "name", "type": "text", "label": "Full Name", "required": true },
+                {
+                  "name": "name",
+                  "type": "text",
+                  "label": "Full Name",
+                  "required": true
+                },
                 { "name": "email", "type": "email", "required": true },
-                { "name": "role", "type": "select", "options": [
-                  { "label": "User", "value": "user" },
-                  { "label": "Admin", "value": "admin" }
-                ]}
+                {
+                  "name": "role",
+                  "type": "select",
+                  "options": [
+                    { "label": "User", "value": "user" },
+                    { "label": "Admin", "value": "admin" }
+                  ]
+                }
               ],
               "submitLabel": "Create",
               "onSuccess": [
                 { "type": "close-modal" },
                 { "type": "refresh", "target": "users-table" },
-                { "type": "toast", "message": "User created", "variant": "success" }
+                {
+                  "type": "toast",
+                  "message": "User created",
+                  "variant": "success"
+                }
               ]
             }
           ]
@@ -300,6 +333,7 @@ npx snapshot sync --server https://api.example.com
 ```
 
 This reads the backend OpenAPI spec and generates:
+
 - Typed API client + hooks
 - Theme CSS from `snapshot.manifest.json`
 - Route definitions from manifest pages
@@ -389,7 +423,11 @@ import { registerComponent } from "@lastshotlabs/snapshot/ui";
 // Replace the built-in stat-card with your own implementation
 registerComponent("stat-card", function MyStatCard({ config }) {
   // `config` has the same shape as the built-in stat-card schema
-  return <div className="my-stat">{config.label}: {config.field}</div>;
+  return (
+    <div className="my-stat">
+      {config.label}: {config.field}
+    </div>
+  );
 });
 ```
 

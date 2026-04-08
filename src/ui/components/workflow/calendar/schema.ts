@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/** A reference to another component's published value. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a static event definition.
@@ -17,7 +15,14 @@ export const calendarEventSchema = z
     endDate: z.string().optional(),
     /** Semantic color for the event pill. */
     color: z
-      .enum(["primary", "secondary", "success", "warning", "destructive", "info"])
+      .enum([
+        "primary",
+        "secondary",
+        "success",
+        "warning",
+        "destructive",
+        "info",
+      ])
       .optional(),
     /** Whether this is an all-day event. */
     allDay: z.boolean().optional(),

@@ -5,6 +5,8 @@ import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
 import type { PopoverConfig } from "./types";
 
+const ANIMATION_DURATION = 150;
+
 /**
  * Trigger button variant styles.
  */
@@ -71,6 +73,8 @@ export function Popover({ config }: { config: PopoverConfig }) {
   const publish = usePublish(config.id);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [animating, setAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const placement = config.placement ?? "bottom";
@@ -109,6 +113,19 @@ export function Popover({ config }: { config: PopoverConfig }) {
     }
   }, []);
 
+  // Mounted/animating pattern for enter/exit animation
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      const enterTimer = setTimeout(() => setAnimating(true), 10);
+      return () => clearTimeout(enterTimer);
+    } else if (mounted) {
+      setAnimating(false);
+      const exitTimer = setTimeout(() => setMounted(false), ANIMATION_DURATION);
+      return () => clearTimeout(exitTimer);
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
@@ -121,8 +138,20 @@ export function Popover({ config }: { config: PopoverConfig }) {
       ref={containerRef}
       className={config.className}
       onKeyDown={handleKeyDown}
-      style={{ position: "relative", display: "inline-block" }}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="popover"] [data-snapshot-popover-trigger]:focus { outline: none; }
+        [data-snapshot-component="popover"] [data-snapshot-popover-trigger]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+      `}</style>
+
       {/* Trigger button */}
       <button
         type="button"
@@ -134,8 +163,7 @@ export function Popover({ config }: { config: PopoverConfig }) {
           display: "inline-flex",
           alignItems: "center",
           gap: "var(--sn-spacing-xs, 0.25rem)",
-          padding:
-            "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+          padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           fontWeight: "var(--sn-font-weight-medium, 500)" as string,
           borderRadius: "var(--sn-radius-md, 0.375rem)",
@@ -152,7 +180,7 @@ export function Popover({ config }: { config: PopoverConfig }) {
       </button>
 
       {/* Floating panel */}
-      {isOpen && (
+      {mounted && (
         <div
           data-snapshot-popover-content=""
           role="dialog"
@@ -161,14 +189,19 @@ export function Popover({ config }: { config: PopoverConfig }) {
             zIndex: "var(--sn-z-index-popover, 40)" as string,
             width,
             minWidth: "8rem",
-            backgroundColor: "var(--sn-color-popover, var(--sn-color-card, #fff))",
-            color: "var(--sn-color-popover-foreground, var(--sn-color-foreground, #111))",
+            backgroundColor:
+              "var(--sn-color-popover, var(--sn-color-card, #fff))",
+            color:
+              "var(--sn-color-popover-foreground, var(--sn-color-foreground, #111))",
             border:
               "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-lg, 0.5rem)",
             boxShadow:
               "var(--sn-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1))",
             padding: "var(--sn-spacing-md, 1rem)",
+            opacity: animating ? 1 : 0,
+            transform: animating ? "scale(1)" : "scale(0.95)",
+            transition: `opacity ${ANIMATION_DURATION}ms ease, transform ${ANIMATION_DURATION}ms ease`,
             ...PLACEMENT_STYLES[placement],
           }}
         >

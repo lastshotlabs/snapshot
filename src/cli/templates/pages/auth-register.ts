@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateRegisterPageComponent(config: ScaffoldConfig): string {
   return `import { useState } from 'react'
@@ -69,5 +69,5 @@ export function RegisterPage() {
     </Card>
   )
 }
-`
+`;
 }

@@ -85,6 +85,7 @@ export function Alert({ config }: { config: AlertConfig }) {
         borderLeft: `4px solid var(--sn-color-${colorToken}, #e5e7eb)`,
         backgroundColor: "var(--sn-color-card, #ffffff)",
         position: "relative",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Icon */}

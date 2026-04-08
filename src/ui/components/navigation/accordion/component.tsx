@@ -45,8 +45,8 @@ function Chevron({ open }: { open: boolean }) {
  * @param props.config - The accordion config from the manifest
  */
 export function AccordionComponent({ config }: { config: AccordionConfig }) {
-  const [openIndices, setOpenIndices] = useState<Set<number>>(
-    () => resolveDefaultOpen(config.defaultOpen),
+  const [openIndices, setOpenIndices] = useState<Set<number>>(() =>
+    resolveDefaultOpen(config.defaultOpen),
   );
 
   const mode = config.mode ?? "single";
@@ -91,8 +91,23 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
       data-snapshot-component="accordion"
       data-testid="accordion"
       className={config.className}
-      style={containerStyle}
+      style={{
+        ...containerStyle,
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="accordion"] button:not([disabled]):hover {
+          background: var(--sn-color-secondary, #f3f4f6);
+        }
+        [data-snapshot-component="accordion"] button:focus {
+          outline: none;
+        }
+        [data-snapshot-component="accordion"] button:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+        }
+      `}</style>
       {config.items.map((item, index) => {
         const isOpen = openIndices.has(index);
         const isDisabled = item.disabled === true;
@@ -120,9 +135,11 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
             {/* Header */}
             <button
               type="button"
+              id={`accordion-${config.id ?? "default"}-btn-${index}`}
               data-testid={`accordion-header-${index}`}
               onClick={() => !isDisabled && toggle(index)}
               aria-expanded={isOpen}
+              aria-controls={`accordion-${config.id ?? "default"}-panel-${index}`}
               aria-disabled={isDisabled}
               disabled={isDisabled}
               style={{
@@ -137,7 +154,8 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
                 cursor: isDisabled ? "not-allowed" : "pointer",
                 opacity: isDisabled ? "var(--sn-opacity-disabled, 0.5)" : 1,
                 fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                fontWeight: "var(--sn-font-weight-semibold, 600)" as unknown as number,
+                fontWeight:
+                  "var(--sn-font-weight-semibold, 600)" as unknown as number,
                 color: "var(--sn-color-foreground, #111827)",
                 textAlign: "left",
                 gap: "var(--sn-spacing-sm, 0.5rem)",
@@ -169,8 +187,10 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
 
             {/* Content panel — uses CSS grid row trick for smooth height animation */}
             <div
+              id={`accordion-${config.id ?? "default"}-panel-${index}`}
               data-testid={`accordion-panel-${index}`}
               role="region"
+              aria-labelledby={`accordion-${config.id ?? "default"}-btn-${index}`}
               style={{
                 display: "grid",
                 gridTemplateRows: isOpen ? "1fr" : "0fr",

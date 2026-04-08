@@ -3,6 +3,7 @@ import { chartSchema } from "../schema";
 
 describe("chartSchema", () => {
   const baseConfig = {
+    type: "chart",
     data: "GET /api/stats",
     xKey: "month",
     series: [{ key: "revenue", label: "Revenue" }],

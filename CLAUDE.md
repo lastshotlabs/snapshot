@@ -16,7 +16,7 @@ Snapshot is the frontend SDK + CLI for bunshot-powered backends. It has two curr
 
 - **SDK** — TypeScript library consumed by React apps (`createSnapshot` factory, hooks, types)
 - **CLI** — oclif-based tool (`snapshot init`, `snapshot sync`) that scaffolds and syncs frontend code from a bunshot server
-- **Config-driven UI layer** *(in development)* — design token system, config-addressable component library, page composition from manifest + OpenAPI, inter-component data binding, and an action vocabulary — the frontend half of the full-stack manifest vision
+- **Config-driven UI layer** _(in development)_ — design token system, config-addressable component library, page composition from manifest + OpenAPI, inter-component data binding, and an action vocabulary — the frontend half of the full-stack manifest vision
 
 The SDK targets browser environments. The CLI targets Node/Bun. These are different execution contexts — never mix browser-only APIs into CLI code or Node-only APIs into SDK code.
 
@@ -196,11 +196,11 @@ src/
 
 Three entry points, three audiences:
 
-| Entry | File | Audience | Contains |
-|-------|------|----------|----------|
-| `@lastshotlabs/snapshot` | `src/index.ts` | SDK consumers | `createSnapshot`, hooks, types, contracts |
-| `@lastshotlabs/snapshot/ui` | `src/ui.ts` | Config-driven UI consumers | `ManifestApp`, `PageRenderer`, components, tokens, flavors, actions |
-| `@lastshotlabs/snapshot/vite` | `src/vite/index.ts` | Build tooling | Vite plugin for auto-sync |
+| Entry                         | File                | Audience                   | Contains                                                            |
+| ----------------------------- | ------------------- | -------------------------- | ------------------------------------------------------------------- |
+| `@lastshotlabs/snapshot`      | `src/index.ts`      | SDK consumers              | `createSnapshot`, hooks, types, contracts                           |
+| `@lastshotlabs/snapshot/ui`   | `src/ui.ts`         | Config-driven UI consumers | `ManifestApp`, `PageRenderer`, components, tokens, flavors, actions |
+| `@lastshotlabs/snapshot/vite` | `src/vite/index.ts` | Build tooling              | Vite plugin for auto-sync                                           |
 
 - SDK consumers who write their own React don't pay for the UI layer.
 - UI consumers import from `/ui` for everything config-driven.
@@ -452,6 +452,7 @@ The same applies to: `secondary`, `muted`, `accent`, `destructive`, `success`,
 #### Every Flavor Must Define All Semantic Colors
 
 When adding a new semantic color (like `success`, `warning`, `info`), add it to:
+
 1. The Zod schema (`src/ui/tokens/schema.ts`) — if not already there
 2. `FOREGROUND_PAIRS` in `resolve.ts` — so foreground is auto-derived
 3. **Every flavor definition** in `flavors.ts` — both `colors` and `darkColors`
@@ -465,6 +466,7 @@ and stop responding to theme changes.
 Every `fontSize` in a component must use `var(--sn-font-size-{xs|sm|md|lg|xl}, fallback)`.
 Hardcoded `fontSize: "0.875rem"` breaks the font size control — the token var gets
 overridden by the static value. This applies to:
+
 - Component inline styles (`style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}`)
 - Playground/consumer CSS (use `font-size: var(--sn-font-size-sm, 0.875rem)`)
 - Any CSS rule that targets component elements
@@ -481,6 +483,7 @@ attributes without corresponding CSS rules to style them.
 
 Modals and drawers must have enter/exit transitions. Never use bare
 `if (!isOpen) return null` — use a `mounted` + `animating` state pattern:
+
 1. On open: set `mounted=true`, then `animating=true` on next frame
 2. On close: set `animating=false`, then `mounted=false` after transition duration
 3. Apply CSS `transition` on opacity/transform

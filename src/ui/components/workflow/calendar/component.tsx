@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useComponentData } from "../../_base/use-component-data";
 import { useActionExecutor } from "../../../actions/executor";
+import { useSubscribe } from "../../../context/hooks";
 import type { CalendarConfig, ResolvedEvent } from "./types";
 
 // ── Date helpers ───────────────────────────────────────────────────────────
@@ -135,8 +136,12 @@ function EventPill({
  * @param props - Component props containing the Calendar configuration
  */
 export function Calendar({ config }: { config: CalendarConfig }) {
-  const { data, isLoading } = useComponentData(config.data ?? "", undefined);
+  const { data, isLoading, error } = useComponentData(
+    config.data ?? "",
+    undefined,
+  );
   const execute = useActionExecutor();
+  const visible = useSubscribe(config.visible ?? true);
   const view = config.view ?? "month";
   const titleField = config.titleField ?? "title";
   const dateField = config.dateField ?? "date";
@@ -252,6 +257,8 @@ export function Calendar({ config }: { config: CalendarConfig }) {
     [config.dateAction, execute],
   );
 
+  if (visible === false) return null;
+
   const MAX_VISIBLE_EVENTS = 3;
 
   // ── Month view ───────────────────────────────────────────────────────────
@@ -286,7 +293,8 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                 fontSize: "var(--sn-font-size-xs, 0.75rem)",
                 color: "var(--sn-color-muted-foreground, #64748b)",
                 padding: "var(--sn-spacing-xs, 4px)",
-                fontWeight: "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+                fontWeight:
+                  "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
               }}
             >
               {name}
@@ -337,7 +345,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                     minHeight: "80px",
                     padding: "var(--sn-spacing-xs, 4px)",
                     backgroundColor: isWeekend(date)
-                      ? "rgba(0,0,0,0.02)"
+                      ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)"
                       : undefined,
                     cursor: config.dateAction ? "pointer" : "default",
                     borderRight:
@@ -364,10 +372,8 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                           ? {
                               backgroundColor:
                                 "var(--sn-color-primary, #2563eb)",
-                              color:
-                                "var(--sn-color-primary-foreground, #fff)",
-                              borderRadius:
-                                "var(--sn-radius-full, 9999px)",
+                              color: "var(--sn-color-primary-foreground, #fff)",
+                              borderRadius: "var(--sn-radius-full, 9999px)",
                               width: "24px",
                               height: "24px",
                               display: "inline-flex",
@@ -448,7 +454,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                 minHeight: "200px",
                 padding: "var(--sn-spacing-sm, 8px)",
                 backgroundColor: isWeekend(date)
-                  ? "rgba(0,0,0,0.02)"
+                  ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)"
                   : undefined,
                 borderRight:
                   idx < 6
@@ -468,7 +474,8 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                   style={{
                     fontSize: "var(--sn-font-size-xs, 0.75rem)",
                     color: "var(--sn-color-muted-foreground, #64748b)",
-                    fontWeight: "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+                    fontWeight:
+                      "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
                   }}
                 >
                   {DAY_NAMES[date.getDay()]}
@@ -478,12 +485,9 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                     fontSize: "var(--sn-font-size-lg, 1.125rem)",
                     ...(isTodayDate
                       ? {
-                          backgroundColor:
-                            "var(--sn-color-primary, #2563eb)",
-                          color:
-                            "var(--sn-color-primary-foreground, #fff)",
-                          borderRadius:
-                            "var(--sn-radius-full, 9999px)",
+                          backgroundColor: "var(--sn-color-primary, #2563eb)",
+                          color: "var(--sn-color-primary-foreground, #fff)",
+                          borderRadius: "var(--sn-radius-full, 9999px)",
                           width: "32px",
                           height: "32px",
                           display: "inline-flex",
@@ -542,7 +546,39 @@ export function Calendar({ config }: { config: CalendarConfig }) {
   }, [currentDate, view]);
 
   return (
-    <div data-snapshot-component="calendar" className={config.className}>
+    <div
+      data-snapshot-component="calendar"
+      className={config.className}
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
+    >
+      {/* Hover/focus styles */}
+      <style>{`
+[data-snapshot-component="calendar"] [data-calendar-cell]:hover {
+  background-color: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 50%, transparent);
+}
+[data-snapshot-component="calendar"] [data-testid^="calendar-nav-"]:hover {
+  background-color: var(--sn-color-secondary, #f3f4f6);
+}
+[data-snapshot-component="calendar"] [data-testid^="calendar-nav-"]:focus {
+  outline: none;
+}
+[data-snapshot-component="calendar"] [data-testid^="calendar-nav-"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="calendar"] [data-calendar-event]:hover {
+  opacity: var(--sn-opacity-hover, 0.85);
+}
+[data-snapshot-component="calendar"] [data-calendar-event]:focus {
+  outline: none;
+}
+[data-snapshot-component="calendar"] [data-calendar-event]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+`}</style>
       {/* Header */}
       <div
         data-calendar-header
@@ -556,7 +592,8 @@ export function Calendar({ config }: { config: CalendarConfig }) {
         <h2
           style={{
             fontSize: "var(--sn-font-size-lg, 1.125rem)",
-            fontWeight: "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+            fontWeight:
+              "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
             color: "var(--sn-color-foreground, #0f172a)",
             margin: 0,
           }}
@@ -627,8 +664,24 @@ export function Calendar({ config }: { config: CalendarConfig }) {
         </div>
       )}
 
+      {/* Error state */}
+      {error && (
+        <div
+          data-calendar-error
+          role="alert"
+          style={{
+            textAlign: "center",
+            padding: "var(--sn-spacing-lg, 16px)",
+            color: "var(--sn-color-destructive, #ef4444)",
+            fontSize: "var(--sn-font-size-sm, 0.875rem)",
+          }}
+        >
+          Error: {error.message}
+        </div>
+      )}
+
       {/* Calendar grid */}
-      {!isLoading && (
+      {!isLoading && !error && (
         <div
           style={{
             border: "1px solid var(--sn-color-border, #e2e8f0)",

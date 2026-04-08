@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useComponentData } from "../../_base/use-component-data";
+import { getInitials } from "../../_base/utils";
 import type { AvatarGroupConfig } from "./types";
 
 /** Size → pixel dimensions. */
@@ -17,32 +18,45 @@ const FONT_SIZE_MAP: Record<string, string> = {
   lg: "var(--sn-font-size-sm, 0.875rem)",
 };
 
-/** Get initials from a name. */
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+/** Color pair: background + foreground for contrast-aware initials. */
+interface ColorPair {
+  bg: string;
+  fg: string;
 }
 
-/** Deterministic color from a name string. */
-function nameToColor(name: string): string {
-  const colors = [
-    "var(--sn-color-primary, #2563eb)",
-    "var(--sn-color-success, #16a34a)",
-    "var(--sn-color-warning, #f59e0b)",
-    "var(--sn-color-info, #3b82f6)",
-    "var(--sn-color-destructive, #dc2626)",
-    "var(--sn-color-accent, #8b5cf6)",
+/** Deterministic color pair from a name string. */
+function nameToColorPair(name: string): ColorPair {
+  const pairs: ColorPair[] = [
+    {
+      bg: "var(--sn-color-primary, #2563eb)",
+      fg: "var(--sn-color-primary-foreground, #ffffff)",
+    },
+    {
+      bg: "var(--sn-color-success, #16a34a)",
+      fg: "var(--sn-color-success-foreground, #ffffff)",
+    },
+    {
+      bg: "var(--sn-color-warning, #f59e0b)",
+      fg: "var(--sn-color-warning-foreground, #000000)",
+    },
+    {
+      bg: "var(--sn-color-info, #3b82f6)",
+      fg: "var(--sn-color-info-foreground, #ffffff)",
+    },
+    {
+      bg: "var(--sn-color-destructive, #dc2626)",
+      fg: "var(--sn-color-destructive-foreground, #ffffff)",
+    },
+    {
+      bg: "var(--sn-color-accent, #8b5cf6)",
+      fg: "var(--sn-color-accent-foreground, #ffffff)",
+    },
   ];
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return colors[Math.abs(hash) % colors.length]!;
+  return pairs[Math.abs(hash) % pairs.length]!;
 }
 
 /**
@@ -57,10 +71,7 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const publish = usePublish(config.id);
 
-  const hasData = config.data != null;
-  const dataResult = hasData
-    ? useComponentData(config.data!, undefined) // eslint-disable-line react-hooks/rules-of-hooks
-    : { data: null, isLoading: false, error: null };
+  const dataResult = useComponentData(config.data ?? "");
 
   const size = config.size ?? "md";
   const px = SIZE_MAP[size] ?? 36;
@@ -77,9 +88,9 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
     if (!dataResult.data) return [];
     const items = Array.isArray(dataResult.data)
       ? dataResult.data
-      : (dataResult.data as Record<string, unknown>).data ??
+      : ((dataResult.data as Record<string, unknown>).data ??
         (dataResult.data as Record<string, unknown>).items ??
-        [];
+        []);
     if (!Array.isArray(items)) return [];
     return items.map((item: Record<string, unknown>) => ({
       name: String(item[nameField] ?? ""),
@@ -138,8 +149,8 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: nameToColor(avatar.name),
-                color: "#ffffff",
+                backgroundColor: nameToColorPair(avatar.name).bg,
+                color: nameToColorPair(avatar.name).fg,
                 fontSize: FONT_SIZE_MAP[size],
                 fontWeight:
                   "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],

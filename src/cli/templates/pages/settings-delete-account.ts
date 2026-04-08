@@ -72,5 +72,5 @@ export function SettingsDeleteAccountPage() {
     </Card>
   )
 }
-`
+`;
 }

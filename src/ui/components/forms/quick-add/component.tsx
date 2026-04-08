@@ -80,7 +80,8 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
         alignItems: "center",
         gap: "var(--sn-spacing-sm, 0.5rem)",
         padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-        border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         ...config.style,
@@ -140,7 +141,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
             cursor: value.trim() ? "pointer" : "not-allowed",
             opacity: value.trim()
               ? 1
-              : "var(--sn-opacity-disabled, 0.5)" as unknown as number,
+              : ("var(--sn-opacity-disabled, 0.5)" as unknown as number),
             transition: `opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)`,
             whiteSpace: "nowrap",
           }}

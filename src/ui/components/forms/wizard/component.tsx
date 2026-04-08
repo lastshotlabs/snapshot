@@ -372,8 +372,45 @@ export function Wizard({ config }: { config: WizardConfig }) {
         border: "1px solid var(--sn-color-border, #e5e7eb)",
         backgroundColor: "var(--sn-color-card, #fff)",
         overflow: "hidden",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
+      {/* Hover/focus styles */}
+      <style>{`
+[data-snapshot-component="wizard"] [data-wizard-step-indicator]:focus {
+  outline: none;
+}
+[data-snapshot-component="wizard"] [data-wizard-back]:hover:not(:disabled) {
+  background-color: var(--sn-color-secondary, #f3f4f6);
+}
+[data-snapshot-component="wizard"] [data-wizard-back]:focus {
+  outline: none;
+}
+[data-snapshot-component="wizard"] [data-wizard-back]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="wizard"] [data-wizard-skip]:hover {
+  background-color: var(--sn-color-secondary, #f3f4f6);
+}
+[data-snapshot-component="wizard"] [data-wizard-skip]:focus {
+  outline: none;
+}
+[data-snapshot-component="wizard"] [data-wizard-skip]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="wizard"] [data-wizard-next]:hover:not(:disabled) {
+  opacity: var(--sn-opacity-hover, 0.85);
+}
+[data-snapshot-component="wizard"] [data-wizard-next]:focus {
+  outline: none;
+}
+[data-snapshot-component="wizard"] [data-wizard-next]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+`}</style>
       {/* Progress bar */}
       <div
         style={{

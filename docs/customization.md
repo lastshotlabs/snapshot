@@ -12,7 +12,7 @@ A flavor is a named theme preset that provides a complete set of design tokens: 
 ### Built-in Flavors
 
 | Flavor     | Description                   | Radius | Spacing   |
-|------------|-------------------------------|--------|-----------|
+| ---------- | ----------------------------- | ------ | --------- |
 | `neutral`  | Clean, professional (default) | `lg`   | `default` |
 | `slate`    | Softer neutral, slate tones   | `sm`   | `default` |
 | `midnight` | Dark-first, deep backgrounds  | `md`   | `default` |
@@ -78,6 +78,7 @@ If `darkColors` is omitted, dark mode variants are automatically derived from th
 colors with adjusted lightness and chroma.
 
 Color values can be specified as:
+
 - Hex: `"#1d4ed8"`
 - OKLCH string: `"0.488 0.243 264.376"`
 - OKLCH CSS function: `"oklch(0.488 0.243 264.376)"`
@@ -88,59 +89,59 @@ Color values can be specified as:
 
 Semantic colors that generate CSS custom properties:
 
-| Token         | CSS Variables | Purpose |
-|---------------|---------------|---------|
-| `primary`     | `--primary`, `--primary-foreground` | Brand color |
-| `secondary`   | `--secondary`, `--secondary-foreground` | Secondary color |
-| `muted`       | `--muted`, `--muted-foreground` | Subtle backgrounds |
-| `accent`      | `--accent`, `--accent-foreground` | Highlight color |
-| `destructive` | `--destructive`, `--destructive-foreground` | Danger/error |
-| `success`     | `--success`, `--success-foreground` | Success state |
-| `warning`     | `--warning`, `--warning-foreground` | Warning state |
-| `info`        | `--info`, `--info-foreground` | Info state |
-| `background`  | `--background`, `--foreground` | Page background |
-| `card`        | `--card`, `--card-foreground` | Card surfaces |
-| `popover`     | `--popover`, `--popover-foreground` | Popover surfaces |
-| `sidebar`     | `--sidebar`, `--sidebar-foreground` | Sidebar surfaces |
-| `border`      | `--border` | Border color |
-| `input`       | `--input` | Input border color |
-| `ring`        | `--ring` | Focus ring color |
-| `chart`       | `--chart-1` through `--chart-5` | Chart palette |
+| Token         | CSS Variables                               | Purpose            |
+| ------------- | ------------------------------------------- | ------------------ |
+| `primary`     | `--primary`, `--primary-foreground`         | Brand color        |
+| `secondary`   | `--secondary`, `--secondary-foreground`     | Secondary color    |
+| `muted`       | `--muted`, `--muted-foreground`             | Subtle backgrounds |
+| `accent`      | `--accent`, `--accent-foreground`           | Highlight color    |
+| `destructive` | `--destructive`, `--destructive-foreground` | Danger/error       |
+| `success`     | `--success`, `--success-foreground`         | Success state      |
+| `warning`     | `--warning`, `--warning-foreground`         | Warning state      |
+| `info`        | `--info`, `--info-foreground`               | Info state         |
+| `background`  | `--background`, `--foreground`              | Page background    |
+| `card`        | `--card`, `--card-foreground`               | Card surfaces      |
+| `popover`     | `--popover`, `--popover-foreground`         | Popover surfaces   |
+| `sidebar`     | `--sidebar`, `--sidebar-foreground`         | Sidebar surfaces   |
+| `border`      | `--border`                                  | Border color       |
+| `input`       | `--input`                                   | Input border color |
+| `ring`        | `--ring`                                    | Focus ring color   |
+| `chart`       | `--chart-1` through `--chart-5`             | Chart palette      |
 
 Foreground colors are automatically derived to pass WCAG AA contrast (4.5:1 ratio).
 
 ### Radius Scale
 
 | Value  | CSS Output |
-|--------|------------|
-| `none` | `0` |
+| ------ | ---------- |
+| `none` | `0`        |
 | `xs`   | `0.125rem` |
-| `sm`   | `0.25rem` |
-| `md`   | `0.5rem` |
-| `lg`   | `0.75rem` |
-| `xl`   | `1rem` |
-| `full` | `9999px` |
+| `sm`   | `0.25rem`  |
+| `md`   | `0.5rem`   |
+| `lg`   | `0.75rem`  |
+| `xl`   | `1rem`     |
+| `full` | `9999px`   |
 
 ### Spacing Scale
 
 Controls global padding, gaps, and margins via a multiplier.
 
 | Value         | Multiplier |
-|---------------|------------|
-| `compact`     | `0.75` |
-| `default`     | `1` |
-| `comfortable` | `1.25` |
-| `spacious`    | `1.5` |
+| ------------- | ---------- |
+| `compact`     | `0.75`     |
+| `default`     | `1`        |
+| `comfortable` | `1.25`     |
+| `spacious`    | `1.5`      |
 
 ### Font Configuration
 
-| Field      | Type | Description |
-|------------|------|-------------|
-| `sans`     | `string` | Sans-serif font family |
-| `mono`     | `string` | Monospace font family |
+| Field      | Type     | Description                 |
+| ---------- | -------- | --------------------------- |
+| `sans`     | `string` | Sans-serif font family      |
+| `mono`     | `string` | Monospace font family       |
 | `display`  | `string` | Display/heading font family |
-| `baseSize` | `number` | Base font size in pixels |
-| `scale`    | `number` | Type scale multiplier |
+| `baseSize` | `number` | Base font size in pixels    |
+| `scale`    | `number` | Type scale multiplier       |
 
 ## Theme Overrides
 
@@ -196,6 +197,7 @@ document.head.appendChild(style);
 ```
 
 Resolution order:
+
 1. Flavor defaults (base tokens from the named flavor)
 2. Config overrides (`overrides` in the theme config)
 3. Runtime `setToken()` calls (inline styles, see below)
@@ -210,8 +212,14 @@ whitelabel customization.
 import { useTokenEditor } from "@lastshotlabs/snapshot/ui";
 
 function ThemeEditor() {
-  const { setToken, setFlavor, resetTokens, getTokens, currentFlavor, subscribe } =
-    useTokenEditor();
+  const {
+    setToken,
+    setFlavor,
+    resetTokens,
+    getTokens,
+    currentFlavor,
+    subscribe,
+  } = useTokenEditor();
 
   // Change individual tokens
   setToken("colors.primary", "#e11d48");
@@ -294,64 +302,64 @@ them in the theme config under `overrides.components`.
 
 ### Card tokens
 
-| Token     | Type | Values | Description |
-|-----------|------|--------|-------------|
-| `shadow`  | `string` | `"none"`, `"sm"`, `"md"`, `"lg"`, `"xl"` | Shadow depth |
-| `padding` | `string` | `"compact"`, `"default"`, `"comfortable"`, `"spacious"` | Internal padding |
-| `border`  | `boolean` | -- | Show border |
+| Token     | Type      | Values                                                  | Description      |
+| --------- | --------- | ------------------------------------------------------- | ---------------- |
+| `shadow`  | `string`  | `"none"`, `"sm"`, `"md"`, `"lg"`, `"xl"`                | Shadow depth     |
+| `padding` | `string`  | `"compact"`, `"default"`, `"comfortable"`, `"spacious"` | Internal padding |
+| `border`  | `boolean` | --                                                      | Show border      |
 
 ### Table tokens
 
-| Token              | Type | Values | Description |
-|--------------------|------|--------|-------------|
-| `striped`          | `boolean` | -- | Alternate row striping |
-| `density`          | `string` | `"compact"`, `"default"`, `"comfortable"` | Row padding |
-| `hoverRow`         | `boolean` | -- | Highlight row on hover |
-| `headerBackground` | `boolean` | -- | Show header background |
-| `borderStyle`      | `string` | `"none"`, `"horizontal"`, `"grid"` | Cell border style |
+| Token              | Type      | Values                                    | Description            |
+| ------------------ | --------- | ----------------------------------------- | ---------------------- |
+| `striped`          | `boolean` | --                                        | Alternate row striping |
+| `density`          | `string`  | `"compact"`, `"default"`, `"comfortable"` | Row padding            |
+| `hoverRow`         | `boolean` | --                                        | Highlight row on hover |
+| `headerBackground` | `boolean` | --                                        | Show header background |
+| `borderStyle`      | `string`  | `"none"`, `"horizontal"`, `"grid"`        | Cell border style      |
 
 ### Button tokens
 
-| Token       | Type | Values | Description |
-|-------------|------|--------|-------------|
-| `weight`    | `string` | `"light"`, `"medium"`, `"bold"` | Font weight |
-| `uppercase` | `boolean` | -- | Uppercase text transform |
-| `iconSize`  | `string` | `"sm"`, `"md"`, `"lg"` | Icon dimensions |
+| Token       | Type      | Values                          | Description              |
+| ----------- | --------- | ------------------------------- | ------------------------ |
+| `weight`    | `string`  | `"light"`, `"medium"`, `"bold"` | Font weight              |
+| `uppercase` | `boolean` | --                              | Uppercase text transform |
+| `iconSize`  | `string`  | `"sm"`, `"md"`, `"lg"`          | Icon dimensions          |
 
 ### Input tokens
 
-| Token     | Type | Values | Description |
-|-----------|------|--------|-------------|
-| `size`    | `string` | `"sm"`, `"md"`, `"lg"` | Input height |
-| `variant` | `string` | `"outline"`, `"filled"`, `"underline"` | Input style |
+| Token     | Type     | Values                                 | Description  |
+| --------- | -------- | -------------------------------------- | ------------ |
+| `size`    | `string` | `"sm"`, `"md"`, `"lg"`                 | Input height |
+| `variant` | `string` | `"outline"`, `"filled"`, `"underline"` | Input style  |
 
 ### Modal tokens
 
-| Token       | Type | Values | Description |
-|-------------|------|--------|-------------|
-| `overlay`   | `string` | `"light"`, `"dark"`, `"blur"` | Overlay style |
+| Token       | Type     | Values                                      | Description    |
+| ----------- | -------- | ------------------------------------------- | -------------- |
+| `overlay`   | `string` | `"light"`, `"dark"`, `"blur"`               | Overlay style  |
 | `animation` | `string` | `"fade"`, `"scale"`, `"slide-up"`, `"none"` | Open animation |
 
 ### Nav tokens
 
-| Token             | Type | Values | Description |
-|-------------------|------|--------|-------------|
-| `variant`         | `string` | `"minimal"`, `"bordered"`, `"filled"` | Nav style |
+| Token             | Type     | Values                                                      | Description           |
+| ----------------- | -------- | ----------------------------------------------------------- | --------------------- |
+| `variant`         | `string` | `"minimal"`, `"bordered"`, `"filled"`                       | Nav style             |
 | `activeIndicator` | `string` | `"background"`, `"border-left"`, `"border-bottom"`, `"dot"` | Active item indicator |
 
 ### Badge tokens
 
-| Token     | Type | Values | Description |
-|-----------|------|--------|-------------|
-| `variant` | `string` | `"solid"`, `"outline"`, `"soft"` | Badge style |
-| `rounded` | `boolean` | -- | Full border radius |
+| Token     | Type      | Values                           | Description        |
+| --------- | --------- | -------------------------------- | ------------------ |
+| `variant` | `string`  | `"solid"`, `"outline"`, `"soft"` | Badge style        |
+| `rounded` | `boolean` | --                               | Full border radius |
 
 ### Toast tokens
 
-| Token       | Type | Values | Description |
-|-------------|------|--------|-------------|
-| `position`  | `string` | `"top-right"`, `"top-center"`, `"bottom-right"`, `"bottom-center"` | Screen position |
-| `animation` | `string` | `"slide"`, `"pop"`, `"fade"` | Entrance animation |
+| Token       | Type     | Values                                                             | Description        |
+| ----------- | -------- | ------------------------------------------------------------------ | ------------------ |
+| `position`  | `string` | `"top-right"`, `"top-center"`, `"bottom-right"`, `"bottom-center"` | Screen position    |
+| `animation` | `string` | `"slide"`, `"pop"`, `"fade"`                                       | Entrance animation |
 
 ## Component Overrides (registerComponent)
 
@@ -430,14 +438,14 @@ Responsive value (per breakpoint):
 
 Breakpoints follow standard Tailwind sizes:
 
-| Breakpoint | Min width |
-|------------|-----------|
+| Breakpoint | Min width     |
+| ---------- | ------------- |
 | `default`  | 0 (all sizes) |
-| `sm`       | 640px |
-| `md`       | 768px |
-| `lg`       | 1024px |
-| `xl`       | 1280px |
-| `2xl`      | 1536px |
+| `sm`       | 640px         |
+| `md`       | 768px         |
+| `lg`       | 1024px        |
+| `xl`       | 1280px        |
+| `2xl`      | 1536px        |
 
 Fields that support responsive values: `span`, `gap`, `visible`.
 
@@ -445,10 +453,10 @@ Fields that support responsive values: `span`, `gap`, `visible`.
 
 Dark mode is controlled by the `theme.mode` setting:
 
-| Value    | Behavior |
-|----------|----------|
-| `light`  | Always light mode |
-| `dark`   | Always dark mode |
+| Value    | Behavior                       |
+| -------- | ------------------------------ |
+| `light`  | Always light mode              |
+| `dark`   | Always dark mode               |
 | `system` | Follow OS preference (default) |
 
 The token system generates `:root { ... }` (light) and `.dark { ... }` blocks. The

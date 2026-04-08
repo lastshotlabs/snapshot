@@ -2,20 +2,20 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |-------|-------|--------|-------|
-> | 1 | Token System | Not started | A — Infrastructure |
-> | 2 | Page Context & `from` Ref System | Not started | A — Infrastructure |
-> | 3 | Action Executor | Not started | A — Infrastructure |
-> | 4 | Manifest Schema & PageRenderer | Not started | A — Infrastructure |
-> | 5 | Layout + Nav | Not started | B — Components |
-> | 6 | StatCard | Not started | B — Components |
-> | 7 | DataTable | Not started | B — Components |
-> | 8 | AutoForm | Not started | B — Components |
-> | 9 | DetailCard | Not started | B — Components |
-> | 10 | Modal + Drawer/Sheet | Not started | B — Components |
-> | 11 | Tabs | Not started | B — Components |
-> | 12 | Integration & Sync | Not started | C — CLI |
+> | Phase | Title                            | Status      | Track              |
+> | ----- | -------------------------------- | ----------- | ------------------ |
+> | 1     | Token System                     | Not started | A — Infrastructure |
+> | 2     | Page Context & `from` Ref System | Not started | A — Infrastructure |
+> | 3     | Action Executor                  | Not started | A — Infrastructure |
+> | 4     | Manifest Schema & PageRenderer   | Not started | A — Infrastructure |
+> | 5     | Layout + Nav                     | Not started | B — Components     |
+> | 6     | StatCard                         | Not started | B — Components     |
+> | 7     | DataTable                        | Not started | B — Components     |
+> | 8     | AutoForm                         | Not started | B — Components     |
+> | 9     | DetailCard                       | Not started | B — Components     |
+> | 10    | Modal + Drawer/Sheet             | Not started | B — Components     |
+> | 11    | Tabs                             | Not started | B — Components     |
+> | 12    | Integration & Sync               | Not started | C — CLI            |
 
 ---
 
@@ -64,50 +64,138 @@ production-quality application:
       "layout": "sidebar",
       "title": "Dashboard",
       "content": [
-        { "type": "row", "gap": "md", "children": [
-          { "type": "stat-card", "data": "GET /api/stats/revenue", "format": "currency", "icon": "dollar-sign", "trend": { "field": "change", "sentiment": "up-is-good" }, "span": 4 },
-          { "type": "stat-card", "data": "GET /api/stats/orders", "format": "number", "icon": "shopping-cart", "span": 4 },
-          { "type": "stat-card", "data": "GET /api/stats/customers", "format": "compact", "icon": "users", "span": 4 }
-        ]},
-        { "type": "table", "id": "recent-orders", "data": "GET /api/orders",
+        {
+          "type": "row",
+          "gap": "md",
+          "children": [
+            {
+              "type": "stat-card",
+              "data": "GET /api/stats/revenue",
+              "format": "currency",
+              "icon": "dollar-sign",
+              "trend": { "field": "change", "sentiment": "up-is-good" },
+              "span": 4
+            },
+            {
+              "type": "stat-card",
+              "data": "GET /api/stats/orders",
+              "format": "number",
+              "icon": "shopping-cart",
+              "span": 4
+            },
+            {
+              "type": "stat-card",
+              "data": "GET /api/stats/customers",
+              "format": "compact",
+              "icon": "users",
+              "span": 4
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "id": "recent-orders",
+          "data": "GET /api/orders",
           "columns": "auto",
           "searchable": true,
           "pagination": { "type": "cursor", "pageSize": 10 },
           "actions": [
-            { "label": "View", "icon": "eye", "action": { "type": "open-modal", "modal": "order-detail" } },
-            { "label": "Delete", "icon": "trash", "action": [
-              { "type": "confirm", "message": "Delete this order?" },
-              { "type": "api", "method": "DELETE", "endpoint": "/api/orders/{id}" },
-              { "type": "refresh", "target": "recent-orders" },
-              { "type": "toast", "message": "Order deleted", "variant": "success" }
-            ]}
+            {
+              "label": "View",
+              "icon": "eye",
+              "action": { "type": "open-modal", "modal": "order-detail" }
+            },
+            {
+              "label": "Delete",
+              "icon": "trash",
+              "action": [
+                { "type": "confirm", "message": "Delete this order?" },
+                {
+                  "type": "api",
+                  "method": "DELETE",
+                  "endpoint": "/api/orders/{id}"
+                },
+                { "type": "refresh", "target": "recent-orders" },
+                {
+                  "type": "toast",
+                  "message": "Order deleted",
+                  "variant": "success"
+                }
+              ]
+            }
           ]
         },
-        { "type": "modal", "id": "order-detail", "title": "Order Details", "size": "lg", "content": [
-          { "type": "detail-card", "data": { "from": "recent-orders.selected" },
-            "actions": [
-              { "label": "Edit", "icon": "pencil", "action": { "type": "open-modal", "modal": "order-edit" } }
-            ]
-          },
-          { "type": "tabs", "children": [
-            { "label": "Activity", "content": [
-              { "type": "feed", "data": "GET /api/orders/{id}/activity", "params": { "id": { "from": "recent-orders.selected.id" } } }
-            ]},
-            { "label": "Notes", "content": [
-              { "type": "comment-thread", "data": "GET /api/orders/{id}/notes", "params": { "id": { "from": "recent-orders.selected.id" } } }
-            ]}
-          ]}
-        ]},
-        { "type": "modal", "id": "order-edit", "title": "Edit Order", "content": [
-          { "type": "form", "data": { "from": "recent-orders.selected" }, "submit": "/api/orders/{id}", "method": "PATCH",
-            "fields": "auto",
-            "onSuccess": [
-              { "type": "close-modal" },
-              { "type": "refresh", "target": "recent-orders" },
-              { "type": "toast", "message": "Order updated", "variant": "success" }
-            ]
-          }
-        ]}
+        {
+          "type": "modal",
+          "id": "order-detail",
+          "title": "Order Details",
+          "size": "lg",
+          "content": [
+            {
+              "type": "detail-card",
+              "data": { "from": "recent-orders.selected" },
+              "actions": [
+                {
+                  "label": "Edit",
+                  "icon": "pencil",
+                  "action": { "type": "open-modal", "modal": "order-edit" }
+                }
+              ]
+            },
+            {
+              "type": "tabs",
+              "children": [
+                {
+                  "label": "Activity",
+                  "content": [
+                    {
+                      "type": "feed",
+                      "data": "GET /api/orders/{id}/activity",
+                      "params": {
+                        "id": { "from": "recent-orders.selected.id" }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "label": "Notes",
+                  "content": [
+                    {
+                      "type": "comment-thread",
+                      "data": "GET /api/orders/{id}/notes",
+                      "params": {
+                        "id": { "from": "recent-orders.selected.id" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "modal",
+          "id": "order-edit",
+          "title": "Edit Order",
+          "content": [
+            {
+              "type": "form",
+              "data": { "from": "recent-orders.selected" },
+              "submit": "/api/orders/{id}",
+              "method": "PATCH",
+              "fields": "auto",
+              "onSuccess": [
+                { "type": "close-modal" },
+                { "type": "refresh", "target": "recent-orders" },
+                {
+                  "type": "toast",
+                  "message": "Order updated",
+                  "variant": "success"
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
     "/users": {
@@ -115,79 +203,212 @@ production-quality application:
       "title": "Users",
       "roles": ["admin"],
       "content": [
-        { "type": "row", "gap": "md", "justify": "between", "align": "center", "children": [
-          { "type": "heading", "text": "Users", "level": 2 },
-          { "type": "button", "label": "Add User", "icon": "plus", "action": { "type": "open-modal", "modal": "create-user" } }
-        ]},
-        { "type": "table", "id": "users-table", "data": "GET /api/users",
+        {
+          "type": "row",
+          "gap": "md",
+          "justify": "between",
+          "align": "center",
+          "children": [
+            { "type": "heading", "text": "Users", "level": 2 },
+            {
+              "type": "button",
+              "label": "Add User",
+              "icon": "plus",
+              "action": { "type": "open-modal", "modal": "create-user" }
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "id": "users-table",
+          "data": "GET /api/users",
           "columns": [
             { "field": "name", "sortable": true },
             { "field": "email", "sortable": true },
-            { "field": "role", "format": "badge", "badgeColors": { "admin": "destructive", "user": "secondary" }, "filter": { "type": "select", "options": "auto" } },
-            { "field": "createdAt", "format": "date", "label": "Joined", "sortable": true }
+            {
+              "field": "role",
+              "format": "badge",
+              "badgeColors": { "admin": "destructive", "user": "secondary" },
+              "filter": { "type": "select", "options": "auto" }
+            },
+            {
+              "field": "createdAt",
+              "format": "date",
+              "label": "Joined",
+              "sortable": true
+            }
           ],
           "selectable": true,
-          "searchable": { "placeholder": "Search by name or email...", "fields": ["name", "email"] },
+          "searchable": {
+            "placeholder": "Search by name or email...",
+            "fields": ["name", "email"]
+          },
           "bulkActions": [
-            { "label": "Delete Selected", "icon": "trash", "action": [
-              { "type": "confirm", "message": "Delete {count} users?" },
-              { "type": "api", "method": "DELETE", "endpoint": "/api/users/bulk", "body": { "ids": { "from": "users-table.selectedIds" } } },
-              { "type": "refresh", "target": "users-table" },
-              { "type": "toast", "message": "{count} users deleted", "variant": "success" }
-            ]}
+            {
+              "label": "Delete Selected",
+              "icon": "trash",
+              "action": [
+                { "type": "confirm", "message": "Delete {count} users?" },
+                {
+                  "type": "api",
+                  "method": "DELETE",
+                  "endpoint": "/api/users/bulk",
+                  "body": { "ids": { "from": "users-table.selectedIds" } }
+                },
+                { "type": "refresh", "target": "users-table" },
+                {
+                  "type": "toast",
+                  "message": "{count} users deleted",
+                  "variant": "success"
+                }
+              ]
+            }
           ]
         },
-        { "type": "drawer", "id": "user-detail", "side": "right", "size": "lg",
+        {
+          "type": "drawer",
+          "id": "user-detail",
+          "side": "right",
+          "size": "lg",
           "trigger": { "from": "users-table.selected" },
           "content": [
-            { "type": "detail-card", "data": { "from": "users-table.selected" }, "title": { "from": "users-table.selected.name" } },
-            { "type": "session-manager", "data": "GET /api/users/{id}/sessions", "params": { "id": { "from": "users-table.selected.id" } } }
+            {
+              "type": "detail-card",
+              "data": { "from": "users-table.selected" },
+              "title": { "from": "users-table.selected.name" }
+            },
+            {
+              "type": "session-manager",
+              "data": "GET /api/users/{id}/sessions",
+              "params": { "id": { "from": "users-table.selected.id" } }
+            }
           ]
         },
-        { "type": "modal", "id": "create-user", "title": "Create User", "content": [
-          { "type": "form", "submit": "/api/users", "fields": "auto",
-            "onSuccess": [
-              { "type": "close-modal" },
-              { "type": "refresh", "target": "users-table" },
-              { "type": "toast", "message": "User created", "variant": "success" }
-            ]
-          }
-        ]}
+        {
+          "type": "modal",
+          "id": "create-user",
+          "title": "Create User",
+          "content": [
+            {
+              "type": "form",
+              "submit": "/api/users",
+              "fields": "auto",
+              "onSuccess": [
+                { "type": "close-modal" },
+                { "type": "refresh", "target": "users-table" },
+                {
+                  "type": "toast",
+                  "message": "User created",
+                  "variant": "success"
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
     "/settings": {
       "layout": "sidebar",
       "title": "Settings",
       "content": [
-        { "type": "tabs", "children": [
-          { "label": "Profile", "icon": "user", "content": [
-            { "type": "avatar-upload", "data": "GET /api/me", "field": "avatar", "submit": "PATCH /api/me/avatar" },
-            { "type": "form", "data": "GET /api/me", "submit": "/api/me", "method": "PATCH", "fields": [
-              { "name": "name", "type": "text", "required": true },
-              { "name": "email", "type": "email", "required": true },
-              { "name": "bio", "type": "textarea" }
-            ]}
-          ]},
-          { "label": "Security", "icon": "shield", "content": [
-            { "type": "form", "submit": "/api/me/password", "submitLabel": "Change Password", "fields": [
-              { "name": "currentPassword", "type": "password", "required": true },
-              { "name": "newPassword", "type": "password", "required": true, "validation": { "minLength": 8, "message": "Password must be at least 8 characters" } },
-              { "name": "confirmPassword", "type": "password", "required": true }
-            ]},
-            { "type": "connected-accounts", "data": "GET /api/me/oauth" },
-            { "type": "session-manager", "data": "GET /api/me/sessions" }
-          ]},
-          { "label": "Danger", "icon": "alert-triangle", "content": [
-            { "type": "danger-zone", "actions": [
-              { "label": "Export Data", "description": "Download all your data as JSON", "action": { "type": "download", "endpoint": "/api/me/export" } },
-              { "label": "Delete Account", "description": "Permanently delete your account and all data", "action": [
-                { "type": "confirm", "message": "This action cannot be undone. Type DELETE to confirm.", "confirmLabel": "Delete Forever" },
-                { "type": "api", "method": "DELETE", "endpoint": "/api/me" },
-                { "type": "navigate", "to": "/goodbye" }
-              ]}
-            ]}
-          ]}
-        ]}
+        {
+          "type": "tabs",
+          "children": [
+            {
+              "label": "Profile",
+              "icon": "user",
+              "content": [
+                {
+                  "type": "avatar-upload",
+                  "data": "GET /api/me",
+                  "field": "avatar",
+                  "submit": "PATCH /api/me/avatar"
+                },
+                {
+                  "type": "form",
+                  "data": "GET /api/me",
+                  "submit": "/api/me",
+                  "method": "PATCH",
+                  "fields": [
+                    { "name": "name", "type": "text", "required": true },
+                    { "name": "email", "type": "email", "required": true },
+                    { "name": "bio", "type": "textarea" }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Security",
+              "icon": "shield",
+              "content": [
+                {
+                  "type": "form",
+                  "submit": "/api/me/password",
+                  "submitLabel": "Change Password",
+                  "fields": [
+                    {
+                      "name": "currentPassword",
+                      "type": "password",
+                      "required": true
+                    },
+                    {
+                      "name": "newPassword",
+                      "type": "password",
+                      "required": true,
+                      "validation": {
+                        "minLength": 8,
+                        "message": "Password must be at least 8 characters"
+                      }
+                    },
+                    {
+                      "name": "confirmPassword",
+                      "type": "password",
+                      "required": true
+                    }
+                  ]
+                },
+                { "type": "connected-accounts", "data": "GET /api/me/oauth" },
+                { "type": "session-manager", "data": "GET /api/me/sessions" }
+              ]
+            },
+            {
+              "label": "Danger",
+              "icon": "alert-triangle",
+              "content": [
+                {
+                  "type": "danger-zone",
+                  "actions": [
+                    {
+                      "label": "Export Data",
+                      "description": "Download all your data as JSON",
+                      "action": {
+                        "type": "download",
+                        "endpoint": "/api/me/export"
+                      }
+                    },
+                    {
+                      "label": "Delete Account",
+                      "description": "Permanently delete your account and all data",
+                      "action": [
+                        {
+                          "type": "confirm",
+                          "message": "This action cannot be undone. Type DELETE to confirm.",
+                          "confirmLabel": "Delete Forever"
+                        },
+                        {
+                          "type": "api",
+                          "method": "DELETE",
+                          "endpoint": "/api/me"
+                        },
+                        { "type": "navigate", "to": "/goodbye" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       ]
     }
   }
@@ -205,64 +426,69 @@ The framework does everything by default. But the consumer can reach in at any l
 **Level 1: Pure config** — the manifest drives the entire app. Zero code.
 
 **Level 2: Config + custom React** — use framework components directly in custom pages:
+
 ```tsx
-import { DataTable, StatCard, AutoForm } from '@lastshotlabs/snapshot'
+import { DataTable, StatCard, AutoForm } from "@lastshotlabs/snapshot";
 
 export function MyCustomDashboard() {
   return (
     <div>
       <h1>Custom header with my own logic</h1>
-      <StatCard config={{ data: 'GET /api/stats/users', format: 'number' }} />
-      <DataTable config={{ data: 'GET /api/users', columns: 'auto' }} />
+      <StatCard config={{ data: "GET /api/stats/users", format: "number" }} />
+      <DataTable config={{ data: "GET /api/users", columns: "auto" }} />
       <MyCustomChart />
     </div>
-  )
+  );
 }
 ```
 
 **Level 3: Headless hooks + custom rendering** — keep the data/state logic, replace the UI:
+
 ```tsx
-import { useDataTable } from '@lastshotlabs/snapshot'
+import { useDataTable } from "@lastshotlabs/snapshot";
 
 export function MyCustomTable() {
   const { rows, columns, sort, pagination, filters, selection } = useDataTable({
-    data: 'GET /api/users',
-    columns: 'auto',
+    data: "GET /api/users",
+    columns: "auto",
     selectable: true,
-  })
+  });
 
   // Complete control over rendering — the hook handles data fetching,
   // sort state, filter state, pagination, selection tracking, cache invalidation
   return (
     <div className="my-custom-grid">
-      {rows.map(row => <MyCustomCard key={row.id} data={row} />)}
+      {rows.map((row) => (
+        <MyCustomCard key={row.id} data={row} />
+      ))}
     </div>
-  )
+  );
 }
 
 // Register to make it available from manifest config
-registerComponent('table', MyCustomTable)
+registerComponent("table", MyCustomTable);
 ```
 
 **Level 3b: Override a single component globally** — swap the framework's rendering for one
 component type across the entire app:
+
 ```tsx
-import { useStatCard } from '@lastshotlabs/snapshot'
+import { useStatCard } from "@lastshotlabs/snapshot";
 
 // My app wants stat cards to look completely different
 function MyStatCard({ config }: { config: StatCardConfig }) {
-  const { value, label, trend, isLoading } = useStatCard(config)
+  const { value, label, trend, isLoading } = useStatCard(config);
 
   return (
     <div className="my-custom-stat">
       <span className="big-number">{value}</span>
       <span className="label">{label}</span>
     </div>
-  )
+  );
 }
 
 // Now every { "type": "stat-card" } in the manifest uses this component
-registerComponent('stat-card', MyStatCard)
+registerComponent("stat-card", MyStatCard);
 ```
 
 The consumer chooses their level of control **per-component, per-page**. One page can be pure
@@ -285,34 +511,34 @@ schema, write its headless hook, write its rendering component, register it.
 
 Audited 2026-04-06 against commit `0581a83`.
 
-| File | What | Lines |
-|------|------|-------|
-| `src/create-snapshot.tsx` | Factory function — all hooks closed over config | 462 |
-| `src/types.ts` | All SDK type definitions (SnapshotConfig, SnapshotInstance, auth, MFA, SSE, WS, community) | 429 |
-| `src/index.ts` | Package exports (~80 types, 4 functions) | 103 |
-| `src/theme/hook.ts` | `useTheme` — light/dark toggle via Jotai `atomWithStorage`, applies `.dark` class to `<html>` | 56 |
-| `src/api/client.ts` | `ApiClient` — dual auth (cookie/token), CSRF, 401 token refresh, bearer support | ~200 |
-| `src/api/error.ts` | `ApiError` class with status, message, response body | ~30 |
-| `src/auth/contract.ts` | `AuthContract` factory — `defaultContract(apiUrl)`, `mergeContract(apiUrl, overrides)` | ~80 |
-| `src/auth/hooks.ts` | `createAuthHooks()` → `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword` | ~200 |
-| `src/auth/mfa-hooks.ts` | `createMfaHooks()` → 12 MFA hooks (TOTP, email OTP, WebAuthn) | ~200 |
-| `src/auth/oauth-hooks.ts` | `createOAuthHooks()` → `getOAuthUrl`, `useOAuthExchange`, `useOAuthUnlink` | ~80 |
-| `src/auth/webauthn-hooks.ts` | `createWebAuthnHooks()` → passkey login, credential management | ~120 |
-| `src/auth/account-hooks.ts` | `createAccountHooks()` → sessions, password reset, email verification, account deletion | ~150 |
-| `src/auth/storage.ts` | `createTokenStorage()` — localStorage/sessionStorage/memory/noop strategies | ~80 |
-| `src/community/hooks.ts` | `createCommunityHooks()` → 50+ hooks (containers, threads, replies, reactions, moderation) | ~800 |
-| `src/community/contract.ts` | `communityContract` — endpoint paths for community API | ~60 |
-| `src/webhooks/hooks.ts` | `createWebhookHooks()` → 8 hooks for webhook CRUD and deliveries | ~120 |
-| `src/ws/manager.ts` | `WebSocketManager` — auto-reconnect, room subscriptions, exponential backoff | ~200 |
-| `src/ws/atom.ts` | `wsManagerAtom` — Jotai atom for WS manager singleton | ~10 |
-| `src/ws/hook.ts` | `createWsHooks()` → `useSocket`, `useRoom`, `useRoomEvent` | ~120 |
-| `src/sse/manager.ts` | `SseManager` — per-endpoint EventSource, subscriber `on/off`, auto-reconnect | ~150 |
-| `src/cli/sync.ts` | OpenAPI → typed hooks + types generation (supports multi-backend, Zod validators) | 1071 |
-| `src/cli/templates/globals-css.ts` | Hardcoded oklch palettes: neutral, dark, minimal (slate), vibrant (violet) — 22 CSS vars each × light/dark | 217 |
-| `src/cli/templates/components-json.ts` | Generates shadcn `components.json` with theme → baseColor mapping | 34 |
-| `src/cli/templates/snapshot-lib.ts` | Generates consumer's `@lib/snapshot` file with `createSnapshot(config)` and hook destructuring | ~60 |
-| `src/vite/index.ts` | Vite plugin — auto-sync on schema file changes | 68 |
-| `tsup.config.ts` | 4 build entries: library (ESM+CJS), CLI index, CLI commands, Vite plugin | ~40 |
+| File                                   | What                                                                                                       | Lines |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----- |
+| `src/create-snapshot.tsx`              | Factory function — all hooks closed over config                                                            | 462   |
+| `src/types.ts`                         | All SDK type definitions (SnapshotConfig, SnapshotInstance, auth, MFA, SSE, WS, community)                 | 429   |
+| `src/index.ts`                         | Package exports (~80 types, 4 functions)                                                                   | 103   |
+| `src/theme/hook.ts`                    | `useTheme` — light/dark toggle via Jotai `atomWithStorage`, applies `.dark` class to `<html>`              | 56    |
+| `src/api/client.ts`                    | `ApiClient` — dual auth (cookie/token), CSRF, 401 token refresh, bearer support                            | ~200  |
+| `src/api/error.ts`                     | `ApiError` class with status, message, response body                                                       | ~30   |
+| `src/auth/contract.ts`                 | `AuthContract` factory — `defaultContract(apiUrl)`, `mergeContract(apiUrl, overrides)`                     | ~80   |
+| `src/auth/hooks.ts`                    | `createAuthHooks()` → `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword`               | ~200  |
+| `src/auth/mfa-hooks.ts`                | `createMfaHooks()` → 12 MFA hooks (TOTP, email OTP, WebAuthn)                                              | ~200  |
+| `src/auth/oauth-hooks.ts`              | `createOAuthHooks()` → `getOAuthUrl`, `useOAuthExchange`, `useOAuthUnlink`                                 | ~80   |
+| `src/auth/webauthn-hooks.ts`           | `createWebAuthnHooks()` → passkey login, credential management                                             | ~120  |
+| `src/auth/account-hooks.ts`            | `createAccountHooks()` → sessions, password reset, email verification, account deletion                    | ~150  |
+| `src/auth/storage.ts`                  | `createTokenStorage()` — localStorage/sessionStorage/memory/noop strategies                                | ~80   |
+| `src/community/hooks.ts`               | `createCommunityHooks()` → 50+ hooks (containers, threads, replies, reactions, moderation)                 | ~800  |
+| `src/community/contract.ts`            | `communityContract` — endpoint paths for community API                                                     | ~60   |
+| `src/webhooks/hooks.ts`                | `createWebhookHooks()` → 8 hooks for webhook CRUD and deliveries                                           | ~120  |
+| `src/ws/manager.ts`                    | `WebSocketManager` — auto-reconnect, room subscriptions, exponential backoff                               | ~200  |
+| `src/ws/atom.ts`                       | `wsManagerAtom` — Jotai atom for WS manager singleton                                                      | ~10   |
+| `src/ws/hook.ts`                       | `createWsHooks()` → `useSocket`, `useRoom`, `useRoomEvent`                                                 | ~120  |
+| `src/sse/manager.ts`                   | `SseManager` — per-endpoint EventSource, subscriber `on/off`, auto-reconnect                               | ~150  |
+| `src/cli/sync.ts`                      | OpenAPI → typed hooks + types generation (supports multi-backend, Zod validators)                          | 1071  |
+| `src/cli/templates/globals-css.ts`     | Hardcoded oklch palettes: neutral, dark, minimal (slate), vibrant (violet) — 22 CSS vars each × light/dark | 217   |
+| `src/cli/templates/components-json.ts` | Generates shadcn `components.json` with theme → baseColor mapping                                          | 34    |
+| `src/cli/templates/snapshot-lib.ts`    | Generates consumer's `@lib/snapshot` file with `createSnapshot(config)` and hook destructuring             | ~60   |
+| `src/vite/index.ts`                    | Vite plugin — auto-sync on schema file changes                                                             | 68    |
+| `tsup.config.ts`                       | 4 build entries: library (ESM+CJS), CLI index, CLI commands, Vite plugin                                   | ~40   |
 
 **What doesn't exist:** No component system. No token schema. No page context. No `from` refs.
 No action executor. No `PageRenderer`. No manifest schema. No component registration API.
@@ -340,32 +566,35 @@ bun test                 # vitest run
 ### Key Patterns
 
 **Factory closure pattern (every SDK module follows this):**
+
 ```ts
 function createFooHooks(deps: { api: ApiClient; queryClient: QueryClient }) {
   function useFoo() {
     // Captures deps from closure. No globals. No React context for deps.
   }
-  return { useFoo }
+  return { useFoo };
 }
 
 // In createSnapshot:
-const fooHooks = createFooHooks({ api, queryClient })
-return { ...fooHooks, /* ...other hook factories */ }
+const fooHooks = createFooHooks({ api, queryClient });
+return { ...fooHooks /* ...other hook factories */ };
 ```
 
 **Contract pattern (endpoint paths are configurable):**
+
 ```ts
-const contract = mergeContract(apiUrl, config.contract)
+const contract = mergeContract(apiUrl, config.contract);
 // contract.endpoints.login → "/auth/login"
 // Hooks use contract paths, not hardcoded strings
 ```
 
 **Jotai atom pattern (existing):**
+
 ```ts
 // ws/atom.ts — singleton within createSnapshot scope
-const wsManagerAtom = atom<WebSocketManager | null>(null)
+const wsManagerAtom = atom<WebSocketManager | null>(null);
 // theme/hook.ts — persisted across sessions
-const themeAtom = atomWithStorage<Theme>('snapshot-theme', defaultTheme)
+const themeAtom = atomWithStorage<Theme>("snapshot-theme", defaultTheme);
 ```
 
 ### Package Entry Points
@@ -396,21 +625,21 @@ setup — this is guaranteed because both use the same CSS variable names.
 
 From `docs/engineering-rules.md`:
 
-| # | Rule | Impact on this spec |
-|---|------|---------------------|
-| 1 | Factory pattern — `createSnapshot(config)` is the single entry point | New component hooks integrate into the factory |
-| 3 | Hooks are closures, not globals | Component hooks capture `api`, `queryClient` from factory scope |
-| 5 | No `any`. No unnecessary casts | All component configs are fully typed via Zod inference |
-| 8 | Separation of concerns — SDK modules by domain | Each component is its own module under `src/components/` |
-| 9 | Shared types in `types.ts`. Never redefine a shape | Token types, action types, component base types in `types.ts` |
-| 10 | Peer deps are boundaries | Zod becomes required peer dep. Radix becomes bundled dep. |
-| 15 | Test what you ship | Every component, hook, schema, and utility has tests |
-| 21 | Design tokens are the styling boundary | Components consume tokens only — no raw CSS values |
-| 22 | Components are higher-level abstractions | Zod config schema, self-manage data + state |
-| 23 | Inter-component data binding via `from` refs | PageContext + AppContext atom registries |
-| 24 | Fixed action vocabulary | 9 action types, Zod-validated configs |
-| 28 | JSDoc on every exported function, hook, type, class | All new public API surface |
-| 29 | Documentation parity — `docs/` updated in same commit | Per-phase doc requirements specified |
+| #   | Rule                                                                 | Impact on this spec                                             |
+| --- | -------------------------------------------------------------------- | --------------------------------------------------------------- |
+| 1   | Factory pattern — `createSnapshot(config)` is the single entry point | New component hooks integrate into the factory                  |
+| 3   | Hooks are closures, not globals                                      | Component hooks capture `api`, `queryClient` from factory scope |
+| 5   | No `any`. No unnecessary casts                                       | All component configs are fully typed via Zod inference         |
+| 8   | Separation of concerns — SDK modules by domain                       | Each component is its own module under `src/components/`        |
+| 9   | Shared types in `types.ts`. Never redefine a shape                   | Token types, action types, component base types in `types.ts`   |
+| 10  | Peer deps are boundaries                                             | Zod becomes required peer dep. Radix becomes bundled dep.       |
+| 15  | Test what you ship                                                   | Every component, hook, schema, and utility has tests            |
+| 21  | Design tokens are the styling boundary                               | Components consume tokens only — no raw CSS values              |
+| 22  | Components are higher-level abstractions                             | Zod config schema, self-manage data + state                     |
+| 23  | Inter-component data binding via `from` refs                         | PageContext + AppContext atom registries                        |
+| 24  | Fixed action vocabulary                                              | 9 action types, Zod-validated configs                           |
+| 28  | JSDoc on every exported function, hook, type, class                  | All new public API surface                                      |
+| 29  | Documentation parity — `docs/` updated in same commit                | Per-phase doc requirements specified                            |
 
 ---
 
@@ -427,6 +656,7 @@ customization for theme editors and per-user theming.
 ### The Vision
 
 A consumer should be able to:
+
 1. Pick a flavor: `"flavor": "midnight"` — done, beautiful app
 2. Override specific tokens: `"overrides": { "colors": { "primary": "#8b5cf6" } }` — keeps the
    flavor's other colors, just swaps primary
@@ -447,75 +677,76 @@ import {
   useTokenEditor,
   flavors,
   defineFlavor,
-} from '@lastshotlabs/snapshot'
+} from "@lastshotlabs/snapshot";
 
 // --- Flavor system ---
 
 // List built-in flavors
-console.log(Object.keys(flavors))
+console.log(Object.keys(flavors));
 // ['neutral', 'slate', 'midnight', 'violet', 'rose', 'emerald', 'ocean', 'sunset']
 
 // Use a built-in flavor with overrides
 const css = resolveTokens({
-  flavor: 'midnight',
+  flavor: "midnight",
   overrides: {
-    colors: { primary: '#8b5cf6' },
-    radius: 'lg',
+    colors: { primary: "#8b5cf6" },
+    radius: "lg",
   },
-})
+});
 
 // Define a custom flavor
-const myBrandFlavor = defineFlavor('my-brand', {
+const myBrandFlavor = defineFlavor("my-brand", {
   colors: {
-    primary: '#1d4ed8',
-    secondary: '#64748b',
-    accent: '#f59e0b',
-    background: '#fafaf9',
-    destructive: '#dc2626',
+    primary: "#1d4ed8",
+    secondary: "#64748b",
+    accent: "#f59e0b",
+    background: "#fafaf9",
+    destructive: "#dc2626",
   },
   darkColors: {
-    primary: '#3b82f6',
-    secondary: '#94a3b8',
-    accent: '#fbbf24',
-    background: '#0c0a09',
-    destructive: '#ef4444',
+    primary: "#3b82f6",
+    secondary: "#94a3b8",
+    accent: "#fbbf24",
+    background: "#0c0a09",
+    destructive: "#ef4444",
   },
-  radius: 'md',
-  spacing: 'default',
-  font: { sans: 'DM Sans', mono: 'JetBrains Mono' },
+  radius: "md",
+  spacing: "default",
+  font: { sans: "DM Sans", mono: "JetBrains Mono" },
   components: {
-    card: { shadow: 'md', padding: 'relaxed' },
-    table: { striped: true, density: 'comfortable' },
-    button: { weight: 'medium' },
+    card: { shadow: "md", padding: "relaxed" },
+    table: { striped: true, density: "comfortable" },
+    button: { weight: "medium" },
   },
-})
+});
 
 // Use custom flavor in manifest
 // { "theme": { "flavor": "my-brand" } }
 
 // --- Runtime editing ---
 
-const { setToken, resetTokens, getTokens, setFlavor, subscribe } = useTokenEditor()
+const { setToken, resetTokens, getTokens, setFlavor, subscribe } =
+  useTokenEditor();
 
 // Change individual tokens at runtime — instant visual update
-setToken('colors.primary', '#e11d48')
-setToken('radius', 'full')
-setToken('components.card.shadow', 'lg')
+setToken("colors.primary", "#e11d48");
+setToken("radius", "full");
+setToken("components.card.shadow", "lg");
 
 // Switch entire flavor at runtime
-setFlavor('midnight')
+setFlavor("midnight");
 
 // Get current state as manifest-compatible config (for persistence)
-const overrides = getTokens()
+const overrides = getTokens();
 // → { colors: { primary: '#e11d48' }, radius: 'full', components: { card: { shadow: 'lg' } } }
 
 // Persist to backend, restore on next load
-await api.patch('/api/me/preferences', { theme: overrides })
+await api.patch("/api/me/preferences", { theme: overrides });
 
 // Subscribe to changes (for syncing theme editor UI)
 const unsub = subscribe((overrides) => {
-  console.log('Theme changed:', overrides)
-})
+  console.log("Theme changed:", overrides);
+});
 ```
 
 ### Types
@@ -524,154 +755,158 @@ const unsub = subscribe((overrides) => {
 /** Named theme preset. Provides a complete set of design tokens. */
 interface Flavor {
   /** Flavor identifier. */
-  name: string
+  name: string;
   /** Human-readable display name. */
-  displayName: string
+  displayName: string;
   /** Light mode colors. */
-  colors: ThemeColors
+  colors: ThemeColors;
   /** Dark mode colors. If omitted, auto-derived from light colors. */
-  darkColors?: ThemeColors
+  darkColors?: ThemeColors;
   /** Border radius preset. */
-  radius: RadiusScale
+  radius: RadiusScale;
   /** Spacing density. */
-  spacing: SpacingScale
+  spacing: SpacingScale;
   /** Font families. */
-  font: FontConfig
+  font: FontConfig;
   /** Component-level token overrides. */
-  components?: ComponentTokens
+  components?: ComponentTokens;
 }
 
 /** Semantic color tokens. Each generates a CSS custom property. */
 interface ThemeColors {
   /** Primary brand color. Generates `--primary` and `--primary-foreground`. */
-  primary?: string
+  primary?: string;
   /** Secondary color. Generates `--secondary` and `--secondary-foreground`. */
-  secondary?: string
+  secondary?: string;
   /** Muted/subtle backgrounds. Generates `--muted` and `--muted-foreground`. */
-  muted?: string
+  muted?: string;
   /** Accent color for highlights. Generates `--accent` and `--accent-foreground`. */
-  accent?: string
+  accent?: string;
   /** Destructive/danger color. Generates `--destructive` and `--destructive-foreground`. */
-  destructive?: string
+  destructive?: string;
   /** Success color. Generates `--success` and `--success-foreground`. */
-  success?: string
+  success?: string;
   /** Warning color. Generates `--warning` and `--warning-foreground`. */
-  warning?: string
+  warning?: string;
   /** Info color. Generates `--info` and `--info-foreground`. */
-  info?: string
+  info?: string;
   /** Page background. Generates `--background` and `--foreground`. */
-  background?: string
+  background?: string;
   /** Card background. Generates `--card` and `--card-foreground`. */
-  card?: string
+  card?: string;
   /** Popover background. Generates `--popover` and `--popover-foreground`. */
-  popover?: string
+  popover?: string;
   /** Sidebar background. Generates `--sidebar` and `--sidebar-foreground`. */
-  sidebar?: string
+  sidebar?: string;
   /** Border color. Generates `--border`. */
-  border?: string
+  border?: string;
   /** Input border color. Generates `--input`. */
-  input?: string
+  input?: string;
   /** Focus ring color. Generates `--ring`. */
-  ring?: string
+  ring?: string;
   /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
-  chart?: [string, string, string, string, string]
+  chart?: [string, string, string, string, string];
 }
 
 /** Border radius scale. */
-type RadiusScale = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+type RadiusScale = "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full";
 
 /** Spacing density. Affects padding, gaps, and margins globally. */
-type SpacingScale = 'compact' | 'default' | 'comfortable' | 'spacious'
+type SpacingScale = "compact" | "default" | "comfortable" | "spacious";
 
 /** Font configuration. */
 interface FontConfig {
   /** Primary font family (body text, headings). */
-  sans?: string
+  sans?: string;
   /** Monospace font family (code, pre). */
-  mono?: string
+  mono?: string;
   /** Display font (large headings, hero text). */
-  display?: string
+  display?: string;
   /** Base font size in px. Default: 16. */
-  baseSize?: number
+  baseSize?: number;
   /** Type scale ratio. Default: 1.25 (major third). */
-  scale?: number
+  scale?: number;
 }
 
 /** A breakpoint-aware value. Flat value or responsive map. */
-type Responsive<T> = T | { default: T; sm?: T; md?: T; lg?: T; xl?: T; '2xl'?: T }
+type Responsive<T> =
+  | T
+  | { default: T; sm?: T; md?: T; lg?: T; xl?: T; "2xl"?: T };
 
 /** Component-level token overrides. Per-component styling knobs. */
 interface ComponentTokens {
   card?: {
-    shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
-    padding?: SpacingScale
-    border?: boolean
-  }
+    shadow?: "none" | "sm" | "md" | "lg" | "xl";
+    padding?: SpacingScale;
+    border?: boolean;
+  };
   table?: {
-    striped?: boolean
-    density?: 'compact' | 'default' | 'comfortable'
-    headerBackground?: boolean
-    hoverRow?: boolean
-    borderStyle?: 'none' | 'horizontal' | 'grid'
-  }
+    striped?: boolean;
+    density?: "compact" | "default" | "comfortable";
+    headerBackground?: boolean;
+    hoverRow?: boolean;
+    borderStyle?: "none" | "horizontal" | "grid";
+  };
   button?: {
-    weight?: 'light' | 'medium' | 'bold'
-    uppercase?: boolean
-    iconSize?: 'sm' | 'md' | 'lg'
-  }
+    weight?: "light" | "medium" | "bold";
+    uppercase?: boolean;
+    iconSize?: "sm" | "md" | "lg";
+  };
   input?: {
-    size?: 'sm' | 'md' | 'lg'
-    variant?: 'outline' | 'filled' | 'underline'
-  }
+    size?: "sm" | "md" | "lg";
+    variant?: "outline" | "filled" | "underline";
+  };
   modal?: {
-    overlay?: 'light' | 'dark' | 'blur'
-    animation?: 'fade' | 'scale' | 'slide-up' | 'none'
-  }
+    overlay?: "light" | "dark" | "blur";
+    animation?: "fade" | "scale" | "slide-up" | "none";
+  };
   nav?: {
-    variant?: 'minimal' | 'bordered' | 'filled'
-    activeIndicator?: 'background' | 'border-left' | 'border-bottom' | 'dot'
-  }
+    variant?: "minimal" | "bordered" | "filled";
+    activeIndicator?: "background" | "border-left" | "border-bottom" | "dot";
+  };
   badge?: {
-    variant?: 'solid' | 'outline' | 'soft'
-    rounded?: boolean
-  }
+    variant?: "solid" | "outline" | "soft";
+    rounded?: boolean;
+  };
   toast?: {
-    position?: 'top-right' | 'top-center' | 'bottom-right' | 'bottom-center'
-    animation?: 'slide' | 'fade' | 'pop'
-  }
+    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center";
+    animation?: "slide" | "fade" | "pop";
+  };
 }
 
 /** Theme configuration in the manifest. */
 interface ThemeConfig {
   /** Named flavor preset. Provides all base tokens. */
-  flavor?: string
+  flavor?: string;
   /** Token overrides applied on top of the flavor. */
   overrides?: {
-    colors?: ThemeColors
-    darkColors?: ThemeColors
-    radius?: RadiusScale
-    spacing?: SpacingScale
-    font?: FontConfig
-    components?: ComponentTokens
-  }
+    colors?: ThemeColors;
+    darkColors?: ThemeColors;
+    radius?: RadiusScale;
+    spacing?: SpacingScale;
+    font?: FontConfig;
+    components?: ComponentTokens;
+  };
   /** Initial color mode. 'system' follows prefers-color-scheme. */
-  mode?: 'light' | 'dark' | 'system'
+  mode?: "light" | "dark" | "system";
 }
 
 /** Return type of useTokenEditor(). */
 interface TokenEditor {
   /** Override a single token at runtime. Instant visual update via CSS custom property. */
-  setToken: (path: string, value: string) => void
+  setToken: (path: string, value: string) => void;
   /** Switch to a different flavor at runtime. Resets all overrides. */
-  setFlavor: (flavorName: string) => void
+  setFlavor: (flavorName: string) => void;
   /** Reset all runtime overrides. Reverts to the CSS file baseline. */
-  resetTokens: () => void
+  resetTokens: () => void;
   /** Get current runtime overrides as a manifest-compatible config object. */
-  getTokens: () => Partial<ThemeConfig['overrides']>
+  getTokens: () => Partial<ThemeConfig["overrides"]>;
   /** Get the name of the currently active flavor. */
-  currentFlavor: () => string
+  currentFlavor: () => string;
   /** Subscribe to token changes. Returns unsubscribe function. */
-  subscribe: (listener: (overrides: Partial<ThemeConfig['overrides']>) => void) => () => void
+  subscribe: (
+    listener: (overrides: Partial<ThemeConfig["overrides"]>) => void,
+  ) => () => void;
 }
 ```
 
@@ -680,16 +915,16 @@ interface TokenEditor {
 The 4 current hardcoded palettes become the first built-in flavors. Additional flavors are
 added to cover common app aesthetics:
 
-| Flavor | Description | Primary | Vibe |
-|--------|-------------|---------|------|
-| `neutral` | Clean, professional. Current default palette. | Gray scale | Corporate SaaS, admin dashboards |
-| `slate` | Softer neutral. Current "minimal" palette. | Slate tones | Documentation, content apps |
-| `midnight` | Dark-first. Deep backgrounds with high-contrast text. | Blue-violet | Dev tools, media apps, chat |
-| `violet` | Vibrant purple. Current "vibrant" palette. | Violet | Creative apps, social platforms |
-| `rose` | Warm pink-red tones. | Rose | E-commerce, lifestyle, beauty |
-| `emerald` | Nature-inspired greens. | Emerald | Finance, health, sustainability |
-| `ocean` | Deep blues with teal accents. | Cyan-blue | Travel, communication, productivity |
-| `sunset` | Warm orange-amber tones. | Orange | Food, entertainment, energy |
+| Flavor     | Description                                           | Primary     | Vibe                                |
+| ---------- | ----------------------------------------------------- | ----------- | ----------------------------------- |
+| `neutral`  | Clean, professional. Current default palette.         | Gray scale  | Corporate SaaS, admin dashboards    |
+| `slate`    | Softer neutral. Current "minimal" palette.            | Slate tones | Documentation, content apps         |
+| `midnight` | Dark-first. Deep backgrounds with high-contrast text. | Blue-violet | Dev tools, media apps, chat         |
+| `violet`   | Vibrant purple. Current "vibrant" palette.            | Violet      | Creative apps, social platforms     |
+| `rose`     | Warm pink-red tones.                                  | Rose        | E-commerce, lifestyle, beauty       |
+| `emerald`  | Nature-inspired greens.                               | Emerald     | Finance, health, sustainability     |
+| `ocean`    | Deep blues with teal accents.                         | Cyan-blue   | Travel, communication, productivity |
+| `sunset`   | Warm orange-amber tones.                              | Orange      | Food, entertainment, energy         |
 
 Each flavor provides a full `ThemeColors` (light + dark), a default radius, spacing, and font.
 Flavors are extensible — `defineFlavor()` creates new ones.
@@ -722,6 +957,7 @@ Component-level tokens are CSS custom properties scoped to component selectors:
 ```
 
 Components read their own tokens via CSS variables. This means:
+
 - A consumer can override `[data-snapshot-component="card"] { --card-shadow: none }` in their
   own CSS to kill card shadows globally
 - Component tokens cascade — setting `spacing: 'compact'` globally affects card padding,
@@ -731,88 +967,129 @@ Components read their own tokens via CSS variables. This means:
 ### Zod Schema
 
 ```ts
-const themeColorsSchema = z.object({
-  primary: z.string().optional(),
-  secondary: z.string().optional(),
-  muted: z.string().optional(),
-  accent: z.string().optional(),
-  destructive: z.string().optional(),
-  success: z.string().optional(),
-  warning: z.string().optional(),
-  info: z.string().optional(),
-  background: z.string().optional(),
-  card: z.string().optional(),
-  popover: z.string().optional(),
-  sidebar: z.string().optional(),
-  border: z.string().optional(),
-  input: z.string().optional(),
-  ring: z.string().optional(),
-  chart: z.tuple([z.string(), z.string(), z.string(), z.string(), z.string()]).optional(),
-}).strict()
+const themeColorsSchema = z
+  .object({
+    primary: z.string().optional(),
+    secondary: z.string().optional(),
+    muted: z.string().optional(),
+    accent: z.string().optional(),
+    destructive: z.string().optional(),
+    success: z.string().optional(),
+    warning: z.string().optional(),
+    info: z.string().optional(),
+    background: z.string().optional(),
+    card: z.string().optional(),
+    popover: z.string().optional(),
+    sidebar: z.string().optional(),
+    border: z.string().optional(),
+    input: z.string().optional(),
+    ring: z.string().optional(),
+    chart: z
+      .tuple([z.string(), z.string(), z.string(), z.string(), z.string()])
+      .optional(),
+  })
+  .strict();
 
-const radiusSchema = z.enum(['none', 'xs', 'sm', 'md', 'lg', 'xl', 'full'])
-const spacingSchema = z.enum(['compact', 'default', 'comfortable', 'spacious'])
+const radiusSchema = z.enum(["none", "xs", "sm", "md", "lg", "xl", "full"]);
+const spacingSchema = z.enum(["compact", "default", "comfortable", "spacious"]);
 
-const fontSchema = z.object({
-  sans: z.string().optional(),
-  mono: z.string().optional(),
-  display: z.string().optional(),
-  baseSize: z.number().min(10).max(24).optional(),
-  scale: z.number().min(1.1).max(1.5).optional(),
-}).strict()
+const fontSchema = z
+  .object({
+    sans: z.string().optional(),
+    mono: z.string().optional(),
+    display: z.string().optional(),
+    baseSize: z.number().min(10).max(24).optional(),
+    scale: z.number().min(1.1).max(1.5).optional(),
+  })
+  .strict();
 
-const componentTokensSchema = z.object({
-  card: z.object({
-    shadow: z.enum(['none', 'sm', 'md', 'lg', 'xl']).optional(),
-    padding: spacingSchema.optional(),
-    border: z.boolean().optional(),
-  }).strict().optional(),
-  table: z.object({
-    striped: z.boolean().optional(),
-    density: z.enum(['compact', 'default', 'comfortable']).optional(),
-    headerBackground: z.boolean().optional(),
-    hoverRow: z.boolean().optional(),
-    borderStyle: z.enum(['none', 'horizontal', 'grid']).optional(),
-  }).strict().optional(),
-  button: z.object({
-    weight: z.enum(['light', 'medium', 'bold']).optional(),
-    uppercase: z.boolean().optional(),
-    iconSize: z.enum(['sm', 'md', 'lg']).optional(),
-  }).strict().optional(),
-  input: z.object({
-    size: z.enum(['sm', 'md', 'lg']).optional(),
-    variant: z.enum(['outline', 'filled', 'underline']).optional(),
-  }).strict().optional(),
-  modal: z.object({
-    overlay: z.enum(['light', 'dark', 'blur']).optional(),
-    animation: z.enum(['fade', 'scale', 'slide-up', 'none']).optional(),
-  }).strict().optional(),
-  nav: z.object({
-    variant: z.enum(['minimal', 'bordered', 'filled']).optional(),
-    activeIndicator: z.enum(['background', 'border-left', 'border-bottom', 'dot']).optional(),
-  }).strict().optional(),
-  badge: z.object({
-    variant: z.enum(['solid', 'outline', 'soft']).optional(),
-    rounded: z.boolean().optional(),
-  }).strict().optional(),
-  toast: z.object({
-    position: z.enum(['top-right', 'top-center', 'bottom-right', 'bottom-center']).optional(),
-    animation: z.enum(['slide', 'fade', 'pop']).optional(),
-  }).strict().optional(),
-}).strict()
+const componentTokensSchema = z
+  .object({
+    card: z
+      .object({
+        shadow: z.enum(["none", "sm", "md", "lg", "xl"]).optional(),
+        padding: spacingSchema.optional(),
+        border: z.boolean().optional(),
+      })
+      .strict()
+      .optional(),
+    table: z
+      .object({
+        striped: z.boolean().optional(),
+        density: z.enum(["compact", "default", "comfortable"]).optional(),
+        headerBackground: z.boolean().optional(),
+        hoverRow: z.boolean().optional(),
+        borderStyle: z.enum(["none", "horizontal", "grid"]).optional(),
+      })
+      .strict()
+      .optional(),
+    button: z
+      .object({
+        weight: z.enum(["light", "medium", "bold"]).optional(),
+        uppercase: z.boolean().optional(),
+        iconSize: z.enum(["sm", "md", "lg"]).optional(),
+      })
+      .strict()
+      .optional(),
+    input: z
+      .object({
+        size: z.enum(["sm", "md", "lg"]).optional(),
+        variant: z.enum(["outline", "filled", "underline"]).optional(),
+      })
+      .strict()
+      .optional(),
+    modal: z
+      .object({
+        overlay: z.enum(["light", "dark", "blur"]).optional(),
+        animation: z.enum(["fade", "scale", "slide-up", "none"]).optional(),
+      })
+      .strict()
+      .optional(),
+    nav: z
+      .object({
+        variant: z.enum(["minimal", "bordered", "filled"]).optional(),
+        activeIndicator: z
+          .enum(["background", "border-left", "border-bottom", "dot"])
+          .optional(),
+      })
+      .strict()
+      .optional(),
+    badge: z
+      .object({
+        variant: z.enum(["solid", "outline", "soft"]).optional(),
+        rounded: z.boolean().optional(),
+      })
+      .strict()
+      .optional(),
+    toast: z
+      .object({
+        position: z
+          .enum(["top-right", "top-center", "bottom-right", "bottom-center"])
+          .optional(),
+        animation: z.enum(["slide", "fade", "pop"]).optional(),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
 
-const themeConfigSchema = z.object({
-  flavor: z.string().optional(),
-  overrides: z.object({
-    colors: themeColorsSchema.optional(),
-    darkColors: themeColorsSchema.optional(),
-    radius: radiusSchema.optional(),
-    spacing: spacingSchema.optional(),
-    font: fontSchema.optional(),
-    components: componentTokensSchema.optional(),
-  }).strict().optional(),
-  mode: z.enum(['light', 'dark', 'system']).optional(),
-}).strict()
+const themeConfigSchema = z
+  .object({
+    flavor: z.string().optional(),
+    overrides: z
+      .object({
+        colors: themeColorsSchema.optional(),
+        darkColors: themeColorsSchema.optional(),
+        radius: radiusSchema.optional(),
+        spacing: spacingSchema.optional(),
+        font: fontSchema.optional(),
+        components: componentTokensSchema.optional(),
+      })
+      .strict()
+      .optional(),
+    mode: z.enum(["light", "dark", "system"]).optional(),
+  })
+  .strict();
 ```
 
 ### Implementation
@@ -822,32 +1099,49 @@ const themeConfigSchema = z.object({
 **`src/tokens/flavors.ts`** — Built-in flavor definitions + `defineFlavor()` + flavor registry.
 
 ```ts
-const flavorRegistry = new Map<string, Flavor>()
+const flavorRegistry = new Map<string, Flavor>();
 
-function defineFlavor(name: string, config: Omit<Flavor, 'name'>): Flavor {
-  const flavor: Flavor = { name, displayName: name, ...config }
-  flavorRegistry.set(name, flavor)
-  return flavor
+function defineFlavor(name: string, config: Omit<Flavor, "name">): Flavor {
+  const flavor: Flavor = { name, displayName: name, ...config };
+  flavorRegistry.set(name, flavor);
+  return flavor;
 }
 
 function getFlavor(name: string): Flavor | undefined {
-  return flavorRegistry.get(name)
+  return flavorRegistry.get(name);
 }
 
 // Register built-in flavors
-defineFlavor('neutral', { /* ... extracted from current globals-css.ts neutral palette */ })
-defineFlavor('slate', { /* ... extracted from current globals-css.ts minimal palette */ })
-defineFlavor('midnight', { /* ... new dark-first palette */ })
-defineFlavor('violet', { /* ... extracted from current globals-css.ts vibrant palette */ })
-defineFlavor('rose', { /* ... new warm palette */ })
-defineFlavor('emerald', { /* ... new green palette */ })
-defineFlavor('ocean', { /* ... new blue palette */ })
-defineFlavor('sunset', { /* ... new orange palette */ })
+defineFlavor("neutral", {
+  /* ... extracted from current globals-css.ts neutral palette */
+});
+defineFlavor("slate", {
+  /* ... extracted from current globals-css.ts minimal palette */
+});
+defineFlavor("midnight", {
+  /* ... new dark-first palette */
+});
+defineFlavor("violet", {
+  /* ... extracted from current globals-css.ts vibrant palette */
+});
+defineFlavor("rose", {
+  /* ... new warm palette */
+});
+defineFlavor("emerald", {
+  /* ... new green palette */
+});
+defineFlavor("ocean", {
+  /* ... new blue palette */
+});
+defineFlavor("sunset", {
+  /* ... new orange palette */
+});
 ```
 
 **`src/tokens/resolve.ts`** — `resolveTokens(config: ThemeConfig): string`
 
 Resolution pipeline:
+
 1. Load base flavor (default: `neutral`)
 2. Deep merge overrides onto flavor defaults
 3. Convert all colors to oklch (hex, hsl, rgb, oklch all accepted)
@@ -864,6 +1158,7 @@ Resolution pipeline:
 **`src/tokens/color.ts`** — Color conversion utilities.
 
 No external dependencies. Inline implementations of:
+
 - `hexToOklch(hex: string): [number, number, number]`
 - `hslToOklch(h: number, s: number, l: number): [number, number, number]`
 - `oklchToString(l: number, c: number, h: number): string`
@@ -880,74 +1175,89 @@ Runtime overrides via `document.documentElement.style.setProperty()`:
 
 ```ts
 function useTokenEditor(): TokenEditor {
-  const overridesRef = useRef<Map<string, string>>(new Map())
-  const currentFlavorRef = useRef<string>('neutral')
-  const listenersRef = useRef<Set<(o: Partial<ThemeConfig['overrides']>) => void>>(new Set())
+  const overridesRef = useRef<Map<string, string>>(new Map());
+  const currentFlavorRef = useRef<string>("neutral");
+  const listenersRef = useRef<
+    Set<(o: Partial<ThemeConfig["overrides"]>) => void>
+  >(new Set());
 
   const setToken = useCallback((path: string, value: string) => {
-    const cssVar = tokenPathToCssVar(path)
-    const cssValue = convertToCssValue(path, value)
-    document.documentElement.style.setProperty(cssVar, cssValue)
-    overridesRef.current.set(path, value)
-    notifyListeners()
-  }, [])
+    const cssVar = tokenPathToCssVar(path);
+    const cssValue = convertToCssValue(path, value);
+    document.documentElement.style.setProperty(cssVar, cssValue);
+    overridesRef.current.set(path, value);
+    notifyListeners();
+  }, []);
 
   const setFlavor = useCallback((flavorName: string) => {
-    const flavor = getFlavor(flavorName)
-    if (!flavor) throw new Error(`Unknown flavor: ${flavorName}`)
+    const flavor = getFlavor(flavorName);
+    if (!flavor) throw new Error(`Unknown flavor: ${flavorName}`);
 
     // Remove all current overrides
-    resetTokens()
+    resetTokens();
 
     // Apply flavor's tokens as inline styles
-    const tokens = flavorToTokenMap(flavor)
+    const tokens = flavorToTokenMap(flavor);
     for (const [cssVar, value] of tokens) {
-      document.documentElement.style.setProperty(cssVar, value)
+      document.documentElement.style.setProperty(cssVar, value);
     }
-    currentFlavorRef.current = flavorName
-    notifyListeners()
-  }, [])
+    currentFlavorRef.current = flavorName;
+    notifyListeners();
+  }, []);
 
   const resetTokens = useCallback(() => {
     for (const [path] of overridesRef.current) {
-      document.documentElement.style.removeProperty(tokenPathToCssVar(path))
+      document.documentElement.style.removeProperty(tokenPathToCssVar(path));
     }
-    overridesRef.current.clear()
-    notifyListeners()
-  }, [])
+    overridesRef.current.clear();
+    notifyListeners();
+  }, []);
 
-  const getTokens = useCallback((): Partial<ThemeConfig['overrides']> => {
-    return mapToThemeConfig(overridesRef.current)
-  }, [])
+  const getTokens = useCallback((): Partial<ThemeConfig["overrides"]> => {
+    return mapToThemeConfig(overridesRef.current);
+  }, []);
 
-  const currentFlavor = useCallback(() => currentFlavorRef.current, [])
+  const currentFlavor = useCallback(() => currentFlavorRef.current, []);
 
-  const subscribe = useCallback((listener: (o: Partial<ThemeConfig['overrides']>) => void) => {
-    listenersRef.current.add(listener)
-    return () => { listenersRef.current.delete(listener) }
-  }, [])
+  const subscribe = useCallback(
+    (listener: (o: Partial<ThemeConfig["overrides"]>) => void) => {
+      listenersRef.current.add(listener);
+      return () => {
+        listenersRef.current.delete(listener);
+      };
+    },
+    [],
+  );
 
-  return { setToken, setFlavor, resetTokens, getTokens, currentFlavor, subscribe }
+  return {
+    setToken,
+    setFlavor,
+    resetTokens,
+    getTokens,
+    currentFlavor,
+    subscribe,
+  };
 }
 ```
 
 **Token path to CSS variable mapping:**
+
 ```ts
 const TOKEN_MAP: Record<string, string> = {
-  'colors.primary': '--primary',
-  'colors.secondary': '--secondary',
-  'colors.background': '--background',
-  'colors.card': '--card',
+  "colors.primary": "--primary",
+  "colors.secondary": "--secondary",
+  "colors.background": "--background",
+  "colors.card": "--card",
   // ... all semantic colors
-  'radius': '--radius',
-  'spacing': '--spacing-unit',
-  'font.sans': '--font-sans',
-  'font.mono': '--font-mono',
-  'components.card.shadow': '--card-shadow',
-  'components.card.padding': '--card-padding',
-  'components.table.density': '--table-density',
+  radius: "--radius",
+  spacing: "--spacing-unit",
+  "font.sans": "--font-sans",
+  "font.mono": "--font-mono",
+  "components.card.shadow": "--card-shadow",
+  "components.card.padding": "--card-padding",
+  "components.table.density": "--table-density",
   // ... all component tokens
-}
+};
 ```
 
 **`src/tokens/defaults.ts`** — Default token values and palette extraction.
@@ -970,37 +1280,37 @@ the `.dark` selector element when in dark mode:
 // In setToken, when the path starts with 'darkColors.'
 if (isDarkColorPath(path)) {
   // Set on a scoped style element for .dark selector
-  darkStyleSheet.setProperty(cssVar, cssValue)
+  darkStyleSheet.setProperty(cssVar, cssValue);
 } else {
-  document.documentElement.style.setProperty(cssVar, cssValue)
+  document.documentElement.style.setProperty(cssVar, cssValue);
 }
 ```
 
 ### Files to Create
 
-| File | What |
-|------|------|
-| `src/tokens/schema.ts` | Zod schemas + TS types (ThemeConfig, ThemeColors, Flavor, ComponentTokens, etc.) |
-| `src/tokens/flavors.ts` | Built-in flavor definitions, `defineFlavor()`, `getFlavor()`, flavor registry |
-| `src/tokens/resolve.ts` | `resolveTokens()` — config → CSS string with all token layers |
-| `src/tokens/color.ts` | Color conversion: hex→oklch, hsl→oklch, foreground derivation, dark variant derivation |
-| `src/tokens/editor.ts` | `useTokenEditor()` hook with setToken, setFlavor, resetTokens, getTokens, subscribe |
-| `src/tokens/defaults.ts` | Default token values, palette extraction from existing globals-css |
-| `src/tokens/index.ts` | Module exports |
+| File                     | What                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| `src/tokens/schema.ts`   | Zod schemas + TS types (ThemeConfig, ThemeColors, Flavor, ComponentTokens, etc.)       |
+| `src/tokens/flavors.ts`  | Built-in flavor definitions, `defineFlavor()`, `getFlavor()`, flavor registry          |
+| `src/tokens/resolve.ts`  | `resolveTokens()` — config → CSS string with all token layers                          |
+| `src/tokens/color.ts`    | Color conversion: hex→oklch, hsl→oklch, foreground derivation, dark variant derivation |
+| `src/tokens/editor.ts`   | `useTokenEditor()` hook with setToken, setFlavor, resetTokens, getTokens, subscribe    |
+| `src/tokens/defaults.ts` | Default token values, palette extraction from existing globals-css                     |
+| `src/tokens/index.ts`    | Module exports                                                                         |
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
-| `src/index.ts` | Export: `themeConfigSchema`, `resolveTokens`, `useTokenEditor`, `defineFlavor`, `flavors`, all token types |
+| File           | Change                                                                                                                                   |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/index.ts` | Export: `themeConfigSchema`, `resolveTokens`, `useTokenEditor`, `defineFlavor`, `flavors`, all token types                               |
 | `src/types.ts` | Add: `ThemeConfig`, `ThemeColors`, `Flavor`, `ComponentTokens`, `TokenEditor`, `Responsive`, `RadiusScale`, `SpacingScale`, `FontConfig` |
 
 ### Documentation Impact
 
-| Target | Change |
-|--------|--------|
+| Target           | Change                                                                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/tokens.md` | **Create** — design token system guide: flavors, overrides, component tokens, runtime editing, custom flavors, CSS variable reference |
-| `docs/vision.md` | Verify token system section matches implementation |
+| `docs/vision.md` | Verify token system section matches implementation                                                                                    |
 
 ### Exit Criteria
 
@@ -1024,13 +1334,13 @@ if (isDarkColorPath(path)) {
 
 ### Tests
 
-| File | What |
-|------|------|
-| `src/tokens/__tests__/schema.test.ts` | Zod validation: all valid config shapes, invalid configs with descriptive errors, edge cases (empty, partial, unknown keys) |
+| File                                   | What                                                                                                                                        |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/tokens/__tests__/schema.test.ts`  | Zod validation: all valid config shapes, invalid configs with descriptive errors, edge cases (empty, partial, unknown keys)                 |
 | `src/tokens/__tests__/resolve.test.ts` | CSS generation: each flavor, override merging, dark mode derivation, component tokens, radius/spacing/font mapping, missing-config defaults |
-| `src/tokens/__tests__/color.test.ts` | Color conversion: hex→oklch (20+ known values), hsl→oklch, oklch passthrough, foreground contrast, dark variant derivation |
-| `src/tokens/__tests__/editor.test.ts` | Token editor: setToken, setFlavor, resetTokens, getTokens, subscribe/unsubscribe, mode-specific overrides, unknown flavor error |
-| `src/tokens/__tests__/flavors.test.ts` | Flavor registry: built-in flavors exist, defineFlavor creates new, getFlavor retrieves, override doesn't mutate original |
+| `src/tokens/__tests__/color.test.ts`   | Color conversion: hex→oklch (20+ known values), hsl→oklch, oklch passthrough, foreground contrast, dark variant derivation                  |
+| `src/tokens/__tests__/editor.test.ts`  | Token editor: setToken, setFlavor, resetTokens, getTokens, subscribe/unsubscribe, mode-specific overrides, unknown flavor error             |
+| `src/tokens/__tests__/flavors.test.ts` | Flavor registry: built-in flavors exist, defineFlavor creates new, getFlavor retrieves, override doesn't mutate original                    |
 
 ---
 
@@ -1046,16 +1356,26 @@ UI — without it, components are isolated islands.
 ### Real-World Wiring Examples
 
 **Example 1: Table drives detail drawer**
+
 ```json
 {
   "content": [
-    { "type": "table", "id": "users-table", "data": "GET /api/users", "selectable": true },
-    { "type": "drawer", "id": "user-detail",
+    {
+      "type": "table",
+      "id": "users-table",
+      "data": "GET /api/users",
+      "selectable": true
+    },
+    {
+      "type": "drawer",
+      "id": "user-detail",
       "trigger": { "from": "users-table.selected" },
       "title": { "from": "users-table.selected.name" },
       "content": [
         { "type": "detail-card", "data": { "from": "users-table.selected" } },
-        { "type": "feed", "data": "GET /api/users/{id}/activity",
+        {
+          "type": "feed",
+          "data": "GET /api/users/{id}/activity",
           "params": { "id": { "from": "users-table.selected.id" } }
         }
       ]
@@ -1065,6 +1385,7 @@ UI — without it, components are isolated islands.
 ```
 
 When a user clicks a table row:
+
 1. `users-table` publishes `{ selected: { id: 5, name: "Alice", ... }, selectedRows: [...] }`
 2. `user-detail` drawer opens (trigger resolves to truthy)
 3. Drawer title resolves to `"Alice"`
@@ -1072,24 +1393,59 @@ When a user clicks a table row:
 5. Feed fetches `GET /api/users/5/activity`
 
 **Example 2: Filter chain across components**
+
 ```json
 {
   "content": [
-    { "type": "select", "id": "date-range", "options": ["7d", "30d", "90d", "1y"], "default": "30d" },
-    { "type": "select", "id": "region-filter", "data": "GET /api/regions", "valueField": "code", "labelField": "name" },
-    { "type": "row", "children": [
-      { "type": "stat-card", "data": "GET /api/stats/revenue",
-        "params": { "period": { "from": "date-range" }, "region": { "from": "region-filter" } }
-      },
-      { "type": "stat-card", "data": "GET /api/stats/orders",
-        "params": { "period": { "from": "date-range" }, "region": { "from": "region-filter" } }
-      }
-    ]},
-    { "type": "chart", "data": "GET /api/stats/revenue/timeseries",
-      "params": { "period": { "from": "date-range" }, "region": { "from": "region-filter" } }
+    {
+      "type": "select",
+      "id": "date-range",
+      "options": ["7d", "30d", "90d", "1y"],
+      "default": "30d"
     },
-    { "type": "table", "data": "GET /api/orders",
-      "filters": { "period": { "from": "date-range" }, "region": { "from": "region-filter" } }
+    {
+      "type": "select",
+      "id": "region-filter",
+      "data": "GET /api/regions",
+      "valueField": "code",
+      "labelField": "name"
+    },
+    {
+      "type": "row",
+      "children": [
+        {
+          "type": "stat-card",
+          "data": "GET /api/stats/revenue",
+          "params": {
+            "period": { "from": "date-range" },
+            "region": { "from": "region-filter" }
+          }
+        },
+        {
+          "type": "stat-card",
+          "data": "GET /api/stats/orders",
+          "params": {
+            "period": { "from": "date-range" },
+            "region": { "from": "region-filter" }
+          }
+        }
+      ]
+    },
+    {
+      "type": "chart",
+      "data": "GET /api/stats/revenue/timeseries",
+      "params": {
+        "period": { "from": "date-range" },
+        "region": { "from": "region-filter" }
+      }
+    },
+    {
+      "type": "table",
+      "data": "GET /api/orders",
+      "filters": {
+        "period": { "from": "date-range" },
+        "region": { "from": "region-filter" }
+      }
     }
   ]
 }
@@ -1099,6 +1455,7 @@ Changing either dropdown refetches all 4 components. One source, four subscriber
 code.
 
 **Example 3: Global state (cart, auth)**
+
 ```json
 {
   "globals": {
@@ -1106,14 +1463,19 @@ code.
     "cart": { "data": "GET /api/cart" }
   },
   "nav": [
-    { "label": "Cart", "path": "/cart", "icon": "shopping-cart",
+    {
+      "label": "Cart",
+      "path": "/cart",
+      "icon": "shopping-cart",
       "badge": { "from": "global.cart.items.length" }
     }
   ],
   "pages": {
     "/checkout": {
       "content": [
-        { "type": "detail-card", "data": { "from": "global.cart" },
+        {
+          "type": "detail-card",
+          "data": { "from": "global.cart" },
           "title": "Order Summary"
         }
       ]
@@ -1135,36 +1497,36 @@ import {
   useSubscribe,
   useResolveFrom,
   isFromRef,
-} from '@lastshotlabs/snapshot'
+} from "@lastshotlabs/snapshot";
 
 // Level 2: Using in custom React code
 function MyCustomComponent() {
   // Publish a value that other components can subscribe to
-  const publish = usePublish('my-component')
+  const publish = usePublish("my-component");
 
   // Subscribe to another component's published value
-  const selectedUser = useSubscribe({ from: 'users-table.selected' })
-  const userName = useSubscribe({ from: 'users-table.selected.name' })
+  const selectedUser = useSubscribe({ from: "users-table.selected" });
+  const userName = useSubscribe({ from: "users-table.selected.name" });
 
   // Subscribe to global state
-  const currentUser = useSubscribe({ from: 'global.user' })
+  const currentUser = useSubscribe({ from: "global.user" });
 
   // Static values pass through unchanged
-  const staticValue = useSubscribe('just-a-string') // → 'just-a-string'
+  const staticValue = useSubscribe("just-a-string"); // → 'just-a-string'
 
   // Resolve all FromRefs in a config object at once
   const resolvedConfig = useResolveFrom({
-    userId: { from: 'users-table.selected.id' },
-    period: { from: 'date-range' },
-    label: 'static label',
-  })
+    userId: { from: "users-table.selected.id" },
+    period: { from: "date-range" },
+    label: "static label",
+  });
   // → { userId: 5, period: '30d', label: 'static label' }
 
   useEffect(() => {
-    publish({ myValue: 42 })
-  }, [])
+    publish({ myValue: 42 });
+  }, []);
 
-  return <div>User: {userName}</div>
+  return <div>User: {userName}</div>;
 }
 ```
 
@@ -1174,54 +1536,54 @@ function MyCustomComponent() {
 /** A reference to another component's published value. */
 interface FromRef {
   /** Dot-path reference. Examples: "component-id", "component-id.field", "global.user.name" */
-  from: string
+  from: string;
 }
 
 /** Type guard for FromRef values. */
-function isFromRef(value: unknown): value is FromRef
+function isFromRef(value: unknown): value is FromRef;
 
 /**
  * Resolves a type where FromRef values are replaced with their resolved types.
  * Used internally — consumers don't need to use this directly.
  */
 type ResolvedConfig<T> = {
-  [K in keyof T]: T[K] extends FromRef ? unknown : T[K]
-}
+  [K in keyof T]: T[K] extends FromRef ? unknown : T[K];
+};
 
 /** The atom registry interface — maps component ids to their published Jotai atoms. */
 interface AtomRegistry {
   /** Register an atom for a component id. Idempotent — returns existing atom if already registered. */
-  register(id: string): PrimitiveAtom<unknown>
+  register(id: string): PrimitiveAtom<unknown>;
   /** Get the atom for a component id. Returns undefined if not registered. */
-  get(id: string): PrimitiveAtom<unknown> | undefined
+  get(id: string): PrimitiveAtom<unknown> | undefined;
   /** Remove a component's atom. Called on unmount. */
-  unregister(id: string): void
+  unregister(id: string): void;
   /** Get all registered component ids. For debugging/dev tools. */
-  keys(): string[]
+  keys(): string[];
   /** Get the Jotai store backing this registry. */
-  store: Store
+  store: Store;
 }
 
 /** Global state definition from the manifest. */
 interface GlobalConfig {
   /** Endpoint to fetch initial value from. Fetched on app mount. */
-  data?: string
+  data?: string;
   /** Static default value (used until endpoint responds, or if no endpoint). */
-  default?: unknown
+  default?: unknown;
 }
 
 /** Props for AppContextProvider. */
 interface AppContextProviderProps {
   /** Global state definitions from manifest. Keyed by id. */
-  globals?: Record<string, GlobalConfig>
+  globals?: Record<string, GlobalConfig>;
   /** The API client instance (from createSnapshot) for fetching global data. */
-  api?: ApiClient
-  children: React.ReactNode
+  api?: ApiClient;
+  children: React.ReactNode;
 }
 
 /** Props for PageContextProvider. */
 interface PageContextProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 ```
 
@@ -1230,38 +1592,38 @@ interface PageContextProviderProps {
 **`src/context/registry.ts`** — `AtomRegistryImpl` class
 
 ```ts
-import { atom, createStore, type PrimitiveAtom } from 'jotai'
-import type { Store } from 'jotai/vanilla'
+import { atom, createStore, type PrimitiveAtom } from "jotai";
+import type { Store } from "jotai/vanilla";
 
 class AtomRegistryImpl implements AtomRegistry {
-  private atoms = new Map<string, PrimitiveAtom<unknown>>()
-  readonly store: Store
+  private atoms = new Map<string, PrimitiveAtom<unknown>>();
+  readonly store: Store;
 
   constructor(store?: Store) {
-    this.store = store ?? createStore()
+    this.store = store ?? createStore();
   }
 
   register(id: string): PrimitiveAtom<unknown> {
-    const existing = this.atoms.get(id)
-    if (existing) return existing
+    const existing = this.atoms.get(id);
+    if (existing) return existing;
 
-    const a = atom<unknown>(undefined)
+    const a = atom<unknown>(undefined);
     // Debug label for Jotai devtools
-    a.debugLabel = `snapshot:${id}`
-    this.atoms.set(id, a)
-    return a
+    a.debugLabel = `snapshot:${id}`;
+    this.atoms.set(id, a);
+    return a;
   }
 
   get(id: string): PrimitiveAtom<unknown> | undefined {
-    return this.atoms.get(id)
+    return this.atoms.get(id);
   }
 
   unregister(id: string): void {
-    this.atoms.delete(id)
+    this.atoms.delete(id);
   }
 
   keys(): string[] {
-    return [...this.atoms.keys()]
+    return [...this.atoms.keys()];
   }
 }
 ```
@@ -1269,59 +1631,61 @@ class AtomRegistryImpl implements AtomRegistry {
 **`src/context/providers.tsx`** — Context providers
 
 ```tsx
-import { Provider as JotaiProvider } from 'jotai'
+import { Provider as JotaiProvider } from "jotai";
 
-const PageRegistryContext = createContext<AtomRegistry | null>(null)
-const AppRegistryContext = createContext<AtomRegistry | null>(null)
+const PageRegistryContext = createContext<AtomRegistry | null>(null);
+const AppRegistryContext = createContext<AtomRegistry | null>(null);
 
-function AppContextProvider({ globals, api, children }: AppContextProviderProps) {
-  const registryRef = useRef<AtomRegistry>(null)
+function AppContextProvider({
+  globals,
+  api,
+  children,
+}: AppContextProviderProps) {
+  const registryRef = useRef<AtomRegistry>(null);
   if (!registryRef.current) {
-    registryRef.current = new AtomRegistryImpl()
+    registryRef.current = new AtomRegistryImpl();
   }
-  const registry = registryRef.current
+  const registry = registryRef.current;
 
   // Initialize globals on mount
   useEffect(() => {
-    if (!globals) return
+    if (!globals) return;
     for (const [id, config] of Object.entries(globals)) {
-      const a = registry.register(id)
+      const a = registry.register(id);
 
       // Set default value immediately
       if (config.default !== undefined) {
-        registry.store.set(a, config.default)
+        registry.store.set(a, config.default);
       }
 
       // Fetch from endpoint if specified
       if (config.data && api) {
-        const [method, endpoint] = parseDataString(config.data)
-        api.get(endpoint).then(data => {
-          registry.store.set(a, data)
-        })
+        const [method, endpoint] = parseDataString(config.data);
+        api.get(endpoint).then((data) => {
+          registry.store.set(a, data);
+        });
       }
     }
-  }, [])
+  }, []);
 
   return (
     <AppRegistryContext.Provider value={registry}>
-      <JotaiProvider store={registry.store}>
-        {children}
-      </JotaiProvider>
+      <JotaiProvider store={registry.store}>{children}</JotaiProvider>
     </AppRegistryContext.Provider>
-  )
+  );
 }
 
 function PageContextProvider({ children }: PageContextProviderProps) {
-  const registryRef = useRef<AtomRegistry>(null)
+  const registryRef = useRef<AtomRegistry>(null);
   if (!registryRef.current) {
-    registryRef.current = new AtomRegistryImpl()
+    registryRef.current = new AtomRegistryImpl();
   }
 
   return (
     <PageRegistryContext.Provider value={registryRef.current}>
       {children}
     </PageRegistryContext.Provider>
-  )
+  );
 }
 ```
 
@@ -1329,62 +1693,70 @@ function PageContextProvider({ children }: PageContextProviderProps) {
 
 ```ts
 function usePublish(id: string): (value: unknown) => void {
-  const pageRegistry = useContext(PageRegistryContext)
+  const pageRegistry = useContext(PageRegistryContext);
 
   // Register atom on mount, unregister on unmount
-  const atomRef = useRef<PrimitiveAtom<unknown>>()
+  const atomRef = useRef<PrimitiveAtom<unknown>>();
   if (!atomRef.current && pageRegistry) {
-    atomRef.current = pageRegistry.register(id)
+    atomRef.current = pageRegistry.register(id);
   }
 
   useEffect(() => {
     return () => {
-      if (pageRegistry) pageRegistry.unregister(id)
-      atomRef.current = undefined
-    }
-  }, [id, pageRegistry])
+      if (pageRegistry) pageRegistry.unregister(id);
+      atomRef.current = undefined;
+    };
+  }, [id, pageRegistry]);
 
-  return useCallback((value: unknown) => {
-    if (atomRef.current && pageRegistry) {
-      pageRegistry.store.set(atomRef.current, value)
-    }
-  }, [pageRegistry])
+  return useCallback(
+    (value: unknown) => {
+      if (atomRef.current && pageRegistry) {
+        pageRegistry.store.set(atomRef.current, value);
+      }
+    },
+    [pageRegistry],
+  );
 }
 
 function useSubscribe(ref: FromRef | unknown): unknown {
   // Static values pass through
-  if (!isFromRef(ref)) return ref
+  if (!isFromRef(ref)) return ref;
 
-  const refPath = ref.from
-  const isGlobal = refPath.startsWith('global.')
-  const cleanPath = isGlobal ? refPath.slice(7) : refPath
+  const refPath = ref.from;
+  const isGlobal = refPath.startsWith("global.");
+  const cleanPath = isGlobal ? refPath.slice(7) : refPath;
 
   // Split component id from sub-path: "users-table.selected.id" → ["users-table", "selected.id"]
-  const dotIndex = cleanPath.indexOf('.')
-  const componentId = dotIndex === -1 ? cleanPath : cleanPath.slice(0, dotIndex)
-  const subPath = dotIndex === -1 ? '' : cleanPath.slice(dotIndex + 1)
+  const dotIndex = cleanPath.indexOf(".");
+  const componentId =
+    dotIndex === -1 ? cleanPath : cleanPath.slice(0, dotIndex);
+  const subPath = dotIndex === -1 ? "" : cleanPath.slice(dotIndex + 1);
 
-  const registry = useContext(isGlobal ? AppRegistryContext : PageRegistryContext)
-  const sourceAtom = registry?.get(componentId)
+  const registry = useContext(
+    isGlobal ? AppRegistryContext : PageRegistryContext,
+  );
+  const sourceAtom = registry?.get(componentId);
 
   // If atom doesn't exist yet, return undefined (component may not have mounted yet)
   const value = useAtomValue(sourceAtom ?? atom(undefined), {
     store: registry?.store,
-  })
+  });
 
-  return subPath ? getNestedValue(value, subPath) : value
+  return subPath ? getNestedValue(value, subPath) : value;
 }
 
-function useResolveFrom<T extends Record<string, unknown>>(config: T): ResolvedConfig<T> {
+function useResolveFrom<T extends Record<string, unknown>>(
+  config: T,
+): ResolvedConfig<T> {
   // Collect all FromRef paths from the config
-  const refs = extractFromRefs(config)
+  const refs = extractFromRefs(config);
   // Subscribe to each one
-  const resolved = new Map<string, unknown>()
+  const resolved = new Map<string, unknown>();
   for (const [path, ref] of refs) {
-    resolved.set(path, useSubscribe(ref))
+    resolved.set(path, useSubscribe(ref));
   }
   // Return config with FromRefs replaced by resolved values
-  return applyResolved(config, resolved) as ResolvedConfig<T>
+  return applyResolved(config, resolved) as ResolvedConfig<T>;
 }
 ```
 
@@ -1393,57 +1765,65 @@ function useResolveFrom<T extends Record<string, unknown>>(config: T): ResolvedC
 ```ts
 /** Safely access nested values via dot-path. */
 function getNestedValue(obj: unknown, path: string): unknown {
-  const parts = path.split('.')
-  let current: unknown = obj
+  const parts = path.split(".");
+  let current: unknown = obj;
   for (const part of parts) {
-    if (current == null || typeof current !== 'object') return undefined
-    current = (current as Record<string, unknown>)[part]
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[part];
   }
-  return current
+  return current;
 }
 
 /** Check if a value is a FromRef. */
 function isFromRef(value: unknown): value is FromRef {
-  return typeof value === 'object' && value !== null && 'from' in value
-    && typeof (value as FromRef).from === 'string'
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "from" in value &&
+    typeof (value as FromRef).from === "string"
+  );
 }
 
 /** Parse a data string like "GET /api/users" into [method, endpoint]. */
 function parseDataString(data: string): [string, string] {
-  const spaceIndex = data.indexOf(' ')
-  if (spaceIndex === -1) return ['GET', data]
-  return [data.slice(0, spaceIndex), data.slice(spaceIndex + 1)]
+  const spaceIndex = data.indexOf(" ");
+  if (spaceIndex === -1) return ["GET", data];
+  return [data.slice(0, spaceIndex), data.slice(spaceIndex + 1)];
 }
 
 /** Extract all FromRef values from a nested config object with their dot-paths. */
-function extractFromRefs(obj: unknown, prefix = ''): Map<string, FromRef> { /* ... */ }
+function extractFromRefs(obj: unknown, prefix = ""): Map<string, FromRef> {
+  /* ... */
+}
 
 /** Apply resolved values back into a config object, replacing FromRefs. */
-function applyResolved<T>(config: T, resolved: Map<string, unknown>): T { /* ... */ }
+function applyResolved<T>(config: T, resolved: Map<string, unknown>): T {
+  /* ... */
+}
 ```
 
 ### Files to Create
 
-| File | What |
-|------|------|
-| `src/context/registry.ts` | `AtomRegistryImpl` class with Jotai store |
-| `src/context/providers.tsx` | `PageContextProvider`, `AppContextProvider` |
-| `src/context/hooks.ts` | `usePublish`, `useSubscribe`, `useResolveFrom` |
-| `src/context/utils.ts` | `getNestedValue`, `isFromRef`, `parseDataString`, `extractFromRefs`, `applyResolved` |
-| `src/context/types.ts` | `FromRef`, `AtomRegistry`, `GlobalConfig`, provider prop types |
-| `src/context/index.ts` | Module exports |
+| File                        | What                                                                                 |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| `src/context/registry.ts`   | `AtomRegistryImpl` class with Jotai store                                            |
+| `src/context/providers.tsx` | `PageContextProvider`, `AppContextProvider`                                          |
+| `src/context/hooks.ts`      | `usePublish`, `useSubscribe`, `useResolveFrom`                                       |
+| `src/context/utils.ts`      | `getNestedValue`, `isFromRef`, `parseDataString`, `extractFromRefs`, `applyResolved` |
+| `src/context/types.ts`      | `FromRef`, `AtomRegistry`, `GlobalConfig`, provider prop types                       |
+| `src/context/index.ts`      | Module exports                                                                       |
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
+| File           | Change                                                                                                                              |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `src/index.ts` | Export: `PageContextProvider`, `AppContextProvider`, `usePublish`, `useSubscribe`, `useResolveFrom`, `isFromRef`, all context types |
-| `src/types.ts` | Add: `FromRef`, `GlobalConfig`, `AtomRegistry` interface |
+| `src/types.ts` | Add: `FromRef`, `GlobalConfig`, `AtomRegistry` interface                                                                            |
 
 ### Documentation Impact
 
-| Target | Change |
-|--------|--------|
+| Target                 | Change                                                                                                                                                                |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/data-binding.md` | **Create** — `id`/`from` pattern guide, page vs global context, wiring examples (table→drawer, filter chain, global cart), Level 2 usage with usePublish/useSubscribe |
 
 ### Exit Criteria
@@ -1469,12 +1849,12 @@ function applyResolved<T>(config: T, resolved: Map<string, unknown>): T { /* ...
 
 ### Tests
 
-| File | What |
-|------|------|
-| `src/context/__tests__/registry.test.ts` | AtomRegistry: register, get, unregister, keys, idempotent register, store access |
-| `src/context/__tests__/hooks.test.ts` | usePublish/useSubscribe: publish→subscribe flow, nested paths, global prefix, static passthrough, unmount cleanup, multiple subscribers |
-| `src/context/__tests__/providers.test.ts` | Provider isolation: page context scoped to route, app context persists, globals init from config (default + data), nested providers |
-| `src/context/__tests__/utils.test.ts` | getNestedValue: simple, deep, missing, null safety. isFromRef: valid, invalid, edge cases. parseDataString: with/without method. extractFromRefs: nested objects, arrays |
+| File                                      | What                                                                                                                                                                     |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/context/__tests__/registry.test.ts`  | AtomRegistry: register, get, unregister, keys, idempotent register, store access                                                                                         |
+| `src/context/__tests__/hooks.test.ts`     | usePublish/useSubscribe: publish→subscribe flow, nested paths, global prefix, static passthrough, unmount cleanup, multiple subscribers                                  |
+| `src/context/__tests__/providers.test.ts` | Provider isolation: page context scoped to route, app context persists, globals init from config (default + data), nested providers                                      |
+| `src/context/__tests__/utils.test.ts`     | getNestedValue: simple, deep, missing, null safety. isFromRef: valid, invalid, edge cases. parseDataString: with/without method. extractFromRefs: nested objects, arrays |
 
 ---
 
@@ -1534,103 +1914,103 @@ type ActionConfig =
   | SetValueAction
   | DownloadAction
   | ConfirmAction
-  | ToastAction
+  | ToastAction;
 
 /** Navigate to a route. */
 interface NavigateAction {
-  type: 'navigate'
+  type: "navigate";
   /** Route path. Supports `{param}` interpolation from context. */
-  to: string
+  to: string;
   /** Replace history entry instead of pushing. */
-  replace?: boolean
+  replace?: boolean;
 }
 
 /** Call an API endpoint. */
 interface ApiAction {
-  type: 'api'
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  type: "api";
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   /** Endpoint path. Supports `{param}` interpolation. */
-  endpoint: string
+  endpoint: string;
   /** Request body. Can include `{ from: 'id' }` refs. */
-  body?: Record<string, unknown> | FromRef
+  body?: Record<string, unknown> | FromRef;
   /** Query parameters. */
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>;
   /** Actions to execute on success. Response data available as `{result}` in subsequent interpolation. */
-  onSuccess?: ActionConfig | ActionConfig[]
+  onSuccess?: ActionConfig | ActionConfig[];
   /** Actions to execute on error. Error available as `{error}` in subsequent interpolation. */
-  onError?: ActionConfig | ActionConfig[]
+  onError?: ActionConfig | ActionConfig[];
 }
 
 /** Open a modal or drawer by id. */
 interface OpenModalAction {
-  type: 'open-modal'
+  type: "open-modal";
   /** The id of the modal/drawer component to open. */
-  modal: string
+  modal: string;
 }
 
 /** Close a modal or drawer. */
 interface CloseModalAction {
-  type: 'close-modal'
+  type: "close-modal";
   /** Specific modal id. Omit to close the topmost. */
-  modal?: string
+  modal?: string;
 }
 
 /** Re-fetch a component's data. */
 interface RefreshAction {
-  type: 'refresh'
+  type: "refresh";
   /** Component id to refresh. Can be a comma-separated list for multiple. */
-  target: string
+  target: string;
 }
 
 /** Set another component's published value. */
 interface SetValueAction {
-  type: 'set-value'
+  type: "set-value";
   /** Component id. */
-  target: string
+  target: string;
   /** Value to set. Supports `{param}` interpolation. */
-  value: unknown
+  value: unknown;
 }
 
 /** Download a file from an endpoint. */
 interface DownloadAction {
-  type: 'download'
+  type: "download";
   /** Endpoint path. Supports `{param}` interpolation. */
-  endpoint: string
+  endpoint: string;
   /** Suggested filename. */
-  filename?: string
+  filename?: string;
 }
 
 /** Show a confirmation dialog. Stops the chain if cancelled. */
 interface ConfirmAction {
-  type: 'confirm'
+  type: "confirm";
   /** Message to display. Supports `{param}` interpolation. */
-  message: string
+  message: string;
   /** Confirm button text. Default: "Confirm". */
-  confirmLabel?: string
+  confirmLabel?: string;
   /** Cancel button text. Default: "Cancel". */
-  cancelLabel?: string
+  cancelLabel?: string;
   /** Visual variant. */
-  variant?: 'default' | 'destructive'
+  variant?: "default" | "destructive";
 }
 
 /** Show a toast notification. */
 interface ToastAction {
-  type: 'toast'
+  type: "toast";
   /** Message. Supports `{param}` interpolation (e.g., `"{count} users deleted"`). */
-  message: string
+  message: string;
   /** Visual variant. */
-  variant?: 'success' | 'error' | 'warning' | 'info'
+  variant?: "success" | "error" | "warning" | "info";
   /** Auto-dismiss duration in ms. Default: 5000. 0 = no auto-dismiss. */
-  duration?: number
+  duration?: number;
   /** Optional action button in the toast. */
-  action?: { label: string; action: ActionConfig }
+  action?: { label: string; action: ActionConfig };
 }
 
 /** The execute function returned by useActionExecutor. */
 type ActionExecuteFn = (
   action: ActionConfig | ActionConfig[],
-  context?: Record<string, unknown>
-) => Promise<void>
+  context?: Record<string, unknown>,
+) => Promise<void>;
 ```
 
 ### Implementation
@@ -1641,117 +2021,141 @@ The executor captures dependencies from context and returns an `execute` functio
 
 ```ts
 function useActionExecutor(): ActionExecuteFn {
-  const api = useSnapshotApi()
-  const router = useRouter()
-  const pageRegistry = useContext(PageRegistryContext)
-  const appRegistry = useContext(AppRegistryContext)
-  const modalManager = useModalManager()
-  const toastManager = useToastManager()
-  const confirmManager = useConfirmManager()
+  const api = useSnapshotApi();
+  const router = useRouter();
+  const pageRegistry = useContext(PageRegistryContext);
+  const appRegistry = useContext(AppRegistryContext);
+  const modalManager = useModalManager();
+  const toastManager = useToastManager();
+  const confirmManager = useConfirmManager();
 
-  const execute = useCallback(async (
-    action: ActionConfig | ActionConfig[],
-    context: Record<string, unknown> = {}
-  ): Promise<void> => {
-    const actions = Array.isArray(action) ? action : [action]
+  const execute = useCallback(
+    async (
+      action: ActionConfig | ActionConfig[],
+      context: Record<string, unknown> = {},
+    ): Promise<void> => {
+      const actions = Array.isArray(action) ? action : [action];
 
-    for (const a of actions) {
-      switch (a.type) {
-        case 'navigate': {
-          const to = interpolate(a.to, context)
-          router.navigate({ to, replace: a.replace })
-          break
-        }
-
-        case 'api': {
-          const endpoint = interpolate(a.endpoint, context)
-          const body = a.body ? resolveBody(a.body, context) : undefined
-          const method = a.method.toLowerCase() as keyof ApiClient
-          try {
-            const result = await api[method](endpoint, body)
-            if (a.onSuccess) {
-              await execute(a.onSuccess, { ...context, result })
-            }
-          } catch (error) {
-            if (a.onError) {
-              await execute(a.onError, { ...context, error })
-            } else {
-              throw error
-            }
+      for (const a of actions) {
+        switch (a.type) {
+          case "navigate": {
+            const to = interpolate(a.to, context);
+            router.navigate({ to, replace: a.replace });
+            break;
           }
-          break
-        }
 
-        case 'open-modal':
-          modalManager.open(a.modal)
-          break
-
-        case 'close-modal':
-          modalManager.close(a.modal)
-          break
-
-        case 'refresh': {
-          // Support comma-separated targets: "table1,table2"
-          const targets = a.target.split(',').map(t => t.trim())
-          for (const target of targets) {
-            const registry = resolveRegistry(target, pageRegistry, appRegistry)
-            if (registry) {
-              const refreshAtom = registry.get(`__refresh_${target}`)
-              if (refreshAtom) {
-                registry.store.set(refreshAtom, Date.now())
+          case "api": {
+            const endpoint = interpolate(a.endpoint, context);
+            const body = a.body ? resolveBody(a.body, context) : undefined;
+            const method = a.method.toLowerCase() as keyof ApiClient;
+            try {
+              const result = await api[method](endpoint, body);
+              if (a.onSuccess) {
+                await execute(a.onSuccess, { ...context, result });
+              }
+            } catch (error) {
+              if (a.onError) {
+                await execute(a.onError, { ...context, error });
+              } else {
+                throw error;
               }
             }
+            break;
           }
-          break
-        }
 
-        case 'set-value': {
-          const value = typeof a.value === 'string' ? interpolate(a.value, context) : a.value
-          const registry = resolveRegistry(a.target, pageRegistry, appRegistry)
-          if (registry) {
-            const atom = registry.get(a.target)
-            if (atom) registry.store.set(atom, value)
+          case "open-modal":
+            modalManager.open(a.modal);
+            break;
+
+          case "close-modal":
+            modalManager.close(a.modal);
+            break;
+
+          case "refresh": {
+            // Support comma-separated targets: "table1,table2"
+            const targets = a.target.split(",").map((t) => t.trim());
+            for (const target of targets) {
+              const registry = resolveRegistry(
+                target,
+                pageRegistry,
+                appRegistry,
+              );
+              if (registry) {
+                const refreshAtom = registry.get(`__refresh_${target}`);
+                if (refreshAtom) {
+                  registry.store.set(refreshAtom, Date.now());
+                }
+              }
+            }
+            break;
           }
-          break
-        }
 
-        case 'download': {
-          const endpoint = interpolate(a.endpoint, context)
-          const blob = await api.get(endpoint, { responseType: 'blob' })
-          triggerBrowserDownload(blob as Blob, a.filename ?? 'download')
-          break
-        }
+          case "set-value": {
+            const value =
+              typeof a.value === "string"
+                ? interpolate(a.value, context)
+                : a.value;
+            const registry = resolveRegistry(
+              a.target,
+              pageRegistry,
+              appRegistry,
+            );
+            if (registry) {
+              const atom = registry.get(a.target);
+              if (atom) registry.store.set(atom, value);
+            }
+            break;
+          }
 
-        case 'confirm': {
-          const message = interpolate(a.message, context)
-          const confirmed = await confirmManager.show({
-            message,
-            confirmLabel: a.confirmLabel,
-            cancelLabel: a.cancelLabel,
-            variant: a.variant,
-          })
-          if (!confirmed) return // Stop the chain
-          break
-        }
+          case "download": {
+            const endpoint = interpolate(a.endpoint, context);
+            const blob = await api.get(endpoint, { responseType: "blob" });
+            triggerBrowserDownload(blob as Blob, a.filename ?? "download");
+            break;
+          }
 
-        case 'toast': {
-          const message = interpolate(a.message, context)
-          toastManager.show({
-            message,
-            variant: a.variant,
-            duration: a.duration,
-            action: a.action ? {
-              label: a.action.label,
-              onClick: () => execute(a.action!.action, context),
-            } : undefined,
-          })
-          break
+          case "confirm": {
+            const message = interpolate(a.message, context);
+            const confirmed = await confirmManager.show({
+              message,
+              confirmLabel: a.confirmLabel,
+              cancelLabel: a.cancelLabel,
+              variant: a.variant,
+            });
+            if (!confirmed) return; // Stop the chain
+            break;
+          }
+
+          case "toast": {
+            const message = interpolate(a.message, context);
+            toastManager.show({
+              message,
+              variant: a.variant,
+              duration: a.duration,
+              action: a.action
+                ? {
+                    label: a.action.label,
+                    onClick: () => execute(a.action!.action, context),
+                  }
+                : undefined,
+            });
+            break;
+          }
         }
       }
-    }
-  }, [api, router, pageRegistry, appRegistry, modalManager, toastManager, confirmManager])
+    },
+    [
+      api,
+      router,
+      pageRegistry,
+      appRegistry,
+      modalManager,
+      toastManager,
+      confirmManager,
+    ],
+  );
 
-  return execute
+  return execute;
 }
 ```
 
@@ -1763,29 +2167,34 @@ function useActionExecutor(): ActionExecuteFn {
  * Supports nested paths: {user.name}, {result.id}
  * Supports special tokens: {count} (length of selectedRows), {id} (current row id)
  */
-function interpolate(template: string, context: Record<string, unknown>): string {
+function interpolate(
+  template: string,
+  context: Record<string, unknown>,
+): string {
   return template.replace(/\{([^}]+)\}/g, (_, path) => {
-    const value = getNestedValue(context, path)
-    return value != null ? String(value) : `{${path}}`
-  })
+    const value = getNestedValue(context, path);
+    return value != null ? String(value) : `{${path}}`;
+  });
 }
 ```
 
 **`src/actions/modal-manager.ts`** — Modal state management
 
 ```ts
-const modalStackAtom = atom<string[]>([])
+const modalStackAtom = atom<string[]>([]);
 
 function useModalManager() {
-  const [stack, setStack] = useAtom(modalStackAtom)
+  const [stack, setStack] = useAtom(modalStackAtom);
   return {
-    open: (id: string) => setStack(prev => [...prev.filter(m => m !== id), id]),
-    close: (id?: string) => setStack(prev =>
-      id ? prev.filter(m => m !== id) : prev.slice(0, -1)
-    ),
+    open: (id: string) =>
+      setStack((prev) => [...prev.filter((m) => m !== id), id]),
+    close: (id?: string) =>
+      setStack((prev) =>
+        id ? prev.filter((m) => m !== id) : prev.slice(0, -1),
+      ),
     isOpen: (id: string) => stack.includes(id),
     stack,
-  }
+  };
 }
 ```
 
@@ -1797,30 +2206,31 @@ from the theme config.
 
 ```ts
 interface ToastItem {
-  id: string
-  message: string
-  variant: 'success' | 'error' | 'warning' | 'info'
-  duration: number
-  action?: { label: string; onClick: () => void }
+  id: string;
+  message: string;
+  variant: "success" | "error" | "warning" | "info";
+  duration: number;
+  action?: { label: string; onClick: () => void };
 }
 
-const toastQueueAtom = atom<ToastItem[]>([])
+const toastQueueAtom = atom<ToastItem[]>([]);
 
 function useToastManager() {
-  const [, setQueue] = useAtom(toastQueueAtom)
+  const [, setQueue] = useAtom(toastQueueAtom);
   return {
-    show: (toast: Omit<ToastItem, 'id'>) => {
-      const id = crypto.randomUUID()
-      setQueue(prev => [...prev, { ...toast, id }])
+    show: (toast: Omit<ToastItem, "id">) => {
+      const id = crypto.randomUUID();
+      setQueue((prev) => [...prev, { ...toast, id }]);
 
       if (toast.duration !== 0) {
         setTimeout(() => {
-          setQueue(prev => prev.filter(t => t.id !== id))
-        }, toast.duration ?? 5000)
+          setQueue((prev) => prev.filter((t) => t.id !== id));
+        }, toast.duration ?? 5000);
       }
     },
-    dismiss: (id: string) => setQueue(prev => prev.filter(t => t.id !== id)),
-  }
+    dismiss: (id: string) =>
+      setQueue((prev) => prev.filter((t) => t.id !== id)),
+  };
 }
 ```
 
@@ -1828,24 +2238,24 @@ function useToastManager() {
 
 ```ts
 interface ConfirmRequest {
-  message: string
-  confirmLabel?: string
-  cancelLabel?: string
-  variant?: 'default' | 'destructive'
-  resolve: (confirmed: boolean) => void
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: "default" | "destructive";
+  resolve: (confirmed: boolean) => void;
 }
 
-const confirmAtom = atom<ConfirmRequest | null>(null)
+const confirmAtom = atom<ConfirmRequest | null>(null);
 
 function useConfirmManager() {
-  const [, setConfirm] = useAtom(confirmAtom)
+  const [, setConfirm] = useAtom(confirmAtom);
   return {
-    show: (options: Omit<ConfirmRequest, 'resolve'>): Promise<boolean> => {
-      return new Promise(resolve => {
-        setConfirm({ ...options, resolve })
-      })
+    show: (options: Omit<ConfirmRequest, "resolve">): Promise<boolean> => {
+      return new Promise((resolve) => {
+        setConfirm({ ...options, resolve });
+      });
     },
-  }
+  };
 }
 
 // <ConfirmDialog> component reads confirmAtom and renders shadcn AlertDialog
@@ -1854,98 +2264,128 @@ function useConfirmManager() {
 ### Zod Schemas
 
 ```ts
-const navigateActionSchema = z.object({
-  type: z.literal('navigate'),
-  to: z.string(),
-  replace: z.boolean().optional(),
-}).strict()
+const navigateActionSchema = z
+  .object({
+    type: z.literal("navigate"),
+    to: z.string(),
+    replace: z.boolean().optional(),
+  })
+  .strict();
 
-const apiActionSchema: z.ZodType<ApiAction> = z.object({
-  type: z.literal('api'),
-  method: z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
-  endpoint: z.string(),
-  body: z.union([z.record(z.unknown()), fromRefSchema]).optional(),
-  params: z.record(z.unknown()).optional(),
-  onSuccess: z.lazy(() => z.union([actionSchema, z.array(actionSchema)])).optional(),
-  onError: z.lazy(() => z.union([actionSchema, z.array(actionSchema)])).optional(),
-}).strict()
+const apiActionSchema: z.ZodType<ApiAction> = z
+  .object({
+    type: z.literal("api"),
+    method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
+    endpoint: z.string(),
+    body: z.union([z.record(z.unknown()), fromRefSchema]).optional(),
+    params: z.record(z.unknown()).optional(),
+    onSuccess: z
+      .lazy(() => z.union([actionSchema, z.array(actionSchema)]))
+      .optional(),
+    onError: z
+      .lazy(() => z.union([actionSchema, z.array(actionSchema)]))
+      .optional(),
+  })
+  .strict();
 
-const openModalActionSchema = z.object({
-  type: z.literal('open-modal'),
-  modal: z.string(),
-}).strict()
+const openModalActionSchema = z
+  .object({
+    type: z.literal("open-modal"),
+    modal: z.string(),
+  })
+  .strict();
 
-const closeModalActionSchema = z.object({
-  type: z.literal('close-modal'),
-  modal: z.string().optional(),
-}).strict()
+const closeModalActionSchema = z
+  .object({
+    type: z.literal("close-modal"),
+    modal: z.string().optional(),
+  })
+  .strict();
 
-const refreshActionSchema = z.object({
-  type: z.literal('refresh'),
-  target: z.string(),
-}).strict()
+const refreshActionSchema = z
+  .object({
+    type: z.literal("refresh"),
+    target: z.string(),
+  })
+  .strict();
 
-const setValueActionSchema = z.object({
-  type: z.literal('set-value'),
-  target: z.string(),
-  value: z.unknown(),
-}).strict()
+const setValueActionSchema = z
+  .object({
+    type: z.literal("set-value"),
+    target: z.string(),
+    value: z.unknown(),
+  })
+  .strict();
 
-const downloadActionSchema = z.object({
-  type: z.literal('download'),
-  endpoint: z.string(),
-  filename: z.string().optional(),
-}).strict()
+const downloadActionSchema = z
+  .object({
+    type: z.literal("download"),
+    endpoint: z.string(),
+    filename: z.string().optional(),
+  })
+  .strict();
 
-const confirmActionSchema = z.object({
-  type: z.literal('confirm'),
-  message: z.string(),
-  confirmLabel: z.string().optional(),
-  cancelLabel: z.string().optional(),
-  variant: z.enum(['default', 'destructive']).optional(),
-}).strict()
+const confirmActionSchema = z
+  .object({
+    type: z.literal("confirm"),
+    message: z.string(),
+    confirmLabel: z.string().optional(),
+    cancelLabel: z.string().optional(),
+    variant: z.enum(["default", "destructive"]).optional(),
+  })
+  .strict();
 
-const toastActionSchema = z.object({
-  type: z.literal('toast'),
-  message: z.string(),
-  variant: z.enum(['success', 'error', 'warning', 'info']).optional(),
-  duration: z.number().optional(),
-  action: z.object({
-    label: z.string(),
-    action: z.lazy(() => actionSchema),
-  }).optional(),
-}).strict()
+const toastActionSchema = z
+  .object({
+    type: z.literal("toast"),
+    message: z.string(),
+    variant: z.enum(["success", "error", "warning", "info"]).optional(),
+    duration: z.number().optional(),
+    action: z
+      .object({
+        label: z.string(),
+        action: z.lazy(() => actionSchema),
+      })
+      .optional(),
+  })
+  .strict();
 
-const actionSchema = z.discriminatedUnion('type', [
-  navigateActionSchema, apiActionSchema, openModalActionSchema,
-  closeModalActionSchema, refreshActionSchema, setValueActionSchema,
-  downloadActionSchema, confirmActionSchema, toastActionSchema,
-])
+const actionSchema = z.discriminatedUnion("type", [
+  navigateActionSchema,
+  apiActionSchema,
+  openModalActionSchema,
+  closeModalActionSchema,
+  refreshActionSchema,
+  setValueActionSchema,
+  downloadActionSchema,
+  confirmActionSchema,
+  toastActionSchema,
+]);
 ```
 
 ### Files to Create
 
-| File | What |
-|------|------|
-| `src/actions/types.ts` | Action type definitions + Zod schemas |
-| `src/actions/executor.ts` | `useActionExecutor()` hook |
-| `src/actions/modal-manager.ts` | Modal stack state (Jotai atom) + `useModalManager()` |
-| `src/actions/toast.ts` | Toast queue (Jotai atom) + `useToastManager()` + `<ToastContainer>` component |
-| `src/actions/confirm.ts` | Confirm dialog (Promise-based) + `useConfirmManager()` + `<ConfirmDialog>` component |
-| `src/actions/interpolate.ts` | `interpolate()` template string replacement |
-| `src/actions/index.ts` | Module exports |
+| File                           | What                                                                                 |
+| ------------------------------ | ------------------------------------------------------------------------------------ |
+| `src/actions/types.ts`         | Action type definitions + Zod schemas                                                |
+| `src/actions/executor.ts`      | `useActionExecutor()` hook                                                           |
+| `src/actions/modal-manager.ts` | Modal stack state (Jotai atom) + `useModalManager()`                                 |
+| `src/actions/toast.ts`         | Toast queue (Jotai atom) + `useToastManager()` + `<ToastContainer>` component        |
+| `src/actions/confirm.ts`       | Confirm dialog (Promise-based) + `useConfirmManager()` + `<ConfirmDialog>` component |
+| `src/actions/interpolate.ts`   | `interpolate()` template string replacement                                          |
+| `src/actions/index.ts`         | Module exports                                                                       |
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
+| File           | Change                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------ |
 | `src/index.ts` | Export: `useActionExecutor`, `actionSchema`, all action types, `ToastContainer`, `ConfirmDialog` |
-| `src/types.ts` | Add: all action type definitions |
+| `src/types.ts` | Add: all action type definitions                                                                 |
 
 ### Documentation Impact
 
-| Target | Change |
-|--------|--------|
+| Target            | Change                                                                                                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `docs/actions.md` | **Create** — action vocabulary reference (all 9 types with examples), chaining, interpolation syntax, `{result}` and `{error}` in onSuccess/onError, Level 2 usage |
 
 ### Exit Criteria
@@ -1976,14 +2416,14 @@ const actionSchema = z.discriminatedUnion('type', [
 
 ### Tests
 
-| File | What |
-|------|------|
-| `src/actions/__tests__/executor.test.ts` | Each action type, chaining, confirm cancellation, error handling, context propagation through chains |
-| `src/actions/__tests__/interpolate.test.ts` | Simple, nested, missing keys (preserved), multiple in one string, non-string context values |
-| `src/actions/__tests__/modal-manager.test.ts` | Open, close by id, close topmost, duplicate open, isOpen, stack ordering |
-| `src/actions/__tests__/toast.test.ts` | Show, auto-dismiss, dismiss manually, action button, queue ordering |
-| `src/actions/__tests__/confirm.test.ts` | Show, confirm resolves true, cancel resolves false, variant styling |
-| `src/actions/__tests__/types.test.ts` | Zod validation: valid configs for all 9 types, invalid configs, recursive onSuccess/onError |
+| File                                          | What                                                                                                 |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `src/actions/__tests__/executor.test.ts`      | Each action type, chaining, confirm cancellation, error handling, context propagation through chains |
+| `src/actions/__tests__/interpolate.test.ts`   | Simple, nested, missing keys (preserved), multiple in one string, non-string context values          |
+| `src/actions/__tests__/modal-manager.test.ts` | Open, close by id, close topmost, duplicate open, isOpen, stack ordering                             |
+| `src/actions/__tests__/toast.test.ts`         | Show, auto-dismiss, dismiss manually, action button, queue ordering                                  |
+| `src/actions/__tests__/confirm.test.ts`       | Show, confirm resolves true, cancel resolves false, variant styling                                  |
+| `src/actions/__tests__/types.test.ts`         | Zod validation: valid configs for all 9 types, invalid configs, recursive onSuccess/onError          |
 
 ---
 
@@ -1998,32 +2438,35 @@ that renders an entire application from a single manifest.
 ### The API
 
 **Level 1: Full app from manifest**
+
 ```tsx
-import { ManifestApp } from '@lastshotlabs/snapshot'
-import manifest from './snapshot.manifest.json'
+import { ManifestApp } from "@lastshotlabs/snapshot";
+import manifest from "./snapshot.manifest.json";
 
 // Entire app from config — zero custom React
 function App() {
-  return <ManifestApp manifest={manifest} apiUrl="https://api.myapp.com" />
+  return <ManifestApp manifest={manifest} apiUrl="https://api.myapp.com" />;
 }
 ```
 
 **Level 2: PageRenderer in custom routing**
+
 ```tsx
-import { PageRenderer, useManifest } from '@lastshotlabs/snapshot'
+import { PageRenderer, useManifest } from "@lastshotlabs/snapshot";
 
 function MyRoute() {
-  const manifest = useManifest()
-  return <PageRenderer page={manifest.pages['/dashboard']} />
+  const manifest = useManifest();
+  return <PageRenderer page={manifest.pages["/dashboard"]} />;
 }
 ```
 
 **Level 2: Register custom components for manifest use**
+
 ```tsx
-import { registerComponent } from '@lastshotlabs/snapshot'
+import { registerComponent } from "@lastshotlabs/snapshot";
 
 // Register a custom component the manifest can reference
-registerComponent('revenue-chart', MyCustomRevenueChart)
+registerComponent("revenue-chart", MyCustomRevenueChart);
 
 // Now this works in manifest config:
 // { "type": "custom", "component": "revenue-chart", "props": { "currency": "EUR" } }
@@ -2035,77 +2478,84 @@ registerComponent('revenue-chart', MyCustomRevenueChart)
 /** The complete manifest schema. */
 interface ManifestConfig {
   /** JSON schema reference for IDE autocomplete. */
-  $schema?: string
+  $schema?: string;
   /** Design tokens. Flavor + overrides. */
-  theme?: ThemeConfig
+  theme?: ThemeConfig;
   /** Global state definitions. Persist across routes. */
-  globals?: Record<string, GlobalConfig>
+  globals?: Record<string, GlobalConfig>;
   /** Navigation structure. */
-  nav?: NavItem[]
+  nav?: NavItem[];
   /** Auth screen configuration. */
-  auth?: AuthScreenConfig
+  auth?: AuthScreenConfig;
   /** Page definitions keyed by route path. */
-  pages: Record<string, PageConfig>
+  pages: Record<string, PageConfig>;
 }
 
 /** Navigation item. */
 interface NavItem {
   /** Display label. */
-  label: string
+  label: string;
   /** Route path. */
-  path: string
+  path: string;
   /** Lucide icon name. */
-  icon?: string
+  icon?: string;
   /** Required roles (checked against global.user.roles). */
-  roles?: string[]
+  roles?: string[];
   /** Badge — static count or from ref (e.g., notification count). */
-  badge?: number | FromRef
+  badge?: number | FromRef;
   /** Nested children (renders as expandable group). */
-  children?: NavItem[]
+  children?: NavItem[];
 }
 
 /** Auth screen config. */
 interface AuthScreenConfig {
   /** Which screens to generate. */
-  screens: ('login' | 'register' | 'forgot-password' | 'reset-password' | 'verify-email' | 'mfa')[]
+  screens: (
+    | "login"
+    | "register"
+    | "forgot-password"
+    | "reset-password"
+    | "verify-email"
+    | "mfa"
+  )[];
   /** OAuth providers to show. */
-  providers?: ('google' | 'github' | 'apple' | 'microsoft')[]
+  providers?: ("google" | "github" | "apple" | "microsoft")[];
   /** Enable passkey/WebAuthn login. */
-  passkey?: boolean
+  passkey?: boolean;
   /** Custom branding for auth pages. */
   branding?: {
-    logo?: string
-    title?: string
-    description?: string
-  }
+    logo?: string;
+    title?: string;
+    description?: string;
+  };
 }
 
 /** A page definition. */
 interface PageConfig {
   /** Layout shell. Default: inherits from parent or 'sidebar'. */
-  layout?: 'sidebar' | 'top-nav' | 'minimal' | 'full-width'
+  layout?: "sidebar" | "top-nav" | "minimal" | "full-width";
   /** Document title (for browser tab). */
-  title?: string
+  title?: string;
   /** Component tree. */
-  content: ComponentConfig[]
+  content: ComponentConfig[];
   /** Required roles. Redirects to forbidden page if not met. */
-  roles?: string[]
+  roles?: string[];
   /** Breadcrumb label. */
-  breadcrumb?: string
+  breadcrumb?: string;
 }
 
 /** Base config shared by all components. */
 interface BaseComponentConfig {
   /** Component type discriminator. */
-  type: string
+  type: string;
   /** Unique id for `from` ref system. Optional — only needed if other components reference this one. */
-  id?: string
+  id?: string;
   /** Responsive visibility. Can be static, responsive, or from-ref. */
-  visible?: boolean | Responsive<boolean> | FromRef
+  visible?: boolean | Responsive<boolean> | FromRef;
   /** Additional CSS class. */
-  className?: string
+  className?: string;
   /** Grid span when inside a row. */
-  span?: Responsive<number>
+  span?: Responsive<number>;
 }
 
 /** Union of all component configs. Extended by each component phase. */
@@ -2113,60 +2563,66 @@ type ComponentConfig =
   | RowConfig
   | HeadingConfig
   | ButtonConfig
-  | CustomComponentConfig
-  // ... each phase adds its component config to this union
+  | CustomComponentConfig;
+// ... each phase adds its component config to this union
 
 /** Row — horizontal layout container. */
 interface RowConfig extends BaseComponentConfig {
-  type: 'row'
-  gap?: Responsive<'xs' | 'sm' | 'md' | 'lg' | 'xl'>
-  justify?: 'start' | 'center' | 'end' | 'between' | 'around'
-  align?: 'start' | 'center' | 'end' | 'stretch'
-  wrap?: boolean
-  children: ComponentConfig[]
+  type: "row";
+  gap?: Responsive<"xs" | "sm" | "md" | "lg" | "xl">;
+  justify?: "start" | "center" | "end" | "between" | "around";
+  align?: "start" | "center" | "end" | "stretch";
+  wrap?: boolean;
+  children: ComponentConfig[];
 }
 
 /** Heading — simple text heading. */
 interface HeadingConfig extends BaseComponentConfig {
-  type: 'heading'
-  text: string | FromRef
-  level?: 1 | 2 | 3 | 4 | 5 | 6
+  type: "heading";
+  text: string | FromRef;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 /** Button — action trigger. */
 interface ButtonConfig extends BaseComponentConfig {
-  type: 'button'
-  label: string
-  icon?: string
-  variant?: 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link'
-  size?: 'sm' | 'md' | 'lg' | 'icon'
-  action: ActionConfig | ActionConfig[]
+  type: "button";
+  label: string;
+  icon?: string;
+  variant?:
+    | "default"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "destructive"
+    | "link";
+  size?: "sm" | "md" | "lg" | "icon";
+  action: ActionConfig | ActionConfig[];
   /** Disable condition. */
-  disabled?: boolean | FromRef
+  disabled?: boolean | FromRef;
 }
 
 /** Select — dropdown that publishes its value. */
 interface SelectConfig extends BaseComponentConfig {
-  type: 'select'
+  type: "select";
   /** Static options or endpoint to fetch options from. */
-  options: { label: string; value: string }[] | string
+  options: { label: string; value: string }[] | string;
   /** For endpoint options: which field is the value. */
-  valueField?: string
+  valueField?: string;
   /** For endpoint options: which field is the label. */
-  labelField?: string
+  labelField?: string;
   /** Default selected value. */
-  default?: string
+  default?: string;
   /** Placeholder text. */
-  placeholder?: string
+  placeholder?: string;
 }
 
 /** Custom component escape hatch. */
 interface CustomComponentConfig extends BaseComponentConfig {
-  type: 'custom'
+  type: "custom";
   /** Registered component name. */
-  component: string
+  component: string;
   /** Props to pass to the custom component. */
-  props?: Record<string, unknown>
+  props?: Record<string, unknown>;
 }
 ```
 
@@ -2178,80 +2634,88 @@ Uses a dynamic component registry pattern — each component phase registers its
 
 ```ts
 // Extensible component type validation
-const componentSchemaRegistry = new Map<string, z.ZodType>()
+const componentSchemaRegistry = new Map<string, z.ZodType>();
 
 function registerComponentSchema(type: string, schema: z.ZodType): void {
-  componentSchemaRegistry.set(type, schema)
+  componentSchemaRegistry.set(type, schema);
 }
 
 // Component config validation — delegates to registered schemas
-const componentConfigSchema = z.object({ type: z.string() }).passthrough()
+const componentConfigSchema = z
+  .object({ type: z.string() })
+  .passthrough()
   .superRefine((data, ctx) => {
-    const schema = componentSchemaRegistry.get(data.type)
+    const schema = componentSchemaRegistry.get(data.type);
     if (schema) {
-      const result = schema.safeParse(data)
+      const result = schema.safeParse(data);
       if (!result.success) {
-        for (const issue of result.error.issues) ctx.addIssue(issue)
+        for (const issue of result.error.issues) ctx.addIssue(issue);
       }
-    } else if (data.type !== 'custom') {
+    } else if (data.type !== "custom") {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Unknown component type "${data.type}". Available types: ${[...componentSchemaRegistry.keys()].join(', ')}`,
-      })
+        message: `Unknown component type "${data.type}". Available types: ${[...componentSchemaRegistry.keys()].join(", ")}`,
+      });
     }
-  })
+  });
 
 // Register built-in structural components
-registerComponentSchema('row', rowConfigSchema)
-registerComponentSchema('heading', headingConfigSchema)
-registerComponentSchema('button', buttonConfigSchema)
-registerComponentSchema('select', selectConfigSchema)
+registerComponentSchema("row", rowConfigSchema);
+registerComponentSchema("heading", headingConfigSchema);
+registerComponentSchema("button", buttonConfigSchema);
+registerComponentSchema("select", selectConfigSchema);
 ```
 
 **`src/manifest/renderer.tsx`** — `<PageRenderer>` and `<ComponentRenderer>`
 
 ```tsx
 function PageRenderer({ page }: { page: PageConfig }) {
-  const Layout = getLayout(page.layout ?? 'sidebar')
+  const Layout = getLayout(page.layout ?? "sidebar");
 
   return (
     <PageContextProvider>
       <Layout>
         {page.content.map((config, i) => (
-          <ComponentRenderer key={config.id ?? `component-${i}`} config={config} />
+          <ComponentRenderer
+            key={config.id ?? `component-${i}`}
+            config={config}
+          />
         ))}
       </Layout>
     </PageContextProvider>
-  )
+  );
 }
 
 function ComponentRenderer({ config }: { config: ComponentConfig }) {
   // Check visibility
-  const visible = useSubscribe(config.visible ?? true)
-  if (visible === false) return null
+  const visible = useSubscribe(config.visible ?? true);
+  if (visible === false) return null;
 
   // Resolve component from registry
-  const Component = getRegisteredComponent(config.type)
+  const Component = getRegisteredComponent(config.type);
   if (!Component) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[snapshot] Unknown component type: "${config.type}"`)
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[snapshot] Unknown component type: "${config.type}"`);
     }
-    return null
+    return null;
   }
 
   // Wrap with span for responsive grid
-  const span = config.span
-  const style = span ? { gridColumn: `span ${typeof span === 'number' ? span : 'auto'}` } : undefined
+  const span = config.span;
+  const style = span
+    ? { gridColumn: `span ${typeof span === "number" ? span : "auto"}` }
+    : undefined;
 
   return (
     <div data-snapshot-component={config.type} style={style}>
       <Component config={config} />
     </div>
-  )
+  );
 }
 ```
 
 The `data-snapshot-component` attribute serves two purposes:
+
 1. Component-level token CSS selectors target it
 2. Dev tools / debugging can identify component boundaries
 
@@ -2290,26 +2754,30 @@ function CustomComponentWrapper({ config }: { config: CustomComponentConfig }) {
 
 ```tsx
 interface ManifestAppProps {
-  manifest: ManifestConfig
-  apiUrl: string
+  manifest: ManifestConfig;
+  apiUrl: string;
   /** Additional createSnapshot config. */
-  snapshotConfig?: Partial<SnapshotConfig>
+  snapshotConfig?: Partial<SnapshotConfig>;
 }
 
 function ManifestApp({ manifest, apiUrl, snapshotConfig }: ManifestAppProps) {
   // Create snapshot instance
-  const snapshot = useMemo(() => createSnapshot({
-    apiUrl,
-    ...snapshotConfig,
-  }), [apiUrl])
+  const snapshot = useMemo(
+    () =>
+      createSnapshot({
+        apiUrl,
+        ...snapshotConfig,
+      }),
+    [apiUrl],
+  );
 
   // Apply theme tokens (inject CSS)
   useEffect(() => {
     if (manifest.theme) {
-      const css = resolveTokens(manifest.theme)
-      injectStyleSheet('snapshot-tokens', css)
+      const css = resolveTokens(manifest.theme);
+      injectStyleSheet("snapshot-tokens", css);
     }
-  }, [manifest.theme])
+  }, [manifest.theme]);
 
   return (
     <snapshot.QueryProvider>
@@ -2321,7 +2789,7 @@ function ManifestApp({ manifest, apiUrl, snapshotConfig }: ManifestAppProps) {
         </SnapshotApiContext.Provider>
       </AppContextProvider>
     </snapshot.QueryProvider>
-  )
+  );
 }
 
 // ManifestRouter creates TanStack Router routes from manifest.pages
@@ -2336,27 +2804,27 @@ function ManifestRouter({ manifest }: { manifest: ManifestConfig }) {
 
 ### Files to Create
 
-| File | What |
-|------|------|
-| `src/manifest/schema.ts` | Manifest Zod schema + component schema registry + TypeScript types |
-| `src/manifest/renderer.tsx` | `<PageRenderer>`, `<ComponentRenderer>` |
+| File                                 | What                                                                        |
+| ------------------------------------ | --------------------------------------------------------------------------- |
+| `src/manifest/schema.ts`             | Manifest Zod schema + component schema registry + TypeScript types          |
+| `src/manifest/renderer.tsx`          | `<PageRenderer>`, `<ComponentRenderer>`                                     |
 | `src/manifest/component-registry.ts` | `registerComponent()`, `getRegisteredComponent()`, custom component wrapper |
-| `src/manifest/app.tsx` | `<ManifestApp>`, `<ManifestRouter>` |
-| `src/manifest/structural.tsx` | Built-in structural components: Row, Heading, Button, Select |
-| `src/manifest/types.ts` | Manifest config types, component base types |
-| `src/manifest/index.ts` | Module exports |
+| `src/manifest/app.tsx`               | `<ManifestApp>`, `<ManifestRouter>`                                         |
+| `src/manifest/structural.tsx`        | Built-in structural components: Row, Heading, Button, Select                |
+| `src/manifest/types.ts`              | Manifest config types, component base types                                 |
+| `src/manifest/index.ts`              | Module exports                                                              |
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
+| File           | Change                                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `src/index.ts` | Export: `ManifestApp`, `PageRenderer`, `ComponentRenderer`, `registerComponent`, `registerComponentSchema`, `manifestSchema`, all manifest types |
 
 ### Documentation Impact
 
-| Target | Change |
-|--------|--------|
-| `docs/manifest.md` | **Create** — manifest format reference with full examples, field descriptions, component type registry |
+| Target                  | Change                                                                                                                 |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `docs/manifest.md`      | **Create** — manifest format reference with full examples, field descriptions, component type registry                 |
 | `docs/page-renderer.md` | **Create** — PageRenderer usage, ManifestApp usage, component registration (framework and custom), Level 2 integration |
 
 ### Exit Criteria
@@ -2380,13 +2848,13 @@ function ManifestRouter({ manifest }: { manifest: ManifestConfig }) {
 
 ### Tests
 
-| File | What |
-|------|------|
-| `src/manifest/__tests__/schema.test.ts` | Manifest validation: full valid manifest, missing pages (required), invalid theme, unknown component types (descriptive error), structural component schemas |
-| `src/manifest/__tests__/renderer.test.ts` | PageRenderer: wraps in PageContext, renders component tree, handles unknown types, visibility control, span layout |
-| `src/manifest/__tests__/registry.test.ts` | Component registration: register/get, custom wrapper, override with warning, unknown custom component |
-| `src/manifest/__tests__/app.test.ts` | ManifestApp: creates snapshot, applies theme, creates routes, renders nav, global context |
-| `src/manifest/__tests__/structural.test.ts` | Row (gap/justify/align/wrap/children), Heading (text/level/fromRef), Button (label/icon/variant/action), Select (options/default/publish) |
+| File                                        | What                                                                                                                                                         |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/manifest/__tests__/schema.test.ts`     | Manifest validation: full valid manifest, missing pages (required), invalid theme, unknown component types (descriptive error), structural component schemas |
+| `src/manifest/__tests__/renderer.test.ts`   | PageRenderer: wraps in PageContext, renders component tree, handles unknown types, visibility control, span layout                                           |
+| `src/manifest/__tests__/registry.test.ts`   | Component registration: register/get, custom wrapper, override with warning, unknown custom component                                                        |
+| `src/manifest/__tests__/app.test.ts`        | ManifestApp: creates snapshot, applies theme, creates routes, renders nav, global context                                                                    |
+| `src/manifest/__tests__/structural.test.ts` | Row (gap/justify/align/wrap/children), Heading (text/level/fromRef), Button (label/icon/variant/action), Select (options/default/publish)                    |
 
 ---
 
@@ -2417,53 +2885,59 @@ same pattern as Phase 6 (StatCard) — each component gets its own directory und
 ```
 
 All layouts consume these design tokens:
+
 - `--sidebar` / `--sidebar-foreground` (sidebar background)
 - `nav.variant` component token (minimal/bordered/filled)
 - `nav.activeIndicator` component token (background/border-left/border-bottom/dot)
 - Spacing tokens for padding/gaps
 
 **Nav component config:**
+
 ```ts
 interface NavConfig extends BaseComponentConfig {
-  type: 'nav'
-  items: NavItem[]
+  type: "nav";
+  items: NavItem[];
   /** Collapse sidebar on mobile. Default: true. */
-  collapsible?: boolean
+  collapsible?: boolean;
   /** Show user menu (avatar, name, logout). */
-  userMenu?: boolean | {
-    showAvatar?: boolean
-    showEmail?: boolean
-    /** Additional menu items. */
-    items?: { label: string; icon?: string; action: ActionConfig }[]
-  }
+  userMenu?:
+    | boolean
+    | {
+        showAvatar?: boolean;
+        showEmail?: boolean;
+        /** Additional menu items. */
+        items?: { label: string; icon?: string; action: ActionConfig }[];
+      };
   /** Logo / brand element. */
-  logo?: { src?: string; text?: string; path?: string }
+  logo?: { src?: string; text?: string; path?: string };
 }
 ```
 
 **Headless hook:**
+
 ```ts
 interface UseNavResult {
   /** Resolved nav items with active/visible state. */
-  items: ResolvedNavItem[]
+  items: ResolvedNavItem[];
   /** Currently active item (matching current route). */
-  activeItem: ResolvedNavItem | null
+  activeItem: ResolvedNavItem | null;
   /** Whether sidebar is collapsed (mobile). */
-  isCollapsed: boolean
+  isCollapsed: boolean;
   /** Toggle sidebar collapse. */
-  toggle: () => void
+  toggle: () => void;
   /** Current user info (from global.user). */
-  user: AuthUser | null
+  user: AuthUser | null;
 }
 
 interface ResolvedNavItem extends NavItem {
-  isActive: boolean
-  isVisible: boolean
-  resolvedBadge: number | null
+  isActive: boolean;
+  isVisible: boolean;
+  resolvedBadge: number | null;
 }
 ```
 
 **Key details:**
+
 - Nav reads `global.user` from AppContext for role-based visibility and user menu
 - Active route detection uses TanStack Router's `useMatch` / `useLocation`
 - Badge values can be `FromRef` (e.g., `{ "from": "global.notifications.unread" }`)
@@ -2478,77 +2952,80 @@ interface ResolvedNavItem extends NavItem {
 ### Phase 6: StatCard
 
 **Config:**
+
 ```ts
 interface StatCardConfig extends BaseComponentConfig {
-  type: 'stat-card'
+  type: "stat-card";
   /** API endpoint to fetch data. Supports FromRef for dependent data. */
-  data: string | FromRef
+  data: string | FromRef;
   /** Query parameters. Support FromRef for filtered stats. */
-  params?: Record<string, unknown | FromRef>
+  params?: Record<string, unknown | FromRef>;
   /** Response field to display. Default: auto-detect first numeric field. */
-  field?: string
+  field?: string;
   /** Display label. Default: humanized field name. */
-  label?: string | FromRef
+  label?: string | FromRef;
   /** Number format. */
-  format?: 'number' | 'currency' | 'percent' | 'compact' | 'decimal'
+  format?: "number" | "currency" | "percent" | "compact" | "decimal";
   /** Currency code (for format: 'currency'). Default: 'USD'. */
-  currency?: string
+  currency?: string;
   /** Decimal places. Default: auto. */
-  decimals?: number
+  decimals?: number;
   /** Prefix text (e.g., "$"). */
-  prefix?: string
+  prefix?: string;
   /** Suffix text (e.g., "%"). */
-  suffix?: string
+  suffix?: string;
   /** Lucide icon name. */
-  icon?: string
+  icon?: string;
   /** Icon color (semantic token name). */
-  iconColor?: string
+  iconColor?: string;
   /** Trend indicator — shows change vs. comparison period. */
   trend?: {
     /** Response field containing comparison value. */
-    field: string
+    field: string;
     /** 'up-is-good': green for increase. 'up-is-bad': red for increase. */
-    sentiment?: 'up-is-good' | 'up-is-bad'
+    sentiment?: "up-is-good" | "up-is-bad";
     /** Format for the trend value. */
-    format?: 'percent' | 'absolute'
-  }
+    format?: "percent" | "absolute";
+  };
   /** Click action. */
-  action?: ActionConfig
+  action?: ActionConfig;
   /** Grid span inside a row. */
-  span?: Responsive<number>
+  span?: Responsive<number>;
   /** Loading skeleton variant. */
-  loading?: 'skeleton' | 'pulse' | 'spinner'
+  loading?: "skeleton" | "pulse" | "spinner";
 }
 ```
 
 **Headless hook:**
+
 ```ts
 interface UseStatCardResult {
   /** Formatted display value (e.g., "$12,345", "89%"). */
-  value: string | null
+  value: string | null;
   /** Raw numeric value. */
-  rawValue: number | null
+  rawValue: number | null;
   /** Display label. */
-  label: string
+  label: string;
   /** Loading state. */
-  isLoading: boolean
+  isLoading: boolean;
   /** Error state. */
-  error: Error | null
+  error: Error | null;
   /** Trend info. */
   trend: {
-    direction: 'up' | 'down' | 'flat'
-    value: string
-    percentage: number
-    sentiment: 'positive' | 'negative' | 'neutral'
-  } | null
+    direction: "up" | "down" | "flat";
+    value: string;
+    percentage: number;
+    sentiment: "positive" | "negative" | "neutral";
+  } | null;
   /** Refetch data. */
-  refetch: () => void
+  refetch: () => void;
   /** The full response data (for custom rendering). */
-  data: Record<string, unknown> | null
+  data: Record<string, unknown> | null;
 }
 ```
 
 **Implementation:**
+
 - Uses `useSubscribe` to resolve `data` and `params` FromRefs before fetching
 - Uses TanStack Query (`useQuery`) with the API client for data fetching
 - Auto-detects first numeric field if `field` not specified (inspect response keys)
@@ -2694,12 +3171,14 @@ size/side)
 ### Goal
 
 Wire everything together: update `snapshot sync` to read the manifest and generate theme CSS
-+ page routes, update `createSnapshot` to support manifest-driven apps, add manifest
-validation CLI command, and verify the full end-to-end flow.
+
+- page routes, update `createSnapshot` to support manifest-driven apps, add manifest
+  validation CLI command, and verify the full end-to-end flow.
 
 ### Implementation
 
 **Update `src/cli/sync.ts`:**
+
 1. Look for `snapshot.manifest.json` (or `.ts` with default export) in the consumer's project root
 2. If found, validate against `manifestSchema` — report errors clearly
 3. If `manifest.theme` exists: call `resolveTokens(manifest.theme)`, write to
@@ -2711,15 +3190,18 @@ validation CLI command, and verify the full end-to-end flow.
 6. If `manifest.nav` exists: generate nav component from nav config
 
 **Update `src/create-snapshot.tsx`:**
+
 1. Accept optional `manifest?: ManifestConfig` in `SnapshotConfig`
 2. If manifest provided, export a pre-configured `ManifestApp` component
 3. No breaking changes — existing hooks-only usage unaffected
 
 **Update `src/cli/templates/globals-css.ts`:**
+
 1. If manifest theme exists, use `resolveTokens()` instead of hardcoded palettes
 2. Fall back to hardcoded palettes if no manifest (backward compat for `snapshot init`)
 
 **New CLI command: `snapshot manifest validate`:**
+
 ```
 $ snapshot manifest validate
 ✓ Manifest valid (4 pages, 6 nav items, midnight flavor)
@@ -2736,32 +3218,32 @@ settings page. Interactive prompts for flavor selection and feature toggles.
 
 ### Files to Create
 
-| File | What |
-|------|------|
-| `src/cli/commands/manifest.ts` | `snapshot manifest validate` + `snapshot manifest init` commands |
-| `src/cli/templates/manifest.ts` | Manifest template generator (for `manifest init`) |
+| File                            | What                                                             |
+| ------------------------------- | ---------------------------------------------------------------- |
+| `src/cli/commands/manifest.ts`  | `snapshot manifest validate` + `snapshot manifest init` commands |
+| `src/cli/templates/manifest.ts` | Manifest template generator (for `manifest init`)                |
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
-| `src/cli/sync.ts` | Read manifest, generate theme CSS + page routes + auth screens |
-| `src/create-snapshot.tsx` | Accept manifest in config, pre-configure ManifestApp |
-| `src/types.ts` | Add `manifest` to `SnapshotConfig` |
-| `src/cli/templates/globals-css.ts` | Use `resolveTokens()` when manifest theme available |
-| `src/index.ts` | Verify all new exports are present |
+| File                               | Change                                                         |
+| ---------------------------------- | -------------------------------------------------------------- |
+| `src/cli/sync.ts`                  | Read manifest, generate theme CSS + page routes + auth screens |
+| `src/create-snapshot.tsx`          | Accept manifest in config, pre-configure ManifestApp           |
+| `src/types.ts`                     | Add `manifest` to `SnapshotConfig`                             |
+| `src/cli/templates/globals-css.ts` | Use `resolveTokens()` when manifest theme available            |
+| `src/index.ts`                     | Verify all new exports are present                             |
 
 ### Documentation Impact
 
-| Target | Change |
-|--------|--------|
-| `docs/getting-started.md` | **Create** — quickstart: install → `manifest init` → edit manifest → `sync` → running app |
-| `docs/components.md` | **Create** — component reference: all 8 foundation components with config examples, headless hook APIs, Level 2/3 usage |
-| `docs/tokens.md` | Verify accuracy (created Phase 1) |
-| `docs/manifest.md` | Verify accuracy (created Phase 4) |
-| `docs/data-binding.md` | Verify accuracy (created Phase 2) |
-| `docs/actions.md` | Verify accuracy (created Phase 3) |
-| `docs/customization.md` | **Create** — guide to Level 1/2/3 usage, component overrides, custom components, when to use each level |
+| Target                    | Change                                                                                                                  |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `docs/getting-started.md` | **Create** — quickstart: install → `manifest init` → edit manifest → `sync` → running app                               |
+| `docs/components.md`      | **Create** — component reference: all 8 foundation components with config examples, headless hook APIs, Level 2/3 usage |
+| `docs/tokens.md`          | Verify accuracy (created Phase 1)                                                                                       |
+| `docs/manifest.md`        | Verify accuracy (created Phase 4)                                                                                       |
+| `docs/data-binding.md`    | Verify accuracy (created Phase 2)                                                                                       |
+| `docs/actions.md`         | Verify accuracy (created Phase 3)                                                                                       |
+| `docs/customization.md`   | **Create** — guide to Level 1/2/3 usage, component overrides, custom components, when to use each level                 |
 
 ### Exit Criteria
 
@@ -2784,13 +3266,13 @@ settings page. Interactive prompts for flavor selection and feature toggles.
 
 ### Tests
 
-| File | What |
-|------|------|
-| `src/cli/__tests__/sync-manifest.test.ts` | Sync reads manifest, generates CSS, generates routes, handles missing manifest gracefully |
-| `src/cli/__tests__/manifest-validate.test.ts` | Validate: valid manifest passes, invalid manifest reports errors with suggestions |
-| `src/cli/__tests__/manifest-init.test.ts` | Init: generates valid manifest for each flavor |
-| `src/__tests__/integration.test.ts` | Full flow: manifest → createSnapshot → ManifestApp renders pages with data binding, actions, theme |
-| `src/__tests__/levels.test.ts` | Level 1 (pure config), Level 2 (mixed), Level 3 (headless hooks), Level 3b (component override) all work |
+| File                                          | What                                                                                                     |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `src/cli/__tests__/sync-manifest.test.ts`     | Sync reads manifest, generates CSS, generates routes, handles missing manifest gracefully                |
+| `src/cli/__tests__/manifest-validate.test.ts` | Validate: valid manifest passes, invalid manifest reports errors with suggestions                        |
+| `src/cli/__tests__/manifest-init.test.ts`     | Init: generates valid manifest for each flavor                                                           |
+| `src/__tests__/integration.test.ts`           | Full flow: manifest → createSnapshot → ManifestApp renders pages with data binding, actions, theme       |
+| `src/__tests__/levels.test.ts`                | Level 1 (pure config), Level 2 (mixed), Level 3 (headless hooks), Level 3b (component override) all work |
 
 ---
 
@@ -2827,20 +3309,20 @@ modifies existing ones.
 
 ### Phase Dependencies
 
-| Phase | Hard Dependencies | Can Parallel With |
-|-------|------------------|-------------------|
-| 1. Token System | None | Phase 2 |
-| 2. Page Context | None | Phase 1 |
-| 3. Action Executor | Phase 2 (uses registries for refresh/set-value) | — |
-| 4. Manifest + Renderer | Phase 1 (resolveTokens), Phase 2 (PageContextProvider), Phase 3 (action executor) | — |
-| 5. Layout + Nav | Phase 4 (component registry, layout resolver) | Phases 6-11 (after 5 is done) |
-| 6. StatCard | Phase 4 (registry), Phase 2 (usePublish/useSubscribe) | Phases 7-11 |
-| 7. DataTable | Phase 4, Phase 2, Phase 3 (row actions) | Phases 8-11 |
-| 8. AutoForm | Phase 4, Phase 2, Phase 3 (submit action) | Phases 9-11 |
-| 9. DetailCard | Phase 4, Phase 2 (from refs) | Phases 10-11 |
-| 10. Modal + Drawer | Phase 3 (modal manager), Phase 4 (recursive renderer) | Phase 11 |
-| 11. Tabs | Phase 4 (recursive renderer) | — |
-| 12. Integration | All of the above | — |
+| Phase                  | Hard Dependencies                                                                 | Can Parallel With             |
+| ---------------------- | --------------------------------------------------------------------------------- | ----------------------------- |
+| 1. Token System        | None                                                                              | Phase 2                       |
+| 2. Page Context        | None                                                                              | Phase 1                       |
+| 3. Action Executor     | Phase 2 (uses registries for refresh/set-value)                                   | —                             |
+| 4. Manifest + Renderer | Phase 1 (resolveTokens), Phase 2 (PageContextProvider), Phase 3 (action executor) | —                             |
+| 5. Layout + Nav        | Phase 4 (component registry, layout resolver)                                     | Phases 6-11 (after 5 is done) |
+| 6. StatCard            | Phase 4 (registry), Phase 2 (usePublish/useSubscribe)                             | Phases 7-11                   |
+| 7. DataTable           | Phase 4, Phase 2, Phase 3 (row actions)                                           | Phases 8-11                   |
+| 8. AutoForm            | Phase 4, Phase 2, Phase 3 (submit action)                                         | Phases 9-11                   |
+| 9. DetailCard          | Phase 4, Phase 2 (from refs)                                                      | Phases 10-11                  |
+| 10. Modal + Drawer     | Phase 3 (modal manager), Phase 4 (recursive renderer)                             | Phase 11                      |
+| 11. Tabs               | Phase 4 (recursive renderer)                                                      | —                             |
+| 12. Integration        | All of the above                                                                  | —                             |
 
 **Phases 6-11 are mostly independent of each other** — they don't import each other's code.
 However, building them sequentially allows each phase to validate the infrastructure
@@ -2876,16 +3358,16 @@ Push branches, don't merge. Review before merge. Merge order: A → B → C into
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|------|-----------|
-| Jotai store sharing between providers | Each registry creates its own store via `createStore()`. App-level store wraps in `<JotaiProvider>`. Page-level registries use their own store scoped to the route. |
-| Component registry conflicts | Last registration wins. Dev-mode warning on override. This is intentional — Level 3b overrides should be explicit. |
+| Risk                                                                    | Mitigation                                                                                                                                                                                                                       |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Jotai store sharing between providers                                   | Each registry creates its own store via `createStore()`. App-level store wraps in `<JotaiProvider>`. Page-level registries use their own store scoped to the route.                                                              |
+| Component registry conflicts                                            | Last registration wins. Dev-mode warning on override. This is intentional — Level 3b overrides should be explicit.                                                                                                               |
 | Circular dependency: ComponentRenderer → components → ComponentRenderer | Components import ComponentRenderer for recursive content (modal, tabs, drawer). This is a runtime reference chain, not a compile-time circular dep. Break cycle via the component registry (lookup by name, not direct import). |
-| shadcn/Radix bundled into package | Mark `@radix-ui/*` as dependencies. Tailwind classes work because both package and consumer use the same CSS variable names. Test that bundled components render correctly in a consumer project. |
-| Bundle size | Foundation is 8 components. Tree-shaking via tsup entry points. Unused components don't ship. Monitor bundle size per phase. |
-| Token editor SSR | Guard `document` access: `if (typeof document !== 'undefined')`. `useTokenEditor` returns no-op functions on server. |
-| Color conversion accuracy | Test against known hex→oklch conversion table (20+ values). Use the CSS Color Level 4 algorithm, not approximations. |
-| Flavor aesthetic quality | Each built-in flavor must be reviewed visually — automated tests verify structure, human review verifies beauty. Ship a Storybook or visual test page. |
+| shadcn/Radix bundled into package                                       | Mark `@radix-ui/*` as dependencies. Tailwind classes work because both package and consumer use the same CSS variable names. Test that bundled components render correctly in a consumer project.                                |
+| Bundle size                                                             | Foundation is 8 components. Tree-shaking via tsup entry points. Unused components don't ship. Monitor bundle size per phase.                                                                                                     |
+| Token editor SSR                                                        | Guard `document` access: `if (typeof document !== 'undefined')`. `useTokenEditor` returns no-op functions on server.                                                                                                             |
+| Color conversion accuracy                                               | Test against known hex→oklch conversion table (20+ values). Use the CSS Color Level 4 algorithm, not approximations.                                                                                                             |
+| Flavor aesthetic quality                                                | Each built-in flavor must be reviewed visually — automated tests verify structure, human review verifies beauty. Ship a Storybook or visual test page.                                                                           |
 
 ---
 

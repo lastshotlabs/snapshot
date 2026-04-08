@@ -2,228 +2,852 @@
   {
     "category": "smileys",
     "emojis": [
-      { "native": "\ud83d\ude00", "name": "grinning", "keywords": ["happy", "smile"] },
-      { "native": "\ud83d\ude03", "name": "smiley", "keywords": ["happy", "joy"] },
-      { "native": "\ud83d\ude04", "name": "smile", "keywords": ["happy", "joy"] },
+      {
+        "native": "\ud83d\ude00",
+        "name": "grinning",
+        "keywords": ["happy", "smile"]
+      },
+      {
+        "native": "\ud83d\ude03",
+        "name": "smiley",
+        "keywords": ["happy", "joy"]
+      },
+      {
+        "native": "\ud83d\ude04",
+        "name": "smile",
+        "keywords": ["happy", "joy"]
+      },
       { "native": "\ud83d\ude01", "name": "grin", "keywords": ["happy"] },
-      { "native": "\ud83d\ude06", "name": "laughing", "keywords": ["happy", "haha"] },
+      {
+        "native": "\ud83d\ude06",
+        "name": "laughing",
+        "keywords": ["happy", "haha"]
+      },
       { "native": "\ud83d\ude05", "name": "sweat smile", "keywords": ["hot"] },
-      { "native": "\ud83e\udd23", "name": "rofl", "keywords": ["lol", "laughing"] },
-      { "native": "\ud83d\ude02", "name": "joy", "keywords": ["tears", "laughing"] },
-      { "native": "\ud83d\ude42", "name": "slightly smiling", "keywords": ["smile"] },
-      { "native": "\ud83d\ude43", "name": "upside down", "keywords": ["silly"] },
+      {
+        "native": "\ud83e\udd23",
+        "name": "rofl",
+        "keywords": ["lol", "laughing"]
+      },
+      {
+        "native": "\ud83d\ude02",
+        "name": "joy",
+        "keywords": ["tears", "laughing"]
+      },
+      {
+        "native": "\ud83d\ude42",
+        "name": "slightly smiling",
+        "keywords": ["smile"]
+      },
+      {
+        "native": "\ud83d\ude43",
+        "name": "upside down",
+        "keywords": ["silly"]
+      },
       { "native": "\ud83d\ude09", "name": "wink", "keywords": ["flirt"] },
-      { "native": "\ud83d\ude0a", "name": "blush", "keywords": ["proud", "shy"] },
-      { "native": "\ud83d\ude07", "name": "innocent", "keywords": ["angel", "halo"] },
-      { "native": "\ud83e\udd70", "name": "smiling with hearts", "keywords": ["love", "crush"] },
-      { "native": "\ud83d\ude0d", "name": "heart eyes", "keywords": ["love", "crush"] },
+      {
+        "native": "\ud83d\ude0a",
+        "name": "blush",
+        "keywords": ["proud", "shy"]
+      },
+      {
+        "native": "\ud83d\ude07",
+        "name": "innocent",
+        "keywords": ["angel", "halo"]
+      },
+      {
+        "native": "\ud83e\udd70",
+        "name": "smiling with hearts",
+        "keywords": ["love", "crush"]
+      },
+      {
+        "native": "\ud83d\ude0d",
+        "name": "heart eyes",
+        "keywords": ["love", "crush"]
+      },
       { "native": "\ud83e\udd29", "name": "star struck", "keywords": ["wow"] },
-      { "native": "\ud83d\ude18", "name": "kissing heart", "keywords": ["love", "kiss"] },
+      {
+        "native": "\ud83d\ude18",
+        "name": "kissing heart",
+        "keywords": ["love", "kiss"]
+      },
       { "native": "\ud83d\ude1b", "name": "tongue", "keywords": ["playful"] },
-      { "native": "\ud83d\ude1c", "name": "winking tongue", "keywords": ["playful", "silly"] },
-      { "native": "\ud83e\udd11", "name": "money mouth", "keywords": ["rich", "dollar"] },
-      { "native": "\ud83e\udd17", "name": "hugging", "keywords": ["hug", "love"] },
-      { "native": "\ud83e\udd14", "name": "thinking", "keywords": ["hmm", "think"] },
-      { "native": "\ud83e\udd2b", "name": "shushing", "keywords": ["quiet", "secret"] },
-      { "native": "\ud83e\udd2d", "name": "hand over mouth", "keywords": ["oops", "giggle"] },
-      { "native": "\ud83d\ude10", "name": "neutral", "keywords": ["meh", "blank"] },
-      { "native": "\ud83d\ude11", "name": "expressionless", "keywords": ["meh"] },
-      { "native": "\ud83d\ude36", "name": "no mouth", "keywords": ["silent", "speechless"] },
-      { "native": "\ud83d\ude0f", "name": "smirk", "keywords": ["flirt", "smug"] },
-      { "native": "\ud83d\ude12", "name": "unamused", "keywords": ["bored", "meh"] },
-      { "native": "\ud83d\ude44", "name": "eye roll", "keywords": ["whatever"] },
-      { "native": "\ud83d\ude2c", "name": "grimacing", "keywords": ["awkward", "nervous"] },
-      { "native": "\ud83d\ude2e\u200d\ud83d\udca8", "name": "exhaling", "keywords": ["sigh", "relief"] },
-      { "native": "\ud83d\ude24", "name": "triumph", "keywords": ["proud", "steam"] },
+      {
+        "native": "\ud83d\ude1c",
+        "name": "winking tongue",
+        "keywords": ["playful", "silly"]
+      },
+      {
+        "native": "\ud83e\udd11",
+        "name": "money mouth",
+        "keywords": ["rich", "dollar"]
+      },
+      {
+        "native": "\ud83e\udd17",
+        "name": "hugging",
+        "keywords": ["hug", "love"]
+      },
+      {
+        "native": "\ud83e\udd14",
+        "name": "thinking",
+        "keywords": ["hmm", "think"]
+      },
+      {
+        "native": "\ud83e\udd2b",
+        "name": "shushing",
+        "keywords": ["quiet", "secret"]
+      },
+      {
+        "native": "\ud83e\udd2d",
+        "name": "hand over mouth",
+        "keywords": ["oops", "giggle"]
+      },
+      {
+        "native": "\ud83d\ude10",
+        "name": "neutral",
+        "keywords": ["meh", "blank"]
+      },
+      {
+        "native": "\ud83d\ude11",
+        "name": "expressionless",
+        "keywords": ["meh"]
+      },
+      {
+        "native": "\ud83d\ude36",
+        "name": "no mouth",
+        "keywords": ["silent", "speechless"]
+      },
+      {
+        "native": "\ud83d\ude0f",
+        "name": "smirk",
+        "keywords": ["flirt", "smug"]
+      },
+      {
+        "native": "\ud83d\ude12",
+        "name": "unamused",
+        "keywords": ["bored", "meh"]
+      },
+      {
+        "native": "\ud83d\ude44",
+        "name": "eye roll",
+        "keywords": ["whatever"]
+      },
+      {
+        "native": "\ud83d\ude2c",
+        "name": "grimacing",
+        "keywords": ["awkward", "nervous"]
+      },
+      {
+        "native": "\ud83d\ude2e\u200d\ud83d\udca8",
+        "name": "exhaling",
+        "keywords": ["sigh", "relief"]
+      },
+      {
+        "native": "\ud83d\ude24",
+        "name": "triumph",
+        "keywords": ["proud", "steam"]
+      },
       { "native": "\ud83d\ude20", "name": "angry", "keywords": ["mad"] },
-      { "native": "\ud83d\ude21", "name": "rage", "keywords": ["furious", "mad"] },
-      { "native": "\ud83e\udd2c", "name": "cursing", "keywords": ["angry", "swearing"] },
+      {
+        "native": "\ud83d\ude21",
+        "name": "rage",
+        "keywords": ["furious", "mad"]
+      },
+      {
+        "native": "\ud83e\udd2c",
+        "name": "cursing",
+        "keywords": ["angry", "swearing"]
+      },
       { "native": "\ud83d\ude22", "name": "cry", "keywords": ["sad", "tear"] },
-      { "native": "\ud83d\ude2d", "name": "sob", "keywords": ["crying", "sad"] },
-      { "native": "\ud83d\ude31", "name": "scream", "keywords": ["horror", "scared"] },
-      { "native": "\ud83d\ude28", "name": "fearful", "keywords": ["scared", "oops"] },
-      { "native": "\ud83d\ude30", "name": "cold sweat", "keywords": ["nervous"] },
-      { "native": "\ud83d\ude25", "name": "disappointed relieved", "keywords": ["phew"] },
-      { "native": "\ud83e\udd74", "name": "woozy", "keywords": ["dizzy", "drunk"] },
-      { "native": "\ud83d\ude34", "name": "sleeping", "keywords": ["zzz", "tired"] },
-      { "native": "\ud83e\udd27", "name": "sneezing", "keywords": ["sick", "achoo"] },
-      { "native": "\ud83e\udd75", "name": "hot face", "keywords": ["heat", "sweating"] },
-      { "native": "\ud83e\udd76", "name": "cold face", "keywords": ["freezing", "cold"] },
-      { "native": "\ud83e\udd2e", "name": "vomiting", "keywords": ["sick", "throw up"] },
+      {
+        "native": "\ud83d\ude2d",
+        "name": "sob",
+        "keywords": ["crying", "sad"]
+      },
+      {
+        "native": "\ud83d\ude31",
+        "name": "scream",
+        "keywords": ["horror", "scared"]
+      },
+      {
+        "native": "\ud83d\ude28",
+        "name": "fearful",
+        "keywords": ["scared", "oops"]
+      },
+      {
+        "native": "\ud83d\ude30",
+        "name": "cold sweat",
+        "keywords": ["nervous"]
+      },
+      {
+        "native": "\ud83d\ude25",
+        "name": "disappointed relieved",
+        "keywords": ["phew"]
+      },
+      {
+        "native": "\ud83e\udd74",
+        "name": "woozy",
+        "keywords": ["dizzy", "drunk"]
+      },
+      {
+        "native": "\ud83d\ude34",
+        "name": "sleeping",
+        "keywords": ["zzz", "tired"]
+      },
+      {
+        "native": "\ud83e\udd27",
+        "name": "sneezing",
+        "keywords": ["sick", "achoo"]
+      },
+      {
+        "native": "\ud83e\udd75",
+        "name": "hot face",
+        "keywords": ["heat", "sweating"]
+      },
+      {
+        "native": "\ud83e\udd76",
+        "name": "cold face",
+        "keywords": ["freezing", "cold"]
+      },
+      {
+        "native": "\ud83e\udd2e",
+        "name": "vomiting",
+        "keywords": ["sick", "throw up"]
+      },
       { "native": "\ud83d\udca9", "name": "poop", "keywords": ["poo", "shit"] },
-      { "native": "\ud83d\udc7b", "name": "ghost", "keywords": ["halloween", "spooky"] },
-      { "native": "\ud83d\udc80", "name": "skull", "keywords": ["dead", "death"] },
+      {
+        "native": "\ud83d\udc7b",
+        "name": "ghost",
+        "keywords": ["halloween", "spooky"]
+      },
+      {
+        "native": "\ud83d\udc80",
+        "name": "skull",
+        "keywords": ["dead", "death"]
+      },
       { "native": "\ud83e\udd16", "name": "robot", "keywords": ["bot", "ai"] }
     ]
   },
   {
     "category": "people",
     "emojis": [
-      { "native": "\ud83d\udc4d", "name": "thumbs up", "keywords": ["yes", "ok", "like", "+1"] },
-      { "native": "\ud83d\udc4e", "name": "thumbs down", "keywords": ["no", "dislike", "-1"] },
-      { "native": "\ud83d\udc4f", "name": "clapping", "keywords": ["bravo", "applause"] },
-      { "native": "\ud83d\ude4c", "name": "raised hands", "keywords": ["hooray", "yay"] },
-      { "native": "\ud83e\udd1d", "name": "handshake", "keywords": ["deal", "agreement"] },
-      { "native": "\ud83d\ude4f", "name": "folded hands", "keywords": ["pray", "thanks", "please"] },
-      { "native": "\u270d\ufe0f", "name": "writing hand", "keywords": ["write", "compose"] },
-      { "native": "\ud83d\udc4b", "name": "wave", "keywords": ["hello", "bye", "hi"] },
-      { "native": "\u270c\ufe0f", "name": "victory", "keywords": ["peace", "v"] },
-      { "native": "\ud83e\udd1e", "name": "crossed fingers", "keywords": ["luck", "hope"] },
-      { "native": "\ud83e\udd1f", "name": "love you", "keywords": ["ily", "love"] },
-      { "native": "\ud83e\udd18", "name": "rock on", "keywords": ["metal", "rock"] },
-      { "native": "\ud83d\udc4c", "name": "ok hand", "keywords": ["ok", "perfect"] },
-      { "native": "\ud83e\udd0c", "name": "pinched fingers", "keywords": ["italian", "chef kiss"] },
-      { "native": "\ud83d\udc4a", "name": "fist bump", "keywords": ["punch", "power"] },
-      { "native": "\u261d\ufe0f", "name": "point up", "keywords": ["this", "important"] },
+      {
+        "native": "\ud83d\udc4d",
+        "name": "thumbs up",
+        "keywords": ["yes", "ok", "like", "+1"]
+      },
+      {
+        "native": "\ud83d\udc4e",
+        "name": "thumbs down",
+        "keywords": ["no", "dislike", "-1"]
+      },
+      {
+        "native": "\ud83d\udc4f",
+        "name": "clapping",
+        "keywords": ["bravo", "applause"]
+      },
+      {
+        "native": "\ud83d\ude4c",
+        "name": "raised hands",
+        "keywords": ["hooray", "yay"]
+      },
+      {
+        "native": "\ud83e\udd1d",
+        "name": "handshake",
+        "keywords": ["deal", "agreement"]
+      },
+      {
+        "native": "\ud83d\ude4f",
+        "name": "folded hands",
+        "keywords": ["pray", "thanks", "please"]
+      },
+      {
+        "native": "\u270d\ufe0f",
+        "name": "writing hand",
+        "keywords": ["write", "compose"]
+      },
+      {
+        "native": "\ud83d\udc4b",
+        "name": "wave",
+        "keywords": ["hello", "bye", "hi"]
+      },
+      {
+        "native": "\u270c\ufe0f",
+        "name": "victory",
+        "keywords": ["peace", "v"]
+      },
+      {
+        "native": "\ud83e\udd1e",
+        "name": "crossed fingers",
+        "keywords": ["luck", "hope"]
+      },
+      {
+        "native": "\ud83e\udd1f",
+        "name": "love you",
+        "keywords": ["ily", "love"]
+      },
+      {
+        "native": "\ud83e\udd18",
+        "name": "rock on",
+        "keywords": ["metal", "rock"]
+      },
+      {
+        "native": "\ud83d\udc4c",
+        "name": "ok hand",
+        "keywords": ["ok", "perfect"]
+      },
+      {
+        "native": "\ud83e\udd0c",
+        "name": "pinched fingers",
+        "keywords": ["italian", "chef kiss"]
+      },
+      {
+        "native": "\ud83d\udc4a",
+        "name": "fist bump",
+        "keywords": ["punch", "power"]
+      },
+      {
+        "native": "\u261d\ufe0f",
+        "name": "point up",
+        "keywords": ["this", "important"]
+      },
       { "native": "\ud83d\udc47", "name": "point down", "keywords": ["below"] },
       { "native": "\ud83d\udc48", "name": "point left", "keywords": ["left"] },
-      { "native": "\ud83d\udc49", "name": "point right", "keywords": ["right"] },
-      { "native": "\ud83d\udcaa", "name": "flexed biceps", "keywords": ["strong", "muscle"] },
-      { "native": "\ud83e\udde0", "name": "brain", "keywords": ["smart", "think", "intelligence"] },
-      { "native": "\ud83d\udc40", "name": "eyes", "keywords": ["look", "see", "watch"] },
-      { "native": "\ud83d\udc41\ufe0f", "name": "eye", "keywords": ["watch", "see"] },
-      { "native": "\ud83d\udde3\ufe0f", "name": "speaking head", "keywords": ["talk", "say"] }
+      {
+        "native": "\ud83d\udc49",
+        "name": "point right",
+        "keywords": ["right"]
+      },
+      {
+        "native": "\ud83d\udcaa",
+        "name": "flexed biceps",
+        "keywords": ["strong", "muscle"]
+      },
+      {
+        "native": "\ud83e\udde0",
+        "name": "brain",
+        "keywords": ["smart", "think", "intelligence"]
+      },
+      {
+        "native": "\ud83d\udc40",
+        "name": "eyes",
+        "keywords": ["look", "see", "watch"]
+      },
+      {
+        "native": "\ud83d\udc41\ufe0f",
+        "name": "eye",
+        "keywords": ["watch", "see"]
+      },
+      {
+        "native": "\ud83d\udde3\ufe0f",
+        "name": "speaking head",
+        "keywords": ["talk", "say"]
+      }
     ]
   },
   {
     "category": "animals",
     "emojis": [
       { "native": "\ud83d\udc36", "name": "dog", "keywords": ["puppy", "pet"] },
-      { "native": "\ud83d\udc31", "name": "cat", "keywords": ["kitten", "pet"] },
+      {
+        "native": "\ud83d\udc31",
+        "name": "cat",
+        "keywords": ["kitten", "pet"]
+      },
       { "native": "\ud83d\udc2d", "name": "mouse", "keywords": ["rodent"] },
       { "native": "\ud83d\udc39", "name": "hamster", "keywords": ["pet"] },
       { "native": "\ud83d\udc3b", "name": "bear", "keywords": ["animal"] },
       { "native": "\ud83e\udd8a", "name": "fox", "keywords": ["animal"] },
-      { "native": "\ud83e\udd81", "name": "lion", "keywords": ["king", "animal"] },
+      {
+        "native": "\ud83e\udd81",
+        "name": "lion",
+        "keywords": ["king", "animal"]
+      },
       { "native": "\ud83d\udc2e", "name": "cow", "keywords": ["animal"] },
       { "native": "\ud83d\udc37", "name": "pig", "keywords": ["animal"] },
       { "native": "\ud83d\udc38", "name": "frog", "keywords": ["toad"] },
       { "native": "\ud83d\udc35", "name": "monkey", "keywords": ["animal"] },
       { "native": "\ud83d\udc27", "name": "penguin", "keywords": ["linux"] },
-      { "native": "\ud83e\udd8b", "name": "butterfly", "keywords": ["insect", "pretty"] },
+      {
+        "native": "\ud83e\udd8b",
+        "name": "butterfly",
+        "keywords": ["insect", "pretty"]
+      },
       { "native": "\ud83d\udc1d", "name": "bee", "keywords": ["honeybee"] },
-      { "native": "\ud83e\udd84", "name": "unicorn", "keywords": ["magical", "fantasy"] }
+      {
+        "native": "\ud83e\udd84",
+        "name": "unicorn",
+        "keywords": ["magical", "fantasy"]
+      }
     ]
   },
   {
     "category": "food",
     "emojis": [
       { "native": "\ud83c\udf55", "name": "pizza", "keywords": ["food"] },
-      { "native": "\ud83c\udf54", "name": "hamburger", "keywords": ["food", "burger"] },
-      { "native": "\ud83c\udf5f", "name": "fries", "keywords": ["food", "mcdonalds"] },
-      { "native": "\ud83c\udf2e", "name": "taco", "keywords": ["food", "mexican"] },
-      { "native": "\ud83c\udf63", "name": "sushi", "keywords": ["food", "japanese"] },
-      { "native": "\u2615", "name": "coffee", "keywords": ["drink", "cafe", "espresso"] },
-      { "native": "\ud83c\udf7a", "name": "beer", "keywords": ["drink", "bar"] },
-      { "native": "\ud83c\udf77", "name": "wine", "keywords": ["drink", "red wine"] },
-      { "native": "\ud83c\udf70", "name": "cake", "keywords": ["dessert", "birthday"] },
-      { "native": "\ud83c\udf69", "name": "donut", "keywords": ["dessert", "doughnut"] },
-      { "native": "\ud83c\udf4e", "name": "apple", "keywords": ["fruit", "red"] },
-      { "native": "\ud83c\udf53", "name": "strawberry", "keywords": ["fruit", "berry"] },
-      { "native": "\ud83e\udd51", "name": "avocado", "keywords": ["food", "guacamole"] },
-      { "native": "\ud83c\udf36\ufe0f", "name": "hot pepper", "keywords": ["spicy", "chili"] },
-      { "native": "\ud83c\udf7d\ufe0f", "name": "fork and knife", "keywords": ["dining", "eat"] }
+      {
+        "native": "\ud83c\udf54",
+        "name": "hamburger",
+        "keywords": ["food", "burger"]
+      },
+      {
+        "native": "\ud83c\udf5f",
+        "name": "fries",
+        "keywords": ["food", "mcdonalds"]
+      },
+      {
+        "native": "\ud83c\udf2e",
+        "name": "taco",
+        "keywords": ["food", "mexican"]
+      },
+      {
+        "native": "\ud83c\udf63",
+        "name": "sushi",
+        "keywords": ["food", "japanese"]
+      },
+      {
+        "native": "\u2615",
+        "name": "coffee",
+        "keywords": ["drink", "cafe", "espresso"]
+      },
+      {
+        "native": "\ud83c\udf7a",
+        "name": "beer",
+        "keywords": ["drink", "bar"]
+      },
+      {
+        "native": "\ud83c\udf77",
+        "name": "wine",
+        "keywords": ["drink", "red wine"]
+      },
+      {
+        "native": "\ud83c\udf70",
+        "name": "cake",
+        "keywords": ["dessert", "birthday"]
+      },
+      {
+        "native": "\ud83c\udf69",
+        "name": "donut",
+        "keywords": ["dessert", "doughnut"]
+      },
+      {
+        "native": "\ud83c\udf4e",
+        "name": "apple",
+        "keywords": ["fruit", "red"]
+      },
+      {
+        "native": "\ud83c\udf53",
+        "name": "strawberry",
+        "keywords": ["fruit", "berry"]
+      },
+      {
+        "native": "\ud83e\udd51",
+        "name": "avocado",
+        "keywords": ["food", "guacamole"]
+      },
+      {
+        "native": "\ud83c\udf36\ufe0f",
+        "name": "hot pepper",
+        "keywords": ["spicy", "chili"]
+      },
+      {
+        "native": "\ud83c\udf7d\ufe0f",
+        "name": "fork and knife",
+        "keywords": ["dining", "eat"]
+      }
     ]
   },
   {
     "category": "travel",
     "emojis": [
-      { "native": "\ud83c\udfe0", "name": "house", "keywords": ["home", "building"] },
-      { "native": "\ud83c\udfdb\ufe0f", "name": "classical building", "keywords": ["bank", "museum"] },
-      { "native": "\u2708\ufe0f", "name": "airplane", "keywords": ["travel", "flight"] },
-      { "native": "\ud83d\ude97", "name": "car", "keywords": ["vehicle", "drive"] },
-      { "native": "\ud83d\ude80", "name": "rocket", "keywords": ["launch", "space", "ship"] },
-      { "native": "\ud83c\udf0d", "name": "earth", "keywords": ["globe", "world"] },
-      { "native": "\ud83c\udf05", "name": "sunrise", "keywords": ["morning", "sun"] },
-      { "native": "\u2600\ufe0f", "name": "sun", "keywords": ["sunny", "weather"] },
-      { "native": "\ud83c\udf19", "name": "crescent moon", "keywords": ["night"] },
-      { "native": "\u2b50", "name": "star", "keywords": ["favorite", "rating"] },
-      { "native": "\ud83c\udf08", "name": "rainbow", "keywords": ["pride", "colorful"] },
-      { "native": "\u26a1", "name": "lightning", "keywords": ["bolt", "thunder", "zap"] },
-      { "native": "\ud83d\udd25", "name": "fire", "keywords": ["hot", "lit", "flame"] },
-      { "native": "\u2744\ufe0f", "name": "snowflake", "keywords": ["cold", "winter"] },
-      { "native": "\ud83c\udf0a", "name": "wave", "keywords": ["ocean", "water", "sea"] }
+      {
+        "native": "\ud83c\udfe0",
+        "name": "house",
+        "keywords": ["home", "building"]
+      },
+      {
+        "native": "\ud83c\udfdb\ufe0f",
+        "name": "classical building",
+        "keywords": ["bank", "museum"]
+      },
+      {
+        "native": "\u2708\ufe0f",
+        "name": "airplane",
+        "keywords": ["travel", "flight"]
+      },
+      {
+        "native": "\ud83d\ude97",
+        "name": "car",
+        "keywords": ["vehicle", "drive"]
+      },
+      {
+        "native": "\ud83d\ude80",
+        "name": "rocket",
+        "keywords": ["launch", "space", "ship"]
+      },
+      {
+        "native": "\ud83c\udf0d",
+        "name": "earth",
+        "keywords": ["globe", "world"]
+      },
+      {
+        "native": "\ud83c\udf05",
+        "name": "sunrise",
+        "keywords": ["morning", "sun"]
+      },
+      {
+        "native": "\u2600\ufe0f",
+        "name": "sun",
+        "keywords": ["sunny", "weather"]
+      },
+      {
+        "native": "\ud83c\udf19",
+        "name": "crescent moon",
+        "keywords": ["night"]
+      },
+      {
+        "native": "\u2b50",
+        "name": "star",
+        "keywords": ["favorite", "rating"]
+      },
+      {
+        "native": "\ud83c\udf08",
+        "name": "rainbow",
+        "keywords": ["pride", "colorful"]
+      },
+      {
+        "native": "\u26a1",
+        "name": "lightning",
+        "keywords": ["bolt", "thunder", "zap"]
+      },
+      {
+        "native": "\ud83d\udd25",
+        "name": "fire",
+        "keywords": ["hot", "lit", "flame"]
+      },
+      {
+        "native": "\u2744\ufe0f",
+        "name": "snowflake",
+        "keywords": ["cold", "winter"]
+      },
+      {
+        "native": "\ud83c\udf0a",
+        "name": "wave",
+        "keywords": ["ocean", "water", "sea"]
+      }
     ]
   },
   {
     "category": "activities",
     "emojis": [
-      { "native": "\u26bd", "name": "soccer", "keywords": ["football", "sport"] },
-      { "native": "\ud83c\udfc0", "name": "basketball", "keywords": ["sport", "nba"] },
-      { "native": "\ud83c\udfc8", "name": "football", "keywords": ["sport", "nfl"] },
-      { "native": "\ud83c\udfae", "name": "video game", "keywords": ["gaming", "controller"] },
-      { "native": "\ud83c\udfb5", "name": "musical note", "keywords": ["music", "song"] },
-      { "native": "\ud83c\udfb6", "name": "musical notes", "keywords": ["music", "melody"] },
-      { "native": "\ud83c\udfa8", "name": "art palette", "keywords": ["paint", "creative"] },
-      { "native": "\ud83c\udfac", "name": "clapper board", "keywords": ["movie", "film"] },
-      { "native": "\ud83c\udfa4", "name": "microphone", "keywords": ["karaoke", "sing"] },
-      { "native": "\ud83c\udfc6", "name": "trophy", "keywords": ["win", "champion", "award"] },
-      { "native": "\ud83e\udd47", "name": "gold medal", "keywords": ["first", "winner"] },
-      { "native": "\ud83c\udfaf", "name": "bullseye", "keywords": ["target", "goal", "dart"] },
-      { "native": "\ud83c\udfb2", "name": "dice", "keywords": ["game", "random", "lucky"] },
-      { "native": "\ud83e\udde9", "name": "puzzle piece", "keywords": ["jigsaw", "solve"] },
-      { "native": "\ud83c\udfad", "name": "performing arts", "keywords": ["theater", "drama"] }
+      {
+        "native": "\u26bd",
+        "name": "soccer",
+        "keywords": ["football", "sport"]
+      },
+      {
+        "native": "\ud83c\udfc0",
+        "name": "basketball",
+        "keywords": ["sport", "nba"]
+      },
+      {
+        "native": "\ud83c\udfc8",
+        "name": "football",
+        "keywords": ["sport", "nfl"]
+      },
+      {
+        "native": "\ud83c\udfae",
+        "name": "video game",
+        "keywords": ["gaming", "controller"]
+      },
+      {
+        "native": "\ud83c\udfb5",
+        "name": "musical note",
+        "keywords": ["music", "song"]
+      },
+      {
+        "native": "\ud83c\udfb6",
+        "name": "musical notes",
+        "keywords": ["music", "melody"]
+      },
+      {
+        "native": "\ud83c\udfa8",
+        "name": "art palette",
+        "keywords": ["paint", "creative"]
+      },
+      {
+        "native": "\ud83c\udfac",
+        "name": "clapper board",
+        "keywords": ["movie", "film"]
+      },
+      {
+        "native": "\ud83c\udfa4",
+        "name": "microphone",
+        "keywords": ["karaoke", "sing"]
+      },
+      {
+        "native": "\ud83c\udfc6",
+        "name": "trophy",
+        "keywords": ["win", "champion", "award"]
+      },
+      {
+        "native": "\ud83e\udd47",
+        "name": "gold medal",
+        "keywords": ["first", "winner"]
+      },
+      {
+        "native": "\ud83c\udfaf",
+        "name": "bullseye",
+        "keywords": ["target", "goal", "dart"]
+      },
+      {
+        "native": "\ud83c\udfb2",
+        "name": "dice",
+        "keywords": ["game", "random", "lucky"]
+      },
+      {
+        "native": "\ud83e\udde9",
+        "name": "puzzle piece",
+        "keywords": ["jigsaw", "solve"]
+      },
+      {
+        "native": "\ud83c\udfad",
+        "name": "performing arts",
+        "keywords": ["theater", "drama"]
+      }
     ]
   },
   {
     "category": "objects",
     "emojis": [
-      { "native": "\ud83d\udcbb", "name": "laptop", "keywords": ["computer", "code"] },
-      { "native": "\ud83d\udcf1", "name": "phone", "keywords": ["mobile", "cell"] },
-      { "native": "\u2328\ufe0f", "name": "keyboard", "keywords": ["type", "computer"] },
-      { "native": "\ud83d\udcbe", "name": "floppy disk", "keywords": ["save", "retro"] },
-      { "native": "\ud83d\udce7", "name": "email", "keywords": ["mail", "inbox"] },
-      { "native": "\ud83d\udcc1", "name": "folder", "keywords": ["directory", "file"] },
-      { "native": "\ud83d\udcca", "name": "bar chart", "keywords": ["graph", "data", "stats"] },
-      { "native": "\ud83d\udcce", "name": "paperclip", "keywords": ["attach", "attachment"] },
-      { "native": "\ud83d\udd17", "name": "link", "keywords": ["chain", "url"] },
-      { "native": "\ud83d\udcc5", "name": "calendar", "keywords": ["date", "schedule"] },
-      { "native": "\ud83d\udcdd", "name": "memo", "keywords": ["note", "write", "pencil"] },
-      { "native": "\ud83d\udd0d", "name": "magnifying glass", "keywords": ["search", "find"] },
-      { "native": "\ud83d\udd12", "name": "lock", "keywords": ["security", "private"] },
-      { "native": "\ud83d\udd11", "name": "key", "keywords": ["password", "access"] },
-      { "native": "\ud83d\udca1", "name": "light bulb", "keywords": ["idea", "tip"] },
-      { "native": "\ud83d\udee0\ufe0f", "name": "tools", "keywords": ["wrench", "hammer", "build"] },
-      { "native": "\u2699\ufe0f", "name": "gear", "keywords": ["settings", "config"] },
-      { "native": "\ud83d\udcf0", "name": "newspaper", "keywords": ["news", "press"] },
-      { "native": "\ud83d\udcda", "name": "books", "keywords": ["library", "reading"] },
-      { "native": "\ud83c\udfe5", "name": "bell", "keywords": ["notification", "alert"] }
+      {
+        "native": "\ud83d\udcbb",
+        "name": "laptop",
+        "keywords": ["computer", "code"]
+      },
+      {
+        "native": "\ud83d\udcf1",
+        "name": "phone",
+        "keywords": ["mobile", "cell"]
+      },
+      {
+        "native": "\u2328\ufe0f",
+        "name": "keyboard",
+        "keywords": ["type", "computer"]
+      },
+      {
+        "native": "\ud83d\udcbe",
+        "name": "floppy disk",
+        "keywords": ["save", "retro"]
+      },
+      {
+        "native": "\ud83d\udce7",
+        "name": "email",
+        "keywords": ["mail", "inbox"]
+      },
+      {
+        "native": "\ud83d\udcc1",
+        "name": "folder",
+        "keywords": ["directory", "file"]
+      },
+      {
+        "native": "\ud83d\udcca",
+        "name": "bar chart",
+        "keywords": ["graph", "data", "stats"]
+      },
+      {
+        "native": "\ud83d\udcce",
+        "name": "paperclip",
+        "keywords": ["attach", "attachment"]
+      },
+      {
+        "native": "\ud83d\udd17",
+        "name": "link",
+        "keywords": ["chain", "url"]
+      },
+      {
+        "native": "\ud83d\udcc5",
+        "name": "calendar",
+        "keywords": ["date", "schedule"]
+      },
+      {
+        "native": "\ud83d\udcdd",
+        "name": "memo",
+        "keywords": ["note", "write", "pencil"]
+      },
+      {
+        "native": "\ud83d\udd0d",
+        "name": "magnifying glass",
+        "keywords": ["search", "find"]
+      },
+      {
+        "native": "\ud83d\udd12",
+        "name": "lock",
+        "keywords": ["security", "private"]
+      },
+      {
+        "native": "\ud83d\udd11",
+        "name": "key",
+        "keywords": ["password", "access"]
+      },
+      {
+        "native": "\ud83d\udca1",
+        "name": "light bulb",
+        "keywords": ["idea", "tip"]
+      },
+      {
+        "native": "\ud83d\udee0\ufe0f",
+        "name": "tools",
+        "keywords": ["wrench", "hammer", "build"]
+      },
+      {
+        "native": "\u2699\ufe0f",
+        "name": "gear",
+        "keywords": ["settings", "config"]
+      },
+      {
+        "native": "\ud83d\udcf0",
+        "name": "newspaper",
+        "keywords": ["news", "press"]
+      },
+      {
+        "native": "\ud83d\udcda",
+        "name": "books",
+        "keywords": ["library", "reading"]
+      },
+      {
+        "native": "\ud83c\udfe5",
+        "name": "bell",
+        "keywords": ["notification", "alert"]
+      }
     ]
   },
   {
     "category": "symbols",
     "emojis": [
-      { "native": "\u2764\ufe0f", "name": "red heart", "keywords": ["love", "like"] },
-      { "native": "\ud83e\udde1", "name": "orange heart", "keywords": ["love"] },
-      { "native": "\ud83d\udc9b", "name": "yellow heart", "keywords": ["love"] },
+      {
+        "native": "\u2764\ufe0f",
+        "name": "red heart",
+        "keywords": ["love", "like"]
+      },
+      {
+        "native": "\ud83e\udde1",
+        "name": "orange heart",
+        "keywords": ["love"]
+      },
+      {
+        "native": "\ud83d\udc9b",
+        "name": "yellow heart",
+        "keywords": ["love"]
+      },
       { "native": "\ud83d\udc9a", "name": "green heart", "keywords": ["love"] },
       { "native": "\ud83d\udc99", "name": "blue heart", "keywords": ["love"] },
-      { "native": "\ud83d\udc9c", "name": "purple heart", "keywords": ["love"] },
-      { "native": "\ud83d\udc94", "name": "broken heart", "keywords": ["sad", "sorry"] },
-      { "native": "\u2705", "name": "check mark", "keywords": ["yes", "done", "complete"] },
-      { "native": "\u274c", "name": "cross mark", "keywords": ["no", "wrong", "delete"] },
-      { "native": "\u2757", "name": "exclamation", "keywords": ["important", "warning"] },
-      { "native": "\u2753", "name": "question", "keywords": ["confused", "what"] },
-      { "native": "\ud83d\udcaf", "name": "hundred", "keywords": ["perfect", "score", "100"] },
-      { "native": "\ud83c\udd99", "name": "up", "keywords": ["upvote", "update"] },
-      { "native": "\ud83d\udd34", "name": "red circle", "keywords": ["dot", "stop"] },
-      { "native": "\ud83d\udfe2", "name": "green circle", "keywords": ["dot", "go"] },
-      { "native": "\ud83d\udfe1", "name": "yellow circle", "keywords": ["dot", "warning"] },
-      { "native": "\u2b55", "name": "hollow circle", "keywords": ["ring", "o"] },
-      { "native": "\u267b\ufe0f", "name": "recycle", "keywords": ["environment", "green"] },
-      { "native": "\u26a0\ufe0f", "name": "warning", "keywords": ["caution", "alert"] },
+      {
+        "native": "\ud83d\udc9c",
+        "name": "purple heart",
+        "keywords": ["love"]
+      },
+      {
+        "native": "\ud83d\udc94",
+        "name": "broken heart",
+        "keywords": ["sad", "sorry"]
+      },
+      {
+        "native": "\u2705",
+        "name": "check mark",
+        "keywords": ["yes", "done", "complete"]
+      },
+      {
+        "native": "\u274c",
+        "name": "cross mark",
+        "keywords": ["no", "wrong", "delete"]
+      },
+      {
+        "native": "\u2757",
+        "name": "exclamation",
+        "keywords": ["important", "warning"]
+      },
+      {
+        "native": "\u2753",
+        "name": "question",
+        "keywords": ["confused", "what"]
+      },
+      {
+        "native": "\ud83d\udcaf",
+        "name": "hundred",
+        "keywords": ["perfect", "score", "100"]
+      },
+      {
+        "native": "\ud83c\udd99",
+        "name": "up",
+        "keywords": ["upvote", "update"]
+      },
+      {
+        "native": "\ud83d\udd34",
+        "name": "red circle",
+        "keywords": ["dot", "stop"]
+      },
+      {
+        "native": "\ud83d\udfe2",
+        "name": "green circle",
+        "keywords": ["dot", "go"]
+      },
+      {
+        "native": "\ud83d\udfe1",
+        "name": "yellow circle",
+        "keywords": ["dot", "warning"]
+      },
+      {
+        "native": "\u2b55",
+        "name": "hollow circle",
+        "keywords": ["ring", "o"]
+      },
+      {
+        "native": "\u267b\ufe0f",
+        "name": "recycle",
+        "keywords": ["environment", "green"]
+      },
+      {
+        "native": "\u26a0\ufe0f",
+        "name": "warning",
+        "keywords": ["caution", "alert"]
+      },
       { "native": "\u2139\ufe0f", "name": "info", "keywords": ["information"] }
     ]
   },
   {
     "category": "flags",
     "emojis": [
-      { "native": "\ud83c\udfc1", "name": "checkered flag", "keywords": ["finish", "race"] },
-      { "native": "\ud83d\udea9", "name": "triangular flag", "keywords": ["flag", "mark"] },
-      { "native": "\ud83c\udf8c", "name": "crossed flags", "keywords": ["japan", "celebration"] },
-      { "native": "\ud83c\udff3\ufe0f", "name": "white flag", "keywords": ["surrender", "peace"] },
-      { "native": "\ud83c\udff3\ufe0f\u200d\ud83c\udf08", "name": "rainbow flag", "keywords": ["pride", "lgbtq"] },
-      { "native": "\ud83c\udff4\u200d\u2620\ufe0f", "name": "pirate flag", "keywords": ["pirate", "jolly roger"] }
+      {
+        "native": "\ud83c\udfc1",
+        "name": "checkered flag",
+        "keywords": ["finish", "race"]
+      },
+      {
+        "native": "\ud83d\udea9",
+        "name": "triangular flag",
+        "keywords": ["flag", "mark"]
+      },
+      {
+        "native": "\ud83c\udf8c",
+        "name": "crossed flags",
+        "keywords": ["japan", "celebration"]
+      },
+      {
+        "native": "\ud83c\udff3\ufe0f",
+        "name": "white flag",
+        "keywords": ["surrender", "peace"]
+      },
+      {
+        "native": "\ud83c\udff3\ufe0f\u200d\ud83c\udf08",
+        "name": "rainbow flag",
+        "keywords": ["pride", "lgbtq"]
+      },
+      {
+        "native": "\ud83c\udff4\u200d\u2620\ufe0f",
+        "name": "pirate flag",
+        "keywords": ["pirate", "jolly roger"]
+      }
     ]
   }
 ]

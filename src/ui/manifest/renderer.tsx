@@ -9,6 +9,7 @@
 import type { CSSProperties } from "react";
 import { PageContextProvider, useSubscribe } from "../context/index";
 import { getRegisteredComponent } from "./component-registry";
+import { ComponentWrapper } from "../components/_base/component-wrapper";
 import { useResponsiveValue } from "../hooks/use-breakpoint";
 import type { PageConfig, ComponentConfig } from "./types";
 
@@ -53,19 +54,19 @@ export function ComponentRenderer({ config }: ComponentRendererProps) {
   const configStyle = (config as Record<string, unknown>).style as
     | Record<string, string | number>
     | undefined;
-  const style: CSSProperties = {
+  const mergedStyle: Record<string, string | number> = {
     ...(span ? { gridColumn: `span ${span}` } : undefined),
-    ...(configStyle as CSSProperties),
+    ...configStyle,
   };
 
   return (
-    <div
-      data-snapshot-component={config.type}
+    <ComponentWrapper
+      type={config.type}
       className={config.className}
-      style={Object.keys(style).length > 0 ? style : undefined}
+      style={Object.keys(mergedStyle).length > 0 ? mergedStyle : undefined}
     >
       <Component config={config as Record<string, unknown>} />
-    </div>
+    </ComponentWrapper>
   );
 }
 

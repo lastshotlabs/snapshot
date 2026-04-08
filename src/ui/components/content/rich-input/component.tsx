@@ -229,14 +229,30 @@ export function RichInput({ config }: { config: RichInputConfig }) {
 
     // Direct command dispatch — explicit for reliability
     switch (item.action) {
-      case "toggleBold": editor.chain().focus().toggleBold().run(); break;
-      case "toggleItalic": editor.chain().focus().toggleItalic().run(); break;
-      case "toggleUnderline": editor.chain().focus().toggleUnderline().run(); break;
-      case "toggleStrike": editor.chain().focus().toggleStrike().run(); break;
-      case "toggleCode": editor.chain().focus().toggleCode().run(); break;
-      case "toggleCodeBlock": editor.chain().focus().toggleCodeBlock().run(); break;
-      case "toggleBulletList": editor.chain().focus().toggleBulletList().run(); break;
-      case "toggleOrderedList": editor.chain().focus().toggleOrderedList().run(); break;
+      case "toggleBold":
+        editor.chain().focus().toggleBold().run();
+        break;
+      case "toggleItalic":
+        editor.chain().focus().toggleItalic().run();
+        break;
+      case "toggleUnderline":
+        editor.chain().focus().toggleUnderline().run();
+        break;
+      case "toggleStrike":
+        editor.chain().focus().toggleStrike().run();
+        break;
+      case "toggleCode":
+        editor.chain().focus().toggleCode().run();
+        break;
+      case "toggleCodeBlock":
+        editor.chain().focus().toggleCodeBlock().run();
+        break;
+      case "toggleBulletList":
+        editor.chain().focus().toggleBulletList().run();
+        break;
+      case "toggleOrderedList":
+        editor.chain().focus().toggleOrderedList().run();
+        break;
     }
   };
 
@@ -255,7 +271,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
-        transition: "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+        transition:
+          "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
         ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
@@ -312,7 +329,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             display: "flex",
             alignItems: "center",
             gap: "var(--sn-spacing-xs, 0.25rem)",
-            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+            padding:
+              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
             borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
             backgroundColor: "var(--sn-color-secondary, #f9fafb)",
           }}
@@ -326,7 +344,9 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             onKeyDown={(e) => {
               if (e.key === "Enter" && linkUrl.trim()) {
                 e.preventDefault();
-                const url = linkUrl.trim().startsWith("http") ? linkUrl.trim() : `https://${linkUrl.trim()}`;
+                const url = linkUrl.trim().startsWith("http")
+                  ? linkUrl.trim()
+                  : `https://${linkUrl.trim()}`;
                 editor?.chain().focus().setLink({ href: url }).run();
                 setShowLinkInput(false);
                 setLinkUrl("");
@@ -351,7 +371,9 @@ export function RichInput({ config }: { config: RichInputConfig }) {
           <button
             onClick={() => {
               if (linkUrl.trim()) {
-                const url = linkUrl.trim().startsWith("http") ? linkUrl.trim() : `https://${linkUrl.trim()}`;
+                const url = linkUrl.trim().startsWith("http")
+                  ? linkUrl.trim()
+                  : `https://${linkUrl.trim()}`;
                 editor?.chain().focus().setLink({ href: url }).run();
               }
               setShowLinkInput(false);
@@ -380,7 +402,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+            padding:
+              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
             borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
             gap: "var(--sn-spacing-sm, 0.5rem)",
           }}
@@ -432,7 +455,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                     cursor: readonly ? "not-allowed" : "pointer",
                     opacity: readonly ? 0.5 : 1,
                     flexShrink: 0,
-                    transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                    transition:
+                      "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                   }}
                 >
                   <Icon name={item.icon} size={16} />
@@ -456,7 +480,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                   color: isOverLimit
                     ? "var(--sn-color-destructive, #ef4444)"
                     : "var(--sn-color-muted-foreground, #9ca3af)",
-                  transition: "color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                  transition:
+                    "color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                 }}
               >
                 {charCount}/{config.maxLength}
@@ -491,7 +516,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                       ? "not-allowed"
                       : "pointer",
                   flexShrink: 0,
-                  transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                  transition:
+                    "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                 }}
               >
                 <Icon name="send" size={16} />

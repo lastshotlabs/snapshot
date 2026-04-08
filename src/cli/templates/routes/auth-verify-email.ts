@@ -9,5 +9,5 @@ export const Route = createFileRoute('/_guest/auth/verify-email')({
   }),
   component: VerifyEmailPage,
 })
-`
+`;
 }

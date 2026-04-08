@@ -1,4 +1,4 @@
-import type { AdminScaffoldConfig } from '../../types'
+import type { AdminScaffoldConfig } from "../../types";
 
 export function generateCapabilitiesLib(): string {
   return `import { createContext, useContext, useEffect, useState } from 'react'
@@ -69,13 +69,13 @@ export function CapabilitiesProvider({ children }: { children: React.ReactNode }
 export function useCapabilities(): CapabilitiesContextValue {
   return useContext(CapabilitiesContext)
 }
-`
+`;
 }
 
 export function generateSnapshotLib(config: AdminScaffoldConfig): string {
   const webhookExports = config.webhookAdminPages
     ? `  useWebhookEndpoints,\n  useWebhookEndpoint,\n  useWebhookDeliveries,\n  useCreateWebhookEndpoint,\n  useUpdateWebhookEndpoint,\n  useDeleteWebhookEndpoint,\n  useTestWebhookEndpoint,`
-    : ''
+    : "";
 
   return `import { createSnapshot } from '@lastshotlabs/snapshot'
 
@@ -99,7 +99,7 @@ ${webhookExports}
   queryClient,
   tokenStorage,
 } = snapshot
-`
+`;
 }
 
 export function generateRouterLib(): string {
@@ -120,5 +120,5 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
 }
-`
+`;
 }

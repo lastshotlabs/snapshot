@@ -5,7 +5,7 @@ import { CommunityContainersPage } from '@pages/community/CommunityContainersPag
 export const Route = createFileRoute('/_authenticated/community/')({
   component: CommunityContainersPage,
 })
-`
+`;
 }
 
 export function generateCommunityThreadListRoute(): string {
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_authenticated/community/$containerId')({
     return <CommunityThreadListPage containerId={containerId} />
   },
 })
-`
+`;
 }
 
 export function generateCommunityThreadRoute(): string {
@@ -31,5 +31,5 @@ export const Route = createFileRoute('/_authenticated/community/$containerId/$th
     return <CommunityThreadPage containerId={containerId} threadId={threadId} />
   },
 })
-`
+`;
 }

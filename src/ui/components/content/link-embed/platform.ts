@@ -25,9 +25,7 @@ const YOUTUBE_PATTERNS = [
 ];
 
 /** Instagram URL patterns. */
-const INSTAGRAM_PATTERNS = [
-  /instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/,
-];
+const INSTAGRAM_PATTERNS = [/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/];
 
 /** TikTok URL patterns. */
 const TIKTOK_PATTERNS = [
@@ -36,9 +34,7 @@ const TIKTOK_PATTERNS = [
 ];
 
 /** Twitter/X URL patterns. */
-const TWITTER_PATTERNS = [
-  /(?:twitter\.com|x\.com)\/[^/]+\/status\/(\d+)/,
-];
+const TWITTER_PATTERNS = [/(?:twitter\.com|x\.com)\/[^/]+\/status\/(\d+)/];
 
 /** GIF URL patterns (direct image links). */
 const GIF_PATTERNS = [
@@ -54,7 +50,10 @@ const GIF_PATTERNS = [
  * @param url - The URL to analyze
  * @returns Platform info with embed ID and URL, or null for generic
  */
-export function detectPlatform(url: string): PlatformInfo | null {
+export function detectPlatform(
+  url: string,
+  options?: { darkMode?: boolean },
+): PlatformInfo | null {
   // YouTube
   for (const pattern of YOUTUBE_PATTERNS) {
     const match = url.match(pattern);
@@ -99,7 +98,7 @@ export function detectPlatform(url: string): PlatformInfo | null {
         platform: "twitter",
         embedId: match[1],
         // Twitter doesn't have a simple iframe embed — use publish.twitter.com
-        embedUrl: `https://platform.twitter.com/embed/Tweet.html?id=${match[1]}&theme=light`,
+        embedUrl: `https://platform.twitter.com/embed/Tweet.html?id=${match[1]}&theme=${options?.darkMode ? "dark" : "light"}`,
       };
     }
   }

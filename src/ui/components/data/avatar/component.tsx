@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
+import { getInitials } from "../../_base/utils";
 import type { AvatarConfig } from "./types";
 
 /** Size enum → pixel dimension. */
@@ -26,22 +27,10 @@ const DEFAULT_INITIALS_FONT_SIZE = "var(--sn-font-size-sm, 0.875rem)";
 /** Status dot color mapping. */
 const STATUS_COLORS: Record<string, string> = {
   online: "var(--sn-color-success, #16a34a)",
-  offline: "var(--sn-color-muted, #9ca3af)",
+  offline: "var(--sn-color-muted-foreground, #6b7280)",
   busy: "var(--sn-color-destructive, #dc2626)",
   away: "var(--sn-color-warning, #f59e0b)",
 };
-
-/**
- * Extract initials from a name string.
- * Takes the first letter of the first two words.
- */
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  const first = parts[0] ?? "";
-  const last = parts[parts.length - 1] ?? "";
-  if (parts.length === 1) return first.charAt(0).toUpperCase();
-  return (first.charAt(0) + last.charAt(0)).toUpperCase();
-}
 
 /**
  * Avatar component — a config-driven avatar with image, initials, or icon fallback.
@@ -87,7 +76,8 @@ export function Avatar({ config }: { config: AvatarConfig }) {
   const shape = config.shape ?? "circle";
   const color = config.color ?? "primary";
   const px = SIZE_PX[size] ?? 40;
-  const initialsFontSize = INITIALS_FONT_SIZE[size] ?? DEFAULT_INITIALS_FONT_SIZE;
+  const initialsFontSize =
+    INITIALS_FONT_SIZE[size] ?? DEFAULT_INITIALS_FONT_SIZE;
 
   const showImage = resolvedSrc && !imgError;
   const initials = resolvedName ? getInitials(resolvedName) : null;
@@ -112,16 +102,13 @@ export function Avatar({ config }: { config: AvatarConfig }) {
         width: `${px}px`,
         height: `${px}px`,
         borderRadius,
-        backgroundColor: showImage
-          ? "transparent"
-          : `var(--sn-color-${color})`,
-        color: showImage
-          ? undefined
-          : `var(--sn-color-${color}-foreground)`,
+        backgroundColor: showImage ? "transparent" : `var(--sn-color-${color})`,
+        color: showImage ? undefined : `var(--sn-color-${color}-foreground)`,
         fontSize: INITIALS_FONT_SIZE[size],
         fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
         overflow: "hidden",
         flexShrink: 0,
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Image */}

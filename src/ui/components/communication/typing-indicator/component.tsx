@@ -15,11 +15,7 @@ const BOUNCE_KEYFRAMES = `
  *
  * @param props - Component props containing the typing indicator configuration
  */
-export function TypingIndicator({
-  config,
-}: {
-  config: TypingIndicatorConfig;
-}) {
+export function TypingIndicator({ config }: { config: TypingIndicatorConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const rawUsers = useSubscribe(config.users ?? []);
 
@@ -44,7 +40,10 @@ export function TypingIndicator({
     const names = displayUsers.map((u) => u.name).join(", ");
     text = `${names} and ${remaining} other${remaining > 1 ? "s" : ""} are typing`;
   } else {
-    const allButLast = displayUsers.slice(0, -1).map((u) => u.name).join(", ");
+    const allButLast = displayUsers
+      .slice(0, -1)
+      .map((u) => u.name)
+      .join(", ");
     text = `${allButLast} and ${displayUsers[displayUsers.length - 1]!.name} are typing`;
   }
 
@@ -52,13 +51,17 @@ export function TypingIndicator({
     <div
       data-snapshot-component="typing-indicator"
       data-testid="typing-indicator"
+      role="status"
+      aria-live="polite"
       className={config.className}
       style={{
         display: "flex",
         alignItems: "center",
         gap: "var(--sn-spacing-xs, 0.25rem)",
         padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-        transition: "opacity var(--sn-duration-normal, 250ms) var(--sn-ease-default, ease)",
+        transition:
+          "opacity var(--sn-duration-normal, 250ms) var(--sn-ease-default, ease)",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Inject keyframes */}

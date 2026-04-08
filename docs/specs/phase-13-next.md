@@ -3,12 +3,12 @@
 > **Base:** `origin/main` (32 commits, 31 components shipped)
 > **Status:** Draft — pending developer review
 
-| Phase | Title | Status | Track |
-|-------|-------|--------|-------|
-| 13-A | Fix test suite (vitest DOM config) | Ready | A |
-| 13-B | Page Presets | Ready | B |
-| 13-C | Remaining Phase 2 components (Feed, Chart, Wizard) | Ready | C |
-| 13-D | Headless hooks surface | Blocked by 13-B | B |
+| Phase | Title                                              | Status          | Track |
+| ----- | -------------------------------------------------- | --------------- | ----- |
+| 13-A  | Fix test suite (vitest DOM config)                 | Ready           | A     |
+| 13-B  | Page Presets                                       | Ready           | B     |
+| 13-C  | Remaining Phase 2 components (Feed, Chart, Wizard) | Ready           | C     |
+| 13-D  | Headless hooks surface                             | Blocked by 13-B | B     |
 
 ---
 
@@ -54,16 +54,16 @@ remaining high-value Phase 2 components (Feed, Chart) exist and are in the playg
 
 ### Component Inventory (31 total)
 
-| Group | Components |
-|-------|-----------|
-| layout/ | layout, nav |
-| data/ | stat-card, data-table, detail-card, list, badge, avatar, empty-state, alert, progress, skeleton, tooltip |
-| forms/ | auto-form, switch |
-| overlay/ | modal, drawer, dropdown-menu |
-| navigation/ | tabs, accordion, breadcrumb, stepper, tree-view |
-| content/ | rich-text-editor, file-uploader, code-block, timeline |
-| workflow/ | kanban, calendar, audit-log, notification-feed |
-| commerce/ | pricing-table |
+| Group       | Components                                                                                               |
+| ----------- | -------------------------------------------------------------------------------------------------------- |
+| layout/     | layout, nav                                                                                              |
+| data/       | stat-card, data-table, detail-card, list, badge, avatar, empty-state, alert, progress, skeleton, tooltip |
+| forms/      | auto-form, switch                                                                                        |
+| overlay/    | modal, drawer, dropdown-menu                                                                             |
+| navigation/ | tabs, accordion, breadcrumb, stepper, tree-view                                                          |
+| content/    | rich-text-editor, file-uploader, code-block, timeline                                                    |
+| workflow/   | kanban, calendar, audit-log, notification-feed                                                           |
+| commerce/   | pricing-table                                                                                            |
 
 ### Broken: Test Suite
 
@@ -103,31 +103,31 @@ bun run lint             # eslint
 
 ### Key Files
 
-| Path | What | Size |
-|------|------|------|
-| `src/ui.ts` | UI entry point — public API surface | ~100 lines |
-| `src/ui/tokens/resolve.ts` | Token → CSS variable generation | ~200 lines |
-| `src/ui/manifest/renderer.tsx` | `<PageRenderer>` | ~150 lines |
-| `src/ui/manifest/schema.ts` | Manifest Zod schema | ~200 lines |
-| `src/ui/actions/executor.ts` | Action dispatch | ~250 lines |
-| `src/ui/context/hooks.ts` | `usePublish`, `useSubscribe`, `useResolveFrom` | ~120 lines |
-| `src/ui/components/data/data-table/` | Reference component (most complex) | ~400 lines |
-| `src/ui/components/forms/auto-form/` | Reference component (forms) | ~300 lines |
-| `playground/src/showcase.tsx` | All components + fixture data | ~800 lines |
-| `vitest.config.ts` | Broken environment config | ~20 lines |
+| Path                                 | What                                           | Size       |
+| ------------------------------------ | ---------------------------------------------- | ---------- |
+| `src/ui.ts`                          | UI entry point — public API surface            | ~100 lines |
+| `src/ui/tokens/resolve.ts`           | Token → CSS variable generation                | ~200 lines |
+| `src/ui/manifest/renderer.tsx`       | `<PageRenderer>`                               | ~150 lines |
+| `src/ui/manifest/schema.ts`          | Manifest Zod schema                            | ~200 lines |
+| `src/ui/actions/executor.ts`         | Action dispatch                                | ~250 lines |
+| `src/ui/context/hooks.ts`            | `usePublish`, `useSubscribe`, `useResolveFrom` | ~120 lines |
+| `src/ui/components/data/data-table/` | Reference component (most complex)             | ~400 lines |
+| `src/ui/components/forms/auto-form/` | Reference component (forms)                    | ~300 lines |
+| `playground/src/showcase.tsx`        | All components + fixture data                  | ~800 lines |
+| `vitest.config.ts`                   | Broken environment config                      | ~20 lines  |
 
 ### How Consumers Use This Today
 
 ```tsx
 // Level 1: pure manifest
 import { ManifestApp } from "@lastshotlabs/snapshot/ui";
-<ManifestApp manifest={myManifest} />
+<ManifestApp manifest={myManifest} />;
 
 // Level 2: manifest + custom
 import { PageRenderer } from "@lastshotlabs/snapshot/ui";
 <PageContextProvider pageId="users">
   <PageRenderer config={pageConfig} />
-</PageContextProvider>
+</PageContextProvider>;
 ```
 
 ---
@@ -259,8 +259,8 @@ export interface CrudPageOptions {
 export interface DashboardPageOptions {
   title: string;
   stats: StatDef[];
-  charts?: ChartDef[];           // requires Chart component (Phase 13-C)
-  recentActivity?: string;       // endpoint for activity feed
+  charts?: ChartDef[]; // requires Chart component (Phase 13-C)
+  recentActivity?: string; // endpoint for activity feed
   id?: string;
 }
 
@@ -283,7 +283,14 @@ export interface FormDef {
 
 export interface FormFieldDef {
   key: string;
-  type: "text" | "email" | "password" | "number" | "select" | "textarea" | "toggle";
+  type:
+    | "text"
+    | "email"
+    | "password"
+    | "number"
+    | "select"
+    | "textarea"
+    | "toggle";
   label: string;
   required?: boolean;
   options?: Array<{ label: string; value: string }>;
@@ -301,11 +308,11 @@ export interface StatDef {
 
 ### Presets to Ship (Phase 13-B)
 
-| Preset | File | Components used |
-|--------|------|-----------------|
-| `crudPage` | `src/ui/presets/crud-page.ts` | DataTable, AutoForm, Modal, Drawer, EmptyState |
-| `dashboardPage` | `src/ui/presets/dashboard-page.ts` | StatCard, List, EmptyState (Chart when ready) |
-| `settingsPage` | `src/ui/presets/settings-page.ts` | AutoForm, Tabs, Modal |
+| Preset          | File                               | Components used                                |
+| --------------- | ---------------------------------- | ---------------------------------------------- |
+| `crudPage`      | `src/ui/presets/crud-page.ts`      | DataTable, AutoForm, Modal, Drawer, EmptyState |
+| `dashboardPage` | `src/ui/presets/dashboard-page.ts` | StatCard, List, EmptyState (Chart when ready)  |
+| `settingsPage`  | `src/ui/presets/settings-page.ts`  | AutoForm, Tabs, Modal                          |
 
 ### Files to Create
 
@@ -321,14 +328,20 @@ src/ui/presets/
 ### Export Surface
 
 Add to `src/ui.ts`:
+
 ```typescript
 export { crudPage, dashboardPage, settingsPage } from "./ui/presets/index";
-export type { CrudPageOptions, DashboardPageOptions, SettingsPageOptions } from "./ui/presets/types";
+export type {
+  CrudPageOptions,
+  DashboardPageOptions,
+  SettingsPageOptions,
+} from "./ui/presets/types";
 ```
 
 ### Playground Integration
 
 Add a "Presets" tab to `playground/src/showcase.tsx` showing:
+
 - `crudPage` rendered with mock `/api/users` fixture data
 - `dashboardPage` with 4 stat cards and mock activity feed
 - `settingsPage` with profile + password + notification sections
@@ -369,19 +382,22 @@ needed for `dashboardPage` (Chart, Feed) and complex data-entry flows (Wizard).
 Activity/event stream. Renders a list of timestamped events from an endpoint.
 
 **Config schema (`src/ui/components/data/feed/schema.ts`):**
+
 ```typescript
 export const feedSchema = z.object({
   id: z.string().optional(),
-  data: z.union([z.string(), fromRefSchema]),  // endpoint string or from-ref
+  data: z.union([z.string(), fromRefSchema]), // endpoint string or from-ref
   itemKey: z.string().default("id"),
-  avatar: z.string().optional(),               // field path for avatar URL
-  title: z.string(),                           // field path for item title
-  description: z.string().optional(),          // field path for description
-  timestamp: z.string().optional(),            // field path for timestamp
-  badge: z.object({
-    field: z.string(),
-    colorMap: z.record(z.string()).optional(),
-  }).optional(),
+  avatar: z.string().optional(), // field path for avatar URL
+  title: z.string(), // field path for item title
+  description: z.string().optional(), // field path for description
+  timestamp: z.string().optional(), // field path for timestamp
+  badge: z
+    .object({
+      field: z.string(),
+      colorMap: z.record(z.string()).optional(),
+    })
+    .optional(),
   emptyMessage: z.string().default("No activity yet"),
   pageSize: z.number().int().default(20),
 });
@@ -398,17 +414,20 @@ tech stack (React 19, no existing chart dep), use **Recharts** (already commonly
 with shadcn/Tailwind patterns and tree-shakes well).
 
 **Config schema (`src/ui/components/data/chart/schema.ts`):**
+
 ```typescript
 export const chartSchema = z.object({
   id: z.string().optional(),
   data: z.union([z.string(), fromRefSchema]),
   type: z.enum(["bar", "line", "area", "pie", "donut"]).default("bar"),
   xKey: z.string(),
-  series: z.array(z.object({
-    key: z.string(),
-    label: z.string(),
-    color: z.string().optional(),  // CSS variable or hex
-  })),
+  series: z.array(
+    z.object({
+      key: z.string(),
+      label: z.string(),
+      color: z.string().optional(), // CSS variable or hex
+    }),
+  ),
   height: z.number().int().default(300),
   legend: z.boolean().default(true),
   grid: z.boolean().default(true),
@@ -428,15 +447,18 @@ Multi-step form flow. Manages step state internally, exposes current step data o
 by `id`.
 
 **Config schema (`src/ui/components/forms/wizard/schema.ts`):**
+
 ```typescript
 export const wizardSchema = z.object({
   id: z.string().optional(),
-  steps: z.array(z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    fields: z.array(formFieldSchema),   // reuse AutoForm field schema
-    submitLabel: z.string().optional(),
-  })),
+  steps: z.array(
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      fields: z.array(formFieldSchema), // reuse AutoForm field schema
+      submitLabel: z.string().optional(),
+    }),
+  ),
   submitEndpoint: z.string().optional(),
   submitLabel: z.string().default("Submit"),
   onComplete: actionSchema.optional(),
@@ -492,13 +514,13 @@ src/ui/components/forms/wizard/
 
 ### Hooks to Export
 
-| Hook | Extracts from | File |
-|------|--------------|------|
-| `useDataTable` | `data-table/hook.ts` (already exists) | expose from `src/ui.ts` |
-| `useAutoForm` | extract from `auto-form/hook.ts` | expose from `src/ui.ts` |
-| `useWizard` | `wizard/hook.ts` (Phase 13-C) | expose from `src/ui.ts` |
-| `useModalManager` | `actions/modal-manager.ts` (already exists) | already exported |
-| `useFeed` | extract from `feed/component.tsx` (Phase 13-C) | expose from `src/ui.ts` |
+| Hook              | Extracts from                                  | File                    |
+| ----------------- | ---------------------------------------------- | ----------------------- |
+| `useDataTable`    | `data-table/hook.ts` (already exists)          | expose from `src/ui.ts` |
+| `useAutoForm`     | extract from `auto-form/hook.ts`               | expose from `src/ui.ts` |
+| `useWizard`       | `wizard/hook.ts` (Phase 13-C)                  | expose from `src/ui.ts` |
+| `useModalManager` | `actions/modal-manager.ts` (already exists)    | already exported        |
+| `useFeed`         | extract from `feed/component.tsx` (Phase 13-C) | expose from `src/ui.ts` |
 
 ### Files to Modify
 
@@ -517,11 +539,11 @@ src/ui/components/forms/wizard/
 
 ### Track Overview
 
-| Track | Phases | File ownership |
-|-------|--------|---------------|
-| A | 13-A (test fix) | `vitest.config.ts`, all `__tests__/*.tsx` |
-| B | 13-B (presets), 13-D (hooks) | `src/ui/presets/`, `src/ui/hooks/`, `src/ui.ts` |
-| C | 13-C (Feed, Chart, Wizard) | `src/ui/components/data/feed/`, `.../chart/`, `.../forms/wizard/`, `playground/` |
+| Track | Phases                       | File ownership                                                                   |
+| ----- | ---------------------------- | -------------------------------------------------------------------------------- |
+| A     | 13-A (test fix)              | `vitest.config.ts`, all `__tests__/*.tsx`                                        |
+| B     | 13-B (presets), 13-D (hooks) | `src/ui/presets/`, `src/ui/hooks/`, `src/ui.ts`                                  |
+| C     | 13-C (Feed, Chart, Wizard)   | `src/ui/components/data/feed/`, `.../chart/`, `.../forms/wizard/`, `playground/` |
 
 **Tracks A, B, C are independent.** A only touches test infrastructure. B creates new files
 in `src/ui/presets/` and adds exports to `src/ui.ts`. C creates new component directories
@@ -556,7 +578,7 @@ For each track:
    writing any CSS. Do not invent token names.
 5. Implement phase by phase. Run `bun run typecheck` after each file. Fix errors before
    moving on.
-6. Add playground entries *before* running the final test suite — visual issues are easier
+6. Add playground entries _before_ running the final test suite — visual issues are easier
    to catch in the playground than in test output.
 7. Before closing: independently verify JSDoc on every new exported symbol.
 8. Before closing: verify every new `docs/` impact (none expected for 13-A; 13-B/C should
@@ -564,12 +586,12 @@ For each track:
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|------|-----------|
-| Chart dep (recharts) not compatible with React 19 | Check peer dep compatibility before adding; fallback to `victory` or `visx` |
+| Risk                                                | Mitigation                                                                                                |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Chart dep (recharts) not compatible with React 19   | Check peer dep compatibility before adding; fallback to `victory` or `visx`                               |
 | Preset config gets out of sync with manifest schema | Preset tests validate output against the manifest Zod schema — schema changes will catch this immediately |
-| Test fix (13-A) causes regressions | Run full suite before and after; only add `@vitest-environment` annotations, do not touch test logic |
-| Feed/Chart paginate differently from DataTable | `useComponentData` handles pagination — reuse the existing hook, don't build a new one |
+| Test fix (13-A) causes regressions                  | Run full suite before and after; only add `@vitest-environment` annotations, do not touch test logic      |
+| Feed/Chart paginate differently from DataTable      | `useComponentData` handles pagination — reuse the existing hook, don't build a new one                    |
 
 ---
 

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { LayoutConfig } from "./schema";
 
 /** Props for the Layout component. */
@@ -19,9 +19,11 @@ interface LayoutComponentProps {
 function SidebarLayout({
   nav,
   children,
+  style,
 }: {
   nav?: ReactNode;
   children: ReactNode;
+  style?: CSSProperties;
 }) {
   return (
     <div
@@ -30,21 +32,23 @@ function SidebarLayout({
       style={{
         display: "flex",
         minHeight: "100vh",
-        background: "var(--sn-color-background, var(--background))",
-        color: "var(--sn-color-foreground, var(--foreground))",
+        background: "var(--sn-color-background)",
+        color: "var(--sn-color-foreground)",
+        ...style,
       }}
     >
       {nav && (
         <aside
+          aria-label="Sidebar navigation"
           data-layout-sidebar=""
           style={{
             width: "var(--sn-sidebar-width, 16rem)",
             flexShrink: 0,
-            background:
-              "var(--sn-sidebar-background, var(--sidebar, var(--card)))",
+            background: "var(--sn-color-sidebar, var(--sn-color-card))",
             color:
-              "var(--sn-sidebar-foreground, var(--sidebar-foreground, var(--card-foreground)))",
-            borderRight: "1px solid var(--sn-color-border, var(--border))",
+              "var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground))",
+            borderRight:
+              "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
             display: "flex",
             flexDirection: "column",
             overflow: "auto",
@@ -54,6 +58,7 @@ function SidebarLayout({
         </aside>
       )}
       <main
+        aria-label="Main content"
         data-layout-content=""
         style={{
           flex: 1,
@@ -71,9 +76,9 @@ function SidebarLayout({
             top: 0;
             left: 0;
             bottom: 0;
-            z-index: 40;
+            z-index: var(--sn-z-index-overlay, 30);
             transform: translateX(-100%);
-            transition: transform 0.2s ease;
+            transition: transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
           }
           [data-layout-variant="sidebar"] [data-layout-sidebar][data-sidebar-open="true"] {
             transform: translateX(0);
@@ -90,9 +95,11 @@ function SidebarLayout({
 function TopNavLayout({
   nav,
   children,
+  style,
 }: {
   nav?: ReactNode;
   children: ReactNode;
+  style?: CSSProperties;
 }) {
   return (
     <div
@@ -102,25 +109,27 @@ function TopNavLayout({
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        background: "var(--sn-color-background, var(--background))",
-        color: "var(--sn-color-foreground, var(--foreground))",
+        background: "var(--sn-color-background)",
+        color: "var(--sn-color-foreground)",
+        ...style,
       }}
     >
       {nav && (
         <header
           data-layout-header=""
           style={{
-            background:
-              "var(--sn-sidebar-background, var(--sidebar, var(--card)))",
+            background: "var(--sn-color-sidebar, var(--sn-color-card))",
             color:
-              "var(--sn-sidebar-foreground, var(--sidebar-foreground, var(--card-foreground)))",
-            borderBottom: "1px solid var(--sn-color-border, var(--border))",
+              "var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground))",
+            borderBottom:
+              "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
           }}
         >
           {nav}
         </header>
       )}
       <main
+        aria-label="Main content"
         data-layout-content=""
         style={{
           flex: 1,
@@ -138,7 +147,13 @@ function TopNavLayout({
  * Minimal layout: centered content, no persistent nav.
  * Suitable for auth pages, onboarding flows, and similar focused views.
  */
-function MinimalLayout({ children }: { children: ReactNode }) {
+function MinimalLayout({
+  children,
+  style,
+}: {
+  children: ReactNode;
+  style?: CSSProperties;
+}) {
   return (
     <div
       data-snapshot-component="layout"
@@ -148,16 +163,18 @@ function MinimalLayout({ children }: { children: ReactNode }) {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        background: "var(--sn-color-background, var(--background))",
-        color: "var(--sn-color-foreground, var(--foreground))",
+        background: "var(--sn-color-background)",
+        color: "var(--sn-color-foreground)",
         padding: "var(--sn-spacing-md, 1rem)",
+        ...style,
       }}
     >
       <main
+        aria-label="Main content"
         data-layout-content=""
         style={{
           width: "100%",
-          maxWidth: "32rem",
+          maxWidth: "var(--sn-container-md, 32rem)",
         }}
       >
         {children}
@@ -171,18 +188,27 @@ function MinimalLayout({ children }: { children: ReactNode }) {
  * Suitable for landing pages, custom layouts, and content that needs
  * the full viewport width.
  */
-function FullWidthLayout({ children }: { children: ReactNode }) {
+function FullWidthLayout({
+  children,
+  style,
+}: {
+  children: ReactNode;
+  style?: CSSProperties;
+}) {
   return (
     <div
       data-snapshot-component="layout"
       data-layout-variant="full-width"
       style={{
         minHeight: "100vh",
-        background: "var(--sn-color-background, var(--background))",
-        color: "var(--sn-color-foreground, var(--foreground))",
+        background: "var(--sn-color-background)",
+        color: "var(--sn-color-foreground)",
+        ...style,
       }}
     >
-      <main data-layout-content="">{children}</main>
+      <main aria-label="Main content" data-layout-content="">
+        {children}
+      </main>
     </div>
   );
 }
@@ -198,14 +224,23 @@ function FullWidthLayout({ children }: { children: ReactNode }) {
  * @param props - Layout configuration, optional nav element, and children
  */
 export function Layout({ config, nav, children }: LayoutComponentProps) {
+  const rootStyle = (config.style as CSSProperties) ?? undefined;
   switch (config.variant) {
     case "sidebar":
-      return <SidebarLayout nav={nav}>{children}</SidebarLayout>;
+      return (
+        <SidebarLayout nav={nav} style={rootStyle}>
+          {children}
+        </SidebarLayout>
+      );
     case "top-nav":
-      return <TopNavLayout nav={nav}>{children}</TopNavLayout>;
+      return (
+        <TopNavLayout nav={nav} style={rootStyle}>
+          {children}
+        </TopNavLayout>
+      );
     case "minimal":
-      return <MinimalLayout>{children}</MinimalLayout>;
+      return <MinimalLayout style={rootStyle}>{children}</MinimalLayout>;
     case "full-width":
-      return <FullWidthLayout>{children}</FullWidthLayout>;
+      return <FullWidthLayout style={rootStyle}>{children}</FullWidthLayout>;
   }
 }

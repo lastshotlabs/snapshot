@@ -1,6 +1,6 @@
-export { createCommunityHooks } from './hooks'
-export type { CommunityHooks } from './hooks'
-export { communityContract } from './contract'
+export { createCommunityHooks } from "./hooks";
+export type { CommunityHooks } from "./hooks";
+export { communityContract } from "./contract";
 export type {
   ContainerResponse,
   CreateContainerBody,
@@ -25,4 +25,4 @@ export type {
   ListParams,
   ThreadListParams,
   ReplyListParams,
-} from './types'
+} from "./types";

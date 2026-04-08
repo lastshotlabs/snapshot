@@ -53,9 +53,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const publish = usePublish(config.id);
 
   // Fetch tags from API if data is provided
-  const { data: apiData } = config.data
-    ? useComponentData(config.data)
-    : { data: null };
+  const { data: apiData } = useComponentData(config.data ?? "");
 
   const [searchText, setSearchText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +82,10 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       const items = Array.isArray(apiData)
         ? apiData
         : Array.isArray((apiData as Record<string, unknown>).data)
-          ? ((apiData as Record<string, unknown>).data as Record<string, unknown>[])
+          ? ((apiData as Record<string, unknown>).data as Record<
+              string,
+              unknown
+            >[])
           : [];
       const labelField = config.labelField ?? "label";
       const valueField = config.valueField ?? "value";
@@ -101,7 +102,13 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
     }
 
     return tags;
-  }, [config.tags, apiData, config.labelField, config.valueField, config.colorField]);
+  }, [
+    config.tags,
+    apiData,
+    config.labelField,
+    config.valueField,
+    config.colorField,
+  ]);
 
   // Filter available tags by search and exclude already selected
   const filteredTags = useMemo(() => {
@@ -117,9 +124,12 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const canCreate =
     config.allowCreate &&
     searchText.trim() !== "" &&
-    !availableTags.some((t) => t.label.toLowerCase() === searchText.trim().toLowerCase());
+    !availableTags.some(
+      (t) => t.label.toLowerCase() === searchText.trim().toLowerCase(),
+    );
 
-  const atMax = config.maxTags != null && selectedValues.length >= config.maxTags;
+  const atMax =
+    config.maxTags != null && selectedValues.length >= config.maxTags;
 
   // Publish and notify on change
   const updateSelection = useCallback(
@@ -163,7 +173,10 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -188,8 +201,37 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       style={{
         position: "relative",
         fontFamily: "var(--sn-font-sans, system-ui, sans-serif)",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
+      <style>{`
+        [data-snapshot-component="tag-selector"] [data-testid="tag-remove"]:focus { outline: none; }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-remove"]:hover {
+          opacity: 1;
+          background-color: rgba(0, 0, 0, 0.15);
+          border-radius: var(--sn-radius-full, 9999px);
+        }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-remove"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+          border-radius: var(--sn-radius-full, 9999px);
+        }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-option"]:focus { outline: none; }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-option"]:hover {
+          background-color: var(--sn-color-secondary, #f1f5f9);
+        }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-option"]:focus-visible {
+          background-color: var(--sn-color-secondary, #f1f5f9);
+        }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-create-option"]:focus { outline: none; }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-create-option"]:hover {
+          background-color: var(--sn-color-secondary, #f1f5f9);
+        }
+        [data-snapshot-component="tag-selector"] [data-testid="tag-create-option"]:focus-visible {
+          background-color: var(--sn-color-secondary, #f1f5f9);
+        }
+      `}</style>
+
       {/* Label */}
       {config.label && (
         <label
@@ -217,7 +259,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
           flexWrap: "wrap",
           gap: "var(--sn-spacing-xs, 0.25rem)",
           padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-          border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+          border:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           borderRadius: "var(--sn-radius-md, 0.5rem)",
           backgroundColor: "var(--sn-color-input, #ffffff)",
           minHeight: "2.5rem",
@@ -227,7 +270,9 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       >
         {selectedTags.map((tag) => {
           const bgColor = tag.color ?? "var(--sn-color-primary, #2563eb)";
-          const textColor = tag.color ? contrastText(tag.color) : "var(--sn-color-primary-foreground, #ffffff)";
+          const textColor = tag.color
+            ? contrastText(tag.color)
+            : "var(--sn-color-primary-foreground, #ffffff)";
           return (
             <span
               key={tag.value}
@@ -236,7 +281,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "var(--sn-spacing-2xs, 0.125rem)",
-                padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+                padding:
+                  "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
                 borderRadius: "var(--sn-radius-full, 9999px)",
                 backgroundColor: bgColor,
                 color: textColor,
@@ -282,7 +328,11 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={(e) => {
-            if (e.key === "Backspace" && searchText === "" && selectedValues.length > 0) {
+            if (
+              e.key === "Backspace" &&
+              searchText === "" &&
+              selectedValues.length > 0
+            ) {
               const lastVal = selectedValues[selectedValues.length - 1];
               if (lastVal) removeTag(lastVal);
             }
@@ -317,7 +367,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
             right: 0,
             marginTop: "var(--sn-spacing-2xs, 0.125rem)",
             backgroundColor: "var(--sn-color-popover, #ffffff)",
-            border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-md, 0.5rem)",
             boxShadow: "var(--sn-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1))",
             zIndex: "var(--sn-z-index-dropdown, 100)" as string,
@@ -338,7 +389,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 alignItems: "center",
                 gap: "var(--sn-spacing-sm, 0.5rem)",
                 width: "100%",
-                padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+                padding:
+                  "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
                 border: "none",
                 background: "transparent",
                 cursor: "pointer",
@@ -351,7 +403,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                   "var(--sn-color-secondary, #f1f5f9)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                (e.currentTarget as HTMLElement).style.backgroundColor =
+                  "transparent";
               }}
             >
               {tag.color && (
@@ -379,7 +432,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 alignItems: "center",
                 gap: "var(--sn-spacing-sm, 0.5rem)",
                 width: "100%",
-                padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+                padding:
+                  "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
                 border: "none",
                 borderTop:
                   filteredTags.length > 0
@@ -396,7 +450,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                   "var(--sn-color-secondary, #f1f5f9)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                (e.currentTarget as HTMLElement).style.backgroundColor =
+                  "transparent";
               }}
             >
               Create &ldquo;{searchText.trim()}&rdquo;

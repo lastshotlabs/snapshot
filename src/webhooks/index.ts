@@ -1,6 +1,6 @@
-export { createWebhookHooks } from './hooks'
-export type { WebhookHooks } from './hooks'
-export { webhooksContract } from './contract'
+export { createWebhookHooks } from "./hooks";
+export type { WebhookHooks } from "./hooks";
+export { webhooksContract } from "./contract";
 export type {
   WebhookEndpointResponse,
   CreateWebhookEndpointBody,
@@ -9,4 +9,4 @@ export type {
   ListWebhookEndpointsParams,
   ListWebhookDeliveriesParams,
   TestWebhookBody,
-} from './types'
+} from "./types";

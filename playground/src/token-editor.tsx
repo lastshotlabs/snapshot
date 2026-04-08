@@ -25,7 +25,12 @@ const COLOR_TOKENS = [
 ] as const;
 
 const RADIUS_OPTIONS = ["none", "xs", "sm", "md", "lg", "xl", "full"] as const;
-const SPACING_OPTIONS = ["compact", "default", "comfortable", "spacious"] as const;
+const SPACING_OPTIONS = [
+  "compact",
+  "default",
+  "comfortable",
+  "spacious",
+] as const;
 
 /**
  * Convert an oklch string (raw "L C H" or "oklch(L C H)") to hex
@@ -67,7 +72,11 @@ function injectCss(css: string) {
   if (el) el.textContent = css;
 }
 
-export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean }) {
+export function TokenEditorSidebar({
+  darkMode = false,
+}: {
+  darkMode?: boolean;
+}) {
   const editor = useTokenEditor();
   const flavors = getAllFlavors();
   const [activeFlavor, setActiveFlavor] = useState("neutral");
@@ -84,7 +93,8 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
     const flavor = getFlavor(activeFlavor);
     const colors: Record<string, string> = {};
     if (flavor) {
-      const palette = darkMode && flavor.darkColors ? flavor.darkColors : flavor.colors;
+      const palette =
+        darkMode && flavor.darkColors ? flavor.darkColors : flavor.colors;
       for (const { key } of COLOR_TOKENS) {
         const raw = (palette as Record<string, string>)[key];
         if (raw) colors[key] = oklchStringToHex(raw);
@@ -121,9 +131,10 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
       }
       const css = resolveTokens({
         flavor: flavorName,
-        overrides: Object.keys(resolveOverrides).length > 0
-          ? resolveOverrides as any
-          : undefined,
+        overrides:
+          Object.keys(resolveOverrides).length > 0
+            ? (resolveOverrides as any)
+            : undefined,
       });
       injectCss(css);
     },
@@ -192,7 +203,10 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
   const handleFontFamilyChange = useCallback(
     (value: string) => {
       setOverrides((prev) => {
-        const next = { ...prev, font: { ...prev.font, sans: value || undefined } };
+        const next = {
+          ...prev,
+          font: { ...prev.font, sans: value || undefined },
+        };
         regenerateCss(activeFlavor, next);
         return next;
       });
@@ -231,7 +245,10 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
 
   /** Build a colors object from hex overrides → oklch strings, merged with base flavor */
   const buildFlavorColors = useCallback(
-    (base: Record<string, string>, hexOverrides: Record<string, string> | undefined) => {
+    (
+      base: Record<string, string>,
+      hexOverrides: Record<string, string> | undefined,
+    ) => {
       const result = { ...base };
       if (hexOverrides) {
         for (const [key, val] of Object.entries(hexOverrides)) {
@@ -259,7 +276,10 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
       overrides.colors,
     );
     const darkColors = baseFlavor.darkColors
-      ? buildFlavorColors(baseFlavor.darkColors as Record<string, string>, overrides.colors)
+      ? buildFlavorColors(
+          baseFlavor.darkColors as Record<string, string>,
+          overrides.colors,
+        )
       : undefined;
 
     defineFlavor(name, {
@@ -279,7 +299,12 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
 
   const handleExport = useCallback(() => {
     const config: Record<string, unknown> = { flavor: activeFlavor };
-    if (overrides.colors || overrides.radius || overrides.spacing || overrides.font) {
+    if (
+      overrides.colors ||
+      overrides.radius ||
+      overrides.spacing ||
+      overrides.font
+    ) {
       const ov: Record<string, unknown> = {};
       if (overrides.colors) {
         const colorOv: Record<string, string> = {};
@@ -363,7 +388,10 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
       <Section title="Radius" defaultOpen={false}>
         <div className="control">
           <label>Border Radius</label>
-          <select value={overrides.radius || "md"} onChange={handleRadiusChange}>
+          <select
+            value={overrides.radius || "md"}
+            onChange={handleRadiusChange}
+          >
             {RADIUS_OPTIONS.map((r) => (
               <option key={r} value={r}>
                 {r}
@@ -376,7 +404,10 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
       <Section title="Spacing" defaultOpen={false}>
         <div className="control">
           <label>Spacing Scale</label>
-          <select value={overrides.spacing || "default"} onChange={handleSpacingChange}>
+          <select
+            value={overrides.spacing || "default"}
+            onChange={handleSpacingChange}
+          >
             {SPACING_OPTIONS.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -450,7 +481,11 @@ export function TokenEditorSidebar({ darkMode = false }: { darkMode?: boolean })
                   resize: "vertical",
                 }}
               />
-              <button className="btn-small" onClick={handleCopyExport} style={{ marginTop: 4 }}>
+              <button
+                className="btn-small"
+                onClick={handleCopyExport}
+                style={{ marginTop: 4 }}
+              >
                 {copyFeedback || "Copy to Clipboard"}
               </button>
             </>

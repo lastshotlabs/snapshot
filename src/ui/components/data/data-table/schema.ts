@@ -1,12 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/**
- * A reference to another component's published value.
- */
-const fromRefSchema = z.object({
-  from: z.string(),
-});
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for base component config fields shared across all config-driven components.
@@ -62,7 +56,17 @@ export const columnConfigSchema = z
     sortable: z.boolean().optional(),
     /** Display format. */
     format: z
-      .enum(["date", "number", "currency", "badge", "boolean", "avatar", "progress", "link", "code"])
+      .enum([
+        "date",
+        "number",
+        "currency",
+        "badge",
+        "boolean",
+        "avatar",
+        "progress",
+        "link",
+        "code",
+      ])
       .optional(),
     /** Color mapping for badge format. Maps field values to semantic colors. */
     badgeColors: badgeColorsSchema.optional(),

@@ -58,7 +58,7 @@ export function AdminLayout() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateCapabilityContextComponent(): string {
@@ -79,7 +79,7 @@ export function CapabilityGate({ capability, children, fallback = null }: Capabi
   if (!value) return <>{fallback}</>
   return <>{children}</>
 }
-`
+`;
 }
 
 export function generateUsersPageComponent(): string {
@@ -236,7 +236,7 @@ export function UsersPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateUserDetailPageComponent(): string {
@@ -456,7 +456,7 @@ export function UserDetailPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateUserSessionsPageComponent(): string {
@@ -558,7 +558,7 @@ export function UserSessionsPage() {
     </CapabilityGate>
   )
 }
-`
+`;
 }
 
 export function generateUserAuditLogPageComponent(): string {
@@ -697,7 +697,7 @@ export function UserAuditLogPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateAuditLogPageComponent(): string {
@@ -846,7 +846,7 @@ export function AuditLogPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateGroupsPageComponent(): string {
@@ -910,7 +910,7 @@ export function GroupsPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateOrgsPageComponent(): string {
@@ -973,7 +973,7 @@ export function OrgsPage() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateCapabilitiesPageComponent(): string {
@@ -1042,5 +1042,5 @@ export function CapabilitiesPage() {
     </div>
   )
 }
-`
+`;
 }

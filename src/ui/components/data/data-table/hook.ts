@@ -1,7 +1,8 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useContext } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { usePublish } from "../../../context/hooks";
 import { isFromRef, parseDataString } from "../../../context/utils";
+import { SnapshotApiContext } from "../../../actions/executor";
 import type {
   DataTableConfig,
   ResolvedColumn,
@@ -193,14 +194,27 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   const [search, setSearch] = useState("");
   const [refreshCounter, setRefreshCounter] = useState(0);
 
+  // API client for endpoint fetching
+  const api = useContext(SnapshotApiContext);
+
   // Determine if data is from a FromRef (already resolved) or needs fetching
   const isDataFromRef = isFromRef(config.data);
 
-  // Handle data from FromRef — the resolved value IS the data
+  // Handle inline data (arrays passed directly or from FromRef)
   useEffect(() => {
-    if (isDataFromRef) {
+    if (isDataFromRef || Array.isArray(resolvedData)) {
       if (Array.isArray(resolvedData)) {
         setAllRows(resolvedData as Record<string, unknown>[]);
+        setIsLoading(false);
+        setError(null);
+      } else if (resolvedData != null && typeof resolvedData === "object") {
+        // Object with a data array (e.g., { data: [...], total: 100 })
+        const obj = resolvedData as Record<string, unknown>;
+        if (Array.isArray(obj["data"])) {
+          setAllRows(obj["data"] as Record<string, unknown>[]);
+        } else {
+          setAllRows([]);
+        }
         setIsLoading(false);
         setError(null);
       } else if (resolvedData == null) {
@@ -210,17 +224,86 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
     }
   }, [isDataFromRef, resolvedData]);
 
-  // Handle data from endpoint string — this is a simplified mock approach.
-  // In a real implementation, this would use the API client via useComponentData.
-  // For now, the data must be provided via FromRef or test injection.
+  // Handle data from endpoint string — fetch via API client
   useEffect(() => {
-    if (!isDataFromRef && typeof resolvedData === "string") {
-      // Data endpoint string — would fetch via API client in full implementation.
-      // For the headless hook, we just mark as loaded with empty data.
-      // The component.tsx implementation will handle actual fetching.
-      setIsLoading(false);
+    if (isDataFromRef || typeof resolvedData !== "string") return;
+    if (!api) {
+      // No API client available yet — stay in loading state
+      return;
     }
-  }, [isDataFromRef, resolvedData, refreshCounter]);
+
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+
+    const fetchData = async () => {
+      try {
+        const [method, endpoint] = parseDataString(resolvedData);
+
+        // Build query string from resolved params
+        const queryParams = new URLSearchParams();
+        for (const [key, value] of Object.entries(resolvedParams)) {
+          if (value !== undefined && value !== null) {
+            queryParams.set(key, String(value));
+          }
+        }
+        const qs = queryParams.toString();
+        const url = qs ? `${endpoint}?${qs}` : endpoint;
+
+        let result: unknown;
+        switch (method.toUpperCase()) {
+          case "POST":
+            result = await api.post(url, undefined);
+            break;
+          case "PUT":
+            result = await api.put(url, undefined);
+            break;
+          default:
+            result = await api.get(url);
+        }
+
+        if (cancelled) return;
+
+        // Handle response: array directly, or object with data array
+        if (Array.isArray(result)) {
+          setAllRows(result as Record<string, unknown>[]);
+        } else if (result != null && typeof result === "object") {
+          const obj = result as Record<string, unknown>;
+          if (Array.isArray(obj["data"])) {
+            setAllRows(obj["data"] as Record<string, unknown>[]);
+          } else {
+            setAllRows([obj] as Record<string, unknown>[]);
+          }
+        } else {
+          setAllRows([]);
+        }
+        setError(null);
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err : new Error("Failed to fetch data"),
+          );
+          setAllRows([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void fetchData();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isDataFromRef,
+    resolvedData,
+    api,
+    refreshCounter,
+    JSON.stringify(resolvedParams),
+  ]);
 
   // Resolve columns
   const columns = useMemo(

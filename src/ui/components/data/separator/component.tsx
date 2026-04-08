@@ -52,6 +52,7 @@ export function Separator({ config }: { config: SeparatorConfig }) {
           minHeight: "var(--sn-spacing-lg, 1.5rem)",
           backgroundColor: "var(--sn-color-border, #e5e7eb)",
           flexShrink: 0,
+          ...(config.style as React.CSSProperties),
         }}
       />
     );
@@ -70,6 +71,7 @@ export function Separator({ config }: { config: SeparatorConfig }) {
           alignItems: "center",
           gap: "var(--sn-spacing-sm, 0.5rem)",
           width: "100%",
+          ...(config.style as React.CSSProperties),
         }}
       >
         <div
@@ -114,6 +116,7 @@ export function Separator({ config }: { config: SeparatorConfig }) {
         width: "100%",
         height: "var(--sn-border-thin, 1px)",
         backgroundColor: "var(--sn-color-border, #e5e7eb)",
+        ...(config.style as React.CSSProperties),
       }}
     />
   );

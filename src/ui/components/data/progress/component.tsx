@@ -32,11 +32,7 @@ const CIRCULAR_SIZE_MAP = { sm: 32, md: 48, lg: 64 } as const;
 export function Progress({ config }: { config: ProgressConfig }) {
   const uniqueId = useId();
   const publish = usePublish(config.id);
-
-  // Check visibility
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
-
   const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const resolvedValue = useSubscribe(config.value) as number | undefined;
 
@@ -60,6 +56,8 @@ export function Progress({ config }: { config: ProgressConfig }) {
     }
   }, [publish, resolvedValue, percentage]);
 
+  if (visible === false) return null;
+
   const fillColor = `var(--sn-color-${color}, currentColor)`;
   const trackColor = "var(--sn-color-secondary, #e5e7eb)";
 
@@ -82,6 +80,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
           flexDirection: "column",
           alignItems: "center",
           gap: "var(--sn-spacing-xs, 0.25rem)",
+          ...(config.style as React.CSSProperties),
         }}
       >
         {isIndeterminate && (
@@ -168,6 +167,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
         display: "flex",
         flexDirection: "column",
         gap: "var(--sn-spacing-xs, 0.25rem)",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {isIndeterminate && (
@@ -247,9 +247,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
                     flex: 1,
                     height: "100%",
                     backgroundColor:
-                      isFilled || isPartial
-                        ? fillColor
-                        : "transparent",
+                      isFilled || isPartial ? fillColor : "transparent",
                     opacity: isPartial ? 0.5 : 1,
                     borderRadius: "var(--sn-radius-full, 9999px)",
                     transition:

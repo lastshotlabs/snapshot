@@ -3,6 +3,7 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { useComponentData } from "../../_base/use-component-data";
 import { ComponentRenderer } from "../../../manifest/renderer";
+import { Icon } from "../../../icons/icon";
 import type { ComponentConfig } from "../../../manifest/types";
 import type { TimelineConfig, TimelineItem } from "./types";
 
@@ -79,7 +80,6 @@ export function Timeline({ config }: { config: TimelineConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
 
   // Publish items when data changes
   useEffect(() => {
@@ -98,6 +98,8 @@ export function Timeline({ config }: { config: TimelineConfig }) {
         void execute(config.action!, { ...item, index })
     : undefined;
 
+  if (visible === false) return null;
+
   // Loading state
   if (isLoading) {
     return (
@@ -106,7 +108,10 @@ export function Timeline({ config }: { config: TimelineConfig }) {
         data-testid="timeline"
         className={config.className}
       >
-        <div data-testid="timeline-loading" style={{ padding: "var(--sn-spacing-md, 1rem)" }}>
+        <div
+          data-testid="timeline-loading"
+          style={{ padding: "var(--sn-spacing-md, 1rem)" }}
+        >
           {[0, 1, 2].map((i) => (
             <div
               key={i}
@@ -214,7 +219,10 @@ export function Timeline({ config }: { config: TimelineConfig }) {
       data-snapshot-component="timeline"
       data-testid="timeline"
       className={config.className}
-      style={{ position: "relative" }}
+      style={{
+        position: "relative",
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
       {items.map((item, index) => {
         const dotColor = item.color
@@ -228,9 +236,7 @@ export function Timeline({ config }: { config: TimelineConfig }) {
             key={index}
             data-testid="timeline-item"
             onClick={
-              handleItemClick
-                ? () => handleItemClick(item, index)
-                : undefined
+              handleItemClick ? () => handleItemClick(item, index) : undefined
             }
             onKeyDown={
               handleItemClick
@@ -316,10 +322,12 @@ export function Timeline({ config }: { config: TimelineConfig }) {
                       style={{
                         fontSize: "var(--sn-font-size-sm, 0.875rem)",
                         color: dotColor,
+                        display: "inline-flex",
+                        alignItems: "center",
                       }}
                       aria-hidden="true"
                     >
-                      {item.icon}
+                      <Icon name={item.icon} size={14} />
                     </span>
                   )}
                   <span

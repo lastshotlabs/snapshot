@@ -6,11 +6,7 @@ import {
 } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { useAutoForm } from "./hook";
-import type {
-  AutoFormConfig,
-  FieldConfig,
-  FieldSectionConfig,
-} from "./types";
+import type { AutoFormConfig, FieldConfig, FieldSectionConfig } from "./types";
 import type { ApiClient } from "../../../../api/client";
 
 // ── Gap map ───────────────────────────────────────────────────────────────
@@ -106,7 +102,11 @@ function FieldRenderer({
     onBlur,
     disabled: field.disabled,
     "aria-invalid": hasError,
-    "aria-describedby": hasError ? `${fieldId}-error` : field.helperText ? `${fieldId}-helper` : undefined,
+    "aria-describedby": hasError
+      ? `${fieldId}-error`
+      : field.helperText
+        ? `${fieldId}-helper`
+        : undefined,
   };
 
   let input: React.ReactNode;
@@ -325,9 +325,7 @@ function SectionRenderer({
   columns: number;
   gap: string;
 }) {
-  const [collapsed, setCollapsed] = useState(
-    section.defaultCollapsed ?? false,
-  );
+  const [collapsed, setCollapsed] = useState(section.defaultCollapsed ?? false);
 
   return (
     <fieldset
@@ -349,9 +347,7 @@ function SectionRenderer({
           cursor: section.collapsible ? "pointer" : undefined,
         }}
         onClick={
-          section.collapsible
-            ? () => setCollapsed(!collapsed)
-            : undefined
+          section.collapsible ? () => setCollapsed(!collapsed) : undefined
         }
       >
         {section.collapsible && (
@@ -516,7 +512,14 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
         }
       }
     },
-    [api, config.submit, config.onSuccess, config.onError, method, executeAction],
+    [
+      api,
+      config.submit,
+      config.onSuccess,
+      config.onError,
+      method,
+      executeAction,
+    ],
   );
 
   const form = useAutoForm(allFields, onSubmit);
@@ -531,15 +534,21 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
         errors: form.errors,
       });
     }
-  }, [config.id, publish, form.values, form.isDirty, form.isValid, form.errors]);
+  }, [
+    config.id,
+    publish,
+    form.values,
+    form.isDirty,
+    form.isValid,
+    form.errors,
+  ]);
 
   // Reset on successful submit if configured
   const handleSubmit = useCallback(async () => {
     const valuesBefore = { ...form.values };
     await form.handleSubmit();
     if (config.resetOnSubmit && !form.isSubmitting) {
-      const submitted =
-        Object.keys(valuesBefore).length > 0 && form.isValid;
+      const submitted = Object.keys(valuesBefore).length > 0 && form.isValid;
       if (submitted) {
         form.reset();
       }
@@ -566,24 +575,20 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       }}
     >
       {/* Sections mode */}
-      {config.sections
-        ? config.sections.map((section) => (
-            <SectionRenderer
-              key={section.title}
-              section={section}
-              form={form}
-              columns={columns}
-              gap={gap}
-            />
-          ))
-        : /* Flat fields mode */
-          <FieldGrid
-            fields={allFields}
+      {config.sections ? (
+        config.sections.map((section) => (
+          <SectionRenderer
+            key={section.title}
+            section={section}
             form={form}
             columns={columns}
             gap={gap}
           />
-      }
+        ))
+      ) : (
+        /* Flat fields mode */
+        <FieldGrid fields={allFields} form={form} columns={columns} gap={gap} />
+      )}
 
       {/* Submit button */}
       <div>

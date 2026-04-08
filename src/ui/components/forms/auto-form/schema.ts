@@ -1,12 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/**
- * Schema for a FromRef value — a reference to another component's published value.
- */
-const fromRefSchema = z.object({
-  from: z.string(),
-});
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for select/radio option entries.

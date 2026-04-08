@@ -1,32 +1,36 @@
-import { redirect } from '@tanstack/react-router'
-import type { QueryClient } from '@tanstack/react-query'
-import type { ApiClient } from '../api/client'
-import { warnOnce } from '../auth/warnings'
-import type { AuthUser, SnapshotConfig } from '../types'
-import type { AuthContract } from '../auth/contract'
+import { redirect } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import type { ApiClient } from "../api/client";
+import { warnOnce } from "../auth/warnings";
+import type { AuthUser, SnapshotConfig } from "../types";
+import type { AuthContract } from "../auth/contract";
 
 interface RouterContext {
-  context: { queryClient: QueryClient }
+  context: { queryClient: QueryClient };
 }
 
-const AUTH_QUERY_KEY = ['auth', 'me'] as const
+const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
 type LoaderConfig = Pick<
   SnapshotConfig,
-  'loginPath' | 'homePath' | 'forbiddenPath' | 'onUnauthenticated' | 'staleTime'
->
+  "loginPath" | "homePath" | "forbiddenPath" | "onUnauthenticated" | "staleTime"
+>;
 
-export function createLoaders(config: LoaderConfig, api: ApiClient, contract: AuthContract) {
-  const staleTime = config.staleTime ?? 5 * 60 * 1000
+export function createLoaders(
+  config: LoaderConfig,
+  api: ApiClient,
+  contract: AuthContract,
+) {
+  const staleTime = config.staleTime ?? 5 * 60 * 1000;
 
   async function fetchUser(queryClient: QueryClient): Promise<AuthUser | null> {
     // Fast path: return cached data synchronously if it's still fresh.
     // This avoids an async tick that would trigger the router's "pending" state
     // on every navigation, and prevents redundant /auth/me requests.
-    const cached = queryClient.getQueryState<AuthUser | null>(AUTH_QUERY_KEY)
+    const cached = queryClient.getQueryState<AuthUser | null>(AUTH_QUERY_KEY);
     if (cached?.data !== undefined && cached.dataUpdatedAt > 0) {
-      const age = Date.now() - cached.dataUpdatedAt
-      if (age < staleTime) return cached.data
+      const age = Date.now() - cached.dataUpdatedAt;
+      if (age < staleTime) return cached.data;
     }
 
     try {
@@ -34,51 +38,53 @@ export function createLoaders(config: LoaderConfig, api: ApiClient, contract: Au
         queryKey: AUTH_QUERY_KEY,
         queryFn: async () => {
           try {
-            return await api.get<AuthUser>(contract.endpoints.me)
+            return await api.get<AuthUser>(contract.endpoints.me);
           } catch {
-            return null
+            return null;
           }
         },
         staleTime,
-      })
+      });
     } catch {
-      return null
+      return null;
     }
   }
 
-  async function protectedBeforeLoad({ context }: RouterContext): Promise<void> {
-    const user = await fetchUser(context.queryClient)
+  async function protectedBeforeLoad({
+    context,
+  }: RouterContext): Promise<void> {
+    const user = await fetchUser(context.queryClient);
 
     if (!user) {
-      config.onUnauthenticated?.()
+      config.onUnauthenticated?.();
 
       if (!config.loginPath) {
         warnOnce(
-          'protectedBeforeLoad:no-loginPath',
-          '[snapshot] protectedBeforeLoad: no loginPath configured. Set loginPath in createSnapshot config.',
-        )
-        return
+          "protectedBeforeLoad:no-loginPath",
+          "[snapshot] protectedBeforeLoad: no loginPath configured. Set loginPath in createSnapshot config.",
+        );
+        return;
       }
 
-      throw redirect({ to: config.loginPath })
+      throw redirect({ to: config.loginPath });
     }
   }
 
   async function guestBeforeLoad({ context }: RouterContext): Promise<void> {
-    const user = await fetchUser(context.queryClient)
+    const user = await fetchUser(context.queryClient);
 
     if (user) {
       if (!config.homePath) {
         warnOnce(
-          'guestBeforeLoad:no-homePath',
-          '[snapshot] guestBeforeLoad: no homePath configured. Set homePath in createSnapshot config.',
-        )
-        return
+          "guestBeforeLoad:no-homePath",
+          "[snapshot] guestBeforeLoad: no homePath configured. Set homePath in createSnapshot config.",
+        );
+        return;
       }
 
-      throw redirect({ to: config.homePath })
+      throw redirect({ to: config.homePath });
     }
   }
 
-  return { protectedBeforeLoad, guestBeforeLoad }
+  return { protectedBeforeLoad, guestBeforeLoad };
 }

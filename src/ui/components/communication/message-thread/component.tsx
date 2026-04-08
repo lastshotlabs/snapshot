@@ -5,76 +5,17 @@ import { useActionExecutor } from "../../../actions/executor";
 import { sanitizeMessageHtml } from "./message-renderer";
 import { LinkEmbed } from "../../content/link-embed/component";
 import type { LinkEmbedConfig } from "../../content/link-embed/types";
+import {
+  formatRelativeTime,
+  formatDateSeparator,
+  getNestedField,
+  getInitials,
+} from "../../_base/utils";
 import type { MessageThreadConfig } from "./types";
-
-// ── Helpers ───────────────────────────────────────────────────────────────
-
-function formatRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHour = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHour / 24);
-
-  if (diffSec < 60) return "just now";
-  if (diffMin < 60) return `${diffMin} min ago`;
-  if (diffHour < 24) return `${diffHour} hour${diffHour === 1 ? "" : "s"} ago`;
-  if (diffDay === 1) return "Yesterday";
-  if (diffDay < 7) return `${diffDay} days ago`;
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function formatDateSeparator(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const diffDays = Math.floor(
-    (today.getTime() - msgDate.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  return date.toLocaleDateString(undefined, {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-function getNestedField(obj: Record<string, unknown>, path: string): unknown {
-  const parts = path.split(".");
-  let current: unknown = obj;
-  for (const part of parts) {
-    if (current == null || typeof current !== "object") return undefined;
-    current = (current as Record<string, unknown>)[part];
-  }
-  return current;
-}
-
-/** Returns initials from a name string. */
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 // ── Avatar subcomponent ───────────────────────────────────────────────────
 
-function MessageAvatar({
-  src,
-  name,
-}: {
-  src?: string | null;
-  name: string;
-}) {
+function MessageAvatar({ src, name }: { src?: string | null; name: string }) {
   const initials = getInitials(name);
 
   if (src) {
@@ -119,11 +60,43 @@ function MessageAvatar({
 
 function MessageSkeleton() {
   return (
-    <div style={{ display: "flex", gap: "var(--sn-spacing-sm, 0.5rem)", padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)" }}>
-      <div style={{ width: 32, height: 32, borderRadius: "var(--sn-radius-full, 9999px)", backgroundColor: "var(--sn-color-muted, #e5e7eb)", opacity: 0.5, flexShrink: 0 }} />
+    <div
+      style={{
+        display: "flex",
+        gap: "var(--sn-spacing-sm, 0.5rem)",
+        padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+      }}
+    >
+      <div
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: "var(--sn-radius-full, 9999px)",
+          backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+          opacity: 0.5,
+          flexShrink: 0,
+        }}
+      />
       <div style={{ flex: 1 }}>
-        <div style={{ height: "0.875rem", width: "30%", borderRadius: "var(--sn-radius-xs, 2px)", backgroundColor: "var(--sn-color-muted, #e5e7eb)", opacity: 0.5, marginBottom: "var(--sn-spacing-xs, 0.25rem)" }} />
-        <div style={{ height: "0.75rem", width: "70%", borderRadius: "var(--sn-radius-xs, 2px)", backgroundColor: "var(--sn-color-muted, #e5e7eb)", opacity: 0.3 }} />
+        <div
+          style={{
+            height: "0.875rem",
+            width: "30%",
+            borderRadius: "var(--sn-radius-xs, 2px)",
+            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+            opacity: 0.5,
+            marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+          }}
+        />
+        <div
+          style={{
+            height: "0.75rem",
+            width: "70%",
+            borderRadius: "var(--sn-radius-xs, 2px)",
+            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+            opacity: 0.3,
+          }}
+        />
       </div>
     </div>
   );
@@ -138,11 +111,7 @@ function MessageSkeleton() {
  *
  * @param props - Component props containing the message thread configuration
  */
-export function MessageThread({
-  config,
-}: {
-  config: MessageThreadConfig;
-}) {
+export function MessageThread({ config }: { config: MessageThreadConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
@@ -249,6 +218,7 @@ export function MessageThread({
         flex: 1,
         minHeight: 0,
         overflow: "hidden",
+        ...(config.style as React.CSSProperties),
       }}
     >
       <style>{`
@@ -258,6 +228,9 @@ export function MessageThread({
       `}</style>
       <div
         ref={scrollRef}
+        role="log"
+        aria-live="polite"
+        aria-label="Messages"
         style={{
           flex: 1,
           overflowY: "auto",
@@ -351,17 +324,16 @@ export function MessageThread({
               {group.messages.map((msg, mi) => {
                 const id = msg["id"];
                 const key =
-                  typeof id === "string" || typeof id === "number" ? id : `${gi}-${mi}`;
-                const content = String(
-                  getNestedField(msg, contentField) ?? "",
-                );
+                  typeof id === "string" || typeof id === "number"
+                    ? id
+                    : `${gi}-${mi}`;
+                const content = String(getNestedField(msg, contentField) ?? "");
                 const authorName = String(
                   getNestedField(msg, authorNameField) ?? "Unknown",
                 );
-                const authorAvatar = getNestedField(
-                  msg,
-                  authorAvatarField,
-                ) as string | null;
+                const authorAvatar = getNestedField(msg, authorAvatarField) as
+                  | string
+                  | null;
                 const rawTs = getNestedField(msg, timestampField);
                 const timestamp = rawTs ? new Date(String(rawTs)) : null;
 
@@ -396,7 +368,8 @@ export function MessageThread({
                         ? "2px var(--sn-spacing-md, 1rem) 2px calc(32px + var(--sn-spacing-sm, 0.5rem) + var(--sn-spacing-md, 1rem))"
                         : "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
                       cursor: config.messageAction ? "pointer" : "default",
-                      transition: "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                      transition:
+                        "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                     }}
                   >
                     {/* Avatar (hidden when grouped) */}
@@ -420,8 +393,7 @@ export function MessageThread({
                               fontSize: "var(--sn-font-size-sm, 0.875rem)",
                               fontWeight:
                                 "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-                              color:
-                                "var(--sn-color-foreground, #111827)",
+                              color: "var(--sn-color-foreground, #111827)",
                             }}
                           >
                             {authorName}
@@ -429,8 +401,7 @@ export function MessageThread({
                           {showTimestamps && timestamp && (
                             <span
                               style={{
-                                fontSize:
-                                  "var(--sn-font-size-xs, 0.75rem)",
+                                fontSize: "var(--sn-font-size-xs, 0.75rem)",
                                 color:
                                   "var(--sn-color-muted-foreground, #6b7280)",
                               }}

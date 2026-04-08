@@ -1,9 +1,9 @@
-import type { ScaffoldConfig } from '../types'
+import type { ScaffoldConfig } from "../types";
 
-const DARK_INIT_SCRIPT = `\n    <script>if(!localStorage.getItem('snapshot-theme')){localStorage.setItem('snapshot-theme','dark');document.documentElement.classList.add('dark')}else if(localStorage.getItem('snapshot-theme')==='dark'){document.documentElement.classList.add('dark')}</script>`
+const DARK_INIT_SCRIPT = `\n    <script>if(!localStorage.getItem('snapshot-theme')){localStorage.setItem('snapshot-theme','dark');document.documentElement.classList.add('dark')}else if(localStorage.getItem('snapshot-theme')==='dark'){document.documentElement.classList.add('dark')}</script>`;
 
 export function generateIndexHtml(config: ScaffoldConfig): string {
-  const darkScript = config.theme === 'dark' ? DARK_INIT_SCRIPT : ''
+  const darkScript = config.theme === "dark" ? DARK_INIT_SCRIPT : "";
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -17,5 +17,5 @@ export function generateIndexHtml(config: ScaffoldConfig): string {
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-`
+`;
 }

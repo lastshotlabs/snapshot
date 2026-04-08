@@ -1,6 +1,9 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
-import { useActionExecutor } from "../../../actions/executor";
+import {
+  useActionExecutor,
+  SnapshotApiContext,
+} from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import type { LocationInputConfig } from "./types";
 
@@ -28,6 +31,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
   const initialValue = useSubscribe(config.value ?? "") as string;
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
+  const api = useContext(SnapshotApiContext);
 
   const [query, setQuery] = useState(initialValue || "");
   const [results, setResults] = useState<LocationResult[]>([]);
@@ -63,15 +67,17 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
 
       setLoading(true);
       try {
+        if (!api) throw new Error("API client not available");
         const separator = config.searchEndpoint.includes("?") ? "&" : "?";
         const url = `${config.searchEndpoint}${separator}q=${encodeURIComponent(q)}`;
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error("Search failed");
-        const data = await resp.json();
+        const data = (await api.get(url)) as Record<string, unknown>;
 
         const items = Array.isArray(data)
           ? data
-          : data.results ?? data.data ?? data.items ?? [];
+          : ((data.results ?? data.data ?? data.items ?? []) as Record<
+              string,
+              unknown
+            >[]);
 
         const mapped: LocationResult[] = items.map(
           (item: Record<string, unknown>) => ({
@@ -93,7 +99,15 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
         setLoading(false);
       }
     },
-    [config.searchEndpoint, nameField, addressField, latField, lngField, minChars],
+    [
+      api,
+      config.searchEndpoint,
+      nameField,
+      addressField,
+      latField,
+      lngField,
+      minChars,
+    ],
   );
 
   const handleInputChange = useCallback(
@@ -183,7 +197,14 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
         >
           {config.label}
           {config.required && (
-            <span style={{ color: "var(--sn-color-destructive, #ef4444)", marginLeft: "2px" }}>*</span>
+            <span
+              style={{
+                color: "var(--sn-color-destructive, #ef4444)",
+                marginLeft: "2px",
+              }}
+            >
+              *
+            </span>
           )}
         </label>
       )}
@@ -199,7 +220,8 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
             ? "var(--sn-color-secondary, #f3f4f6)"
             : "var(--sn-color-card, #ffffff)",
           overflow: "hidden",
-          transition: "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+          transition:
+            "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
         }}
       >
         <span
@@ -226,7 +248,8 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
             flex: 1,
             border: "none",
             outline: "none",
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-sm, 0.5rem) 0",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-sm, 0.5rem) 0",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             color: "var(--sn-color-foreground, #111827)",
             backgroundColor: "transparent",
@@ -274,7 +297,8 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
                 alignItems: "flex-start",
                 gap: "var(--sn-spacing-sm, 0.5rem)",
                 width: "100%",
-                padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+                padding:
+                  "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
                 border: "none",
                 borderBottom:
                   i < results.length - 1

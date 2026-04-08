@@ -31,7 +31,10 @@ function splitByQuery(
   while ((match = regex.exec(text)) !== null) {
     // Add preceding non-matching text
     if (match.index > lastIndex) {
-      segments.push({ text: text.slice(lastIndex, match.index), isMatch: false });
+      segments.push({
+        text: text.slice(lastIndex, match.index),
+        isMatch: false,
+      });
     }
     // Add matching text
     segments.push({ text: match[0], isMatch: true });
@@ -82,7 +85,8 @@ export function HighlightedText({ config }: { config: HighlightedTextConfig }) {
   }, [publish, resolvedText]);
 
   const text = typeof resolvedText === "string" ? resolvedText : "";
-  const highlight = typeof resolvedHighlight === "string" ? resolvedHighlight : "";
+  const highlight =
+    typeof resolvedHighlight === "string" ? resolvedHighlight : "";
   const caseSensitive = config.caseSensitive ?? false;
   const highlightColor =
     config.highlightColor ?? "var(--sn-color-warning, #f59e0b)";

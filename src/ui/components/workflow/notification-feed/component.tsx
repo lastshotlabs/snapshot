@@ -1,34 +1,9 @@
 import React, { useMemo, useCallback } from "react";
 import { useComponentData } from "../../_base/use-component-data";
 import { useActionExecutor } from "../../../actions/executor";
+import { useSubscribe } from "../../../context/hooks";
+import { formatRelativeTime } from "../../_base/utils";
 import type { NotificationFeedConfig } from "./types";
-
-// ── Relative time formatting ───────────────────────────────────────────────
-
-/**
- * Formats a date as a human-readable relative time string.
- *
- * @param date - The date to format
- * @returns A relative time string
- */
-function formatRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHour = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHour / 24);
-
-  if (diffSec < 60) return "just now";
-  if (diffMin < 60) return `${diffMin} min ago`;
-  if (diffHour < 24) return `${diffHour} hour${diffHour === 1 ? "" : "s"} ago`;
-  if (diffDay === 1) {
-    return `Yesterday at ${date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
-  }
-  if (diffDay < 7) return `${diffDay} days ago`;
-
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
 
 // ── Type icons (SVG) ───────────────────────────────────────────────────────
 
@@ -188,11 +163,9 @@ export function NotificationFeed({
 }: {
   config: NotificationFeedConfig;
 }) {
-  const { data, isLoading, error } = useComponentData(
-    config.data,
-    undefined,
-  );
+  const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
+  const visible = useSubscribe(config.visible ?? true);
 
   const titleField = config.titleField ?? "title";
   const messageField = config.messageField ?? "message";
@@ -243,8 +216,16 @@ export function NotificationFeed({
     }
   }, [config.markReadAction, items, readField, execute]);
 
+  if (visible === false) return null;
+
   return (
-    <div data-snapshot-component="notification-feed" className={config.className}>
+    <div
+      data-snapshot-component="notification-feed"
+      className={config.className}
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
+    >
       <style>{`[data-notification-item]:hover { background-color: var(--sn-color-accent, #f0f9ff) !important; }`}</style>
       {/* Header */}
       <div
@@ -257,11 +238,18 @@ export function NotificationFeed({
           borderBottom: "1px solid var(--sn-color-border, #e2e8f0)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--sn-spacing-sm, 8px)" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-sm, 8px)",
+          }}
+        >
           <span
             style={{
               fontSize: "var(--sn-font-size-md, 1rem)",
-              fontWeight: "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+              fontWeight:
+                "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
               color: "var(--sn-color-foreground, #0f172a)",
             }}
           >
@@ -373,13 +361,31 @@ export function NotificationFeed({
                 key={itemKey}
                 data-notification-item
                 data-read={isRead ? "" : undefined}
+                role={
+                  config.itemAction || config.markReadAction
+                    ? "button"
+                    : undefined
+                }
+                tabIndex={
+                  config.itemAction || config.markReadAction ? 0 : undefined
+                }
                 onClick={() => handleItemClick(item)}
+                onKeyDown={
+                  config.itemAction || config.markReadAction
+                    ? (e: React.KeyboardEvent) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleItemClick(item);
+                        }
+                      }
+                    : undefined
+                }
                 style={{
                   display: "flex",
                   gap: "var(--sn-spacing-sm, 8px)",
-                  padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-                  borderBottom:
-                    "1px solid var(--sn-color-border, #e2e8f0)",
+                  padding:
+                    "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
+                  borderBottom: "1px solid var(--sn-color-border, #e2e8f0)",
                   borderLeft: isRead
                     ? "3px solid transparent"
                     : "3px solid var(--sn-color-primary, #2563eb)",
@@ -390,7 +396,8 @@ export function NotificationFeed({
                     config.itemAction || config.markReadAction
                       ? "pointer"
                       : "default",
-                  transition: "background-color 150ms ease",
+                  transition:
+                    "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                 }}
               >
                 {/* Type icon */}
@@ -418,8 +425,7 @@ export function NotificationFeed({
                     <div
                       style={{
                         fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                        color:
-                          "var(--sn-color-muted-foreground, #64748b)",
+                        color: "var(--sn-color-muted-foreground, #64748b)",
                         display: "-webkit-box",
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: "vertical",
@@ -436,13 +442,12 @@ export function NotificationFeed({
                     <div
                       style={{
                         fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                        color:
-                          "var(--sn-color-muted-foreground, #94a3b8)",
+                        color: "var(--sn-color-muted-foreground, #94a3b8)",
                         marginTop: "var(--sn-spacing-xs, 4px)",
                       }}
                       title={timestamp.toLocaleString()}
                     >
-                      {formatRelativeTime(timestamp)}
+                      {formatRelativeTime(timestamp, { includeTime: true })}
                     </div>
                   )}
                 </div>

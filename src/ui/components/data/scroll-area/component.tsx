@@ -1,4 +1,5 @@
 import React, { useId, useMemo } from "react";
+import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
 import type { ScrollAreaConfig } from "./types";
@@ -14,6 +15,7 @@ import type { ScrollAreaConfig } from "./types";
  */
 export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
   const scopeId = useId();
+  const visible = useSubscribe(config.visible ?? true);
   const scopeClass = `sn-scroll-${scopeId.replace(/:/g, "")}`;
 
   const orientation = config.orientation ?? "vertical";
@@ -84,7 +86,7 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
   const content = config.content ?? [];
 
   // Visibility check
-  if (config.visible === false) return null;
+  if (visible === false) return null;
 
   return (
     <div

@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateLoginPageComponent(config: ScaffoldConfig): string {
   if (config.passkeyPages) {
@@ -104,7 +104,7 @@ export function LoginPage() {
     </Card>
   )
 }
-`
+`;
   }
 
   return `import { Link } from '@tanstack/react-router'
@@ -163,5 +163,5 @@ export function LoginPage() {
     </Card>
   )
 }
-`
+`;
 }

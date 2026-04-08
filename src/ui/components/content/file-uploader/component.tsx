@@ -3,8 +3,6 @@ import { usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import type { FileUploaderConfig, UploadFileEntry } from "./types";
 
-let fileIdCounter = 0;
-
 /**
  * Format bytes into a human-readable string (KB, MB, GB).
  */
@@ -41,6 +39,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileIdCounterRef = useRef(0);
   const [files, setFiles] = useState<UploadFileEntry[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -79,7 +78,9 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
 
       setFiles((prev) =>
         prev.map((f) =>
-          f.id === entry.id ? { ...f, status: "uploading" as const, progress: 0 } : f,
+          f.id === entry.id
+            ? { ...f, status: "uploading" as const, progress: 0 }
+            : f,
         ),
       );
 
@@ -94,9 +95,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             if (e.lengthComputable) {
               const progress = Math.round((e.loaded / e.total) * 100);
               setFiles((prev) =>
-                prev.map((f) =>
-                  f.id === entry.id ? { ...f, progress } : f,
-                ),
+                prev.map((f) => (f.id === entry.id ? { ...f, progress } : f)),
               );
             }
           });
@@ -109,8 +108,12 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             }
           });
 
-          xhr.addEventListener("error", () => reject(new Error("Upload failed")));
-          xhr.addEventListener("abort", () => reject(new Error("Upload aborted")));
+          xhr.addEventListener("error", () =>
+            reject(new Error("Upload failed")),
+          );
+          xhr.addEventListener("abort", () =>
+            reject(new Error("Upload aborted")),
+          );
 
           xhr.open("POST", config.uploadEndpoint!);
           xhr.send(formData);
@@ -157,7 +160,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
         if (validationError) {
           entries.push({
             file,
-            id: `file-${++fileIdCounter}`,
+            id: `file-${++fileIdCounterRef.current}`,
             status: "error",
             progress: 0,
             errorMessage: validationError,
@@ -165,7 +168,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
         } else {
           entries.push({
             file,
-            id: `file-${++fileIdCounter}`,
+            id: `file-${++fileIdCounterRef.current}`,
             status: "pending",
             progress: 0,
           });
@@ -260,10 +263,12 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             data-testid="file-uploader-file"
             data-status={entry.status}
             style={{
+              position: "relative",
               display: "flex",
               alignItems: "center",
               gap: "var(--sn-spacing-sm, 0.5rem)",
-              padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+              padding:
+                "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
               borderRadius: "var(--sn-radius-sm, 0.25rem)",
               backgroundColor: "var(--sn-color-muted, #f1f5f9)",
               fontSize: "var(--sn-font-size-sm, 0.875rem)",
@@ -376,6 +381,9 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
         data-testid="file-uploader"
         data-variant="button"
         className={config.className}
+        style={{
+          ...((config.style as React.CSSProperties) ?? {}),
+        }}
       >
         {hiddenInput}
         <button
@@ -383,8 +391,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           data-testid="file-uploader-trigger"
           onClick={openPicker}
           style={{
-            padding:
-              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
+            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
             borderRadius: "var(--sn-radius-md, 0.375rem)",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             fontWeight: "var(--sn-font-weight-semibold, 600)",
@@ -419,6 +426,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           alignItems: "center",
           gap: "var(--sn-spacing-sm, 0.5rem)",
           flexWrap: "wrap",
+          ...((config.style as React.CSSProperties) ?? {}),
         }}
       >
         {hiddenInput}
@@ -464,6 +472,9 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
       data-testid="file-uploader"
       data-variant="dropzone"
       className={config.className}
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
       {hiddenInput}
       <div
@@ -498,8 +509,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           justifyContent: "center",
           gap: "var(--sn-spacing-xs, 0.25rem)",
           cursor: "pointer",
-          transition:
-            "border-color 150ms ease, background-color 150ms ease",
+          transition: "border-color 150ms ease, background-color 150ms ease",
           textAlign: "center",
         }}
       >

@@ -1,7 +1,5 @@
 import { z } from "zod";
-
-/** A reference to another component's published value. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a filter dropdown configuration.

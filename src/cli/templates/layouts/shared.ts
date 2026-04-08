@@ -8,7 +8,7 @@ export function generateAuthLayout(): string {
     </div>
   )
 }
-`
+`;
 }
 
 export function generatePendingComponent(): string {
@@ -19,7 +19,7 @@ export function generatePendingComponent(): string {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateErrorComponent(): string {
@@ -39,7 +39,7 @@ export function ErrorComponent({ error }: { error: Error }) {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateNotFoundComponent(): string {
@@ -54,7 +54,7 @@ export function NotFoundComponent() {
     </div>
   )
 }
-`
+`;
 }
 
 export function generatePageTransition(): string {
@@ -68,5 +68,5 @@ export function PageTransition() {
     </div>
   )
 }
-`
+`;
 }

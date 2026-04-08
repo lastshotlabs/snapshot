@@ -1,5 +1,6 @@
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useEffect } from "react";
+import { Icon } from "../../../icons/index";
 import type { BadgeConfig } from "./types";
 
 /** Size → font-size token + padding values. */
@@ -134,6 +135,7 @@ export function Badge({ config }: { config: BadgeConfig }) {
         textOverflow: "ellipsis",
         maxWidth: "100%",
         ...variantStyles,
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Dot indicator for "dot" variant */}
@@ -153,7 +155,7 @@ export function Badge({ config }: { config: BadgeConfig }) {
       {/* Icon */}
       {config.icon && (
         <span data-testid="badge-icon" aria-hidden="true">
-          {config.icon}
+          <Icon name={config.icon} size={14} />
         </span>
       )}
       {resolvedText}

@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /** Schema for a responsive value — flat or breakpoint map. */
 function responsiveSchema<T extends z.ZodTypeAny>(inner: T) {

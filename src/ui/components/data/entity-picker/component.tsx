@@ -36,10 +36,12 @@ interface ResolvedEntity {
  */
 export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
-  const resolvedValue = useSubscribe(config.value ?? (config.multiple ? [] : ""));
+  const resolvedValue = useSubscribe(
+    config.value ?? (config.multiple ? [] : ""),
+  );
   const executeAction = useActionExecutor();
   const publish = usePublish(config.id);
-  const { data: apiData, isLoading } = useComponentData(config.data);
+  const { data: apiData, isLoading } = useComponentData(config.data ?? "");
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -68,7 +70,10 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
     const items = Array.isArray(apiData)
       ? apiData
       : Array.isArray((apiData as Record<string, unknown>).data)
-        ? ((apiData as Record<string, unknown>).data as Record<string, unknown>[])
+        ? ((apiData as Record<string, unknown>).data as Record<
+            string,
+            unknown
+          >[])
         : [];
 
     return (items as Record<string, unknown>[]).map((item) => ({
@@ -82,7 +87,14 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
         ? String(item[config.avatarField] ?? "")
         : undefined,
     }));
-  }, [apiData, labelField, valueField, config.descriptionField, config.iconField, config.avatarField]);
+  }, [
+    apiData,
+    labelField,
+    valueField,
+    config.descriptionField,
+    config.iconField,
+    config.avatarField,
+  ]);
 
   // Filter by search
   const filtered = useMemo(() => {
@@ -126,13 +138,28 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   // Close on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
 
   // Focus search on open
   useEffect(() => {
@@ -163,8 +190,36 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
         position: "relative",
         fontFamily: "var(--sn-font-sans, system-ui, sans-serif)",
         display: "inline-block",
+        ...(config.style as React.CSSProperties),
       }}
     >
+      {/* Hover/focus styles */}
+      <style>{`
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-trigger"]:hover {
+  background-color: var(--sn-color-secondary, #f3f4f6);
+}
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-trigger"]:focus {
+  outline: none;
+}
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-trigger"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-search"]:focus {
+  outline: none;
+}
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-search"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-item"]:focus {
+  outline: none;
+}
+[data-snapshot-component="entity-picker"] [data-testid="entity-picker-item"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+`}</style>
       {/* Trigger button */}
       <button
         data-testid="entity-picker-trigger"
@@ -174,12 +229,14 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
           alignItems: "center",
           gap: "var(--sn-spacing-sm, 0.5rem)",
           padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-          border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+          border:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           borderRadius: "var(--sn-radius-md, 0.5rem)",
           backgroundColor: "var(--sn-color-input, #ffffff)",
-          color: selectedEntities.length > 0
-            ? "var(--sn-color-foreground, #111827)"
-            : "var(--sn-color-muted-foreground, #6b7280)",
+          color:
+            selectedEntities.length > 0
+              ? "var(--sn-color-foreground, #111827)"
+              : "var(--sn-color-muted-foreground, #6b7280)",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           cursor: "pointer",
           minWidth: "160px",
@@ -219,7 +276,8 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
             minWidth: "240px",
             width: "100%",
             backgroundColor: "var(--sn-color-popover, #ffffff)",
-            border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-md, 0.5rem)",
             boxShadow: "var(--sn-shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1))",
             zIndex: "var(--sn-z-index-dropdown, 100)" as string,
@@ -243,8 +301,10 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-                  border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+                  padding:
+                    "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                  border:
+                    "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
                   borderRadius: "var(--sn-radius-sm, 0.25rem)",
                   fontSize: "var(--sn-font-size-sm, 0.875rem)",
                   color: "var(--sn-color-foreground, #111827)",
@@ -388,7 +448,8 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
-                        fontWeight: "var(--sn-font-weight-medium, 500)" as string,
+                        fontWeight:
+                          "var(--sn-font-weight-medium, 500)" as string,
                       }}
                     >
                       {entity.label}

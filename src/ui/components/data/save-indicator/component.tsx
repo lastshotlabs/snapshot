@@ -100,6 +100,7 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
         gap: "var(--sn-spacing-xs, 0.25rem)",
         fontSize: "var(--sn-font-size-sm, 0.875rem)",
         color,
+        ...(config.style as React.CSSProperties),
       }}
     >
       {showIcon && icon && (

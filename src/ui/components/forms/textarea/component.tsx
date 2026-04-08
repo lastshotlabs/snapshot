@@ -30,8 +30,6 @@ export function Textarea({ config }: { config: TextareaConfig }) {
 
   // Resolve from-refs
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
-
   const resolvedValue = useSubscribe(config.value) as string | undefined;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
   const resolvedReadonly = useSubscribe(config.readonly ?? false) as boolean;
@@ -101,9 +99,12 @@ export function Textarea({ config }: { config: TextareaConfig }) {
     setValidationError(validate(value));
   }, [validate, value]);
 
-  const errorMessage = resolvedErrorText ?? (touched ? validationError : undefined);
+  const errorMessage =
+    resolvedErrorText ?? (touched ? validationError : undefined);
   const hasError = !!errorMessage;
   const fieldId = config.id ? `sn-textarea-${config.id}` : undefined;
+
+  if (visible === false) return null;
 
   return (
     <div
@@ -122,7 +123,8 @@ export function Textarea({ config }: { config: TextareaConfig }) {
           htmlFor={fieldId}
           style={{
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            fontWeight: "var(--sn-font-weight-medium, 500)" as unknown as number,
+            fontWeight:
+              "var(--sn-font-weight-medium, 500)" as unknown as number,
             color: "var(--sn-color-foreground, #111827)",
           }}
         >
@@ -187,11 +189,9 @@ export function Textarea({ config }: { config: TextareaConfig }) {
           e.currentTarget.style.borderColor = hasError
             ? "var(--sn-color-destructive, #ef4444)"
             : "var(--sn-color-ring, #2563eb)";
-          e.currentTarget.style.boxShadow = `0 0 0 var(--sn-ring-width, 2px) ${
-            hasError
-              ? "var(--sn-color-destructive, #ef4444)"
-              : "var(--sn-color-ring, #2563eb)"
-          }20`;
+          e.currentTarget.style.boxShadow = hasError
+            ? "0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-destructive, #ef4444) 25%, transparent)"
+            : "0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-ring, var(--sn-color-primary)) 25%, transparent)";
         }}
         onBlurCapture={(e) => {
           e.currentTarget.style.borderColor = hasError

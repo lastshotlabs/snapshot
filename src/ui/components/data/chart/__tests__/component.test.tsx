@@ -70,6 +70,7 @@ function createWrapper(data: unknown[] = testData) {
 
 function baseConfig(overrides: Partial<ChartConfig> = {}): ChartConfig {
   return {
+    type: "chart",
     data: { from: "chart-source" },
     xKey: "month",
     series: [

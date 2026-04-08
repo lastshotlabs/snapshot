@@ -13,7 +13,11 @@ function formatValue(field: ResolvedField): React.ReactNode {
   const { value, format } = field;
 
   if (value == null) {
-    return <span style={{ color: "var(--sn-color-muted-foreground, #64748b)" }}>--</span>;
+    return (
+      <span style={{ color: "var(--sn-color-muted-foreground, #64748b)" }}>
+        --
+      </span>
+    );
   }
 
   switch (format) {
@@ -23,7 +27,7 @@ function formatValue(field: ResolvedField): React.ReactNode {
           style={{
             color: value
               ? "var(--sn-color-success, #22c55e)"
-              : "var(--sn-color-muted, #94a3b8)",
+              : "var(--sn-color-muted-foreground, #94a3b8)",
           }}
         >
           {value ? "Yes" : "No"}
@@ -167,7 +171,16 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
   );
 
   return (
-    <ComponentWrapper type="detail-card" className={config.className}>
+    <ComponentWrapper
+      type="detail-card"
+      className={config.className}
+      style={config.style}
+    >
+      <style>{`
+[data-snapshot-component="detail-card"] button:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
+[data-snapshot-component="detail-card"] button:focus { outline: none; }
+[data-snapshot-component="detail-card"] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+      `}</style>
       {isLoading ? (
         <DetailCardSkeleton />
       ) : error ? (
@@ -368,7 +381,8 @@ function DetailCardError({ error }: { error: Error }) {
         border: "1px solid var(--sn-color-destructive, #ef4444)",
         borderRadius: "var(--sn-radius-md, 0.375rem)",
         color: "var(--sn-color-destructive, #ef4444)",
-        backgroundColor: "color-mix(in oklch, var(--sn-color-destructive, #ef4444) 10%, var(--sn-color-card, #ffffff))",
+        backgroundColor:
+          "color-mix(in oklch, var(--sn-color-destructive, #ef4444) 10%, var(--sn-color-card, #ffffff))",
       }}
     >
       Failed to load details: {error.message}

@@ -1,11 +1,5 @@
 import { z } from "zod";
-
-/**
- * A reference to another component's published value.
- */
-const fromRefSchema = z.object({
-  from: z.string(),
-});
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a single data series in the chart.
@@ -44,6 +38,8 @@ export const seriesConfigSchema = z
  * ```
  */
 export const chartSchema = z.object({
+  /** Component type discriminator. */
+  type: z.literal("chart"),
   /** Optional component id for publishing chart state to the page context. */
   id: z.string().optional(),
   /** Data source: endpoint string (e.g. "GET /api/data") or a FromRef. */
@@ -62,4 +58,6 @@ export const chartSchema = z.object({
   grid: z.boolean().default(true),
   /** Message shown when there is no data. */
   emptyMessage: z.string().default("No data"),
+  /** Optional inline style overrides. */
+  style: z.record(z.union([z.string(), z.number()])).optional(),
 });

@@ -1,5 +1,5 @@
 import { Component, Suspense } from "react";
-import type { ErrorInfo, ReactNode } from "react";
+import type { CSSProperties, ErrorInfo, ReactNode } from "react";
 
 /**
  * Props for ComponentWrapper.
@@ -9,6 +9,8 @@ interface ComponentWrapperProps {
   type: string;
   /** Optional CSS class name. */
   className?: string;
+  /** Optional inline style overrides from component config. */
+  style?: Record<string, string | number>;
   /** Children to render. */
   children: ReactNode;
 }
@@ -54,10 +56,12 @@ class ComponentErrorBoundary extends Component<
           role="alert"
           style={{
             padding: "var(--sn-spacing-md, 1rem)",
-            border: "1px solid var(--sn-color-destructive, #ef4444)",
+            border:
+              "var(--sn-border-thin, 1px) solid var(--sn-color-destructive, #ef4444)",
             borderRadius: "var(--sn-radius-md, 0.375rem)",
             color: "var(--sn-color-destructive, #ef4444)",
-            backgroundColor: "#fef2f2",
+            backgroundColor:
+              "color-mix(in oklch, var(--sn-color-destructive, #ef4444) 10%, var(--sn-color-background, #fff))",
           }}
         >
           <strong>Error in {this.props.type}:</strong>{" "}
@@ -91,17 +95,22 @@ function ComponentSkeleton({ type }: { type: string }) {
 /**
  * Shared wrapper for all config-driven components.
  * Provides: `data-snapshot-component` attribute for token scoping,
- * error boundary, and Suspense boundary.
+ * error boundary, Suspense boundary, and style/className pass-through.
  *
- * @param props - Wrapper props including type, className, and children
+ * @param props - Wrapper props including type, className, style, and children
  */
 export function ComponentWrapper({
   type,
   className,
+  style,
   children,
 }: ComponentWrapperProps) {
   return (
-    <div data-snapshot-component={type} className={className}>
+    <div
+      data-snapshot-component={type}
+      className={className}
+      style={style ? (style as CSSProperties) : undefined}
+    >
       <ComponentErrorBoundary type={type}>
         <Suspense fallback={<ComponentSkeleton type={type} />}>
           {children}

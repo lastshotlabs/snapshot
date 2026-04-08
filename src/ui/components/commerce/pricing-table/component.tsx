@@ -1,5 +1,6 @@
 import React from "react";
 import { useActionExecutor } from "../../../actions/executor";
+import { useSubscribe } from "../../../context/hooks";
 import type { PricingTableConfig } from "./types";
 
 /**
@@ -38,7 +39,8 @@ function TierCard({
         flexDirection: "column",
         gap: "var(--sn-spacing-md, 1rem)",
         transform: isHighlighted ? "scale(1.02)" : undefined,
-        transition: "transform 200ms ease, box-shadow 200ms ease",
+        transition:
+          "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
       }}
     >
       {/* Badge */}
@@ -88,7 +90,8 @@ function TierCard({
         <span
           style={{
             fontSize: "var(--sn-font-size-xl, 1.25rem)",
-            fontWeight: 700,
+            fontWeight:
+              "var(--sn-font-weight-bold, 700)" as React.CSSProperties["fontWeight"],
             color: "var(--sn-color-foreground, #111827)",
           }}
         >
@@ -179,12 +182,11 @@ function TierCard({
         disabled={!tier.action}
         style={{
           width: "100%",
-          padding:
-            "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
+          padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
           borderRadius: "var(--sn-radius-md, 0.375rem)",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           fontWeight: "var(--sn-font-weight-semibold, 600)",
-          cursor: tier.action ? "pointer" : "default",
+          cursor: tier.action ? "pointer" : "not-allowed",
           border: "1px solid transparent",
           fontFamily: "inherit",
           backgroundColor: isHighlighted
@@ -193,7 +195,8 @@ function TierCard({
           color: isHighlighted
             ? "var(--sn-color-primary-foreground, #fff)"
             : "var(--sn-color-secondary-foreground, #0f172a)",
-          transition: "opacity 150ms ease",
+          transition:
+            "opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
           opacity: tier.action ? 1 : 0.6,
         }}
       >
@@ -226,10 +229,7 @@ function TableVariant({
   }
 
   return (
-    <div
-      data-testid="pricing-table-grid"
-      style={{ overflowX: "auto" }}
-    >
+    <div data-testid="pricing-table-grid" style={{ overflowX: "auto" }}>
       <table
         style={{
           width: "100%",
@@ -270,7 +270,8 @@ function TableVariant({
                 <div
                   style={{
                     fontSize: "var(--sn-font-size-lg, 1.125rem)",
-                    fontWeight: 700,
+                    fontWeight:
+                      "var(--sn-font-weight-bold, 700)" as React.CSSProperties["fontWeight"],
                   }}
                 >
                   {typeof tier.price === "number"
@@ -317,8 +318,7 @@ function TableVariant({
                       textAlign: "center",
                       padding:
                         "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
-                      borderBottom:
-                        "1px solid var(--sn-color-border, #e5e7eb)",
+                      borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
                       fontSize: "var(--sn-font-size-sm, 0.875rem)",
                       color: included
                         ? "var(--sn-color-success, #16a34a)"
@@ -361,7 +361,7 @@ function TableVariant({
                     borderRadius: "var(--sn-radius-md, 0.375rem)",
                     fontSize: "var(--sn-font-size-sm, 0.875rem)",
                     fontWeight: "var(--sn-font-weight-semibold, 600)",
-                    cursor: tier.action ? "pointer" : "default",
+                    cursor: tier.action ? "pointer" : "not-allowed",
                     border: "1px solid transparent",
                     fontFamily: "inherit",
                     backgroundColor: tier.highlighted
@@ -407,8 +407,31 @@ function TableVariant({
  */
 export function PricingTable({ config }: { config: PricingTableConfig }) {
   const execute = useActionExecutor();
+  const visible = useSubscribe(config.visible ?? true);
   const currency = config.currency ?? "$";
   const variant = config.variant ?? "cards";
+
+  if (visible === false) return null;
+
+  const focusStyles = `
+[data-snapshot-component="pricing-table"] [data-testid="pricing-tier-card"]:hover {
+  box-shadow: var(--sn-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1));
+  transform: translateY(-2px);
+}
+[data-snapshot-component="pricing-table"] [data-testid="pricing-tier-card"][data-highlighted]:hover {
+  transform: scale(1.02) translateY(-2px);
+}
+[data-snapshot-component="pricing-table"] [data-testid="pricing-tier-cta"]:hover:not(:disabled) {
+  opacity: var(--sn-opacity-hover, 0.85);
+}
+[data-snapshot-component="pricing-table"] [data-testid="pricing-tier-cta"]:focus {
+  outline: none;
+}
+[data-snapshot-component="pricing-table"] [data-testid="pricing-tier-cta"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+`;
 
   if (variant === "table") {
     return (
@@ -422,8 +445,10 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
           borderRadius: "var(--sn-radius-lg, 0.75rem)",
           border: "1px solid var(--sn-color-border, #e5e7eb)",
           overflow: "hidden",
+          ...((config.style as React.CSSProperties) ?? {}),
         }}
       >
+        <style>{focusStyles}</style>
         <TableVariant config={config} currency={currency} execute={execute} />
       </div>
     );
@@ -448,8 +473,10 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
         gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
         gap: "var(--sn-spacing-lg, 1.5rem)",
         alignItems: "stretch",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
+      <style>{focusStyles}</style>
       {config.tiers.map((tier, i) => (
         <TierCard key={i} tier={tier} currency={currency} execute={execute} />
       ))}

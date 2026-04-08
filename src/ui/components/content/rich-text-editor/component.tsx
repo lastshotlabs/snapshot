@@ -1,5 +1,15 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { EditorView, placeholder as cmPlaceholder, keymap } from "@codemirror/view";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
+import {
+  EditorView,
+  placeholder as cmPlaceholder,
+  keymap,
+} from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { markdown } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
@@ -10,11 +20,7 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { Icon } from "../../../icons/icon";
 import { snEditorTheme, snSyntaxHighlight } from "./cm-theme";
 import "../code-block/hljs-theme.css";
-import {
-  TOOLBAR_ITEMS,
-  DEFAULT_TOOLBAR,
-  applyToolbarAction,
-} from "./toolbar";
+import { TOOLBAR_ITEMS, DEFAULT_TOOLBAR, applyToolbarAction } from "./toolbar";
 import type { ToolbarItem } from "./toolbar";
 import type { RichTextEditorConfig } from "./types";
 
@@ -25,7 +31,8 @@ function resolveToolbar(
   toolbar: RichTextEditorConfig["toolbar"],
 ): ToolbarItem[] {
   if (toolbar === false) return [];
-  const names = toolbar === true || toolbar === undefined ? DEFAULT_TOOLBAR : toolbar;
+  const names =
+    toolbar === true || toolbar === undefined ? DEFAULT_TOOLBAR : toolbar;
   return names
     .map((name) => TOOLBAR_ITEMS[name])
     .filter((item): item is ToolbarItem => item !== undefined);
@@ -236,11 +243,13 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
       {config.toolbar !== false && (
         <div
           data-testid="rich-text-editor-toolbar"
+          role="toolbar"
           style={{
             display: "flex",
             alignItems: "center",
             gap: "var(--sn-spacing-xs, 0.25rem)",
-            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+            padding:
+              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
             borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
             backgroundColor: "var(--sn-color-secondary, #f9fafb)",
             flexWrap: "wrap",
@@ -331,7 +340,8 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                 aria-label={`${mode} mode`}
                 aria-pressed={currentMode === mode}
                 style={{
-                  padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                  padding:
+                    "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
                   border: "none",
                   fontSize: "var(--sn-font-size-xs, 0.75rem)",
                   fontWeight:
@@ -419,7 +429,8 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                         color: "var(--sn-color-foreground, #111827)",
                         marginBottom: "var(--sn-spacing-md, 1rem)",
                         lineHeight: "var(--sn-leading-tight, 1.25)",
-                        borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+                        borderBottom:
+                          "1px solid var(--sn-color-border, #e5e7eb)",
                         paddingBottom: "var(--sn-spacing-sm, 0.5rem)",
                       }}
                     >
@@ -430,7 +441,8 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                     <h2
                       style={{
                         fontSize: "var(--sn-font-size-lg, 1.125rem)",
-                        fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
+                        fontWeight:
+                          "var(--sn-font-weight-semibold, 600)" as string,
                         color: "var(--sn-color-foreground, #111827)",
                         marginBottom: "var(--sn-spacing-sm, 0.5rem)",
                         lineHeight: "var(--sn-leading-tight, 1.25)",
@@ -443,7 +455,8 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                     <h3
                       style={{
                         fontSize: "var(--sn-font-size-md, 1rem)",
-                        fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
+                        fontWeight:
+                          "var(--sn-font-weight-semibold, 600)" as string,
                         color: "var(--sn-color-foreground, #111827)",
                         marginBottom: "var(--sn-spacing-sm, 0.5rem)",
                       }}
@@ -498,7 +511,7 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                           backgroundColor: "var(--sn-color-muted, #f3f4f6)",
                           color: "var(--sn-color-destructive, #dc2626)",
                           fontFamily: "var(--sn-font-mono, monospace)",
-                          fontSize: "0.9em",
+                          fontSize: "var(--sn-font-size-sm, 0.875rem)",
                           padding: "0.15em 0.35em",
                           borderRadius: "var(--sn-radius-sm, 0.25rem)",
                         }}
@@ -526,7 +539,8 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                   blockquote: ({ children }) => (
                     <blockquote
                       style={{
-                        borderLeft: "3px solid var(--sn-color-primary, #2563eb)",
+                        borderLeft:
+                          "3px solid var(--sn-color-primary, #2563eb)",
                         paddingLeft: "var(--sn-spacing-md, 1rem)",
                         color: "var(--sn-color-muted-foreground, #6b7280)",
                         fontStyle: "italic",
@@ -603,10 +617,13 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                   th: ({ children }) => (
                     <th
                       style={{
-                        borderBottom: "2px solid var(--sn-color-border, #e5e7eb)",
-                        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                        borderBottom:
+                          "2px solid var(--sn-color-border, #e5e7eb)",
+                        padding:
+                          "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
                         textAlign: "left",
-                        fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
+                        fontWeight:
+                          "var(--sn-font-weight-semibold, 600)" as string,
                       }}
                     >
                       {children}
@@ -615,8 +632,10 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                   td: ({ children }) => (
                     <td
                       style={{
-                        borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
-                        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                        borderBottom:
+                          "1px solid var(--sn-color-border, #e5e7eb)",
+                        padding:
+                          "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
                       }}
                     >
                       {children}

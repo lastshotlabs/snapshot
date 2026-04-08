@@ -2,6 +2,26 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, afterEach } from "vitest";
+
+// jsdom doesn't provide window.matchMedia — stub it before any module import
+// triggers create-snapshot which calls getInitialTheme at module scope.
+// vi.hoisted runs before imports are evaluated.
+vi.hoisted(() => {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+  });
+});
+
 import { render, screen } from "@testing-library/react";
 import { ManifestApp, injectStyleSheet } from "../app";
 import type { ManifestConfig } from "../types";

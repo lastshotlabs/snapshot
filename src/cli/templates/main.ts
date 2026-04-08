@@ -1,15 +1,15 @@
-import type { ScaffoldConfig } from '../types'
+import type { ScaffoldConfig } from "../types";
 
 export function generateMain(config: ScaffoldConfig): string {
-  const hasTooltip = config.components.includes('tooltip')
+  const hasTooltip = config.components.includes("tooltip");
 
   const tooltipImport = hasTooltip
     ? `import { TooltipProvider } from '@components/ui/tooltip'\n`
-    : ''
+    : "";
 
   const inner = hasTooltip
     ? `      <TooltipProvider>\n        <RouterProvider router={router} />\n      </TooltipProvider>`
-    : `      <RouterProvider router={router} />`
+    : `      <RouterProvider router={router} />`;
 
   return `import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -27,5 +27,5 @@ ${inner}
     </QueryProvider>
   </StrictMode>
 )
-`
+`;
 }

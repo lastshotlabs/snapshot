@@ -69,12 +69,14 @@ function getLineStyle(type: DiffLine["type"]): React.CSSProperties {
   switch (type) {
     case "removed":
       return {
-        backgroundColor: "color-mix(in oklch, var(--sn-color-destructive, #ef4444) 15%, var(--sn-color-card, #ffffff))",
+        backgroundColor:
+          "color-mix(in oklch, var(--sn-color-destructive, #ef4444) 15%, var(--sn-color-card, #ffffff))",
         color: "var(--sn-color-destructive, #ef4444)",
       };
     case "added":
       return {
-        backgroundColor: "color-mix(in oklch, var(--sn-color-success, #22c55e) 15%, var(--sn-color-card, #ffffff))",
+        backgroundColor:
+          "color-mix(in oklch, var(--sn-color-success, #22c55e) 15%, var(--sn-color-card, #ffffff))",
         color: "var(--sn-color-success, #22c55e)",
       };
     default:
@@ -121,8 +123,6 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
   const rightPaneRef = useRef<HTMLDivElement>(null);
   const scrollingRef = useRef(false);
 
-  if (visible === false) return null;
-
   const leftLabel = config.leftLabel ?? "Original";
   const rightLabel = config.rightLabel ?? "Modified";
   const maxHeight = config.maxHeight ?? "400px";
@@ -144,24 +144,23 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
   );
 
   /** Sync scroll between left and right panes. */
-  const handleScroll = useCallback(
-    (source: "left" | "right") => {
-      if (scrollingRef.current) return;
-      scrollingRef.current = true;
+  const handleScroll = useCallback((source: "left" | "right") => {
+    if (scrollingRef.current) return;
+    scrollingRef.current = true;
 
-      const from = source === "left" ? leftPaneRef.current : rightPaneRef.current;
-      const to = source === "left" ? rightPaneRef.current : leftPaneRef.current;
+    const from = source === "left" ? leftPaneRef.current : rightPaneRef.current;
+    const to = source === "left" ? rightPaneRef.current : leftPaneRef.current;
 
-      if (from && to) {
-        to.scrollTop = from.scrollTop;
-      }
+    if (from && to) {
+      to.scrollTop = from.scrollTop;
+    }
 
-      requestAnimationFrame(() => {
-        scrollingRef.current = false;
-      });
-    },
-    [],
-  );
+    requestAnimationFrame(() => {
+      scrollingRef.current = false;
+    });
+  }, []);
+
+  if (visible === false) return null;
 
   const lineNumberStyle: React.CSSProperties = {
     display: "inline-block",
@@ -192,14 +191,19 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
     >
       {lines.map((line, idx) => {
         const lineStyle = getLineStyle(
-          line.type === "unchanged" ? "unchanged" : side === "left" ? "removed" : "added",
+          line.type === "unchanged"
+            ? "unchanged"
+            : side === "left"
+              ? "removed"
+              : "added",
         );
         const num = side === "left" ? line.leftNum : line.rightNum;
-        const prefix = line.type === "unchanged"
-          ? LINE_PREFIX.unchanged
-          : side === "left"
-            ? LINE_PREFIX.removed
-            : LINE_PREFIX.added;
+        const prefix =
+          line.type === "unchanged"
+            ? LINE_PREFIX.unchanged
+            : side === "left"
+              ? LINE_PREFIX.removed
+              : LINE_PREFIX.added;
 
         return (
           <div
@@ -226,7 +230,13 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
             >
               {prefix}
             </span>
-            <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-all", flex: 1 }}>
+            <span
+              style={{
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-all",
+                flex: 1,
+              }}
+            >
               {line.text}
             </span>
           </div>
@@ -243,26 +253,30 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
       style={{
         display: "flex",
         flexDirection: "column",
-        border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
         overflow: "hidden",
         fontFamily: "var(--sn-font-mono, monospace)",
         fontSize: "var(--sn-font-size-sm, 0.875rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
       {/* Header */}
       <div
         style={{
           display: "flex",
-          borderBottom: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+          borderBottom:
+            "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
         }}
       >
         <div
           data-testid="compare-left-label"
           style={{
             flex: 1,
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
             color: "var(--sn-color-foreground, #111827)",
@@ -282,7 +296,8 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
           data-testid="compare-right-label"
           style={{
             flex: 1,
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
             color: "var(--sn-color-foreground, #111827)",

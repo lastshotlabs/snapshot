@@ -9,7 +9,8 @@
 import { useCallback, useRef } from "react";
 import type { ThemeConfig, TokenEditor } from "./types";
 import { getFlavor } from "./flavors";
-import { colorToOklch, oklchToString } from "./color";
+import { colorToOklch, oklchToString, deriveForeground } from "./color";
+import { resolveTokens } from "./resolve";
 
 // ── Token path -> CSS variable mapping ───────────────────────────────────────
 
@@ -160,7 +161,16 @@ function mapToThemeConfig(overrides: Map<string, string>): Overrides {
 }
 
 /**
+ * Normalize a raw color value to a valid CSS oklch() string.
+ */
+function normalizeColorValue(value: string): string {
+  if (value.startsWith("oklch(") || value.startsWith("#")) return value;
+  return `oklch(${value})`;
+}
+
+/**
  * Generate all CSS variable entries from a flavor's colors for runtime application.
+ * Includes auto-derived foreground companions for all semantic colors.
  */
 function flavorToTokenMap(flavor: {
   colors: Record<string, unknown>;
@@ -169,21 +179,37 @@ function flavorToTokenMap(flavor: {
   const entries: Array<[string, string]> = [];
   const colors = flavor.colors;
 
+  const FOREGROUND_KEYS = [
+    "primary",
+    "secondary",
+    "muted",
+    "accent",
+    "destructive",
+    "success",
+    "warning",
+    "info",
+    "card",
+    "popover",
+    "sidebar",
+  ];
+
   for (const [key, value] of Object.entries(colors)) {
     if (typeof value === "string") {
       const cssVar = `--sn-color-${key}`;
-      // Wrap raw oklch values in oklch() for valid CSS
-      const cssValue = value.startsWith("oklch(") || value.startsWith("#")
-        ? value
-        : `oklch(${value})`;
+      const cssValue = normalizeColorValue(value);
       entries.push([cssVar, cssValue]);
+
+      // Auto-derive foreground companion
+      if (key === "background") {
+        entries.push([`--sn-color-foreground`, deriveForeground(cssValue)]);
+      } else if (FOREGROUND_KEYS.includes(key)) {
+        entries.push([`${cssVar}-foreground`, deriveForeground(cssValue)]);
+      }
     } else if (key === "chart" && Array.isArray(value)) {
       for (let i = 0; i < value.length; i++) {
         if (typeof value[i] === "string") {
           const v = value[i] as string;
-          const cssValue = v.startsWith("oklch(") || v.startsWith("#")
-            ? v
-            : `oklch(${v})`;
+          const cssValue = normalizeColorValue(v);
           entries.push([`--sn-chart-${i + 1}`, cssValue]);
         }
       }
@@ -257,14 +283,20 @@ export function useTokenEditor(): TokenEditor {
       // Remove all current overrides and flavor vars
       resetTokens();
 
-      // Apply flavor's tokens as inline styles
-      const tokens = flavorToTokenMap(flavor);
-      const appliedVars: string[] = [];
-      for (const [cssVar, value] of tokens) {
-        document.documentElement.style.setProperty(cssVar, value);
-        appliedVars.push(cssVar);
+      // Regenerate full CSS via resolveTokens — the correct approach per CLAUDE.md.
+      // This ensures dark mode, foreground pairs, and all derived tokens update correctly.
+      const css = resolveTokens({ flavor: flavorName });
+      const styleId = "snapshot-tokens";
+      if (typeof document !== "undefined") {
+        let el = document.getElementById(styleId) as HTMLStyleElement | null;
+        if (!el) {
+          el = document.createElement("style");
+          el.id = styleId;
+          document.head.appendChild(el);
+        }
+        el.textContent = css;
       }
-      appliedFlavorVarsRef.current = appliedVars;
+
       currentFlavorRef.current = flavorName;
       notifyListeners();
     },

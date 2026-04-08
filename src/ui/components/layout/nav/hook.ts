@@ -12,7 +12,9 @@ function resolveNavItem(
   userRoles: string[],
   subscribedBadge: unknown,
 ): ResolvedNavItem {
-  const isActive = item.path ? pathname === item.path : false;
+  const isActive = item.path
+    ? pathname === item.path || pathname.startsWith(item.path + "/")
+    : false;
   const isVisible =
     !item.roles ||
     item.roles.length === 0 ||
@@ -62,7 +64,7 @@ function findActiveItem(items: ResolvedNavItem[]): ResolvedNavItem | null {
  * @returns Resolved nav items, active item, collapse state, and user info
  */
 export function useNav(config: NavConfig, pathname: string): UseNavResult {
-  const [isCollapsed, setIsCollapsed] = useState(config.collapsible !== false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Read global.user from AppContext for role filtering and user menu
   const rawUser = useSubscribe({ from: "global.user" });
@@ -76,21 +78,34 @@ export function useNav(config: NavConfig, pathname: string): UseNavResult {
     return roles;
   }, [user]);
 
-  // Subscribe to badge FromRefs for each item that has a FromRef badge.
-  // We collect all badge subscriptions in a stable order based on item index.
-  const badgeValues: unknown[] = [];
-  for (const item of config.items) {
+  // Subscribe to badge FromRefs using a fixed number of useSubscribe calls (max 10)
+  // to avoid hooks-in-loop violations. Items beyond 10 won't get live badge updates.
+  const badgeRef = (index: number) => {
+    const item = config.items[index];
     if (
+      item &&
       typeof item.badge === "object" &&
       item.badge !== null &&
       "from" in item.badge
     ) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      badgeValues.push(useSubscribe(item.badge));
-    } else {
-      badgeValues.push(undefined);
+      return item.badge;
     }
-  }
+    return undefined;
+  };
+  const b0 = useSubscribe(badgeRef(0));
+  const b1 = useSubscribe(badgeRef(1));
+  const b2 = useSubscribe(badgeRef(2));
+  const b3 = useSubscribe(badgeRef(3));
+  const b4 = useSubscribe(badgeRef(4));
+  const b5 = useSubscribe(badgeRef(5));
+  const b6 = useSubscribe(badgeRef(6));
+  const b7 = useSubscribe(badgeRef(7));
+  const b8 = useSubscribe(badgeRef(8));
+  const b9 = useSubscribe(badgeRef(9));
+  const badgeValues: unknown[] = [b0, b1, b2, b3, b4, b5, b6, b7, b8, b9].slice(
+    0,
+    config.items.length,
+  );
 
   const items = useMemo(() => {
     return config.items.map((item, index) =>

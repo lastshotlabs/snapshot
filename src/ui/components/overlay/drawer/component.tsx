@@ -135,8 +135,9 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 50,
+        zIndex: "var(--sn-z-index-modal, 40)" as unknown as number,
         display: "flex",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
       {/* Overlay */}
@@ -178,6 +179,17 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
           transition: `transform ${ANIMATION_DURATION}ms cubic-bezier(0.32, 0.72, 0, 1)`,
         }}
       >
+        <style>{`
+          [data-snapshot-component="drawer"] [data-snapshot-drawer-close]:focus { outline: none; }
+          [data-snapshot-component="drawer"] [data-snapshot-drawer-close]:hover {
+            background-color: var(--sn-color-secondary, #f3f4f6);
+          }
+          [data-snapshot-component="drawer"] [data-snapshot-drawer-close]:focus-visible {
+            outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+            outline-offset: var(--sn-ring-offset, 2px);
+          }
+        `}</style>
+
         {/* Header */}
         {title && (
           <div
@@ -214,7 +226,7 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
                 padding: "var(--sn-spacing-xs, 0.25rem)",
                 borderRadius: "var(--sn-radius-sm, 0.25rem)",
                 color: "var(--sn-color-muted-foreground, #6b7280)",
-                fontSize: "1.25rem",
+                fontSize: "var(--sn-font-size-lg, 1.125rem)",
                 lineHeight: 1,
               }}
             >

@@ -1,7 +1,6 @@
 import { z } from "zod";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+// Canonical fromRefSchema source is _base/types.ts
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the Popover component.

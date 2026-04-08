@@ -243,18 +243,11 @@ function PieDonutChart({
  * ```
  */
 export function Chart({ config }: { config: ChartConfig }) {
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const isRef = isFromRef(config.data);
-  const resolvedRef = useSubscribe(config.data); // eslint-disable-line react-hooks/rules-of-hooks
-  const {
-    data: fetchedData,
-    isLoading,
-    error,
-  } = useComponentData(
-    // eslint-disable-line react-hooks/rules-of-hooks
-    isRef ? (config.data as { from: string }) : (config.data as string),
-  );
+  const resolvedRef = useSubscribe(config.data);
+  const { data: fetchedData, isLoading, error } = useComponentData(config.data);
 
   const rows = useMemo<Record<string, unknown>[]>(() => {
     if (isRef) return normalizeRows(resolvedRef);
@@ -272,6 +265,7 @@ export function Chart({ config }: { config: ChartConfig }) {
         borderRadius: "var(--sn-radius-md, 6px)",
         border: "1px solid var(--sn-color-border, #e5e7eb)",
         padding: "var(--sn-spacing-md, 12px)",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Loading */}

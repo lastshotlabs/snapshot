@@ -5,5 +5,5 @@ import { ForgotPasswordPage } from '@pages/auth/ForgotPasswordPage'
 export const Route = createFileRoute('/_guest/auth/forgot-password')({
   component: ForgotPasswordPage,
 })
-`
+`;
 }

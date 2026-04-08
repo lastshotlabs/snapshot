@@ -1,7 +1,5 @@
 import { z } from "zod";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the FavoriteButton component.
@@ -28,9 +26,7 @@ export const favoriteButtonConfigSchema = z
     /** Icon size. Default: "md". */
     size: z.enum(["sm", "md", "lg"]).optional(),
     /** Action dispatched on toggle. */
-    toggleAction: z.lazy(() =>
-      z.record(z.unknown()).pipe(z.any()),
-    ).optional(),
+    toggleAction: z.lazy(() => z.record(z.unknown()).pipe(z.any())).optional(),
     // --- BaseComponentConfig fields ---
     /** Component id for publishing/subscribing. */
     id: z.string().optional(),

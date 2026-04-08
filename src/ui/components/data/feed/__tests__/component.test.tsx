@@ -57,6 +57,7 @@ function createWrapper(data: unknown[] = testItems) {
 
 function baseConfig(overrides: Partial<FeedConfig> = {}): FeedConfig {
   return {
+    type: "feed",
     data: { from: "feed-source" },
     title: "message",
     itemKey: "id",

@@ -36,8 +36,6 @@ export function Switch({ config }: { config: SwitchConfig }) {
 
   // Check visibility
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
-
   const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
 
@@ -63,6 +61,8 @@ export function Switch({ config }: { config: SwitchConfig }) {
     }
   }, [checked, resolvedDisabled, config.action, execute]);
 
+  if (visible === false) return null;
+
   const thumbOffset = 2;
   const thumbTranslate = checked
     ? dims.trackW - dims.thumb - thumbOffset * 2
@@ -81,6 +81,7 @@ export function Switch({ config }: { config: SwitchConfig }) {
           ? "var(--sn-opacity-disabled, 0.5)"
           : undefined,
         cursor: resolvedDisabled ? "not-allowed" : "pointer",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
       onClick={handleToggle}
       onKeyDown={(e) => {
@@ -95,6 +96,15 @@ export function Switch({ config }: { config: SwitchConfig }) {
       aria-label={resolvedLabel}
       tabIndex={resolvedDisabled ? -1 : 0}
     >
+      <style>{`
+        [data-snapshot-component="switch"]:focus { outline: none; }
+        [data-snapshot-component="switch"]:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+          border-radius: var(--sn-radius-full, 9999px);
+        }
+      `}</style>
+
       {/* Track */}
       <div
         style={{

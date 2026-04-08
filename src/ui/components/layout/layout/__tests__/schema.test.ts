@@ -43,11 +43,14 @@ describe("layoutConfigSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects missing variant", () => {
+  it("applies default variant when missing", () => {
     const result = layoutConfigSchema.safeParse({
       type: "layout",
     });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.variant).toBe("sidebar");
+    }
   });
 
   it("rejects wrong type", () => {

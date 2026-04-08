@@ -1,7 +1,7 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateOAuthCallbackPage(config: ScaffoldConfig): string {
-  if (config.securityProfile === 'prototype') {
+  if (config.securityProfile === "prototype") {
     return `import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { OAuthCallbackPage } from '@pages/auth/OAuthCallbackPage'
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_guest/auth/oauth/callback')({
   }),
   component: OAuthCallbackPage,
 })
-`
+`;
   }
 
   // hardened
@@ -28,5 +28,5 @@ export const Route = createFileRoute('/_guest/auth/oauth/callback')({
   }),
   component: OAuthCallbackPage,
 })
-`
+`;
 }

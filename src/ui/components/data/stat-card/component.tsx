@@ -180,7 +180,6 @@ export function StatCard({ config }: { config: StatCardConfig }) {
 
   // Check visibility
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
 
   // Publish value when data changes
   useEffect(() => {
@@ -188,6 +187,8 @@ export function StatCard({ config }: { config: StatCardConfig }) {
       publish({ value: rawValue, label, trend });
     }
   }, [publish, rawValue, label, trend]);
+
+  if (visible === false) return null;
 
   const handleClick = config.action
     ? () => void execute(config.action!)
@@ -237,6 +238,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
         gap: "var(--sn-spacing-sm, 0.5rem)",
         minWidth: 0,
         overflow: "hidden",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Loading state */}
@@ -279,7 +281,9 @@ export function StatCard({ config }: { config: StatCardConfig }) {
           data-testid="stat-card-error"
           style={{ color: "var(--sn-color-destructive, #dc2626)" }}
         >
-          <span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}>{config.errorMessage ?? "Failed to load"}</span>
+          <span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}>
+            {config.errorMessage ?? "Failed to load"}
+          </span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -310,7 +314,8 @@ export function StatCard({ config }: { config: StatCardConfig }) {
             style={{
               fontSize: "var(--sn-font-size-sm, 0.875rem)",
               color: "var(--sn-color-muted-foreground, #6b7280)",
-              fontWeight: "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
+              fontWeight:
+                "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",

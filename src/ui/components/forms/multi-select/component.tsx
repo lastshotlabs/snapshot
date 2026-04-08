@@ -35,16 +35,11 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
 
   // Resolve from-refs
   const visible = useSubscribe(config.visible ?? true);
-  if (visible === false) return null;
-
   const resolvedValue = useSubscribe(config.value) as string[] | undefined;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
 
   // Fetch remote options if `data` is configured
-  const hasDataConfig = config.data !== undefined;
-  const dataResult = hasDataConfig
-    ? useComponentData(config.data!)
-    : { data: null, isLoading: false, error: null };
+  const dataResult = useComponentData(config.data ?? "");
 
   const labelField = config.labelField ?? "label";
   const valueField = config.valueField ?? "value";
@@ -154,6 +149,8 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
 
   const fieldId = config.id ? `sn-multi-select-${config.id}` : undefined;
 
+  if (visible === false) return null;
+
   return (
     <div
       data-snapshot-component="multi-select"
@@ -173,7 +170,8 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
           htmlFor={fieldId}
           style={{
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            fontWeight: "var(--sn-font-weight-medium, 500)" as unknown as number,
+            fontWeight:
+              "var(--sn-font-weight-medium, 500)" as unknown as number,
             color: "var(--sn-color-foreground, #111827)",
           }}
         >
@@ -455,9 +453,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                   {isChecked && "✓"}
                 </span>
 
-                {opt.icon && (
-                  <Icon name={opt.icon} size={14} />
-                )}
+                {opt.icon && <Icon name={opt.icon} size={14} />}
 
                 <span
                   style={{

@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateRootLayoutTopNav(): string {
   return `import { TopNav } from './TopNav'
@@ -13,7 +13,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-`
+`;
 }
 
 export function generateTopNav(config: ScaffoldConfig): string {
@@ -58,5 +58,5 @@ export function TopNav() {
     </header>
   )
 }
-`
+`;
 }

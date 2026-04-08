@@ -1,55 +1,55 @@
 // ── Webhook Endpoints ─────────────────────────────────────────────────────────
 
 export interface WebhookEndpointResponse {
-  id: string
-  url: string
-  events: string[]
-  secretHint: string
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
+  id: string;
+  url: string;
+  events: string[];
+  secretHint: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateWebhookEndpointBody {
-  url: string
-  events: string[]
+  url: string;
+  events: string[];
 }
 
 export interface UpdateWebhookEndpointBody {
-  url?: string
-  events?: string[]
-  isActive?: boolean
+  url?: string;
+  events?: string[];
+  isActive?: boolean;
 }
 
 // ── Webhook Deliveries ────────────────────────────────────────────────────────
 
 export interface WebhookDeliveryResponse {
-  id: string
-  endpointId: string
-  event: string
-  payload: unknown
-  status: string
-  attempts: number
-  maxAttempts: number
-  lastAttemptAt?: string
-  createdAt: string
+  id: string;
+  endpointId: string;
+  event: string;
+  payload: unknown;
+  status: string;
+  attempts: number;
+  maxAttempts: number;
+  lastAttemptAt?: string;
+  createdAt: string;
 }
 
 // ── Param types ───────────────────────────────────────────────────────────────
 
 export interface ListWebhookEndpointsParams {
-  page?: number
-  pageSize?: number
+  page?: number;
+  pageSize?: number;
 }
 
 export interface ListWebhookDeliveriesParams {
-  endpointId: string
-  page?: number
-  pageSize?: number
+  endpointId: string;
+  page?: number;
+  pageSize?: number;
 }
 
 // ── Test ──────────────────────────────────────────────────────────────────────
 
 export interface TestWebhookBody {
-  event: string
+  event: string;
 }

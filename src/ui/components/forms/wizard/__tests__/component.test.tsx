@@ -31,6 +31,7 @@ function createWrapper() {
 
 function baseConfig(overrides: Partial<WizardConfig> = {}): WizardConfig {
   return {
+    type: "wizard",
     steps: [
       {
         title: "Account Details",

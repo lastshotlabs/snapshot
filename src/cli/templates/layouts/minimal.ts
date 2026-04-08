@@ -6,5 +6,5 @@ export function generateRootLayoutMinimal(): string {
     </div>
   )
 }
-`
+`;
 }

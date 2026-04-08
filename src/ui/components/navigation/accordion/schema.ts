@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { baseComponentConfigSchema, componentConfigSchema } from "../../../manifest/schema";
+import {
+  baseComponentConfigSchema,
+  componentConfigSchema,
+} from "../../../manifest/schema";
 
 /**
  * Schema for a single accordion item.

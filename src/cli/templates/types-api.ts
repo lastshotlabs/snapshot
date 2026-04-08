@@ -7,5 +7,5 @@ export interface PaginatedResponse<T> {
   page: number
   perPage: number
 }
-`
+`;
 }

@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+// Canonical fromRefSchema source is _base/types.ts
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a single command item within a group.

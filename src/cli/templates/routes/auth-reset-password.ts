@@ -9,5 +9,5 @@ export const Route = createFileRoute('/_guest/auth/reset-password')({
   }),
   component: ResetPasswordPage,
 })
-`
+`;
 }

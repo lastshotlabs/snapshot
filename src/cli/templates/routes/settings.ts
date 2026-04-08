@@ -5,7 +5,7 @@ import { SettingsPage } from '@pages/settings/SettingsPage'
 export const Route = createFileRoute('/_authenticated/settings/')({
   component: SettingsPage,
 })
-`
+`;
 }
 
 export function generateSettingsPasswordRoute(): string {
@@ -15,7 +15,7 @@ import { SettingsPasswordPage } from '@pages/settings/SettingsPasswordPage'
 export const Route = createFileRoute('/_authenticated/settings/password')({
   component: SettingsPasswordPage,
 })
-`
+`;
 }
 
 export function generateSettingsSessionsRoute(): string {
@@ -25,7 +25,7 @@ import { SettingsSessionsPage } from '@pages/settings/SettingsSessionsPage'
 export const Route = createFileRoute('/_authenticated/settings/sessions')({
   component: SettingsSessionsPage,
 })
-`
+`;
 }
 
 export function generateSettingsDeleteAccountRoute(): string {
@@ -35,7 +35,7 @@ import { SettingsDeleteAccountPage } from '@pages/settings/SettingsDeleteAccount
 export const Route = createFileRoute('/_authenticated/settings/delete-account')({
   component: SettingsDeleteAccountPage,
 })
-`
+`;
 }
 
 export function generateSettingsEmailOtpRoute(): string {
@@ -45,5 +45,5 @@ import { SettingsEmailOtpPage } from '@pages/settings/SettingsEmailOtpPage'
 export const Route = createFileRoute('/_authenticated/settings/email-otp')({
   component: SettingsEmailOtpPage,
 })
-`
+`;
 }

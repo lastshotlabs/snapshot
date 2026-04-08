@@ -1,9 +1,9 @@
-import { ALIASES } from './aliases'
+import { ALIASES } from "./aliases";
 
 export function generateViteConfig(): string {
   const aliasLines = ALIASES.map(
     (a) => `      '@${a}': path.resolve(__dirname, './src/${a}'),`,
-  ).join('\n')
+  ).join("\n");
 
   return `import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -30,5 +30,5 @@ ${aliasLines}
     },
   },
 })
-`
+`;
 }

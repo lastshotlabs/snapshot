@@ -301,8 +301,8 @@ describe("AutoForm", () => {
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
     render(createElement(AutoForm, { config: baseConfig }), { wrapper });
 
-    expect(screen.getByLabelText("Email")).toBeDefined();
-    expect(screen.getByLabelText("Name")).toBeDefined();
+    expect(screen.getByLabelText(/Email/)).toBeDefined();
+    expect(screen.getByLabelText(/Name/)).toBeDefined();
   });
 
   it("renders submit button with default label", () => {
@@ -376,7 +376,7 @@ describe("AutoForm", () => {
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
     render(createElement(AutoForm, { config: baseConfig }), { wrapper });
 
-    const emailInput = screen.getByLabelText("Email");
+    const emailInput = screen.getByLabelText(/Email/);
 
     await act(async () => {
       fireEvent.blur(emailInput);
@@ -389,8 +389,8 @@ describe("AutoForm", () => {
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
     render(createElement(AutoForm, { config: baseConfig }), { wrapper });
 
-    const emailInput = screen.getByLabelText("Email");
-    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText(/Email/);
+    const nameInput = screen.getByLabelText(/Name/);
 
     await act(async () => {
       fireEvent.change(emailInput, { target: { value: "test@test.com" } });
@@ -416,7 +416,7 @@ describe("AutoForm", () => {
     };
     render(createElement(AutoForm, { config }), { wrapper });
 
-    const emailInput = screen.getByLabelText("Email");
+    const emailInput = screen.getByLabelText(/Email/);
     await act(async () => {
       fireEvent.change(emailInput, { target: { value: "test@test.com" } });
     });
@@ -437,7 +437,7 @@ describe("AutoForm", () => {
     };
     render(createElement(AutoForm, { config }), { wrapper });
 
-    const emailInput = screen.getByLabelText("Email");
+    const emailInput = screen.getByLabelText(/Email/);
     await act(async () => {
       fireEvent.change(emailInput, { target: { value: "test@test.com" } });
     });

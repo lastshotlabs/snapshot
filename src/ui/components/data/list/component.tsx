@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useComponentData } from "../../_base/use-component-data";
+import { Icon } from "../../../icons/index";
 import {
   DndContext,
   SortableContext,
@@ -18,13 +19,7 @@ import type { ActionConfig, ActionExecuteFn } from "../../../actions/types";
 /**
  * Badge pill component for list items.
  */
-function ListBadge({
-  text,
-  color,
-}: {
-  text: string;
-  color?: string;
-}) {
+function ListBadge({ text, color }: { text: string; color?: string }) {
   const colorToken = color ?? "primary";
   return (
     <span
@@ -153,8 +148,9 @@ function ListItem({
       onMouseLeave={
         isClickable
           ? (e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor =
-                isCard ? "var(--sn-color-card, #ffffff)" : "";
+              (e.currentTarget as HTMLElement).style.backgroundColor = isCard
+                ? "var(--sn-color-card, #ffffff)"
+                : "";
             }
           : undefined
       }
@@ -165,11 +161,10 @@ function ListItem({
           aria-hidden="true"
           style={{
             color: "var(--sn-color-muted-foreground, #6b7280)",
-            fontSize: "20px",
             flexShrink: 0,
           }}
         >
-          {item.icon}
+          <Icon name={item.icon} size={20} />
         </span>
       )}
 
@@ -178,7 +173,8 @@ function ListItem({
         <div
           style={{
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            fontWeight: "var(--sn-font-weight-medium, 500)" as unknown as number,
+            fontWeight:
+              "var(--sn-font-weight-medium, 500)" as unknown as number,
             color: "var(--sn-color-foreground, #111827)",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -203,16 +199,17 @@ function ListItem({
       </div>
 
       {/* Badge */}
-      {item.badge && (
-        <ListBadge text={item.badge} color={item.badgeColor} />
-      )}
+      {item.badge && <ListBadge text={item.badge} color={item.badgeColor} />}
     </div>
   );
 
   return (
     <>
       {item.href && !item.action ? (
-        <a href={item.href} style={{ textDecoration: "none", color: "inherit" }}>
+        <a
+          href={item.href}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           {content}
         </a>
       ) : (
@@ -277,18 +274,19 @@ export function ListComponent({ config }: { config: ListConfig }) {
   const emptyMessage = config.emptyMessage ?? "No items";
 
   // Fetch data if endpoint is provided
-  const hasEndpoint = config.data != null;
-  const fetchResult = hasEndpoint
-    ? useComponentData(config.data!, undefined) // eslint-disable-line react-hooks/rules-of-hooks
-    : { data: null, isLoading: false, error: null, refetch: () => {} };
-  const { data, isLoading, error } = fetchResult;
+  const { data, isLoading, error } = useComponentData(config.data ?? "");
 
   // Resolve items: static config or mapped from data
+  const hasEndpoint = config.data != null;
   let resolvedItems: ListItemConfig[] = [];
   if (!hasEndpoint && config.items) {
     resolvedItems = config.items;
   } else if (hasEndpoint && data) {
-    const dataArray = Array.isArray(data) ? data : (data as Record<string, unknown>).items ?? (data as Record<string, unknown>).data ?? [];
+    const dataArray = Array.isArray(data)
+      ? data
+      : ((data as Record<string, unknown>).items ??
+        (data as Record<string, unknown>).data ??
+        []);
     if (Array.isArray(dataArray)) {
       resolvedItems = dataArray.map(
         (row: Record<string, unknown>): ListItemConfig => ({
@@ -324,8 +322,12 @@ export function ListComponent({ config }: { config: ListConfig }) {
       data-snapshot-component="list"
       data-testid="list"
       className={config.className}
-      style={containerStyle}
+      style={{ ...containerStyle, ...(config.style as React.CSSProperties) }}
     >
+      <style>{`
+[data-snapshot-component="list"] [data-testid="list-item"][role="button"]:focus { outline: none; }
+[data-snapshot-component="list"] [data-testid="list-item"][role="button"]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); border-radius: var(--sn-radius-md, 0.5rem); }
+      `}</style>
       {/* Loading state */}
       {isLoading && (
         <div data-testid="list-loading">

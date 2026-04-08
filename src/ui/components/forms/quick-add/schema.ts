@@ -1,7 +1,5 @@
 import { z } from "zod";
-
-/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
-const fromRefSchema = z.object({ from: z.string() });
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the QuickAdd component.
@@ -28,9 +26,7 @@ export const quickAddConfigSchema = z
     /** Left icon name. Default: "plus". */
     icon: z.string().optional(),
     /** Action dispatched on submit with `{ value: string }` payload. */
-    submitAction: z.lazy(() =>
-      z.record(z.unknown()).pipe(z.any()),
-    ).optional(),
+    submitAction: z.lazy(() => z.record(z.unknown()).pipe(z.any())).optional(),
     /** Whether Enter key submits. Default: true. */
     submitOnEnter: z.boolean().optional(),
     /** Whether to show the submit button. Default: true. */

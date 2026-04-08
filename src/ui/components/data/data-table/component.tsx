@@ -40,19 +40,58 @@ function formatCellValue(
     case "badge": {
       const colorName = column.badgeColors?.[String(value)] ?? "muted";
       const badgeColorMap: Record<string, { bg: string; fg: string }> = {
-        blue: { bg: "var(--sn-color-info, oklch(0.546 0.245 262.881))", fg: "var(--sn-color-info-foreground, #fff)" },
-        green: { bg: "var(--sn-color-success, oklch(0.586 0.209 145.071))", fg: "var(--sn-color-success-foreground, #fff)" },
-        red: { bg: "var(--sn-color-destructive, oklch(0.577 0.245 27.325))", fg: "var(--sn-color-destructive-foreground, #fff)" },
-        gray: { bg: "var(--sn-color-muted, oklch(0.97 0 0))", fg: "var(--sn-color-muted-foreground, #64748b)" },
-        yellow: { bg: "var(--sn-color-warning, oklch(0.681 0.162 75.834))", fg: "var(--sn-color-warning-foreground, #fff)" },
-        success: { bg: "var(--sn-color-success, oklch(0.586 0.209 145.071))", fg: "var(--sn-color-success-foreground, #fff)" },
-        warning: { bg: "var(--sn-color-warning, oklch(0.681 0.162 75.834))", fg: "var(--sn-color-warning-foreground, #fff)" },
-        info: { bg: "var(--sn-color-info, oklch(0.546 0.245 262.881))", fg: "var(--sn-color-info-foreground, #fff)" },
-        destructive: { bg: "var(--sn-color-destructive, oklch(0.577 0.245 27.325))", fg: "var(--sn-color-destructive-foreground, #fff)" },
-        muted: { bg: "var(--sn-color-muted, oklch(0.97 0 0))", fg: "var(--sn-color-muted-foreground, #64748b)" },
-        primary: { bg: "var(--sn-color-primary, oklch(0.205 0 0))", fg: "var(--sn-color-primary-foreground, #fff)" },
-        secondary: { bg: "var(--sn-color-secondary, oklch(0.97 0 0))", fg: "var(--sn-color-secondary-foreground, #0f172a)" },
-        accent: { bg: "var(--sn-color-accent, oklch(0.97 0 0))", fg: "var(--sn-color-accent-foreground, #0f172a)" },
+        blue: {
+          bg: "var(--sn-color-info, oklch(0.546 0.245 262.881))",
+          fg: "var(--sn-color-info-foreground, #fff)",
+        },
+        green: {
+          bg: "var(--sn-color-success, oklch(0.586 0.209 145.071))",
+          fg: "var(--sn-color-success-foreground, #fff)",
+        },
+        red: {
+          bg: "var(--sn-color-destructive, oklch(0.577 0.245 27.325))",
+          fg: "var(--sn-color-destructive-foreground, #fff)",
+        },
+        gray: {
+          bg: "var(--sn-color-muted, oklch(0.97 0 0))",
+          fg: "var(--sn-color-muted-foreground, #64748b)",
+        },
+        yellow: {
+          bg: "var(--sn-color-warning, oklch(0.681 0.162 75.834))",
+          fg: "var(--sn-color-warning-foreground, #fff)",
+        },
+        success: {
+          bg: "var(--sn-color-success, oklch(0.586 0.209 145.071))",
+          fg: "var(--sn-color-success-foreground, #fff)",
+        },
+        warning: {
+          bg: "var(--sn-color-warning, oklch(0.681 0.162 75.834))",
+          fg: "var(--sn-color-warning-foreground, #fff)",
+        },
+        info: {
+          bg: "var(--sn-color-info, oklch(0.546 0.245 262.881))",
+          fg: "var(--sn-color-info-foreground, #fff)",
+        },
+        destructive: {
+          bg: "var(--sn-color-destructive, oklch(0.577 0.245 27.325))",
+          fg: "var(--sn-color-destructive-foreground, #fff)",
+        },
+        muted: {
+          bg: "var(--sn-color-muted, oklch(0.97 0 0))",
+          fg: "var(--sn-color-muted-foreground, #64748b)",
+        },
+        primary: {
+          bg: "var(--sn-color-primary, oklch(0.205 0 0))",
+          fg: "var(--sn-color-primary-foreground, #fff)",
+        },
+        secondary: {
+          bg: "var(--sn-color-secondary, oklch(0.97 0 0))",
+          fg: "var(--sn-color-secondary-foreground, #0f172a)",
+        },
+        accent: {
+          bg: "var(--sn-color-accent, oklch(0.97 0 0))",
+          fg: "var(--sn-color-accent-foreground, #0f172a)",
+        },
       };
       const colors = badgeColorMap[colorName] ?? badgeColorMap.muted!;
       return (
@@ -88,7 +127,13 @@ function formatCellValue(
         .join("")
         .toUpperCase();
       return (
-        <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-xs, 0.25rem)",
+          }}
+        >
           {src ? (
             <img
               src={src}
@@ -125,7 +170,13 @@ function formatCellValue(
     case "progress": {
       const pct = typeof value === "number" ? value : Number(value) || 0;
       return (
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--sn-spacing-sm, 0.5rem)" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-sm, 0.5rem)",
+          }}
+        >
           <div
             style={{
               flex: 1,
@@ -139,15 +190,24 @@ function formatCellValue(
               style={{
                 width: `${Math.min(100, Math.max(0, pct))}%`,
                 height: "100%",
-                backgroundColor: pct >= 100
-                  ? "var(--sn-color-success, #22c55e)"
-                  : "var(--sn-color-primary, #2563eb)",
+                backgroundColor:
+                  pct >= 100
+                    ? "var(--sn-color-success, #22c55e)"
+                    : "var(--sn-color-primary, #2563eb)",
                 borderRadius: "var(--sn-radius-full, 9999px)",
-                transition: "width var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
+                transition:
+                  "width var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
               }}
             />
           </div>
-          <span style={{ fontSize: "var(--sn-font-size-xs, 0.75rem)", color: "var(--sn-color-muted-foreground, #6b7280)", minWidth: "2.5em", textAlign: "right" }}>
+          <span
+            style={{
+              fontSize: "var(--sn-font-size-xs, 0.75rem)",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              minWidth: "2.5em",
+              textAlign: "right",
+            }}
+          >
             {Math.round(pct)}%
           </span>
         </div>
@@ -163,7 +223,10 @@ function formatCellValue(
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "var(--sn-color-info, #3b82f6)", textDecoration: "underline" }}
+          style={{
+            color: "var(--sn-color-info, #3b82f6)",
+            textDecoration: "underline",
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {text}
@@ -297,7 +360,9 @@ export function DataTable({ config }: { config: DataTableConfig }) {
   const hasActions = (config.actions?.length ?? 0) > 0;
 
   // Expandable row state
-  const [expandedRows, setExpandedRows] = useState<Set<string | number>>(new Set());
+  const [expandedRows, setExpandedRows] = useState<Set<string | number>>(
+    new Set(),
+  );
   const toggleExpandRow = useCallback((id: string | number) => {
     setExpandedRows((prev) => {
       const next = new Set(prev);
@@ -332,7 +397,29 @@ export function DataTable({ config }: { config: DataTableConfig }) {
     table.selectedIds.length > 0;
 
   return (
-    <div data-snapshot-component="data-table" className={config.className}>
+    <div
+      data-snapshot-component="data-table"
+      className={config.className}
+      style={config.style as React.CSSProperties}
+    >
+      <style>{`
+[data-snapshot-component="data-table"] tr[style*="cursor"]:hover,
+[data-snapshot-component="data-table"] tr[data-selected]:hover { background-color: var(--sn-color-secondary, #f3f4f6) !important; }
+[data-snapshot-component="data-table"] th[style*="cursor: pointer"]:hover { color: var(--sn-color-primary, #2563eb); }
+[data-snapshot-component="data-table"] th[style*="cursor: pointer"]:focus { outline: none; }
+[data-snapshot-component="data-table"] th[style*="cursor: pointer"]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+[data-snapshot-component="data-table"] [data-table-pagination] button:hover:not(:disabled) { background-color: var(--sn-color-secondary, #f3f4f6); }
+[data-snapshot-component="data-table"] [data-table-pagination] button:focus { outline: none; }
+[data-snapshot-component="data-table"] [data-table-pagination] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+[data-snapshot-component="data-table"] input[type="checkbox"]:focus { outline: none; }
+[data-snapshot-component="data-table"] input[type="checkbox"]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+[data-snapshot-component="data-table"] [data-row-action]:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
+[data-snapshot-component="data-table"] [data-row-action]:focus { outline: none; }
+[data-snapshot-component="data-table"] [data-row-action]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+[data-snapshot-component="data-table"] [data-bulk-action]:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
+[data-snapshot-component="data-table"] [data-bulk-action]:focus { outline: none; }
+[data-snapshot-component="data-table"] [data-bulk-action]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
+      `}</style>
       {/* Search bar */}
       {config.searchable && (
         <div
@@ -397,253 +484,276 @@ export function DataTable({ config }: { config: DataTableConfig }) {
 
       {/* Table */}
       <div style={{ overflowX: "auto" }}>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          tableLayout: "auto",
-        }}
-      >
-        <thead>
-          <tr>
-            {/* Expand column header */}
-            {config.expandable && (
-              <th style={{ padding: cellPadding, width: "32px" }} />
-            )}
-            {/* Select all checkbox */}
-            {config.selectable && (
-              <th style={{ padding: cellPadding, width: "40px" }}>
-                <input
-                  type="checkbox"
-                  onChange={() => table.toggleAll()}
-                  checked={
-                    table.rows.length > 0 &&
-                    table.rows.every((row, i) => {
-                      const id = (row as Record<string, unknown>)["id"];
-                      const rowId =
-                        typeof id === "string" || typeof id === "number"
-                          ? id
-                          : i;
-                      return table.selection.has(rowId);
-                    })
-                  }
-                  aria-label="Select all rows"
-                />
-              </th>
-            )}
-
-            {/* Column headers */}
-            {table.columns.map((col) => (
-              <th
-                key={col.field}
-                style={{
-                  padding: cellPadding,
-                  textAlign: col.align ?? "left",
-                  cursor: col.sortable ? "pointer" : "default",
-                  width: col.width,
-                  userSelect: "none",
-                }}
-                onClick={
-                  col.sortable
-                    ? () => table.setSortColumn(col.field)
-                    : undefined
-                }
-                aria-sort={
-                  table.sort?.column === col.field
-                    ? table.sort.direction === "asc"
-                      ? "ascending"
-                      : "descending"
-                    : undefined
-                }
-              >
-                {col.label}
-                {col.sortable && (
-                  <SortIndicator column={col.field} sort={table.sort} />
-                )}
-              </th>
-            ))}
-
-            {/* Actions column header */}
-            {hasActions && (
-              <th style={{ padding: cellPadding, textAlign: "right" }}>
-                Actions
-              </th>
-            )}
-          </tr>
-        </thead>
-
-        <tbody>
-          {/* Loading state */}
-          {table.isLoading && (
-            <SkeletonRows columnCount={totalColumns} rowCount={5} />
-          )}
-
-          {/* Error state */}
-          {table.error && (
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            tableLayout: "auto",
+          }}
+        >
+          <thead>
             <tr>
-              <td
-                colSpan={totalColumns}
-                style={{ padding: cellPadding, textAlign: "center" }}
-              >
-                <div data-table-error role="alert">
-                  Error: {table.error.message}
-                </div>
-              </td>
-            </tr>
-          )}
+              {/* Expand column header */}
+              {config.expandable && (
+                <th style={{ padding: cellPadding, width: "32px" }} />
+              )}
+              {/* Select all checkbox */}
+              {config.selectable && (
+                <th style={{ padding: cellPadding, width: "40px" }}>
+                  <input
+                    type="checkbox"
+                    onChange={() => table.toggleAll()}
+                    checked={
+                      table.rows.length > 0 &&
+                      table.rows.every((row, i) => {
+                        const id = (row as Record<string, unknown>)["id"];
+                        const rowId =
+                          typeof id === "string" || typeof id === "number"
+                            ? id
+                            : i;
+                        return table.selection.has(rowId);
+                      })
+                    }
+                    aria-label="Select all rows"
+                  />
+                </th>
+              )}
 
-          {/* Empty state */}
-          {!table.isLoading && !table.error && table.rows.length === 0 && (
-            <tr>
-              <td
-                colSpan={totalColumns}
-                style={{ padding: cellPadding, textAlign: "center" }}
-              >
-                <div data-table-empty>
-                  {config.emptyMessage ?? "No data available"}
-                </div>
-              </td>
-            </tr>
-          )}
-
-          {/* Data rows */}
-          {!table.isLoading &&
-            !table.error &&
-            table.rows.map((row, rowIndex) => {
-              const rowRecord = row as Record<string, unknown>;
-              const id = rowRecord["id"];
-              const rowId =
-                typeof id === "string" || typeof id === "number"
-                  ? id
-                  : rowIndex;
-
-              const isExpanded = expandedRows.has(rowId);
-
-              return (
-                <React.Fragment key={rowId}>
-                <tr
-                  data-selected={table.selection.has(rowId) ? "" : undefined}
-                  onClick={
-                    config.expandable
-                      ? () => toggleExpandRow(rowId)
-                      : config.rowClickAction
-                        ? () => void execute(config.rowClickAction!, { row: rowRecord, ...rowRecord })
-                        : undefined
-                  }
+              {/* Column headers */}
+              {table.columns.map((col) => (
+                <th
+                  key={col.field}
                   style={{
-                    backgroundColor: table.selection.has(rowId)
-                      ? "var(--sn-color-accent, #dbeafe)"
-                      : undefined,
-                    cursor: config.expandable || config.rowClickAction ? "pointer" : undefined,
+                    padding: cellPadding,
+                    textAlign: col.align ?? "left",
+                    cursor: col.sortable ? "pointer" : "default",
+                    width: col.width,
+                    userSelect: "none",
                   }}
+                  onClick={
+                    col.sortable
+                      ? () => table.setSortColumn(col.field)
+                      : undefined
+                  }
+                  aria-sort={
+                    table.sort?.column === col.field
+                      ? table.sort.direction === "asc"
+                        ? "ascending"
+                        : "descending"
+                      : undefined
+                  }
                 >
-                  {/* Expand toggle */}
-                  {config.expandable && (
-                    <td style={{ padding: cellPadding, width: "32px" }}>
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
-                          transition: "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-                          color: "var(--sn-color-muted-foreground, #6b7280)",
-                        }}
-                      >
-                        &#x25B6;
-                      </span>
-                    </td>
+                  {col.label}
+                  {col.sortable && (
+                    <SortIndicator column={col.field} sort={table.sort} />
                   )}
+                </th>
+              ))}
 
-                  {/* Row selection checkbox */}
-                  {config.selectable && (
-                    <td style={{ padding: cellPadding, width: "40px" }}>
-                      <input
-                        type="checkbox"
-                        checked={table.selection.has(rowId)}
-                        onChange={() => table.toggleRow(rowId)}
-                        aria-label={`Select row ${rowId}`}
-                      />
-                    </td>
-                  )}
+              {/* Actions column header */}
+              {hasActions && (
+                <th style={{ padding: cellPadding, textAlign: "right" }}>
+                  Actions
+                </th>
+              )}
+            </tr>
+          </thead>
 
-                  {/* Data cells */}
-                  {table.columns.map((col) => (
-                    <td
-                      key={col.field}
-                      style={{
-                        padding: cellPadding,
-                        textAlign: col.align ?? "left",
-                      }}
-                    >
-                      {formatCellValue(rowRecord[col.field], col, rowRecord)}
-                    </td>
-                  ))}
+          <tbody>
+            {/* Loading state */}
+            {table.isLoading && (
+              <SkeletonRows columnCount={totalColumns} rowCount={5} />
+            )}
 
-                  {/* Row action buttons */}
-                  {hasActions && (
-                    <td style={{ padding: cellPadding, textAlign: "right" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "var(--sn-spacing-xs, 4px)",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        {config.actions!.map((action, actionIndex) => {
-                          // Handle visibility
-                          if (action.visible === false) return null;
-                          // FromRef visibility would need useSubscribe, but for now handle boolean
-                          if (
-                            typeof action.visible === "boolean" &&
-                            !action.visible
-                          )
-                            return null;
+            {/* Error state */}
+            {table.error && (
+              <tr>
+                <td
+                  colSpan={totalColumns}
+                  style={{ padding: cellPadding, textAlign: "center" }}
+                >
+                  <div data-table-error role="alert">
+                    Error: {table.error.message}
+                  </div>
+                </td>
+              </tr>
+            )}
 
-                          return (
-                            <button
-                              key={actionIndex}
-                              data-row-action
-                              onClick={() =>
-                                void execute(action.action, {
+            {/* Empty state */}
+            {!table.isLoading && !table.error && table.rows.length === 0 && (
+              <tr>
+                <td
+                  colSpan={totalColumns}
+                  style={{ padding: cellPadding, textAlign: "center" }}
+                >
+                  <div data-table-empty>
+                    {config.emptyMessage ?? "No data available"}
+                  </div>
+                </td>
+              </tr>
+            )}
+
+            {/* Data rows */}
+            {!table.isLoading &&
+              !table.error &&
+              table.rows.map((row, rowIndex) => {
+                const rowRecord = row as Record<string, unknown>;
+                const id = rowRecord["id"];
+                const rowId =
+                  typeof id === "string" || typeof id === "number"
+                    ? id
+                    : rowIndex;
+
+                const isExpanded = expandedRows.has(rowId);
+
+                return (
+                  <React.Fragment key={rowId}>
+                    <tr
+                      data-selected={
+                        table.selection.has(rowId) ? "" : undefined
+                      }
+                      onClick={
+                        config.expandable
+                          ? () => toggleExpandRow(rowId)
+                          : config.rowClickAction
+                            ? () =>
+                                void execute(config.rowClickAction!, {
                                   row: rowRecord,
                                   ...rowRecord,
                                 })
-                              }
-                              style={{ cursor: "pointer" }}
-                            >
-                              {action.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </td>
-                  )}
-                </tr>
-
-                {/* Expanded row content */}
-                {config.expandable && isExpanded && config.expandedContent && (
-                  <tr data-expanded-row>
-                    <td
-                      colSpan={totalColumns}
+                            : undefined
+                      }
                       style={{
-                        padding: cellPadding,
-                        backgroundColor: "var(--sn-color-secondary, #f8fafc)",
-                        borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+                        backgroundColor: table.selection.has(rowId)
+                          ? "var(--sn-color-accent, #dbeafe)"
+                          : undefined,
+                        cursor:
+                          config.expandable || config.rowClickAction
+                            ? "pointer"
+                            : undefined,
                       }}
                     >
-                      {config.expandedContent.map((child, ci) => (
-                        <ComponentRenderer
-                          key={ci}
-                          config={child as ComponentConfig}
-                        />
+                      {/* Expand toggle */}
+                      {config.expandable && (
+                        <td style={{ padding: cellPadding, width: "32px" }}>
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              transform: isExpanded
+                                ? "rotate(90deg)"
+                                : "rotate(0deg)",
+                              transition:
+                                "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                              color:
+                                "var(--sn-color-muted-foreground, #6b7280)",
+                            }}
+                          >
+                            &#x25B6;
+                          </span>
+                        </td>
+                      )}
+
+                      {/* Row selection checkbox */}
+                      {config.selectable && (
+                        <td style={{ padding: cellPadding, width: "40px" }}>
+                          <input
+                            type="checkbox"
+                            checked={table.selection.has(rowId)}
+                            onChange={() => table.toggleRow(rowId)}
+                            aria-label={`Select row ${rowId}`}
+                          />
+                        </td>
+                      )}
+
+                      {/* Data cells */}
+                      {table.columns.map((col) => (
+                        <td
+                          key={col.field}
+                          style={{
+                            padding: cellPadding,
+                            textAlign: col.align ?? "left",
+                          }}
+                        >
+                          {formatCellValue(
+                            rowRecord[col.field],
+                            col,
+                            rowRecord,
+                          )}
+                        </td>
                       ))}
-                    </td>
-                  </tr>
-                )}
-                </React.Fragment>
-              );
-            })}
-        </tbody>
-      </table>
+
+                      {/* Row action buttons */}
+                      {hasActions && (
+                        <td
+                          style={{ padding: cellPadding, textAlign: "right" }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "var(--sn-spacing-xs, 4px)",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            {config.actions!.map((action, actionIndex) => {
+                              // Handle visibility
+                              if (action.visible === false) return null;
+                              // FromRef visibility would need useSubscribe, but for now handle boolean
+                              if (
+                                typeof action.visible === "boolean" &&
+                                !action.visible
+                              )
+                                return null;
+
+                              return (
+                                <button
+                                  key={actionIndex}
+                                  data-row-action
+                                  onClick={() =>
+                                    void execute(action.action, {
+                                      row: rowRecord,
+                                      ...rowRecord,
+                                    })
+                                  }
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {action.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+
+                    {/* Expanded row content */}
+                    {config.expandable &&
+                      isExpanded &&
+                      config.expandedContent && (
+                        <tr data-expanded-row>
+                          <td
+                            colSpan={totalColumns}
+                            style={{
+                              padding: cellPadding,
+                              backgroundColor:
+                                "var(--sn-color-secondary, #f8fafc)",
+                              borderBottom:
+                                "1px solid var(--sn-color-border, #e5e7eb)",
+                            }}
+                          >
+                            {config.expandedContent.map((child, ci) => (
+                              <ComponentRenderer
+                                key={ci}
+                                config={child as ComponentConfig}
+                              />
+                            ))}
+                          </td>
+                        </tr>
+                      )}
+                  </React.Fragment>
+                );
+              })}
+          </tbody>
+        </table>
       </div>
 
       {/* Pagination controls */}

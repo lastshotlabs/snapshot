@@ -5,48 +5,13 @@ import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { RichInput } from "../../content/rich-input/component";
 import { sanitizeMessageHtml } from "../message-thread/message-renderer";
+import {
+  formatRelativeTime,
+  getNestedField,
+  getInitials,
+} from "../../_base/utils";
 import type { CommentSectionConfig } from "./types";
 import type { RichInputConfig } from "../../content/rich-input/types";
-
-// ── Helpers ───────────────────────────────────────────────────────────────
-
-function formatRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHour = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHour / 24);
-
-  if (diffSec < 60) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHour < 24) return `${diffHour}h ago`;
-  if (diffDay < 7) return `${diffDay}d ago`;
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function getNestedField(obj: Record<string, unknown>, path: string): unknown {
-  const parts = path.split(".");
-  let current: unknown = obj;
-  for (const part of parts) {
-    if (current == null || typeof current !== "object") return undefined;
-    current = (current as Record<string, unknown>)[part];
-  }
-  return current;
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 // ── Comment item ──────────────────────────────────────────────────────────
 
@@ -64,8 +29,12 @@ function CommentItem({
   const contentField = config.contentField ?? "content";
   const timestampField = config.timestampField ?? "timestamp";
 
-  const authorName = String(getNestedField(comment, authorNameField) ?? "Unknown");
-  const authorAvatar = getNestedField(comment, authorAvatarField) as string | null;
+  const authorName = String(
+    getNestedField(comment, authorNameField) ?? "Unknown",
+  );
+  const authorAvatar = getNestedField(comment, authorAvatarField) as
+    | string
+    | null;
   const content = String(getNestedField(comment, contentField) ?? "");
   const rawTs = getNestedField(comment, timestampField);
   const timestamp = rawTs ? new Date(String(rawTs)) : null;
@@ -148,7 +117,7 @@ function CommentItem({
               }}
               title={timestamp.toLocaleString()}
             >
-              {formatRelativeTime(timestamp)}
+              {formatRelativeTime(timestamp, { short: true })}
             </span>
           )}
           {config.deleteAction && (
@@ -164,7 +133,8 @@ function CommentItem({
                 display: "flex",
                 alignItems: "center",
                 borderRadius: "var(--sn-radius-sm, 0.25rem)",
-                transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                transition:
+                  "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
               }}
               title="Delete comment"
             >
@@ -192,11 +162,43 @@ function CommentItem({
 
 function CommentSkeleton() {
   return (
-    <div style={{ display: "flex", gap: "var(--sn-spacing-sm, 0.5rem)", padding: "var(--sn-spacing-sm, 0.5rem) 0" }}>
-      <div style={{ width: 28, height: 28, borderRadius: "var(--sn-radius-full, 9999px)", backgroundColor: "var(--sn-color-muted, #e5e7eb)", opacity: 0.5, flexShrink: 0 }} />
+    <div
+      style={{
+        display: "flex",
+        gap: "var(--sn-spacing-sm, 0.5rem)",
+        padding: "var(--sn-spacing-sm, 0.5rem) 0",
+      }}
+    >
+      <div
+        style={{
+          width: 28,
+          height: 28,
+          borderRadius: "var(--sn-radius-full, 9999px)",
+          backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+          opacity: 0.5,
+          flexShrink: 0,
+        }}
+      />
       <div style={{ flex: 1 }}>
-        <div style={{ height: "0.75rem", width: "25%", borderRadius: "var(--sn-radius-xs, 2px)", backgroundColor: "var(--sn-color-muted, #e5e7eb)", opacity: 0.5, marginBottom: "var(--sn-spacing-xs, 0.25rem)" }} />
-        <div style={{ height: "0.75rem", width: "60%", borderRadius: "var(--sn-radius-xs, 2px)", backgroundColor: "var(--sn-color-muted, #e5e7eb)", opacity: 0.3 }} />
+        <div
+          style={{
+            height: "0.75rem",
+            width: "25%",
+            borderRadius: "var(--sn-radius-xs, 2px)",
+            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+            opacity: 0.5,
+            marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+          }}
+        />
+        <div
+          style={{
+            height: "0.75rem",
+            width: "60%",
+            borderRadius: "var(--sn-radius-xs, 2px)",
+            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+            opacity: 0.3,
+          }}
+        />
       </div>
     </div>
   );
@@ -210,11 +212,7 @@ function CommentSkeleton() {
  *
  * @param props - Component props containing the comment section configuration
  */
-export function CommentSection({
-  config,
-}: {
-  config: CommentSectionConfig;
-}) {
+export function CommentSection({ config }: { config: CommentSectionConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
@@ -271,12 +269,14 @@ export function CommentSection({
     <div
       data-snapshot-component="comment-section"
       data-testid="comment-section"
+      aria-label="Comments"
       className={config.className}
       style={{
         border: "1px solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
+        ...(config.style as React.CSSProperties),
       }}
     >
       <style>{`
@@ -291,8 +291,7 @@ export function CommentSection({
           display: "flex",
           alignItems: "center",
           gap: "var(--sn-spacing-sm, 0.5rem)",
-          padding:
-            "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+          padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
           borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
         }}
       >

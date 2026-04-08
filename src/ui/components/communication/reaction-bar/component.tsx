@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+// Internal composition — EmojiPicker is used as a sub-component, not via from-ref binding
 import { EmojiPicker } from "../emoji-picker/component";
 import type { ReactionBarConfig } from "./types";
 import type { EmojiPickerConfig } from "../emoji-picker/types";
@@ -94,16 +95,31 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
         gap: "var(--sn-spacing-xs, 0.25rem)",
         position: "relative",
         overflow: "visible",
+        ...(config.style as React.CSSProperties),
       }}
     >
-      {/* Hover/transition styles */}
+      {/* Hover/transition/focus styles */}
       <style>{`
 [data-snapshot-component="reaction-bar"] [data-testid="reaction-button"]:hover {
   transform: scale(1.05);
   box-shadow: var(--sn-shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
 }
+[data-snapshot-component="reaction-bar"] [data-testid="reaction-button"]:focus {
+  outline: none;
+}
+[data-snapshot-component="reaction-bar"] [data-testid="reaction-button"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
 [data-snapshot-component="reaction-bar"] [data-testid="reaction-add"]:hover {
   background-color: var(--sn-color-accent, #f3f4f6) !important;
+}
+[data-snapshot-component="reaction-bar"] [data-testid="reaction-add"]:focus {
+  outline: none;
+}
+[data-snapshot-component="reaction-bar"] [data-testid="reaction-add"]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
 }
 `}</style>
       {reactions.map((reaction, idx) => (
@@ -131,7 +147,8 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
               : "var(--sn-color-card, #ffffff)",
             cursor: "pointer",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+            transition:
+              "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
           }}
         >
           <span>{reaction.emoji}</span>

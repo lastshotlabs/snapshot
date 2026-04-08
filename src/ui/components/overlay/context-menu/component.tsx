@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { usePublish } from "../../../context/hooks";
+import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import type { ContextMenuConfig } from "./types";
+
+const ANIMATION_DURATION = 150;
 
 /**
  * ContextMenu component — renders a right-click context menu at cursor position.
@@ -14,10 +16,13 @@ import type { ContextMenuConfig } from "./types";
  * @param props.config - The context menu config from the manifest
  */
 export function ContextMenu({ config }: { config: ContextMenuConfig }) {
+  const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [animating, setAnimating] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -29,15 +34,12 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
     publish?.({ isOpen });
   }, [isOpen, publish]);
 
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setPosition({ x: e.clientX, y: e.clientY });
-      setIsOpen(true);
-    },
-    [],
-  );
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPosition({ x: e.clientX, y: e.clientY });
+    setIsOpen(true);
+  }, []);
 
   const close = useCallback(() => {
     setIsOpen(false);
@@ -48,10 +50,7 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
     if (!isOpen) return;
 
     const handleClick = (e: MouseEvent) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         close();
       }
     };
@@ -88,6 +87,19 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
     }
   }, [isOpen, position]);
 
+  // Mounted/animating pattern for enter/exit animation
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      const enterTimer = setTimeout(() => setAnimating(true), 10);
+      return () => clearTimeout(enterTimer);
+    } else if (mounted) {
+      setAnimating(false);
+      const exitTimer = setTimeout(() => setMounted(false), ANIMATION_DURATION);
+      return () => clearTimeout(exitTimer);
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleItemClick = useCallback(
     (item: NonNullable<ContextMenuConfig["items"]>[number]) => {
       if (item.disabled || item.separator) return;
@@ -100,14 +112,27 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
   );
 
   // Visibility check
-  if (config.visible === false) return null;
+  if (visible === false) return null;
 
   return (
     <div
       data-snapshot-component="context-menu"
       className={config.className}
-      style={{ position: "relative", display: "inline-block" }}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="context-menu"] [role="menuitem"]:focus { outline: none; }
+        [data-snapshot-component="context-menu"] [role="menuitem"]:hover:not(:disabled) {
+          background-color: var(--sn-color-secondary, #f3f4f6);
+        }
+        [data-snapshot-component="context-menu"] [role="menuitem"]:focus-visible {
+          background-color: var(--sn-color-secondary, #f3f4f6);
+        }
+      `}</style>
       {/* Trigger area */}
       <div
         ref={triggerRef}
@@ -132,7 +157,7 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
       </div>
 
       {/* Floating menu */}
-      {isOpen && (
+      {mounted && (
         <div
           ref={menuRef}
           role="menu"
@@ -145,11 +170,15 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
             minWidth: "160px",
             backgroundColor: "var(--sn-color-popover, #fff)",
             color: "var(--sn-color-popover-foreground, #111)",
-            border: "1px solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-md, 0.375rem)",
             boxShadow: "var(--sn-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1))",
             padding: "var(--sn-spacing-2xs, 0.125rem) 0",
             overflow: "hidden",
+            opacity: animating ? 1 : 0,
+            transform: animating ? "scale(1)" : "scale(0.95)",
+            transition: `opacity ${ANIMATION_DURATION}ms ease, transform ${ANIMATION_DURATION}ms ease`,
           }}
         >
           {items.map((item, i) => {
@@ -194,9 +223,7 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
                     : isDestructive
                       ? "var(--sn-color-destructive, #ef4444)"
                       : "var(--sn-color-popover-foreground, #111)",
-                  opacity: isDisabled
-                    ? "var(--sn-opacity-disabled, 0.5)"
-                    : 1,
+                  opacity: isDisabled ? "var(--sn-opacity-disabled, 0.5)" : 1,
                   textAlign: "left",
                   whiteSpace: "nowrap",
                 }}

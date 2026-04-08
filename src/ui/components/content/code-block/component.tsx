@@ -101,6 +101,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
         border: "1px solid var(--sn-color-border, #e5e7eb)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
+        ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
       {/* Title bar */}
@@ -111,8 +112,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding:
-              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
+            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
             backgroundColor: "var(--sn-color-secondary, #f1f5f9)",
             borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
             gap: "var(--sn-spacing-sm, 0.5rem)",

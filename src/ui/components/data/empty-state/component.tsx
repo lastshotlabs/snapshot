@@ -1,5 +1,6 @@
 import { useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
+import { Icon } from "../../../icons/index";
 import type { EmptyStateConfig } from "./types";
 
 /** Icon size in pixels for each size variant. */
@@ -60,6 +61,7 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
         textAlign: "center",
         padding: spacing,
         gap: "var(--sn-spacing-md, 1rem)",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Icon */}
@@ -68,14 +70,13 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
           data-testid="empty-state-icon"
           aria-hidden="true"
           style={{
-            fontSize: iconSize,
             lineHeight: 1,
             color: config.iconColor
               ? `var(--sn-color-${config.iconColor}, ${config.iconColor})`
               : "var(--sn-color-muted-foreground, #6b7280)",
           }}
         >
-          {config.icon}
+          <Icon name={config.icon} size={iconSize} />
         </span>
       )}
 

@@ -3,6 +3,7 @@ import { feedSchema } from "../schema";
 
 describe("feedSchema", () => {
   const baseConfig = {
+    type: "feed",
     data: "GET /api/activity",
     title: "message",
   };

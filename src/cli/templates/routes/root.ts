@@ -1,4 +1,4 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
 export function generateRootRoute(config: ScaffoldConfig): string {
   return `import { createRootRouteWithContext } from '@tanstack/react-router'
@@ -23,5 +23,5 @@ export const Route = createRootRouteWithContext<{
     </UnheadProvider>
   ),
 })
-`
+`;
 }

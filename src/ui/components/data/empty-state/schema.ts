@@ -41,9 +41,7 @@ export const emptyStateConfigSchema = z
     /** Component id for publishing/subscribing. */
     id: z.string().optional(),
     /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z
-      .union([z.boolean(), z.object({ from: z.string() })])
-      .optional(),
+    visible: z.union([z.boolean(), z.object({ from: z.string() })]).optional(),
     /** Inline style overrides. */
     style: z.record(z.union([z.string(), z.number()])).optional(),
     /** Additional CSS class name. */

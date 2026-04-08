@@ -1,10 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { useComponentData } from "../../_base/use-component-data";
 import type { ActionConfig } from "../../../actions/types";
 import type { CommandPaletteConfig } from "./types";
+
+const ANIMATION_DURATION = 150;
 
 /** Shape of a single command item for internal use. */
 interface CommandItem {
@@ -72,6 +81,8 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
 
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const [animating, setAnimating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -80,13 +91,18 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const maxHeight = config.maxHeight ?? "300px";
 
   // Fetch dynamic items if data endpoint is provided
-  const dataResult = config.data ? useComponentData(config.data) : null;
+  const dataResult = useComponentData(config.data ?? "");
 
   // Merge static groups with dynamic data
   const allGroups: CommandGroup[] = useMemo(() => {
-    const staticGroups: CommandGroup[] = (config.groups ?? []) as CommandGroup[];
-    if (dataResult?.data && Array.isArray((dataResult.data as Record<string, unknown>).groups)) {
-      const dynamicGroups = (dataResult.data as Record<string, unknown>).groups as CommandGroup[];
+    const staticGroups: CommandGroup[] = (config.groups ??
+      []) as CommandGroup[];
+    if (
+      dataResult?.data &&
+      Array.isArray((dataResult.data as Record<string, unknown>).groups)
+    ) {
+      const dynamicGroups = (dataResult.data as Record<string, unknown>)
+        .groups as CommandGroup[];
       return [...staticGroups, ...dynamicGroups];
     }
     return staticGroups;
@@ -108,7 +124,10 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       .filter((group) => group.items.length > 0);
   }, [allGroups, query]);
 
-  const flatItems = useMemo(() => flattenItems(filteredGroups), [filteredGroups]);
+  const flatItems = useMemo(
+    () => flattenItems(filteredGroups),
+    [filteredGroups],
+  );
 
   // Reset active index when query changes
   useEffect(() => {
@@ -164,7 +183,40 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
     [flatItems, activeIndex, handleSelect],
   );
 
-  if (visible === false) return null;
+  // Mounted/animating pattern for enter/exit animation
+  const isVisible = visible !== false;
+  useEffect(() => {
+    if (isVisible) {
+      setMounted(true);
+      const enterTimer = setTimeout(() => setAnimating(true), 10);
+      return () => clearTimeout(enterTimer);
+    } else if (mounted) {
+      setAnimating(false);
+      const exitTimer = setTimeout(() => setMounted(false), ANIMATION_DURATION);
+      return () => clearTimeout(exitTimer);
+    }
+  }, [isVisible]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Escape key handler to close (publish a close signal)
+  const handleEscape = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        if (publish) {
+          publish({ dismissed: true });
+        }
+      }
+    },
+    [publish],
+  );
+
+  if (!mounted) return null;
+
+  const animationStyle: CSSProperties = {
+    opacity: animating ? 1 : 0,
+    transform: animating ? "scale(1)" : "scale(0.95)",
+    transition: `opacity ${ANIMATION_DURATION}ms ease, transform ${ANIMATION_DURATION}ms ease`,
+  };
 
   let flatIndex = 0;
 
@@ -172,12 +224,16 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
     <div
       data-snapshot-component="command-palette"
       className={config.className}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(e) => {
+        handleEscape(e);
+        handleKeyDown(e);
+      }}
       style={{
         display: "flex",
         flexDirection: "column",
-        backgroundColor:
-          "var(--sn-color-popover, var(--sn-color-card, #fff))",
+        ...animationStyle,
+        backgroundColor: "var(--sn-color-popover, var(--sn-color-card, #fff))",
+        ...((config.style as React.CSSProperties) ?? {}),
         color:
           "var(--sn-color-popover-foreground, var(--sn-color-foreground, #111))",
         border:
@@ -188,6 +244,22 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
         overflow: "hidden",
       }}
     >
+      <style>{`
+        [data-snapshot-component="command-palette"] [data-snapshot-command-input] input:focus { outline: none; }
+        [data-snapshot-component="command-palette"] [data-snapshot-command-input] input:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+          border-radius: var(--sn-radius-sm, 0.25rem);
+        }
+        [data-snapshot-component="command-palette"] [data-snapshot-command-item]:hover {
+          background-color: var(--sn-color-accent, #f3f4f6);
+        }
+        [data-snapshot-component="command-palette"] [data-snapshot-command-item]:focus { outline: none; }
+        [data-snapshot-component="command-palette"] [data-snapshot-command-item]:focus-visible {
+          background-color: var(--sn-color-accent, #f3f4f6);
+        }
+      `}</style>
+
       {/* Search input */}
       <div
         data-snapshot-command-input=""
@@ -195,13 +267,16 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
           display: "flex",
           alignItems: "center",
           gap: "var(--sn-spacing-sm, 0.5rem)",
-          padding:
-            "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+          padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
           borderBottom:
             "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
         }}
       >
-        <Icon name="search" size={16} color="var(--sn-color-muted-foreground, #6b7280)" />
+        <Icon
+          name="search"
+          size={16}
+          color="var(--sn-color-muted-foreground, #6b7280)"
+        />
         <input
           ref={inputRef}
           type="text"
@@ -310,7 +385,8 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
                       <div
                         style={{
                           fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                          fontWeight: "var(--sn-font-weight-normal, 400)" as string,
+                          fontWeight:
+                            "var(--sn-font-weight-normal, 400)" as string,
                           lineHeight: 1.5,
                           overflow: "hidden",
                           textOverflow: "ellipsis",
@@ -323,8 +399,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
                         <div
                           style={{
                             fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                            color:
-                              "var(--sn-color-muted-foreground, #6b7280)",
+                            color: "var(--sn-color-muted-foreground, #6b7280)",
                             lineHeight: 1.4,
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -346,10 +421,8 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
                           gap: "var(--sn-spacing-2xs, 0.125rem)",
                           fontSize: "var(--sn-font-size-xs, 0.75rem)",
                           fontFamily: "var(--sn-font-mono, monospace)",
-                          color:
-                            "var(--sn-color-muted-foreground, #6b7280)",
-                          backgroundColor:
-                            "var(--sn-color-muted, #f3f4f6)",
+                          color: "var(--sn-color-muted-foreground, #6b7280)",
+                          backgroundColor: "var(--sn-color-muted, #f3f4f6)",
                           padding:
                             "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
                           borderRadius: "var(--sn-radius-xs, 0.125rem)",

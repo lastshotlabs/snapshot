@@ -263,19 +263,12 @@ function FeedItemRow({
  * ```
  */
 export function Feed({ config }: { config: FeedConfig }) {
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Resolve data — either from-ref or endpoint fetch
   const isRef = isFromRef(config.data);
-  const resolvedRef = useSubscribe(config.data); // eslint-disable-line react-hooks/rules-of-hooks
-  const {
-    data: fetchedData,
-    isLoading,
-    error,
-  } = useComponentData(
-    // eslint-disable-line react-hooks/rules-of-hooks
-    isRef ? (config.data as { from: string }) : (config.data as string),
-  );
+  const resolvedRef = useSubscribe(config.data);
+  const { data: fetchedData, isLoading, error } = useComponentData(config.data);
 
   const [page, setPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState<Record<
@@ -344,6 +337,7 @@ export function Feed({ config }: { config: FeedConfig }) {
         borderRadius: "var(--sn-radius-md, 6px)",
         border: "1px solid var(--sn-color-border, #e5e7eb)",
         overflow: "hidden",
+        ...(config.style as React.CSSProperties),
       }}
     >
       {/* Loading state */}

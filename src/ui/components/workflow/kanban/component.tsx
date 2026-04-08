@@ -13,7 +13,12 @@ import {
   useDndSensors,
   getSortableStyle,
 } from "../../../hooks/use-drag-drop";
-import type { DragStartEvent, DragEndEvent, DragOverEvent } from "../../../hooks/use-drag-drop";
+import type {
+  DragStartEvent,
+  DragEndEvent,
+  DragOverEvent,
+} from "../../../hooks/use-drag-drop";
+import { getInitials } from "../../_base/utils";
 import type { KanbanConfig } from "./types";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -26,16 +31,6 @@ const priorityColorMap: Record<string, string> = {
   medium: "var(--sn-color-warning, #f59e0b)",
   low: "var(--sn-color-info, #3b82f6)",
 };
-
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 // ── Skeleton ───────────────────────────────────────────────────────────────
 
@@ -98,12 +93,7 @@ function SortableCard({
   const sortableStyle = getSortableStyle(transform, transition, isDragging);
 
   return (
-    <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      style={sortableStyle}
-    >
+    <div ref={setNodeRef} {...attributes} {...listeners} style={sortableStyle}>
       <CardContent item={item} config={config} execute={execute} />
     </div>
   );
@@ -131,7 +121,8 @@ function DroppableColumnBody({
         backgroundColor: isOver
           ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 5%, transparent)"
           : undefined,
-        transition: "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+        transition:
+          "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
       }}
     >
       {children}
@@ -165,9 +156,21 @@ function CardContent({
   return (
     <div
       data-kanban-card
+      role={config.cardAction ? "button" : undefined}
+      tabIndex={config.cardAction ? 0 : undefined}
       onClick={
         config.cardAction
           ? () => void execute(config.cardAction!, { ...item })
+          : undefined
+      }
+      onKeyDown={
+        config.cardAction
+          ? (e: React.KeyboardEvent) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                void execute(config.cardAction!, { ...item });
+              }
+            }
           : undefined
       }
       style={{
@@ -176,8 +179,13 @@ function CardContent({
         padding: "var(--sn-spacing-sm, 8px)",
         boxShadow:
           "var(--sn-shadow-sm, 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1))",
-        cursor: config.sortable ? "grab" : config.cardAction ? "pointer" : "default",
-        transition: "box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+        cursor: config.sortable
+          ? "grab"
+          : config.cardAction
+            ? "pointer"
+            : "default",
+        transition:
+          "box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
       }}
     >
       {/* Title */}
@@ -187,9 +195,7 @@ function CardContent({
             "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           color: "var(--sn-color-foreground, #0f172a)",
-          marginBottom: description
-            ? "var(--sn-spacing-xs, 4px)"
-            : undefined,
+          marginBottom: description ? "var(--sn-spacing-xs, 4px)" : undefined,
         }}
       >
         {title}
@@ -342,12 +348,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
   );
 
   // DnD handlers
-  const handleDragStart = useCallback(
-    (event: DragStartEvent) => {
-      setActiveId(String(event.active.id));
-    },
-    [],
-  );
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(String(event.active.id));
+  }, []);
 
   const handleDragOver = useCallback(
     (event: DragOverEvent) => {
@@ -477,8 +480,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
           data-kanban-header
           style={{
             borderTop: `3px solid ${colorVar(accentColor)}`,
-            padding:
-              "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
+            padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
             display: "flex",
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 8px)",
@@ -538,6 +540,21 @@ export function Kanban({ config }: { config: KanbanConfig }) {
                 <SkeletonCard />
                 <SkeletonCard />
               </>
+            )}
+
+            {error && (
+              <div
+                data-kanban-error
+                role="alert"
+                style={{
+                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                  color: "var(--sn-color-destructive, #ef4444)",
+                  textAlign: "center",
+                  padding: "var(--sn-spacing-sm, 8px)",
+                }}
+              >
+                Error loading data
+              </div>
             )}
 
             {!isLoading && !error && colItems.length === 0 && (
@@ -650,6 +667,22 @@ export function Kanban({ config }: { config: KanbanConfig }) {
         ...(config.style as React.CSSProperties),
       }}
     >
+      {/* Hover/focus styles */}
+      <style>{`
+[data-snapshot-component="kanban"] [data-kanban-card]:hover {
+  box-shadow: var(--sn-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1));
+}
+[data-snapshot-component="kanban"] [data-kanban-card]:focus {
+  outline: none;
+}
+[data-snapshot-component="kanban"] [data-kanban-card]:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+[data-snapshot-component="kanban"] [data-kanban-header]:hover {
+  background-color: color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 40%, transparent);
+}
+`}</style>
       {config.columns.map(renderColumn)}
     </div>
   );

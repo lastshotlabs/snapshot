@@ -48,7 +48,20 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
       data-snapshot-component="breadcrumb"
       data-testid="breadcrumb"
       className={config.className}
+      style={{
+        ...((config.style as React.CSSProperties) ?? {}),
+      }}
     >
+      <style>{`
+        [data-snapshot-component="breadcrumb"] a:focus {
+          outline: none;
+        }
+        [data-snapshot-component="breadcrumb"] a:focus-visible {
+          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+          outline-offset: var(--sn-ring-offset, 2px);
+          border-radius: var(--sn-radius-sm, 0.25rem);
+        }
+      `}</style>
       <ol
         style={{
           display: "flex",
@@ -101,7 +114,8 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
                   aria-current="page"
                   style={{
                     color: "var(--sn-color-foreground, #111827)",
-                    fontWeight: "var(--sn-font-weight-medium, 500)" as unknown as number,
+                    fontWeight:
+                      "var(--sn-font-weight-medium, 500)" as unknown as number,
                   }}
                 >
                   {item.icon && (

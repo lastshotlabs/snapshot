@@ -1,7 +1,9 @@
-import type { ScaffoldConfig } from '../../types'
+import type { ScaffoldConfig } from "../../types";
 
-export function generateOAuthCallbackPageComponent(config: ScaffoldConfig): string {
-  if (config.securityProfile === 'prototype') {
+export function generateOAuthCallbackPageComponent(
+  config: ScaffoldConfig,
+): string {
+  if (config.securityProfile === "prototype") {
     return `import { useEffect } from 'react'
 import { useHead } from '@unhead/react'
 import { Link } from '@tanstack/react-router'
@@ -66,7 +68,7 @@ export function OAuthCallbackPage() {
     </Card>
   )
 }
-`
+`;
   }
 
   // hardened
@@ -124,5 +126,5 @@ export function OAuthCallbackPage() {
     </Card>
   )
 }
-`
+`;
 }
