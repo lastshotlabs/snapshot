@@ -172,7 +172,9 @@ export function Timeline({ config }: { config: TimelineConfig }) {
             Failed to load timeline
           </span>
           <button
+            type="button"
             onClick={() => refetch()}
+            aria-label="Retry"
             style={{
               marginLeft: "var(--sn-spacing-sm, 0.5rem)",
               fontSize: "var(--sn-font-size-xs, 0.75rem)",

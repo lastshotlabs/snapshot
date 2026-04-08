@@ -146,7 +146,8 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
       data-testid="gif-picker"
       className={config.className}
       style={{
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
@@ -161,7 +162,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
   transform: scale(1.03);
 }
 [data-snapshot-component="gif-picker"] button img {
-  transition: transform var(--sn-duration-fast, 150ms) ease;
+  transition: transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
 }
 [data-snapshot-component="gif-picker"] button:hover {
   box-shadow: var(--sn-shadow-sm, 0 1px 2px rgba(0,0,0,0.1));
@@ -177,7 +178,8 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
       <div
         style={{
           padding: "var(--sn-spacing-xs, 0.25rem)",
-          borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+          borderBottom:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         }}
       >
         <div
@@ -264,9 +266,11 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
           >
             {displayGifs.map((gif) => (
               <button
+                type="button"
                 key={gif.id}
                 onClick={() => handleSelect(gif)}
                 title={gif.title}
+                aria-label={gif.title ?? "Select GIF"}
                 style={{
                   display: "block",
                   padding: 0,
@@ -302,7 +306,8 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
           style={{
             padding:
               "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-            borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+            borderTop:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             fontSize: "var(--sn-font-size-xs, 0.75rem)",
             color: "var(--sn-color-muted-foreground, #6b7280)",
             textAlign: "center",

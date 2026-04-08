@@ -428,7 +428,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
                           borderRadius: "var(--sn-radius-xs, 0.125rem)",
                           border:
                             "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
-                          lineHeight: 1,
+                          lineHeight: "var(--sn-leading-none, 1)",
                           flexShrink: 0,
                         }}
                       >

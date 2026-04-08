@@ -123,6 +123,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       {/* Submit button */}
       {showButton && (
         <button
+          type="button"
           data-testid="quick-add-button"
           onClick={handleSubmit}
           disabled={!value.trim()}

@@ -81,7 +81,8 @@ export function Alert({ config }: { config: AlertConfig }) {
         gap: "var(--sn-spacing-sm, 0.5rem)",
         padding: "var(--sn-spacing-md, 0.75rem) var(--sn-spacing-lg, 1.5rem)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderLeft: `4px solid var(--sn-color-${colorToken}, #e5e7eb)`,
         backgroundColor: "var(--sn-color-card, #ffffff)",
         position: "relative",
@@ -96,7 +97,7 @@ export function Alert({ config }: { config: AlertConfig }) {
           style={{
             color: `var(--sn-color-${colorToken === "border" ? "muted-foreground" : colorToken})`,
             flexShrink: 0,
-            marginTop: "2px",
+            marginTop: "var(--sn-spacing-2xs, 2px)",
             display: "flex",
           }}
         >
@@ -127,7 +128,7 @@ export function Alert({ config }: { config: AlertConfig }) {
           style={{
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             color: "var(--sn-color-muted-foreground, #6b7280)",
-            lineHeight: 1.5,
+            lineHeight: "var(--sn-leading-normal, 1.5)",
           }}
         >
           {resolvedDescription}
@@ -136,6 +137,7 @@ export function Alert({ config }: { config: AlertConfig }) {
         {/* Action button */}
         {handleAction && config.actionLabel && (
           <button
+            type="button"
             data-testid="alert-action"
             onClick={handleAction}
             style={{
@@ -146,7 +148,7 @@ export function Alert({ config }: { config: AlertConfig }) {
               fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
               color: `var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
               backgroundColor: "transparent",
-              border: `1px solid var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
+              border: `var(--sn-border-default, 1px) solid var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
               borderRadius: "var(--sn-radius-sm, 0.25rem)",
               cursor: "pointer",
             }}
@@ -159,6 +161,7 @@ export function Alert({ config }: { config: AlertConfig }) {
       {/* Dismiss button */}
       {dismissible && (
         <button
+          type="button"
           data-testid="alert-dismiss"
           onClick={() => setDismissed(true)}
           aria-label="Dismiss alert"
@@ -169,7 +172,7 @@ export function Alert({ config }: { config: AlertConfig }) {
             padding: "var(--sn-spacing-xs, 0.25rem)",
             color: "var(--sn-color-muted-foreground, #6b7280)",
             fontSize: "var(--sn-font-size-md, 1rem)",
-            lineHeight: 1,
+            lineHeight: "var(--sn-leading-none, 1)",
             flexShrink: 0,
             display: "flex",
             alignItems: "center",

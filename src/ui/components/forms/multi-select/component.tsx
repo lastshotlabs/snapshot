@@ -40,6 +40,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
 
   // Fetch remote options if `data` is configured
   const dataResult = useComponentData(config.data ?? "");
+  const { error: dataError, refetch: dataRefetch } = dataResult;
 
   const labelField = config.labelField ?? "label";
   const valueField = config.valueField ?? "value";
@@ -239,7 +240,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                 backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
                 color: "var(--sn-color-secondary-foreground, #111827)",
                 borderRadius: "var(--sn-radius-sm, 0.25rem)",
-                lineHeight: 1.4,
+                lineHeight: "var(--sn-leading-tight, 1.25)",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
@@ -266,7 +267,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                   alignItems: "center",
                   fontSize: "var(--sn-font-size-xs, 0.75rem)",
                   color: "var(--sn-color-muted-foreground, #6b7280)",
-                  lineHeight: 1,
+                  lineHeight: "var(--sn-leading-none, 1)",
                 }}
               >
                 ×
@@ -369,18 +370,54 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
             </div>
           )}
 
-          {!dataResult.isLoading && filteredOptions.length === 0 && (
+          {!dataResult.isLoading && dataError && (
             <div
+              data-testid="multi-select-error"
               style={{
                 padding: "var(--sn-spacing-md, 0.75rem)",
                 textAlign: "center",
                 fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                color: "var(--sn-color-muted-foreground, #6b7280)",
+                color: "var(--sn-color-destructive, #ef4444)",
               }}
             >
-              {search ? "No results found" : "No options available"}
+              <div>Failed to load options</div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dataRefetch();
+                }}
+                style={{
+                  marginTop: "var(--sn-spacing-xs, 0.25rem)",
+                  padding:
+                    "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-primary, #2563eb)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+              >
+                Retry
+              </button>
             </div>
           )}
+
+          {!dataResult.isLoading &&
+            !dataError &&
+            filteredOptions.length === 0 && (
+              <div
+                style={{
+                  padding: "var(--sn-spacing-md, 0.75rem)",
+                  textAlign: "center",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-muted-foreground, #6b7280)",
+                }}
+              >
+                {search ? "No results found" : "No options available"}
+              </div>
+            )}
 
           {filteredOptions.map((opt) => {
             const isChecked = selected.includes(opt.value);
@@ -444,7 +481,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                       ? "var(--sn-color-primary-foreground, #ffffff)"
                       : "transparent",
                     fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                    lineHeight: 1,
+                    lineHeight: "var(--sn-leading-none, 1)",
                     flexShrink: 0,
                     transition:
                       "background-color var(--sn-duration-fast, 150ms), border-color var(--sn-duration-fast, 150ms)",

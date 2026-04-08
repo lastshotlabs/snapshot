@@ -560,7 +560,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           aria-hidden="true"
           style={{
             fontSize: "var(--sn-font-size-4xl, 2.25rem)",
-            lineHeight: 1,
+            lineHeight: "var(--sn-leading-none, 1)",
             color: "var(--sn-color-muted-foreground, #6b7280)",
           }}
         >

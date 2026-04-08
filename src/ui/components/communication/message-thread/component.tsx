@@ -73,7 +73,7 @@ function MessageSkeleton() {
           height: 32,
           borderRadius: "var(--sn-radius-full, 9999px)",
           backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-          opacity: 0.5,
+          opacity: "var(--sn-opacity-muted, 0.5)",
           flexShrink: 0,
         }}
       />
@@ -84,7 +84,7 @@ function MessageSkeleton() {
             width: "30%",
             borderRadius: "var(--sn-radius-xs, 2px)",
             backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: 0.5,
+            opacity: "var(--sn-opacity-muted, 0.5)",
             marginBottom: "var(--sn-spacing-xs, 0.25rem)",
           }}
         />
@@ -94,7 +94,7 @@ function MessageSkeleton() {
             width: "70%",
             borderRadius: "var(--sn-radius-xs, 2px)",
             backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: 0.3,
+            opacity: "var(--sn-opacity-disabled, 0.3)",
           }}
         />
       </div>

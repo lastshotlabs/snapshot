@@ -209,7 +209,8 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
                 alignItems: "center",
                 marginBottom: "var(--sn-spacing-md, 1rem)",
                 paddingBottom: "var(--sn-spacing-sm, 0.5rem)",
-                borderBottom: "1px solid var(--sn-color-border, #e2e8f0)",
+                borderBottom:
+                  "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
               }}
             >
               {title && (
@@ -241,7 +242,8 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
                         padding:
                           "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
                         borderRadius: "var(--sn-radius-md, 0.375rem)",
-                        border: "1px solid var(--sn-color-border, #e2e8f0)",
+                        border:
+                          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
                         background: "transparent",
                         cursor: "pointer",
                         fontSize: "var(--sn-font-size-sm, 0.875rem)",
@@ -380,7 +382,8 @@ function DetailCardError({ error }: { error: Error }) {
       data-testid="detail-card-error"
       style={{
         padding: "var(--sn-spacing-md, 1rem)",
-        border: "1px solid var(--sn-color-destructive, #ef4444)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-destructive, #ef4444)",
         borderRadius: "var(--sn-radius-md, 0.375rem)",
         color: "var(--sn-color-destructive, #ef4444)",
         backgroundColor:
@@ -404,7 +407,8 @@ function DetailCardEmpty({ message }: { message: string }) {
         textAlign: "center",
         color: "var(--sn-color-muted-foreground, #64748b)",
         fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        border: "1px dashed var(--sn-color-border, #e2e8f0)",
+        border:
+          "var(--sn-border-default, 1px) dashed var(--sn-color-border, #e2e8f0)",
         borderRadius: "var(--sn-radius-lg, 0.5rem)",
       }}
     >

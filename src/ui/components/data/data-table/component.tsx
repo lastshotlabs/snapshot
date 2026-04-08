@@ -436,7 +436,8 @@ export function DataTable({ config }: { config: DataTableConfig }) {
             style={{
               padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
               borderRadius: "var(--sn-radius-md, 6px)",
-              border: "1px solid var(--sn-color-border, #d1d5db)",
+              border:
+                "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
               width: "100%",
               maxWidth: "min(320px, 100%)",
             }}
@@ -463,6 +464,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           <span>{table.selectedIds.length} selected</span>
           {config.bulkActions!.map((bulkAction, i) => (
             <button
+              type="button"
               key={i}
               data-bulk-action
               onClick={() =>
@@ -707,6 +709,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
 
                               return (
                                 <button
+                                  type="button"
                                   key={actionIndex}
                                   data-row-action
                                   onClick={() =>
@@ -776,6 +779,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           </span>
           <div style={{ display: "flex", gap: "var(--sn-spacing-xs, 4px)" }}>
             <button
+              type="button"
               onClick={() => table.prevPage()}
               disabled={table.pagination!.currentPage <= 1}
               aria-label="Previous page"
@@ -784,6 +788,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               Previous
             </button>
             <button
+              type="button"
               onClick={() => table.nextPage()}
               disabled={
                 table.pagination!.currentPage >= table.pagination!.totalPages

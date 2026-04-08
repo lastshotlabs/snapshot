@@ -130,7 +130,8 @@ function ListItem({
         transition: `background-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)`,
         ...(isCard
           ? {
-              border: "1px solid var(--sn-color-border, #e5e7eb)",
+              border:
+                "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
               borderRadius: "var(--sn-radius-md, 0.5rem)",
               boxShadow: "var(--sn-shadow-sm, 0 1px 2px rgba(0,0,0,0.05))",
               backgroundColor: "var(--sn-color-card, #ffffff)",
@@ -305,7 +306,8 @@ export function ListComponent({ config }: { config: ListConfig }) {
   const containerStyle: React.CSSProperties =
     variant === "bordered"
       ? {
-          border: "1px solid var(--sn-color-border, #e5e7eb)",
+          border:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           borderRadius: "var(--sn-radius-md, 0.5rem)",
           overflow: "hidden",
         }

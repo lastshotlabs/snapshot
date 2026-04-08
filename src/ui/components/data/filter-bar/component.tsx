@@ -286,7 +286,8 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                 paddingLeft: "var(--sn-spacing-xl, 2rem)",
                 fontSize: "var(--sn-font-size-sm, 0.875rem)",
                 lineHeight: "var(--sn-leading-normal, 1.5)",
-                border: "1px solid var(--sn-color-border, #e5e7eb)",
+                border:
+                  "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
                 borderRadius: "var(--sn-radius-md, 0.375rem)",
                 backgroundColor: "var(--sn-color-input, #fff)",
                 color: "var(--sn-color-foreground, #111)",
@@ -346,7 +347,8 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                     zIndex: "var(--sn-z-index-dropdown, 30)",
                     minWidth: "150px",
                     backgroundColor: "var(--sn-color-popover, #fff)",
-                    border: "1px solid var(--sn-color-border, #e5e7eb)",
+                    border:
+                      "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
                     borderRadius: "var(--sn-radius-md, 0.375rem)",
                     boxShadow:
                       "var(--sn-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1))",
@@ -503,7 +505,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                   cursor: "pointer",
                   padding: "0",
                   color: "var(--sn-color-muted-foreground, #6b7280)",
-                  lineHeight: 1,
+                  lineHeight: "var(--sn-leading-none, 1)",
                 }}
               >
                 <Icon name="x" size={12} />

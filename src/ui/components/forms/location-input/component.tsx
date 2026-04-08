@@ -200,7 +200,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
             <span
               style={{
                 color: "var(--sn-color-destructive, #ef4444)",
-                marginLeft: "2px",
+                marginLeft: "var(--sn-spacing-2xs, 0.125rem)",
               }}
             >
               *
@@ -214,7 +214,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
         style={{
           display: "flex",
           alignItems: "center",
-          border: `1px solid ${hasError ? "var(--sn-color-destructive, #ef4444)" : "var(--sn-color-border, #e5e7eb)"}`,
+          border: `var(--sn-border-default, 1px) solid ${hasError ? "var(--sn-color-destructive, #ef4444)" : "var(--sn-color-border, #e5e7eb)"}`,
           borderRadius: "var(--sn-radius-md, 0.375rem)",
           backgroundColor: disabled
             ? "var(--sn-color-secondary, #f3f4f6)"
@@ -278,7 +278,8 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
             left: 0,
             right: 0,
             marginTop: "var(--sn-spacing-xs, 0.25rem)",
-            border: "1px solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-md, 0.375rem)",
             backgroundColor: "var(--sn-color-card, #ffffff)",
             boxShadow: "var(--sn-shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1))",
@@ -289,6 +290,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
         >
           {results.map((loc, i) => (
             <button
+              type="button"
               key={`${loc.name}-${loc.lat}-${loc.lng}-${i}`}
               data-testid="location-result"
               onClick={() => handleSelect(loc)}
@@ -302,7 +304,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
                 border: "none",
                 borderBottom:
                   i < results.length - 1
-                    ? "1px solid var(--sn-color-border, #e5e7eb)"
+                    ? "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)"
                     : undefined,
                 backgroundColor: "transparent",
                 cursor: "pointer",

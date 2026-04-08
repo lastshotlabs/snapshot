@@ -66,7 +66,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
           <style>{`
             @keyframes sn-pulse {
               0%, 100% { opacity: 1; }
-              50% { opacity: 0.5; }
+              50% { opacity: var(--sn-opacity-muted, 0.5); }
             }
           `}</style>
         )}
@@ -98,7 +98,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
           <style>{`
             @keyframes sn-pulse {
               0%, 100% { opacity: 1; }
-              50% { opacity: 0.5; }
+              50% { opacity: var(--sn-opacity-muted, 0.5); }
             }
           `}</style>
         )}
@@ -127,7 +127,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
           <style>{`
             @keyframes sn-pulse {
               0%, 100% { opacity: 1; }
-              50% { opacity: 0.5; }
+              50% { opacity: var(--sn-opacity-muted, 0.5); }
             }
           `}</style>
         )}

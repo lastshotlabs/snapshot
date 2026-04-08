@@ -118,7 +118,7 @@ function SkeletonItem() {
           height: "20px",
           borderRadius: "var(--sn-radius-full, 9999px)",
           backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-          opacity: 0.5,
+          opacity: "var(--sn-opacity-muted, 0.5)",
           flexShrink: 0,
         }}
       />
@@ -129,7 +129,7 @@ function SkeletonItem() {
             width: "50%",
             borderRadius: "var(--sn-radius-xs, 2px)",
             backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: 0.5,
+            opacity: "var(--sn-opacity-muted, 0.5)",
             marginBottom: "var(--sn-spacing-xs, 4px)",
           }}
         />
@@ -139,7 +139,7 @@ function SkeletonItem() {
             width: "80%",
             borderRadius: "var(--sn-radius-xs, 2px)",
             backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: 0.3,
+            opacity: "var(--sn-opacity-disabled, 0.3)",
           }}
         />
       </div>
@@ -235,7 +235,8 @@ export function NotificationFeed({
           alignItems: "center",
           justifyContent: "space-between",
           padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-          borderBottom: "1px solid var(--sn-color-border, #e2e8f0)",
+          borderBottom:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
         }}
       >
         <div
@@ -385,10 +386,11 @@ export function NotificationFeed({
                   gap: "var(--sn-spacing-sm, 8px)",
                   padding:
                     "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-                  borderBottom: "1px solid var(--sn-color-border, #e2e8f0)",
+                  borderBottom:
+                    "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
                   borderLeft: isRead
-                    ? "3px solid transparent"
-                    : "3px solid var(--sn-color-primary, #2563eb)",
+                    ? "var(--sn-border-thick, 3px) solid transparent"
+                    : "var(--sn-border-thick, 3px) solid var(--sn-color-primary, #2563eb)",
                   backgroundColor: isRead
                     ? undefined
                     : "var(--sn-color-accent, #f0f9ff)",
@@ -401,7 +403,7 @@ export function NotificationFeed({
                 }}
               >
                 {/* Type icon */}
-                <div style={{ paddingTop: "2px" }}>
+                <div style={{ paddingTop: "var(--sn-spacing-2xs, 2px)" }}>
                   <TypeIcon type={notifType} />
                 </div>
 
@@ -430,7 +432,7 @@ export function NotificationFeed({
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
-                        marginTop: "2px",
+                        marginTop: "var(--sn-spacing-2xs, 2px)",
                       }}
                     >
                       {message}

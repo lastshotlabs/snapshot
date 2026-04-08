@@ -99,7 +99,7 @@ export function ConfirmDialog(): ReactNode {
       style: {
         position: "fixed",
         inset: 0,
-        zIndex: 10000,
+        zIndex: "var(--sn-z-index-modal, 10000)" as unknown as number,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -115,12 +115,12 @@ export function ConfirmDialog(): ReactNode {
         "aria-label": "Confirmation",
         style: {
           background: "var(--sn-color-surface, #fff)",
-          color: "var(--sn-color-text, #111)",
+          color: "var(--sn-color-foreground, #111)",
           borderRadius: "var(--sn-radius-lg, 0.75rem)",
           padding: "var(--sn-spacing-lg, 1.5rem)",
-          maxWidth: "28rem",
+          maxWidth: "var(--sn-container-sm, 28rem)",
           width: "90%",
-          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.2)",
+          boxShadow: "var(--sn-shadow-lg, 0 4px 24px rgba(0, 0, 0, 0.2))",
         },
       },
       createElement(
@@ -146,13 +146,18 @@ export function ConfirmDialog(): ReactNode {
           "button",
           {
             onClick: handleCancel,
+            type: "button",
             style: {
-              padding: "0.5rem 1rem",
+              padding:
+                "var(--sn-spacing-xs, 0.5rem) var(--sn-spacing-md, 1rem)",
               borderRadius: "var(--sn-radius-md, 0.375rem)",
-              border: "1px solid var(--sn-color-border, #d1d5db)",
+              border:
+                "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
               background: "transparent",
-              color: "var(--sn-color-text, #111)",
+              color: "var(--sn-color-foreground, #111)",
               cursor: "pointer",
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              fontFamily: "inherit",
             },
           },
           request.cancelLabel ?? "Cancel",
@@ -161,17 +166,21 @@ export function ConfirmDialog(): ReactNode {
           "button",
           {
             onClick: handleConfirm,
+            type: "button",
             style: {
-              padding: "0.5rem 1rem",
+              padding:
+                "var(--sn-spacing-xs, 0.5rem) var(--sn-spacing-md, 1rem)",
               borderRadius: "var(--sn-radius-md, 0.375rem)",
               border: "none",
               background: isDestructive
-                ? "var(--sn-color-danger, #ef4444)"
+                ? "var(--sn-color-destructive, #ef4444)"
                 : "var(--sn-color-primary, #2563eb)",
               color: isDestructive
-                ? "var(--sn-color-danger-fg, #fff)"
-                : "var(--sn-color-primary-fg, #fff)",
+                ? "var(--sn-color-destructive-foreground, #fff)"
+                : "var(--sn-color-primary-foreground, #fff)",
               cursor: "pointer",
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              fontFamily: "inherit",
             },
           },
           request.confirmLabel ?? "Confirm",

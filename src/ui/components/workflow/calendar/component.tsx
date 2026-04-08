@@ -281,7 +281,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
             gridTemplateColumns: config.showWeekNumbers
               ? "40px repeat(7, 1fr)"
               : "repeat(7, 1fr)",
-            gap: "1px",
+            gap: "var(--sn-border-thin, 1px)",
           }}
         >
           {config.showWeekNumbers && <div />}
@@ -311,7 +311,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
               gridTemplateColumns: config.showWeekNumbers
                 ? "40px repeat(7, 1fr)"
                 : "repeat(7, 1fr)",
-              gap: "1px",
+              gap: "var(--sn-border-thin, 1px)",
               borderBottom:
                 "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
             }}
@@ -393,7 +393,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "1px",
+                      gap: "var(--sn-border-thin, 1px)",
                     }}
                   >
                     {dayEvents.slice(0, MAX_VISIBLE_EVENTS).map((ev, evIdx) => (
@@ -439,7 +439,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(7, 1fr)",
-          gap: "1px",
+          gap: "var(--sn-border-thin, 1px)",
         }}
       >
         {weekDates.map((date, idx) => {

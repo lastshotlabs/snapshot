@@ -72,7 +72,7 @@ export function TypingIndicator({ config }: { config: TypingIndicatorConfig }) {
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: "2px",
+          gap: "var(--sn-spacing-2xs, 2px)",
         }}
       >
         {[0, 1, 2].map((i) => (

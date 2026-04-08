@@ -175,7 +175,7 @@ function CommentSkeleton() {
           height: 28,
           borderRadius: "var(--sn-radius-full, 9999px)",
           backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-          opacity: 0.5,
+          opacity: "var(--sn-opacity-muted, 0.5)",
           flexShrink: 0,
         }}
       />
@@ -186,7 +186,7 @@ function CommentSkeleton() {
             width: "25%",
             borderRadius: "var(--sn-radius-xs, 2px)",
             backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: 0.5,
+            opacity: "var(--sn-opacity-muted, 0.5)",
             marginBottom: "var(--sn-spacing-xs, 0.25rem)",
           }}
         />
@@ -196,7 +196,7 @@ function CommentSkeleton() {
             width: "60%",
             borderRadius: "var(--sn-radius-xs, 2px)",
             backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: 0.3,
+            opacity: "var(--sn-opacity-disabled, 0.3)",
           }}
         />
       </div>
@@ -272,7 +272,8 @@ export function CommentSection({ config }: { config: CommentSectionConfig }) {
       aria-label="Comments"
       className={config.className}
       style={{
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
@@ -292,7 +293,8 @@ export function CommentSection({ config }: { config: CommentSectionConfig }) {
           alignItems: "center",
           gap: "var(--sn-spacing-sm, 0.5rem)",
           padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
-          borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+          borderBottom:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         }}
       >
         <Icon name="message-square" size={16} />
@@ -371,7 +373,7 @@ export function CommentSection({ config }: { config: CommentSectionConfig }) {
                 style={{
                   borderBottom:
                     i < comments.length - 1
-                      ? "1px solid var(--sn-color-border, #e5e7eb)"
+                      ? "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)"
                       : undefined,
                 }}
               >
@@ -389,7 +391,8 @@ export function CommentSection({ config }: { config: CommentSectionConfig }) {
       {config.submitAction && (
         <div
           style={{
-            borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+            borderTop:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             padding: "var(--sn-spacing-sm, 0.5rem)",
           }}
         >

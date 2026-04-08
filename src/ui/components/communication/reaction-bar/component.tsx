@@ -124,6 +124,7 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
 `}</style>
       {reactions.map((reaction, idx) => (
         <button
+          type="button"
           key={`${reaction.emoji}-${idx}`}
           data-testid="reaction-button"
           aria-label={`React with ${reaction.emoji}`}
@@ -171,7 +172,9 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
       {showAddButton && (
         <div style={{ position: "relative" }}>
           <button
+            type="button"
             data-testid="reaction-add"
+            aria-label="Add reaction"
             onClick={() => setShowPicker(!showPicker)}
             style={{
               display: "inline-flex",
@@ -181,7 +184,8 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
               height: "2rem",
               padding: 0,
               borderRadius: "var(--sn-radius-full, 9999px)",
-              border: "1px solid var(--sn-color-border, #e5e7eb)",
+              border:
+                "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
               backgroundColor: "var(--sn-color-card, #ffffff)",
               color: "var(--sn-color-muted-foreground, #6b7280)",
               cursor: "pointer",

@@ -230,7 +230,8 @@ export function StatCard({ config }: { config: StatCardConfig }) {
         padding: "var(--sn-spacing-lg, 1.5rem)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
         boxShadow: "var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.1))",
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         cursor: handleClick ? "pointer" : undefined,
         display: "flex",

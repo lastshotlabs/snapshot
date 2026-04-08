@@ -22,21 +22,114 @@ type Page =
   | "presets"
   | "feed-chart-wizard";
 
-const PAGES: { key: Page; label: string }[] = [
-  { key: "dashboard", label: "Dashboard" },
-  { key: "data", label: "Data Display" },
-  { key: "primitives", label: "Primitives" },
-  { key: "forms", label: "Forms" },
-  { key: "overlay", label: "Overlay" },
-  { key: "navigation", label: "Navigation" },
-  { key: "content", label: "Content" },
-  { key: "workflow", label: "Workflow" },
-  { key: "structural", label: "Structural" },
-  { key: "communication", label: "Communication" },
-
-  { key: "presets", label: "Presets" },
-  { key: "feed-chart-wizard", label: "Feed / Chart / Wizard" },
+const PAGES: {
+  key: Page;
+  label: string;
+  group: string;
+  count: number;
+  description: string;
+}[] = [
+  {
+    key: "dashboard",
+    label: "Dashboard",
+    group: "Core",
+    count: 4,
+    description:
+      "Executive metric cards with API-backed values, trend semantics, icons, and tokenized layout behavior.",
+  },
+  {
+    key: "data",
+    label: "Data",
+    group: "Core",
+    count: 2,
+    description:
+      "Tables and detail views for dense operational data, selection, search, sorting, actions, and loading states.",
+  },
+  {
+    key: "primitives",
+    label: "Primitives",
+    group: "Foundation",
+    count: 18,
+    description:
+      "Small, reusable atoms that set the baseline for color, rhythm, focus, feedback, and empty-state quality.",
+  },
+  {
+    key: "forms",
+    label: "Forms",
+    group: "Input",
+    count: 9,
+    description:
+      "Form inputs, creation flows, validation, inline editing, tagging, location search, and quick entry patterns.",
+  },
+  {
+    key: "overlay",
+    label: "Overlay",
+    group: "Interaction",
+    count: 7,
+    description:
+      "Modals, drawers, command surfaces, popovers, context menus, tabs, and filters that need clear focus states and low-friction exits.",
+  },
+  {
+    key: "navigation",
+    label: "Navigation",
+    group: "Interaction",
+    count: 6,
+    description:
+      "Wayfinding patterns for hierarchy, branching, tabbing, menus, tree structures, and step-based flows.",
+  },
+  {
+    key: "content",
+    label: "Content",
+    group: "Expression",
+    count: 8,
+    description:
+      "Editors, timelines, markdown, code, file input, and compare views where readability and containment matter most.",
+  },
+  {
+    key: "workflow",
+    label: "Workflow",
+    group: "Systems",
+    count: 5,
+    description:
+      "Kanban, calendar, pricing, audit logs, and notification feeds that stress-test density, drag affordances, and large-card balance.",
+  },
+  {
+    key: "structural",
+    label: "Structural",
+    group: "Foundation",
+    count: 3,
+    description:
+      "Raw layout primitives for rows, headings, buttons, and selects before they are wrapped into product screens.",
+  },
+  {
+    key: "communication",
+    label: "Communication",
+    group: "Expression",
+    count: 15,
+    description:
+      "Messaging, threads, comments, embeds, emoji, reactions, and presence components with realistic conversation payloads.",
+  },
+  {
+    key: "presets",
+    label: "Presets",
+    group: "Composed",
+    count: 3,
+    description:
+      "Generated page presets that combine primitives into CRUD, dashboard, and account settings experiences.",
+  },
+  {
+    key: "feed-chart-wizard",
+    label: "Feed + Chart + Wizard",
+    group: "Composed",
+    count: 9,
+    description:
+      "Recent additions for activity streams, chart empty states, and multi-step onboarding flows.",
+  },
 ];
+
+const PAGE_BY_KEY = Object.fromEntries(
+  PAGES.map((page) => [page.key, page]),
+) as Record<Page, (typeof PAGES)[number]>;
 
 // ── Dashboard page configs ──────────────────────────────────────────────
 
@@ -667,28 +760,28 @@ const listDemo = {
   items: [
     {
       title: "Alice Johnson",
-      description: "Senior Engineer · Engineering",
+      description: "Senior Engineer - Engineering",
       icon: "user",
       badge: "Admin",
       badgeColor: "primary",
     },
     {
       title: "Bob Smith",
-      description: "Product Manager · Product",
+      description: "Product Manager - Product",
       icon: "user",
       badge: "Editor",
       badgeColor: "success",
     },
     {
       title: "Carol Davis",
-      description: "Designer · Design",
+      description: "Designer - Design",
       icon: "user",
       badge: "Viewer",
       badgeColor: "secondary",
     },
     {
       title: "Dave Wilson",
-      description: "DevOps · Infrastructure",
+      description: "DevOps - Infrastructure",
       icon: "user",
     },
   ],
@@ -754,7 +847,7 @@ const accordionDemo = {
       content: [
         {
           type: "heading",
-          text: "Snapshot uses a design token system with flavors, semantic colors, and component-level overrides — all customizable at runtime.",
+          text: "Snapshot uses a design token system with flavors, semantic colors, and component-level overrides - all customizable at runtime.",
           level: 5,
         },
       ],
@@ -1111,7 +1204,10 @@ function ShowcaseSection({
 }) {
   return (
     <div className="showcase__section">
-      <div className="showcase__section-header">{title}</div>
+      <div className="showcase__section-header">
+        <span>{title}</span>
+        <span className="showcase__section-tag">Demo</span>
+      </div>
       <div className="showcase__section-body">{children}</div>
     </div>
   );
@@ -1145,14 +1241,13 @@ function DataPage() {
         <ShowcaseSection title="Data Table">
           <p
             style={{
-              fontSize: "0.8125rem",
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
               color: "var(--sn-color-muted-foreground, #6b7280)",
-              marginBottom: "1rem",
+              marginBottom: "var(--sn-spacing-md, 1rem)",
             }}
           >
-            Note: DataTable currently expects data via FromRef. The table below
-            shows the empty state. StatCard and DetailCard fetch data directly
-            from the mock API.
+            Live mock API data with search, sort, selection, pagination, row
+            actions, and bulk actions enabled.
           </p>
           <RenderConfig config={dataTable} />
         </ShowcaseSection>
@@ -1224,6 +1319,12 @@ function OverlayPage() {
         </ShowcaseSection>
         <ShowcaseSection title="Filter Bar">
           <RenderConfig config={filterBarDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Popover">
+          <RenderConfig config={popoverDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Context Menu">
+          <RenderConfig config={contextMenuDemo} />
         </ShowcaseSection>
       </div>
     </PageWrapper>
@@ -1464,6 +1565,133 @@ const commandPaletteDemo = {
   ],
 };
 
+const entityPickerDemo = {
+  type: "entity-picker",
+  id: "team-member-picker",
+  label: "Assign to...",
+  data: "GET /api/team-members",
+  labelField: "name",
+  valueField: "id",
+  descriptionField: "email",
+  searchable: true,
+  multiple: true,
+};
+
+const scrollAreaDemo = {
+  type: "scroll-area",
+  maxHeight: "200px",
+  orientation: "vertical",
+  showScrollbar: "hover",
+  content: [
+    { type: "heading", text: "Scrollable Content", level: 4 },
+    {
+      type: "list",
+      variant: "bordered",
+      divider: true,
+      items: Array.from({ length: 12 }, (_, i) => ({
+        title: `Item ${i + 1}`,
+        description: `Description for list item number ${i + 1}`,
+        icon: "file",
+      })),
+    },
+  ],
+};
+
+const popoverDemo = {
+  type: "popover",
+  trigger: "Show Popover",
+  triggerIcon: "settings",
+  triggerVariant: "outline",
+  placement: "bottom",
+  width: "300px",
+  content: [
+    { type: "heading", text: "Popover Content", level: 4 },
+    {
+      type: "form",
+      submit: "/api/settings",
+      fields: [
+        {
+          name: "theme",
+          type: "select",
+          label: "Theme",
+          options: [
+            { label: "Light", value: "light" },
+            { label: "Dark", value: "dark" },
+          ],
+        },
+        { name: "compact", type: "checkbox", label: "Compact mode" },
+      ],
+      submitLabel: "Apply",
+    },
+  ],
+};
+
+const contextMenuDemo = {
+  type: "context-menu",
+  triggerText: "Right-click this area to open the context menu",
+  items: [
+    {
+      label: "Edit",
+      icon: "pencil",
+      action: { type: "toast", message: "Edit clicked" },
+    },
+    {
+      label: "Duplicate",
+      icon: "copy",
+      action: { type: "toast", message: "Duplicate clicked" },
+    },
+    { label: "", separator: true },
+    {
+      label: "Delete",
+      icon: "trash-2",
+      variant: "destructive",
+      action: {
+        type: "confirm",
+        title: "Delete?",
+        message: "This cannot be undone.",
+        onConfirm: { type: "toast", message: "Deleted" },
+      },
+    },
+  ],
+};
+
+const auditLogDemo = {
+  type: "audit-log",
+  data: "GET /api/audit-log",
+  userField: "user",
+  actionField: "action",
+  timestampField: "timestamp",
+  detailsField: "details",
+  pagination: { pageSize: 10 },
+};
+
+const notificationFeedDemo = {
+  type: "notification-feed",
+  data: "GET /api/notifications",
+  titleField: "title",
+  messageField: "message",
+  timestampField: "timestamp",
+  readField: "read",
+  typeField: "type",
+  markReadAction: {
+    type: "toast",
+    message: "Marked as read",
+    variant: "success",
+  },
+  itemAction: { type: "toast", message: "Notification clicked" },
+  maxHeight: "400px",
+  emptyMessage: "No notifications",
+};
+
+const messageThreadDemo = {
+  type: "message-thread",
+  data: "GET /api/messages",
+  showTimestamps: true,
+  groupByDate: true,
+  maxHeight: "400px",
+  emptyMessage: "No messages yet",
+};
+
 function PrimitivesPage() {
   return (
     <PageWrapper>
@@ -1515,6 +1743,12 @@ function PrimitivesPage() {
         </ShowcaseSection>
         <ShowcaseSection title="Avatar Group">
           <RenderConfig config={avatarGroupDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Entity Picker">
+          <RenderConfig config={entityPickerDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Scroll Area">
+          <RenderConfig config={scrollAreaDemo} />
         </ShowcaseSection>
       </div>
     </PageWrapper>
@@ -1593,6 +1827,12 @@ function WorkflowPage() {
         </ShowcaseSection>
         <ShowcaseSection title="Pricing Table">
           <RenderConfig config={pricingDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Audit Log">
+          <RenderConfig config={auditLogDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Notification Feed">
+          <RenderConfig config={notificationFeedDemo} />
         </ShowcaseSection>
       </div>
     </PageWrapper>
@@ -1905,6 +2145,9 @@ function CommunicationPage() {
         <ShowcaseSection title="Typing Indicators">
           <RenderConfig config={typingIndicatorDemos} />
         </ShowcaseSection>
+        <ShowcaseSection title="Message Thread">
+          <RenderConfig config={messageThreadDemo} />
+        </ShowcaseSection>
         <ShowcaseSection title="Chat with Embeds">
           <RenderConfig config={chatWithEmbedsDemo} />
         </ShowcaseSection>
@@ -2124,7 +2367,7 @@ function PresetsPage() {
   return (
     <PageWrapper>
       <div className="showcase">
-        <ShowcaseSection title="crudPage — Users">
+        <ShowcaseSection title="crudPage - Users">
           <p
             style={{
               fontSize: "var(--sn-font-size-sm, 0.875rem)",
@@ -2140,7 +2383,7 @@ function PresetsPage() {
             <ComponentRenderer key={i} config={config as any} />
           ))}
         </ShowcaseSection>
-        <ShowcaseSection title="dashboardPage — Overview">
+        <ShowcaseSection title="dashboardPage - Overview">
           <p
             style={{
               fontSize: "var(--sn-font-size-sm, 0.875rem)",
@@ -2159,7 +2402,7 @@ function PresetsPage() {
             <ComponentRenderer key={i} config={config as any} />
           ))}
         </ShowcaseSection>
-        <ShowcaseSection title="settingsPage — Account Settings">
+        <ShowcaseSection title="settingsPage - Account Settings">
           <p
             style={{
               fontSize: "var(--sn-font-size-sm, 0.875rem)",
@@ -2203,7 +2446,7 @@ const feedActivityItems = [
   {
     id: "3",
     message: "Bob opened PR #88: Add Chart component",
-    detail: "3 files changed, +420 −12",
+    detail: "3 files changed, +420 -12",
     createdAt: new Date(Date.now() - 3600000).toISOString(),
     type: "info",
   },
@@ -2486,43 +2729,43 @@ function FeedChartWizardPage() {
               <FeedDataProvider id="chart-empty-source" data={[]}>
                 <div className="showcase">
                   {/* Feed */}
-                  <ShowcaseSection title="Feed — Populated (with badges, timestamps, descriptions)">
+                  <ShowcaseSection title="Feed - Populated (with badges, timestamps, descriptions)">
                     <RenderConfig config={feedPopulatedConfig} />
                   </ShowcaseSection>
 
-                  <ShowcaseSection title="Feed — Empty State">
+                  <ShowcaseSection title="Feed - Empty State">
                     <RenderConfig config={feedEmptyConfig} />
                   </ShowcaseSection>
 
                   {/* Chart */}
-                  <ShowcaseSection title="Chart — Bar (multi-series)">
+                  <ShowcaseSection title="Chart - Bar (multi-series)">
                     <RenderConfig config={chartBarConfig} />
                   </ShowcaseSection>
 
-                  <ShowcaseSection title="Chart — Line">
+                  <ShowcaseSection title="Chart - Line">
                     <RenderConfig config={chartLineConfig} />
                   </ShowcaseSection>
 
-                  <ShowcaseSection title="Chart — Pie">
+                  <ShowcaseSection title="Chart - Pie">
                     <RenderConfig config={chartPieConfig} />
                   </ShowcaseSection>
 
-                  <ShowcaseSection title="Chart — Donut">
+                  <ShowcaseSection title="Chart - Donut">
                     <RenderConfig config={chartDonutConfig} />
                   </ShowcaseSection>
 
-                  <ShowcaseSection title="Chart — Empty State">
+                  <ShowcaseSection title="Chart - Empty State">
                     <RenderConfig config={chartEmptyConfig} />
                   </ShowcaseSection>
 
                   {/* Wizard */}
-                  <ShowcaseSection title="Wizard — Multi-step Onboarding (2 steps)">
+                  <ShowcaseSection title="Wizard - Multi-step Onboarding (2 steps)">
                     <div style={{ maxWidth: "32rem" }}>
                       <RenderConfig config={wizardOnboardingConfig} />
                     </div>
                   </ShowcaseSection>
 
-                  <ShowcaseSection title="Wizard — With Skip (3 steps, step 2 optional)">
+                  <ShowcaseSection title="Wizard - With Skip (3 steps, step 2 optional)">
                     <div style={{ maxWidth: "32rem" }}>
                       <RenderConfig config={wizardSkippableConfig} />
                     </div>
@@ -2539,20 +2782,39 @@ function FeedChartWizardPage() {
 
 export function ComponentShowcase() {
   const [page, setPage] = useState<Page>("dashboard");
+  const currentPage = PAGE_BY_KEY[page];
 
   return (
     <>
-      <div className="page-tabs">
+      <div className="showcase-overview" aria-live="polite">
+        <div>
+          <p className="showcase-overview__eyebrow">{currentPage.group}</p>
+          <h2>{currentPage.label}</h2>
+          <p>{currentPage.description}</p>
+        </div>
+        <dl className="showcase-overview__stats">
+          <div>
+            <dt>Demos</dt>
+            <dd>{currentPage.count}</dd>
+          </div>
+          <div>
+            <dt>Total surface</dt>
+            <dd>{PAGES.reduce((total, item) => total + item.count, 0)}</dd>
+          </div>
+        </dl>
+      </div>
+      <nav className="page-tabs" aria-label="Playground sections">
         {PAGES.map(({ key, label }) => (
           <button
             key={key}
             className={`page-tab ${page === key ? "page-tab--active" : ""}`}
+            aria-current={page === key ? "page" : undefined}
             onClick={() => setPage(key)}
           >
-            {label}
+            <span>{label}</span>
           </button>
         ))}
-      </div>
+      </nav>
       {page === "dashboard" && <DashboardPage />}
       {page === "data" && <DataPage />}
       {page === "primitives" && <PrimitivesPage />}

@@ -6,7 +6,7 @@
  * registry (for rendering) and the schema registry (for validation).
  */
 
-import { useState, type CSSProperties } from "react";
+import { useState, useId, type CSSProperties } from "react";
 import { useSubscribe, usePublish } from "../context/index";
 import {
   registerComponent,
@@ -46,6 +46,61 @@ const ALIGN_MAP: Record<string, string> = {
   end: "flex-end",
   stretch: "stretch",
 };
+
+// ── Shared interactive styles (injected once) ───────────────────────────────
+
+/**
+ * CSS for hover/focus-visible states on structural buttons and selects.
+ * Uses `data-snapshot-structural-*` attributes as selectors.
+ */
+const STRUCTURAL_STYLES = `
+[data-snapshot-structural-button]:not(:disabled) {
+  transition: opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
+              box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
+              filter var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
+}
+[data-snapshot-structural-button]:not(:disabled):hover {
+  filter: brightness(0.9);
+}
+[data-snapshot-structural-button][data-variant="outline"]:not(:disabled):hover,
+[data-snapshot-structural-button][data-variant="ghost"]:not(:disabled):hover {
+  background-color: var(--sn-color-accent, #f3f4f6);
+  filter: none;
+}
+[data-snapshot-structural-button][data-variant="link"]:not(:disabled):hover {
+  filter: none;
+  opacity: var(--sn-opacity-hover, 0.8);
+}
+[data-snapshot-structural-button]:focus-visible {
+  outline: var(--sn-ring-width, 2px) solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+
+[data-snapshot-structural-select] {
+  transition: border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
+              box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
+}
+[data-snapshot-structural-select]:hover:not(:disabled) {
+  border-color: var(--sn-color-primary, #2563eb);
+}
+[data-snapshot-structural-select]:focus-visible {
+  outline: var(--sn-ring-width, 2px) solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: var(--sn-ring-offset, 2px);
+}
+`;
+
+/** Tracks whether the structural stylesheet has been injected. */
+let stylesInjected = false;
+
+/** Injects the shared structural styles into the document head once. */
+function ensureStyles() {
+  if (stylesInjected || typeof document === "undefined") return;
+  const style = document.createElement("style");
+  style.setAttribute("data-snapshot-structural-styles", "");
+  style.textContent = STRUCTURAL_STYLES;
+  document.head.appendChild(style);
+  stylesInjected = true;
+}
 
 // ── ComponentRenderer (inline for structural children) ──────────────────────
 
@@ -95,29 +150,38 @@ function Row({ config }: { config: Record<string, unknown> }) {
   const rowConfig = config as unknown as RowConfig;
   const gap = useResponsiveValue(rowConfig.gap ?? "md");
   const hasSpans = rowConfig.children.some((child) => child.span !== undefined);
+  const configStyle = rowConfig.style as CSSProperties | undefined;
 
-  const style: CSSProperties = hasSpans
-    ? {
-        display: "grid",
-        gridTemplateColumns: "repeat(12, 1fr)",
-        gap: GAP_MAP[gap] ?? GAP_MAP["md"],
-        justifyContent: rowConfig.justify
-          ? JUSTIFY_MAP[rowConfig.justify]
-          : undefined,
-        alignItems: rowConfig.align ? ALIGN_MAP[rowConfig.align] : undefined,
-      }
-    : {
-        display: "flex",
-        gap: GAP_MAP[gap] ?? GAP_MAP["md"],
-        justifyContent: rowConfig.justify
-          ? JUSTIFY_MAP[rowConfig.justify]
-          : undefined,
-        alignItems: rowConfig.align ? ALIGN_MAP[rowConfig.align] : undefined,
-        flexWrap: rowConfig.wrap ? "wrap" : undefined,
-      };
+  const style: CSSProperties = {
+    ...(hasSpans
+      ? {
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          gap: GAP_MAP[gap] ?? GAP_MAP["md"],
+          justifyContent: rowConfig.justify
+            ? JUSTIFY_MAP[rowConfig.justify]
+            : undefined,
+          alignItems: rowConfig.align ? ALIGN_MAP[rowConfig.align] : undefined,
+        }
+      : {
+          display: "flex",
+          gap: GAP_MAP[gap] ?? GAP_MAP["md"],
+          justifyContent: rowConfig.justify
+            ? JUSTIFY_MAP[rowConfig.justify]
+            : undefined,
+          alignItems: rowConfig.align ? ALIGN_MAP[rowConfig.align] : undefined,
+          flexWrap: rowConfig.wrap ? "wrap" : undefined,
+        }),
+    ...configStyle,
+  };
 
   return (
-    <div style={style} data-snapshot-row>
+    <div
+      style={style}
+      className={rowConfig.className}
+      role="group"
+      data-snapshot-row
+    >
       {rowConfig.children.map((child, i) => (
         <InlineComponentRenderer
           key={child.id ?? `row-child-${i}`}
@@ -149,9 +213,11 @@ function Heading({ config }: { config: Record<string, unknown> }) {
   const text = useSubscribe(headingConfig.text);
   const level = headingConfig.level ?? 2;
   const Tag = `h${level}` as const;
+  const configStyle = headingConfig.style as CSSProperties | undefined;
 
   return (
     <Tag
+      className={headingConfig.className}
       style={{
         fontSize: HEADING_SIZE[level],
         fontWeight:
@@ -164,6 +230,8 @@ function Heading({ config }: { config: Record<string, unknown> }) {
             ? "var(--sn-tracking-tight, -0.025em)"
             : "var(--sn-tracking-normal, 0)",
         color: "var(--sn-color-foreground, #111827)",
+        margin: 0,
+        ...configStyle,
       }}
     >
       {typeof text === "string" ? text : String(text ?? "")}
@@ -184,6 +252,8 @@ function Button({ config }: { config: Record<string, unknown> }) {
   );
   const execute = useActionExecutor();
 
+  ensureStyles();
+
   const variantStyles: Record<string, CSSProperties> = {
     default: {
       backgroundColor: "var(--sn-color-primary, #2563eb)",
@@ -198,7 +268,8 @@ function Button({ config }: { config: Record<string, unknown> }) {
     outline: {
       backgroundColor: "transparent",
       color: "var(--sn-color-primary, #2563eb)",
-      border: "1px solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
     },
     ghost: {
       backgroundColor: "transparent",
@@ -215,29 +286,37 @@ function Button({ config }: { config: Record<string, unknown> }) {
       color: "var(--sn-color-primary, #2563eb)",
       border: "none",
       textDecoration: "underline",
+      padding: "0",
     },
   };
 
   const sizeStyles: Record<string, CSSProperties> = {
     sm: {
-      padding: "0.25rem 0.5rem",
+      padding: "var(--sn-spacing-2xs, 0.25rem) var(--sn-spacing-xs, 0.5rem)",
       fontSize: "var(--sn-font-size-sm, 0.875rem)",
     },
-    md: { padding: "0.5rem 1rem", fontSize: "var(--sn-font-size-md, 1rem)" },
+    md: {
+      padding: "var(--sn-spacing-xs, 0.5rem) var(--sn-spacing-md, 1rem)",
+      fontSize: "var(--sn-font-size-md, 1rem)",
+    },
     lg: {
-      padding: "0.75rem 1.5rem",
+      padding: "var(--sn-spacing-sm, 0.75rem) var(--sn-spacing-lg, 1.5rem)",
       fontSize: "var(--sn-font-size-lg, 1.125rem)",
     },
     icon: {
-      padding: "0.5rem",
+      padding: "var(--sn-spacing-xs, 0.5rem)",
       fontSize: "var(--sn-font-size-md, 1rem)",
       width: "2.5rem",
       height: "2.5rem",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
   };
 
   const variant = buttonConfig.variant ?? "default";
   const size = buttonConfig.size ?? "md";
+  const configStyle = buttonConfig.style as CSSProperties | undefined;
 
   const handleClick = () => {
     if (disabled || !buttonConfig.action) return;
@@ -249,15 +328,22 @@ function Button({ config }: { config: Record<string, unknown> }) {
       type="button"
       onClick={handleClick}
       disabled={!!disabled}
+      aria-disabled={disabled ? true : undefined}
+      className={buttonConfig.className}
+      data-snapshot-structural-button=""
+      data-variant={variant}
+      data-size={size}
       style={{
         ...variantStyles[variant],
         ...sizeStyles[size],
         cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.5 : 1,
+        opacity: disabled ? "var(--sn-opacity-disabled, 0.5)" : undefined,
         borderRadius: "var(--sn-radius-md, 0.375rem)",
+        fontFamily: "var(--sn-font-sans, inherit)",
+        fontWeight: "var(--sn-font-weight-medium, 500)",
+        lineHeight: "var(--sn-leading-tight, 1.25)",
+        ...configStyle,
       }}
-      data-variant={variant}
-      data-size={size}
     >
       {buttonConfig.label}
     </button>
@@ -274,6 +360,10 @@ function Select({ config }: { config: Record<string, unknown> }) {
   const selectConfig = config as unknown as SelectConfig;
   const publish = selectConfig.id ? usePublish(selectConfig.id) : null;
   const [value, setValue] = useState(selectConfig.default ?? "");
+  const generatedId = useId();
+  const selectId = selectConfig.id ?? generatedId;
+
+  ensureStyles();
 
   const options = Array.isArray(selectConfig.options)
     ? selectConfig.options
@@ -287,14 +377,27 @@ function Select({ config }: { config: Record<string, unknown> }) {
     }
   };
 
+  const configStyle = selectConfig.style as CSSProperties | undefined;
+
   return (
     <select
+      id={selectId}
       value={value}
       onChange={handleChange}
+      aria-label={selectConfig.placeholder ?? undefined}
+      className={selectConfig.className}
+      data-snapshot-structural-select=""
       style={{
-        padding: "0.5rem",
+        padding: "var(--sn-spacing-xs, 0.5rem)",
         borderRadius: "var(--sn-radius-md, 0.375rem)",
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+        backgroundColor: "var(--sn-color-background, #fff)",
+        color: "var(--sn-color-foreground, #111827)",
+        fontSize: "var(--sn-font-size-md, 1rem)",
+        fontFamily: "var(--sn-font-sans, inherit)",
+        lineHeight: "var(--sn-leading-normal, 1.5)",
+        ...configStyle,
       }}
     >
       {selectConfig.placeholder && (

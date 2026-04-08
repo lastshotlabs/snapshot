@@ -57,10 +57,15 @@ function Section({
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="editor-section">
-      <div className="editor-section__header" onClick={() => setOpen(!open)}>
+      <button
+        type="button"
+        className="editor-section__header"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
         <span>{title}</span>
         <span>{open ? "\u25B4" : "\u25BE"}</span>
-      </div>
+      </button>
       {open && <div className="editor-section__body">{children}</div>}
     </div>
   );
@@ -170,6 +175,27 @@ export function TokenEditorSidebar({
         const next = {
           ...prev,
           colors: { ...prev.colors, [key]: value },
+        };
+        regenerateCssDebounced(activeFlavor, next);
+        return next;
+      });
+    },
+    [activeFlavor, regenerateCssDebounced],
+  );
+
+  const handleColorTextChange = useCallback(
+    (key: string, value: string) => {
+      setOverrides((prev) => {
+        const nextColors = { ...prev.colors };
+        if (value) {
+          nextColors[key] = value;
+        } else {
+          delete nextColors[key];
+        }
+
+        const next = {
+          ...prev,
+          colors: Object.keys(nextColors).length > 0 ? nextColors : undefined,
         };
         regenerateCssDebounced(activeFlavor, next);
         return next;
@@ -346,7 +372,11 @@ export function TokenEditorSidebar({
 
   return (
     <div className="playground__sidebar">
-      <h2 style={{ fontSize: "1rem", fontWeight: 700 }}>Token Editor</h2>
+      <div className="token-editor__intro">
+        <p className="playground__eyebrow">Live tokens</p>
+        <h2>Token Editor</h2>
+        <p>Stress-test every demo against color, radius, spacing, and type.</p>
+      </div>
 
       <Section title="Flavor">
         <div className="control">
@@ -376,9 +406,7 @@ export function TokenEditorSidebar({
                 type="text"
                 placeholder={`#hex or oklch(...)`}
                 value={overrides.colors?.[key] || ""}
-                onChange={(e) => {
-                  if (e.target.value) handleColorChange(key, e.target.value);
-                }}
+                onChange={(e) => handleColorTextChange(key, e.target.value)}
               />
             </div>
           </div>

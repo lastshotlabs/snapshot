@@ -99,7 +99,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
             transform: "rotate(-90deg)",
             ...(isIndeterminate
               ? {
-                  animation: `sn-progress-spin-${uniqueId.replace(/:/g, "")} 1.5s linear infinite`,
+                  animation: `sn-progress-spin-${uniqueId.replace(/:/g, "")} var(--sn-duration-slow, 1.5s) linear infinite`,
                 }
               : {}),
           }}
@@ -224,7 +224,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
               height: "100%",
               backgroundColor: fillColor,
               borderRadius: "var(--sn-radius-full, 9999px)",
-              animation: `sn-progress-indeterminate-${uniqueId.replace(/:/g, "")} 1.5s ease-in-out infinite`,
+              animation: `sn-progress-indeterminate-${uniqueId.replace(/:/g, "")} var(--sn-duration-slow, 1.5s) var(--sn-ease-in-out, ease-in-out) infinite`,
             }}
           />
         ) : segments && segments > 1 ? (
@@ -232,7 +232,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
             style={{
               display: "flex",
               height: "100%",
-              gap: 2,
+              gap: "var(--sn-spacing-2xs, 2px)",
             }}
           >
             {Array.from({ length: segments }).map((_, i) => {

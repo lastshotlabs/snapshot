@@ -115,7 +115,7 @@ export function ToastContainer(): ReactNode {
         position: "fixed",
         bottom: "var(--sn-spacing-md, 1rem)",
         right: "var(--sn-spacing-md, 1rem)",
-        zIndex: 9999,
+        zIndex: "var(--sn-z-index-toast, 9999)" as unknown as number,
         display: "flex",
         flexDirection: "column" as const,
         gap: "var(--sn-spacing-sm, 0.5rem)",
@@ -131,7 +131,7 @@ export function ToastContainer(): ReactNode {
           style: {
             padding: "var(--sn-spacing-sm, 0.75rem) var(--sn-spacing-md, 1rem)",
             borderRadius: "var(--sn-radius-md, 0.5rem)",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            boxShadow: "var(--sn-shadow-md, 0 2px 8px rgba(0,0,0,0.15))",
             display: "flex",
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
@@ -149,12 +149,14 @@ export function ToastContainer(): ReactNode {
               "button",
               {
                 onClick: toast.action.onClick,
+                type: "button",
                 style: {
                   background: "transparent",
-                  border: "1px solid currentColor",
+                  border: "var(--sn-border-default, 1px) solid currentColor",
                   color: "inherit",
                   cursor: "pointer",
-                  padding: "0.25rem 0.5rem",
+                  padding:
+                    "var(--sn-spacing-2xs, 0.25rem) var(--sn-spacing-xs, 0.5rem)",
                   borderRadius: "var(--sn-radius-sm, 0.25rem)",
                   fontSize: "var(--sn-font-size-sm, 0.875rem)",
                 },
@@ -165,6 +167,7 @@ export function ToastContainer(): ReactNode {
         createElement(
           "button",
           {
+            type: "button",
             onClick: () =>
               setQueue((prev) => prev.filter((t) => t.id !== toast.id)),
             style: {
@@ -172,9 +175,9 @@ export function ToastContainer(): ReactNode {
               border: "none",
               color: "inherit",
               cursor: "pointer",
-              padding: "0.25rem",
-              fontSize: "1rem",
-              lineHeight: 1,
+              padding: "var(--sn-spacing-2xs, 0.25rem)",
+              fontSize: "var(--sn-font-size-md, 1rem)",
+              lineHeight: "var(--sn-leading-none, 1)",
             },
             "aria-label": "Dismiss",
           },

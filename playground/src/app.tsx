@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider, createStore } from "jotai";
 import {
   resolveTokens,
-  PageContextProvider,
   SnapshotApiContext,
   ToastContainer,
   ConfirmDialog,
@@ -183,6 +182,117 @@ const mockApi = {
         },
       ];
     }
+    if (url.includes("/notifications")) {
+      return [
+        {
+          id: "n1",
+          title: "New comment on your PR",
+          message:
+            "Alice commented on PR #42: 'Looks great, just one suggestion...'",
+          timestamp: new Date(Date.now() - 600000).toISOString(),
+          read: false,
+          type: "info",
+        },
+        {
+          id: "n2",
+          title: "Build succeeded",
+          message: "Deploy #241 to production completed successfully.",
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          read: false,
+          type: "success",
+        },
+        {
+          id: "n3",
+          title: "Security alert",
+          message: "A new login was detected from an unfamiliar device.",
+          timestamp: new Date(Date.now() - 7200000).toISOString(),
+          read: true,
+          type: "warning",
+        },
+        {
+          id: "n4",
+          title: "Invitation accepted",
+          message: "Bob Smith accepted your team invitation.",
+          timestamp: new Date(Date.now() - 86400000).toISOString(),
+          read: true,
+          type: "info",
+        },
+        {
+          id: "n5",
+          title: "Build failed",
+          message: "Build #240 failed: TypeScript error in src/index.ts.",
+          timestamp: new Date(Date.now() - 172800000).toISOString(),
+          read: true,
+          type: "error",
+        },
+      ];
+    }
+    if (url.includes("/messages")) {
+      return [
+        {
+          id: "t1",
+          content:
+            "<p>Hey, can you review the latest changes to the token system?</p>",
+          author: { name: "Alice Johnson", avatar: null },
+          timestamp: new Date(Date.now() - 7200000).toISOString(),
+        },
+        {
+          id: "t2",
+          content:
+            "<p>Sure! I'll take a look this afternoon. Anything specific to focus on?</p>",
+          author: { name: "Bob Smith", avatar: null },
+          timestamp: new Date(Date.now() - 7000000).toISOString(),
+        },
+        {
+          id: "t3",
+          content:
+            "<p>Mainly the dark mode color derivation. I refactored how overrides merge with <code>darkColors</code>.</p>",
+          author: { name: "Alice Johnson", avatar: null },
+          timestamp: new Date(Date.now() - 6800000).toISOString(),
+        },
+        {
+          id: "t4",
+          content:
+            "<p>Got it. I'll pay extra attention to the foreground pair contrast ratios.</p>",
+          author: { name: "Bob Smith", avatar: null },
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+        },
+      ];
+    }
+    if (url.includes("/entities") || url.includes("/team-members")) {
+      return [
+        {
+          id: "u1",
+          name: "Alice Johnson",
+          email: "alice@example.com",
+          avatar_url: null,
+        },
+        {
+          id: "u2",
+          name: "Bob Smith",
+          email: "bob@example.com",
+          avatar_url: null,
+        },
+        {
+          id: "u3",
+          name: "Carol Davis",
+          email: "carol@example.com",
+          avatar_url: null,
+        },
+        {
+          id: "u4",
+          name: "Dave Wilson",
+          email: "dave@example.com",
+          avatar_url: null,
+        },
+        {
+          id: "u5",
+          name: "Eve Brown",
+          email: "eve@example.com",
+          avatar_url: null,
+        },
+      ];
+    }
     if (url.includes("/user/")) {
       return {
         id: 1,
@@ -231,15 +341,23 @@ export function App() {
           <div className="playground">
             <TokenEditorSidebar darkMode={darkMode} />
             <div className="playground__main">
-              <div className="playground__header">
-                <h1>Snapshot Playground</h1>
+              <header className="playground__header">
+                <div className="playground__header-copy">
+                  <p className="playground__eyebrow">Snapshot UI audit</p>
+                  <h1>Component Playground</h1>
+                  <p>
+                    Inspect coverage, interaction states, token behavior, and
+                    responsive density across the full config-driven surface.
+                  </p>
+                </div>
                 <button
                   className="dark-toggle"
+                  aria-pressed={darkMode}
                   onClick={() => setDarkMode(!darkMode)}
                 >
-                  {darkMode ? "Light Mode" : "Dark Mode"}
+                  {darkMode ? "Switch to light" : "Switch to dark"}
                 </button>
-              </div>
+              </header>
               <ComponentShowcase />
             </div>
             <ToastContainer />

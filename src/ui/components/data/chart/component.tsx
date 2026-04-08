@@ -153,7 +153,8 @@ function CartesianChart({
       <Tooltip
         contentStyle={{
           backgroundColor: "var(--sn-color-card, #fff)",
-          border: "1px solid var(--sn-color-border, #e5e7eb)",
+          border:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           borderRadius: "var(--sn-radius-md, 6px)",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
         }}
@@ -209,7 +210,8 @@ function PieDonutChart({
         <Tooltip
           contentStyle={{
             backgroundColor: "var(--sn-color-card, #fff)",
-            border: "1px solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-md, 6px)",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
           }}
@@ -264,7 +266,8 @@ export function Chart({ config }: { config: ChartConfig }) {
       style={{
         backgroundColor: "var(--sn-color-card, #fff)",
         borderRadius: "var(--sn-radius-md, 6px)",
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         padding: "var(--sn-spacing-md, 12px)",
         ...(config.style as React.CSSProperties),
       }}

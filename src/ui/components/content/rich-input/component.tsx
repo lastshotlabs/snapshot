@@ -265,7 +265,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
       data-testid="rich-input"
       className={config.className}
       style={{
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         display: "flex",
@@ -300,6 +301,87 @@ export function RichInput({ config }: { config: RichInputConfig }) {
           height: 0;
           pointer-events: none;
         }
+        /* ── List styles ── */
+        [data-snapshot-component="rich-input"] .ProseMirror ul {
+          list-style-type: disc;
+          padding-left: var(--sn-spacing-lg, 1.5rem);
+          margin: var(--sn-spacing-xs, 0.25rem) 0;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror ol {
+          list-style-type: decimal;
+          padding-left: var(--sn-spacing-lg, 1.5rem);
+          margin: var(--sn-spacing-xs, 0.25rem) 0;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror li {
+          margin: var(--sn-spacing-2xs, 0.125rem) 0;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror li p {
+          margin: 0;
+        }
+        /* Nested lists */
+        [data-snapshot-component="rich-input"] .ProseMirror ul ul,
+        [data-snapshot-component="rich-input"] .ProseMirror ol ul {
+          list-style-type: circle;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror ul ul ul,
+        [data-snapshot-component="rich-input"] .ProseMirror ol ul ul {
+          list-style-type: square;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror ol ol {
+          list-style-type: lower-alpha;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror ol ol ol {
+          list-style-type: lower-roman;
+        }
+        /* ── Code block styles ── */
+        [data-snapshot-component="rich-input"] .ProseMirror pre {
+          background: var(--sn-color-muted, #f3f4f6);
+          color: var(--sn-color-foreground, #111827);
+          border-radius: var(--sn-radius-sm, 0.25rem);
+          padding: var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem);
+          font-family: var(--sn-font-mono, ui-monospace, monospace);
+          font-size: var(--sn-font-size-sm, 0.875rem);
+          overflow-x: auto;
+          margin: var(--sn-spacing-xs, 0.25rem) 0;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror pre code {
+          background: none;
+          padding: 0;
+          font-size: inherit;
+          color: inherit;
+        }
+        /* ── Inline code ── */
+        [data-snapshot-component="rich-input"] .ProseMirror code {
+          background: var(--sn-color-muted, #f3f4f6);
+          color: var(--sn-color-destructive, #ef4444);
+          border-radius: var(--sn-radius-xs, 0.125rem);
+          padding: 0.1em 0.3em;
+          font-family: var(--sn-font-mono, ui-monospace, monospace);
+          font-size: 0.9em;
+        }
+        /* ── Blockquote ── */
+        [data-snapshot-component="rich-input"] .ProseMirror blockquote {
+          border-left: var(--sn-border-thick, 3px) solid var(--sn-color-border, #e5e7eb);
+          padding-left: var(--sn-spacing-md, 0.75rem);
+          color: var(--sn-color-muted-foreground, #6b7280);
+          margin: var(--sn-spacing-xs, 0.25rem) 0;
+        }
+        /* ── Links ── */
+        [data-snapshot-component="rich-input"] .ProseMirror a {
+          color: var(--sn-color-primary, #2563eb);
+          text-decoration: underline;
+          cursor: pointer;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror a:hover {
+          color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 80%, black);
+        }
+        /* ── Paragraph spacing ── */
+        [data-snapshot-component="rich-input"] .ProseMirror p {
+          margin: 0;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror > * + * {
+          margin-top: var(--sn-spacing-xs, 0.25rem);
+        }
       `}</style>
 
       {/* Editor area */}
@@ -331,7 +413,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             gap: "var(--sn-spacing-xs, 0.25rem)",
             padding:
               "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-            borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+            borderTop:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             backgroundColor: "var(--sn-color-secondary, #f9fafb)",
           }}
         >
@@ -369,6 +452,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             }}
           />
           <button
+            type="button"
+            aria-label="Close link input"
             onClick={() => {
               if (linkUrl.trim()) {
                 const url = linkUrl.trim().startsWith("http")
@@ -404,7 +489,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             justifyContent: "space-between",
             padding:
               "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-            borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+            borderTop:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             gap: "var(--sn-spacing-sm, 0.5rem)",
           }}
         >
@@ -413,7 +499,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "1px",
+              gap: "var(--sn-border-thin, 1px)",
               flexWrap: "wrap",
             }}
           >
@@ -431,11 +517,13 @@ export function RichInput({ config }: { config: RichInputConfig }) {
 
               return (
                 <button
+                  type="button"
                   key={item.name}
                   data-ri-btn
                   data-active={isActive ? "" : undefined}
                   onClick={() => handleToolbarAction(item)}
                   title={item.label}
+                  aria-label={item.label}
                   disabled={readonly}
                   style={{
                     display: "flex",
@@ -490,6 +578,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
 
             {config.sendAction && (
               <button
+                type="button"
                 data-testid="rich-input-send"
                 onClick={handleSend}
                 disabled={readonly || !charCount || isOverLimit}

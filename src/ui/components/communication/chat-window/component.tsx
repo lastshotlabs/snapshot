@@ -76,7 +76,8 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
         display: "flex",
         flexDirection: "column",
         height,
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
@@ -92,7 +93,8 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
             padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
-            borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+            borderBottom:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             backgroundColor: "var(--sn-color-card, #ffffff)",
             flexShrink: 0,
           }}
@@ -159,7 +161,8 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
       <div
         style={{
           flexShrink: 0,
-          borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+          borderTop:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
         }}
       >

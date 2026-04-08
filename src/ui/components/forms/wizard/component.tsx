@@ -193,7 +193,7 @@ function WizardFieldRenderer({
                 style={{
                   color:
                     "var(--sn-color-destructive, oklch(0.577 0.245 27.325))",
-                  marginLeft: "2px",
+                  marginLeft: "var(--sn-spacing-2xs, 2px)",
                 }}
               >
                 *

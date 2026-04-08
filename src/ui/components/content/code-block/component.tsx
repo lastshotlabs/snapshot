@@ -159,6 +159,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
 
           {showCopy && (
             <button
+              type="button"
               data-testid="code-block-copy"
               onClick={() => void handleCopy()}
               style={{
@@ -185,6 +186,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
       {showCopy && !hasTitleBar && (
         <div style={{ position: "relative" }}>
           <button
+            type="button"
             data-testid="code-block-copy"
             onClick={() => void handleCopy()}
             style={{

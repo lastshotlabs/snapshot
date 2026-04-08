@@ -119,7 +119,7 @@ function FeedBadge({ value, color }: { value: string; color: string }) {
         fontSize: "var(--sn-font-size-xs, 0.75rem)",
         backgroundColor: colors.bg,
         color: colors.fg,
-        lineHeight: 1.4,
+        lineHeight: "var(--sn-leading-tight, 1.4)",
         fontWeight: "var(--sn-font-weight-medium, 500)",
       }}
     >
@@ -146,12 +146,14 @@ function FeedItemRow({
         display: "flex",
         gap: "var(--sn-spacing-sm, 8px)",
         padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-        borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+        borderBottom:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         cursor: "pointer",
         backgroundColor: isSelected
           ? "var(--sn-color-muted, #f3f4f6)"
           : undefined,
-        transition: "background-color 0.15s ease",
+        transition:
+          "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
       }}
     >
       {/* Avatar */}
@@ -336,7 +338,8 @@ export function Feed({ config }: { config: FeedConfig }) {
         backgroundColor: "var(--sn-color-card, #fff)",
         color: "var(--sn-color-card-foreground, #111827)",
         borderRadius: "var(--sn-radius-md, 6px)",
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         overflow: "hidden",
         ...(config.style as React.CSSProperties),
       }}
@@ -406,11 +409,13 @@ export function Feed({ config }: { config: FeedConfig }) {
         <div
           style={{
             padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-            borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+            borderTop:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             textAlign: "center",
           }}
         >
           <button
+            type="button"
             data-feed-load-more
             onClick={loadMore}
             style={{

@@ -66,7 +66,7 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
       text = savingText;
       color = "var(--sn-color-muted-foreground, #6b7280)";
       iconStyle = {
-        animation: "sn-save-spin 1s linear infinite",
+        animation: "sn-save-spin var(--sn-duration-slow, 1s) linear infinite",
         display: "flex",
       };
       break;

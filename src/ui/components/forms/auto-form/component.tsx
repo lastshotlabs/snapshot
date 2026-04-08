@@ -274,7 +274,7 @@ function FieldRenderer({
           <span
             style={{
               color: "var(--sn-color-destructive, #ef4444)",
-              marginLeft: "2px",
+              marginLeft: "var(--sn-spacing-2xs, 2px)",
             }}
           >
             *

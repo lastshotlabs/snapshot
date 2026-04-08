@@ -168,7 +168,7 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
     textAlign: "right",
     marginRight: "var(--sn-spacing-sm, 0.5rem)",
     color: "var(--sn-color-muted-foreground, #6b7280)",
-    opacity: 0.6,
+    opacity: "var(--sn-opacity-muted, 0.6)" as unknown as number,
     userSelect: "none",
     flexShrink: 0,
   };

@@ -139,7 +139,7 @@ export function NotificationBell({
               padding: badge.padding,
               fontSize: badge.fontSize,
               fontWeight: "var(--sn-font-weight-bold, 700)" as string,
-              lineHeight: 1,
+              lineHeight: "var(--sn-leading-none, 1)",
               borderRadius: "var(--sn-radius-full, 9999px)",
               backgroundColor: "var(--sn-color-destructive, #ef4444)",
               color: "var(--sn-color-destructive-foreground, #ffffff)",

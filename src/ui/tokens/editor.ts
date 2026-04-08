@@ -9,7 +9,7 @@
 import { useCallback, useRef } from "react";
 import type { ThemeConfig, TokenEditor } from "./types";
 import { getFlavor } from "./flavors";
-import { colorToOklch, oklchToString, deriveForeground } from "./color";
+import { colorToOklch, oklchToString } from "./color";
 import { resolveTokens } from "./resolve";
 
 // ── Token path -> CSS variable mapping ───────────────────────────────────────
@@ -158,65 +158,6 @@ function mapToThemeConfig(overrides: Map<string, string>): Overrides {
   }
 
   return result;
-}
-
-/**
- * Normalize a raw color value to a valid CSS oklch() string.
- */
-function normalizeColorValue(value: string): string {
-  if (value.startsWith("oklch(") || value.startsWith("#")) return value;
-  return `oklch(${value})`;
-}
-
-/**
- * Generate all CSS variable entries from a flavor's colors for runtime application.
- * Includes auto-derived foreground companions for all semantic colors.
- */
-function flavorToTokenMap(flavor: {
-  colors: Record<string, unknown>;
-  darkColors?: Record<string, unknown>;
-}): Array<[string, string]> {
-  const entries: Array<[string, string]> = [];
-  const colors = flavor.colors;
-
-  const FOREGROUND_KEYS = [
-    "primary",
-    "secondary",
-    "muted",
-    "accent",
-    "destructive",
-    "success",
-    "warning",
-    "info",
-    "card",
-    "popover",
-    "sidebar",
-  ];
-
-  for (const [key, value] of Object.entries(colors)) {
-    if (typeof value === "string") {
-      const cssVar = `--sn-color-${key}`;
-      const cssValue = normalizeColorValue(value);
-      entries.push([cssVar, cssValue]);
-
-      // Auto-derive foreground companion
-      if (key === "background") {
-        entries.push([`--sn-color-foreground`, deriveForeground(cssValue)]);
-      } else if (FOREGROUND_KEYS.includes(key)) {
-        entries.push([`${cssVar}-foreground`, deriveForeground(cssValue)]);
-      }
-    } else if (key === "chart" && Array.isArray(value)) {
-      for (let i = 0; i < value.length; i++) {
-        if (typeof value[i] === "string") {
-          const v = value[i] as string;
-          const cssValue = normalizeColorValue(v);
-          entries.push([`--sn-chart-${i + 1}`, cssValue]);
-        }
-      }
-    }
-  }
-
-  return entries;
 }
 
 /**

@@ -330,7 +330,7 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                 key={mode}
                 type="button"
                 onClick={() => setCurrentMode(mode)}
-                aria-label={`${mode} mode`}
+                aria-label={`Switch to ${mode} mode`}
                 aria-pressed={currentMode === mode}
                 style={{
                   padding:

@@ -41,7 +41,12 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   );
   const executeAction = useActionExecutor();
   const publish = usePublish(config.id);
-  const { data: apiData, isLoading } = useComponentData(config.data ?? "");
+  const {
+    data: apiData,
+    isLoading,
+    error: dataError,
+    refetch: dataRefetch,
+  } = useComponentData(config.data ?? "");
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -289,7 +294,8 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
             <div
               style={{
                 padding: "var(--sn-spacing-sm, 0.5rem)",
-                borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+                borderBottom:
+                  "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
               }}
             >
               <input
@@ -337,7 +343,40 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
               </div>
             )}
 
-            {!isLoading && filtered.length === 0 && (
+            {!isLoading && dataError && (
+              <div
+                data-testid="entity-picker-error"
+                style={{
+                  padding: "var(--sn-spacing-md, 0.75rem)",
+                  textAlign: "center",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-destructive, #ef4444)",
+                }}
+              >
+                <div>Failed to load entities</div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dataRefetch();
+                  }}
+                  style={{
+                    marginTop: "var(--sn-spacing-xs, 0.25rem)",
+                    padding:
+                      "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+                    fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                    color: "var(--sn-color-primary, #2563eb)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {!isLoading && !dataError && filtered.length === 0 && (
               <div
                 data-testid="entity-picker-empty"
                 style={{

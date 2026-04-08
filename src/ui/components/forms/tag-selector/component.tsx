@@ -53,7 +53,12 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const publish = usePublish(config.id);
 
   // Fetch tags from API if data is provided
-  const { data: apiData } = useComponentData(config.data ?? "");
+  const {
+    data: apiData,
+    isLoading: apiLoading,
+    error: apiError,
+    refetch: apiRefetch,
+  } = useComponentData(config.data ?? "");
 
   const [searchText, setSearchText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -307,7 +312,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                   padding: "0 0 0 var(--sn-spacing-2xs, 0.125rem)",
                   fontSize: "var(--sn-font-size-md, 1rem)",
                   lineHeight: "var(--sn-leading-none, 1)",
-                  opacity: 0.7,
+                  opacity: "var(--sn-opacity-hover, 0.7)",
                 }}
                 aria-label={`Remove ${tag.label}`}
               >
@@ -357,108 +362,158 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       </div>
 
       {/* Dropdown */}
-      {isOpen && (filteredTags.length > 0 || canCreate) && (
-        <div
-          data-testid="tag-dropdown"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            marginTop: "var(--sn-spacing-2xs, 0.125rem)",
-            backgroundColor: "var(--sn-color-popover, #ffffff)",
-            border:
-              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-            borderRadius: "var(--sn-radius-md, 0.5rem)",
-            boxShadow: "var(--sn-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1))",
-            zIndex: "var(--sn-z-index-dropdown, 100)" as string,
-            maxHeight: "200px",
-            overflowY: "auto",
-          }}
-        >
-          {filteredTags.map((tag) => (
-            <button
-              key={tag.value}
-              data-testid="tag-option"
-              onClick={() => {
-                addTag(tag.value);
-                setIsOpen(false);
-              }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--sn-spacing-sm, 0.5rem)",
-                width: "100%",
-                padding:
-                  "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                color: "var(--sn-color-foreground, #111827)",
-                textAlign: "left",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor =
-                  "var(--sn-color-secondary, #f1f5f9)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor =
-                  "transparent";
-              }}
-            >
-              {tag.color && (
-                <span
-                  style={{
-                    width: "0.75rem",
-                    height: "0.75rem",
-                    borderRadius: "var(--sn-radius-full, 9999px)",
-                    backgroundColor: tag.color,
-                    flexShrink: 0,
-                  }}
-                />
-              )}
-              {tag.label}
-            </button>
-          ))}
+      {isOpen &&
+        (filteredTags.length > 0 || canCreate || apiLoading || apiError) && (
+          <div
+            data-testid="tag-dropdown"
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              right: 0,
+              marginTop: "var(--sn-spacing-2xs, 0.125rem)",
+              backgroundColor: "var(--sn-color-popover, #ffffff)",
+              border:
+                "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+              borderRadius: "var(--sn-radius-md, 0.5rem)",
+              boxShadow: "var(--sn-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1))",
+              zIndex: "var(--sn-z-index-dropdown, 100)" as string,
+              maxHeight: "200px",
+              overflowY: "auto",
+            }}
+          >
+            {apiLoading && (
+              <div
+                data-testid="tag-selector-loading"
+                style={{
+                  padding: "var(--sn-spacing-md, 0.75rem)",
+                  textAlign: "center",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-muted-foreground, #6b7280)",
+                }}
+              >
+                Loading...
+              </div>
+            )}
 
-          {/* Create option */}
-          {canCreate && (
-            <button
-              data-testid="tag-create-option"
-              onClick={handleCreate}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--sn-spacing-sm, 0.5rem)",
-                width: "100%",
-                padding:
-                  "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-                border: "none",
-                borderTop:
-                  filteredTags.length > 0
-                    ? "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)"
-                    : "none",
-                background: "transparent",
-                cursor: "pointer",
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                color: "var(--sn-color-primary, #2563eb)",
-                textAlign: "left",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor =
-                  "var(--sn-color-secondary, #f1f5f9)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor =
-                  "transparent";
-              }}
-            >
-              Create &ldquo;{searchText.trim()}&rdquo;
-            </button>
-          )}
-        </div>
-      )}
+            {!apiLoading && apiError && (
+              <div
+                data-testid="tag-selector-error"
+                style={{
+                  padding: "var(--sn-spacing-md, 0.75rem)",
+                  textAlign: "center",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-destructive, #ef4444)",
+                }}
+              >
+                <div>Failed to load tags</div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    apiRefetch();
+                  }}
+                  style={{
+                    marginTop: "var(--sn-spacing-xs, 0.25rem)",
+                    padding:
+                      "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+                    fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                    color: "var(--sn-color-primary, #2563eb)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {!apiLoading &&
+              !apiError &&
+              filteredTags.map((tag) => (
+                <button
+                  key={tag.value}
+                  data-testid="tag-option"
+                  onClick={() => {
+                    addTag(tag.value);
+                    setIsOpen(false);
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--sn-spacing-sm, 0.5rem)",
+                    width: "100%",
+                    padding:
+                      "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+                    border: "none",
+                    background: "transparent",
+                    cursor: "pointer",
+                    fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                    color: "var(--sn-color-foreground, #111827)",
+                    textAlign: "left",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "var(--sn-color-secondary, #f1f5f9)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "transparent";
+                  }}
+                >
+                  {tag.color && (
+                    <span
+                      style={{
+                        width: "0.75rem",
+                        height: "0.75rem",
+                        borderRadius: "var(--sn-radius-full, 9999px)",
+                        backgroundColor: tag.color,
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
+                  {tag.label}
+                </button>
+              ))}
+
+            {/* Create option */}
+            {canCreate && (
+              <button
+                data-testid="tag-create-option"
+                onClick={handleCreate}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--sn-spacing-sm, 0.5rem)",
+                  width: "100%",
+                  padding:
+                    "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+                  border: "none",
+                  borderTop:
+                    filteredTags.length > 0
+                      ? "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)"
+                      : "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-primary, #2563eb)",
+                  textAlign: "left",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor =
+                    "var(--sn-color-secondary, #f1f5f9)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor =
+                    "transparent";
+                }}
+              >
+                Create &ldquo;{searchText.trim()}&rdquo;
+              </button>
+            )}
+          </div>
+        )}
     </div>
   );
 }

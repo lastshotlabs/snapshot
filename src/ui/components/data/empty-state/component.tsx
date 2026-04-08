@@ -70,7 +70,7 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
           data-testid="empty-state-icon"
           aria-hidden="true"
           style={{
-            lineHeight: 1,
+            lineHeight: "var(--sn-leading-none, 1)",
             color: config.iconColor
               ? `var(--sn-color-${config.iconColor}, ${config.iconColor})`
               : "var(--sn-color-muted-foreground, #6b7280)",

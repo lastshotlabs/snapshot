@@ -138,7 +138,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
       data-testid="emoji-picker"
       className={config.className}
       style={{
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
@@ -187,7 +188,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
       <div
         style={{
           padding: "var(--sn-spacing-xs, 0.25rem)",
-          borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+          borderBottom:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         }}
       >
         <div
@@ -225,7 +227,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
       <div
         style={{
           display: "flex",
-          borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+          borderBottom:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           padding: "var(--sn-spacing-2xs, 2px) var(--sn-spacing-xs, 0.25rem)",
           gap: "var(--sn-border-thin, 1px)",
           overflowX: "auto",
@@ -237,6 +240,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
             data-cat-tab
             data-active={activeCategory === cat ? "" : undefined}
             title={CATEGORY_LABELS[cat] ?? cat}
+            aria-label={CATEGORY_LABELS[cat] ?? cat}
             onClick={() =>
               setActiveCategory(activeCategory === cat ? null : cat)
             }

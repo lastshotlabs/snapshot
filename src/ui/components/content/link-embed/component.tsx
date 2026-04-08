@@ -23,7 +23,7 @@ function YouTubeEmbed({
         aspectRatio,
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         overflow: "hidden",
-        backgroundColor: "#000",
+        backgroundColor: "var(--sn-color-foreground, #000)",
       }}
     >
       <iframe
@@ -169,7 +169,8 @@ function GenericCard({
         style={{
           borderRadius: "var(--sn-radius-md, 0.5rem)",
           overflow: "hidden",
-          border: "1px solid var(--sn-color-border, #e5e7eb)",
+          border:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         }}
         dangerouslySetInnerHTML={{ __html: sanitizeOEmbed(meta.html) }}
       />
@@ -184,13 +185,14 @@ function GenericCard({
       style={{
         display: "flex",
         textDecoration: "none",
-        border: "1px solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         overflow: "hidden",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         borderLeft: color
-          ? `3px solid ${color}`
-          : "1px solid var(--sn-color-border, #e5e7eb)",
+          ? `var(--sn-border-thick, 3px) solid ${color}`
+          : "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         maxHeight: "120px",
       }}
     >
@@ -217,7 +219,7 @@ function GenericCard({
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          gap: "2px",
+          gap: "var(--sn-spacing-2xs, 2px)",
         }}
       >
         {/* Site name */}
@@ -233,7 +235,11 @@ function GenericCard({
               <img
                 src={favicon}
                 alt=""
-                style={{ width: 14, height: 14, borderRadius: 2 }}
+                style={{
+                  width: 14,
+                  height: 14,
+                  borderRadius: "var(--sn-radius-xs, 2px)",
+                }}
               />
             )}
             {siteName && (
@@ -242,7 +248,7 @@ function GenericCard({
                   fontSize: "var(--sn-font-size-xs, 0.75rem)",
                   color: "var(--sn-color-muted-foreground, #6b7280)",
                   textTransform: "uppercase",
-                  letterSpacing: "0.05em",
+                  letterSpacing: "var(--sn-tracking-wide, 0.05em)",
                 }}
               >
                 {siteName}
