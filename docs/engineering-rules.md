@@ -9,6 +9,9 @@
 - If a pattern is wrong, fix it now. Don't add tech debt "for later"
 - No conservative decision-making based on hypothetical consumers
 - The only consumers are internal. If something breaks, fix it.
+- This applies to manifests, config shape, and generated output too. If the manifest model is
+  wrong, replace it. Do not introduce public versioning, migration theater, or compatibility
+  layers just to protect hypothetical future apps that do not exist yet.
 
 ## What Snapshot Is
 

@@ -10,11 +10,24 @@ export {
   selectConfigSchema,
   customComponentConfigSchema,
   componentConfigSchema,
+  appConfigSchema,
   navItemSchema,
+  navigationConfigSchema,
   authScreenConfigSchema,
   pageConfigSchema,
+  routeConfigSchema,
+  stateValueConfigSchema,
   manifestConfigSchema,
 } from "./schema";
+
+// Compiler
+export {
+  compileManifest,
+  defineManifest,
+  parseManifest,
+  safeCompileManifest,
+  safeParseManifest,
+} from "./compiler";
 
 // Component registry
 export {
@@ -31,10 +44,17 @@ export { ManifestApp, injectStyleSheet } from "./app";
 
 // Types
 export type {
+  AppConfig,
+  CompiledManifest,
+  CompiledRoute,
   ManifestConfig,
   NavItem,
+  NavigationConfig,
   AuthScreenConfig,
   PageConfig,
+  RouteConfig,
+  StateConfig,
+  StateValueConfig,
   BaseComponentConfig,
   RowConfig,
   HeadingConfig,

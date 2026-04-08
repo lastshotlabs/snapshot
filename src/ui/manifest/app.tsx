@@ -11,8 +11,9 @@ import { createSnapshot } from "../../create-snapshot";
 import { AppContextProvider } from "../context/index";
 import { SnapshotApiContext } from "../actions/executor";
 import { resolveTokens } from "../tokens/resolve";
+import { compileManifest } from "./compiler";
 import { PageRenderer } from "./renderer";
-import type { ManifestConfig, ManifestAppProps } from "./types";
+import type { CompiledManifest, ManifestAppProps } from "./types";
 
 // ── Style injection utility ─────────────────────────────────────────────────
 
@@ -38,16 +39,15 @@ export function injectStyleSheet(id: string, css: string): void {
 
 /** Props for the ManifestRouter component. */
 interface ManifestRouterProps {
-  /** The manifest config containing page definitions. */
-  manifest: ManifestConfig;
+  /** The compiled manifest containing route definitions. */
+  manifest: CompiledManifest;
 }
 
 /**
  * Simplified router for Phase 4.
  *
- * Renders the page matching the current browser path from `manifest.pages`.
- * Falls back to the first page if no match. Full TanStack Router integration
- * is deferred to a later phase.
+ * Renders the route matching the current browser path from `manifest.routes`.
+ * Falls back to the configured home route, then the first route, then notFound.
  *
  * @param props - Contains the manifest with page definitions
  */
@@ -65,14 +65,17 @@ function ManifestRouter({ manifest }: ManifestRouterProps) {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  const pageConfig = manifest.pages[currentPath];
-  const firstPath = Object.keys(manifest.pages)[0];
-  const fallbackPage = firstPath ? manifest.pages[firstPath] : undefined;
-  const page = pageConfig ?? fallbackPage;
+  const route =
+    manifest.routeMap[currentPath] ??
+    (manifest.app.home ? manifest.routeMap[manifest.app.home] : undefined) ??
+    manifest.firstRoute ??
+    (manifest.app.notFound
+      ? manifest.routeMap[manifest.app.notFound]
+      : undefined);
 
-  if (!page) return null;
+  if (!route) return null;
 
-  return <PageRenderer page={page} />;
+  return <PageRenderer page={route.page} />;
 }
 
 // ── ManifestApp ─────────────────────────────────────────────────────────────
@@ -103,6 +106,7 @@ export function ManifestApp({
   apiUrl,
   snapshotConfig,
 }: ManifestAppProps) {
+  const compiledManifest = useMemo(() => compileManifest(manifest), [manifest]);
   const snapshot = useMemo(
     () =>
       createSnapshot({
@@ -115,17 +119,17 @@ export function ManifestApp({
 
   // Apply theme tokens
   useEffect(() => {
-    if (manifest.theme) {
-      const css = resolveTokens(manifest.theme);
+    if (compiledManifest.theme) {
+      const css = resolveTokens(compiledManifest.theme);
       injectStyleSheet("snapshot-tokens", css);
     }
-  }, [manifest.theme]);
+  }, [compiledManifest.theme]);
 
   return (
     <snapshot.QueryProvider>
       <SnapshotApiContext.Provider value={snapshot.api}>
-        <AppContextProvider globals={manifest.globals} api={snapshot.api}>
-          <ManifestRouter manifest={manifest} />
+        <AppContextProvider globals={compiledManifest.state} api={snapshot.api}>
+          <ManifestRouter manifest={compiledManifest} />
         </AppContextProvider>
       </SnapshotApiContext.Provider>
     </snapshot.QueryProvider>

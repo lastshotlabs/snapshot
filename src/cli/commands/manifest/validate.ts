@@ -51,23 +51,18 @@ export default class ManifestValidate extends Command {
     }
 
     // Dynamic import so the schema registry is initialized
-    const { manifestConfigSchema } =
-      await import("../../../ui/manifest/schema.js");
+    const { safeCompileManifest } =
+      await import("../../../ui/manifest/compiler.js");
 
-    const result = manifestConfigSchema.safeParse(parsed);
+    const result = safeCompileManifest(parsed);
 
     if (result.success) {
-      const data = result.data as {
-        pages?: Record<string, unknown>;
-        nav?: unknown[];
-        theme?: { flavor?: string };
-      };
-      const pageCount = Object.keys(data.pages ?? {}).length;
-      const navCount = Array.isArray(data.nav) ? data.nav.length : 0;
-      const flavor = data.theme?.flavor ?? "(none)";
+      const routeCount = result.compiled.routes.length;
+      const navCount = result.compiled.navigation?.items.length ?? 0;
+      const flavor = result.compiled.theme?.flavor ?? "(none)";
 
       log.success("Manifest is valid.");
-      log.info(`Pages: ${pageCount}`);
+      log.info(`Routes: ${routeCount}`);
       log.info(`Nav items: ${navCount}`);
       log.info(`Flavor: ${flavor}`);
       outro("Validation passed.");

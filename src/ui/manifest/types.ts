@@ -1,8 +1,12 @@
 import type { z } from "zod";
 import type {
+  appConfigSchema,
   manifestConfigSchema,
   authScreenConfigSchema,
   pageConfigSchema,
+  routeConfigSchema,
+  navigationConfigSchema,
+  stateValueConfigSchema,
   baseComponentConfigSchema,
   headingConfigSchema,
   buttonConfigSchema,
@@ -10,53 +14,31 @@ import type {
   customComponentConfigSchema,
 } from "./schema";
 import type { FromRef } from "../context/types";
-import type { Responsive } from "../tokens/types";
+import type { Responsive, ThemeConfig } from "../tokens/types";
 
-// ── Inferred types from Zod schemas ─────────────────────────────────────────
-
-/** The complete manifest schema for a snapshot application. */
 export type ManifestConfig = z.infer<typeof manifestConfigSchema>;
-
-/** Auth screen configuration for login, register, etc. */
+export type AppConfig = z.infer<typeof appConfigSchema>;
 export type AuthScreenConfig = z.infer<typeof authScreenConfigSchema>;
-
-/** A page definition with layout, title, content tree, and access control. */
 export type PageConfig = z.infer<typeof pageConfigSchema>;
-
-/** Base config shared by all components. */
+export type RouteConfig = z.infer<typeof routeConfigSchema>;
+export type NavigationConfig = z.infer<typeof navigationConfigSchema>;
+export type StateValueConfig = z.infer<typeof stateValueConfigSchema>;
+export type StateConfig = Record<string, StateValueConfig>;
 export type BaseComponentConfig = z.infer<typeof baseComponentConfigSchema>;
-
-/** Heading component config. */
 export type HeadingConfig = z.infer<typeof headingConfigSchema>;
-
-/** Button component config. */
 export type ButtonConfig = z.infer<typeof buttonConfigSchema>;
-
-/** Select dropdown component config. */
 export type SelectConfig = z.infer<typeof selectConfigSchema>;
-
-/** Custom component escape hatch config. */
 export type CustomComponentConfig = z.infer<typeof customComponentConfigSchema>;
 
-// ── Hand-written types for recursive/lazy schemas ───────────────────────────
-
-/** Navigation item in the sidebar or top nav. */
 export interface NavItem {
-  /** Display label. */
   label: string;
-  /** Route path. */
   path: string;
-  /** Lucide icon name. */
   icon?: string;
-  /** Required roles. */
   roles?: string[];
-  /** Badge value — static count or from ref. */
   badge?: number | FromRef;
-  /** Nested children (renders as expandable group). */
   children?: NavItem[];
 }
 
-/** Row layout container config. Uses children recursively. */
 export interface RowConfig extends BaseComponentConfig {
   type: "row";
   gap?: Responsive<"xs" | "sm" | "md" | "lg" | "xl">;
@@ -66,14 +48,6 @@ export interface RowConfig extends BaseComponentConfig {
   children: ComponentConfig[];
 }
 
-/**
- * Union of all component configs.
- *
- * Structural types (row, heading, button, select, custom) are listed explicitly.
- * Registered components (stat-card, data-table, modal, etc.) are validated at
- * runtime by the dynamic schema registry and typed as BaseComponentConfig with
- * additional fields via the index signature.
- */
 export type ComponentConfig =
   | RowConfig
   | HeadingConfig
@@ -82,19 +56,30 @@ export type ComponentConfig =
   | CustomComponentConfig
   | (BaseComponentConfig & Record<string, unknown>);
 
-// ── Non-schema types ────────────────────────────────────────────────────────
+export interface CompiledRoute {
+  id: string;
+  path: string;
+  page: PageConfig;
+}
 
-/** Props for the ManifestApp component. */
+export interface CompiledManifest {
+  raw: ManifestConfig;
+  app: AppConfig;
+  theme?: ThemeConfig;
+  state?: StateConfig;
+  navigation?: NavigationConfig;
+  auth?: AuthScreenConfig;
+  routes: CompiledRoute[];
+  routeMap: Record<string, CompiledRoute>;
+  firstRoute: CompiledRoute | null;
+}
+
 export interface ManifestAppProps {
-  /** The parsed manifest configuration. */
   manifest: ManifestConfig;
-  /** Base URL for the API client. */
   apiUrl: string;
-  /** Additional createSnapshot config overrides. */
   snapshotConfig?: Record<string, unknown>;
 }
 
-/** A React component that renders from a config object. */
 export type ConfigDrivenComponent = React.ComponentType<{
   config: Record<string, unknown>;
 }>;
