@@ -58,6 +58,10 @@ export const emojiPickerConfigSchema = z
       .optional(),
     /** API endpoint for loading custom emojis. */
     customEmojiData: z.union([z.string(), fromRefSchema]).optional(),
+    /** Field name for emoji image URL in API results. Default: "url". */
+    emojiUrlField: z.string().optional(),
+    /** URL prefix for resolving uploadKey to full URL (e.g., "https://cdn.example.com/emojis/"). */
+    emojiUrlPrefix: z.string().optional(),
     /** Action dispatched when an emoji is selected. */
     selectAction: actionSchema.optional(),
     // --- BaseComponentConfig fields ---

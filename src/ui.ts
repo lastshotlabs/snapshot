@@ -398,7 +398,7 @@ export { GifPicker, gifPickerConfigSchema } from "./ui/components/communication/
 export type { GifPickerConfig, GifEntry } from "./ui/components/communication/gif-picker/index";
 
 // Custom Emoji Utilities
-export { parseShortcodes, buildEmojiMap, CUSTOM_EMOJI_CSS } from "./ui/components/communication/emoji-picker/index";
+export { parseShortcodes, buildEmojiMap, resolveEmojiRecords, CUSTOM_EMOJI_CSS } from "./ui/components/communication/emoji-picker/index";
 export type { CustomEmoji } from "./ui/components/communication/emoji-picker/index";
 
 // Icons

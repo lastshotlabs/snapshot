@@ -14,12 +14,45 @@ export interface CustomEmoji {
   name: string;
   /** Shortcode without colons (e.g., "party_parrot"). */
   shortcode: string;
-  /** Image URL. */
+  /** Image URL (resolved). */
   url: string;
+  /** Storage key from bunshot (before URL resolution). */
+  uploadKey?: string;
   /** Optional category for grouping. */
   category?: string;
   /** Whether this is an animated emoji (GIF). */
   animated?: boolean;
+}
+
+/**
+ * Resolves emoji records from the API into CustomEmoji entries.
+ * Handles the `uploadKey` → `url` resolution using a URL prefix or field mapping.
+ *
+ * @param records - Raw API response records
+ * @param urlField - Field name containing the image URL. Default: "url"
+ * @param urlPrefix - Prefix to prepend to uploadKey for URL resolution
+ */
+export function resolveEmojiRecords(
+  records: Record<string, unknown>[],
+  urlField = "url",
+  urlPrefix?: string,
+): CustomEmoji[] {
+  return records.map((r) => {
+    let url = String(r[urlField] ?? "");
+    // If no direct URL field, try resolving uploadKey with prefix
+    if (!url && r.uploadKey && urlPrefix) {
+      url = `${urlPrefix}${r.uploadKey}`;
+    }
+    return {
+      id: String(r.id ?? ""),
+      name: String(r.name ?? ""),
+      shortcode: String(r.shortcode ?? ""),
+      url,
+      uploadKey: r.uploadKey ? String(r.uploadKey) : undefined,
+      category: r.category ? String(r.category) : undefined,
+      animated: Boolean(r.animated ?? false),
+    };
+  });
 }
 
 /**
