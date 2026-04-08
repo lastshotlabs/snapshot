@@ -31,7 +31,7 @@ import type { MultiSelectConfig, MultiSelectOption } from "./types";
  */
 export function MultiSelect({ config }: { config: MultiSelectConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Resolve from-refs
   const visible = useSubscribe(config.visible ?? true);
@@ -43,7 +43,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
   // Fetch remote options if `data` is configured
   const hasDataConfig = config.data !== undefined;
   const dataResult = hasDataConfig
-    ? useComponentData(config.data!) // eslint-disable-line react-hooks/rules-of-hooks
+    ? useComponentData(config.data!)
     : { data: null, isLoading: false, error: null };
 
   const labelField = config.labelField ?? "label";

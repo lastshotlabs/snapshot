@@ -91,7 +91,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const readonly = useSubscribe(config.readonly ?? false) as boolean;
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
   const [charCount, setCharCount] = useState(0);
 
   const features = config.features ?? [

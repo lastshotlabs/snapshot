@@ -46,7 +46,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
 
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);

@@ -38,7 +38,7 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const resolvedValue = useSubscribe(config.value ?? (config.multiple ? [] : ""));
   const executeAction = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
   const { data: apiData, isLoading } = useComponentData(config.data);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -137,7 +137,8 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   // Focus search on open
   useEffect(() => {
     if (isOpen && searchable) {
-      setTimeout(() => searchInputRef.current?.focus(), 0);
+      const timer = setTimeout(() => searchInputRef.current?.focus(), 0);
+      return () => clearTimeout(timer);
     }
   }, [isOpen, searchable]);
 

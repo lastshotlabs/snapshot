@@ -37,18 +37,19 @@ const UNDEFINED_ATOM = atom<unknown>(undefined);
  * }
  * ```
  */
-export function usePublish(id: string): (value: unknown) => void {
+export function usePublish(id: string | undefined): (value: unknown) => void {
   const pageRegistry = useContext(PageRegistryContext);
 
-  // Register atom on mount, unregister on unmount
+  // Register atom on mount, unregister on unmount.
+  // When id is falsy, the hook is a no-op (safe to call unconditionally).
   const atomRef = useRef<PrimitiveAtom<unknown> | undefined>(undefined);
-  if (!atomRef.current && pageRegistry) {
+  if (!atomRef.current && pageRegistry && id) {
     atomRef.current = pageRegistry.register(id);
   }
 
   useEffect(() => {
     return () => {
-      if (pageRegistry) pageRegistry.unregister(id);
+      if (pageRegistry && id) pageRegistry.unregister(id);
       atomRef.current = undefined;
     };
   }, [id, pageRegistry]);

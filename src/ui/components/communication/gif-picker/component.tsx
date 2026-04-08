@@ -13,7 +13,7 @@ import type { GifPickerConfig, GifEntry } from "./types";
 export function GifPicker({ config }: { config: GifPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
 
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<GifEntry[]>([]);

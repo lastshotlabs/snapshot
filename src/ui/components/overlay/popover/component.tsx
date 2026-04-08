@@ -68,7 +68,7 @@ const PLACEMENT_STYLES: Record<string, React.CSSProperties> = {
 export function Popover({ config }: { config: PopoverConfig }) {
   const triggerText = useSubscribe(config.trigger) as string;
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

@@ -27,7 +27,7 @@ import type { QuickAddConfig } from "./types";
 export function QuickAdd({ config }: { config: QuickAddConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const [value, setValue] = useState("");
 

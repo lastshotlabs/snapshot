@@ -55,7 +55,7 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
   const resolvedContent = useSubscribe(config.content ?? "") as string;
   const resolvedReadonly = useSubscribe(config.readonly ?? false) as boolean;
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const [currentMode, setCurrentMode] = useState<"edit" | "preview" | "split">(
     config.mode ?? "edit",

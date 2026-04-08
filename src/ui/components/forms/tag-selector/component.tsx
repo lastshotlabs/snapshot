@@ -50,11 +50,11 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const resolvedValue = useSubscribe(config.value ?? []);
   const executeAction = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Fetch tags from API if data is provided
   const { data: apiData } = config.data
-    ? useComponentData(config.data) // eslint-disable-line react-hooks/rules-of-hooks
+    ? useComponentData(config.data)
     : { data: null };
 
   const [searchText, setSearchText] = useState("");

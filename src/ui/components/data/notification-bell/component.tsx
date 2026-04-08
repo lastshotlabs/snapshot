@@ -40,7 +40,7 @@ export function NotificationBell({ config }: { config: NotificationBellConfig })
   const resolvedCount = useSubscribe(config.count ?? 0) as number;
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Publish count
   useEffect(() => {

@@ -32,7 +32,7 @@ const SIZE_MAP = {
  */
 export function Switch({ config }: { config: SwitchConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Check visibility
   const visible = useSubscribe(config.visible ?? true);

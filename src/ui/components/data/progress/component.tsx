@@ -31,7 +31,7 @@ const CIRCULAR_SIZE_MAP = { sm: 32, md: 48, lg: 64 } as const;
  */
 export function Progress({ config }: { config: ProgressConfig }) {
   const uniqueId = useId();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Check visibility
   const visible = useSubscribe(config.visible ?? true);

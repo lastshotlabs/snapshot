@@ -146,7 +146,7 @@ export function MessageThread({
   const visible = useSubscribe(config.visible ?? true);
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const contentField = config.contentField ?? "content";
@@ -297,7 +297,7 @@ export function MessageThread({
         {!isLoading &&
           !error &&
           grouped.map((group, gi) => (
-            <div key={gi}>
+            <div key={group.dateLabel || gi}>
               {/* Date separator */}
               {group.dateLabel && (
                 <div

@@ -17,9 +17,7 @@ import type { InlineEditConfig } from "./types";
  */
 export function InlineEdit({ config }: { config: InlineEditConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
-
-  // Resolve value from ref or static
+  const publish = usePublish(config.id);
   const resolvedValue = useSubscribe(config.value);
   const displayValue =
     typeof resolvedValue === "string" || typeof resolvedValue === "number"

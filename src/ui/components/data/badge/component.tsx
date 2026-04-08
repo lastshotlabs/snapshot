@@ -95,7 +95,7 @@ function getVariantStyles(
 export function Badge({ config }: { config: BadgeConfig }) {
   const resolvedText = useSubscribe(config.text) as string;
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   useEffect(() => {
     if (publish && resolvedText) {

@@ -15,7 +15,7 @@ import type { EmojiPickerConfig } from "../emoji-picker/types";
 export function ReactionBar({ config }: { config: ReactionBarConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
   const [showPicker, setShowPicker] = useState(false);
 
   const reactions = config.reactions ?? [];

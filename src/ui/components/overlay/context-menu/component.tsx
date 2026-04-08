@@ -15,7 +15,7 @@ import type { ContextMenuConfig } from "./types";
  */
 export function ContextMenu({ config }: { config: ContextMenuConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
 
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });

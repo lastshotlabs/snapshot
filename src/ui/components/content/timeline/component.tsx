@@ -76,7 +76,7 @@ function useTimelineItems(config: TimelineConfig): {
 export function Timeline({ config }: { config: TimelineConfig }) {
   const { items, isLoading, error, refetch } = useTimelineItems(config);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
   if (visible === false) return null;

@@ -24,7 +24,7 @@ import type { SeparatorConfig } from "./types";
 export function Separator({ config }: { config: SeparatorConfig }) {
   const label = useSubscribe(config.label ?? undefined) as string | undefined;
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   useEffect(() => {
     if (publish) {

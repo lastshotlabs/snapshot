@@ -248,7 +248,7 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
   );
 
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
   if (visible === false) return null;

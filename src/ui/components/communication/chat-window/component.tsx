@@ -19,7 +19,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const title = useSubscribe(config.title ?? "") as string;
   const subtitle = useSubscribe(config.subtitle ?? "") as string;
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
 
   if (visible === false) return null;
 

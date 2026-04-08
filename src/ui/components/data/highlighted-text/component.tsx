@@ -73,7 +73,7 @@ export function HighlightedText({ config }: { config: HighlightedTextConfig }) {
   const resolvedText = useSubscribe(config.text) as string;
   const resolvedHighlight = useSubscribe(config.highlight ?? "");
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   useEffect(() => {
     if (publish && resolvedText) {

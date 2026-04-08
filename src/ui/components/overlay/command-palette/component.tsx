@@ -67,7 +67,7 @@ function flattenItems(
  */
 export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
   const executeAction = useActionExecutor();
 
   const [query, setQuery] = useState("");
@@ -80,7 +80,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const maxHeight = config.maxHeight ?? "300px";
 
   // Fetch dynamic items if data endpoint is provided
-  const dataResult = config.data ? useComponentData(config.data) : null; // eslint-disable-line react-hooks/rules-of-hooks
+  const dataResult = config.data ? useComponentData(config.data) : null;
 
   // Merge static groups with dynamic data
   const allGroups: CommandGroup[] = useMemo(() => {

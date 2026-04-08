@@ -39,7 +39,7 @@ function formatFileSize(bytes: number): string {
  */
 export function FileUploader({ config }: { config: FileUploaderConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<UploadFileEntry[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);

@@ -173,7 +173,7 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   }
 
   // Publish state when id is set
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // State
   const [allRows, setAllRows] = useState<Record<string, unknown>[]>([]);

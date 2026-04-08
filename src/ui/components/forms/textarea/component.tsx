@@ -26,7 +26,7 @@ import type { TextareaConfig } from "./types";
  */
 export function Textarea({ config }: { config: TextareaConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   // Resolve from-refs
   const visible = useSubscribe(config.visible ?? true);

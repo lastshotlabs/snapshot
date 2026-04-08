@@ -66,7 +66,7 @@ export function Avatar({ config }: { config: AvatarConfig }) {
   const resolvedSrc = useSubscribe(config.src ?? "") as string;
   const resolvedName = useSubscribe(config.name ?? "") as string;
   const visible = useSubscribe(config.visible ?? true);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const [imgError, setImgError] = useState(false);
 

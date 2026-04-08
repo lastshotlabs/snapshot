@@ -217,7 +217,7 @@ export function CommentSection({
   const visible = useSubscribe(config.visible ?? true);
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
 
   const sortOrder = config.sortOrder ?? "newest";
 

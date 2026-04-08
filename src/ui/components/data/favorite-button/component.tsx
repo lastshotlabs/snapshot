@@ -33,7 +33,7 @@ export function FavoriteButton({ config }: { config: FavoriteButtonConfig }) {
   const resolvedActive = useSubscribe(config.active ?? false) as boolean;
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const [active, setActive] = useState(resolvedActive);
 

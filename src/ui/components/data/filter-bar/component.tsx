@@ -17,7 +17,7 @@ type FilterState = Record<string, string | string[]>;
  */
 export function FilterBar({ config }: { config: FilterBarConfig }) {
   const execute = useActionExecutor();
-  const publish = config.id ? usePublish(config.id) : undefined;
+  const publish = usePublish(config.id);
 
   const showSearch = config.showSearch !== false;
   const filters = config.filters ?? [];

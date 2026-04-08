@@ -32,7 +32,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
     typeof resolvedActiveStep === "number" ? resolvedActiveStep : 0;
 
   const [currentStep, setCurrentStep] = useState(initialStep);
-  const publish = config.id ? usePublish(config.id) : undefined; // eslint-disable-line react-hooks/rules-of-hooks
+  const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
   if (visible === false) return null;
