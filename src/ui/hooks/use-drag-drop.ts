@@ -8,11 +8,13 @@
 import {
   DndContext,
   closestCenter,
+  rectIntersection,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   DragOverlay,
+  useDroppable,
 } from "@dnd-kit/core";
 import type { DragStartEvent, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import {
@@ -32,10 +34,12 @@ export {
   DragOverlay,
   // Strategies
   closestCenter,
+  rectIntersection,
   verticalListSortingStrategy,
   horizontalListSortingStrategy,
   // Hooks
   useSortable,
+  useDroppable,
   useSensor,
   useSensors,
   // Sensors

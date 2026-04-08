@@ -6,8 +6,9 @@ import {
   DndContext,
   SortableContext,
   DragOverlay,
-  closestCenter,
+  rectIntersection,
   useSortable,
+  useDroppable,
   verticalListSortingStrategy,
   useDndSensors,
   getSortableStyle,
@@ -104,6 +105,36 @@ function SortableCard({
       style={sortableStyle}
     >
       <CardContent item={item} config={config} execute={execute} />
+    </div>
+  );
+}
+
+// ── Droppable column body (allows dropping onto empty columns) ──────────────
+
+function DroppableColumnBody({
+  columnKey,
+  children,
+  style,
+}: {
+  columnKey: string;
+  children: React.ReactNode;
+  style: React.CSSProperties;
+}) {
+  const { setNodeRef, isOver } = useDroppable({ id: `column-${columnKey}` });
+
+  return (
+    <div
+      ref={setNodeRef}
+      data-kanban-body
+      style={{
+        ...style,
+        backgroundColor: isOver
+          ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 5%, transparent)"
+          : undefined,
+        transition: "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      }}
+    >
+      {children}
     </div>
   );
 }
@@ -326,8 +357,11 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       const activeItem = findItem(String(active.id));
       if (!activeItem) return;
 
-      // Check if dragged over a column (droppable) or another card
-      const overColumnKey = config.columns.find((c) => c.key === String(over.id))?.key;
+      // Check if dragged over a column droppable (id: "column-{key}") or another card
+      const overId = String(over.id);
+      const overColumnKey = overId.startsWith("column-")
+        ? config.columns.find((c) => `column-${c.key}` === overId)?.key
+        : config.columns.find((c) => c.key === overId)?.key;
       if (overColumnKey) {
         // Dropped on column header — move to that column
         const currentCol = String(activeItem[columnField] ?? "");
@@ -354,10 +388,15 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       const activeItem = findItem(String(active.id));
       if (!activeItem) return;
 
+      const overId = String(over.id);
       const targetColumnKey =
-        config.columns.find((c) => c.key === String(over.id))?.key ??
+        // Dropped on a column droppable zone (id: "column-{key}")
+        (overId.startsWith("column-")
+          ? config.columns.find((c) => `column-${c.key}` === overId)?.key
+          : config.columns.find((c) => c.key === overId)?.key) ??
+        // Dropped on another card — find which column that card is in
         (() => {
-          const overItem = findItem(String(over.id));
+          const overItem = findItem(overId);
           return overItem ? String(overItem[columnField] ?? "") : null;
         })();
 
@@ -479,84 +518,121 @@ export function Kanban({ config }: { config: KanbanConfig }) {
           </span>
         </div>
 
-        {/* Column body */}
-        <div
-          data-kanban-body
-          style={{
-            padding:
-              "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px) var(--sn-spacing-sm, 8px)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--sn-spacing-sm, 8px)",
-            flex: 1,
-            overflowY: "auto",
-            minHeight: "60px",
-          }}
-        >
-          {isLoading && (
-            <>
-              <SkeletonCard />
-              <SkeletonCard />
-            </>
-          )}
+        {/* Column body — droppable when sortable so empty columns accept drops */}
+        {sortable ? (
+          <DroppableColumnBody
+            columnKey={col.key}
+            style={{
+              padding:
+                "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px) var(--sn-spacing-sm, 8px)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--sn-spacing-sm, 8px)",
+              flex: 1,
+              overflowY: "auto",
+              minHeight: "80px",
+            }}
+          >
+            {isLoading && (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            )}
 
-          {error && (
-            <div
-              data-kanban-error
-              role="alert"
-              style={{
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                color: "var(--sn-color-destructive, #ef4444)",
-                textAlign: "center",
-                padding: "var(--sn-spacing-sm, 8px)",
-              }}
-            >
-              Error loading data
-            </div>
-          )}
+            {!isLoading && !error && colItems.length === 0 && (
+              <div
+                data-kanban-empty
+                style={{
+                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                  color: "var(--sn-color-muted-foreground, #94a3b8)",
+                  textAlign: "center",
+                  padding: "var(--sn-spacing-md, 12px)",
+                }}
+              >
+                {config.emptyMessage ?? "No items"}
+              </div>
+            )}
 
-          {!isLoading && !error && colItems.length === 0 && (
-            <div
-              data-kanban-empty
-              style={{
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                color: "var(--sn-color-muted-foreground, #94a3b8)",
-                textAlign: "center",
-                padding: "var(--sn-spacing-md, 12px)",
-              }}
-            >
-              {config.emptyMessage ?? "No items"}
-            </div>
-          )}
+            {!isLoading && !error && (
+              <SortableContext
+                items={cardIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {colItems.map((item) => (
+                  <SortableCard
+                    key={getCardId(item)}
+                    item={item}
+                    cardId={getCardId(item)}
+                    config={config}
+                    execute={execute}
+                  />
+                ))}
+              </SortableContext>
+            )}
+          </DroppableColumnBody>
+        ) : (
+          <div
+            data-kanban-body
+            style={{
+              padding:
+                "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px) var(--sn-spacing-sm, 8px)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--sn-spacing-sm, 8px)",
+              flex: 1,
+              overflowY: "auto",
+              minHeight: "60px",
+            }}
+          >
+            {isLoading && (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            )}
 
-          {!isLoading && !error && sortable ? (
-            <SortableContext
-              items={cardIds}
-              strategy={verticalListSortingStrategy}
-            >
-              {colItems.map((item) => (
-                <SortableCard
+            {error && (
+              <div
+                data-kanban-error
+                role="alert"
+                style={{
+                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                  color: "var(--sn-color-destructive, #ef4444)",
+                  textAlign: "center",
+                  padding: "var(--sn-spacing-sm, 8px)",
+                }}
+              >
+                Error loading data
+              </div>
+            )}
+
+            {!isLoading && !error && colItems.length === 0 && (
+              <div
+                data-kanban-empty
+                style={{
+                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                  color: "var(--sn-color-muted-foreground, #94a3b8)",
+                  textAlign: "center",
+                  padding: "var(--sn-spacing-md, 12px)",
+                }}
+              >
+                {config.emptyMessage ?? "No items"}
+              </div>
+            )}
+
+            {!isLoading &&
+              !error &&
+              colItems.map((item) => (
+                <CardContent
                   key={getCardId(item)}
                   item={item}
-                  cardId={getCardId(item)}
                   config={config}
                   execute={execute}
                 />
               ))}
-            </SortableContext>
-          ) : (
-            !isLoading &&
-            !error &&
-            colItems.map((item, idx) => (
-              <CardContent
-                key={getCardId(item)}
-                item={item}
-                config={config}
-                execute={execute}
-              />
-            ))
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -583,7 +659,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
     return (
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={rectIntersection}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
