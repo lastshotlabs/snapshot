@@ -184,7 +184,8 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
       data-testid={`compare-${side}`}
       onScroll={() => handleScroll(side)}
       style={{
-        flex: 1,
+        flex: "1 1 min(50%, 400px)",
+        minWidth: "min(100%, 300px)",
         overflow: "auto",
         maxHeight,
       }}
@@ -294,7 +295,7 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
       </div>
 
       {/* Diff panes */}
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         {renderPane(leftDiff, "left", leftPaneRef)}
         <div
           style={{

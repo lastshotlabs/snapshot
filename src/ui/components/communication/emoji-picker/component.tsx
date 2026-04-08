@@ -140,7 +140,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         backgroundColor: "var(--sn-color-card, #ffffff)",
         overflow: "hidden",
-        width: `${perRow * 2.25 + 1.5}rem`,
+        width: "100%",
+        maxWidth: `${perRow * 2.25 + 1.5}rem`,
       }}
     >
       {/* Custom emoji CSS */}

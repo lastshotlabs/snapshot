@@ -25,7 +25,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
 
   const showHeader = config.showHeader ?? true;
   const showTypingIndicator = config.showTypingIndicator ?? true;
-  const height = config.height ?? "500px";
+  const height = config.height ?? "clamp(300px, 70vh, 500px)";
 
   // Build MessageThread config
   const threadConfig: MessageThreadConfig = {

@@ -204,7 +204,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               position: "relative",
               flex: "1 1 200px",
               minWidth: "140px",
-              maxWidth: "320px",
+              maxWidth: "min(320px, 100%)",
             }}
           >
             <div

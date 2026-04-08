@@ -469,7 +469,7 @@ export function MessageThread({
                                     type: "link-embed" as const,
                                     url: String(embed.url ?? ""),
                                     meta: embed.meta as LinkEmbedConfig["meta"],
-                                    maxWidth: "400px",
+                                    maxWidth: "min(400px, 100%)",
                                   }}
                                 />
                               ))}

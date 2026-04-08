@@ -218,7 +218,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               borderRadius: "var(--sn-radius-md, 6px)",
               border: "1px solid var(--sn-color-border, #d1d5db)",
               width: "100%",
-              maxWidth: "320px",
+              maxWidth: "min(320px, 100%)",
             }}
           />
         </div>
@@ -264,6 +264,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
       )}
 
       {/* Table */}
+      <div style={{ overflowX: "auto" }}>
       <table
         style={{
           width: "100%",
@@ -459,6 +460,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
             })}
         </tbody>
       </table>
+      </div>
 
       {/* Pagination controls */}
       {table.pagination && table.pagination.totalPages > 1 && (

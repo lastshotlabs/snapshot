@@ -316,7 +316,7 @@ export function CommentSection({
       <div
         style={{
           padding: "0 var(--sn-spacing-md, 1rem)",
-          maxHeight: "400px",
+          maxHeight: "clamp(200px, 50vh, 400px)",
           overflowY: "auto",
         }}
       >

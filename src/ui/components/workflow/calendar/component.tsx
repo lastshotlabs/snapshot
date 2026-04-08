@@ -631,9 +631,12 @@ export function Calendar({ config }: { config: CalendarConfig }) {
             border: "1px solid var(--sn-color-border, #e2e8f0)",
             borderRadius: "var(--sn-radius-md, 6px)",
             overflow: "hidden",
+            overflowX: "auto",
           }}
         >
-          {view === "month" ? renderMonthView() : renderWeekView()}
+          <div style={{ minWidth: "600px" }}>
+            {view === "month" ? renderMonthView() : renderWeekView()}
+          </div>
         </div>
       )}
     </div>

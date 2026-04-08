@@ -51,7 +51,7 @@ function InstagramEmbed({ info }: { info: PlatformInfo }) {
       style={{
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         overflow: "hidden",
-        maxWidth: "540px",
+        maxWidth: "min(540px, 100%)",
       }}
     >
       <iframe
@@ -76,7 +76,7 @@ function TikTokEmbed({ info }: { info: PlatformInfo }) {
       style={{
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         overflow: "hidden",
-        maxWidth: "325px",
+        maxWidth: "min(325px, 100%)",
       }}
     >
       <iframe
@@ -84,8 +84,8 @@ function TikTokEmbed({ info }: { info: PlatformInfo }) {
         title="TikTok video"
         allowFullScreen
         style={{
-          width: "325px",
-          height: "750px",
+          width: "100%",
+          height: "min(750px, 80vh)",
           border: "none",
           backgroundColor: "var(--sn-color-card, #ffffff)",
         }}
@@ -101,7 +101,7 @@ function TwitterEmbed({ info }: { info: PlatformInfo }) {
       style={{
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         overflow: "hidden",
-        maxWidth: "550px",
+        maxWidth: "min(550px, 100%)",
       }}
     >
       <iframe
@@ -125,7 +125,7 @@ function GifEmbed({ url }: { url: string }) {
       style={{
         borderRadius: "var(--sn-radius-md, 0.5rem)",
         overflow: "hidden",
-        maxWidth: "400px",
+        maxWidth: "min(400px, 100%)",
       }}
     >
       <img
@@ -194,7 +194,7 @@ function GenericCard({
       {image && (
         <div
           style={{
-            width: "120px",
+            width: "clamp(80px, 25%, 120px)",
             minHeight: "80px",
             flexShrink: 0,
             backgroundImage: `url(${image})`,
