@@ -168,11 +168,7 @@ export type {
   LayoutProps,
   LayoutVariant,
 } from "./ui/components/layout/layout/index";
-export {
-  Nav,
-  navConfigSchema,
-  useNav,
-} from "./ui/components/layout/nav/index";
+export { Nav, navConfigSchema, useNav } from "./ui/components/layout/nav/index";
 export type {
   NavConfig,
   NavItemConfig,
@@ -310,15 +306,24 @@ export {
 export type { ChatWindowConfig } from "./ui/components/communication/chat-window/index";
 
 // Components — Popover
-export { Popover, popoverConfigSchema } from "./ui/components/overlay/popover/index";
+export {
+  Popover,
+  popoverConfigSchema,
+} from "./ui/components/overlay/popover/index";
 export type { PopoverConfig } from "./ui/components/overlay/popover/index";
 
 // Components — Separator
-export { Separator, separatorConfigSchema } from "./ui/components/data/separator/index";
+export {
+  Separator,
+  separatorConfigSchema,
+} from "./ui/components/data/separator/index";
 export type { SeparatorConfig } from "./ui/components/data/separator/index";
 
 // Components — Command Palette
-export { CommandPalette, commandPaletteConfigSchema } from "./ui/components/overlay/command-palette/index";
+export {
+  CommandPalette,
+  commandPaletteConfigSchema,
+} from "./ui/components/overlay/command-palette/index";
 export type { CommandPaletteConfig } from "./ui/components/overlay/command-palette/index";
 
 // Components — Input
@@ -326,7 +331,10 @@ export { Input, inputConfigSchema } from "./ui/components/forms/input/index";
 export type { InputConfig } from "./ui/components/forms/input/index";
 
 // Components — Textarea
-export { Textarea, textareaConfigSchema } from "./ui/components/forms/textarea/index";
+export {
+  Textarea,
+  textareaConfigSchema,
+} from "./ui/components/forms/textarea/index";
 export type { TextareaConfig } from "./ui/components/forms/textarea/index";
 
 // Components — Toggle
@@ -334,76 +342,155 @@ export { Toggle, toggleConfigSchema } from "./ui/components/forms/toggle/index";
 export type { ToggleConfig } from "./ui/components/forms/toggle/index";
 
 // Components — MultiSelect
-export { MultiSelect, multiSelectConfigSchema } from "./ui/components/forms/multi-select/index";
+export {
+  MultiSelect,
+  multiSelectConfigSchema,
+} from "./ui/components/forms/multi-select/index";
 export type { MultiSelectConfig } from "./ui/components/forms/multi-select/index";
 
 // Components — ContextMenu
-export { ContextMenu, contextMenuConfigSchema } from "./ui/components/overlay/context-menu/index";
+export {
+  ContextMenu,
+  contextMenuConfigSchema,
+} from "./ui/components/overlay/context-menu/index";
 export type { ContextMenuConfig } from "./ui/components/overlay/context-menu/index";
 
 // Components — ScrollArea
-export { ScrollArea, scrollAreaConfigSchema } from "./ui/components/data/scroll-area/index";
+export {
+  ScrollArea,
+  scrollAreaConfigSchema,
+} from "./ui/components/data/scroll-area/index";
 export type { ScrollAreaConfig } from "./ui/components/data/scroll-area/index";
 
 // Components — FilterBar
-export { FilterBar, filterBarConfigSchema } from "./ui/components/data/filter-bar/index";
+export {
+  FilterBar,
+  filterBarConfigSchema,
+} from "./ui/components/data/filter-bar/index";
 export type { FilterBarConfig } from "./ui/components/data/filter-bar/index";
 
 // Components — InlineEdit
-export { InlineEdit, inlineEditConfigSchema } from "./ui/components/forms/inline-edit/index";
+export {
+  InlineEdit,
+  inlineEditConfigSchema,
+} from "./ui/components/forms/inline-edit/index";
 export type { InlineEditConfig } from "./ui/components/forms/inline-edit/index";
 
 // Components — Markdown
-export { Markdown, markdownConfigSchema } from "./ui/components/content/markdown/index";
+export {
+  Markdown,
+  markdownConfigSchema,
+} from "./ui/components/content/markdown/index";
 export type { MarkdownConfig } from "./ui/components/content/markdown/index";
 
 // Components — TagSelector
-export { TagSelector, tagSelectorConfigSchema } from "./ui/components/forms/tag-selector/index";
+export {
+  TagSelector,
+  tagSelectorConfigSchema,
+} from "./ui/components/forms/tag-selector/index";
 export type { TagSelectorConfig } from "./ui/components/forms/tag-selector/index";
 
 // Components — EntityPicker
-export { EntityPicker, entityPickerConfigSchema } from "./ui/components/data/entity-picker/index";
+export {
+  EntityPicker,
+  entityPickerConfigSchema,
+} from "./ui/components/data/entity-picker/index";
 export type { EntityPickerConfig } from "./ui/components/data/entity-picker/index";
 
 // Components — HighlightedText
-export { HighlightedText, highlightedTextConfigSchema } from "./ui/components/data/highlighted-text/index";
+export {
+  HighlightedText,
+  highlightedTextConfigSchema,
+} from "./ui/components/data/highlighted-text/index";
 export type { HighlightedTextConfig } from "./ui/components/data/highlighted-text/index";
 
 // Components — FavoriteButton
-export { FavoriteButton, favoriteButtonConfigSchema } from "./ui/components/data/favorite-button/index";
+export {
+  FavoriteButton,
+  favoriteButtonConfigSchema,
+} from "./ui/components/data/favorite-button/index";
 export type { FavoriteButtonConfig } from "./ui/components/data/favorite-button/index";
 
 // Components — NotificationBell
-export { NotificationBell, notificationBellConfigSchema } from "./ui/components/data/notification-bell/index";
+export {
+  NotificationBell,
+  notificationBellConfigSchema,
+} from "./ui/components/data/notification-bell/index";
 export type { NotificationBellConfig } from "./ui/components/data/notification-bell/index";
 
 // Components — SaveIndicator
-export { SaveIndicator, saveIndicatorConfigSchema } from "./ui/components/data/save-indicator/index";
+export {
+  SaveIndicator,
+  saveIndicatorConfigSchema,
+} from "./ui/components/data/save-indicator/index";
 export type { SaveIndicatorConfig } from "./ui/components/data/save-indicator/index";
 
 // Components — CompareView
-export { CompareView, compareViewConfigSchema } from "./ui/components/content/compare-view/index";
+export {
+  CompareView,
+  compareViewConfigSchema,
+} from "./ui/components/content/compare-view/index";
 export type { CompareViewConfig } from "./ui/components/content/compare-view/index";
 
 // Components — QuickAdd
-export { QuickAdd, quickAddConfigSchema } from "./ui/components/forms/quick-add/index";
+export {
+  QuickAdd,
+  quickAddConfigSchema,
+} from "./ui/components/forms/quick-add/index";
 export type { QuickAddConfig } from "./ui/components/forms/quick-add/index";
 
 // Components — LinkEmbed
-export { LinkEmbed, linkEmbedConfigSchema, detectPlatform, PLATFORM_COLORS, PLATFORM_NAMES } from "./ui/components/content/link-embed/index";
-export type { LinkEmbedConfig, Platform, PlatformInfo } from "./ui/components/content/link-embed/index";
+export {
+  LinkEmbed,
+  linkEmbedConfigSchema,
+  detectPlatform,
+  PLATFORM_COLORS,
+  PLATFORM_NAMES,
+} from "./ui/components/content/link-embed/index";
+export type {
+  LinkEmbedConfig,
+  Platform,
+  PlatformInfo,
+} from "./ui/components/content/link-embed/index";
 
 // Components — GifPicker
-export { GifPicker, gifPickerConfigSchema } from "./ui/components/communication/gif-picker/index";
-export type { GifPickerConfig, GifEntry } from "./ui/components/communication/gif-picker/index";
+export {
+  GifPicker,
+  gifPickerConfigSchema,
+} from "./ui/components/communication/gif-picker/index";
+export type {
+  GifPickerConfig,
+  GifEntry,
+} from "./ui/components/communication/gif-picker/index";
 
 // Custom Emoji Utilities
-export { parseShortcodes, buildEmojiMap, resolveEmojiRecords, CUSTOM_EMOJI_CSS } from "./ui/components/communication/emoji-picker/index";
+export {
+  parseShortcodes,
+  buildEmojiMap,
+  resolveEmojiRecords,
+  CUSTOM_EMOJI_CSS,
+} from "./ui/components/communication/emoji-picker/index";
 export type { CustomEmoji } from "./ui/components/communication/emoji-picker/index";
 
 // Icons
 export { Icon, ICON_PATHS } from "./ui/icons/index";
 export type { IconProps } from "./ui/icons/index";
+
+// Page Presets
+export { crudPage, dashboardPage, settingsPage } from "./ui/presets/index";
+export type {
+  CrudPageOptions,
+  DashboardPageOptions,
+  SettingsPageOptions,
+  ColumnDef,
+  FormDef,
+  FormFieldDef,
+  FormFieldOption,
+  FilterDef,
+  FilterOption,
+  StatDef,
+  SettingsSectionDef,
+} from "./ui/presets/types";
 
 // Register all built-in components
 import "./ui/components/register";

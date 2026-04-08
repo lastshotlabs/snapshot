@@ -2,9 +2,23 @@ import React, { useState } from "react";
 import {
   ComponentRenderer,
   PageContextProvider,
+  crudPage,
+  dashboardPage,
+  settingsPage,
 } from "@lastshotlabs/snapshot/ui";
 
-type Page = "dashboard" | "data" | "forms" | "overlay" | "structural" | "primitives" | "navigation" | "content" | "workflow" | "communication";
+type Page =
+  | "dashboard"
+  | "data"
+  | "forms"
+  | "overlay"
+  | "structural"
+  | "primitives"
+  | "navigation"
+  | "content"
+  | "workflow"
+  | "communication"
+  | "presets";
 
 const PAGES: { key: Page; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
@@ -17,6 +31,7 @@ const PAGES: { key: Page; label: string }[] = [
   { key: "workflow", label: "Workflow" },
   { key: "structural", label: "Structural" },
   { key: "communication", label: "Communication" },
+  { key: "presets", label: "Presets" },
 ];
 
 // ── Dashboard page configs ──────────────────────────────────────────────
@@ -425,13 +440,35 @@ const badgeRow = {
     { type: "badge", text: "Primary", color: "primary", variant: "solid" },
     { type: "badge", text: "Success", color: "success", variant: "soft" },
     { type: "badge", text: "Warning", color: "warning", variant: "outline" },
-    { type: "badge", text: "Destructive", color: "destructive", variant: "solid" },
+    {
+      type: "badge",
+      text: "Destructive",
+      color: "destructive",
+      variant: "solid",
+    },
     { type: "badge", text: "Info", color: "info", variant: "soft" },
     { type: "badge", text: "Dot Variant", color: "success", variant: "dot" },
-    { type: "badge", text: "Large", color: "info", variant: "solid", size: "lg" },
-    { type: "badge", text: "Small", color: "warning", variant: "outline", size: "sm" },
+    {
+      type: "badge",
+      text: "Large",
+      color: "info",
+      variant: "solid",
+      size: "lg",
+    },
+    {
+      type: "badge",
+      text: "Small",
+      color: "warning",
+      variant: "outline",
+      size: "sm",
+    },
     { type: "badge", text: "Muted", color: "muted", variant: "soft" },
-    { type: "badge", text: "Secondary", color: "secondary", variant: "outline" },
+    {
+      type: "badge",
+      text: "Secondary",
+      color: "secondary",
+      variant: "outline",
+    },
   ],
 };
 
@@ -443,7 +480,13 @@ const avatarRow = {
     { type: "avatar", name: "Alice Johnson", size: "xs" },
     { type: "avatar", name: "Bob Smith", size: "sm", color: "accent" },
     { type: "avatar", name: "Carol Davis", size: "md", status: "online" },
-    { type: "avatar", name: "Dave Wilson", size: "lg", status: "busy", color: "secondary" },
+    {
+      type: "avatar",
+      name: "Dave Wilson",
+      size: "lg",
+      status: "busy",
+      color: "secondary",
+    },
     { type: "avatar", name: "Eve", size: "xl", status: "away" },
     { type: "avatar", shape: "square", name: "SQ", size: "lg" },
   ],
@@ -453,10 +496,38 @@ const alerts = {
   type: "row",
   gap: "md",
   children: [
-    { type: "alert", variant: "info", title: "Information", description: "This is an informational message about the system.", span: 12 },
-    { type: "alert", variant: "success", title: "Success!", description: "Your changes have been saved successfully.", dismissible: true, span: 12 },
-    { type: "alert", variant: "warning", description: "Your trial expires in 3 days. Upgrade now.", actionLabel: "Upgrade", action: { type: "toast", message: "Upgrade clicked" }, span: 12 },
-    { type: "alert", variant: "destructive", title: "Error", description: "Failed to connect to the database. Please check your configuration.", dismissible: true, span: 12 },
+    {
+      type: "alert",
+      variant: "info",
+      title: "Information",
+      description: "This is an informational message about the system.",
+      span: 12,
+    },
+    {
+      type: "alert",
+      variant: "success",
+      title: "Success!",
+      description: "Your changes have been saved successfully.",
+      dismissible: true,
+      span: 12,
+    },
+    {
+      type: "alert",
+      variant: "warning",
+      description: "Your trial expires in 3 days. Upgrade now.",
+      actionLabel: "Upgrade",
+      action: { type: "toast", message: "Upgrade clicked" },
+      span: 12,
+    },
+    {
+      type: "alert",
+      variant: "destructive",
+      title: "Error",
+      description:
+        "Failed to connect to the database. Please check your configuration.",
+      dismissible: true,
+      span: 12,
+    },
   ],
 };
 
@@ -464,9 +535,32 @@ const progressBars = {
   type: "row",
   gap: "md",
   children: [
-    { type: "progress", value: 75, label: "Upload Progress", showValue: true, color: "primary", span: 6 },
-    { type: "progress", value: 45, label: "Storage Used", showValue: true, color: "warning", size: "lg", span: 6 },
-    { type: "progress", value: 100, label: "Complete", showValue: true, color: "success", size: "sm", span: 6 },
+    {
+      type: "progress",
+      value: 75,
+      label: "Upload Progress",
+      showValue: true,
+      color: "primary",
+      span: 6,
+    },
+    {
+      type: "progress",
+      value: 45,
+      label: "Storage Used",
+      showValue: true,
+      color: "warning",
+      size: "lg",
+      span: 6,
+    },
+    {
+      type: "progress",
+      value: 100,
+      label: "Complete",
+      showValue: true,
+      color: "success",
+      size: "sm",
+      span: 6,
+    },
     { type: "progress", label: "Loading...", color: "info", span: 6 },
   ],
 };
@@ -484,7 +578,8 @@ const skeletonDemo = {
 const emptyStateDemo = {
   type: "empty-state",
   title: "No results found",
-  description: "Try adjusting your search or filter to find what you're looking for.",
+  description:
+    "Try adjusting your search or filter to find what you're looking for.",
   icon: "search",
   actionLabel: "Clear Filters",
   action: { type: "toast", message: "Filters cleared" },
@@ -494,9 +589,24 @@ const switchDemo = {
   type: "row",
   gap: "lg",
   children: [
-    { type: "switch", label: "Email notifications", description: "Receive email updates about activity", defaultChecked: true, color: "primary", span: 4 },
+    {
+      type: "switch",
+      label: "Email notifications",
+      description: "Receive email updates about activity",
+      defaultChecked: true,
+      color: "primary",
+      span: 4,
+    },
     { type: "switch", label: "Dark mode", color: "secondary", span: 4 },
-    { type: "switch", label: "Auto-save", description: "Automatically save changes", defaultChecked: true, color: "success", size: "sm", span: 4 },
+    {
+      type: "switch",
+      label: "Auto-save",
+      description: "Automatically save changes",
+      defaultChecked: true,
+      color: "success",
+      size: "sm",
+      span: 4,
+    },
   ],
 };
 
@@ -504,9 +614,45 @@ const tooltipDemo = {
   type: "row",
   gap: "md",
   children: [
-    { type: "tooltip", text: "This is a tooltip on top", placement: "top", content: [{ type: "button", label: "Hover Me (Top)", variant: "outline", size: "sm" }] },
-    { type: "tooltip", text: "Tooltip on the right side", placement: "right", content: [{ type: "button", label: "Hover Me (Right)", variant: "outline", size: "sm" }] },
-    { type: "tooltip", text: "Bottom tooltip here", placement: "bottom", content: [{ type: "button", label: "Hover Me (Bottom)", variant: "outline", size: "sm" }] },
+    {
+      type: "tooltip",
+      text: "This is a tooltip on top",
+      placement: "top",
+      content: [
+        {
+          type: "button",
+          label: "Hover Me (Top)",
+          variant: "outline",
+          size: "sm",
+        },
+      ],
+    },
+    {
+      type: "tooltip",
+      text: "Tooltip on the right side",
+      placement: "right",
+      content: [
+        {
+          type: "button",
+          label: "Hover Me (Right)",
+          variant: "outline",
+          size: "sm",
+        },
+      ],
+    },
+    {
+      type: "tooltip",
+      text: "Bottom tooltip here",
+      placement: "bottom",
+      content: [
+        {
+          type: "button",
+          label: "Hover Me (Bottom)",
+          variant: "outline",
+          size: "sm",
+        },
+      ],
+    },
   ],
 };
 
@@ -515,10 +661,32 @@ const listDemo = {
   variant: "bordered",
   divider: true,
   items: [
-    { title: "Alice Johnson", description: "Senior Engineer · Engineering", icon: "user", badge: "Admin", badgeColor: "primary" },
-    { title: "Bob Smith", description: "Product Manager · Product", icon: "user", badge: "Editor", badgeColor: "success" },
-    { title: "Carol Davis", description: "Designer · Design", icon: "user", badge: "Viewer", badgeColor: "secondary" },
-    { title: "Dave Wilson", description: "DevOps · Infrastructure", icon: "user" },
+    {
+      title: "Alice Johnson",
+      description: "Senior Engineer · Engineering",
+      icon: "user",
+      badge: "Admin",
+      badgeColor: "primary",
+    },
+    {
+      title: "Bob Smith",
+      description: "Product Manager · Product",
+      icon: "user",
+      badge: "Editor",
+      badgeColor: "success",
+    },
+    {
+      title: "Carol Davis",
+      description: "Designer · Design",
+      icon: "user",
+      badge: "Viewer",
+      badgeColor: "secondary",
+    },
+    {
+      title: "Dave Wilson",
+      description: "DevOps · Infrastructure",
+      icon: "user",
+    },
   ],
 };
 
@@ -529,10 +697,41 @@ const accordionDemo = {
   variant: "bordered",
   mode: "single",
   items: [
-    { title: "What is Snapshot?", content: [{ type: "heading", text: "Snapshot is a config-driven UI framework that lets you build enterprise applications from JSON manifests.", level: 5 }] },
-    { title: "How does theming work?", content: [{ type: "heading", text: "Snapshot uses a design token system with flavors, semantic colors, and component-level overrides — all customizable at runtime.", level: 5 }] },
-    { title: "Can I use custom components?", content: [{ type: "heading", text: "Yes! Register custom components via the component registry and reference them as { type: 'custom', component: 'MyComponent' }.", level: 5 }] },
-    { title: "Disabled Section", disabled: true, content: [{ type: "heading", text: "This is disabled" }] },
+    {
+      title: "What is Snapshot?",
+      content: [
+        {
+          type: "heading",
+          text: "Snapshot is a config-driven UI framework that lets you build enterprise applications from JSON manifests.",
+          level: 5,
+        },
+      ],
+    },
+    {
+      title: "How does theming work?",
+      content: [
+        {
+          type: "heading",
+          text: "Snapshot uses a design token system with flavors, semantic colors, and component-level overrides — all customizable at runtime.",
+          level: 5,
+        },
+      ],
+    },
+    {
+      title: "Can I use custom components?",
+      content: [
+        {
+          type: "heading",
+          text: "Yes! Register custom components via the component registry and reference them as { type: 'custom', component: 'MyComponent' }.",
+          level: 5,
+        },
+      ],
+    },
+    {
+      title: "Disabled Section",
+      disabled: true,
+      content: [{ type: "heading", text: "This is disabled" }],
+    },
   ],
 };
 
@@ -565,12 +764,17 @@ const treeViewDemo = {
   showConnectors: true,
   items: [
     {
-      label: "Documents", icon: "folder", value: "docs", expanded: true,
+      label: "Documents",
+      icon: "folder",
+      value: "docs",
+      expanded: true,
       children: [
         { label: "report.pdf", icon: "file", value: "report" },
         { label: "invoice.xlsx", icon: "file", value: "invoice" },
         {
-          label: "Images", icon: "folder", value: "images",
+          label: "Images",
+          icon: "folder",
+          value: "images",
           children: [
             { label: "logo.png", icon: "image", value: "logo" },
             { label: "banner.jpg", icon: "image", value: "banner" },
@@ -579,7 +783,9 @@ const treeViewDemo = {
       ],
     },
     {
-      label: "Source Code", icon: "folder", value: "src",
+      label: "Source Code",
+      icon: "folder",
+      value: "src",
       children: [
         { label: "index.ts", icon: "code", value: "index" },
         { label: "app.tsx", icon: "code", value: "app" },
@@ -594,10 +800,26 @@ const dropdownDemo = {
   trigger: { label: "Actions", variant: "outline" },
   items: [
     { type: "label", text: "User Actions" },
-    { type: "item", label: "Edit Profile", icon: "edit", action: { type: "toast", message: "Edit profile" } },
-    { type: "item", label: "Settings", icon: "settings", action: { type: "toast", message: "Settings" } },
+    {
+      type: "item",
+      label: "Edit Profile",
+      icon: "edit",
+      action: { type: "toast", message: "Edit profile" },
+    },
+    {
+      type: "item",
+      label: "Settings",
+      icon: "settings",
+      action: { type: "toast", message: "Settings" },
+    },
     { type: "separator" },
-    { type: "item", label: "Delete Account", icon: "trash-2", action: { type: "toast", message: "Delete clicked" }, destructive: true },
+    {
+      type: "item",
+      label: "Delete Account",
+      icon: "trash-2",
+      action: { type: "toast", message: "Delete clicked" },
+      destructive: true,
+    },
   ],
 };
 
@@ -607,10 +829,30 @@ const timelineDemo = {
   type: "timeline",
   variant: "default",
   items: [
-    { title: "Project Created", description: "Initial repository setup and scaffolding", date: "2025-01-15", color: "primary" },
-    { title: "First Release", description: "v1.0.0 shipped to production", date: "2025-02-20", color: "success" },
-    { title: "Security Patch", description: "Critical vulnerability fixed in auth module", date: "2025-03-10", color: "destructive" },
-    { title: "Major Update", description: "v2.0 with new component library and token system", date: "2025-04-01", color: "info" },
+    {
+      title: "Project Created",
+      description: "Initial repository setup and scaffolding",
+      date: "2025-01-15",
+      color: "primary",
+    },
+    {
+      title: "First Release",
+      description: "v1.0.0 shipped to production",
+      date: "2025-02-20",
+      color: "success",
+    },
+    {
+      title: "Security Patch",
+      description: "Critical vulnerability fixed in auth module",
+      date: "2025-03-10",
+      color: "destructive",
+    },
+    {
+      title: "Major Update",
+      description: "v2.0 with new component library and token system",
+      date: "2025-04-01",
+      color: "info",
+    },
   ],
 };
 
@@ -834,9 +1076,16 @@ function DataPage() {
     <PageWrapper>
       <div className="showcase">
         <ShowcaseSection title="Data Table">
-          <p style={{ fontSize: "0.8125rem", color: "var(--sn-color-muted-foreground, #6b7280)", marginBottom: "1rem" }}>
-            Note: DataTable currently expects data via FromRef. The table below shows the empty state.
-            StatCard and DetailCard fetch data directly from the mock API.
+          <p
+            style={{
+              fontSize: "0.8125rem",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              marginBottom: "1rem",
+            }}
+          >
+            Note: DataTable currently expects data via FromRef. The table below
+            shows the empty state. StatCard and DetailCard fetch data directly
+            from the mock API.
           </p>
           <RenderConfig config={dataTable} />
         </ShowcaseSection>
@@ -929,9 +1178,29 @@ const inputDemo = {
   gap: "md",
   direction: "column",
   children: [
-    { type: "input", label: "Email", placeholder: "you@example.com", inputType: "email", icon: "mail", helperText: "We'll never share your email" },
-    { type: "input", label: "Password", placeholder: "Enter password", inputType: "password", icon: "lock", required: true },
-    { type: "input", label: "With Error", value: "bad input", errorText: "This field is invalid", icon: "alert-circle" },
+    {
+      type: "input",
+      label: "Email",
+      placeholder: "you@example.com",
+      inputType: "email",
+      icon: "mail",
+      helperText: "We'll never share your email",
+    },
+    {
+      type: "input",
+      label: "Password",
+      placeholder: "Enter password",
+      inputType: "password",
+      icon: "lock",
+      required: true,
+    },
+    {
+      type: "input",
+      label: "With Error",
+      value: "bad input",
+      errorText: "This field is invalid",
+      icon: "alert-circle",
+    },
   ],
 };
 
@@ -976,9 +1245,34 @@ const filterBarDemo = {
   type: "filter-bar",
   searchPlaceholder: "Search items...",
   filters: [
-    { key: "status", label: "Status", options: [{ label: "Active", value: "active" }, { label: "Inactive", value: "inactive" }, { label: "Pending", value: "pending" }] },
-    { key: "type", label: "Type", options: [{ label: "Bug", value: "bug" }, { label: "Feature", value: "feature" }, { label: "Task", value: "task" }], multiple: true },
-    { key: "priority", label: "Priority", options: [{ label: "High", value: "high" }, { label: "Medium", value: "medium" }, { label: "Low", value: "low" }] },
+    {
+      key: "status",
+      label: "Status",
+      options: [
+        { label: "Active", value: "active" },
+        { label: "Inactive", value: "inactive" },
+        { label: "Pending", value: "pending" },
+      ],
+    },
+    {
+      key: "type",
+      label: "Type",
+      options: [
+        { label: "Bug", value: "bug" },
+        { label: "Feature", value: "feature" },
+        { label: "Task", value: "task" },
+      ],
+      multiple: true,
+    },
+    {
+      key: "priority",
+      label: "Priority",
+      options: [
+        { label: "High", value: "high" },
+        { label: "Medium", value: "medium" },
+        { label: "Low", value: "low" },
+      ],
+    },
   ],
 };
 
@@ -1000,8 +1294,16 @@ const inlineEditDemo = {
   gap: "md",
   direction: "column",
   children: [
-    { type: "inline-edit", value: "Click me to edit", saveAction: { type: "toast", message: "Saved!", variant: "success" } },
-    { type: "inline-edit", placeholder: "Click to add title", fontSize: "var(--sn-font-size-xl, 1.25rem)" },
+    {
+      type: "inline-edit",
+      value: "Click me to edit",
+      saveAction: { type: "toast", message: "Saved!", variant: "success" },
+    },
+    {
+      type: "inline-edit",
+      placeholder: "Click to add title",
+      fontSize: "var(--sn-font-size-xl, 1.25rem)",
+    },
   ],
 };
 
@@ -1050,7 +1352,8 @@ const quickAddDemo = {
 
 const markdownDemo = {
   type: "markdown",
-  content: "# Hello World\n\nThis is **bold** and *italic* text.\n\n## Features\n- List item one\n- List item two\n- List item three\n\n> A blockquote with some wisdom.\n\n```typescript\nconst x = 42;\nconsole.log(`The answer is ${x}`);\n```\n\n| Column 1 | Column 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |",
+  content:
+    "# Hello World\n\nThis is **bold** and *italic* text.\n\n## Features\n- List item one\n- List item two\n- List item three\n\n> A blockquote with some wisdom.\n\n```typescript\nconst x = 42;\nconsole.log(`The answer is ${x}`);\n```\n\n| Column 1 | Column 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |",
   maxHeight: "400px",
 };
 
@@ -1059,7 +1362,8 @@ const compareViewDemo = {
   leftLabel: "Original",
   rightLabel: "Modified",
   left: "function greet(name) {\n  console.log('Hello ' + name);\n  return true;\n}\n\ngreet('world');",
-  right: "function greet(name: string) {\n  console.log(`Hello ${name}`);\n  return true;\n}\n\nconst result = greet('world');\nconsole.log(result);",
+  right:
+    "function greet(name: string) {\n  console.log(`Hello ${name}`);\n  return true;\n}\n\nconst result = greet('world');\nconsole.log(result);",
   maxHeight: "300px",
 };
 
@@ -1070,7 +1374,11 @@ const commandPaletteDemo = {
     {
       label: "Navigation",
       items: [
-        { label: "Go to Dashboard", icon: "layout-dashboard", shortcut: "Ctrl+D" },
+        {
+          label: "Go to Dashboard",
+          icon: "layout-dashboard",
+          shortcut: "Ctrl+D",
+        },
         { label: "Go to Settings", icon: "settings", shortcut: "Ctrl+," },
         { label: "Go to Profile", icon: "user" },
       ],
@@ -1221,7 +1529,16 @@ const richInputDemo = {
   type: "rich-input",
   id: "demo-input",
   placeholder: "Type a message... (Enter to send, Shift+Enter for newline)",
-  features: ["bold", "italic", "underline", "strike", "code", "link", "bullet-list", "ordered-list"],
+  features: [
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "code",
+    "link",
+    "bullet-list",
+    "ordered-list",
+  ],
   minHeight: "3rem",
   maxHeight: "10rem",
 };
@@ -1274,7 +1591,16 @@ const typingIndicatorDemos = {
   children: [
     { type: "typing-indicator", users: [{ name: "Alice" }] },
     { type: "typing-indicator", users: [{ name: "Alice" }, { name: "Bob" }] },
-    { type: "typing-indicator", users: [{ name: "Alice" }, { name: "Bob" }, { name: "Charlie" }, { name: "Diana" }], maxDisplay: 2 },
+    {
+      type: "typing-indicator",
+      users: [
+        { name: "Alice" },
+        { name: "Bob" },
+        { name: "Charlie" },
+        { name: "Diana" },
+      ],
+      maxDisplay: 2,
+    },
   ],
 };
 
@@ -1283,25 +1609,32 @@ const commentSectionDemo = {
   data: [
     {
       id: "c1",
-      content: "<p>This is a <b>great</b> feature! Really looking forward to seeing it in production.</p>",
+      content:
+        "<p>This is a <b>great</b> feature! Really looking forward to seeing it in production.</p>",
       author: { name: "Alice Johnson", avatar: null },
       timestamp: new Date(Date.now() - 3600000).toISOString(),
     },
     {
       id: "c2",
-      content: "<p>I agree! The design tokens make it really easy to customize.</p>",
+      content:
+        "<p>I agree! The design tokens make it really easy to customize.</p>",
       author: { name: "Bob Smith", avatar: null },
       timestamp: new Date(Date.now() - 1800000).toISOString(),
     },
     {
       id: "c3",
-      content: "<p>Can we add <code>dark mode</code> support? That would be awesome.</p>",
+      content:
+        "<p>Can we add <code>dark mode</code> support? That would be awesome.</p>",
       author: { name: "Charlie Brown", avatar: null },
       timestamp: new Date(Date.now() - 600000).toISOString(),
     },
   ],
   inputPlaceholder: "Write a comment...",
-  submitAction: { type: "toast", message: "Comment posted!", variant: "success" },
+  submitAction: {
+    type: "toast",
+    message: "Comment posted!",
+    variant: "success",
+  },
 };
 
 const chatWindowDemo = {
@@ -1311,13 +1644,15 @@ const chatWindowDemo = {
   data: [
     {
       id: "m1",
-      content: "<p>Hey everyone! \ud83d\udc4b How's the new feature coming along?</p>",
+      content:
+        "<p>Hey everyone! \ud83d\udc4b How's the new feature coming along?</p>",
       author: { name: "Alice Johnson", avatar: null },
       timestamp: new Date(Date.now() - 7200000).toISOString(),
     },
     {
       id: "m2",
-      content: "<p>Going well! Just finished the <b>token system</b> updates. All tests passing.</p>",
+      content:
+        "<p>Going well! Just finished the <b>token system</b> updates. All tests passing.</p>",
       author: { name: "Bob Smith", avatar: null },
       timestamp: new Date(Date.now() - 7100000).toISOString(),
     },
@@ -1329,19 +1664,22 @@ const chatWindowDemo = {
     },
     {
       id: "m4",
-      content: "<p>FYI the staging deploy went through. You can test it at <a href=\"#\">staging.example.com</a></p>",
+      content:
+        '<p>FYI the staging deploy went through. You can test it at <a href="#">staging.example.com</a></p>',
       author: { name: "Charlie Brown", avatar: null },
       timestamp: new Date(Date.now() - 3600000).toISOString(),
     },
     {
       id: "m5",
-      content: "<p>Just tried it \u2014 looks great! One small thing: the <code>border-radius</code> on the cards could be a bit smaller.</p>",
+      content:
+        "<p>Just tried it \u2014 looks great! One small thing: the <code>border-radius</code> on the cards could be a bit smaller.</p>",
       author: { name: "Diana Prince", avatar: null },
       timestamp: new Date(Date.now() - 1800000).toISOString(),
     },
     {
       id: "m6",
-      content: "<p>Good catch, I'll update the radius tokens. Should be a one-line change \ud83d\ude04</p>",
+      content:
+        "<p>Good catch, I'll update the radius tokens. Should be a one-line change \ud83d\ude04</p>",
       author: { name: "Bob Smith", avatar: null },
       timestamp: new Date(Date.now() - 1700000).toISOString(),
     },
@@ -1364,7 +1702,8 @@ const twitterEmbedDemo = {
   url: "https://twitter.com/elonmusk/status/1234567890",
   meta: {
     title: "Elon Musk on X",
-    description: "This is an example tweet embed card showing Open Graph metadata.",
+    description:
+      "This is an example tweet embed card showing Open Graph metadata.",
     siteName: "Twitter",
     image: undefined,
     color: "#1da1f2",
@@ -1377,7 +1716,8 @@ const genericEmbedDemo = {
   url: "https://github.com/lastshotlabs/snapshot",
   meta: {
     title: "lastshotlabs/snapshot: Config-driven UI SDK",
-    description: "The frontend SDK for bunshot-powered backends. Design tokens, config-addressable components, page composition from manifest.",
+    description:
+      "The frontend SDK for bunshot-powered backends. Design tokens, config-addressable components, page composition from manifest.",
     siteName: "GitHub",
     image: "https://opengraph.githubassets.com/1/lastshotlabs/snapshot",
     favicon: "https://github.githubassets.com/favicons/favicon.svg",
@@ -1393,10 +1733,26 @@ const gifEmbedDemo = {
 const gifPickerDemo = {
   type: "gif-picker",
   gifs: [
-    { id: "1", url: "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif", title: "Cat typing" },
-    { id: "2", url: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif", title: "Thumbs up" },
-    { id: "3", url: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif", title: "Celebration" },
-    { id: "4", url: "https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif", title: "Mind blown" },
+    {
+      id: "1",
+      url: "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+      title: "Cat typing",
+    },
+    {
+      id: "2",
+      url: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif",
+      title: "Thumbs up",
+    },
+    {
+      id: "3",
+      url: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif",
+      title: "Celebration",
+    },
+    {
+      id: "4",
+      url: "https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif",
+      title: "Mind blown",
+    },
   ],
   columns: 2,
   maxHeight: "250px",
@@ -1420,19 +1776,22 @@ const chatWithEmbedsDemo = {
       content: "<p>Here's a cool project on GitHub</p>",
       author: { name: "Bob", avatar: null },
       timestamp: new Date(Date.now() - 1800000).toISOString(),
-      embeds: [{
-        url: "https://github.com/lastshotlabs/snapshot",
-        meta: {
-          title: "lastshotlabs/snapshot",
-          description: "Config-driven UI SDK for bunshot backends",
-          siteName: "GitHub",
-          color: "#333",
+      embeds: [
+        {
+          url: "https://github.com/lastshotlabs/snapshot",
+          meta: {
+            title: "lastshotlabs/snapshot",
+            description: "Config-driven UI SDK for bunshot backends",
+            siteName: "GitHub",
+            color: "#333",
+          },
         },
-      }],
+      ],
     },
     {
       id: "e3",
-      content: "<p><img class=\"sn-custom-emoji\" src=\"https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/128/emoji_u1f389.png\" alt=\":tada:\" title=\"Party\" draggable=\"false\" /> Launch day!</p>",
+      content:
+        '<p><img class="sn-custom-emoji" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/128/emoji_u1f389.png" alt=":tada:" title="Party" draggable="false" /> Launch day!</p>',
       author: { name: "Charlie", avatar: null },
       timestamp: new Date(Date.now() - 600000).toISOString(),
     },
@@ -1511,6 +1870,243 @@ function StructuralPage() {
   );
 }
 
+// ── Preset page configs ───────────────────────────────────────────────────────
+
+const usersPresetPage = crudPage({
+  title: "Users",
+  listEndpoint: "GET /api/users",
+  createEndpoint: "POST /api/users",
+  updateEndpoint: "PUT /api/users/{id}",
+  deleteEndpoint: "DELETE /api/users/{id}",
+  columns: [
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email" },
+    { key: "role", label: "Role", badge: true },
+    { key: "createdAt", label: "Joined", format: "date" },
+  ],
+  createForm: {
+    fields: [
+      {
+        key: "name",
+        type: "text",
+        label: "Full Name",
+        required: true,
+        placeholder: "Enter full name",
+      },
+      {
+        key: "email",
+        type: "email",
+        label: "Email",
+        required: true,
+        placeholder: "user@example.com",
+      },
+      {
+        key: "role",
+        type: "select",
+        label: "Role",
+        options: [
+          { label: "Admin", value: "admin" },
+          { label: "Editor", value: "editor" },
+          { label: "Viewer", value: "viewer" },
+        ],
+      },
+    ],
+  },
+  updateForm: {
+    fields: [
+      { key: "name", type: "text", label: "Full Name", required: true },
+      {
+        key: "role",
+        type: "select",
+        label: "Role",
+        options: [
+          { label: "Admin", value: "admin" },
+          { label: "Editor", value: "editor" },
+          { label: "Viewer", value: "viewer" },
+        ],
+      },
+    ],
+  },
+});
+
+const overviewPresetPage = dashboardPage({
+  title: "Overview",
+  stats: [
+    {
+      label: "Total Users",
+      endpoint: "GET /api/stats/users",
+      valueKey: "value",
+      format: "number",
+      icon: "users",
+      trend: { key: "change", positive: "up" },
+    },
+    {
+      label: "Revenue",
+      endpoint: "GET /api/stats/revenue",
+      valueKey: "value",
+      format: "currency",
+      icon: "dollar-sign",
+      trend: { key: "change", positive: "up" },
+    },
+    {
+      label: "Orders",
+      endpoint: "GET /api/stats/orders",
+      valueKey: "value",
+      format: "number",
+      icon: "shopping-cart",
+      trend: { key: "change", positive: "up" },
+    },
+    {
+      label: "Conversion Rate",
+      endpoint: "GET /api/stats/conversion",
+      valueKey: "value",
+      format: "percent",
+      icon: "trending-up",
+      trend: { key: "change", positive: "up" },
+    },
+  ],
+  recentActivity: "GET /api/activity",
+});
+
+const accountSettingsPresetPage = settingsPage({
+  title: "Account Settings",
+  sections: [
+    {
+      label: "Profile",
+      submitEndpoint: "PATCH /api/me/profile",
+      dataEndpoint: "GET /api/me/profile",
+      icon: "user",
+      submitLabel: "Update Profile",
+      fields: [
+        {
+          key: "name",
+          type: "text",
+          label: "Full Name",
+          required: true,
+          placeholder: "Enter your name",
+        },
+        { key: "email", type: "email", label: "Email", required: true },
+        {
+          key: "bio",
+          type: "textarea",
+          label: "Bio",
+          placeholder: "Tell us about yourself",
+        },
+      ],
+    },
+    {
+      label: "Password",
+      submitEndpoint: "POST /api/me/password",
+      method: "POST",
+      icon: "lock",
+      fields: [
+        {
+          key: "currentPassword",
+          type: "password",
+          label: "Current Password",
+          required: true,
+        },
+        {
+          key: "newPassword",
+          type: "password",
+          label: "New Password",
+          required: true,
+        },
+        {
+          key: "confirmPassword",
+          type: "password",
+          label: "Confirm New Password",
+          required: true,
+        },
+      ],
+    },
+    {
+      label: "Notifications",
+      submitEndpoint: "PUT /api/me/notifications",
+      method: "PUT",
+      icon: "bell",
+      submitLabel: "Save Preferences",
+      fields: [
+        {
+          key: "emailNotifications",
+          type: "toggle",
+          label: "Email Notifications",
+        },
+        {
+          key: "pushNotifications",
+          type: "toggle",
+          label: "Push Notifications",
+        },
+        { key: "marketingEmails", type: "toggle", label: "Marketing Emails" },
+        { key: "weeklyDigest", type: "toggle", label: "Weekly Digest" },
+      ],
+    },
+  ],
+});
+
+function PresetsPage() {
+  return (
+    <PageWrapper>
+      <div className="showcase">
+        <ShowcaseSection title="crudPage — Users">
+          <p
+            style={{
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: "var(--sn-color-muted-foreground)",
+              marginBottom: "var(--sn-spacing-md, 1rem)",
+            }}
+          >
+            Generated from{" "}
+            <code>crudPage(&#123; title: &quot;Users&quot;, ... &#125;)</code>.
+            Includes data table, create modal, edit drawer, and delete action.
+          </p>
+          {usersPresetPage.content.map((config, i) => (
+            <ComponentRenderer key={i} config={config as any} />
+          ))}
+        </ShowcaseSection>
+        <ShowcaseSection title="dashboardPage — Overview">
+          <p
+            style={{
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: "var(--sn-color-muted-foreground)",
+              marginBottom: "var(--sn-spacing-md, 1rem)",
+            }}
+          >
+            Generated from{" "}
+            <code>
+              dashboardPage(&#123; title: &quot;Overview&quot;, stats: [...]
+              &#125;)
+            </code>
+            . Includes stat cards and recent activity list.
+          </p>
+          {overviewPresetPage.content.map((config, i) => (
+            <ComponentRenderer key={i} config={config as any} />
+          ))}
+        </ShowcaseSection>
+        <ShowcaseSection title="settingsPage — Account Settings">
+          <p
+            style={{
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: "var(--sn-color-muted-foreground)",
+              marginBottom: "var(--sn-spacing-md, 1rem)",
+            }}
+          >
+            Generated from{" "}
+            <code>
+              settingsPage(&#123; title: &quot;Account Settings&quot;, sections:
+              [...] &#125;)
+            </code>
+            . Includes tabbed settings sections, each with an AutoForm.
+          </p>
+          {accountSettingsPresetPage.content.map((config, i) => (
+            <ComponentRenderer key={i} config={config as any} />
+          ))}
+        </ShowcaseSection>
+      </div>
+    </PageWrapper>
+  );
+}
+
 export function ComponentShowcase() {
   const [page, setPage] = useState<Page>("dashboard");
 
@@ -1537,6 +2133,7 @@ export function ComponentShowcase() {
       {page === "workflow" && <WorkflowPage />}
       {page === "structural" && <StructuralPage />}
       {page === "communication" && <CommunicationPage />}
+      {page === "presets" && <PresetsPage />}
     </>
   );
 }
