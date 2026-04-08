@@ -1,6 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useDataTable } from "./hook";
 import { useActionExecutor } from "../../../actions/executor";
+import { ComponentRenderer } from "../../../manifest/renderer";
+import type { ComponentConfig } from "../../../manifest/types";
 import type { DataTableConfig, ResolvedColumn } from "./types";
 
 // ── Formatting helpers ──────────────────────────────────────────────────────
@@ -8,6 +10,7 @@ import type { DataTableConfig, ResolvedColumn } from "./types";
 function formatCellValue(
   value: unknown,
   column: ResolvedColumn,
+  row?: Record<string, unknown>,
 ): React.ReactNode {
   if (value == null) return "\u2014";
 
@@ -72,8 +75,123 @@ function formatCellValue(
     case "boolean": {
       return value ? "\u2713" : "\u2717";
     }
-    default:
-      return String(value);
+    case "avatar": {
+      const src = column.avatarField
+        ? String(row?.[column.avatarField] ?? "")
+        : "";
+      const name = String(value);
+      const initials = name
+        .split(/\s+/)
+        .map((w) => w[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+      return (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+          {src ? (
+            <img
+              src={src}
+              alt={name}
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                objectFit: "cover",
+              }}
+            />
+          ) : (
+            <span
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                backgroundColor: "var(--sn-color-primary, #2563eb)",
+                color: "var(--sn-color-primary-foreground, #fff)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "var(--sn-font-size-xs, 0.625rem)",
+                fontWeight: 600,
+              }}
+            >
+              {initials || "?"}
+            </span>
+          )}
+          <span>{name}</span>
+        </span>
+      );
+    }
+    case "progress": {
+      const pct = typeof value === "number" ? value : Number(value) || 0;
+      return (
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--sn-spacing-sm, 0.5rem)" }}>
+          <div
+            style={{
+              flex: 1,
+              height: 6,
+              backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+              borderRadius: "var(--sn-radius-full, 9999px)",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${Math.min(100, Math.max(0, pct))}%`,
+                height: "100%",
+                backgroundColor: pct >= 100
+                  ? "var(--sn-color-success, #22c55e)"
+                  : "var(--sn-color-primary, #2563eb)",
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                transition: "width var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
+              }}
+            />
+          </div>
+          <span style={{ fontSize: "var(--sn-font-size-xs, 0.75rem)", color: "var(--sn-color-muted-foreground, #6b7280)", minWidth: "2.5em", textAlign: "right" }}>
+            {Math.round(pct)}%
+          </span>
+        </div>
+      );
+    }
+    case "link": {
+      const url = String(value);
+      const text = column.linkTextField
+        ? String(row?.[column.linkTextField] ?? url)
+        : url;
+      return (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "var(--sn-color-info, #3b82f6)", textDecoration: "underline" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {text}
+        </a>
+      );
+    }
+    case "code": {
+      return (
+        <code
+          style={{
+            fontFamily: "var(--sn-font-mono, monospace)",
+            fontSize: "var(--sn-font-size-xs, 0.75rem)",
+            backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
+            padding: "1px var(--sn-spacing-xs, 0.25rem)",
+            borderRadius: "var(--sn-radius-sm, 0.25rem)",
+          }}
+        >
+          {String(value)}
+        </code>
+      );
+    }
+    default: {
+      const s = String(value);
+      if (column.prefix || column.suffix) {
+        return `${column.prefix ?? ""}${s}${column.suffix ?? ""}`;
+      }
+      return s;
+    }
   }
 }
 
@@ -178,9 +296,23 @@ export function DataTable({ config }: { config: DataTableConfig }) {
   // Determine if we need an actions column
   const hasActions = (config.actions?.length ?? 0) > 0;
 
+  // Expandable row state
+  const [expandedRows, setExpandedRows] = useState<Set<string | number>>(new Set());
+  const toggleExpandRow = useCallback((id: string | number) => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
   // Column count for skeleton and colSpan
   const totalColumns =
-    table.columns.length + (config.selectable ? 1 : 0) + (hasActions ? 1 : 0);
+    table.columns.length +
+    (config.selectable ? 1 : 0) +
+    (hasActions ? 1 : 0) +
+    (config.expandable ? 1 : 0);
 
   // Search fields placeholder
   const searchPlaceholder = useMemo(() => {
@@ -274,6 +406,10 @@ export function DataTable({ config }: { config: DataTableConfig }) {
       >
         <thead>
           <tr>
+            {/* Expand column header */}
+            {config.expandable && (
+              <th style={{ padding: cellPadding, width: "32px" }} />
+            )}
             {/* Select all checkbox */}
             {config.selectable && (
               <th style={{ padding: cellPadding, width: "40px" }}>
@@ -381,16 +517,42 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                   ? id
                   : rowIndex;
 
+              const isExpanded = expandedRows.has(rowId);
+
               return (
+                <React.Fragment key={rowId}>
                 <tr
-                  key={rowId}
                   data-selected={table.selection.has(rowId) ? "" : undefined}
+                  onClick={
+                    config.expandable
+                      ? () => toggleExpandRow(rowId)
+                      : config.rowClickAction
+                        ? () => void execute(config.rowClickAction!, { row: rowRecord, ...rowRecord })
+                        : undefined
+                  }
                   style={{
                     backgroundColor: table.selection.has(rowId)
                       ? "var(--sn-color-accent, #dbeafe)"
                       : undefined,
+                    cursor: config.expandable || config.rowClickAction ? "pointer" : undefined,
                   }}
                 >
+                  {/* Expand toggle */}
+                  {config.expandable && (
+                    <td style={{ padding: cellPadding, width: "32px" }}>
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
+                          transition: "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                          color: "var(--sn-color-muted-foreground, #6b7280)",
+                        }}
+                      >
+                        &#x25B6;
+                      </span>
+                    </td>
+                  )}
+
                   {/* Row selection checkbox */}
                   {config.selectable && (
                     <td style={{ padding: cellPadding, width: "40px" }}>
@@ -412,7 +574,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                         textAlign: col.align ?? "left",
                       }}
                     >
-                      {formatCellValue(rowRecord[col.field], col)}
+                      {formatCellValue(rowRecord[col.field], col, rowRecord)}
                     </td>
                   ))}
 
@@ -456,6 +618,28 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                     </td>
                   )}
                 </tr>
+
+                {/* Expanded row content */}
+                {config.expandable && isExpanded && config.expandedContent && (
+                  <tr data-expanded-row>
+                    <td
+                      colSpan={totalColumns}
+                      style={{
+                        padding: cellPadding,
+                        backgroundColor: "var(--sn-color-secondary, #f8fafc)",
+                        borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+                      }}
+                    >
+                      {config.expandedContent.map((child, ci) => (
+                        <ComponentRenderer
+                          key={ci}
+                          config={child as ComponentConfig}
+                        />
+                      ))}
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
               );
             })}
         </tbody>

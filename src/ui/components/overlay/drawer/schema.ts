@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { actionSchema } from "../../../actions/types";
 import {
   baseComponentConfigSchema,
   fromRefSchema,
@@ -25,6 +26,28 @@ export const drawerConfigSchema = baseComponentConfigSchema.extend({
   style: z.record(z.union([z.string(), z.number()])).optional(),
   /** Additional CSS class name. */
   className: z.string().optional(),
+  /** Footer with action buttons. */
+  footer: z
+    .object({
+      /** Action buttons rendered in the footer. */
+      actions: z.array(
+        z.object({
+          /** Button label text. */
+          label: z.string(),
+          /** Button visual variant. */
+          variant: z
+            .enum(["default", "secondary", "destructive", "ghost"])
+            .optional(),
+          /** Action to dispatch on click. */
+          action: actionSchema.optional(),
+          /** Close the drawer after the action executes. Default: false. */
+          dismiss: z.boolean().optional(),
+        }),
+      ),
+      /** Footer alignment. Default: "right". */
+      align: z.enum(["left", "center", "right"]).optional(),
+    })
+    .optional(),
 });
 
 /** Inferred type for drawer config. */

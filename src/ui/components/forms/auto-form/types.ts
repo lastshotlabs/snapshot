@@ -1,5 +1,9 @@
 import type { z } from "zod";
-import type { autoFormConfigSchema, fieldConfigSchema } from "./schema";
+import type {
+  autoFormConfigSchema,
+  fieldConfigSchema,
+  fieldSectionSchema,
+} from "./schema";
 
 /**
  * Inferred type for a single field configuration.
@@ -10,6 +14,11 @@ export type FieldConfig = z.infer<typeof fieldConfigSchema>;
  * Inferred type for the AutoForm component config.
  */
 export type AutoFormConfig = z.infer<typeof autoFormConfigSchema>;
+
+/**
+ * Inferred type for a field section configuration.
+ */
+export type FieldSectionConfig = z.infer<typeof fieldSectionSchema>;
 
 /**
  * Per-field validation error.

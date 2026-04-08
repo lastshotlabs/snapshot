@@ -47,9 +47,17 @@ export interface ResolvedColumn {
   /** Whether the column is sortable. */
   sortable: boolean;
   /** Display format. */
-  format?: "date" | "number" | "currency" | "badge" | "boolean";
+  format?: "date" | "number" | "currency" | "badge" | "boolean" | "avatar" | "progress" | "link" | "code";
   /** Badge color mapping. */
   badgeColors?: Record<string, string>;
+  /** Field for avatar image src. */
+  avatarField?: string;
+  /** Field for link display text. */
+  linkTextField?: string;
+  /** Cell value prefix. */
+  prefix?: string;
+  /** Cell value suffix. */
+  suffix?: string;
   /** Column width. */
   width?: string;
   /** Text alignment. */

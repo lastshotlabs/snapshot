@@ -15,6 +15,28 @@ import { themeConfigSchema } from "../tokens/schema";
 export const fromRefSchema = z
   .object({
     from: z.string(),
+    transform: z
+      .enum([
+        "uppercase",
+        "lowercase",
+        "trim",
+        "length",
+        "number",
+        "boolean",
+        "string",
+        "json",
+        "keys",
+        "values",
+        "first",
+        "last",
+        "count",
+        "sum",
+        "join",
+        "split",
+        "default",
+      ])
+      .optional(),
+    transformArg: z.union([z.string(), z.number()]).optional(),
   })
   .strict();
 

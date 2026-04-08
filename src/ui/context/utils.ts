@@ -91,6 +91,72 @@ export function extractFromRefs(
 }
 
 /**
+ * Applies a named transform to a resolved value.
+ * Used by the FromRef system to post-process values after resolution.
+ *
+ * @param value - The resolved value to transform
+ * @param transform - The transform name (e.g. "uppercase", "first", "default")
+ * @param arg - Optional argument for transforms that accept one (e.g. join separator)
+ * @returns The transformed value, or the original value if no transform is specified
+ */
+export function applyTransform(
+  value: unknown,
+  transform?: string,
+  arg?: string | number,
+): unknown {
+  if (!transform || value === undefined || value === null) return value;
+
+  switch (transform) {
+    case "uppercase":
+      return String(value).toUpperCase();
+    case "lowercase":
+      return String(value).toLowerCase();
+    case "trim":
+      return String(value).trim();
+    case "length":
+      return Array.isArray(value) ? value.length : String(value).length;
+    case "number":
+      return Number(value);
+    case "boolean":
+      return Boolean(value);
+    case "string":
+      return String(value);
+    case "json":
+      try {
+        return JSON.parse(String(value));
+      } catch {
+        return value;
+      }
+    case "keys":
+      return typeof value === "object" && value ? Object.keys(value) : [];
+    case "values":
+      return typeof value === "object" && value ? Object.values(value) : [];
+    case "first":
+      return Array.isArray(value) ? value[0] : value;
+    case "last":
+      return Array.isArray(value) ? value[value.length - 1] : value;
+    case "count":
+      return Array.isArray(value) ? value.length : 0;
+    case "sum":
+      return Array.isArray(value)
+        ? value.reduce((a: number, b: unknown) => a + Number(b), 0)
+        : 0;
+    case "join":
+      return Array.isArray(value)
+        ? value.join(arg != null ? String(arg) : ", ")
+        : String(value);
+    case "split":
+      return String(value).split(arg != null ? String(arg) : ",");
+    case "default":
+      return value === undefined || value === null || value === ""
+        ? arg
+        : value;
+    default:
+      return value;
+  }
+}
+
+/**
  * Apply resolved values back into a config object, replacing FromRefs with their resolved values.
  * Creates a shallow clone at each level where replacements occur.
  *

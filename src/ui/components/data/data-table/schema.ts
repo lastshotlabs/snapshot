@@ -62,10 +62,18 @@ export const columnConfigSchema = z
     sortable: z.boolean().optional(),
     /** Display format. */
     format: z
-      .enum(["date", "number", "currency", "badge", "boolean"])
+      .enum(["date", "number", "currency", "badge", "boolean", "avatar", "progress", "link", "code"])
       .optional(),
     /** Color mapping for badge format. Maps field values to semantic colors. */
     badgeColors: badgeColorsSchema.optional(),
+    /** Field to use as avatar image src (when format is "avatar"). */
+    avatarField: z.string().optional(),
+    /** Field to use as link text (when format is "link"). */
+    linkTextField: z.string().optional(),
+    /** Prefix text for the cell value. */
+    prefix: z.string().optional(),
+    /** Suffix text for the cell value. */
+    suffix: z.string().optional(),
     /** Filter configuration for this column. */
     filter: columnFilterSchema.optional(),
     /** Column width (CSS value, e.g. '200px', '20%'). */
@@ -174,6 +182,12 @@ export const dataTableConfigSchema = baseComponentConfigSchema
     bulkActions: z.array(bulkActionSchema).optional(),
     /** Message shown when there is no data. */
     emptyMessage: z.string().optional(),
+    /** Enable expandable row detail. */
+    expandable: z.boolean().optional(),
+    /** Child components rendered in the expanded row area. Row data is available via from-ref. */
+    expandedContent: z.array(z.record(z.unknown())).optional(),
+    /** Action dispatched when a row is clicked. */
+    rowClickAction: actionSchema.optional(),
     /** Table density. Affects row padding. */
     density: z.enum(["compact", "default", "comfortable"]).optional(),
     /** Inline style overrides. */

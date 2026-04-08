@@ -25,6 +25,27 @@ import type { ApiClient } from "../../api/client";
 export interface FromRef {
   /** Dot-path reference. Examples: "component-id", "component-id.field", "global.user.name" */
   from: string;
+  /** Optional transform to apply to the resolved value before returning it. */
+  transform?:
+    | "uppercase"
+    | "lowercase"
+    | "trim"
+    | "length"
+    | "number"
+    | "boolean"
+    | "string"
+    | "json"
+    | "keys"
+    | "values"
+    | "first"
+    | "last"
+    | "count"
+    | "sum"
+    | "join"
+    | "split"
+    | "default";
+  /** Optional argument for transforms that accept one (e.g. join separator, split delimiter, default fallback). */
+  transformArg?: string | number;
 }
 
 /**

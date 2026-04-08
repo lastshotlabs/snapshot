@@ -8,6 +8,7 @@ import {
   isFromRef,
   extractFromRefs,
   applyResolved,
+  applyTransform,
 } from "./utils";
 import type { FromRef, ResolvedConfig } from "./types";
 
@@ -115,7 +116,12 @@ export function useSubscribe(ref: FromRef | unknown): unknown {
 
   if (!isRef) return ref;
 
-  return subPath ? getNestedValue(value, subPath) : value;
+  const resolved = subPath ? getNestedValue(value, subPath) : value;
+  return applyTransform(
+    resolved,
+    (ref as FromRef).transform,
+    (ref as FromRef).transformArg,
+  );
 }
 
 /**

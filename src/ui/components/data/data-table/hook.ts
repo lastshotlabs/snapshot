@@ -66,6 +66,10 @@ function resolveColumns(
     sortable: col.sortable ?? false,
     format: col.format,
     badgeColors: col.badgeColors,
+    avatarField: col.avatarField,
+    linkTextField: col.linkTextField,
+    prefix: col.prefix,
+    suffix: col.suffix,
     width: col.width,
     align: col.align,
   }));
