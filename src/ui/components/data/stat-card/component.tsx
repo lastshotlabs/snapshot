@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { useComponentData } from "../../_base/use-component-data";
+import { Icon } from "../../../icons/index";
 import {
   formatValue,
   detectNumericField,
@@ -225,7 +226,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
       role={handleClick ? "button" : undefined}
       tabIndex={handleClick ? 0 : undefined}
       style={{
-        padding: "clamp(var(--sn-spacing-sm, 0.5rem), 3vw, var(--sn-spacing-lg, 1.5rem))",
+        padding: "var(--sn-spacing-lg, 1.5rem)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
         boxShadow: "var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.1))",
         border: "1px solid var(--sn-color-border, #e5e7eb)",
@@ -233,7 +234,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
         cursor: handleClick ? "pointer" : undefined,
         display: "flex",
         flexDirection: "column",
-        gap: "var(--sn-spacing-xs, 0.25rem)",
+        gap: "var(--sn-spacing-sm, 0.5rem)",
         minWidth: 0,
         overflow: "hidden",
       }}
@@ -303,14 +304,44 @@ export function StatCard({ config }: { config: StatCardConfig }) {
       {/* Data state */}
       {!isLoading && !error && value !== null && (
         <>
-          {/* Header: icon + label */}
+          {/* Label */}
+          <span
+            data-testid="stat-card-label"
+            style={{
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              fontWeight: "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+          </span>
+
+          {/* Value + Icon row */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--sn-spacing-xs, 0.25rem)",
+              justifyContent: "space-between",
+              gap: "var(--sn-spacing-sm, 0.5rem)",
             }}
           >
+            <div
+              data-testid="stat-card-value"
+              style={{
+                fontSize: "var(--sn-font-size-2xl, 1.5rem)",
+                fontWeight: "var(--sn-font-weight-bold, 700)" as string,
+                color: "var(--sn-color-foreground, #111827)",
+                lineHeight: "var(--sn-leading-tight, 1.25)",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                minWidth: 0,
+              }}
+            >
+              {value}
+            </div>
             {config.icon && (
               <span
                 data-testid="stat-card-icon"
@@ -318,44 +349,14 @@ export function StatCard({ config }: { config: StatCardConfig }) {
                   color: config.iconColor
                     ? `var(--sn-color-${config.iconColor}, ${config.iconColor})`
                     : "var(--sn-color-muted-foreground, #6b7280)",
-                  fontSize: "20px",
+                  flexShrink: 0,
+                  opacity: 0.5,
                 }}
                 aria-hidden="true"
               >
-                {config.icon}
+                <Icon name={config.icon} size={24} />
               </span>
             )}
-            <span
-              data-testid="stat-card-label"
-              style={{
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                color: "var(--sn-color-muted-foreground, #6b7280)",
-                fontWeight: "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                minWidth: 0,
-              }}
-            >
-              {label}
-            </span>
-          </div>
-
-          {/* Value */}
-          <div
-            data-testid="stat-card-value"
-            style={{
-              fontSize: "clamp(var(--sn-font-size-md, 1rem), 4vw, var(--sn-font-size-xl, 1.25rem))",
-              fontWeight: "var(--sn-font-weight-bold, 700)" as string,
-              color: "var(--sn-color-foreground, #111827)",
-              lineHeight: "var(--sn-leading-tight, 1.25)",
-              wordBreak: "break-word",
-              overflowWrap: "break-word",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {value}
           </div>
 
           {/* Trend */}
