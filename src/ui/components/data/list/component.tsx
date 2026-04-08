@@ -306,7 +306,7 @@ export function ListComponent({ config }: { config: ListConfig }) {
             textAlign: "center",
           }}
         >
-          Failed to load items
+          {config.errorMessage ?? "Failed to load items"}
         </div>
       )}
 

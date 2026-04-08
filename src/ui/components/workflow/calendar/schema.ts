@@ -65,6 +65,8 @@ export const calendarConfigSchema = z
     dateAction: actionSchema.optional(),
     /** Show ISO week numbers in the first column. Default: false. */
     showWeekNumbers: z.boolean().optional(),
+    /** Label for the "Today" button. Default: "Today". */
+    todayLabel: z.string().optional(),
     // --- BaseComponentConfig fields ---
     /** Component id for publishing/subscribing. */
     id: z.string().optional(),

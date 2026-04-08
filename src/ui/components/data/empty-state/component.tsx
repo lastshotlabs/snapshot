@@ -70,7 +70,9 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
           style={{
             fontSize: iconSize,
             lineHeight: 1,
-            color: "var(--sn-color-muted-foreground, #6b7280)",
+            color: config.iconColor
+              ? `var(--sn-color-${config.iconColor}, ${config.iconColor})`
+              : "var(--sn-color-muted-foreground, #6b7280)",
           }}
         >
           {config.icon}

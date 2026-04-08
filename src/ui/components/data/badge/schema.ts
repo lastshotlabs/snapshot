@@ -41,7 +41,7 @@ export const badgeConfigSchema = z
     /** Visual variant. Default: "soft". */
     variant: z.enum(["solid", "soft", "outline", "dot"]).optional(),
     /** Size. Default: "md". */
-    size: z.enum(["sm", "md", "lg"]).optional(),
+    size: z.enum(["xs", "sm", "md", "lg"]).optional(),
     /** Icon name (rendered as text placeholder). */
     icon: z.string().optional(),
     /** Use pill shape (fully rounded). Default: true. */

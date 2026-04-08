@@ -132,7 +132,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
             data-kanban-column={col.key}
             style={{
               minWidth: "min(280px, 85vw)",
-              maxWidth: "320px",
+              maxWidth: "min(320px, 85vw)",
               flex: "0 0 min(280px, 85vw)",
               backgroundColor: "var(--sn-color-secondary, #f8fafc)",
               borderRadius: "var(--sn-radius-md, 6px)",

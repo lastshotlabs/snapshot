@@ -278,7 +278,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
           data-testid="stat-card-error"
           style={{ color: "var(--sn-color-destructive, #dc2626)" }}
         >
-          <span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}>Failed to load</span>
+          <span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}>{config.errorMessage ?? "Failed to load"}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();

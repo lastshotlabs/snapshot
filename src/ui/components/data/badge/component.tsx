@@ -4,6 +4,10 @@ import type { BadgeConfig } from "./types";
 
 /** Size → font-size token + padding values. */
 const SIZE_MAP = {
+  xs: {
+    fontSize: "var(--sn-font-size-xs, 0.625rem)",
+    padding: "1px var(--sn-spacing-xs, 0.25rem)",
+  },
   sm: {
     fontSize: "var(--sn-font-size-xs, 0.75rem)",
     padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",

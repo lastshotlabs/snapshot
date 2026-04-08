@@ -99,6 +99,7 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
       {/* Overlay */}
       <div
         data-snapshot-modal-overlay=""
+        data-testid="modal-overlay"
         onClick={handleOverlayClick}
         style={{
           position: "fixed",
@@ -162,6 +163,7 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
               onClick={close}
               aria-label="Close"
               data-snapshot-modal-close=""
+              data-testid="modal-close"
               style={{
                 background: "none",
                 border: "none",

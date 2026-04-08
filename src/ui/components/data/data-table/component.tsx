@@ -484,6 +484,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               onClick={() => table.prevPage()}
               disabled={table.pagination!.currentPage <= 1}
               aria-label="Previous page"
+              data-testid="table-pagination-prev"
             >
               Previous
             </button>
@@ -493,6 +494,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                 table.pagination!.currentPage >= table.pagination!.totalPages
               }
               aria-label="Next page"
+              data-testid="table-pagination-next"
             >
               Next
             </button>

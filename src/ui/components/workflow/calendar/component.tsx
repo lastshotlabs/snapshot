@@ -567,6 +567,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
         <div style={{ display: "flex", gap: "var(--sn-spacing-xs, 4px)" }}>
           <button
             onClick={goPrev}
+            data-testid="calendar-nav-prev"
             aria-label={view === "month" ? "Previous month" : "Previous week"}
             style={{
               padding: "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px)",
@@ -581,6 +582,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
           </button>
           <button
             onClick={goToday}
+            data-testid="calendar-nav-today"
             style={{
               padding: "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px)",
               borderRadius: "var(--sn-radius-sm, 4px)",
@@ -590,10 +592,11 @@ export function Calendar({ config }: { config: CalendarConfig }) {
               fontSize: "var(--sn-font-size-sm, 0.875rem)",
             }}
           >
-            Today
+            {config.todayLabel ?? "Today"}
           </button>
           <button
             onClick={goNext}
+            data-testid="calendar-nav-next"
             aria-label={view === "month" ? "Next month" : "Next week"}
             style={{
               padding: "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px)",

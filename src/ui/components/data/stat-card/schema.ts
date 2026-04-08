@@ -85,6 +85,8 @@ export const statCardConfigSchema = z
     span: responsiveSchema(z.number()).optional(),
     /** Loading skeleton variant. Default: 'skeleton'. */
     loading: z.enum(["skeleton", "pulse", "spinner"]).optional(),
+    /** Custom error message. Default: "Failed to load". */
+    errorMessage: z.string().optional(),
     // --- BaseComponentConfig fields ---
     /** Component id for publishing/subscribing. */
     id: z.string().optional(),

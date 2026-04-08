@@ -35,6 +35,8 @@ export const emptyStateConfigSchema = z
     actionLabel: z.string().optional(),
     /** Size variant. Default: "md". */
     size: z.enum(["sm", "md", "lg"]).optional(),
+    /** Icon color token name (e.g., "primary", "info"). */
+    iconColor: z.string().optional(),
     // --- BaseComponentConfig fields ---
     /** Component id for publishing/subscribing. */
     id: z.string().optional(),

@@ -381,7 +381,7 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
             data-testid="rich-text-editor-editor"
             style={{
               flex: showPreview ? "1 1 50%" : "1 1 100%",
-              minWidth: showPreview ? "min(100%, 300px)" : 0,
+              minWidth: showPreview ? "min(100%, 250px)" : 0,
               overflow: "auto",
               borderRight: showPreview
                 ? "1px solid var(--sn-color-border, #e5e7eb)"
@@ -396,7 +396,7 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
             data-testid="rich-text-editor-preview"
             style={{
               flex: showEditor ? "1 1 50%" : "1 1 100%",
-              minWidth: showEditor ? "min(100%, 300px)" : 0,
+              minWidth: showEditor ? "min(100%, 250px)" : 0,
               overflow: "auto",
               padding: "var(--sn-spacing-md, 1rem)",
               color: "var(--sn-color-foreground, #111827)",

@@ -171,6 +171,7 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
               onClick={close}
               aria-label="Close"
               data-snapshot-drawer-close=""
+              data-testid="drawer-close"
               style={{
                 background: "none",
                 border: "none",
