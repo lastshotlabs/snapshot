@@ -121,7 +121,7 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
 
         const trendDisplayValue =
           trendFormat === "percent"
-            ? `${Math.abs(trend.percentage).toFixed(1)}%`
+            ? `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(Math.abs(trend.percentage))}%`
             : formatValue(trend.value, config.format, {
                 currency: config.currency,
                 decimals: config.decimals,
@@ -335,8 +335,9 @@ export function StatCard({ config }: { config: StatCardConfig }) {
                 fontWeight: "var(--sn-font-weight-bold, 700)" as string,
                 color: "var(--sn-color-foreground, #111827)",
                 lineHeight: "var(--sn-leading-tight, 1.25)",
-                wordBreak: "break-word",
-                overflowWrap: "break-word",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
                 minWidth: 0,
               }}
             >

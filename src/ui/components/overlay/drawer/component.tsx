@@ -36,21 +36,20 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
   const size = config.size ?? "md";
   const width = SIZE_MAP[size] ?? SIZE_MAP.md;
 
-  // Handle mount/unmount with animation
+  // Handle mount/unmount with animation.
+  // Uses setTimeout(0) instead of double-rAF for reliable animation
+  // trigger across React 18+ batching and strict mode.
   useEffect(() => {
     if (isOpen) {
       setMounted(true);
-      // Double-rAF ensures the browser paints the initial (off-screen) state
-      // before transitioning to the final (on-screen) state
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => setAnimating(true));
-      });
+      const enterTimer = setTimeout(() => setAnimating(true), 10);
+      return () => clearTimeout(enterTimer);
     } else if (mounted) {
       setAnimating(false);
-      const timer = setTimeout(() => setMounted(false), ANIMATION_DURATION);
-      return () => clearTimeout(timer);
+      const exitTimer = setTimeout(() => setMounted(false), ANIMATION_DURATION);
+      return () => clearTimeout(exitTimer);
     }
-  }, [isOpen]);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Focus the panel when it opens
   useEffect(() => {
