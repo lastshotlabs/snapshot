@@ -1,0 +1,91 @@
+import { z } from "zod";
+import { actionSchema } from "../../../actions/types";
+
+/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
+const fromRefSchema = z.object({ from: z.string() });
+
+/**
+ * Zod config schema for the GifPicker component.
+ *
+ * Searchable GIF picker that queries a GIF API (Giphy/Tenor) and
+ * displays results in a masonry-style grid.
+ *
+ * The component expects a backend proxy endpoint that handles the
+ * actual API key and returns GIF results. This avoids exposing
+ * API keys in the frontend.
+ *
+ * @example
+ * ```json
+ * {
+ *   "type": "gif-picker",
+ *   "searchEndpoint": "GET /api/gifs/search",
+ *   "trendingEndpoint": "GET /api/gifs/trending",
+ *   "selectAction": {
+ *     "type": "toast",
+ *     "message": "GIF selected!"
+ *   }
+ * }
+ * ```
+ *
+ * Expected API response format:
+ * ```json
+ * {
+ *   "results": [
+ *     {
+ *       "id": "abc123",
+ *       "url": "https://media.giphy.com/media/abc123/giphy.gif",
+ *       "preview": "https://media.giphy.com/media/abc123/200w.gif",
+ *       "width": 480,
+ *       "height": 270,
+ *       "title": "Funny cat"
+ *     }
+ *   ]
+ * }
+ * ```
+ */
+export const gifPickerConfigSchema = z
+  .object({
+    /** Component type discriminator. */
+    type: z.literal("gif-picker"),
+    /** Backend endpoint for GIF search. Query appended as `?q={search}`. */
+    searchEndpoint: z.string().optional(),
+    /** Backend endpoint for trending GIFs (shown by default). */
+    trendingEndpoint: z.string().optional(),
+    /** Static GIF data (for demos without a backend). */
+    gifs: z
+      .array(
+        z.object({
+          id: z.string(),
+          url: z.string(),
+          preview: z.string().optional(),
+          width: z.number().optional(),
+          height: z.number().optional(),
+          title: z.string().optional(),
+        }),
+      )
+      .optional(),
+    /** Field name for the GIF URL in API results. Default: "url". */
+    urlField: z.string().optional(),
+    /** Field name for the preview URL. Default: "preview". */
+    previewField: z.string().optional(),
+    /** Field name for title. Default: "title". */
+    titleField: z.string().optional(),
+    /** Action dispatched when a GIF is selected. */
+    selectAction: actionSchema.optional(),
+    /** Number of columns in the grid. Default: 2. */
+    columns: z.number().optional(),
+    /** Max height of the scrollable area. Default: "300px". */
+    maxHeight: z.string().optional(),
+    /** Placeholder text for search. Default: "Search GIFs...". */
+    placeholder: z.string().optional(),
+    /** Attribution text (e.g., "Powered by Giphy"). */
+    attribution: z.string().optional(),
+    // --- BaseComponentConfig fields ---
+    /** Component id for publishing/subscribing. */
+    id: z.string().optional(),
+    /** Visibility toggle. Can be a FromRef for conditional display. */
+    visible: z.union([z.boolean(), fromRefSchema]).optional(),
+    /** Additional CSS class name. */
+    className: z.string().optional(),
+  })
+  .strict();

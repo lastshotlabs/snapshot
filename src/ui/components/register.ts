@@ -61,6 +61,99 @@ import {
   RichTextEditor,
   richTextEditorConfigSchema,
 } from "./content/rich-text-editor/index";
+import {
+  RichInput,
+  richInputConfigSchema,
+} from "./content/rich-input/index";
+import {
+  EmojiPicker,
+  emojiPickerConfigSchema,
+} from "./communication/emoji-picker/index";
+import {
+  ReactionBar,
+  reactionBarConfigSchema,
+} from "./communication/reaction-bar/index";
+import {
+  PresenceIndicator,
+  presenceIndicatorConfigSchema,
+} from "./communication/presence-indicator/index";
+import {
+  TypingIndicator,
+  typingIndicatorConfigSchema,
+} from "./communication/typing-indicator/index";
+import {
+  MessageThread,
+  messageThreadConfigSchema,
+} from "./communication/message-thread/index";
+import {
+  CommentSection,
+  commentSectionConfigSchema,
+} from "./communication/comment-section/index";
+import {
+  ChatWindow,
+  chatWindowConfigSchema,
+} from "./communication/chat-window/index";
+import { Popover, popoverConfigSchema } from "./overlay/popover/index";
+import { Separator, separatorConfigSchema } from "./data/separator/index";
+import {
+  CommandPalette,
+  commandPaletteConfigSchema,
+} from "./overlay/command-palette/index";
+import { Input, inputConfigSchema } from "./forms/input/index";
+import { Textarea, textareaConfigSchema } from "./forms/textarea/index";
+import { Toggle, toggleConfigSchema } from "./forms/toggle/index";
+import {
+  MultiSelect,
+  multiSelectConfigSchema,
+} from "./forms/multi-select/index";
+import {
+  ContextMenu,
+  contextMenuConfigSchema,
+} from "./overlay/context-menu/index";
+import { ScrollArea, scrollAreaConfigSchema } from "./data/scroll-area/index";
+import { FilterBar, filterBarConfigSchema } from "./data/filter-bar/index";
+import {
+  InlineEdit,
+  inlineEditConfigSchema,
+} from "./forms/inline-edit/index";
+import { Markdown, markdownConfigSchema } from "./content/markdown/index";
+import {
+  TagSelector,
+  tagSelectorConfigSchema,
+} from "./forms/tag-selector/index";
+import {
+  EntityPicker,
+  entityPickerConfigSchema,
+} from "./data/entity-picker/index";
+import {
+  HighlightedText,
+  highlightedTextConfigSchema,
+} from "./data/highlighted-text/index";
+import {
+  FavoriteButton,
+  favoriteButtonConfigSchema,
+} from "./data/favorite-button/index";
+import {
+  NotificationBell,
+  notificationBellConfigSchema,
+} from "./data/notification-bell/index";
+import {
+  SaveIndicator,
+  saveIndicatorConfigSchema,
+} from "./data/save-indicator/index";
+import {
+  CompareView,
+  compareViewConfigSchema,
+} from "./content/compare-view/index";
+import { QuickAdd, quickAddConfigSchema } from "./forms/quick-add/index";
+import {
+  LinkEmbed,
+  linkEmbedConfigSchema,
+} from "./content/link-embed/index";
+import {
+  GifPicker,
+  gifPickerConfigSchema,
+} from "./communication/gif-picker/index";
 
 registerComponent(
   "stat-card",
@@ -241,3 +334,183 @@ registerComponent(
   RichTextEditor as Parameters<typeof registerComponent>[1],
 );
 registerComponentSchema("rich-text-editor", richTextEditorConfigSchema);
+
+registerComponent(
+  "rich-input",
+  RichInput as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("rich-input", richInputConfigSchema);
+
+registerComponent(
+  "emoji-picker",
+  EmojiPicker as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("emoji-picker", emojiPickerConfigSchema);
+
+registerComponent(
+  "reaction-bar",
+  ReactionBar as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("reaction-bar", reactionBarConfigSchema);
+
+registerComponent(
+  "presence-indicator",
+  PresenceIndicator as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("presence-indicator", presenceIndicatorConfigSchema);
+
+registerComponent(
+  "typing-indicator",
+  TypingIndicator as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("typing-indicator", typingIndicatorConfigSchema);
+
+registerComponent(
+  "message-thread",
+  MessageThread as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("message-thread", messageThreadConfigSchema);
+
+registerComponent(
+  "comment-section",
+  CommentSection as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("comment-section", commentSectionConfigSchema);
+
+registerComponent(
+  "chat-window",
+  ChatWindow as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("chat-window", chatWindowConfigSchema);
+
+registerComponent(
+  "popover",
+  Popover as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("popover", popoverConfigSchema);
+
+registerComponent(
+  "separator",
+  Separator as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("separator", separatorConfigSchema);
+
+registerComponent(
+  "command-palette",
+  CommandPalette as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("command-palette", commandPaletteConfigSchema);
+
+registerComponent(
+  "input",
+  Input as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("input", inputConfigSchema);
+
+registerComponent(
+  "textarea",
+  Textarea as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("textarea", textareaConfigSchema);
+
+registerComponent(
+  "toggle",
+  Toggle as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("toggle", toggleConfigSchema);
+
+registerComponent(
+  "multi-select",
+  MultiSelect as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("multi-select", multiSelectConfigSchema);
+
+registerComponent(
+  "context-menu",
+  ContextMenu as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("context-menu", contextMenuConfigSchema);
+
+registerComponent(
+  "scroll-area",
+  ScrollArea as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("scroll-area", scrollAreaConfigSchema);
+
+registerComponent(
+  "filter-bar",
+  FilterBar as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("filter-bar", filterBarConfigSchema);
+
+registerComponent(
+  "inline-edit",
+  InlineEdit as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("inline-edit", inlineEditConfigSchema);
+
+registerComponent(
+  "markdown",
+  Markdown as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("markdown", markdownConfigSchema);
+
+registerComponent(
+  "tag-selector",
+  TagSelector as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("tag-selector", tagSelectorConfigSchema);
+
+registerComponent(
+  "entity-picker",
+  EntityPicker as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("entity-picker", entityPickerConfigSchema);
+
+registerComponent(
+  "highlighted-text",
+  HighlightedText as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("highlighted-text", highlightedTextConfigSchema);
+
+registerComponent(
+  "favorite-button",
+  FavoriteButton as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("favorite-button", favoriteButtonConfigSchema);
+
+registerComponent(
+  "notification-bell",
+  NotificationBell as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("notification-bell", notificationBellConfigSchema);
+
+registerComponent(
+  "save-indicator",
+  SaveIndicator as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("save-indicator", saveIndicatorConfigSchema);
+
+registerComponent(
+  "compare-view",
+  CompareView as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("compare-view", compareViewConfigSchema);
+
+registerComponent(
+  "quick-add",
+  QuickAdd as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("quick-add", quickAddConfigSchema);
+
+registerComponent(
+  "link-embed",
+  LinkEmbed as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("link-embed", linkEmbedConfigSchema);
+
+registerComponent(
+  "gif-picker",
+  GifPicker as Parameters<typeof registerComponent>[1],
+);
+registerComponentSchema("gif-picker", gifPickerConfigSchema);

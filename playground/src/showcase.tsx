@@ -4,7 +4,7 @@ import {
   PageContextProvider,
 } from "@lastshotlabs/snapshot/ui";
 
-type Page = "dashboard" | "data" | "forms" | "overlay" | "structural" | "primitives" | "navigation" | "content" | "workflow";
+type Page = "dashboard" | "data" | "forms" | "overlay" | "structural" | "primitives" | "navigation" | "content" | "workflow" | "communication";
 
 const PAGES: { key: Page; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
@@ -16,6 +16,7 @@ const PAGES: { key: Page; label: string }[] = [
   { key: "content", label: "Content" },
   { key: "workflow", label: "Workflow" },
   { key: "structural", label: "Structural" },
+  { key: "communication", label: "Communication" },
 ];
 
 // ── Dashboard page configs ──────────────────────────────────────────────
@@ -854,6 +855,27 @@ function FormsPage() {
         <ShowcaseSection title="Auto Form">
           <RenderConfig config={autoForm} />
         </ShowcaseSection>
+        <ShowcaseSection title="Input">
+          <RenderConfig config={inputDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Textarea">
+          <RenderConfig config={textareaDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Toggle">
+          <RenderConfig config={toggleDemo2} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Multi-Select">
+          <RenderConfig config={multiSelectDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Tag Selector">
+          <RenderConfig config={tagSelectorDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Inline Edit">
+          <RenderConfig config={inlineEditDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Quick Add">
+          <RenderConfig config={quickAddDemo} />
+        </ShowcaseSection>
       </div>
     </PageWrapper>
   );
@@ -878,10 +900,191 @@ function OverlayPage() {
         <ShowcaseSection title="Tabs">
           <RenderConfig config={tabs} />
         </ShowcaseSection>
+        <ShowcaseSection title="Command Palette">
+          <RenderConfig config={commandPaletteDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Filter Bar">
+          <RenderConfig config={filterBarDemo} />
+        </ShowcaseSection>
       </div>
     </PageWrapper>
   );
 }
+
+// ── New primitives demos ──────────────────────────────────────────────────
+
+const separatorDemo = {
+  type: "row",
+  gap: "md",
+  direction: "column",
+  children: [
+    { type: "separator" },
+    { type: "separator", label: "OR" },
+    { type: "separator", label: "Section Break" },
+  ],
+};
+
+const inputDemo = {
+  type: "row",
+  gap: "md",
+  direction: "column",
+  children: [
+    { type: "input", label: "Email", placeholder: "you@example.com", inputType: "email", icon: "mail", helperText: "We'll never share your email" },
+    { type: "input", label: "Password", placeholder: "Enter password", inputType: "password", icon: "lock", required: true },
+    { type: "input", label: "With Error", value: "bad input", errorText: "This field is invalid", icon: "alert-circle" },
+  ],
+};
+
+const textareaDemo = {
+  type: "textarea",
+  label: "Description",
+  placeholder: "Write a description...",
+  rows: 4,
+  maxLength: 500,
+  helperText: "Supports plain text only",
+};
+
+const toggleDemo2 = {
+  type: "row",
+  gap: "sm",
+  children: [
+    { type: "toggle", label: "Bold", icon: "bold" },
+    { type: "toggle", label: "Italic", icon: "italic" },
+    { type: "toggle", label: "Underline", icon: "underline", pressed: true },
+    { type: "toggle", icon: "list", variant: "outline" },
+    { type: "toggle", icon: "list-ordered", variant: "outline" },
+  ],
+};
+
+const multiSelectDemo = {
+  type: "multi-select",
+  label: "Select Technologies",
+  placeholder: "Choose frameworks...",
+  searchable: true,
+  options: [
+    { label: "React", value: "react" },
+    { label: "Vue", value: "vue" },
+    { label: "Angular", value: "angular" },
+    { label: "Svelte", value: "svelte" },
+    { label: "Next.js", value: "nextjs" },
+    { label: "Remix", value: "remix" },
+    { label: "Astro", value: "astro" },
+  ],
+};
+
+const filterBarDemo = {
+  type: "filter-bar",
+  searchPlaceholder: "Search items...",
+  filters: [
+    { key: "status", label: "Status", options: [{ label: "Active", value: "active" }, { label: "Inactive", value: "inactive" }, { label: "Pending", value: "pending" }] },
+    { key: "type", label: "Type", options: [{ label: "Bug", value: "bug" }, { label: "Feature", value: "feature" }, { label: "Task", value: "task" }], multiple: true },
+    { key: "priority", label: "Priority", options: [{ label: "High", value: "high" }, { label: "Medium", value: "medium" }, { label: "Low", value: "low" }] },
+  ],
+};
+
+const tagSelectorDemo = {
+  type: "tag-selector",
+  label: "Tags",
+  allowCreate: true,
+  tags: [
+    { label: "Bug", value: "bug", color: "#ef4444" },
+    { label: "Feature", value: "feature", color: "#3b82f6" },
+    { label: "Enhancement", value: "enhancement", color: "#8b5cf6" },
+    { label: "Documentation", value: "docs", color: "#22c55e" },
+    { label: "Urgent", value: "urgent", color: "#f59e0b" },
+  ],
+};
+
+const inlineEditDemo = {
+  type: "row",
+  gap: "md",
+  direction: "column",
+  children: [
+    { type: "inline-edit", value: "Click me to edit", saveAction: { type: "toast", message: "Saved!", variant: "success" } },
+    { type: "inline-edit", placeholder: "Click to add title", fontSize: "var(--sn-font-size-xl, 1.25rem)" },
+  ],
+};
+
+const highlightedTextDemo = {
+  type: "highlighted-text",
+  text: "The quick brown fox jumps over the lazy dog. The fox was very quick indeed.",
+  highlight: "fox",
+};
+
+const favoriteButtonDemo = {
+  type: "row",
+  gap: "md",
+  children: [
+    { type: "favorite-button", size: "sm" },
+    { type: "favorite-button", size: "md", active: true },
+    { type: "favorite-button", size: "lg" },
+  ],
+};
+
+const notificationBellDemo = {
+  type: "row",
+  gap: "lg",
+  children: [
+    { type: "notification-bell", count: 3 },
+    { type: "notification-bell", count: 42, size: "lg" },
+    { type: "notification-bell", count: 150, max: 99 },
+    { type: "notification-bell", count: 0 },
+  ],
+};
+
+const saveIndicatorDemo = {
+  type: "row",
+  gap: "xl",
+  children: [
+    { type: "save-indicator", status: "saving" },
+    { type: "save-indicator", status: "saved" },
+    { type: "save-indicator", status: "error" },
+  ],
+};
+
+const quickAddDemo = {
+  type: "quick-add",
+  placeholder: "Add a new task...",
+  submitAction: { type: "toast", message: "Item added!", variant: "success" },
+};
+
+const markdownDemo = {
+  type: "markdown",
+  content: "# Hello World\n\nThis is **bold** and *italic* text.\n\n## Features\n- List item one\n- List item two\n- List item three\n\n> A blockquote with some wisdom.\n\n```typescript\nconst x = 42;\nconsole.log(`The answer is ${x}`);\n```\n\n| Column 1 | Column 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |",
+  maxHeight: "400px",
+};
+
+const compareViewDemo = {
+  type: "compare-view",
+  leftLabel: "Original",
+  rightLabel: "Modified",
+  left: "function greet(name) {\n  console.log('Hello ' + name);\n  return true;\n}\n\ngreet('world');",
+  right: "function greet(name: string) {\n  console.log(`Hello ${name}`);\n  return true;\n}\n\nconst result = greet('world');\nconsole.log(result);",
+  maxHeight: "300px",
+};
+
+const commandPaletteDemo = {
+  type: "command-palette",
+  placeholder: "Type a command...",
+  groups: [
+    {
+      label: "Navigation",
+      items: [
+        { label: "Go to Dashboard", icon: "layout-dashboard", shortcut: "Ctrl+D" },
+        { label: "Go to Settings", icon: "settings", shortcut: "Ctrl+," },
+        { label: "Go to Profile", icon: "user" },
+      ],
+    },
+    {
+      label: "Actions",
+      items: [
+        { label: "Create New Item", icon: "plus", shortcut: "Ctrl+N" },
+        { label: "Search Files", icon: "search", shortcut: "Ctrl+P" },
+        { label: "Toggle Dark Mode", icon: "moon" },
+      ],
+    },
+  ],
+};
 
 function PrimitivesPage() {
   return (
@@ -913,6 +1116,21 @@ function PrimitivesPage() {
         </ShowcaseSection>
         <ShowcaseSection title="Empty State">
           <RenderConfig config={emptyStateDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Separator">
+          <RenderConfig config={separatorDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Highlighted Text">
+          <RenderConfig config={highlightedTextDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Favorite Button">
+          <RenderConfig config={favoriteButtonDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Notification Bell">
+          <RenderConfig config={notificationBellDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Save Indicator">
+          <RenderConfig config={saveIndicatorDemo} />
         </ShowcaseSection>
       </div>
     </PageWrapper>
@@ -968,6 +1186,12 @@ function ContentPage() {
         <ShowcaseSection title="File Uploader">
           <RenderConfig config={fileUploaderDemo} />
         </ShowcaseSection>
+        <ShowcaseSection title="Markdown Renderer">
+          <RenderConfig config={markdownDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Compare View (Diff)">
+          <RenderConfig config={compareViewDemo} />
+        </ShowcaseSection>
       </div>
     </PageWrapper>
   );
@@ -985,6 +1209,284 @@ function WorkflowPage() {
         </ShowcaseSection>
         <ShowcaseSection title="Pricing Table">
           <RenderConfig config={pricingDemo} />
+        </ShowcaseSection>
+      </div>
+    </PageWrapper>
+  );
+}
+
+// ── Communication page configs ────────────────────────────────────────────
+
+const richInputDemo = {
+  type: "rich-input",
+  id: "demo-input",
+  placeholder: "Type a message... (Enter to send, Shift+Enter for newline)",
+  features: ["bold", "italic", "underline", "strike", "code", "link", "bullet-list", "ordered-list"],
+  minHeight: "3rem",
+  maxHeight: "10rem",
+};
+
+const richInputWithSendDemo = {
+  type: "rich-input",
+  id: "demo-input-send",
+  placeholder: "Type and press Enter to send...",
+  sendOnEnter: true,
+  maxLength: 280,
+  sendAction: { type: "toast", message: "Message sent!", variant: "success" },
+  features: ["bold", "italic", "code"],
+};
+
+const emojiPickerDemo = {
+  type: "emoji-picker",
+  id: "emoji",
+  perRow: 8,
+  maxHeight: "250px",
+};
+
+const reactionBarDemo = {
+  type: "reaction-bar",
+  reactions: [
+    { emoji: "\ud83d\udc4d", count: 12, active: true },
+    { emoji: "\u2764\ufe0f", count: 8 },
+    { emoji: "\ud83d\ude02", count: 5 },
+    { emoji: "\ud83d\ude31", count: 2 },
+    { emoji: "\ud83d\ude80", count: 1 },
+  ],
+  addAction: { type: "toast", message: "Reaction added!", variant: "success" },
+};
+
+const presenceIndicatorDemos = {
+  type: "row",
+  gap: "lg",
+  children: [
+    { type: "presence-indicator", status: "online", label: "Alice" },
+    { type: "presence-indicator", status: "away", label: "Bob" },
+    { type: "presence-indicator", status: "busy", label: "Charlie" },
+    { type: "presence-indicator", status: "dnd", label: "Diana" },
+    { type: "presence-indicator", status: "offline", label: "Eve" },
+  ],
+};
+
+const typingIndicatorDemos = {
+  type: "row",
+  gap: "lg",
+  direction: "column",
+  children: [
+    { type: "typing-indicator", users: [{ name: "Alice" }] },
+    { type: "typing-indicator", users: [{ name: "Alice" }, { name: "Bob" }] },
+    { type: "typing-indicator", users: [{ name: "Alice" }, { name: "Bob" }, { name: "Charlie" }, { name: "Diana" }], maxDisplay: 2 },
+  ],
+};
+
+const commentSectionDemo = {
+  type: "comment-section",
+  data: [
+    {
+      id: "c1",
+      content: "<p>This is a <b>great</b> feature! Really looking forward to seeing it in production.</p>",
+      author: { name: "Alice Johnson", avatar: null },
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+    },
+    {
+      id: "c2",
+      content: "<p>I agree! The design tokens make it really easy to customize.</p>",
+      author: { name: "Bob Smith", avatar: null },
+      timestamp: new Date(Date.now() - 1800000).toISOString(),
+    },
+    {
+      id: "c3",
+      content: "<p>Can we add <code>dark mode</code> support? That would be awesome.</p>",
+      author: { name: "Charlie Brown", avatar: null },
+      timestamp: new Date(Date.now() - 600000).toISOString(),
+    },
+  ],
+  inputPlaceholder: "Write a comment...",
+  submitAction: { type: "toast", message: "Comment posted!", variant: "success" },
+};
+
+const chatWindowDemo = {
+  type: "chat-window",
+  title: "general",
+  subtitle: "Team discussion channel",
+  data: [
+    {
+      id: "m1",
+      content: "<p>Hey everyone! \ud83d\udc4b How's the new feature coming along?</p>",
+      author: { name: "Alice Johnson", avatar: null },
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+    },
+    {
+      id: "m2",
+      content: "<p>Going well! Just finished the <b>token system</b> updates. All tests passing.</p>",
+      author: { name: "Bob Smith", avatar: null },
+      timestamp: new Date(Date.now() - 7100000).toISOString(),
+    },
+    {
+      id: "m3",
+      content: "<p>Nice! I'll review the PR this afternoon.</p>",
+      author: { name: "Alice Johnson", avatar: null },
+      timestamp: new Date(Date.now() - 7000000).toISOString(),
+    },
+    {
+      id: "m4",
+      content: "<p>FYI the staging deploy went through. You can test it at <a href=\"#\">staging.example.com</a></p>",
+      author: { name: "Charlie Brown", avatar: null },
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+    },
+    {
+      id: "m5",
+      content: "<p>Just tried it \u2014 looks great! One small thing: the <code>border-radius</code> on the cards could be a bit smaller.</p>",
+      author: { name: "Diana Prince", avatar: null },
+      timestamp: new Date(Date.now() - 1800000).toISOString(),
+    },
+    {
+      id: "m6",
+      content: "<p>Good catch, I'll update the radius tokens. Should be a one-line change \ud83d\ude04</p>",
+      author: { name: "Bob Smith", avatar: null },
+      timestamp: new Date(Date.now() - 1700000).toISOString(),
+    },
+  ],
+  inputPlaceholder: "Message #general",
+  sendAction: { type: "toast", message: "Message sent!", variant: "success" },
+  height: "500px",
+};
+
+// ── Embed demos ───────────────────────────────────────────────────────────
+
+const youtubeEmbedDemo = {
+  type: "link-embed",
+  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  maxWidth: "560px",
+};
+
+const twitterEmbedDemo = {
+  type: "link-embed",
+  url: "https://twitter.com/elonmusk/status/1234567890",
+  meta: {
+    title: "Elon Musk on X",
+    description: "This is an example tweet embed card showing Open Graph metadata.",
+    siteName: "Twitter",
+    image: undefined,
+    color: "#1da1f2",
+  },
+  maxWidth: "500px",
+};
+
+const genericEmbedDemo = {
+  type: "link-embed",
+  url: "https://github.com/lastshotlabs/snapshot",
+  meta: {
+    title: "lastshotlabs/snapshot: Config-driven UI SDK",
+    description: "The frontend SDK for bunshot-powered backends. Design tokens, config-addressable components, page composition from manifest.",
+    siteName: "GitHub",
+    image: "https://opengraph.githubassets.com/1/lastshotlabs/snapshot",
+    favicon: "https://github.githubassets.com/favicons/favicon.svg",
+  },
+  maxWidth: "500px",
+};
+
+const gifEmbedDemo = {
+  type: "link-embed",
+  url: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWx5b3IwOHh4d3o0YnVpc2s1a3d5c3J5MXRuYXV5MWx1MGRsdWVzOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JIX9t2j0ZTN9S/giphy.gif",
+};
+
+const gifPickerDemo = {
+  type: "gif-picker",
+  gifs: [
+    { id: "1", url: "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif", title: "Cat typing" },
+    { id: "2", url: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif", title: "Thumbs up" },
+    { id: "3", url: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif", title: "Celebration" },
+    { id: "4", url: "https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif", title: "Mind blown" },
+  ],
+  columns: 2,
+  maxHeight: "250px",
+  attribution: "Powered by GIPHY",
+};
+
+const chatWithEmbedsDemo = {
+  type: "chat-window",
+  title: "media-sharing",
+  subtitle: "Share links, GIFs, and media",
+  data: [
+    {
+      id: "e1",
+      content: "<p>Check out this video!</p>",
+      author: { name: "Alice", avatar: null },
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      embeds: [{ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }],
+    },
+    {
+      id: "e2",
+      content: "<p>Here's a cool project on GitHub</p>",
+      author: { name: "Bob", avatar: null },
+      timestamp: new Date(Date.now() - 1800000).toISOString(),
+      embeds: [{
+        url: "https://github.com/lastshotlabs/snapshot",
+        meta: {
+          title: "lastshotlabs/snapshot",
+          description: "Config-driven UI SDK for bunshot backends",
+          siteName: "GitHub",
+          color: "#333",
+        },
+      }],
+    },
+    {
+      id: "e3",
+      content: "<p><img class=\"sn-custom-emoji\" src=\"https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/128/emoji_u1f389.png\" alt=\":tada:\" title=\"Party\" draggable=\"false\" /> Launch day!</p>",
+      author: { name: "Charlie", avatar: null },
+      timestamp: new Date(Date.now() - 600000).toISOString(),
+    },
+  ],
+  inputPlaceholder: "Share a link or GIF...",
+  sendAction: { type: "toast", message: "Sent!", variant: "success" },
+  height: "450px",
+};
+
+function CommunicationPage() {
+  return (
+    <PageWrapper>
+      <div className="showcase">
+        <ShowcaseSection title="Chat Window">
+          <RenderConfig config={chatWindowDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Rich Input (WYSIWYG)">
+          <RenderConfig config={richInputDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Rich Input (with Send)">
+          <RenderConfig config={richInputWithSendDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Comment Section">
+          <RenderConfig config={commentSectionDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Reaction Bar">
+          <RenderConfig config={reactionBarDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Emoji Picker">
+          <RenderConfig config={emojiPickerDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Presence Indicators">
+          <RenderConfig config={presenceIndicatorDemos} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Typing Indicators">
+          <RenderConfig config={typingIndicatorDemos} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Chat with Embeds">
+          <RenderConfig config={chatWithEmbedsDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="YouTube Embed">
+          <RenderConfig config={youtubeEmbedDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Twitter/X Embed (OG Card)">
+          <RenderConfig config={twitterEmbedDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="Generic Link Embed (GitHub)">
+          <RenderConfig config={genericEmbedDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="GIF Embed">
+          <RenderConfig config={gifEmbedDemo} />
+        </ShowcaseSection>
+        <ShowcaseSection title="GIF Picker">
+          <RenderConfig config={gifPickerDemo} />
         </ShowcaseSection>
       </div>
     </PageWrapper>
@@ -1034,6 +1536,7 @@ export function ComponentShowcase() {
       {page === "content" && <ContentPage />}
       {page === "workflow" && <WorkflowPage />}
       {page === "structural" && <StructuralPage />}
+      {page === "communication" && <CommunicationPage />}
     </>
   );
 }

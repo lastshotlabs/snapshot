@@ -1,0 +1,68 @@
+import { z } from "zod";
+import { actionSchema } from "../../../actions/types";
+
+/** Schema for a FromRef value — `{ from: "component-id.field" }`. */
+const fromRefSchema = z.object({ from: z.string() });
+
+/**
+ * Zod config schema for the Input component.
+ *
+ * Defines a standalone text input field with label, placeholder,
+ * validation, and optional icon.
+ *
+ * @example
+ * ```json
+ * {
+ *   "type": "input",
+ *   "id": "email-field",
+ *   "label": "Email",
+ *   "inputType": "email",
+ *   "placeholder": "you@example.com",
+ *   "required": true,
+ *   "helperText": "We'll never share your email"
+ * }
+ * ```
+ */
+export const inputConfigSchema = z
+  .object({
+    /** Component type discriminator. */
+    type: z.literal("input"),
+    /** Label text displayed above the input. */
+    label: z.string().optional(),
+    /** Placeholder text inside the input. */
+    placeholder: z.string().optional(),
+    /** Initial or bound value. Can be a FromRef. */
+    value: z.union([z.string(), fromRefSchema]).optional(),
+    /** HTML input type. Default: "text". */
+    inputType: z
+      .enum(["text", "email", "password", "number", "url", "tel", "search"])
+      .optional(),
+    /** Whether the field is required. */
+    required: z.boolean().optional(),
+    /** Disabled state. Can be a FromRef. */
+    disabled: z.union([z.boolean(), fromRefSchema]).optional(),
+    /** Read-only state. Can be a FromRef. */
+    readonly: z.union([z.boolean(), fromRefSchema]).optional(),
+    /** Maximum character length. */
+    maxLength: z.number().optional(),
+    /** Regex validation pattern. */
+    pattern: z.string().optional(),
+    /** Helper text displayed below the input. */
+    helperText: z.string().optional(),
+    /** Error message displayed below the input. Can be a FromRef. */
+    errorText: z.union([z.string(), fromRefSchema]).optional(),
+    /** Left icon name. */
+    icon: z.string().optional(),
+    /** Action to execute on value change (debounced). */
+    changeAction: actionSchema.optional(),
+    // --- BaseComponentConfig fields ---
+    /** Component id for publishing/subscribing. */
+    id: z.string().optional(),
+    /** Visibility toggle. Can be a FromRef for conditional display. */
+    visible: z.union([z.boolean(), fromRefSchema]).optional(),
+    /** Additional CSS class name. */
+    className: z.string().optional(),
+    /** Inline styles. */
+    style: z.record(z.string()).optional(),
+  })
+  .strict();
