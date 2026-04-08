@@ -21,8 +21,7 @@ type Page =
   | "content"
   | "workflow"
   | "communication"
-
-  | "presets";
+  | "presets"
   | "feed-chart-wizard";
 
 
