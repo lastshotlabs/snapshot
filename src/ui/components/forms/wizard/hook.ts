@@ -4,6 +4,11 @@ import {
   useActionExecutor,
   SnapshotApiContext,
 } from "../../../actions/executor";
+import {
+  buildRequestUrl,
+  resolveEndpointTarget,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import type { FieldConfig } from "../auto-form/types";
 import type { WizardConfig, UseWizardResult } from "./types";
 
@@ -89,6 +94,7 @@ export function useWizard(config: WizardConfig): UseWizardResult {
   const api = useContext(SnapshotApiContext);
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
+  const runtime = useManifestRuntime();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [stepValues, setStepValues] = useState<Record<string, unknown>>({});
@@ -176,7 +182,23 @@ export function useWizard(config: WizardConfig): UseWizardResult {
         setSubmitError(null);
         try {
           if (config.submitEndpoint && api) {
-            await api.post(config.submitEndpoint, newAccumulated);
+            const request = resolveEndpointTarget(
+              config.submitEndpoint,
+              runtime?.resources,
+              undefined,
+              "POST",
+            );
+            const url = buildRequestUrl(request.endpoint, request.params);
+            switch (request.method) {
+              case "PUT":
+                await api.put(url, newAccumulated);
+                break;
+              case "PATCH":
+                await api.patch(url, newAccumulated);
+                break;
+              default:
+                await api.post(url, newAccumulated);
+            }
           }
           if (config.onComplete) {
             await execute(config.onComplete, { data: newAccumulated });

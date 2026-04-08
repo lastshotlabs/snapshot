@@ -1,10 +1,12 @@
-import type { PrimitiveAtom } from "jotai";
-import type { createStore } from "jotai/vanilla";
 import type { ReactNode } from "react";
-
-/** The Jotai store type, derived from the createStore return type. */
-export type JotaiStore = ReturnType<typeof createStore>;
 import type { ApiClient } from "../../api/client";
+import type { ResourceMap } from "../manifest/resources";
+import type {
+  AtomRegistry,
+  JotaiStore,
+  StateConfig as RuntimeStateConfig,
+  StateConfigMap,
+} from "../state/types";
 
 /**
  * A reference to another component's published value.
@@ -48,33 +50,14 @@ export interface FromRef {
   transformArg?: string | number;
 }
 
-/**
- * The atom registry interface — maps component ids to their published Jotai atoms.
- * Each registry backs either a page context (per-route) or app context (global).
- */
-export interface AtomRegistry {
-  /** Register an atom for a component id. Idempotent — returns existing atom if already registered. */
-  register(id: string): PrimitiveAtom<unknown>;
-  /** Get the atom for a component id. Returns undefined if not registered. */
-  get(id: string): PrimitiveAtom<unknown> | undefined;
-  /** Remove a component's atom. Called on unmount. */
-  unregister(id: string): void;
-  /** Get all registered component ids. For debugging/dev tools. */
-  keys(): string[];
-  /** The Jotai store backing this registry. */
-  readonly store: JotaiStore;
-}
+/** Backwards-compatible alias for the shared state registry interface. */
+export type { AtomRegistry, JotaiStore };
 
 /**
  * Global state definition from the manifest.
- * Defines a persistent value that survives route changes.
+ * This now aliases the shared state config used by the runtime.
  */
-export interface GlobalConfig {
-  /** Endpoint to fetch initial value from. Format: "GET /api/users" or just "/api/users". Fetched on app mount. */
-  data?: string;
-  /** Static default value (used until endpoint responds, or if no endpoint). */
-  default?: unknown;
-}
+export type GlobalConfig = RuntimeStateConfig;
 
 /**
  * Props for AppContextProvider.
@@ -83,6 +66,8 @@ export interface GlobalConfig {
 export interface AppContextProviderProps {
   /** Global state definitions from manifest. Keyed by id. */
   globals?: Record<string, GlobalConfig>;
+  /** Named manifest resources available to global state loaders. */
+  resources?: ResourceMap;
   /** The API client instance (from createSnapshot) for fetching global data. */
   api?: ApiClient;
   /** React children. */
@@ -94,6 +79,12 @@ export interface AppContextProviderProps {
  * Wraps each page/route to provide per-page component state.
  */
 export interface PageContextProviderProps {
+  /** Named route-scope state definitions. */
+  state?: StateConfigMap;
+  /** Named manifest resources available to route state loaders. */
+  resources?: ResourceMap;
+  /** API client for route state loaders. */
+  api?: ApiClient;
   /** React children. */
   children: ReactNode;
 }

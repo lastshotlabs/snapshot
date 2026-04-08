@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the EntityPicker component.
@@ -30,7 +30,7 @@ export const entityPickerConfigSchema = z
     /** Trigger button label. Default: "Select...". */
     label: z.string().optional(),
     /** API endpoint to fetch entities. Example: "GET /api/users". */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field name for display label. Default: "name". */
     labelField: z.string().optional(),
     /** Field name for value/id. Default: "id". */

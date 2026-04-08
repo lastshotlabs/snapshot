@@ -10,6 +10,7 @@ import {
 import { createElement } from "react";
 import { Provider } from "jotai/react";
 import { SnapshotApiContext } from "../../../../actions/executor";
+import { ManifestRuntimeProvider } from "../../../../manifest/runtime";
 import {
   PageRegistryContext,
   AppRegistryContext,
@@ -35,24 +36,35 @@ function createMockApi() {
 function createWrapper(options: {
   api?: ReturnType<typeof createMockApi>;
   pageRegistry?: AtomRegistry;
+  resources?: Record<string, { method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"; endpoint: string }>;
 }) {
-  const { api, pageRegistry } = options;
+  const { api, pageRegistry, resources } = options;
   return function Wrapper({ children }: { children: React.ReactNode }) {
     return createElement(
       Provider,
       null,
-      createElement(
-        SnapshotApiContext.Provider,
-        {
-          value:
-            api as unknown as import("../../../../../api/client").ApiClient,
-        },
-        createElement(
-          PageRegistryContext.Provider,
-          { value: pageRegistry ?? null },
-          createElement(AppRegistryContext.Provider, { value: null }, children),
+      createElement(ManifestRuntimeProvider, {
+        manifest: {
+          raw: { routes: [{ id: "test", path: "/", content: [] }], resources },
+          app: {},
+          resources,
+          routes: [],
+          routeMap: {},
+          firstRoute: null,
+        } as never,
+        children: createElement(
+          SnapshotApiContext.Provider,
+          {
+            value:
+              api as unknown as import("../../../../../api/client").ApiClient,
+          },
+          createElement(
+            PageRegistryContext.Provider,
+            { value: pageRegistry ?? null },
+            createElement(AppRegistryContext.Provider, { value: null }, children),
+          ),
         ),
-      ),
+      }),
     );
   };
 }
@@ -559,5 +571,101 @@ describe("AutoForm", () => {
     render(createElement(AutoForm, { config }), { wrapper });
 
     expect(screen.getByLabelText("username")).toBeDefined();
+  });
+
+  it("submits through a named resource target", async () => {
+    const wrapper = createWrapper({
+      api: mockApi,
+      pageRegistry,
+      resources: {
+        "users.update": {
+          method: "PUT",
+          endpoint: "/api/users/1",
+        },
+      },
+    });
+    const config: AutoFormConfig = {
+      type: "form",
+      submit: { resource: "users.update" },
+      fields: [{ name: "email", type: "email", label: "Email", required: true }],
+    };
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText(/Email/), {
+        target: { value: "ada@example.com" },
+      });
+      fireEvent.click(screen.getByText("Submit"));
+    });
+
+    expect(mockApi.put).toHaveBeenCalledWith("/api/users/1", {
+      email: "ada@example.com",
+    });
+  });
+
+  it("loads initial values from a named resource", async () => {
+    mockApi.get.mockResolvedValueOnce({ email: "prefill@example.com" });
+    const wrapper = createWrapper({
+      api: mockApi,
+      pageRegistry,
+      resources: {
+        "users.current": {
+          method: "GET",
+          endpoint: "/api/users/current",
+        },
+      },
+    });
+    const config: AutoFormConfig = {
+      type: "form",
+      data: { resource: "users.current" },
+      submit: "/api/users",
+      fields: [{ name: "email", type: "email", label: "Email" }],
+    };
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect((screen.getByLabelText("Email") as HTMLInputElement).value).toBe(
+      "prefill@example.com",
+    );
+  });
+
+  it("loads select options from a named resource", async () => {
+    mockApi.get.mockResolvedValueOnce([
+      { id: "admin", name: "Admin" },
+      { id: "user", name: "User" },
+    ]);
+    const wrapper = createWrapper({
+      api: mockApi,
+      pageRegistry,
+      resources: {
+        roles: {
+          method: "GET",
+          endpoint: "/api/roles",
+        },
+      },
+    });
+    const config: AutoFormConfig = {
+      type: "form",
+      submit: "/api/users",
+      fields: [
+        {
+          name: "role",
+          type: "select",
+          label: "Role",
+          options: { resource: "roles" },
+        },
+      ],
+    };
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("Admin")).toBeDefined();
+    expect(screen.getByText("User")).toBeDefined();
   });
 });

@@ -1,8 +1,9 @@
 import { z } from "zod";
 import {
   baseComponentConfigSchema,
+  dataSourceSchema,
   fromRefSchema,
-} from "../../../manifest/schema";
+} from "../../_base/types";
 import { actionSchema } from "../../../actions/types";
 
 /**
@@ -49,7 +50,7 @@ export const listConfigSchema = baseComponentConfigSchema.extend({
   /** Component type discriminator. */
   type: z.literal("list"),
   /** API endpoint to fetch list data. Supports FromRef for dependent data. */
-  data: z.union([z.string(), fromRefSchema]).optional(),
+  data: dataSourceSchema.optional(),
   /** Static list items (used when no data endpoint is provided). */
   items: z.array(listItemSchema).optional(),
   /** Response field name to use as item title when using data endpoint. */

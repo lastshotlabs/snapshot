@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { fromRefSchema, componentConfigSchema } from "../../../manifest/schema";
+import {
+  fromRefSchema,
+  componentConfigSchema,
+} from "../../../manifest/schema";
+import { dataSourceSchema } from "../../_base/types";
 import { actionSchema } from "../../../actions/types";
 
 /**
@@ -51,7 +55,7 @@ export const timelineConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("timeline"),
     /** API endpoint to fetch timeline data. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Static timeline items. */
     items: z.array(timelineItemSchema).optional(),
     /** Field name for date when using API data. */

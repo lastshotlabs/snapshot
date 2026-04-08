@@ -14,6 +14,7 @@ export {
   downloadActionSchema,
   confirmActionSchema,
   toastActionSchema,
+  runWorkflowActionSchema,
 } from "./types";
 export type {
   ActionConfig,
@@ -27,6 +28,7 @@ export type {
   DownloadAction,
   ConfirmAction,
   ToastAction,
+  RunWorkflowAction,
 } from "./types";
 export type { ModalManager } from "./modal-manager";
 export type { ToastItem, ShowToastOptions, ToastManager } from "./toast";

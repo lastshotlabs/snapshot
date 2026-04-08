@@ -6,14 +6,17 @@
  * configs to registered React components.
  */
 
-import type { CSSProperties } from "react";
+import type { ApiClient } from "../../api/client";
 import { PageContextProvider, useSubscribe } from "../context/index";
-import { getRegisteredComponent } from "./component-registry";
 import { ComponentWrapper } from "../components/_base/component-wrapper";
 import { useResponsiveValue } from "../hooks/use-breakpoint";
-import type { PageConfig, ComponentConfig } from "./types";
-
-// ── ComponentRenderer ───────────────────────────────────────────────────────
+import { getRegisteredComponent } from "./component-registry";
+import type {
+  ComponentConfig,
+  PageConfig,
+  ResourceConfigMap,
+  StateConfig,
+} from "./types";
 
 /** Props for the ComponentRenderer component. */
 export interface ComponentRendererProps {
@@ -23,15 +26,6 @@ export interface ComponentRendererProps {
 
 /**
  * Renders a single component from its manifest config.
- *
- * Resolves the component type from the registry, handles visibility
- * (static, responsive, or FromRef), applies grid span styling, and
- * wraps with a `data-snapshot-component` attribute for token scoping
- * and debugging.
- *
- * Returns null for unknown types (with a dev warning) or when visibility is false.
- *
- * @param props - Contains the component config to render
  */
 export function ComponentRenderer({ config }: ComponentRendererProps) {
   const visible = useSubscribe(
@@ -70,26 +64,37 @@ export function ComponentRenderer({ config }: ComponentRendererProps) {
   );
 }
 
-// ── PageRenderer ────────────────────────────────────────────────────────────
-
 /** Props for the PageRenderer component. */
 export interface PageRendererProps {
   /** The page config to render. */
   page: PageConfig;
+  /** Stable route identity used to reset route-scoped state. */
+  routeId?: string;
+  /** Named manifest state definitions available for route initialization. */
+  state?: StateConfig;
+  /** Named resources available to route state loaders. */
+  resources?: ResourceConfigMap;
+  /** API client used by route state loaders. */
+  api?: ApiClient;
 }
 
 /**
  * Renders a page from its manifest config.
- *
- * Wraps content in a `PageContextProvider` so all components on the page
- * share a fresh atom registry for inter-component data binding. Each
- * component in the content array is rendered via `ComponentRenderer`.
- *
- * @param props - Contains the page config to render
  */
-export function PageRenderer({ page }: PageRendererProps) {
+export function PageRenderer({
+  page,
+  routeId,
+  state,
+  resources,
+  api,
+}: PageRendererProps) {
   return (
-    <PageContextProvider>
+    <PageContextProvider
+      key={routeId ?? page.title ?? "snapshot-route"}
+      state={state}
+      resources={resources}
+      api={api}
+    >
       <div data-snapshot-page={page.title ?? ""}>
         {page.content.map((config, i) => (
           <ComponentRenderer

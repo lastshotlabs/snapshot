@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a Kanban board column definition.
@@ -55,7 +55,7 @@ export const kanbanConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("kanban"),
     /** API endpoint returning items with a status/column field. Supports FromRef. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Column definitions for the board. */
     columns: z.array(kanbanColumnSchema),
     /** Which data field determines column placement. Default: "status". */

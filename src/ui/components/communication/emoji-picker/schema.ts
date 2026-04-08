@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the EmojiPicker component.
@@ -55,7 +55,7 @@ export const emojiPickerConfigSchema = z
       )
       .optional(),
     /** API endpoint for loading custom emojis. */
-    customEmojiData: z.union([z.string(), fromRefSchema]).optional(),
+    customEmojiData: dataSourceSchema.optional(),
     /** Field name for emoji image URL in API results. Default: "url". */
     emojiUrlField: z.string().optional(),
     /** URL prefix for resolving uploadKey to full URL (e.g., "https://cdn.example.com/emojis/"). */

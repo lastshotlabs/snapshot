@@ -67,32 +67,32 @@ describe("generateManifestJson", () => {
     const parsed = JSON.parse(
       generateManifestJson({ ...baseOptions, includeSidebar: true }),
     );
-    expect(parsed.nav).toBeDefined();
-    expect(parsed.nav.length).toBeGreaterThanOrEqual(2);
-    expect(parsed.nav[0].path).toBe("/dashboard");
+    expect(parsed.navigation).toBeDefined();
+    expect(parsed.navigation.items.length).toBeGreaterThanOrEqual(2);
+    expect(parsed.navigation.items[0].path).toBe("/dashboard");
   });
 
   it("excludes nav items when includeSidebar is false", () => {
     const parsed = JSON.parse(
       generateManifestJson({ ...baseOptions, includeSidebar: false }),
     );
-    expect(parsed.nav).toBeUndefined();
+    expect(parsed.navigation).toBeUndefined();
   });
 
   it("uses sidebar layout when includeSidebar is true", () => {
     const parsed = JSON.parse(
       generateManifestJson({ ...baseOptions, includeSidebar: true }),
     );
-    expect(parsed.pages["/dashboard"].layout).toBe("sidebar");
-    expect(parsed.pages["/settings"].layout).toBe("sidebar");
+    expect(parsed.routes[0].layout).toBe("sidebar");
+    expect(parsed.routes[1].layout).toBe("sidebar");
   });
 
   it("uses minimal layout when includeSidebar is false", () => {
     const parsed = JSON.parse(
       generateManifestJson({ ...baseOptions, includeSidebar: false }),
     );
-    expect(parsed.pages["/dashboard"].layout).toBe("minimal");
-    expect(parsed.pages["/settings"].layout).toBe("minimal");
+    expect(parsed.routes[0].layout).toBe("minimal");
+    expect(parsed.routes[1].layout).toBe("minimal");
   });
 
   it("always includes /dashboard and /settings pages", () => {
@@ -103,13 +103,16 @@ describe("generateManifestJson", () => {
         includeSidebar: false,
       }),
     );
-    expect(parsed.pages["/dashboard"]).toBeDefined();
-    expect(parsed.pages["/settings"]).toBeDefined();
+    expect(parsed.routes.find((route: { path: string }) => route.path === "/dashboard")).toBeDefined();
+    expect(parsed.routes.find((route: { path: string }) => route.path === "/settings")).toBeDefined();
   });
 
   it("includes heading and row components in dashboard", () => {
     const parsed = JSON.parse(generateManifestJson(baseOptions));
-    const content = parsed.pages["/dashboard"].content;
+    const dashboard = parsed.routes.find(
+      (route: { path: string; content: unknown[] }) => route.path === "/dashboard",
+    );
+    const content = dashboard.content;
     expect(content.some((c: { type: string }) => c.type === "heading")).toBe(
       true,
     );

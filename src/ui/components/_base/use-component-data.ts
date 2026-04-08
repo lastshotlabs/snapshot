@@ -1,8 +1,15 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { useSubscribe } from "../../context/hooks";
-import { isFromRef, parseDataString } from "../../context/utils";
+import { isFromRef } from "../../context/utils";
 import { SnapshotApiContext } from "../../actions/executor";
 import type { FromRef } from "../../context/types";
+import {
+  buildRequestUrl,
+  isResourceRef,
+  resolveEndpointTarget,
+  type ResourceRef,
+} from "../../manifest/resources";
+import { useManifestRuntime } from "../../manifest/runtime";
 
 /**
  * Result returned by `useComponentData`.
@@ -34,11 +41,12 @@ export interface ComponentDataResult {
  * @returns Data, loading state, error, and refetch function
  */
 export function useComponentData(
-  dataConfig: string | FromRef,
+  dataConfig: string | FromRef | ResourceRef,
   params?: Record<string, unknown | FromRef>,
 ): ComponentDataResult {
   const resolvedData = useSubscribe(dataConfig);
   const api = useContext(SnapshotApiContext);
+  const runtime = useManifestRuntime();
 
   // Resolve params that may be FromRef — use useResolveFrom to handle
   // all FromRef params in one stable hook call instead of a loop.
@@ -71,11 +79,13 @@ export function useComponentData(
 
   const dataString =
     typeof resolvedData === "string" ? resolvedData : undefined;
+  const resourceTarget = isResourceRef(resolvedData) ? resolvedData : undefined;
 
   // Handle inline data (arrays/objects passed directly instead of an endpoint string)
   const isInlineData =
     resolvedData != null &&
     typeof resolvedData !== "string" &&
+    !isResourceRef(resolvedData) &&
     (Array.isArray(resolvedData) || typeof resolvedData === "object");
 
   const fetchData = useCallback(async () => {
@@ -89,7 +99,7 @@ export function useComponentData(
       return;
     }
 
-    if (!dataString) {
+    if (!dataString && !resourceTarget) {
       setIsLoading(false);
       return;
     }
@@ -104,20 +114,15 @@ export function useComponentData(
     setError(null);
 
     try {
-      const [method, endpoint] = parseDataString(dataString);
+      const request = resolveEndpointTarget(
+        resourceTarget ?? dataString!,
+        runtime?.resources,
+        resolvedParams,
+      );
+      const url = buildRequestUrl(request.endpoint, request.params);
       let result: unknown;
 
-      // Build query string from resolved params
-      const queryParams = new URLSearchParams();
-      for (const [key, value] of Object.entries(resolvedParams)) {
-        if (value !== undefined && value !== null) {
-          queryParams.set(key, String(value));
-        }
-      }
-      const queryString = queryParams.toString();
-      const url = queryString ? `${endpoint}?${queryString}` : endpoint;
-
-      switch (method.toUpperCase()) {
+      switch (request.method) {
         case "POST":
           result = await api.post(url, undefined);
           break;
@@ -144,7 +149,9 @@ export function useComponentData(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dataString,
+    resourceTarget,
     api,
+    runtime?.resources,
     fetchCount,
     isInlineData,
     resolvedData,

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the MessageThread component.
@@ -24,7 +24,7 @@ export const messageThreadConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("message-thread"),
     /** API endpoint for message data, or static data via FromRef. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field name for message HTML content. Default: "content". */
     contentField: z.string().optional(),
     /** Field name for author object. Default: "author". */

@@ -15,6 +15,8 @@ import type {
 } from "./schema";
 import type { FromRef } from "../context/types";
 import type { Responsive, ThemeConfig } from "../tokens/types";
+import type { ResourceConfig, ResourceMap } from "./resources";
+import type { WorkflowMap } from "../workflows/types";
 
 export type ManifestConfig = z.infer<typeof manifestConfigSchema>;
 export type AppConfig = z.infer<typeof appConfigSchema>;
@@ -24,6 +26,7 @@ export type RouteConfig = z.infer<typeof routeConfigSchema>;
 export type NavigationConfig = z.infer<typeof navigationConfigSchema>;
 export type StateValueConfig = z.infer<typeof stateValueConfigSchema>;
 export type StateConfig = Record<string, StateValueConfig>;
+export type ResourceConfigMap = ResourceMap;
 export type BaseComponentConfig = z.infer<typeof baseComponentConfigSchema>;
 export type HeadingConfig = z.infer<typeof headingConfigSchema>;
 export type ButtonConfig = z.infer<typeof buttonConfigSchema>;
@@ -67,6 +70,8 @@ export interface CompiledManifest {
   app: AppConfig;
   theme?: ThemeConfig;
   state?: StateConfig;
+  resources?: ResourceConfigMap;
+  workflows?: WorkflowMap;
   navigation?: NavigationConfig;
   auth?: AuthScreenConfig;
   routes: CompiledRoute[];

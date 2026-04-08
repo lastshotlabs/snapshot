@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the ChatWindow component.
@@ -28,7 +28,7 @@ export const chatWindowConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("chat-window"),
     /** API endpoint for message data. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field name for message content. Default: "content". */
     contentField: z.string().optional(),
     /** Field name for author display name. Default: "author.name". */
@@ -48,7 +48,7 @@ export const chatWindowConfigSchema = z
     /** Features enabled in the message input. */
     inputFeatures: z.array(z.string()).optional(),
     /** API endpoint for @mention user data. */
-    mentionData: z.union([z.string(), fromRefSchema]).optional(),
+    mentionData: dataSourceSchema.optional(),
     /** Action dispatched when sending a message. */
     sendAction: actionSchema.optional(),
     /** Show typing indicator area. Default: true. */

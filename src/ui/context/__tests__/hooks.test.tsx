@@ -145,6 +145,22 @@ describe("useSubscribe", () => {
     expect(result.current).toBe("Bob");
   });
 
+  it("reads named state values via the state. prefix", () => {
+    const pageRegistry = new AtomRegistryImpl();
+    const appRegistry = new AtomRegistryImpl();
+    const wrapper = createTestWrapper(pageRegistry, appRegistry);
+
+    const a = pageRegistry.register("filters");
+    pageRegistry.store.set(a, { status: "open" });
+
+    const { result } = renderHook(
+      () => useSubscribe({ from: "state.filters.status" }),
+      { wrapper },
+    );
+
+    expect(result.current).toBe("open");
+  });
+
   it("passes through static string values", () => {
     const registry = new AtomRegistryImpl();
     const wrapper = createTestWrapper(registry);

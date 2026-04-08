@@ -124,6 +124,37 @@ describe("AppContextProvider", () => {
     expect(mockApi.get).toHaveBeenCalledWith("/api/cart");
   });
 
+  it("fetches data from a named resource when configured", async () => {
+    const mockApi = createMockApi({
+      "/api/me": { id: 1, name: "Ada" },
+    });
+
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <AppContextProvider
+        globals={{ user: { data: { resource: "current-user" } } }}
+        resources={{
+          "current-user": {
+            method: "GET",
+            endpoint: "/api/me",
+          },
+        }}
+        api={mockApi}
+      >
+        <PageContextProvider>{children}</PageContextProvider>
+      </AppContextProvider>
+    );
+
+    const { result } = renderHook(() => useSubscribe({ from: "global.user" }), {
+      wrapper,
+    });
+
+    await waitFor(() => {
+      expect(result.current).toEqual({ id: 1, name: "Ada" });
+    });
+
+    expect(mockApi.get).toHaveBeenCalledWith("/api/me");
+  });
+
   it("persists app context across page context changes", () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
       <AppContextProvider globals={{ user: { default: "Alice" } }}>

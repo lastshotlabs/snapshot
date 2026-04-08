@@ -1,8 +1,14 @@
 import { useCallback, useContext, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSubscribe, usePublish } from "../../../context/hooks";
-import { isFromRef, parseDataString } from "../../../context/utils";
+import { isFromRef } from "../../../context/utils";
 import { SnapshotApiContext } from "../../../actions/executor";
+import {
+  buildRequestUrl,
+  isResourceRef,
+  resolveEndpointTarget,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import type { DetailCardConfig, DetailFieldConfig } from "./schema";
 import type { ResolvedField, UseDetailCardResult } from "./types";
 
@@ -87,20 +93,6 @@ function resolveFields(
 }
 
 /**
- * Interpolate URL parameters into an endpoint path.
- * Replaces `{paramName}` with the corresponding value from params.
- */
-function interpolateEndpoint(
-  endpoint: string,
-  params: Record<string, unknown>,
-): string {
-  return endpoint.replace(/\{(\w+)\}/g, (_, key: string) => {
-    const val = params[key];
-    return val != null ? String(val) : `{${key}}`;
-  });
-}
-
-/**
  * Hook that powers the DetailCard component.
  * Resolves FromRefs, fetches data from endpoints, formats fields,
  * and publishes the record data for other components to subscribe to.
@@ -120,10 +112,11 @@ function interpolateEndpoint(
 export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
   const api = useContext(SnapshotApiContext);
   const queryClient = useQueryClient();
+  const runtime = useManifestRuntime();
 
   // Resolve data source — could be a FromRef or an endpoint string
   const isDataFromRef = isFromRef(config.data);
-  const subscribedData = useSubscribe(isDataFromRef ? config.data : undefined);
+  const resolvedDataSource = useSubscribe(config.data);
 
   // Resolve title — could be a FromRef or a static string
   const resolvedTitle = useSubscribe(config.title) as string | undefined;
@@ -137,14 +130,16 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
   }
 
   // Determine the endpoint for fetching (only used when data is a string)
-  const endpointString = !isDataFromRef ? (config.data as string) : null;
-  const [method, rawPath] = endpointString
-    ? parseDataString(endpointString)
-    : ["GET", ""];
-  const path =
-    rawPath && config.params
-      ? interpolateEndpoint(rawPath, resolvedParams)
-      : rawPath;
+  const resolvedTarget = !isDataFromRef ? resolvedDataSource : null;
+  const request =
+    resolvedTarget && (typeof resolvedTarget === "string" || isResourceRef(resolvedTarget))
+      ? resolveEndpointTarget(
+          resolvedTarget,
+          runtime?.resources,
+          resolvedParams,
+        )
+      : null;
+  const path = request ? buildRequestUrl(request.endpoint, request.params) : "";
 
   // Check if all required params are resolved (no undefined values for params used in the path)
   const allParamsResolved =
@@ -153,7 +148,7 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
 
   // Fetch data from endpoint when data is a string
   const queryResult = useQuery({
-    queryKey: ["detail-card", path, method],
+    queryKey: ["detail-card", path, request?.method],
     queryFn: async () => {
       if (!api) {
         throw new Error(
@@ -161,7 +156,7 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
             "Wrap your app in <SnapshotApiContext.Provider value={apiClient}>.",
         );
       }
-      switch (method.toUpperCase()) {
+      switch (request?.method ?? "GET") {
         case "POST":
           return api.post(path, undefined);
         case "PUT":
@@ -179,7 +174,7 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
 
   // Pick the right data source
   const rawData = isDataFromRef
-    ? (subscribedData as Record<string, unknown> | null)
+    ? (resolvedDataSource as Record<string, unknown> | null)
     : ((queryResult.data as Record<string, unknown> | null) ?? null);
 
   const data =
@@ -206,10 +201,10 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
   const refetch = useCallback(() => {
     if (!isDataFromRef && path) {
       void queryClient.invalidateQueries({
-        queryKey: ["detail-card", path, method],
+        queryKey: ["detail-card", path, request?.method],
       });
     }
-  }, [isDataFromRef, path, method, queryClient]);
+  }, [isDataFromRef, path, request?.method, queryClient]);
 
   const isLoading = isDataFromRef ? false : queryResult.isLoading;
   const error = isDataFromRef

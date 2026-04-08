@@ -8,21 +8,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createSnapshot } from "../../create-snapshot";
-import { AppContextProvider } from "../context/index";
 import { SnapshotApiContext } from "../actions/executor";
+import { AppContextProvider } from "../context/index";
 import { resolveTokens } from "../tokens/resolve";
 import { compileManifest } from "./compiler";
+import { ManifestRuntimeProvider } from "./runtime";
 import { PageRenderer } from "./renderer";
 import type { CompiledManifest, ManifestAppProps } from "./types";
-
-// ── Style injection utility ─────────────────────────────────────────────────
 
 /**
  * Creates or updates a `<style>` element in the document head.
  * Used to inject design token CSS at runtime.
- *
- * @param id - Unique id for the style element (for idempotent updates)
- * @param css - The CSS string to inject
  */
 export function injectStyleSheet(id: string, css: string): void {
   if (typeof document === "undefined") return;
@@ -35,23 +31,12 @@ export function injectStyleSheet(id: string, css: string): void {
   el.textContent = css;
 }
 
-// ── ManifestRouter (simplified for Phase 4) ─────────────────────────────────
-
-/** Props for the ManifestRouter component. */
 interface ManifestRouterProps {
-  /** The compiled manifest containing route definitions. */
   manifest: CompiledManifest;
+  api: ReturnType<typeof createSnapshot>["api"];
 }
 
-/**
- * Simplified router for Phase 4.
- *
- * Renders the route matching the current browser path from `manifest.routes`.
- * Falls back to the configured home route, then the first route, then notFound.
- *
- * @param props - Contains the manifest with page definitions
- */
-function ManifestRouter({ manifest }: ManifestRouterProps) {
+function ManifestRouter({ manifest, api }: ManifestRouterProps) {
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window === "undefined") return "/";
     return window.location.pathname;
@@ -73,33 +58,23 @@ function ManifestRouter({ manifest }: ManifestRouterProps) {
       ? manifest.routeMap[manifest.app.notFound]
       : undefined);
 
-  if (!route) return null;
+  if (!route) {
+    return null;
+  }
 
-  return <PageRenderer page={route.page} />;
+  return (
+    <PageRenderer
+      page={route.page}
+      routeId={route.id}
+      state={manifest.state}
+      resources={manifest.resources}
+      api={api}
+    />
+  );
 }
-
-// ── ManifestApp ─────────────────────────────────────────────────────────────
 
 /**
  * Renders an entire application from a single manifest config.
- *
- * Creates a snapshot SDK instance (memoized by `apiUrl`), applies theme
- * tokens as injected CSS, and wraps all content in the required providers:
- * QueryProvider, AppContextProvider, and the snapshot API context.
- *
- * For basic usage, this is the only component needed — it handles routing,
- * theming, and context setup automatically.
- *
- * @param props - Manifest config, API URL, and optional snapshot config overrides
- *
- * @example
- * ```tsx
- * import manifest from './snapshot.manifest.json'
- *
- * function App() {
- *   return <ManifestApp manifest={manifest} apiUrl="https://api.myapp.com" />
- * }
- * ```
  */
 export function ManifestApp({
   manifest,
@@ -117,7 +92,6 @@ export function ManifestApp({
     [apiUrl],
   );
 
-  // Apply theme tokens
   useEffect(() => {
     if (compiledManifest.theme) {
       const css = resolveTokens(compiledManifest.theme);
@@ -128,9 +102,15 @@ export function ManifestApp({
   return (
     <snapshot.QueryProvider>
       <SnapshotApiContext.Provider value={snapshot.api}>
-        <AppContextProvider globals={compiledManifest.state} api={snapshot.api}>
-          <ManifestRouter manifest={compiledManifest} />
-        </AppContextProvider>
+        <ManifestRuntimeProvider manifest={compiledManifest}>
+          <AppContextProvider
+            globals={compiledManifest.state}
+            resources={compiledManifest.resources}
+            api={snapshot.api}
+          >
+            <ManifestRouter manifest={compiledManifest} api={snapshot.api} />
+          </AppContextProvider>
+        </ManifestRuntimeProvider>
       </SnapshotApiContext.Provider>
     </snapshot.QueryProvider>
   );

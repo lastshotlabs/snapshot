@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the TagSelector component.
@@ -43,7 +43,7 @@ export const tagSelectorConfigSchema = z
       )
       .optional(),
     /** API endpoint to fetch tags from. Example: "GET /api/tags". */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Field name in API response for the tag label. Default: "label". */
     labelField: z.string().optional(),
     /** Field name in API response for the tag value. Default: "value". */

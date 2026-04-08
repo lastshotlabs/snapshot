@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a single data series in the chart.
@@ -43,7 +43,7 @@ export const chartSchema = z.object({
   /** Optional component id for publishing chart state to the page context. */
   id: z.string().optional(),
   /** Data source: endpoint string (e.g. "GET /api/data") or a FromRef. */
-  data: z.union([z.string(), fromRefSchema]),
+  data: dataSourceSchema,
   /** Chart visualization type. */
   chartType: z.enum(["bar", "line", "area", "pie", "donut"]).default("bar"),
   /** Field name for the X axis (categories) — not used for pie/donut. */

@@ -59,6 +59,8 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const variant = config.trigger.variant ?? "default";
   const align = config.align ?? "start";
@@ -70,19 +72,42 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
     .filter((i) => i !== -1);
 
   const open = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     setIsOpen(true);
     setMounted(true);
     setFocusedIndex(-1);
-    setTimeout(() => setAnimating(true), 10);
+    openTimerRef.current = setTimeout(() => {
+      setAnimating(true);
+      openTimerRef.current = null;
+    }, 10);
   }, []);
 
   const close = useCallback(() => {
+    if (openTimerRef.current) {
+      clearTimeout(openTimerRef.current);
+      openTimerRef.current = null;
+    }
     setAnimating(false);
-    setTimeout(() => {
+    closeTimerRef.current = setTimeout(() => {
       setMounted(false);
       setIsOpen(false);
       setFocusedIndex(-1);
+      closeTimerRef.current = null;
     }, ANIMATION_DURATION);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (openTimerRef.current) {
+        clearTimeout(openTimerRef.current);
+      }
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
   }, []);
 
   const toggle = useCallback(() => {

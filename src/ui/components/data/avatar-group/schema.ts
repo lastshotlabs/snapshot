@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the AvatarGroup component.
@@ -39,7 +39,7 @@ export const avatarGroupConfigSchema = z
       )
       .optional(),
     /** API endpoint for avatar data. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Field name for the name in API results. Default: "name". */
     nameField: z.string().optional(),
     /** Field name for the avatar image URL. Default: "avatar". */

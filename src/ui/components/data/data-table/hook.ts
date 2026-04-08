@@ -1,8 +1,14 @@
 import { useState, useMemo, useCallback, useEffect, useContext } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { usePublish } from "../../../context/hooks";
-import { isFromRef, parseDataString } from "../../../context/utils";
+import { isFromRef } from "../../../context/utils";
 import { SnapshotApiContext } from "../../../actions/executor";
+import {
+  buildRequestUrl,
+  isResourceRef,
+  resolveEndpointTarget,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import type {
   DataTableConfig,
   ResolvedColumn,
@@ -196,9 +202,11 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
 
   // API client for endpoint fetching
   const api = useContext(SnapshotApiContext);
+  const runtime = useManifestRuntime();
 
   // Determine if data is from a FromRef (already resolved) or needs fetching
   const isDataFromRef = isFromRef(config.data);
+  const isResolvedResource = isResourceRef(resolvedData);
 
   // Handle inline data (arrays passed directly or from FromRef)
   useEffect(() => {
@@ -226,7 +234,9 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
 
   // Handle data from endpoint string — fetch via API client
   useEffect(() => {
-    if (isDataFromRef || typeof resolvedData !== "string") return;
+    if (isDataFromRef || (typeof resolvedData !== "string" && !isResolvedResource)) {
+      return;
+    }
     if (!api) {
       // No API client available yet — stay in loading state
       return;
@@ -238,20 +248,15 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
 
     const fetchData = async () => {
       try {
-        const [method, endpoint] = parseDataString(resolvedData);
-
-        // Build query string from resolved params
-        const queryParams = new URLSearchParams();
-        for (const [key, value] of Object.entries(resolvedParams)) {
-          if (value !== undefined && value !== null) {
-            queryParams.set(key, String(value));
-          }
-        }
-        const qs = queryParams.toString();
-        const url = qs ? `${endpoint}?${qs}` : endpoint;
+        const request = resolveEndpointTarget(
+          isResolvedResource ? resolvedData : (resolvedData as string),
+          runtime?.resources,
+          resolvedParams,
+        );
+        const url = buildRequestUrl(request.endpoint, request.params);
 
         let result: unknown;
-        switch (method.toUpperCase()) {
+        switch (request.method) {
           case "POST":
             result = await api.post(url, undefined);
             break;
@@ -300,7 +305,9 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   }, [
     isDataFromRef,
     resolvedData,
+    isResolvedResource,
     api,
+    runtime?.resources,
     refreshCounter,
     JSON.stringify(resolvedParams),
   ]);

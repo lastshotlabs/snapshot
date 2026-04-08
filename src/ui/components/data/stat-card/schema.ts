@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /** Schema for a responsive value — flat or breakpoint map. */
 function responsiveSchema<T extends z.ZodTypeAny>(inner: T) {
@@ -52,7 +52,7 @@ export const statCardConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("stat-card"),
     /** API endpoint to fetch data. Supports FromRef for dependent data. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Query parameters. Values can be FromRef for filtered stats. */
     params: z.record(z.union([z.unknown(), fromRefSchema])).optional(),
     /** Response field to display. Default: auto-detect first numeric field. */

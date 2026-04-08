@@ -29,6 +29,38 @@ export {
   safeParseManifest,
 } from "./compiler";
 
+// Resource contracts
+export {
+  buildRequestUrl,
+  dataSourceSchema,
+  endpointTargetSchema,
+  extractResourceRefs,
+  httpMethodSchema,
+  isResourceRef,
+  resourceConfigSchema,
+  resourceRefSchema,
+  resolveEndpointTarget,
+} from "./resources";
+
+// Workflows
+export {
+  runWorkflow,
+  registerWorkflowAction,
+  getRegisteredWorkflowAction,
+  workflowConditionSchema,
+  workflowDefinitionSchema,
+  workflowNodeSchema,
+} from "../workflows/index";
+export type {
+  WorkflowCondition,
+  WorkflowConditionOperator,
+  WorkflowDefinition,
+  WorkflowMap,
+  WorkflowNode,
+  IfWorkflowNode,
+  WorkflowActionHandler,
+} from "../workflows/index";
+
 // Component registry
 export {
   registerComponent,
@@ -41,6 +73,11 @@ export type { ComponentRendererProps, PageRendererProps } from "./renderer";
 
 // App
 export { ManifestApp, injectStyleSheet } from "./app";
+export {
+  ManifestRuntimeProvider,
+  ManifestRuntimeContext,
+  useManifestRuntime,
+} from "./runtime";
 
 // Types
 export type {
@@ -53,6 +90,7 @@ export type {
   AuthScreenConfig,
   PageConfig,
   RouteConfig,
+  ResourceConfigMap,
   StateConfig,
   StateValueConfig,
   BaseComponentConfig,

@@ -4,7 +4,15 @@ import {
   useActionExecutor,
   SnapshotApiContext,
 } from "../../../actions/executor";
+import { useComponentData } from "../../_base/use-component-data";
 import { Icon } from "../../../icons/index";
+import {
+  buildRequestUrl,
+  resolveEndpointTarget,
+  type EndpointTarget,
+  type ResourceMap,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import {
   getButtonStyle,
   BUTTON_INTERACTIVE_CSS,
@@ -21,6 +29,27 @@ const GAP_MAP: Record<string, string> = {
   md: "var(--sn-spacing-md, 1rem)",
   lg: "var(--sn-spacing-lg, 1.5rem)",
 };
+
+function toFieldOptions(data: unknown) {
+  if (Array.isArray(data)) {
+    return data
+      .map((item) => {
+        if (!item || typeof item !== "object") return null;
+        const record = item as Record<string, unknown>;
+        const label = record["label"] ?? record["name"] ?? record["title"];
+        const value = record["value"] ?? record["id"] ?? record["key"];
+        if (label == null || value == null) return null;
+        return { label: String(label), value: String(value) };
+      })
+      .filter((item): item is { label: string; value: string } => item !== null);
+  }
+
+  if (data && typeof data === "object" && Array.isArray((data as Record<string, unknown>)["data"])) {
+    return toFieldOptions((data as Record<string, unknown>)["data"]);
+  }
+
+  return [];
+}
 
 // ── Conditional visibility ────────────────────────────────────────────────
 
@@ -113,6 +142,9 @@ function FieldRenderer({
         : undefined,
   };
 
+  const optionsResult = useComponentData(
+    !Array.isArray(field.options) && field.options ? field.options : "",
+  );
   let input: React.ReactNode;
 
   switch (field.type) {
@@ -138,8 +170,10 @@ function FieldRenderer({
           style={inputStyle}
         >
           <option value="">{field.placeholder ?? "Select..."}</option>
-          {Array.isArray(field.options) &&
-            field.options.map((opt) => (
+          {(Array.isArray(field.options)
+            ? field.options
+            : toFieldOptions(optionsResult.data)
+          ).map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
@@ -455,11 +489,19 @@ function FieldGrid({
 
 async function submitToApi(
   api: ApiClient,
-  endpoint: string,
-  method: string,
+  target: EndpointTarget,
+  resources: ResourceMap | undefined,
+  fallbackMethod: "POST" | "PUT" | "PATCH",
   values: Record<string, unknown>,
 ): Promise<unknown> {
-  switch (method) {
+  const request = resolveEndpointTarget(
+    target,
+    resources,
+    undefined,
+    fallbackMethod,
+  );
+  const endpoint = buildRequestUrl(request.endpoint, request.params);
+  switch (request.method) {
     case "PUT":
       return api.put(endpoint, values);
     case "PATCH":
@@ -486,6 +528,8 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
   const executeAction = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
+  const runtime = useManifestRuntime();
+  const initialData = useComponentData(config.data ?? "");
 
   const allFields = resolveFields(config);
   const method = config.method ?? "POST";
@@ -503,7 +547,13 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       }
 
       try {
-        const result = await submitToApi(api, config.submit, method, values);
+        const result = await submitToApi(
+          api,
+          config.submit,
+          runtime?.resources,
+          method,
+          values,
+        );
 
         if (config.onSuccess) {
           await executeAction(config.onSuccess, { result });
@@ -523,10 +573,21 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       config.onError,
       method,
       executeAction,
+      runtime?.resources,
     ],
   );
 
   const form = useAutoForm(allFields, onSubmit);
+
+  useEffect(() => {
+    if (
+      initialData.data &&
+      typeof initialData.data === "object" &&
+      !Array.isArray(initialData.data)
+    ) {
+      form.setValues(initialData.data);
+    }
+  }, [initialData.data, form.setValues]);
 
   // Publish form state when id is set
   useEffect(() => {

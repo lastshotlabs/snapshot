@@ -1180,12 +1180,12 @@ async function runSyncOnce(
 
 // ─── Manifest processing ─────────────────────────────────────────────────────
 
-import { manifestConfigSchema } from "../ui/manifest/schema";
+import { safeCompileManifest } from "../ui/manifest/compiler";
 import { resolveTokens } from "../ui/tokens/resolve";
 import type { ThemeConfig } from "../ui/tokens/types";
 
 // Re-export manifest types for consumers
-type ManifestConfig = import("../ui/manifest/types").ManifestConfig;
+type CompiledManifest = import("../ui/manifest/types").CompiledManifest;
 type PageConfig = import("../ui/manifest/types").PageConfig;
 type NavItem = import("../ui/manifest/types").NavItem;
 
@@ -1198,7 +1198,7 @@ type NavItem = import("../ui/manifest/types").NavItem;
  */
 export async function readManifest(
   cwd: string,
-): Promise<ManifestConfig | null> {
+): Promise<CompiledManifest | null> {
   const manifestPath = path.join(cwd, "snapshot.manifest.json");
   let content: string;
   try {
@@ -1207,14 +1207,14 @@ export async function readManifest(
     return null;
   }
   const raw = JSON.parse(content) as unknown;
-  const result = manifestConfigSchema.safeParse(raw);
+  const result = safeCompileManifest(raw);
   if (!result.success) {
     const issues = result.error.issues
       .map((i) => `  - ${i.path.join(".")}: ${i.message}`)
       .join("\n");
     throw new Error(`Invalid snapshot.manifest.json:\n${issues}`);
   }
-  return result.data as ManifestConfig;
+  return result.compiled;
 }
 
 /**
@@ -1344,16 +1344,16 @@ export async function processManifest(
   }
 
   // Pages → route files
-  if (manifest.pages) {
+  if (manifest.routes.length > 0) {
     const routesDir = path.join(cwd, "src", "routes");
     await fs.mkdir(routesDir, { recursive: true });
 
-    for (const [pagePath, page] of Object.entries(manifest.pages)) {
-      const routeContent = generateRouteFile(pagePath, page as PageConfig);
+    for (const route of manifest.routes) {
+      const routeContent = generateRouteFile(route.path, route.page as PageConfig);
       const fileName =
-        pagePath === "/"
+        route.path === "/"
           ? "index.tsx"
-          : `${pagePath.replace(/^\//, "").replace(/\//g, ".")}.tsx`;
+          : `${route.path.replace(/^\//, "").replace(/\//g, ".")}.tsx`;
       const routeFile = path.join(routesDir, fileName);
       await fs.writeFile(routeFile, routeContent, "utf8");
       const rel = path.relative(cwd, routeFile).replace(/\\/g, "/");
@@ -1362,10 +1362,10 @@ export async function processManifest(
   }
 
   // Nav → component
-  if (manifest.nav) {
+  if (manifest.navigation?.items) {
     const navDir = path.join(cwd, "src", "components", "generated");
     await fs.mkdir(navDir, { recursive: true });
-    const navContent = generateNavFile(manifest.nav as NavItem[]);
+    const navContent = generateNavFile(manifest.navigation.items as NavItem[]);
     const navPath = path.join(navDir, "nav.tsx");
     await fs.writeFile(navPath, navContent, "utf8");
     const rel = path.relative(cwd, navPath).replace(/\\/g, "/");

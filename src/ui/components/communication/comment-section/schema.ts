@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the CommentSection component.
@@ -27,7 +27,7 @@ export const commentSectionConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("comment-section"),
     /** API endpoint for comments data. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field name for comment content (HTML). Default: "content". */
     contentField: z.string().optional(),
     /** Field name for author display name. Default: "author.name". */

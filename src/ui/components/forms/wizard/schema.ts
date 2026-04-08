@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { orFromRef } from "../../_base/types";
+import { endpointTargetSchema, orFromRef } from "../../_base/types";
 import { fieldConfigSchema } from "../auto-form/schema";
 
 /**
@@ -72,7 +72,7 @@ export const wizardSchema = z.object({
   /** Ordered list of wizard steps. */
   steps: z.array(wizardStepSchema).min(1),
   /** Endpoint to POST all accumulated data to on final step submission. */
-  submitEndpoint: z.string().optional(),
+  submitEndpoint: endpointTargetSchema.optional(),
   /** Label for the final submit button (when no per-step override is set). */
   submitLabel: z.string().default("Submit"),
   /** Action to execute after successful completion. */

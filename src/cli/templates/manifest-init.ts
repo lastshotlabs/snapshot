@@ -23,16 +23,24 @@ export interface ManifestInitOptions {
 export function generateManifestJson(options: ManifestInitOptions): string {
   const manifest: Record<string, unknown> = {
     $schema: "./node_modules/@lastshotlabs/snapshot/manifest-schema.json",
+    app: {
+      title: "Snapshot App",
+      shell: options.includeSidebar ? "sidebar" : "minimal",
+      home: "/dashboard",
+    },
     theme: {
       flavor: options.flavor,
     },
   };
 
   if (options.includeSidebar) {
-    manifest.nav = [
-      { label: "Dashboard", path: "/dashboard", icon: "layout-dashboard" },
-      { label: "Settings", path: "/settings", icon: "settings" },
-    ];
+    manifest.navigation = {
+      mode: "sidebar",
+      items: [
+        { label: "Dashboard", path: "/dashboard", icon: "layout-dashboard" },
+        { label: "Settings", path: "/settings", icon: "settings" },
+      ],
+    };
   }
 
   if (options.includeAuth) {
@@ -45,8 +53,10 @@ export function generateManifestJson(options: ManifestInitOptions): string {
     };
   }
 
-  manifest.pages = {
-    "/dashboard": {
+  manifest.routes = [
+    {
+      id: "dashboard",
+      path: "/dashboard",
       layout: options.includeSidebar ? "sidebar" : "minimal",
       title: "Dashboard",
       content: [
@@ -78,7 +88,9 @@ export function generateManifestJson(options: ManifestInitOptions): string {
         },
       ],
     },
-    "/settings": {
+    {
+      id: "settings",
+      path: "/settings",
       layout: options.includeSidebar ? "sidebar" : "minimal",
       title: "Settings",
       content: [
@@ -89,7 +101,7 @@ export function generateManifestJson(options: ManifestInitOptions): string {
         },
       ],
     },
-  };
+  ];
 
   return JSON.stringify(manifest, null, 2) + "\n";
 }

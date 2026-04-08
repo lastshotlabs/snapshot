@@ -1,4 +1,18 @@
 import { z } from "zod";
+import { endpointTargetSchema, type EndpointTarget } from "../manifest/resources";
+
+export const ACTION_TYPES = [
+  "navigate",
+  "api",
+  "open-modal",
+  "close-modal",
+  "refresh",
+  "set-value",
+  "download",
+  "confirm",
+  "toast",
+  "run-workflow",
+] as const;
 
 /**
  * A reference to another component's published value.
@@ -26,7 +40,7 @@ export interface ApiAction {
   type: "api";
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   /** Endpoint path. Supports `{param}` interpolation. */
-  endpoint: string;
+  endpoint: EndpointTarget;
   /** Request body. Can include `{ from: 'id' }` refs. */
   body?: Record<string, unknown> | { from: string };
   /** Query parameters. */
@@ -81,7 +95,7 @@ export interface SetValueAction {
 export interface DownloadAction {
   type: "download";
   /** Endpoint path. Supports `{param}` interpolation. */
-  endpoint: string;
+  endpoint: EndpointTarget;
   /** Suggested filename. */
   filename?: string;
 }
@@ -117,6 +131,17 @@ export interface ToastAction {
 }
 
 /**
+ * Run a named manifest workflow.
+ */
+export interface RunWorkflowAction {
+  type: "run-workflow";
+  /** Workflow id declared in manifest.workflows. */
+  workflow: string;
+  /** Additional context merged into the workflow run. */
+  input?: Record<string, unknown>;
+}
+
+/**
  * All possible action configs. Discriminated union on `type`.
  */
 export type ActionConfig =
@@ -128,7 +153,8 @@ export type ActionConfig =
   | SetValueAction
   | DownloadAction
   | ConfirmAction
-  | ToastAction;
+  | ToastAction
+  | RunWorkflowAction;
 
 /**
  * The execute function returned by useActionExecutor.
@@ -188,7 +214,7 @@ export const setValueActionSchema = z
 export const downloadActionSchema = z
   .object({
     type: z.literal("download"),
-    endpoint: z.string(),
+    endpoint: endpointTargetSchema,
     filename: z.string().optional(),
   })
   .strict();
@@ -204,6 +230,15 @@ export const confirmActionSchema = z
   })
   .strict();
 
+/** Schema for run-workflow action. */
+export const runWorkflowActionSchema = z
+  .object({
+    type: z.literal("run-workflow"),
+    workflow: z.string().min(1),
+    input: z.record(z.unknown()).optional(),
+  })
+  .strict();
+
 /**
  * Builds the api action schema. Separated into a function because it
  * references actionSchema recursively via z.lazy().
@@ -213,7 +248,7 @@ function buildApiActionSchema(): z.ZodType<ApiAction> {
     .object({
       type: z.literal("api"),
       method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
-      endpoint: z.string(),
+      endpoint: endpointTargetSchema,
       body: z.union([z.record(z.unknown()), fromRefSchema]).optional(),
       params: z.record(z.unknown()).optional(),
       onSuccess: z
@@ -277,5 +312,6 @@ export const actionSchema: z.ZodType<ActionConfig> = z.lazy(() =>
     confirmActionSchema,
     apiActionSchema,
     toastActionSchema,
+    runWorkflowActionSchema,
   ]),
 ) as z.ZodType<ActionConfig>;

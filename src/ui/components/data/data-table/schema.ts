@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for base component config fields shared across all config-driven components.
@@ -169,7 +169,7 @@ export const dataTableConfigSchema = baseComponentConfigSchema
     /** Component type discriminator. */
     type: z.literal("data-table"),
     /** Data source endpoint (e.g. "GET /api/users") or a FromRef. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Query parameters for the data endpoint. Values can be static or FromRefs. */
     params: z.record(z.union([z.unknown(), fromRefSchema])).optional(),
     /** Column configuration. 'auto' derives columns from response data keys. */

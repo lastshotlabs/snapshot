@@ -1,4 +1,4 @@
-import type { SafeParseReturnType } from "zod";
+import type { SafeParseReturnType, ZodError } from "zod";
 import { manifestConfigSchema } from "./schema";
 import type {
   CompiledManifest,
@@ -39,6 +39,8 @@ function buildCompiledManifest(manifest: ManifestConfig): CompiledManifest {
     },
     theme: manifest.theme,
     state: manifest.state,
+    resources: manifest.resources,
+    workflows: manifest.workflows,
     navigation: manifest.navigation,
     auth: manifest.auth,
     routes,
@@ -71,7 +73,7 @@ export function safeCompileManifest(manifest: unknown):
   | { success: true; manifest: ManifestConfig; compiled: CompiledManifest }
   | {
       success: false;
-      error: ReturnType<typeof manifestConfigSchema.safeParse>["error"];
+      error: ZodError<unknown>;
     } {
   const parsed = safeParseManifest(manifest);
   if (!parsed.success) {

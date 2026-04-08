@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod schema for the Feed component configuration.
@@ -31,7 +31,7 @@ export const feedSchema = z
     /** Optional component id for publishing selected item to the page context. */
     id: z.string().optional(),
     /** Data source: endpoint string (e.g. "GET /api/events") or a FromRef. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field in each item used as the React key. Defaults to "id". */
     itemKey: z.string().default("id"),
     /** Field path for the avatar image URL (optional). */

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the RichInput component.
@@ -51,7 +51,7 @@ export const richInputConfigSchema = z
       )
       .optional(),
     /** API endpoint for @mention user suggestions. */
-    mentionData: z.union([z.string(), fromRefSchema]).optional(),
+    mentionData: dataSourceSchema.optional(),
     /** Field name for mention display text. Default: "name". */
     mentionDisplayField: z.string().optional(),
     /** Field name for mention value. Default: "id". */

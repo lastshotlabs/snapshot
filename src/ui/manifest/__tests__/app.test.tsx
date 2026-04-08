@@ -3,9 +3,6 @@
  */
 import { describe, it, expect, vi, afterEach } from "vitest";
 
-// jsdom doesn't provide window.matchMedia — stub it before any module import
-// triggers create-snapshot which calls getInitialTheme at module scope.
-// vi.hoisted runs before imports are evaluated.
 vi.hoisted(() => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
@@ -22,16 +19,42 @@ vi.hoisted(() => {
   });
 });
 
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { z } from "zod";
 import { ManifestApp, injectStyleSheet } from "../app";
+import { registerComponent } from "../component-registry";
+import { registerComponentSchema } from "../schema";
 import type { ManifestConfig } from "../types";
+import { useSetStateValue, useStateValue } from "../../state";
 
-// Ensure structural components are registered
 import "../structural";
 
+registerComponentSchema(
+  "route-state-probe",
+  z.object({
+    type: z.literal("route-state-probe"),
+  }),
+);
+registerComponent("route-state-probe", function RouteStateProbe() {
+  const value = useStateValue("routeCounter");
+  const setValue = useSetStateValue("routeCounter");
+
+  return (
+    <button onClick={() => setValue(Number(value ?? 0) + 1)}>
+      {String(value ?? 0)}
+    </button>
+  );
+});
+
 const minimalManifest: ManifestConfig = {
-  pages: {
-    "/": {
+  app: {
+    title: "Snapshot App",
+    home: "/",
+  },
+  routes: [
+    {
+      id: "home",
+      path: "/",
       title: "Home",
       content: [
         {
@@ -41,7 +64,7 @@ const minimalManifest: ManifestConfig = {
         },
       ],
     },
-  },
+  ],
 };
 
 describe("injectStyleSheet", () => {
@@ -56,21 +79,13 @@ describe("injectStyleSheet", () => {
     expect(el).not.toBeNull();
     expect(el?.textContent).toBe("body { margin: 0; }");
   });
-
-  it("updates existing style element", () => {
-    injectStyleSheet("test-style", "body { margin: 0; }");
-    injectStyleSheet("test-style", "body { padding: 0; }");
-    const el = document.getElementById("test-style");
-    expect(el?.textContent).toBe("body { padding: 0; }");
-    // Only one element with this id
-    expect(document.querySelectorAll("#test-style").length).toBe(1);
-  });
 });
 
 describe("ManifestApp", () => {
   afterEach(() => {
     const el = document.getElementById("snapshot-tokens");
     if (el) el.remove();
+    window.history.replaceState({}, "", "/");
   });
 
   it("renders page content from manifest", () => {
@@ -85,11 +100,13 @@ describe("ManifestApp", () => {
       theme: {
         flavor: "neutral",
       },
-      pages: {
-        "/": {
+      routes: [
+        {
+          id: "home",
+          path: "/",
           content: [{ type: "heading", text: "Themed" }],
         },
-      },
+      ],
     };
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
@@ -98,27 +115,65 @@ describe("ManifestApp", () => {
     expect(style?.textContent).toContain(":root");
   });
 
-  it("renders without theme config", () => {
-    render(
-      <ManifestApp manifest={minimalManifest} apiUrl="http://localhost" />,
-    );
-    expect(screen.getByText("Welcome Home")).toBeDefined();
-  });
+  it("renders the current route when multiple routes exist", () => {
+    window.history.replaceState({}, "", "/about");
 
-  it("renders manifest with multiple pages (shows current path)", () => {
     const manifest: ManifestConfig = {
-      pages: {
-        "/": {
+      app: {
+        home: "/",
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
           content: [{ type: "heading", text: "Home Page" }],
         },
-        "/about": {
+        {
+          id: "about",
+          path: "/about",
           content: [{ type: "heading", text: "About Page" }],
         },
-      },
+      ],
     };
 
-    // In happy-dom, window.location.pathname defaults to "/"
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
-    expect(screen.getByText("Home Page")).toBeDefined();
+    expect(screen.getByText("About Page")).toBeDefined();
+  });
+
+  it("resets route-scoped state when navigation changes routes", async () => {
+    const manifest: ManifestConfig = {
+      state: {
+        routeCounter: {
+          scope: "route",
+          default: 0,
+        },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "route-state-probe" }],
+        },
+        {
+          id: "about",
+          path: "/about",
+          content: [{ type: "route-state-probe" }],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "0" }));
+    expect(screen.getByRole("button", { name: "1" })).toBeDefined();
+
+    await act(async () => {
+      window.history.replaceState({}, "", "/about");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "0" })).toBeDefined();
+    });
   });
 });

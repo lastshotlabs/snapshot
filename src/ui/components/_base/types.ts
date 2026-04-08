@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { dataSourceSchema, endpointTargetSchema, resourceRefSchema } from "../../manifest/resources";
 
 /**
  * Schema for a FromRef value — a reference to another component's published data.
@@ -56,6 +57,8 @@ export function orFromRef<T extends z.ZodTypeAny>(
 ): z.ZodUnion<[T, typeof fromRefSchema]> {
   return z.union([schema, fromRefSchema]);
 }
+
+export { dataSourceSchema, endpointTargetSchema, resourceRefSchema };
 
 /**
  * Base config fields shared by all config-driven components.

@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import {
+  dataSourceSchema,
+  endpointTargetSchema,
+  fromRefSchema,
+} from "../../_base/types";
 
 /**
  * Schema for select/radio option entries.
@@ -66,7 +70,7 @@ export const fieldConfigSchema = z
     /** Client-side validation rules. */
     validation: fieldValidationSchema.optional(),
     /** Options for select fields. Array of {label, value} or a string endpoint. */
-    options: z.union([z.array(fieldOptionSchema), z.string()]).optional(),
+    options: z.union([z.array(fieldOptionSchema), dataSourceSchema]).optional(),
     /** Default value for the field. */
     default: z.unknown().optional(),
     /** Whether the field is disabled. */
@@ -134,9 +138,9 @@ export const autoFormConfigSchema = z
     /** Optional component id for publishing form state to the page context. */
     id: z.string().optional(),
     /** Endpoint to load initial values from (for edit forms). */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Endpoint to submit form data to. */
-    submit: z.string(),
+    submit: endpointTargetSchema,
     /** HTTP method for submission. Defaults to POST. */
     method: z.enum(["POST", "PUT", "PATCH"]).optional(),
     /** Field definitions. 'auto' derives from the submit endpoint schema. */

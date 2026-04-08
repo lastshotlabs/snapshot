@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a filter dropdown configuration.
@@ -39,7 +39,7 @@ export const auditLogConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("audit-log"),
     /** API endpoint returning log entries. Supports FromRef. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field for user name. Default: "user". */
     userField: z.string().optional(),
     /** Field for action text. Default: "action". */

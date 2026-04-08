@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a static event definition.
@@ -53,7 +53,7 @@ export const calendarConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("calendar"),
     /** API endpoint for events. Supports FromRef. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Static event definitions. Used when no data endpoint is provided. */
     events: z.array(calendarEventSchema).optional(),
     /** Calendar view mode. Default: "month". */

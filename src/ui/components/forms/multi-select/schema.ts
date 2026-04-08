@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /** Schema for a single option in the multi-select dropdown. */
 const optionSchema = z.object({
@@ -48,7 +48,7 @@ export const multiSelectConfigSchema = z
     /** Static list of options. */
     options: z.array(optionSchema).optional(),
     /** API endpoint string or FromRef for loading options dynamically. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Field name in API response objects to use as the display label. Default: "label". */
     labelField: z.string().optional(),
     /** Field name in API response objects to use as the value. Default: "value". */

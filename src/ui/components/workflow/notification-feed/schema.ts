@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the NotificationFeed component.
@@ -28,7 +28,7 @@ export const notificationFeedConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("notification-feed"),
     /** API endpoint for notifications. Supports FromRef. */
-    data: z.union([z.string(), fromRefSchema]),
+    data: dataSourceSchema,
     /** Field for notification title. Default: "title". */
     titleField: z.string().optional(),
     /** Field for notification message body. Default: "message". */

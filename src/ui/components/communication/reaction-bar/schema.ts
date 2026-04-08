@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the ReactionBar component.
@@ -37,7 +37,7 @@ export const reactionBarConfigSchema = z
       )
       .optional(),
     /** API endpoint for reaction data. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Action dispatched when adding a reaction. */
     addAction: actionSchema.optional(),
     /** Action dispatched when removing a reaction. */

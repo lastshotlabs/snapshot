@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 import { Provider } from "jotai/react";
 import { useActionExecutor, SnapshotApiContext } from "../executor";
+import { ManifestRuntimeProvider } from "../../manifest/runtime";
 import {
   PageRegistryContext,
   AppRegistryContext,
@@ -28,24 +29,36 @@ function createWrapper(options: {
   api?: ReturnType<typeof createMockApi>;
   pageRegistry?: AtomRegistry;
   appRegistry?: AtomRegistry;
+  manifest?: import("../../manifest/types").CompiledManifest;
 }) {
-  const { api, pageRegistry, appRegistry } = options;
-  return function Wrapper({ children }: { children: React.ReactNode }) {
+  const { api, pageRegistry, appRegistry, manifest } = options;
+  return function Wrapper({ children }: { children: ReactNode }) {
     return createElement(
       Provider,
       null,
       createElement(
         SnapshotApiContext.Provider,
         { value: api as unknown as import("../../../api/client").ApiClient },
-        createElement(
-          PageRegistryContext.Provider,
-          { value: pageRegistry ?? null },
-          createElement(
-            AppRegistryContext.Provider,
-            { value: appRegistry ?? null },
-            children,
+        createElement(ManifestRuntimeProvider as React.ComponentType<any>, {
+          manifest:
+            manifest ??
+            ({
+              raw: { routes: [] },
+              app: {},
+              routes: [],
+              routeMap: {},
+              firstRoute: null,
+            } as import("../../manifest/types").CompiledManifest),
+          children: createElement(
+            PageRegistryContext.Provider,
+            { value: pageRegistry ?? null },
+            createElement(
+              AppRegistryContext.Provider,
+              { value: appRegistry ?? null },
+              children,
+            ),
           ),
-        ),
+        }),
       ),
     );
   };
@@ -54,10 +67,12 @@ function createWrapper(options: {
 describe("useActionExecutor", () => {
   let mockApi: ReturnType<typeof createMockApi>;
   let pageRegistry: AtomRegistryImpl;
+  let appRegistry: AtomRegistryImpl;
 
   beforeEach(() => {
     mockApi = createMockApi();
     pageRegistry = new AtomRegistryImpl();
+    appRegistry = new AtomRegistryImpl();
   });
 
   it("executes a navigate action", async () => {
@@ -242,6 +257,38 @@ describe("useActionExecutor", () => {
     expect(pageRegistry.store.get(atom)).toBe("new-value");
   });
 
+  it("executes set-value against app state via the global. prefix", async () => {
+    const atom = appRegistry.register("status");
+    const wrapper = createWrapper({ api: mockApi, pageRegistry, appRegistry });
+    const { result } = renderHook(() => useActionExecutor(), { wrapper });
+
+    await act(async () => {
+      await result.current({
+        type: "set-value",
+        target: "global.status",
+        value: "ready",
+      });
+    });
+
+    expect(appRegistry.store.get(atom)).toBe("ready");
+  });
+
+  it("executes set-value against named route state via the state. prefix", async () => {
+    const atom = pageRegistry.register("filters");
+    const wrapper = createWrapper({ api: mockApi, pageRegistry, appRegistry });
+    const { result } = renderHook(() => useActionExecutor(), { wrapper });
+
+    await act(async () => {
+      await result.current({
+        type: "set-value",
+        target: "state.filters",
+        value: { status: "open" },
+      });
+    });
+
+    expect(pageRegistry.store.get(atom)).toEqual({ status: "open" });
+  });
+
   it("executes set-value with interpolation", async () => {
     const atom = pageRegistry.register("status");
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
@@ -318,5 +365,48 @@ describe("useActionExecutor", () => {
         }),
       ),
     ).rejects.toThrow("SnapshotApiContext not provided");
+  });
+
+  it("runs a named manifest workflow", async () => {
+    const atom = pageRegistry.register("workflow-target");
+    const wrapper = createWrapper({
+      api: mockApi,
+      pageRegistry,
+      manifest: {
+        raw: {
+          routes: [],
+          workflows: {
+            "users.after-save": [
+              {
+                type: "set-value",
+                target: "workflow-target",
+                value: "{result.data}",
+              },
+              {
+                type: "toast",
+                message: "Saved {result.data}",
+              },
+            ],
+          },
+        },
+        app: {},
+        routes: [],
+        routeMap: {},
+        firstRoute: null,
+      } as import("../../manifest/types").CompiledManifest,
+    });
+    const { result } = renderHook(() => useActionExecutor(), { wrapper });
+
+    await act(async () => {
+      await result.current(
+        {
+          type: "run-workflow",
+          workflow: "users.after-save",
+        },
+        { result: { data: "ok" } },
+      );
+    });
+
+    expect(pageRegistry.store.get(atom)).toBe("ok");
   });
 });

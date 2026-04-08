@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   baseComponentConfigSchema,
+  dataSourceSchema,
   fromRefSchema,
   orFromRef,
 } from "../../_base/types";
@@ -80,7 +81,7 @@ export const detailCardConfigSchema = baseComponentConfigSchema.extend({
   /** Component type discriminator. */
   type: z.literal("detail-card"),
   /** Endpoint string (e.g. "GET /api/users/1") or FromRef to get the record data. */
-  data: orFromRef(z.string()),
+  data: dataSourceSchema,
   /** URL params for the endpoint. Values can be FromRefs for dynamic params. */
   params: z.record(z.union([z.unknown(), fromRefSchema])).optional(),
   /** Card title. Can be a static string or a FromRef. */

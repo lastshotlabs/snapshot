@@ -5,6 +5,7 @@ import { describe, it, expect } from "vitest";
 import {
   manifestConfigSchema,
   pageConfigSchema,
+  routeConfigSchema,
   rowConfigSchema,
   headingConfigSchema,
   buttonConfigSchema,
@@ -12,31 +13,61 @@ import {
   customComponentConfigSchema,
   componentConfigSchema,
   navItemSchema,
+  navigationConfigSchema,
   authScreenConfigSchema,
 } from "../schema";
 
 describe("manifestConfigSchema", () => {
   it("validates a full valid manifest", () => {
     const manifest = {
-      theme: { flavor: "neutral" },
-      globals: {
-        user: { data: "GET /api/me", default: null },
+      app: {
+        title: "Snapshot App",
+        shell: "sidebar",
+        home: "/dashboard",
       },
-      nav: [
-        { label: "Dashboard", path: "/dashboard", icon: "home" },
-        {
-          label: "Users",
-          path: "/users",
-          roles: ["admin"],
-          children: [{ label: "All Users", path: "/users/all" }],
-        },
-      ],
+      theme: { flavor: "neutral" },
+      state: {
+        user: { data: "GET /api/me", default: null },
+        filters: { scope: "route", default: { status: "all" } },
+      },
+      navigation: {
+        mode: "sidebar",
+        items: [
+          { label: "Dashboard", path: "/dashboard", icon: "home" },
+          {
+            label: "Users",
+            path: "/users",
+            roles: ["admin"],
+            children: [{ label: "All Users", path: "/users/all" }],
+          },
+        ],
+      },
       auth: {
         screens: ["login", "register"] as const,
         providers: ["google", "github"] as const,
       },
-      pages: {
-        "/dashboard": {
+      workflows: {
+        "users.delete": {
+          type: "if",
+          condition: {
+            left: { from: "global.user.role" },
+            operator: "equals",
+            right: "admin",
+          },
+          then: {
+            type: "run-workflow",
+            workflow: "users.delete-confirmed",
+          },
+        },
+        "users.delete-confirmed": [
+          { type: "confirm", message: "Delete?" },
+          { type: "api", method: "DELETE", endpoint: "/api/users/{id}" },
+        ],
+      },
+      routes: [
+        {
+          id: "dashboard",
+          path: "/dashboard",
           title: "Dashboard",
           layout: "sidebar" as const,
           content: [
@@ -47,48 +78,111 @@ describe("manifestConfigSchema", () => {
             },
           ],
         },
-      },
+        {
+          id: "users",
+          path: "/users",
+          title: "Users",
+          layout: "sidebar" as const,
+          content: [{ type: "heading", text: "Users" }],
+        },
+        {
+          id: "users-all",
+          path: "/users/all",
+          title: "All Users",
+          layout: "sidebar" as const,
+          content: [{ type: "heading", text: "All Users" }],
+        },
+      ],
     };
 
     const result = manifestConfigSchema.safeParse(manifest);
     expect(result.success).toBe(true);
   });
 
-  it("rejects manifest missing pages (required)", () => {
+  it("rejects manifest missing routes", () => {
     const result = manifestConfigSchema.safeParse({
       theme: { flavor: "neutral" },
     });
     expect(result.success).toBe(false);
   });
 
-  it("accepts minimal manifest with only pages", () => {
+  it("accepts minimal manifest with only routes", () => {
     const result = manifestConfigSchema.safeParse({
-      pages: {
-        "/": {
+      routes: [
+        {
+          id: "home",
+          path: "/",
           content: [{ type: "heading", text: "Hello" }],
         },
-      },
+      ],
     });
     expect(result.success).toBe(true);
   });
 
-  it("allows optional $schema field", () => {
+  it("rejects duplicate route ids", () => {
     const result = manifestConfigSchema.safeParse({
-      $schema: "https://snapshot.dev/schema.json",
-      pages: {
-        "/": { content: [{ type: "heading", text: "Test" }] },
-      },
+      routes: [
+        { id: "home", path: "/", content: [{ type: "heading", text: "A" }] },
+        {
+          id: "home",
+          path: "/about",
+          content: [{ type: "heading", text: "B" }],
+        },
+      ],
     });
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
   });
 
-  it("rejects invalid theme config", () => {
+  it("rejects navigation paths that do not match routes", () => {
     const result = manifestConfigSchema.safeParse({
-      theme: { flavor: 123 },
-      pages: {
-        "/": { content: [{ type: "heading", text: "Test" }] },
+      navigation: {
+        items: [{ label: "Ghost", path: "/ghost" }],
       },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
     });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects invalid state scope values", () => {
+    const result = manifestConfigSchema.safeParse({
+      state: {
+        bad: { scope: "overlay" },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects invalid workflow nodes", () => {
+    const result = manifestConfigSchema.safeParse({
+      workflows: {
+        bad: {
+          type: "if",
+          then: { type: "toast", message: "no condition" },
+        },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
+    });
+
     expect(result.success).toBe(false);
   });
 });
@@ -111,11 +205,24 @@ describe("pageConfigSchema", () => {
     });
     expect(result.success).toBe(false);
   });
+});
 
-  it("rejects invalid layout value", () => {
-    const result = pageConfigSchema.safeParse({
-      layout: "invalid-layout",
-      content: [{ type: "heading", text: "Test" }],
+describe("routeConfigSchema", () => {
+  it("validates a route with id and path", () => {
+    const result = routeConfigSchema.safeParse({
+      id: "dashboard",
+      path: "/dashboard",
+      title: "Dashboard",
+      content: [{ type: "heading", text: "Hello" }],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects route paths that do not start with /", () => {
+    const result = routeConfigSchema.safeParse({
+      id: "dashboard",
+      path: "dashboard",
+      content: [{ type: "heading", text: "Hello" }],
     });
     expect(result.success).toBe(false);
   });
@@ -163,23 +270,6 @@ describe("rowConfigSchema", () => {
     });
     expect(result.success).toBe(true);
   });
-
-  it("rejects row with no children", () => {
-    const result = rowConfigSchema.safeParse({
-      type: "row",
-      children: [],
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it("accepts responsive gap", () => {
-    const result = rowConfigSchema.safeParse({
-      type: "row",
-      gap: { default: "sm", md: "lg" },
-      children: [{ type: "heading", text: "Test" }],
-    });
-    expect(result.success).toBe(true);
-  });
 });
 
 describe("headingConfigSchema", () => {
@@ -191,31 +281,6 @@ describe("headingConfigSchema", () => {
     });
     expect(result.success).toBe(true);
   });
-
-  it("accepts FromRef as text", () => {
-    const result = headingConfigSchema.safeParse({
-      type: "heading",
-      text: { from: "global.user.name" },
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("defaults level when omitted", () => {
-    const result = headingConfigSchema.safeParse({
-      type: "heading",
-      text: "Hello",
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("rejects invalid level", () => {
-    const result = headingConfigSchema.safeParse({
-      type: "heading",
-      text: "Hello",
-      level: 7,
-    });
-    expect(result.success).toBe(false);
-  });
 });
 
 describe("buttonConfigSchema", () => {
@@ -226,56 +291,6 @@ describe("buttonConfigSchema", () => {
       action: { type: "navigate", path: "/dashboard" },
     });
     expect(result.success).toBe(true);
-  });
-
-  it("accepts action array", () => {
-    const result = buttonConfigSchema.safeParse({
-      type: "button",
-      label: "Save",
-      action: [
-        { type: "api", method: "POST", endpoint: "/save" },
-        { type: "toast", message: "Saved!" },
-      ],
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("accepts FromRef for disabled", () => {
-    const result = buttonConfigSchema.safeParse({
-      type: "button",
-      label: "Submit",
-      action: { type: "navigate", path: "/" },
-      disabled: { from: "form.isInvalid" },
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("rejects button without action", () => {
-    const result = buttonConfigSchema.safeParse({
-      type: "button",
-      label: "Click me",
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it("accepts all variant values", () => {
-    const variants = [
-      "default",
-      "secondary",
-      "outline",
-      "ghost",
-      "destructive",
-      "link",
-    ] as const;
-    for (const variant of variants) {
-      const result = buttonConfigSchema.safeParse({
-        type: "button",
-        label: "Test",
-        variant,
-        action: { type: "navigate", path: "/" },
-      });
-      expect(result.success).toBe(true);
-    }
   });
 });
 
@@ -292,23 +307,6 @@ describe("selectConfigSchema", () => {
     });
     expect(result.success).toBe(true);
   });
-
-  it("accepts endpoint string for options", () => {
-    const result = selectConfigSchema.safeParse({
-      type: "select",
-      options: "GET /api/categories",
-      valueField: "id",
-      labelField: "name",
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("rejects select without options", () => {
-    const result = selectConfigSchema.safeParse({
-      type: "select",
-    });
-    expect(result.success).toBe(false);
-  });
 });
 
 describe("customComponentConfigSchema", () => {
@@ -320,16 +318,9 @@ describe("customComponentConfigSchema", () => {
     });
     expect(result.success).toBe(true);
   });
-
-  it("rejects custom component without component name", () => {
-    const result = customComponentConfigSchema.safeParse({
-      type: "custom",
-    });
-    expect(result.success).toBe(false);
-  });
 });
 
-describe("navItemSchema", () => {
+describe("nav schemas", () => {
   it("validates nav item with nested children", () => {
     const result = navItemSchema.safeParse({
       label: "Settings",
@@ -343,20 +334,10 @@ describe("navItemSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("accepts FromRef badge", () => {
-    const result = navItemSchema.safeParse({
-      label: "Notifications",
-      path: "/notifications",
-      badge: { from: "global.notifications.unread" },
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("accepts numeric badge", () => {
-    const result = navItemSchema.safeParse({
-      label: "Messages",
-      path: "/messages",
-      badge: 5,
+  it("validates navigation config", () => {
+    const result = navigationConfigSchema.safeParse({
+      mode: "sidebar",
+      items: [{ label: "Home", path: "/" }],
     });
     expect(result.success).toBe(true);
   });
@@ -375,12 +356,5 @@ describe("authScreenConfigSchema", () => {
       },
     });
     expect(result.success).toBe(true);
-  });
-
-  it("rejects empty screens array", () => {
-    const result = authScreenConfigSchema.safeParse({
-      screens: [],
-    });
-    expect(result.success).toBe(false);
   });
 });

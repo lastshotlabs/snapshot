@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { fromRefSchema } from "../../../manifest/schema";
+import { dataSourceSchema } from "../../_base/types";
 import { actionSchema } from "../../../actions/types";
 
 /**
@@ -64,7 +65,7 @@ export const treeViewConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("tree-view"),
     /** API endpoint to fetch tree data. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Static tree items. */
     items: treeItemSchema.optional(),
     /** Whether items are selectable. Default: true. */

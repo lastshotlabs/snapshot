@@ -8,6 +8,13 @@
 
 import { z } from "zod";
 import { themeConfigSchema } from "../tokens/schema";
+import { workflowDefinitionSchema } from "../workflows/schema";
+import {
+  dataSourceSchema,
+  endpointTargetSchema,
+  extractResourceRefs,
+  resourceConfigSchema,
+} from "./resources";
 
 /** Zod schema for a FromRef value. */
 export const fromRefSchema = z
@@ -140,7 +147,7 @@ const selectOptionSchema = z.object({
 
 export const selectConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("select"),
-  options: z.union([z.array(selectOptionSchema), z.string()]),
+  options: z.union([z.array(selectOptionSchema), dataSourceSchema]),
   valueField: z.string().optional(),
   labelField: z.string().optional(),
   default: z.string().optional(),
@@ -253,7 +260,8 @@ export const routeConfigSchema = pageConfigSchema
 
 export const stateValueConfigSchema = z
   .object({
-    data: z.string().optional(),
+    scope: z.enum(["app", "route"]).optional(),
+    data: endpointTargetSchema.optional(),
     default: z.unknown().optional(),
   })
   .strict();
@@ -286,8 +294,8 @@ export const manifestConfigSchema = z
     state: z.record(stateValueConfigSchema).optional(),
     navigation: navigationConfigSchema.optional(),
     auth: authScreenConfigSchema.optional(),
-    resources: z.record(z.unknown()).optional(),
-    workflows: z.record(z.unknown()).optional(),
+    resources: z.record(resourceConfigSchema).optional(),
+    workflows: z.record(workflowDefinitionSchema).optional(),
     overlays: z.record(z.unknown()).optional(),
     presets: z.record(z.unknown()).optional(),
     policies: z.record(z.unknown()).optional(),
@@ -349,4 +357,16 @@ export const manifestConfigSchema = z
         }
       });
     }
+
+    const resourceNames = new Set(Object.keys(data.resources ?? {}));
+    const resourceRefs = extractResourceRefs(data);
+    resourceRefs.forEach((resourceRef, index) => {
+      if (!resourceNames.has(resourceRef.resource)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["resources", index],
+          message: `Unknown resource "${resourceRef.resource}"`,
+        });
+      }
+    });
   });

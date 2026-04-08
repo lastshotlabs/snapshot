@@ -1,0 +1,137 @@
+import { createContext, useEffect, useMemo, useRef } from "react";
+import { Provider as JotaiProvider } from "jotai/react";
+import { buildRequestUrl, resolveEndpointTarget } from "../manifest/resources";
+import { AtomRegistryImpl } from "./registry";
+import type {
+  AtomRegistry,
+  StateConfigMap,
+  StateProviderProps,
+  StateScope,
+} from "./types";
+
+export const RouteStateRegistryContext = createContext<AtomRegistry | null>(
+  null,
+);
+export const AppStateRegistryContext = createContext<AtomRegistry | null>(null);
+export const RouteStateDefinitionsContext = createContext<StateConfigMap>({});
+export const AppStateDefinitionsContext = createContext<StateConfigMap>({});
+
+function filterStateByScope(
+  state: StateConfigMap | undefined,
+  scope: StateScope,
+): StateConfigMap {
+  if (!state) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(state).filter(([, config]) => {
+      const resolvedScope = config.scope ?? "app";
+      return resolvedScope === scope;
+    }),
+  );
+}
+
+function initializeRegistryState(
+  registry: AtomRegistry,
+  state: StateConfigMap,
+  resources: StateProviderProps["resources"],
+  api: StateProviderProps["api"],
+): void {
+  for (const [id, config] of Object.entries(state)) {
+    const atom = registry.register(id);
+
+    if (config.default !== undefined) {
+      registry.store.set(atom, config.default);
+    }
+
+    if (config.data && api) {
+      const loadData = async () => {
+        try {
+          const request = resolveEndpointTarget(config.data!, resources);
+          const url = buildRequestUrl(request.endpoint, request.params);
+          let data: unknown;
+
+          switch (request.method) {
+            case "POST":
+              data = await api.post(url, undefined);
+              break;
+            case "PUT":
+              data = await api.put(url, undefined);
+              break;
+            case "PATCH":
+              data = await api.patch(url, undefined);
+              break;
+            case "DELETE":
+              data = await api.delete(url);
+              break;
+            default:
+              data = await api.get(url);
+          }
+
+          registry.store.set(atom, data);
+        } catch {
+          // Keep current/default value on initialization failure.
+        }
+      };
+
+      void loadData();
+    }
+  }
+}
+
+export function AppStateProvider({
+  state,
+  resources,
+  api,
+  children,
+}: StateProviderProps) {
+  const registryRef = useRef<AtomRegistry>(null);
+  if (!registryRef.current) {
+    registryRef.current = new AtomRegistryImpl();
+  }
+
+  const scopedState = useMemo(() => filterStateByScope(state, "app"), [state]);
+
+  useEffect(() => {
+    initializeRegistryState(registryRef.current!, scopedState, resources, api);
+    // App-scope state is initialized once for the provider lifetime.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <AppStateDefinitionsContext.Provider value={scopedState}>
+      <AppStateRegistryContext.Provider value={registryRef.current}>
+        <JotaiProvider store={registryRef.current.store}>{children}</JotaiProvider>
+      </AppStateRegistryContext.Provider>
+    </AppStateDefinitionsContext.Provider>
+  );
+}
+
+export function RouteStateProvider({
+  state,
+  resources,
+  api,
+  children,
+}: StateProviderProps) {
+  const registryRef = useRef<AtomRegistry>(null);
+  if (!registryRef.current) {
+    registryRef.current = new AtomRegistryImpl();
+  }
+
+  const scopedState = useMemo(() => filterStateByScope(state, "route"), [state]);
+
+  useEffect(() => {
+    initializeRegistryState(registryRef.current!, scopedState, resources, api);
+    // Route-scope state is recreated by remounting this provider per route.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <RouteStateDefinitionsContext.Provider value={scopedState}>
+      <RouteStateRegistryContext.Provider value={registryRef.current}>
+        {children}
+      </RouteStateRegistryContext.Provider>
+    </RouteStateDefinitionsContext.Provider>
+  );
+}

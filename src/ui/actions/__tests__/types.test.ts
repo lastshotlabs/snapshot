@@ -11,6 +11,7 @@ import {
   downloadActionSchema,
   confirmActionSchema,
   toastActionSchema,
+  runWorkflowActionSchema,
 } from "../types";
 
 describe("Action Zod Schemas", () => {
@@ -53,6 +54,15 @@ describe("Action Zod Schemas", () => {
         type: "api",
         method: "GET",
         endpoint: "/api/users",
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("accepts an api action with a resource endpoint", () => {
+      const result = apiActionSchema.safeParse({
+        type: "api",
+        method: "GET",
+        endpoint: { resource: "users.list" },
       });
       expect(result.success).toBe(true);
     });
@@ -209,6 +219,14 @@ describe("Action Zod Schemas", () => {
       expect(result.success).toBe(true);
     });
 
+    it("accepts a download action with a resource endpoint", () => {
+      const result = downloadActionSchema.safeParse({
+        type: "download",
+        endpoint: { resource: "reports.latest" },
+      });
+      expect(result.success).toBe(true);
+    });
+
     it("accepts download with filename", () => {
       const result = downloadActionSchema.safeParse({
         type: "download",
@@ -295,6 +313,25 @@ describe("Action Zod Schemas", () => {
     });
   });
 
+  describe("runWorkflowActionSchema", () => {
+    it("accepts a valid run-workflow action", () => {
+      const result = runWorkflowActionSchema.safeParse({
+        type: "run-workflow",
+        workflow: "users.delete",
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("accepts run-workflow with input", () => {
+      const result = runWorkflowActionSchema.safeParse({
+        type: "run-workflow",
+        workflow: "users.delete",
+        input: { userId: 42 },
+      });
+      expect(result.success).toBe(true);
+    });
+  });
+
   describe("actionSchema (discriminated union)", () => {
     it("parses each valid action type", () => {
       const configs = [
@@ -307,6 +344,7 @@ describe("Action Zod Schemas", () => {
         { type: "download", endpoint: "/file" },
         { type: "confirm", message: "Sure?" },
         { type: "toast", message: "Done" },
+        { type: "run-workflow", workflow: "users.delete" },
       ];
       for (const config of configs) {
         const result = actionSchema.safeParse(config);

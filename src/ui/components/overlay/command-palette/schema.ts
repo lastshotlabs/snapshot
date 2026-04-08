@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 // Canonical fromRefSchema source is _base/types.ts
-import { fromRefSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a single command item within a group.
@@ -61,7 +61,7 @@ export const commandPaletteConfigSchema = z
     /** Static command groups. */
     groups: z.array(commandGroupSchema).optional(),
     /** API endpoint for dynamic items. Supports FromRef. */
-    data: z.union([z.string(), fromRefSchema]).optional(),
+    data: dataSourceSchema.optional(),
     /** Message shown when search yields no results. Default: "No results found". */
     emptyMessage: z.string().optional(),
     /** Max height of the results list. Default: "300px". */
