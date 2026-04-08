@@ -56,7 +56,23 @@ export function useComponentData(
   const dataString =
     typeof resolvedData === "string" ? resolvedData : undefined;
 
+  // Handle inline data (arrays/objects passed directly instead of an endpoint string)
+  const isInlineData =
+    resolvedData != null &&
+    typeof resolvedData !== "string" &&
+    (Array.isArray(resolvedData) || typeof resolvedData === "object");
+
   const fetchData = useCallback(async () => {
+    if (isInlineData) {
+      setData(
+        Array.isArray(resolvedData)
+          ? (resolvedData as unknown as Record<string, unknown>)
+          : (resolvedData as Record<string, unknown>),
+      );
+      setIsLoading(false);
+      return;
+    }
+
     if (!dataString) {
       setIsLoading(false);
       return;
@@ -112,7 +128,7 @@ export function useComponentData(
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataString, api, fetchCount]);
+  }, [dataString, api, fetchCount, isInlineData, resolvedData]);
 
   useEffect(() => {
     void fetchData();

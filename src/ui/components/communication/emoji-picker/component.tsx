@@ -31,7 +31,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   food: "coffee",
   travel: "map-pin",
   activities: "trophy",
-  objects: "laptop",
+  objects: "paperclip",
   symbols: "heart",
   flags: "flag",
   custom: "sparkles",
@@ -144,6 +144,22 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
         maxWidth: `${perRow * 2.25 + 1.5}rem`,
       }}
     >
+      {/* Hover/transition styles */}
+      <style>{`
+[data-snapshot-component="emoji-picker"] [data-emoji-btn]:hover {
+  background-color: var(--sn-color-accent, #f3f4f6);
+  transform: scale(1.15);
+}
+[data-snapshot-component="emoji-picker"] [data-cat-tab]:hover {
+  background-color: var(--sn-color-accent, #f3f4f6);
+}
+[data-snapshot-component="emoji-picker"] [data-cat-tab][data-active]:hover {
+  background-color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 85%, black);
+}
+[data-snapshot-component="emoji-picker"] [data-testid="emoji-search"]:focus {
+  outline: none;
+}
+`}</style>
       {/* Custom emoji CSS */}
       {customCategory && <style>{CUSTOM_EMOJI_CSS}</style>}
       {/* Search */}
@@ -197,6 +213,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
         {categoryKeys.map((cat) => (
           <button
             key={cat}
+            data-cat-tab
+            data-active={activeCategory === cat ? "" : undefined}
             title={CATEGORY_LABELS[cat] ?? cat}
             onClick={() =>
               setActiveCategory(activeCategory === cat ? null : cat)
@@ -206,8 +224,8 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "1.75rem",
-              height: "1.75rem",
+              width: "2rem",
+              height: "2rem",
               padding: 0,
               border: "none",
               borderRadius: "var(--sn-radius-sm, 0.25rem)",
@@ -220,6 +238,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                   ? "var(--sn-color-primary-foreground, #ffffff)"
                   : "var(--sn-color-muted-foreground, #6b7280)",
               cursor: "pointer",
+              transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
             }}
           >
             <Icon name={CATEGORY_ICONS[cat] ?? "hash"} size={14} />
@@ -256,7 +275,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                 style={{
                   display: "grid",
                   gridTemplateColumns: `repeat(${perRow}, 1fr)`,
-                  gap: "1px",
+                  gap: "2px",
                 }}
               >
                 {cat.emojis.map((emoji) => {
@@ -264,6 +283,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                   return (
                     <button
                       key={emoji.name}
+                      data-emoji-btn
                       onClick={() => handleSelect(emoji)}
                       title={custom ? `:${custom.shortcode}:` : emoji.name}
                       style={{
@@ -278,6 +298,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                         backgroundColor: "transparent",
                         cursor: "pointer",
                         fontSize: "1.25rem",
+                        transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                       }}
                     >
                       {custom ? (

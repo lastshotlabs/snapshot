@@ -58,6 +58,7 @@ export function TypingIndicator({
         alignItems: "center",
         gap: "var(--sn-spacing-xs, 0.25rem)",
         padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+        transition: "opacity var(--sn-duration-normal, 250ms) var(--sn-ease-default, ease)",
       }}
     >
       {/* Inject keyframes */}
@@ -75,8 +76,8 @@ export function TypingIndicator({
           <span
             key={i}
             style={{
-              width: 4,
-              height: 4,
+              width: 5,
+              height: 5,
               borderRadius: "var(--sn-radius-full, 9999px)",
               backgroundColor: "var(--sn-color-muted-foreground, #6b7280)",
               display: "inline-block",
@@ -91,7 +92,7 @@ export function TypingIndicator({
       <span
         data-testid="typing-text"
         style={{
-          fontSize: "var(--sn-font-size-xs, 0.75rem)",
+          fontSize: "var(--sn-font-size-sm, 0.875rem)",
           color: "var(--sn-color-muted-foreground, #6b7280)",
           fontStyle: "italic",
         }}

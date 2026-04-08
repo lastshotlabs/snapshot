@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
@@ -17,6 +17,31 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const [showPicker, setShowPicker] = useState(false);
+  const pickerPopoverRef = useRef<HTMLDivElement>(null);
+
+  // Close picker on click outside
+  useEffect(() => {
+    if (!showPicker) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      if (
+        pickerPopoverRef.current &&
+        !pickerPopoverRef.current.contains(e.target as Node)
+      ) {
+        setShowPicker(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showPicker]);
 
   const reactions = config.reactions ?? [];
   const showAddButton = config.showAddButton ?? true;
@@ -67,12 +92,25 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
         alignItems: "center",
         flexWrap: "wrap",
         gap: "var(--sn-spacing-xs, 0.25rem)",
+        position: "relative",
+        overflow: "visible",
       }}
     >
+      {/* Hover/transition styles */}
+      <style>{`
+[data-snapshot-component="reaction-bar"] [data-testid="reaction-button"]:hover {
+  transform: scale(1.05);
+  box-shadow: var(--sn-shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+}
+[data-snapshot-component="reaction-bar"] [data-testid="reaction-add"]:hover {
+  background-color: var(--sn-color-accent, #f3f4f6) !important;
+}
+`}</style>
       {reactions.map((reaction, idx) => (
         <button
           key={`${reaction.emoji}-${idx}`}
           data-testid="reaction-button"
+          aria-label={`React with ${reaction.emoji}`}
           onClick={() =>
             handleReactionClick(reaction.emoji, reaction.active ?? false)
           }
@@ -93,6 +131,7 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
               : "var(--sn-color-card, #ffffff)",
             cursor: "pointer",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
+            transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
           }}
         >
           <span>{reaction.emoji}</span>
@@ -121,8 +160,8 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "1.75rem",
-              height: "1.75rem",
+              width: "2rem",
+              height: "2rem",
               padding: 0,
               borderRadius: "var(--sn-radius-full, 9999px)",
               border: "1px solid var(--sn-color-border, #e5e7eb)",
@@ -137,6 +176,7 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
           {/* Emoji picker popover */}
           {showPicker && (
             <div
+              ref={pickerPopoverRef}
               style={{
                 position: "absolute",
                 bottom: "calc(100% + 4px)",
@@ -148,15 +188,6 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
                 config={{
                   ...pickerConfig,
                   selectAction: undefined,
-                }}
-              />
-              {/* Invisible overlay to catch clicks outside */}
-              <div
-                onClick={() => setShowPicker(false)}
-                style={{
-                  position: "fixed",
-                  inset: 0,
-                  zIndex: -1,
                 }}
               />
             </div>

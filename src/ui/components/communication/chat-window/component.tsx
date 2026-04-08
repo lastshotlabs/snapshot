@@ -92,7 +92,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
             padding:
               "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
             borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
-            backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
+            backgroundColor: "var(--sn-color-card, #ffffff)",
             flexShrink: 0,
           }}
         >
@@ -152,7 +152,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
         style={{
           flexShrink: 0,
           borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
-          padding: "var(--sn-spacing-sm, 0.5rem)",
+          padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
         }}
       >
         <RichInput config={inputConfig} />

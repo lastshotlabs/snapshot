@@ -142,6 +142,24 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
         maxWidth: "400px",
       }}
     >
+      {/* Hover/transition styles */}
+      <style>{`
+[data-snapshot-component="gif-picker"] button:hover img {
+  transform: scale(1.03);
+}
+[data-snapshot-component="gif-picker"] button img {
+  transition: transform var(--sn-duration-fast, 150ms) ease;
+}
+[data-snapshot-component="gif-picker"] button:hover {
+  box-shadow: var(--sn-shadow-sm, 0 1px 2px rgba(0,0,0,0.1));
+}
+@keyframes sn-gif-spinner {
+  to { transform: rotate(360deg); }
+}
+[data-snapshot-component="gif-picker"] [data-testid="gif-search"]:focus {
+  outline: none;
+}
+`}</style>
       {/* Search */}
       <div
         style={{
@@ -194,10 +212,14 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
               padding: "var(--sn-spacing-lg, 1.5rem)",
               textAlign: "center",
               color: "var(--sn-color-muted-foreground, #6b7280)",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            Loading...
+            <span style={{ animation: "sn-gif-spinner 1s linear infinite", display: "inline-flex" }}>
+              <Icon name="loader" size={20} />
+            </span>
           </div>
         )}
 
@@ -219,7 +241,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${columns}, 1fr)`,
-              gap: "var(--sn-spacing-xs, 0.25rem)",
+              gap: "var(--sn-spacing-sm, 0.5rem)",
             }}
           >
             {displayGifs.map((gif) => (

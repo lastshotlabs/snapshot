@@ -248,6 +248,11 @@ export function MessageThread({
         backgroundColor: "var(--sn-color-card, #ffffff)",
       }}
     >
+      <style>{`
+[data-snapshot-component="message-thread"] [data-testid="message-item"]:hover {
+  background-color: color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 50%, transparent);
+}
+      `}</style>
       <div
         ref={scrollRef}
         style={{
@@ -322,7 +327,8 @@ export function MessageThread({
                       fontSize: "var(--sn-font-size-xs, 0.75rem)",
                       color: "var(--sn-color-muted-foreground, #6b7280)",
                       fontWeight:
-                        "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+                        "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
+                      letterSpacing: "0.05em",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -384,9 +390,10 @@ export function MessageThread({
                       display: "flex",
                       gap: "var(--sn-spacing-sm, 0.5rem)",
                       padding: isGrouped
-                        ? "1px var(--sn-spacing-md, 1rem) 1px calc(32px + var(--sn-spacing-sm, 0.5rem) + var(--sn-spacing-md, 1rem))"
+                        ? "2px var(--sn-spacing-md, 1rem) 2px calc(32px + var(--sn-spacing-sm, 0.5rem) + var(--sn-spacing-md, 1rem))"
                         : "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
                       cursor: config.messageAction ? "pointer" : "default",
+                      transition: "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                     }}
                   >
                     {/* Avatar (hidden when grouped) */}
@@ -458,8 +465,8 @@ export function MessageThread({
                               style={{
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: "var(--sn-spacing-xs, 0.25rem)",
-                                marginTop: "var(--sn-spacing-xs, 0.25rem)",
+                                gap: "var(--sn-spacing-sm, 0.5rem)",
+                                marginTop: "var(--sn-spacing-sm, 0.5rem)",
                               }}
                             >
                               {embeds.map((embed, ei) => (

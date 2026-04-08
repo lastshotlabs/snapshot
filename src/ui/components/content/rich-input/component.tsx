@@ -204,18 +204,33 @@ export function RichInput({ config }: { config: RichInputConfig }) {
     if (!editor) return;
 
     if (item.action === "setLink") {
-      const url = window.prompt("Enter URL:");
-      if (url) {
-        editor.chain().focus().setLink({ href: url }).run();
+      // If already a link, unset it
+      if (editor.isActive("link")) {
+        editor.chain().focus().unsetLink().run();
+        return;
+      }
+      // Get selected text — if it looks like a URL, use it
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to, " ");
+      if (selectedText && /^https?:\/\//.test(selectedText.trim())) {
+        editor.chain().focus().setLink({ href: selectedText.trim() }).run();
+      } else if (selectedText) {
+        // Use selected text, wrap with a placeholder URL
+        editor.chain().focus().setLink({ href: `https://${selectedText.trim().replace(/\s+/g, "")}` }).run();
       }
       return;
     }
 
-    // Use chain().focus() then the command
-    const chain = editor.chain().focus();
-    const command = (chain as Record<string, unknown>)[item.action];
-    if (typeof command === "function") {
-      (command as () => { run: () => void }).call(chain).run();
+    // Direct command dispatch — explicit for reliability
+    switch (item.action) {
+      case "toggleBold": editor.chain().focus().toggleBold().run(); break;
+      case "toggleItalic": editor.chain().focus().toggleItalic().run(); break;
+      case "toggleUnderline": editor.chain().focus().toggleUnderline().run(); break;
+      case "toggleStrike": editor.chain().focus().toggleStrike().run(); break;
+      case "toggleCode": editor.chain().focus().toggleCode().run(); break;
+      case "toggleCodeBlock": editor.chain().focus().toggleCodeBlock().run(); break;
+      case "toggleBulletList": editor.chain().focus().toggleBulletList().run(); break;
+      case "toggleOrderedList": editor.chain().focus().toggleOrderedList().run(); break;
     }
   };
 
@@ -234,9 +249,37 @@ export function RichInput({ config }: { config: RichInputConfig }) {
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        transition: "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
         ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
+      {/* Hover/focus styles */}
+      <style>{`
+        [data-snapshot-component="rich-input"]:focus-within {
+          border-color: var(--sn-color-primary, #2563eb);
+          box-shadow: 0 0 0 2px color-mix(in oklch, var(--sn-color-primary, #2563eb) 15%, transparent);
+        }
+        [data-snapshot-component="rich-input"] [data-ri-btn]:hover:not(:disabled) {
+          background-color: var(--sn-color-accent, #f3f4f6) !important;
+          color: var(--sn-color-foreground, #111827) !important;
+        }
+        [data-snapshot-component="rich-input"] [data-ri-btn][data-active]:hover:not(:disabled) {
+          background-color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 85%, black) !important;
+          color: var(--sn-color-primary-foreground, #ffffff) !important;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror {
+          outline: none;
+          min-height: inherit;
+        }
+        [data-snapshot-component="rich-input"] .ProseMirror p.is-editor-empty:first-child::before {
+          color: var(--sn-color-muted-foreground, #9ca3af);
+          content: attr(data-placeholder);
+          float: left;
+          height: 0;
+          pointer-events: none;
+        }
+      `}</style>
+
       {/* Editor area */}
       <div
         style={{
@@ -250,6 +293,9 @@ export function RichInput({ config }: { config: RichInputConfig }) {
           editor={editor}
           style={{
             padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+            fontSize: "var(--sn-font-size-sm, 0.875rem)",
+            color: "var(--sn-color-foreground, #111827)",
+            lineHeight: "var(--sn-leading-relaxed, 1.625)",
           }}
         />
       </div>
@@ -262,11 +308,9 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding:
-              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
             borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
-            backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
-            gap: "var(--sn-spacing-xs, 0.25rem)",
+            gap: "var(--sn-spacing-sm, 0.5rem)",
           }}
         >
           {/* Formatting buttons */}
@@ -274,7 +318,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "2px",
+              gap: "1px",
               flexWrap: "wrap",
             }}
           >
@@ -293,6 +337,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
               return (
                 <button
                   key={item.name}
+                  data-ri-btn
+                  data-active={isActive ? "" : undefined}
                   onClick={() => handleToolbarAction(item)}
                   title={item.label}
                   disabled={readonly}
@@ -300,23 +346,24 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "1.75rem",
-                    height: "1.75rem",
+                    width: "2rem",
+                    height: "2rem",
                     padding: 0,
                     border: "none",
                     borderRadius: "var(--sn-radius-sm, 0.25rem)",
                     backgroundColor: isActive
-                      ? "var(--sn-color-primary, #2563eb)"
+                      ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 15%, transparent)"
                       : "transparent",
                     color: isActive
-                      ? "var(--sn-color-primary-foreground, #ffffff)"
-                      : "var(--sn-color-muted-foreground, #6b7280)",
+                      ? "var(--sn-color-primary, #2563eb)"
+                      : "var(--sn-color-muted-foreground, #9ca3af)",
                     cursor: readonly ? "not-allowed" : "pointer",
                     opacity: readonly ? 0.5 : 1,
                     flexShrink: 0,
+                    transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                   }}
                 >
-                  <Icon name={item.icon} size={14} />
+                  <Icon name={item.icon} size={16} />
                 </button>
               );
             })}
@@ -336,7 +383,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                   fontSize: "var(--sn-font-size-xs, 0.75rem)",
                   color: isOverLimit
                     ? "var(--sn-color-destructive, #ef4444)"
-                    : "var(--sn-color-muted-foreground, #6b7280)",
+                    : "var(--sn-color-muted-foreground, #9ca3af)",
+                  transition: "color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                 }}
               >
                 {charCount}/{config.maxLength}
@@ -348,31 +396,33 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                 data-testid="rich-input-send"
                 onClick={handleSend}
                 disabled={readonly || !charCount || isOverLimit}
+                aria-label="Send message"
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  width: "1.75rem",
-                  height: "1.75rem",
+                  width: "2rem",
+                  height: "2rem",
                   padding: 0,
                   border: "none",
-                  borderRadius: "var(--sn-radius-sm, 0.25rem)",
+                  borderRadius: "var(--sn-radius-full, 9999px)",
                   backgroundColor:
                     charCount > 0 && !isOverLimit
                       ? "var(--sn-color-primary, #2563eb)"
-                      : "var(--sn-color-muted, #f3f4f6)",
+                      : "transparent",
                   color:
                     charCount > 0 && !isOverLimit
                       ? "var(--sn-color-primary-foreground, #ffffff)"
-                      : "var(--sn-color-muted-foreground, #6b7280)",
+                      : "var(--sn-color-muted-foreground, #9ca3af)",
                   cursor:
                     readonly || !charCount || isOverLimit
                       ? "not-allowed"
                       : "pointer",
                   flexShrink: 0,
+                  transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
                 }}
               >
-                <Icon name="send" size={14} />
+                <Icon name="send" size={16} />
               </button>
             )}
           </div>

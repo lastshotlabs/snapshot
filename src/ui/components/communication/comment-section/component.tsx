@@ -92,8 +92,8 @@ function CommentItem({
           src={authorAvatar}
           alt={authorName}
           style={{
-            width: 28,
-            height: 28,
+            width: 32,
+            height: 32,
             borderRadius: "var(--sn-radius-full, 9999px)",
             objectFit: "cover",
             flexShrink: 0,
@@ -102,8 +102,8 @@ function CommentItem({
       ) : (
         <div
           style={{
-            width: 28,
-            height: 28,
+            width: 32,
+            height: 32,
             borderRadius: "var(--sn-radius-full, 9999px)",
             backgroundColor: "var(--sn-color-primary, #2563eb)",
             color: "var(--sn-color-primary-foreground, #ffffff)",
@@ -158,12 +158,13 @@ function CommentItem({
                 marginLeft: "auto",
                 background: "none",
                 border: "none",
-                padding: "2px",
+                padding: "var(--sn-spacing-xs, 0.25rem)",
                 cursor: "pointer",
-                color: "var(--sn-color-muted-foreground, #6b7280)",
+                color: "var(--sn-color-muted-foreground, #9ca3af)",
                 display: "flex",
                 alignItems: "center",
-                opacity: 0.5,
+                borderRadius: "var(--sn-radius-sm, 0.25rem)",
+                transition: "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
               }}
               title="Delete comment"
             >
@@ -278,6 +279,12 @@ export function CommentSection({
         overflow: "hidden",
       }}
     >
+      <style>{`
+[data-snapshot-component="comment-section"] button[title="Delete comment"]:hover {
+  background-color: color-mix(in oklch, var(--sn-color-destructive, #ef4444) 10%, transparent);
+  color: var(--sn-color-destructive, #ef4444) !important;
+}
+      `}</style>
       {/* Header */}
       <div
         style={{
