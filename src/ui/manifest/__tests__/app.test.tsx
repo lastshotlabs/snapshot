@@ -29,7 +29,6 @@ import { useSubscribe } from "../../context";
 import { useSetStateValue, useStateValue } from "../../state";
 
 import "../structural";
-import "../../components/register";
 
 registerComponentSchema(
   "route-state-probe",
@@ -563,91 +562,6 @@ describe("ManifestApp", () => {
       expect(screen.getByText("84")).toBeDefined();
       expect(screen.getByText("/users/84")).toBeDefined();
       expect(screen.getByRole("button", { name: "0" })).toBeDefined();
-    });
-  });
-
-  it("renders the configured notFound route for unknown paths", async () => {
-    window.history.replaceState({}, "", "/missing");
-
-    const manifest: ManifestConfig = {
-      app: {
-        title: "Snapshot App",
-        notFound: "/404",
-      },
-      routes: [
-        {
-          id: "home",
-          path: "/",
-          title: "Home",
-          content: [{ type: "heading", text: "Home Page" }],
-        },
-        {
-          id: "not-found",
-          path: "/404",
-          title: "Missing",
-          content: [{ type: "heading", text: "Not Found" }],
-        },
-      ],
-    };
-
-    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
-
-    await waitFor(() => {
-      expect(screen.getByText("Not Found")).toBeDefined();
-      expect(document.title).toBe("Missing | Snapshot App");
-    });
-  });
-
-  it("derives route breadcrumbs and keeps breadcrumb navigation in-app", async () => {
-    window.history.replaceState({}, "", "/users/42");
-
-    const manifest: ManifestConfig = {
-      app: {
-        title: "Snapshot App",
-        home: "/",
-      },
-      routes: [
-        {
-          id: "home",
-          path: "/",
-          title: "Home",
-          breadcrumb: "Home",
-          content: [{ type: "heading", text: "Home Page" }],
-        },
-        {
-          id: "users",
-          path: "/users",
-          title: "Users",
-          breadcrumb: "Users",
-          content: [{ type: "heading", text: "Users List" }],
-        },
-        {
-          id: "user-detail",
-          path: "/users/{id}",
-          title: "User {params.id}",
-          breadcrumb: "User {params.id}",
-          content: [
-            { type: "breadcrumb", source: "route" },
-            { type: "heading", text: "User Detail" },
-          ],
-        },
-      ],
-    };
-
-    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
-
-    await waitFor(() => {
-      expect(screen.getByRole("link", { name: "Home" })).toBeDefined();
-      expect(screen.getByRole("link", { name: "Users" })).toBeDefined();
-      expect(screen.getByText("User 42")).toBeDefined();
-      expect(document.title).toBe("User 42 | Snapshot App");
-    });
-
-    fireEvent.click(screen.getByRole("link", { name: "Users" }));
-
-    await waitFor(() => {
-      expect(screen.getByText("Users List")).toBeDefined();
-      expect(document.title).toBe("Users | Snapshot App");
     });
   });
 

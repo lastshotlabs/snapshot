@@ -22,10 +22,7 @@ import type { SsrRequestContext, SsrShellShape } from "./types";
  *
  * @internal
  */
-function buildPreamble(
-  shell: SsrShellShape,
-  dehydratedState: string,
-): string {
+function buildPreamble(shell: SsrShellShape, dehydratedState: string): string {
   return [
     "<!DOCTYPE html>",
     '<html lang="en">',

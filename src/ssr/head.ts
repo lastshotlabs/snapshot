@@ -98,9 +98,7 @@ export function buildHeadTags(meta: SsrMetaShape | undefined): string {
         `<meta property="og:description" content="${escapeHtml(og.description)}">`,
       );
     if (og.image)
-      tags.push(
-        `<meta property="og:image" content="${escapeHtml(og.image)}">`,
-      );
+      tags.push(`<meta property="og:image" content="${escapeHtml(og.image)}">`);
     if (og.imageAlt)
       tags.push(
         `<meta property="og:image:alt" content="${escapeHtml(og.imageAlt)}">`,
@@ -136,9 +134,7 @@ export function buildHeadTags(meta: SsrMetaShape | undefined): string {
         `<meta name="twitter:image:alt" content="${escapeHtml(tw.imageAlt)}">`,
       );
     if (tw.site)
-      tags.push(
-        `<meta name="twitter:site" content="${escapeHtml(tw.site)}">`,
-      );
+      tags.push(`<meta name="twitter:site" content="${escapeHtml(tw.site)}">`);
   }
 
   if (meta.jsonLd) {

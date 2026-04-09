@@ -142,10 +142,7 @@ function buildSpaShell(shell: SsrShellShape): string {
  * ```
  */
 export function createReactRenderer(config: SnapshotSsrConfig): {
-  resolve(
-    url: URL,
-    bsCtx: unknown,
-  ): Promise<ServerRouteMatchShape | null>;
+  resolve(url: URL, bsCtx: unknown): Promise<ServerRouteMatchShape | null>;
   render(
     match: ServerRouteMatchShape,
     shell: SsrShellShape,
@@ -261,11 +258,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
 
       // 6. Call meta() — from directory meta.ts or from the same route module
       const metaFn = match.metaFilePath
-        ? ((
-            (
-              await import(match.metaFilePath)
-            ) as Record<string, unknown>
-          )["meta"] as
+        ? (((await import(match.metaFilePath)) as Record<string, unknown>)[
+            "meta"
+          ] as
             | ((ctx: unknown, result: unknown) => Promise<unknown>)
             | undefined)
         : (routeModule["meta"] as

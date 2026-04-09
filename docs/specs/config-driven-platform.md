@@ -2,17 +2,17 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> | ----- | ----- | ------ | ----- |
-> | 14-A | Canonical Manifest + IR + Compiler Pipeline | Draft | A - Core |
-> | 14-B | Unified Component Definition Registry | Draft | A - Core |
-> | 14-C | Resource Runtime | Draft | B - Runtime |
-> | 14-D | State Runtime | Draft | B - Runtime |
-> | 14-E | Workflow Engine | Draft | B - Runtime |
-> | 14-F | Route/Auth/Nav/Overlay Completion | Draft | C - Shell |
-> | 14-G | Slots, Templates, Presentation System | Draft | C - Shell |
-> | 14-H | Plugin Platform | Draft | D - Extensibility |
-> | 14-I | CLI, Builder, Lint, Docs, Catalog Tooling | Draft | D - Extensibility |
+> | Phase | Title                                       | Status | Track             |
+> | ----- | ------------------------------------------- | ------ | ----------------- |
+> | 14-A  | Canonical Manifest + IR + Compiler Pipeline | Draft  | A - Core          |
+> | 14-B  | Unified Component Definition Registry       | Draft  | A - Core          |
+> | 14-C  | Resource Runtime                            | Draft  | B - Runtime       |
+> | 14-D  | State Runtime                               | Draft  | B - Runtime       |
+> | 14-E  | Workflow Engine                             | Draft  | B - Runtime       |
+> | 14-F  | Route/Auth/Nav/Overlay Completion           | Draft  | C - Shell         |
+> | 14-G  | Slots, Templates, Presentation System       | Draft  | C - Shell         |
+> | 14-H  | Plugin Platform                             | Draft  | D - Extensibility |
+> | 14-I  | CLI, Builder, Lint, Docs, Catalog Tooling   | Draft  | D - Extensibility |
 
 ---
 
@@ -193,23 +193,23 @@ bun run format:check
 
 ### Key files
 
-| Path | What | Lines |
-| ---- | ---- | ----- |
-| `src/ui.ts` | Public `/ui` entry surface | 523 |
-| `src/create-snapshot.tsx` | Snapshot factory and `ManifestApp` wiring | 459 |
-| `src/ui/manifest/schema.ts` | Current manifest schema + schema registry | 273 |
-| `src/ui/manifest/app.tsx` | `ManifestApp` + simplified router | 119 |
-| `src/ui/manifest/renderer.tsx` | Page/component rendering | 93 |
-| `src/ui/manifest/component-registry.tsx` | Runtime component registry | 70 |
-| `src/ui/components/register.ts` | Built-in component registration | 447 |
-| `src/ui/components/_base/use-component-data.ts` | Shared endpoint-bound component data hook | 146 |
-| `src/ui/actions/types.ts` | Current action types and schemas | 256 |
-| `src/ui/actions/executor.ts` | Current action runtime | 240 |
-| `src/ui/context/providers.tsx` | App/page context providers | 121 |
-| `src/ui/context/types.ts` | Binding and global state types | 100 |
-| `src/ui/tokens/schema.ts` | Theme/token schema | 240 |
-| `src/ui/tokens/resolve.ts` | Theme/token CSS generation | 613 |
-| `src/cli/sync.ts` | Current OpenAPI + manifest sync/generation | 1297 |
+| Path                                            | What                                       | Lines |
+| ----------------------------------------------- | ------------------------------------------ | ----- |
+| `src/ui.ts`                                     | Public `/ui` entry surface                 | 523   |
+| `src/create-snapshot.tsx`                       | Snapshot factory and `ManifestApp` wiring  | 459   |
+| `src/ui/manifest/schema.ts`                     | Current manifest schema + schema registry  | 273   |
+| `src/ui/manifest/app.tsx`                       | `ManifestApp` + simplified router          | 119   |
+| `src/ui/manifest/renderer.tsx`                  | Page/component rendering                   | 93    |
+| `src/ui/manifest/component-registry.tsx`        | Runtime component registry                 | 70    |
+| `src/ui/components/register.ts`                 | Built-in component registration            | 447   |
+| `src/ui/components/_base/use-component-data.ts` | Shared endpoint-bound component data hook  | 146   |
+| `src/ui/actions/types.ts`                       | Current action types and schemas           | 256   |
+| `src/ui/actions/executor.ts`                    | Current action runtime                     | 240   |
+| `src/ui/context/providers.tsx`                  | App/page context providers                 | 121   |
+| `src/ui/context/types.ts`                       | Binding and global state types             | 100   |
+| `src/ui/tokens/schema.ts`                       | Theme/token schema                         | 240   |
+| `src/ui/tokens/resolve.ts`                      | Theme/token CSS generation                 | 613   |
+| `src/cli/sync.ts`                               | Current OpenAPI + manifest sync/generation | 1297  |
 
 ### How the consumer uses this today
 
@@ -220,7 +220,9 @@ import { ManifestApp } from "@lastshotlabs/snapshot/ui";
 import manifest from "./snapshot.manifest.json";
 
 export function App() {
-  return <ManifestApp manifest={manifest} apiUrl={import.meta.env.VITE_API_URL} />;
+  return (
+    <ManifestApp manifest={manifest} apiUrl={import.meta.env.VITE_API_URL} />
+  );
 }
 ```
 
@@ -265,11 +267,11 @@ export default defineManifest({
   resources: {
     "users.list": {
       kind: "query",
-      request: { method: "GET", url: "/api/users" }
-    }
+      request: { method: "GET", url: "/api/users" },
+    },
   },
   state: {
-    "filters.userSearch": { scope: "route", default: "" }
+    "filters.userSearch": { scope: "route", default: "" },
   },
   routes: {
     dashboard: {
@@ -278,14 +280,14 @@ export default defineManifest({
       body: [
         {
           type: "data.table",
-          resource: "users.list"
-        }
-      ]
-    }
+          resource: "users.list",
+        },
+      ],
+    },
   },
   navigation: {
-    main: [{ label: "Dashboard", route: "dashboard" }]
-  }
+    main: [{ label: "Dashboard", route: "dashboard" }],
+  },
 });
 ```
 
@@ -296,7 +298,9 @@ import { ManifestApp } from "@lastshotlabs/snapshot/ui";
 import manifest from "./snapshot.manifest";
 
 export function App() {
-  return <ManifestApp manifest={manifest} apiUrl={import.meta.env.VITE_API_URL} />;
+  return (
+    <ManifestApp manifest={manifest} apiUrl={import.meta.env.VITE_API_URL} />
+  );
 }
 ```
 
@@ -455,15 +459,15 @@ export interface ManifestIR {
 The compiler and runtime are built for the new manifest model. Replace the old top-level shape
 instead of carrying the legacy surface forward:
 
-| Current shape | Canonical target |
-| ------------- | ---------------- |
-| Replace this | With this |
-| `pages` | `routes` |
-| `nav` | `navigation.main` |
-| `globals` | `state` |
+| Current shape          | Canonical target                                          |
+| ---------------------- | --------------------------------------------------------- |
+| Replace this           | With this                                                 |
+| `pages`                | `routes`                                                  |
+| `nav`                  | `navigation.main`                                         |
+| `globals`              | `state`                                                   |
 | inline `data`/`submit` | named `resources` or compiler-lowered anonymous resources |
-| `action` arrays | workflow nodes |
-| ad hoc `custom` usage | plugin/core definition registration |
+| `action` arrays        | workflow nodes                                            |
+| ad hoc `custom` usage  | plugin/core definition registration                       |
 
 ---
 
@@ -525,12 +529,7 @@ export interface ResourceConfig {
 ### State system
 
 ```ts
-export type StateScope =
-  | "app"
-  | "route"
-  | "overlay"
-  | "component"
-  | "template";
+export type StateScope = "app" | "route" | "overlay" | "component" | "template";
 
 export type StateKind =
   | "value"
@@ -856,9 +855,9 @@ const manifest = defineManifest({
   routes: {
     dashboard: {
       path: "/dashboard",
-      body: [{ type: "heading", text: "Dashboard", level: 1 }]
-    }
-  }
+      body: [{ type: "heading", text: "Dashboard", level: 1 }],
+    },
+  },
 });
 
 const ir = compileManifest(manifest);
@@ -939,7 +938,7 @@ presets, and workflow actions.
 import {
   registerComponentDefinition,
   getComponentDefinition,
-  getRegisteredComponentDefinitions
+  getRegisteredComponentDefinitions,
 } from "@lastshotlabs/snapshot/ui";
 ```
 
@@ -1005,7 +1004,11 @@ Introduce first-class named resources and move component data semantics onto tha
 ### API
 
 ```ts
-import { useResource, useMutationResource, resourceConfigSchema } from "@lastshotlabs/snapshot/ui";
+import {
+  useResource,
+  useMutationResource,
+  resourceConfigSchema,
+} from "@lastshotlabs/snapshot/ui";
 ```
 
 ### Implementation
@@ -1079,7 +1082,11 @@ component publishing.
 ### API
 
 ```ts
-import { useStateValue, useSetStateValue, stateConfigSchema } from "@lastshotlabs/snapshot/ui";
+import {
+  useStateValue,
+  useSetStateValue,
+  stateConfigSchema,
+} from "@lastshotlabs/snapshot/ui";
 ```
 
 ### Implementation
@@ -1153,7 +1160,7 @@ logic without app-authored React.
 import {
   runWorkflow,
   workflowNodeSchema,
-  registerWorkflowAction
+  registerWorkflowAction,
 } from "@lastshotlabs/snapshot/ui";
 ```
 
@@ -1229,7 +1236,7 @@ import {
   routeConfigSchema,
   navigationConfigSchema,
   authConfigSchema,
-  overlayConfigSchema
+  overlayConfigSchema,
 } from "@lastshotlabs/snapshot/ui";
 ```
 
@@ -1310,7 +1317,7 @@ as more components are added.
 import {
   slotDefinitionSchema,
   templateNodeSchema,
-  presentationConfigSchema
+  presentationConfigSchema,
 } from "@lastshotlabs/snapshot/ui";
 ```
 
@@ -1381,7 +1388,10 @@ into code.
 ### API
 
 ```ts
-import { defineSnapshotUiPlugin, registerPlugin } from "@lastshotlabs/snapshot/ui";
+import {
+  defineSnapshotUiPlugin,
+  registerPlugin,
+} from "@lastshotlabs/snapshot/ui";
 ```
 
 ### Implementation
@@ -1502,17 +1512,17 @@ snapshot sync
 
 ## Current Gaps Mapped to Phases
 
-| Gap | Phase |
-| --- | ----- |
-| No canonical IR | 14-A |
-| Split runtime/schema registration | 14-B |
-| No named resources | 14-C |
-| No first-class state section | 14-D |
-| Action system too small for full orchestration | 14-E |
-| Simplified router and partial shell runtime | 14-F |
-| No shared slot/template/presentation model | 14-G |
-| No formal plugin contract | 14-H |
-| Weak authoring/docs/lint tooling | 14-I |
+| Gap                                            | Phase |
+| ---------------------------------------------- | ----- |
+| No canonical IR                                | 14-A  |
+| Split runtime/schema registration              | 14-B  |
+| No named resources                             | 14-C  |
+| No first-class state section                   | 14-D  |
+| Action system too small for full orchestration | 14-E  |
+| Simplified router and partial shell runtime    | 14-F  |
+| No shared slot/template/presentation model     | 14-G  |
+| No formal plugin contract                      | 14-H  |
+| Weak authoring/docs/lint tooling               | 14-I  |
 
 ---
 
@@ -1588,17 +1598,17 @@ Phases:
 
 ### Dependency rules
 
-| Phase | Depends on |
-| ----- | ---------- |
-| 14-A | none |
-| 14-B | 14-A |
-| 14-C | 14-A |
-| 14-D | 14-A, 14-C |
-| 14-E | 14-C, 14-D |
-| 14-F | 14-A, 14-B |
-| 14-G | 14-B, 14-F |
-| 14-H | 14-B, 14-E |
-| 14-I | 14-A, 14-B, 14-H |
+| Phase | Depends on       |
+| ----- | ---------------- |
+| 14-A  | none             |
+| 14-B  | 14-A             |
+| 14-C  | 14-A             |
+| 14-D  | 14-A, 14-C       |
+| 14-E  | 14-C, 14-D       |
+| 14-F  | 14-A, 14-B       |
+| 14-G  | 14-B, 14-F       |
+| 14-H  | 14-B, 14-E       |
+| 14-I  | 14-A, 14-B, 14-H |
 
 ### Parallelizable combinations
 

@@ -79,10 +79,7 @@ interface ManifestRouteEntry {
  * ```
  */
 export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
-  resolve(
-    url: URL,
-    bsCtx: unknown,
-  ): Promise<SsrRouteMatchShape | null>;
+  resolve(url: URL, bsCtx: unknown): Promise<SsrRouteMatchShape | null>;
   render(
     match: SsrRouteMatchShape,
     shell: SsrShellShape,
@@ -93,9 +90,8 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
   const compiled = compileManifest(frozen.manifest);
 
   // Build route matchers once at construction time — not per request
-  const routeEntries: ManifestRouteEntry[] = compiled.routes.map(
-    buildRouteEntry,
-  );
+  const routeEntries: ManifestRouteEntry[] =
+    compiled.routes.map(buildRouteEntry);
 
   // Build an ID-keyed map (the compiled routeMap is keyed by path)
   const routeById: Record<string, CompiledRoute> = Object.fromEntries(
@@ -181,9 +177,7 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         const redirectTo = route.guard.redirectTo ?? "/login";
         if (route.guard.authenticated) {
           const user = frozen.getUser
-            ? await frozen
-                .getUser(new Headers())
-                .catch((): null => null)
+            ? await frozen.getUser(new Headers()).catch((): null => null)
             : null;
           if (!user) {
             return Response.redirect(redirectTo, 302);
@@ -230,7 +224,10 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         },
       });
       for (const entry of queryCache) {
-        queryClient.setQueryData(entry.queryKey as readonly unknown[], entry.data);
+        queryClient.setQueryData(
+          entry.queryKey as readonly unknown[],
+          entry.data,
+        );
       }
 
       // Head tags from page title
