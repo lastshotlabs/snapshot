@@ -10,6 +10,7 @@ import {
 } from "../../../manifest/resources";
 import {
   useManifestResourceCache,
+  useManifestResourcePolling,
   useManifestRuntime,
 } from "../../../manifest/runtime";
 import type { DetailCardConfig, DetailFieldConfig } from "./schema";
@@ -148,6 +149,12 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
     resolvedTarget && isResourceRef(resolvedTarget)
       ? (resourceCache?.getResourceVersion(resolvedTarget.resource) ?? 0)
       : 0;
+  useManifestResourcePolling(
+    resolvedTarget && isResourceRef(resolvedTarget)
+      ? resolvedTarget.resource
+      : undefined,
+    Boolean(resolvedTarget && isResourceRef(resolvedTarget)),
+  );
 
   // Check if all required params are resolved (no undefined values for params used in the path)
   const allParamsResolved =

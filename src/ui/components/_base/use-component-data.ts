@@ -11,6 +11,7 @@ import {
 } from "../../manifest/resources";
 import {
   useManifestResourceCache,
+  useManifestResourcePolling,
   useManifestRuntime,
 } from "../../manifest/runtime";
 
@@ -87,6 +88,7 @@ export function useComponentData(
   const resourceVersion = resourceTarget
     ? (resourceCache?.getResourceVersion(resourceTarget.resource) ?? 0)
     : 0;
+  useManifestResourcePolling(resourceTarget?.resource, true);
 
   // Handle inline data (arrays/objects passed directly instead of an endpoint string)
   const isInlineData =

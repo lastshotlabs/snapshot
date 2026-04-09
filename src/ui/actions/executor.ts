@@ -377,6 +377,18 @@ export function useActionExecutor(): ActionExecuteFn {
                   result = await api.delete(endpoint, body);
                   break;
               }
+              const configuredInvalidations = new Set<string>(
+                builtin.invalidates ?? [],
+              );
+              if (isResourceRef(target)) {
+                for (const resourceName of
+                  runtime?.resources?.[target.resource]?.invalidates ?? []) {
+                  configuredInvalidations.add(resourceName);
+                }
+              }
+              for (const resourceName of configuredInvalidations) {
+                resourceCache?.invalidateResource(resourceName);
+              }
               if (builtin.onSuccess) {
                 await execute(builtin.onSuccess, { ...builtinContext, result });
               }

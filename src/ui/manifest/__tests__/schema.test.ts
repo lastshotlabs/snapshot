@@ -35,6 +35,13 @@ describe("manifestConfigSchema", () => {
           method: "GET",
           endpoint: "/api/users",
           cacheMs: 30000,
+          pollMs: 60000,
+          invalidates: ["user.stats"],
+        },
+        "user.stats": {
+          method: "GET",
+          endpoint: "/api/users/stats",
+          dependsOn: ["user.list"],
         },
       },
       navigation: {
@@ -191,6 +198,48 @@ describe("manifestConfigSchema", () => {
         bad: {
           type: "if",
           then: { type: "toast", message: "no condition" },
+        },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects resource dependencies that do not exist", () => {
+    const result = manifestConfigSchema.safeParse({
+      resources: {
+        users: {
+          method: "GET",
+          endpoint: "/api/users",
+          dependsOn: ["missing"],
+        },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects invalidation targets that do not exist", () => {
+    const result = manifestConfigSchema.safeParse({
+      resources: {
+        "users.create": {
+          method: "POST",
+          endpoint: "/api/users",
+          invalidates: ["missing"],
         },
       },
       routes: [

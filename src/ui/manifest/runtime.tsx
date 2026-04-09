@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -9,6 +10,8 @@ import {
 import type { ApiClient } from "../../api/client";
 import {
   buildRequestUrl,
+  collectDependentResources,
+  getResourceInvalidationTargets,
   isResourceRef,
   resolveEndpointTarget,
   type EndpointTarget,
@@ -30,6 +33,7 @@ export interface ResourceCacheEntry {
 interface ManifestResourceCacheValue {
   entries: Record<string, ResourceCacheEntry>;
   getResourceVersion: (name: string) => number;
+  getInvalidationTargets: (name: string) => string[];
   getCacheKey: (
     target: EndpointTarget,
     params?: Record<string, unknown>,
@@ -197,6 +201,8 @@ export function ManifestRuntimeProvider({
     () => ({
       entries,
       getResourceVersion: (name) => resourceVersions[name] ?? 0,
+      getInvalidationTargets: (name) =>
+        getResourceInvalidationTargets(name, manifest.resources),
       getCacheKey,
       getEntry: (target, params) => {
         const key = getCacheKey(target, params);
@@ -210,20 +216,36 @@ export function ManifestRuntimeProvider({
       loadTarget,
       preloadResource: (name, params) => loadTarget({ resource: name }, params),
       invalidateResource: (name) => {
+        const names = [
+          name,
+          ...collectDependentResources(name, manifest.resources),
+        ];
+        const nameSet = new Set(names);
         setEntries((current) =>
           Object.fromEntries(
             Object.entries(current).filter(
-              ([, entry]) => entry.resourceName !== name,
+              ([, entry]) =>
+                !entry.resourceName || !nameSet.has(entry.resourceName),
             ),
           ),
         );
-        setResourceVersions((current) => ({
-          ...current,
-          [name]: (current[name] ?? 0) + 1,
-        }));
+        setResourceVersions((current) => {
+          const next = { ...current };
+          for (const target of names) {
+            next[target] = (next[target] ?? 0) + 1;
+          }
+          return next;
+        });
       },
     }),
-    [entries, getCacheKey, isEntryFresh, loadTarget, resourceVersions],
+    [
+      entries,
+      getCacheKey,
+      isEntryFresh,
+      loadTarget,
+      manifest.resources,
+      resourceVersions,
+    ],
   );
 
   return (
@@ -277,4 +299,35 @@ export function useRouteRuntime(): RouteRuntimeValue | null {
 
 export function useOverlayRuntime(): OverlayRuntimeValue | null {
   return useContext(OverlayRuntimeContext);
+}
+
+export function useManifestResourcePolling(
+  resourceName?: string,
+  enabled: boolean = true,
+): void {
+  const manifest = useManifestRuntime();
+  const resourceCache = useManifestResourceCache();
+  const pollMs = resourceName
+    ? manifest?.resources?.[resourceName]?.pollMs
+    : undefined;
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      !enabled ||
+      !resourceName ||
+      !pollMs ||
+      !resourceCache
+    ) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      resourceCache.invalidateResource(resourceName);
+    }, pollMs);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [enabled, pollMs, resourceCache, resourceName]);
 }

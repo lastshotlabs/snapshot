@@ -424,6 +424,26 @@ export const manifestConfigSchema = z
     }
 
     const resourceNames = new Set(Object.keys(data.resources ?? {}));
+    Object.entries(data.resources ?? {}).forEach(([name, resource]) => {
+      for (const dependency of resource.dependsOn ?? []) {
+        if (!resourceNames.has(dependency)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["resources", name, "dependsOn"],
+            message: `Unknown resource dependency "${dependency}"`,
+          });
+        }
+      }
+      for (const target of resource.invalidates ?? []) {
+        if (!resourceNames.has(target)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["resources", name, "invalidates"],
+            message: `Unknown invalidation target "${target}"`,
+          });
+        }
+      }
+    });
     const resourceRefs = extractResourceRefs(data);
     resourceRefs.forEach((resourceRef, index) => {
       if (!resourceNames.has(resourceRef.resource)) {

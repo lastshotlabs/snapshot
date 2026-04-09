@@ -276,6 +276,121 @@ describe("useActionExecutor", () => {
     expect(result.current.resourceCache?.getResourceVersion("users")).toBe(1);
   });
 
+  it("invalidates configured resources after a successful api action", async () => {
+    const manifest = {
+      raw: {
+        routes: [],
+        resources: {
+          users: {
+            method: "GET",
+            endpoint: "/api/users",
+          },
+          stats: {
+            method: "GET",
+            endpoint: "/api/stats",
+          },
+        },
+      },
+      app: {},
+      resources: {
+        users: {
+          method: "GET" as const,
+          endpoint: "/api/users",
+        },
+        stats: {
+          method: "GET" as const,
+          endpoint: "/api/stats",
+        },
+      },
+      routes: [],
+      routeMap: {},
+      firstRoute: null,
+    } as import("../../manifest/types").CompiledManifest;
+    const wrapper = createWrapper({ api: mockApi, pageRegistry, manifest });
+    const { result } = renderHook(
+      () => ({
+        execute: useActionExecutor(),
+        resourceCache: useManifestResourceCache(),
+      }),
+      { wrapper },
+    );
+
+    await act(async () => {
+      await result.current.execute({
+        type: "api",
+        method: "POST",
+        endpoint: "/api/users",
+        invalidates: ["users", "stats"],
+      });
+    });
+
+    expect(result.current.resourceCache?.getResourceVersion("users")).toBe(1);
+    expect(result.current.resourceCache?.getResourceVersion("stats")).toBe(1);
+  });
+
+  it("invalidates resource targets declared on resource-backed api actions", async () => {
+    const manifest = {
+      raw: {
+        routes: [],
+        resources: {
+          "users.create": {
+            method: "POST",
+            endpoint: "/api/users",
+            invalidates: ["users.list"],
+          },
+          "users.list": {
+            method: "GET",
+            endpoint: "/api/users",
+          },
+          dashboard: {
+            method: "GET",
+            endpoint: "/api/dashboard",
+            dependsOn: ["users.list"],
+          },
+        },
+      },
+      app: {},
+      resources: {
+        "users.create": {
+          method: "POST" as const,
+          endpoint: "/api/users",
+          invalidates: ["users.list"],
+        },
+        "users.list": {
+          method: "GET" as const,
+          endpoint: "/api/users",
+        },
+        dashboard: {
+          method: "GET" as const,
+          endpoint: "/api/dashboard",
+          dependsOn: ["users.list"],
+        },
+      },
+      routes: [],
+      routeMap: {},
+      firstRoute: null,
+    } as import("../../manifest/types").CompiledManifest;
+    const wrapper = createWrapper({ api: mockApi, pageRegistry, manifest });
+    const { result } = renderHook(
+      () => ({
+        execute: useActionExecutor(),
+        resourceCache: useManifestResourceCache(),
+      }),
+      { wrapper },
+    );
+
+    await act(async () => {
+      await result.current.execute({
+        type: "api",
+        method: "POST",
+        endpoint: { resource: "users.create" },
+      });
+    });
+
+    expect(result.current.resourceCache?.getResourceVersion("users.list")).toBe(1);
+    expect(result.current.resourceCache?.getResourceVersion("dashboard")).toBe(1);
+  });
+
   it("executes set-value action", async () => {
     const atom = pageRegistry.register("my-input");
     const wrapper = createWrapper({ api: mockApi, pageRegistry });

@@ -45,6 +45,8 @@ export interface ApiAction {
   body?: Record<string, unknown> | { from: string };
   /** Query parameters. */
   params?: Record<string, unknown>;
+  /** Named resources to invalidate after a successful request. */
+  invalidates?: string[];
   /** Actions to execute on success. Response data available as `{result}`. */
   onSuccess?: ActionConfig | ActionConfig[];
   /** Actions to execute on error. Error available as `{error}`. */
@@ -254,6 +256,7 @@ function buildApiActionSchema(): z.ZodType<ApiAction> {
       endpoint: endpointTargetSchema,
       body: z.union([z.record(z.unknown()), fromRefSchema]).optional(),
       params: z.record(z.unknown()).optional(),
+      invalidates: z.array(z.string().min(1)).optional(),
       onSuccess: z
         .union([
           z.lazy(() => actionSchema),

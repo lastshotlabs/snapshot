@@ -83,6 +83,9 @@ export const resourceConfigSchema = z
     endpoint: z.string().min(1),
     params: z.record(z.unknown()).optional(),
     cacheMs: z.number().int().min(0).optional(),
+    pollMs: z.number().int().positive().optional(),
+    dependsOn: z.array(z.string().min(1)).optional(),
+    invalidates: z.array(z.string().min(1)).optional(),
   })
   .strict();
 
@@ -188,4 +191,51 @@ export function extractResourceRefs(
   }
 
   return results;
+}
+
+export function collectDependentResources(
+  resourceName: string,
+  resources?: ResourceMap,
+  visited: Set<string> = new Set(),
+): string[] {
+  if (!resources) {
+    return [];
+  }
+
+  const dependents: string[] = [];
+  for (const [candidateName, resource] of Object.entries(resources)) {
+    if (
+      candidateName !== resourceName &&
+      resource.dependsOn?.includes(resourceName) &&
+      !visited.has(candidateName)
+    ) {
+      visited.add(candidateName);
+      dependents.push(candidateName);
+      dependents.push(
+        ...collectDependentResources(candidateName, resources, visited),
+      );
+    }
+  }
+
+  return dependents;
+}
+
+export function getResourceInvalidationTargets(
+  resourceName: string,
+  resources?: ResourceMap,
+): string[] {
+  const resource = resources?.[resourceName];
+  if (!resource) {
+    return [];
+  }
+
+  const targets = new Set<string>();
+  for (const target of resource.invalidates ?? []) {
+    targets.add(target);
+    for (const dependent of collectDependentResources(target, resources)) {
+      targets.add(dependent);
+    }
+  }
+
+  return [...targets];
 }

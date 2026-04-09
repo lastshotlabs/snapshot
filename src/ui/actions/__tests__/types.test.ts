@@ -74,6 +74,7 @@ describe("Action Zod Schemas", () => {
         endpoint: "/api/users",
         body: { name: "Alice" },
         params: { page: 1 },
+        invalidates: ["users.list"],
       });
       expect(result.success).toBe(true);
     });

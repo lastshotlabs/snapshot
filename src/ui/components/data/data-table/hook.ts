@@ -10,6 +10,7 @@ import {
 } from "../../../manifest/resources";
 import {
   useManifestResourceCache,
+  useManifestResourcePolling,
   useManifestRuntime,
 } from "../../../manifest/runtime";
 import type {
@@ -211,9 +212,12 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   // Determine if data is from a FromRef (already resolved) or needs fetching
   const isDataFromRef = isFromRef(config.data);
   const isResolvedResource = isResourceRef(resolvedData);
-  const resourceVersion = isResolvedResource
-    ? (resourceCache?.getResourceVersion(resolvedData.resource) ?? 0)
+  const resolvedResource = isResolvedResource ? resolvedData : null;
+  const resolvedResourceName = resolvedResource?.resource;
+  const resourceVersion = resolvedResourceName
+    ? (resourceCache?.getResourceVersion(resolvedResourceName) ?? 0)
     : 0;
+  useManifestResourcePolling(resolvedResourceName, isResolvedResource);
 
   // Handle inline data (arrays passed directly or from FromRef)
   useEffect(() => {
@@ -255,9 +259,12 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
 
     const fetchData = async () => {
       try {
-        const target = isResolvedResource
-          ? resolvedData
-          : (resolvedData as string);
+        const target =
+          resolvedResource ??
+          (typeof resolvedData === "string" ? resolvedData : null);
+        if (!target) {
+          return;
+        }
         const result = resourceCache
           ? await resourceCache.loadTarget(target, resolvedParams)
           : await (async () => {
