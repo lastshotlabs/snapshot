@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { renderHook, act } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import { Provider } from "jotai/react";
@@ -71,12 +71,16 @@ function createWrapper(options?: { api?: ApiClient }) {
 }
 
 describe("ManifestRuntimeProvider", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("invalidates dependent resources when a base resource is invalidated", async () => {
     const api = createMockApi({
       "/api/users": [{ id: 1 }],
       "/api/dashboard": { totalUsers: 1 },
     });
-    const { result } = renderHook(() => useManifestResourceCache(), {
+    const { result, unmount } = renderHook(() => useManifestResourceCache(), {
       wrapper: createWrapper({ api }),
     });
 
@@ -96,11 +100,12 @@ describe("ManifestRuntimeProvider", () => {
     expect(result.current?.getResourceVersion("dashboard")).toBe(1);
     expect(result.current?.getData({ resource: "users" })).toBeUndefined();
     expect(result.current?.getData({ resource: "dashboard" })).toBeUndefined();
+    unmount();
   });
 
   it("polls resources by invalidating them on the configured interval", () => {
     vi.useFakeTimers();
-    const { result } = renderHook(
+    const { result, unmount } = renderHook(
       () => {
         useManifestResourcePolling("users", true);
         return useManifestResourceCache();
@@ -115,8 +120,7 @@ describe("ManifestRuntimeProvider", () => {
     });
 
     expect(result.current?.getResourceVersion("users")).toBe(1);
-
-    vi.useRealTimers();
+    unmount();
   });
 
   it("retries resource loads when the resource config enables retry", async () => {
@@ -132,7 +136,7 @@ describe("ManifestRuntimeProvider", () => {
       patch: vi.fn(),
       delete: vi.fn(),
     } as unknown as ApiClient;
-    const { result } = renderHook(() => useManifestResourceCache(), {
+    const { result, unmount } = renderHook(() => useManifestResourceCache(), {
       wrapper: createWrapper({ api }),
     });
 
@@ -149,11 +153,11 @@ describe("ManifestRuntimeProvider", () => {
     expect(result.current?.getData({ resource: "flakyUsers" })).toEqual([
       { id: 1 },
     ]);
-    vi.useRealTimers();
+    unmount();
   });
 
   it("invalidates resources on window focus when configured", async () => {
-    const { result } = renderHook(
+    const { result, unmount } = renderHook(
       () => {
         useManifestResourceFocusRefetch("users", true);
         return useManifestResourceCache();
@@ -168,10 +172,11 @@ describe("ManifestRuntimeProvider", () => {
     });
 
     expect(result.current?.getResourceVersion("users")).toBe(1);
+    unmount();
   });
 
   it("invalidates resources on mount when configured", () => {
-    const { result } = renderHook(
+    const { result, unmount } = renderHook(
       () => {
         useManifestResourceMountRefetch("mountUsers", true);
         return useManifestResourceCache();
@@ -180,5 +185,6 @@ describe("ManifestRuntimeProvider", () => {
     );
 
     expect(result.current?.getResourceVersion("mountUsers")).toBe(1);
+    unmount();
   });
 });
