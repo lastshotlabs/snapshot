@@ -1,6 +1,11 @@
 export {
+  isAssignWorkflowNode,
   isIfWorkflowNode,
+  isParallelWorkflowNode,
+  isRetryWorkflowNode,
   isRunWorkflowAction,
+  isTryWorkflowNode,
+  isWaitWorkflowNode,
   normalizeWorkflowDefinition,
 } from "./builtins";
 export { runWorkflow } from "./engine";
@@ -14,8 +19,13 @@ export {
   workflowNodeSchema,
 } from "./schema";
 export type {
+  AssignWorkflowNode,
   CustomWorkflowNode,
   IfWorkflowNode,
+  ParallelWorkflowNode,
+  RetryWorkflowNode,
+  TryWorkflowNode,
+  WaitWorkflowNode,
   WorkflowActionHandler,
   WorkflowBaseNode,
   WorkflowCondition,

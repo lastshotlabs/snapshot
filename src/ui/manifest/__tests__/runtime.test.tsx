@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { createElement } from "react";
 import { Provider } from "jotai/react";
 import {
+  useManifestResourceFocusRefetch,
   ManifestRuntimeProvider,
   useManifestResourceCache,
   useManifestResourcePolling,
@@ -39,6 +40,7 @@ function createWrapper(options?: { api?: ApiClient }) {
               method: "GET",
               endpoint: "/api/users",
               pollMs: 50,
+              refetchOnWindowFocus: true,
             },
             dashboard: {
               method: "GET",
@@ -142,5 +144,23 @@ describe("ManifestRuntimeProvider", () => {
       { id: 1 },
     ]);
     vi.useRealTimers();
+  });
+
+  it("invalidates resources on window focus when configured", async () => {
+    const { result } = renderHook(
+      () => {
+        useManifestResourceFocusRefetch("users", true);
+        return useManifestResourceCache();
+      },
+      { wrapper: createWrapper() },
+    );
+
+    expect(result.current?.getResourceVersion("users")).toBe(0);
+
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+    });
+
+    expect(result.current?.getResourceVersion("users")).toBe(1);
   });
 });

@@ -9,6 +9,8 @@ import {
   resolveEndpointTarget,
 } from "../../../manifest/resources";
 import {
+  useManifestResourceMountRefetch,
+  useManifestResourceFocusRefetch,
   useManifestResourceCache,
   useManifestResourcePolling,
   useManifestRuntime,
@@ -217,7 +219,9 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   const resourceVersion = resolvedResourceName
     ? (resourceCache?.getResourceVersion(resolvedResourceName) ?? 0)
     : 0;
+  useManifestResourceMountRefetch(resolvedResourceName, isResolvedResource);
   useManifestResourcePolling(resolvedResourceName, isResolvedResource);
+  useManifestResourceFocusRefetch(resolvedResourceName, isResolvedResource);
 
   // Handle inline data (arrays passed directly or from FromRef)
   useEffect(() => {

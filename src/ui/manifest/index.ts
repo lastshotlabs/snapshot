@@ -53,6 +53,11 @@ export {
   workflowNodeSchema,
 } from "../workflows/index";
 export type {
+  AssignWorkflowNode,
+  ParallelWorkflowNode,
+  RetryWorkflowNode,
+  TryWorkflowNode,
+  WaitWorkflowNode,
   WorkflowCondition,
   WorkflowConditionOperator,
   WorkflowDefinition,
@@ -80,6 +85,7 @@ export {
   OverlayRuntimeProvider,
   RouteRuntimeProvider,
   OverlayRuntimeContext,
+  useManifestResourceFocusRefetch,
   useManifestRuntime,
   useManifestResourceCache,
   useOverlayRuntime,

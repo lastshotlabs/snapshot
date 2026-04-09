@@ -10,6 +10,8 @@ import {
   type ResourceRef,
 } from "../../manifest/resources";
 import {
+  useManifestResourceMountRefetch,
+  useManifestResourceFocusRefetch,
   useManifestResourceCache,
   useManifestResourcePolling,
   useManifestRuntime,
@@ -88,7 +90,9 @@ export function useComponentData(
   const resourceVersion = resourceTarget
     ? (resourceCache?.getResourceVersion(resourceTarget.resource) ?? 0)
     : 0;
+  useManifestResourceMountRefetch(resourceTarget?.resource, true);
   useManifestResourcePolling(resourceTarget?.resource, true);
+  useManifestResourceFocusRefetch(resourceTarget?.resource, true);
 
   // Handle inline data (arrays/objects passed directly instead of an endpoint string)
   const isInlineData =

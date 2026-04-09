@@ -49,13 +49,28 @@ export interface AssignWorkflowNode extends WorkflowBaseNode {
   values: Record<string, unknown>;
 }
 
+export interface TryWorkflowNode extends WorkflowBaseNode {
+  type: "try";
+  step: WorkflowDefinition;
+  catch?: WorkflowDefinition;
+  finally?: WorkflowDefinition;
+}
+
+export interface CaptureWorkflowNode extends WorkflowBaseNode {
+  type: "capture";
+  action: ActionConfig;
+  as: string;
+}
+
 export type WorkflowNode =
   | ActionConfig
   | IfWorkflowNode
   | WaitWorkflowNode
   | ParallelWorkflowNode
   | RetryWorkflowNode
-  | AssignWorkflowNode;
+  | AssignWorkflowNode
+  | TryWorkflowNode
+  | CaptureWorkflowNode;
 export type WorkflowDefinition = WorkflowNode | WorkflowNode[];
 export type WorkflowMap = Record<string, WorkflowDefinition>;
 
@@ -65,7 +80,7 @@ export interface WorkflowExecutionRuntime {
   executeAction: (
     action: ActionConfig,
     context: Record<string, unknown>,
-  ) => Promise<void>;
+  ) => Promise<unknown>;
   getWorkflow: (name: string) => WorkflowDefinition | undefined;
   runDefinition: (
     definition: WorkflowDefinition,

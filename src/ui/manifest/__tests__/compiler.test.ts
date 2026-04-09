@@ -22,6 +22,7 @@ describe("compiler", () => {
         "users.list": {
           method: "GET",
           endpoint: "/api/users",
+          refetchOnWindowFocus: true,
         },
       },
       workflows: {
@@ -40,6 +41,18 @@ describe("compiler", () => {
           onFailure: {
             type: "toast",
             message: "Sync failed",
+          },
+        },
+        "users.reconcile": {
+          type: "try",
+          step: {
+            type: "api",
+            method: "POST",
+            endpoint: "/api/users/reconcile",
+          },
+          catch: {
+            type: "toast",
+            message: "Reconcile failed",
           },
         },
       },
@@ -77,6 +90,14 @@ describe("compiler", () => {
         message: "Sync failed",
       },
     });
+    expect(compiled.workflows?.["users.reconcile"]).toMatchObject({
+      type: "try",
+      catch: {
+        type: "toast",
+        message: "Reconcile failed",
+      },
+    });
+    expect(compiled.resources?.["users.list"]?.refetchOnWindowFocus).toBe(true);
     expect(compiled.routes[0]?.preload).toEqual([
       {
         resource: "users.list",

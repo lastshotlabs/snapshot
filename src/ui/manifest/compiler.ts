@@ -24,6 +24,8 @@ function buildCompiledManifest(manifest: ManifestConfig): CompiledManifest {
     path: route.path,
     page: toPageConfig(route),
     preload: route.preload,
+    refreshOnEnter: route.refreshOnEnter,
+    invalidateOnLeave: route.invalidateOnLeave,
     enter: route.enter,
     leave: route.leave,
     guard: route.guard,

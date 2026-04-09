@@ -73,6 +73,8 @@ export interface CompiledRoute {
   path: string;
   page: PageConfig;
   preload?: EndpointTarget[];
+  refreshOnEnter?: string[];
+  invalidateOnLeave?: string[];
   enter?: RouteConfig["enter"];
   leave?: RouteConfig["leave"];
   guard?: RouteConfig["guard"];

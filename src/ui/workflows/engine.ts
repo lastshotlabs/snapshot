@@ -2,10 +2,12 @@ import { ACTION_TYPES, type ActionConfig } from "../actions/types";
 import { getRegisteredWorkflowAction } from "./registry";
 import {
   isAssignWorkflowNode,
+  isCaptureWorkflowNode,
   isParallelWorkflowNode,
   isIfWorkflowNode,
   isRetryWorkflowNode,
   isRunWorkflowAction,
+  isTryWorkflowNode,
   isWaitWorkflowNode,
   normalizeWorkflowDefinition,
 } from "./builtins";
@@ -44,6 +46,34 @@ function delay(duration: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, duration);
   });
+}
+
+function setContextPath(
+  context: Record<string, unknown>,
+  path: string,
+  value: unknown,
+): Record<string, unknown> {
+  const segments = path.split(".").filter(Boolean);
+  if (segments.length === 0) {
+    return context;
+  }
+
+  const next = { ...context };
+  let cursor: Record<string, unknown> = next;
+
+  for (let index = 0; index < segments.length - 1; index += 1) {
+    const segment = segments[index]!;
+    const existing = cursor[segment];
+    const nested =
+      existing && typeof existing === "object" && !Array.isArray(existing)
+        ? { ...(existing as Record<string, unknown>) }
+        : {};
+    cursor[segment] = nested;
+    cursor = nested;
+  }
+
+  cursor[segments[segments.length - 1]!] = value;
+  return next;
 }
 
 export async function runWorkflow(
@@ -157,6 +187,37 @@ export async function runWorkflow(
             unknown
           >),
         };
+        continue;
+      }
+
+      if (isTryWorkflowNode(node)) {
+        let caughtError: unknown;
+        try {
+          await runDefinition(node.step, currentContext);
+        } catch (error) {
+          caughtError = error;
+          if (node.catch) {
+            await runDefinition(node.catch, {
+              ...currentContext,
+              error,
+            });
+          } else {
+            throw error;
+          }
+        } finally {
+          if (node.finally) {
+            await runDefinition(node.finally, {
+              ...currentContext,
+              ...(caughtError !== undefined ? { error: caughtError } : null),
+            });
+          }
+        }
+        continue;
+      }
+
+      if (isCaptureWorkflowNode(node)) {
+        const result = await options.executeAction(node.action, currentContext);
+        currentContext = setContextPath(currentContext, node.as, result);
         continue;
       }
 

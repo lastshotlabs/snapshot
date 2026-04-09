@@ -66,6 +66,29 @@ export const workflowNodeSchema: z.ZodType = z.lazy(() =>
         values: z.record(z.unknown()),
       })
       .strict(),
+    z
+      .object({
+        type: z.literal("try"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        step: z.union([workflowNodeSchema, z.array(workflowNodeSchema)]),
+        catch: z
+          .union([workflowNodeSchema, z.array(workflowNodeSchema)])
+          .optional(),
+        finally: z
+          .union([workflowNodeSchema, z.array(workflowNodeSchema)])
+          .optional(),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("capture"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        action: actionSchema,
+        as: z.string().min(1),
+      })
+      .strict(),
   ]),
 );
 

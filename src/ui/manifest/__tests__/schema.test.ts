@@ -36,6 +36,7 @@ describe("manifestConfigSchema", () => {
           endpoint: "/api/users",
           cacheMs: 30000,
           pollMs: 60000,
+          refetchOnWindowFocus: true,
           invalidates: ["user.stats"],
         },
         "user.stats": {
@@ -128,6 +129,22 @@ describe("manifestConfigSchema", () => {
             message: "Decorated",
           },
         ],
+        "users.reconcile": {
+          type: "try",
+          step: {
+            type: "api",
+            method: "POST",
+            endpoint: "/api/users/reconcile",
+          },
+          catch: {
+            type: "toast",
+            message: "Reconcile failed",
+          },
+          finally: {
+            type: "toast",
+            message: "Reconcile complete",
+          },
+        },
       },
       overlays: {
         help: {

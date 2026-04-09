@@ -373,3 +373,54 @@ export function useManifestResourcePolling(
     };
   }, [enabled, pollMs, resourceCache, resourceName]);
 }
+
+export function useManifestResourceFocusRefetch(
+  resourceName?: string,
+  enabled: boolean = true,
+): void {
+  const manifest = useManifestRuntime();
+  const resourceCache = useManifestResourceCache();
+  const refetchOnWindowFocus = resourceName
+    ? manifest?.resources?.[resourceName]?.refetchOnWindowFocus
+    : undefined;
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      !enabled ||
+      !resourceName ||
+      !refetchOnWindowFocus ||
+      !resourceCache
+    ) {
+      return;
+    }
+
+    const handleFocus = () => {
+      resourceCache.invalidateResource(resourceName);
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [enabled, refetchOnWindowFocus, resourceCache, resourceName]);
+}
+
+export function useManifestResourceMountRefetch(
+  resourceName?: string,
+  enabled: boolean = true,
+): void {
+  const manifest = useManifestRuntime();
+  const resourceCache = useManifestResourceCache();
+  const refetchOnMount = resourceName
+    ? manifest?.resources?.[resourceName]?.refetchOnMount
+    : undefined;
+
+  useEffect(() => {
+    if (!enabled || !resourceName || !refetchOnMount || !resourceCache) {
+      return;
+    }
+
+    resourceCache.invalidateResource(resourceName);
+  }, [enabled, refetchOnMount, resourceCache, resourceName]);
+}

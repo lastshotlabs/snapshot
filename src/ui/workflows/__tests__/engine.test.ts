@@ -337,4 +337,59 @@ describe("runWorkflow", () => {
       role: "admin",
     });
   });
+
+  it("supports try/catch branches with error context", async () => {
+    const calls: Array<{
+      action: ActionConfig;
+      context: Record<string, unknown>;
+    }> = [];
+    const executeAction = vi.fn(
+      async (action: ActionConfig, context: Record<string, unknown>) => {
+        calls.push({ action, context });
+        if (action.type === "toast" && action.message === "explode") {
+          throw new Error("boom");
+        }
+      },
+    );
+
+    await runWorkflow(
+      {
+        type: "try",
+        step: { type: "toast", message: "explode" },
+        catch: { type: "toast", message: "caught" },
+      },
+      {
+        executeAction,
+        resolveValue: (value) => value,
+      },
+    );
+
+    expect(executeAction).toHaveBeenCalledTimes(2);
+    expect(calls[1]?.action).toEqual({ type: "toast", message: "caught" });
+    expect(calls[1]?.context.error).toBeInstanceOf(Error);
+  });
+
+  it("runs finally blocks after successful try steps", async () => {
+    const calls: ActionConfig[] = [];
+    const executeAction = vi.fn(async (action: ActionConfig) => {
+      calls.push(action);
+    });
+
+    await runWorkflow(
+      {
+        type: "try",
+        step: { type: "toast", message: "step" },
+        finally: { type: "toast", message: "cleanup" },
+      },
+      {
+        executeAction,
+        resolveValue: (value) => value,
+      },
+    );
+
+    expect(calls).toEqual([
+      { type: "toast", message: "step" },
+      { type: "toast", message: "cleanup" },
+    ]);
+  });
 });

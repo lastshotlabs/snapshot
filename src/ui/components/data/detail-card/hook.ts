@@ -9,6 +9,8 @@ import {
   resolveEndpointTarget,
 } from "../../../manifest/resources";
 import {
+  useManifestResourceMountRefetch,
+  useManifestResourceFocusRefetch,
   useManifestResourceCache,
   useManifestResourcePolling,
   useManifestRuntime,
@@ -150,7 +152,19 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
     resolvedTarget && isResourceRef(resolvedTarget)
       ? (resourceCache?.getResourceVersion(resolvedTarget.resource) ?? 0)
       : 0;
+  useManifestResourceMountRefetch(
+    resolvedTarget && isResourceRef(resolvedTarget)
+      ? resolvedTarget.resource
+      : undefined,
+    Boolean(resolvedTarget && isResourceRef(resolvedTarget)),
+  );
   useManifestResourcePolling(
+    resolvedTarget && isResourceRef(resolvedTarget)
+      ? resolvedTarget.resource
+      : undefined,
+    Boolean(resolvedTarget && isResourceRef(resolvedTarget)),
+  );
+  useManifestResourceFocusRefetch(
     resolvedTarget && isResourceRef(resolvedTarget)
       ? resolvedTarget.resource
       : undefined,

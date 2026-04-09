@@ -284,7 +284,7 @@ export function useActionExecutor(): ActionExecuteFn {
       const executeBuiltinAction = async (
         builtin: ActionConfig,
         builtinContext: Record<string, unknown>,
-      ): Promise<void> => {
+      ): Promise<unknown> => {
         switch (builtin.type) {
           case "navigate": {
             const to = String(
@@ -303,7 +303,7 @@ export function useActionExecutor(): ActionExecuteFn {
               window.history.pushState({}, "", to);
             }
             window.dispatchEvent(new PopStateEvent("popstate"));
-            return;
+            return to;
           }
 
           case "api": {
@@ -400,14 +400,15 @@ export function useActionExecutor(): ActionExecuteFn {
               if (builtin.onSuccess) {
                 await execute(builtin.onSuccess, { ...builtinContext, result });
               }
+              return result;
             } catch (error) {
               if (builtin.onError) {
                 await execute(builtin.onError, { ...builtinContext, error });
               } else {
                 throw error;
               }
+              return undefined;
             }
-            return;
           }
 
           case "open-modal":
@@ -425,7 +426,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 : undefined,
               builtin.resultTarget,
             );
-            return;
+            return builtin.payload;
 
           case "close-modal": {
             const overlayId =
@@ -457,7 +458,7 @@ export function useActionExecutor(): ActionExecuteFn {
               }
             }
             modalManager.close(overlayId, resolvedResult);
-            return;
+            return resolvedResult;
           }
 
           case "refresh": {
@@ -482,7 +483,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 registry.store.set(refreshAtom, Date.now());
               }
             }
-            return;
+            return builtin.target;
           }
 
           case "set-value": {
@@ -503,7 +504,7 @@ export function useActionExecutor(): ActionExecuteFn {
               const targetAtom = registry.register(targetId);
               registry.store.set(targetAtom, value);
             }
-            return;
+            return value;
           }
 
           case "download": {
@@ -542,7 +543,7 @@ export function useActionExecutor(): ActionExecuteFn {
             const endpoint = buildRequestUrl(request.endpoint, request.params);
             const blob = await api.get<Blob>(endpoint);
             triggerBrowserDownload(blob, builtin.filename ?? "download");
-            return;
+            return blob;
           }
 
           case "confirm": {
@@ -565,7 +566,7 @@ export function useActionExecutor(): ActionExecuteFn {
             if (!confirmed) {
               throw WORKFLOW_CANCELLED;
             }
-            return;
+            return true;
           }
 
           case "toast": {
@@ -591,7 +592,7 @@ export function useActionExecutor(): ActionExecuteFn {
                   }
                 : undefined,
             });
-            return;
+            return message;
           }
 
           case "run-workflow":

@@ -257,6 +257,7 @@ const authProviderConfigSchema = z
     provider: authProviderNameSchema,
     label: z.string().optional(),
     description: z.string().optional(),
+    autoRedirect: z.boolean().optional(),
   })
   .strict();
 
@@ -293,7 +294,18 @@ const authScreenOptionsSchema = z
         z.literal(false),
       ])
       .optional(),
-    passkey: z.boolean().optional(),
+    providerMode: z.enum(["buttons", "auto"]).optional(),
+    passkey: z
+      .union([
+        z.boolean(),
+        z
+          .object({
+            enabled: z.boolean().optional(),
+            autoPrompt: z.boolean().optional(),
+          })
+          .strict(),
+      ])
+      .optional(),
     fields: z
       .object({
         email: authFieldConfigSchema.optional(),
@@ -312,7 +324,18 @@ export const authScreenConfigSchema = z
   .object({
     screens: z.array(authScreenNameSchema).min(1),
     providers: authProviderListSchema.optional(),
-    passkey: z.boolean().optional(),
+    providerMode: z.enum(["buttons", "auto"]).optional(),
+    passkey: z
+      .union([
+        z.boolean(),
+        z
+          .object({
+            enabled: z.boolean().optional(),
+            autoPrompt: z.boolean().optional(),
+          })
+          .strict(),
+      ])
+      .optional(),
     branding: z
       .object({
         logo: z.string().optional(),
@@ -365,6 +388,8 @@ export const routeConfigSchema = pageConfigSchema
     id: z.string().min(1),
     path: z.string().startsWith("/"),
     preload: z.array(endpointTargetSchema).optional(),
+    refreshOnEnter: z.array(z.string().min(1)).optional(),
+    invalidateOnLeave: z.array(z.string().min(1)).optional(),
     enter: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
     leave: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
     guard: z

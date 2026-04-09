@@ -90,6 +90,8 @@ export const resourceConfigSchema = z
     params: z.record(z.unknown()).optional(),
     cacheMs: z.number().int().min(0).optional(),
     pollMs: z.number().int().positive().optional(),
+    refetchOnMount: z.boolean().optional(),
+    refetchOnWindowFocus: z.boolean().optional(),
     retry: z.number().int().min(0).optional(),
     retryDelayMs: z.number().int().min(0).optional(),
     dependsOn: z.array(z.string().min(1)).optional(),

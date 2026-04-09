@@ -28,6 +28,7 @@ import {
 } from "./runtime";
 import { resolveDocumentTitle, resolveRouteMatch } from "./router";
 import { PageRenderer } from "./renderer";
+import type { EndpointTarget } from "./resources";
 import type {
   CompiledManifest,
   CompiledRoute,
@@ -137,6 +138,44 @@ function withRedirectParam(path: string, redirectTo: string): string {
   const url = new URL(path, window.location.origin);
   url.searchParams.set("redirect", redirectTo);
   return `${url.pathname}${url.search}`;
+}
+
+export function resolveRoutePreloadTarget(
+  target: EndpointTarget,
+  params: Record<string, string>,
+): {
+  target: EndpointTarget;
+  params?: Record<string, unknown>;
+} {
+  if (typeof target === "string") {
+    return {
+      target,
+      params,
+    };
+  }
+
+  return {
+    target: {
+      ...target,
+      params: {
+        ...params,
+        ...(target.params ?? {}),
+      },
+    },
+  };
+}
+
+function applyRouteResourceInvalidations(
+  resourceCache: ReturnType<typeof useManifestResourceCache>,
+  resourceNames?: string[],
+): void {
+  if (!resourceCache || !resourceNames) {
+    return;
+  }
+
+  for (const resourceName of resourceNames) {
+    resourceCache.invalidateResource(resourceName);
+  }
 }
 
 function AuthRuntimeBridge({
@@ -458,12 +497,28 @@ function ManifestRouter({
         previousMatch &&
         (previousMatch.currentPath !== currentPath ||
           previousMatch.route?.id !== route.id) &&
-        previousMatch.route?.leave
       ) {
-        if (typeof previousMatch.route.leave === "string") {
-          await execute(
-            { type: "run-workflow", workflow: previousMatch.route.leave },
-            {
+        applyRouteResourceInvalidations(
+          resourceCache,
+          previousMatch.route?.invalidateOnLeave,
+        );
+
+        if (previousMatch.route?.leave) {
+          if (typeof previousMatch.route.leave === "string") {
+            await execute(
+              { type: "run-workflow", workflow: previousMatch.route.leave },
+              {
+                route: {
+                  id: previousMatch.route.id,
+                  path: previousMatch.currentPath,
+                  pattern: previousMatch.route.path,
+                  params: previousMatch.params,
+                },
+                params: previousMatch.params,
+              },
+            );
+          } else {
+            await execute(previousMatch.route.leave as never, {
               route: {
                 id: previousMatch.route.id,
                 path: previousMatch.currentPath,
@@ -471,18 +526,8 @@ function ManifestRouter({
                 params: previousMatch.params,
               },
               params: previousMatch.params,
-            },
-          );
-        } else {
-          await execute(previousMatch.route.leave as never, {
-            route: {
-              id: previousMatch.route.id,
-              path: previousMatch.currentPath,
-              pattern: previousMatch.route.path,
-              params: previousMatch.params,
-            },
-            params: previousMatch.params,
-          });
+            });
+          }
         }
       }
 
@@ -492,26 +537,26 @@ function ManifestRouter({
         params,
       };
 
+      applyRouteResourceInvalidations(resourceCache, route.refreshOnEnter);
+
       if (route.preload && route.preload.length > 0) {
         setIsPreloading(true);
         try {
           await Promise.all(
-            route.preload.map((target) =>
-              resourceCache
-                ? resourceCache.loadTarget(
-                    typeof target === "string"
-                      ? target
-                      : {
-                          ...target,
-                          params: {
-                            ...params,
-                            ...(target.params ?? {}),
-                          },
-                        },
-                    typeof target === "string" ? params : undefined,
-                  )
-                : Promise.resolve(),
-            ),
+            route.preload.map((preloadTarget) => {
+              if (!resourceCache) {
+                return Promise.resolve();
+              }
+
+              const resolvedTarget = resolveRoutePreloadTarget(
+                preloadTarget,
+                params,
+              );
+              return resourceCache.loadTarget(
+                resolvedTarget.target,
+                resolvedTarget.params,
+              );
+            }),
           );
         } finally {
           if (!cancelled) {
