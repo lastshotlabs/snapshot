@@ -496,9 +496,20 @@ function ManifestRouter({
         setIsPreloading(true);
         try {
           await Promise.all(
-            route.preload.map((name) =>
+            route.preload.map((target) =>
               resourceCache
-                ? resourceCache.preloadResource(name, params)
+                ? resourceCache.loadTarget(
+                    typeof target === "string"
+                      ? target
+                      : {
+                          ...target,
+                          params: {
+                            ...params,
+                            ...(target.params ?? {}),
+                          },
+                        },
+                    typeof target === "string" ? params : undefined,
+                  )
                 : Promise.resolve(),
             ),
           );

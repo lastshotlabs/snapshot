@@ -58,6 +58,14 @@ export const workflowNodeSchema: z.ZodType = z.lazy(() =>
           .optional(),
       })
       .strict(),
+    z
+      .object({
+        type: z.literal("assign"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        values: z.record(z.unknown()),
+      })
+      .strict(),
   ]),
 );
 

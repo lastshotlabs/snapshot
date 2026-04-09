@@ -16,7 +16,11 @@ import type {
 } from "./schema";
 import type { FromRef } from "../context/types";
 import type { Responsive, ThemeConfig } from "../tokens/types";
-import type { ResourceConfig, ResourceMap } from "./resources";
+import type {
+  EndpointTarget,
+  ResourceConfig,
+  ResourceMap,
+} from "./resources";
 import type { WorkflowMap } from "../workflows/types";
 
 export type ManifestConfig = z.infer<typeof manifestConfigSchema>;
@@ -68,7 +72,7 @@ export interface CompiledRoute {
   id: string;
   path: string;
   page: PageConfig;
-  preload?: string[];
+  preload?: EndpointTarget[];
   enter?: RouteConfig["enter"];
   leave?: RouteConfig["leave"];
   guard?: RouteConfig["guard"];

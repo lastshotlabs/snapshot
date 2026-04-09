@@ -18,10 +18,29 @@ describe("compiler", () => {
           default: null,
         },
       },
+      resources: {
+        "users.list": {
+          method: "GET",
+          endpoint: "/api/users",
+        },
+      },
       workflows: {
         "users.after-save": {
           type: "toast",
           message: "Saved",
+        },
+        "users.sync": {
+          type: "retry",
+          attempts: 2,
+          step: {
+            type: "api",
+            method: "POST",
+            endpoint: "/api/users/sync",
+          },
+          onFailure: {
+            type: "toast",
+            message: "Sync failed",
+          },
         },
       },
       routes: [
@@ -29,6 +48,14 @@ describe("compiler", () => {
           id: "dashboard",
           path: "/dashboard",
           title: "Dashboard",
+          preload: [
+            {
+              resource: "users.list",
+              params: {
+                page: 2,
+              },
+            },
+          ],
           content: [{ type: "heading", text: "Dashboard" }],
         },
       ],
@@ -42,6 +69,22 @@ describe("compiler", () => {
       type: "toast",
       message: "Saved",
     });
+    expect(compiled.workflows?.["users.sync"]).toMatchObject({
+      type: "retry",
+      attempts: 2,
+      onFailure: {
+        type: "toast",
+        message: "Sync failed",
+      },
+    });
+    expect(compiled.routes[0]?.preload).toEqual([
+      {
+        resource: "users.list",
+        params: {
+          page: 2,
+        },
+      },
+    ]);
     expect(compiled.firstRoute?.id).toBe("dashboard");
     expect(compiled.routeMap["/dashboard"]?.page.title).toBe("Dashboard");
   });

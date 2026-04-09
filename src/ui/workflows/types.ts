@@ -44,12 +44,18 @@ export interface RetryWorkflowNode extends WorkflowBaseNode {
   onFailure?: WorkflowDefinition;
 }
 
+export interface AssignWorkflowNode extends WorkflowBaseNode {
+  type: "assign";
+  values: Record<string, unknown>;
+}
+
 export type WorkflowNode =
   | ActionConfig
   | IfWorkflowNode
   | WaitWorkflowNode
   | ParallelWorkflowNode
-  | RetryWorkflowNode;
+  | RetryWorkflowNode
+  | AssignWorkflowNode;
 export type WorkflowDefinition = WorkflowNode | WorkflowNode[];
 export type WorkflowMap = Record<string, WorkflowDefinition>;
 

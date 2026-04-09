@@ -364,7 +364,7 @@ export const routeConfigSchema = pageConfigSchema
   .extend({
     id: z.string().min(1),
     path: z.string().startsWith("/"),
-    preload: z.array(z.string().min(1)).optional(),
+    preload: z.array(endpointTargetSchema).optional(),
     enter: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
     leave: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
     guard: z

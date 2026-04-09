@@ -457,6 +457,60 @@ describe("ManifestApp", () => {
     });
   });
 
+  it("supports route preload resource refs with explicit params", async () => {
+    window.history.replaceState({}, "", "/users/42");
+
+    let requestedUrl = "";
+    let resolveFetch!: (response: Response) => void;
+    global.fetch = vi.fn((input: RequestInfo | URL) => {
+      requestedUrl = String(input);
+      return new Promise<Response>((resolve) => {
+        resolveFetch = resolve;
+      });
+    }) as typeof fetch;
+
+    const manifest: ManifestConfig = {
+      resources: {
+        user: {
+          method: "GET",
+          endpoint: "/api/users/{id}",
+        },
+      },
+      routes: [
+        {
+          id: "user-detail",
+          path: "/users/{id}",
+          preload: [
+            {
+              resource: "user",
+              params: {
+                id: "99",
+                include: "projects",
+              },
+            },
+          ],
+          content: [{ type: "heading", text: "User Override Ready" }],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+    expect(screen.getByText("Loading...")).toBeDefined();
+    expect(requestedUrl).toContain("/api/users/99");
+    expect(requestedUrl).toContain("include=projects");
+
+    resolveFetch(
+      new Response(JSON.stringify({ id: 99, name: "Grace" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("User Override Ready")).toBeDefined();
+    });
+  });
+
   it("runs route leave and enter workflows during navigation", async () => {
     const manifest: ManifestConfig = {
       state: {

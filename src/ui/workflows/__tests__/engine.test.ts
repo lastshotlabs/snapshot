@@ -258,4 +258,83 @@ describe("runWorkflow", () => {
     expect(calls[2]?.action).toEqual({ type: "toast", message: "fallback" });
     expect(calls[2]?.context.error).toBeInstanceOf(Error);
   });
+
+  it("assigns values into workflow context for later nodes", async () => {
+    const calls: Array<{
+      action: ActionConfig;
+      context: Record<string, unknown>;
+    }> = [];
+    const executeAction = vi.fn(
+      async (action: ActionConfig, context: Record<string, unknown>) => {
+        calls.push({ action, context });
+      },
+    );
+
+    await runWorkflow(
+      [
+        {
+          type: "assign",
+          values: {
+            greeting: "{name}",
+            role: "{user.role}",
+          },
+        },
+        { type: "toast", message: "hello" },
+      ],
+      {
+        context: {
+          name: "Ada",
+          user: { role: "admin" },
+        },
+        executeAction,
+        resolveValue: (value, context) => {
+          if (typeof value === "string") {
+            return value
+              .replace("{name}", String(context["name"] ?? ""))
+              .replace(
+                "{user.role}",
+                String(
+                  context["user"] &&
+                    typeof context["user"] === "object" &&
+                    "role" in (context["user"] as Record<string, unknown>)
+                    ? (context["user"] as Record<string, unknown>)["role"]
+                    : "",
+                ),
+              );
+          }
+          if (value && typeof value === "object") {
+            return Object.fromEntries(
+              Object.entries(value as Record<string, unknown>).map(
+                ([key, nested]) => [
+                  key,
+                  typeof nested === "string"
+                    ? nested
+                        .replace("{name}", String(context["name"] ?? ""))
+                        .replace(
+                          "{user.role}",
+                          String(
+                            context["user"] &&
+                              typeof context["user"] === "object" &&
+                              "role" in (context["user"] as Record<string, unknown>)
+                              ? (context["user"] as Record<string, unknown>)["role"]
+                              : "",
+                          ),
+                        )
+                    : nested,
+                ],
+              ),
+            );
+          }
+          return value;
+        },
+      },
+    );
+
+    expect(executeAction).toHaveBeenCalledTimes(1);
+    expect(calls[0]?.context).toMatchObject({
+      name: "Ada",
+      greeting: "Ada",
+      role: "admin",
+    });
+  });
 });

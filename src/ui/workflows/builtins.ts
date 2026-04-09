@@ -1,5 +1,6 @@
 import type { RunWorkflowAction } from "../actions/types";
 import type {
+  AssignWorkflowNode,
   IfWorkflowNode,
   ParallelWorkflowNode,
   RetryWorkflowNode,
@@ -38,4 +39,10 @@ export function isRetryWorkflowNode(
   node: WorkflowNode,
 ): node is RetryWorkflowNode {
   return node.type === "retry";
+}
+
+export function isAssignWorkflowNode(
+  node: WorkflowNode,
+): node is AssignWorkflowNode {
+  return node.type === "assign";
 }

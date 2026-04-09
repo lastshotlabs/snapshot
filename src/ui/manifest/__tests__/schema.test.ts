@@ -101,6 +101,33 @@ describe("manifestConfigSchema", () => {
           { type: "confirm", message: "Delete?" },
           { type: "api", method: "DELETE", endpoint: "/api/users/{id}" },
         ],
+        "users.sync": {
+          type: "retry",
+          attempts: 3,
+          delayMs: 250,
+          backoffMultiplier: 2,
+          step: {
+            type: "api",
+            method: "POST",
+            endpoint: "/api/users/sync",
+          },
+          onFailure: {
+            type: "toast",
+            message: "Sync failed",
+          },
+        },
+        "users.decorate": [
+          {
+            type: "assign",
+            values: {
+              source: "manifest",
+            },
+          },
+          {
+            type: "toast",
+            message: "Decorated",
+          },
+        ],
       },
       overlays: {
         help: {
@@ -115,7 +142,13 @@ describe("manifestConfigSchema", () => {
           path: "/dashboard",
           title: "Dashboard",
           layout: "sidebar" as const,
-          preload: ["user.list"],
+          preload: [
+            "user.list",
+            {
+              resource: "user.stats",
+              params: { range: "30d" },
+            },
+          ],
           guard: {
             authenticated: true,
             redirectTo: "/dashboard",
@@ -236,6 +269,26 @@ describe("manifestConfigSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("rejects retry workflow nodes without attempts", () => {
+    const result = manifestConfigSchema.safeParse({
+      workflows: {
+        bad: {
+          type: "retry",
+          step: { type: "toast", message: "no attempts" },
+        },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   it("rejects resource dependencies that do not exist", () => {
     const result = manifestConfigSchema.safeParse({
       resources: {
@@ -304,6 +357,12 @@ describe("routeConfigSchema", () => {
     const result = routeConfigSchema.safeParse({
       id: "dashboard",
       path: "/dashboard",
+      preload: [
+        {
+          resource: "users",
+          params: { page: 1 },
+        },
+      ],
       title: "Dashboard",
       content: [{ type: "heading", text: "Hello" }],
     });

@@ -1,6 +1,7 @@
 import { ACTION_TYPES, type ActionConfig } from "../actions/types";
 import { getRegisteredWorkflowAction } from "./registry";
 import {
+  isAssignWorkflowNode,
   isParallelWorkflowNode,
   isIfWorkflowNode,
   isRetryWorkflowNode,
@@ -63,14 +64,17 @@ export async function runWorkflow(
     nextDefinition: WorkflowDefinition,
     nextContext: Record<string, unknown>,
   ): Promise<void> => {
+    let currentContext = nextContext;
     const runtime: WorkflowExecutionRuntime = {
-      context: nextContext,
+      get context() {
+        return currentContext;
+      },
       resolveValue: options.resolveValue,
       executeAction: options.executeAction,
       getWorkflow: (name) => workflows[name],
       runDefinition: (nestedDefinition, nestedContext) =>
         runDefinition(nestedDefinition, {
-          ...nextContext,
+          ...currentContext,
           ...(nestedContext ?? {}),
         }),
     };
@@ -79,17 +83,17 @@ export async function runWorkflow(
       if (
         "when" in node &&
         node.when &&
-        !evaluateCondition(node.when, runtime, nextContext)
+        !evaluateCondition(node.when, runtime, currentContext)
       ) {
         continue;
       }
 
       if (isIfWorkflowNode(node)) {
-        const branch = evaluateCondition(node.condition, runtime, nextContext)
+        const branch = evaluateCondition(node.condition, runtime, currentContext)
           ? node.then
           : node.else;
         if (branch) {
-          await runDefinition(branch, nextContext);
+          await runDefinition(branch, currentContext);
         }
         continue;
       }
@@ -101,7 +105,7 @@ export async function runWorkflow(
 
       if (isParallelWorkflowNode(node)) {
         await Promise.all(
-          node.branches.map((branch) => runDefinition(branch, nextContext)),
+          node.branches.map((branch) => runDefinition(branch, currentContext)),
         );
         continue;
       }
@@ -113,7 +117,7 @@ export async function runWorkflow(
 
         for (let attempt = 0; attempt < node.attempts; attempt += 1) {
           try {
-            await runDefinition(node.step, nextContext);
+            await runDefinition(node.step, currentContext);
             lastError = undefined;
             break;
           } catch (error) {
@@ -134,7 +138,7 @@ export async function runWorkflow(
         if (lastError !== undefined) {
           if (node.onFailure) {
             await runDefinition(node.onFailure, {
-              ...nextContext,
+              ...currentContext,
               error: lastError,
             });
             continue;
@@ -142,6 +146,17 @@ export async function runWorkflow(
           throw lastError;
         }
 
+        continue;
+      }
+
+      if (isAssignWorkflowNode(node)) {
+        currentContext = {
+          ...currentContext,
+          ...(options.resolveValue(node.values, currentContext) as Record<
+            string,
+            unknown
+          >),
+        };
         continue;
       }
 
@@ -153,21 +168,21 @@ export async function runWorkflow(
 
         const input =
           node.input && typeof node.input === "object"
-            ? (options.resolveValue(node.input, nextContext) as Record<
+            ? (options.resolveValue(node.input, currentContext) as Record<
                 string,
                 unknown
               >)
             : {};
 
         await runDefinition(workflow, {
-          ...nextContext,
+          ...currentContext,
           ...input,
         });
         continue;
       }
 
       if (ACTION_TYPES.includes(node.type)) {
-        await options.executeAction(node as ActionConfig, nextContext);
+        await options.executeAction(node as ActionConfig, currentContext);
         continue;
       }
 
