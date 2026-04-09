@@ -15,6 +15,11 @@ import { DrawerComponent } from "../components/overlay/drawer";
 import { ModalComponent } from "../components/overlay/modal";
 import { useSetStateValue } from "../state";
 import { resolveTokens } from "../tokens/resolve";
+import {
+  createManifestAuthRuntimeConfig,
+  ManifestAuthScreen,
+  resolveAuthScreen,
+} from "./auth";
 import { compileManifest } from "./compiler";
 import {
   ManifestRuntimeProvider,
@@ -302,9 +307,16 @@ function AppShell({
 interface ManifestRouterProps {
   manifest: CompiledManifest;
   api: ReturnType<typeof createSnapshot>["api"];
+  snapshot: ReturnType<typeof createSnapshot>;
+  authRuntimeConfig: ReturnType<typeof createManifestAuthRuntimeConfig>;
 }
 
-function ManifestRouter({ manifest, api }: ManifestRouterProps) {
+function ManifestRouter({
+  manifest,
+  api,
+  snapshot,
+  authRuntimeConfig,
+}: ManifestRouterProps) {
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window === "undefined") return "/";
     return window.location.pathname;
@@ -356,6 +368,10 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
   const { route, params } = useMemo(
     () => resolveRouteMatch(manifest, currentPath),
     [currentPath, manifest],
+  );
+  const authScreen = useMemo(
+    () => resolveAuthScreen(manifest, route),
+    [manifest, route],
   );
 
   useEffect(() => {
@@ -537,14 +553,25 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
         isPreloading,
       }}
     >
-      <AppShell
-        manifest={manifest}
-        route={route}
-        currentPath={currentPath}
-        navigate={navigate}
-        isPreloading={isPreloading}
-        api={api}
-      />
+      {authScreen ? (
+        <ManifestAuthScreen
+          manifest={manifest}
+          route={route}
+          screen={authScreen}
+          snapshot={snapshot}
+          runtimeConfig={authRuntimeConfig}
+          navigate={(to, options) => navigate(to, options)}
+        />
+      ) : (
+        <AppShell
+          manifest={manifest}
+          route={route}
+          currentPath={currentPath}
+          navigate={navigate}
+          isPreloading={isPreloading}
+          api={api}
+        />
+      )}
     </RouteRuntimeProvider>
   );
 }
@@ -563,6 +590,10 @@ export function ManifestApp({
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiUrl],
+  );
+  const authRuntimeConfig = useMemo(
+    () => createManifestAuthRuntimeConfig(apiUrl, snapshotConfig),
+    [apiUrl, snapshotConfig],
   );
 
   useEffect(() => {
@@ -587,7 +618,12 @@ export function ManifestApp({
                 useUser={snapshot.useUser}
               />
             ) : null}
-            <ManifestRouter manifest={compiledManifest} api={snapshot.api} />
+            <ManifestRouter
+              manifest={compiledManifest}
+              api={snapshot.api}
+              snapshot={snapshot}
+              authRuntimeConfig={authRuntimeConfig}
+            />
             <OverlayHost overlays={compiledManifest.overlays} />
           </AppContextProvider>
         </ManifestRuntimeProvider>
