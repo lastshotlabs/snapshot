@@ -349,7 +349,15 @@ describe("nav schemas", () => {
   it("validates navigation config", () => {
     const result = navigationConfigSchema.safeParse({
       mode: "sidebar",
-      items: [{ label: "Home", path: "/" }],
+      items: [
+        {
+          label: "Home",
+          path: "/",
+          visible: { from: "global.flags.showHome" },
+          disabled: false,
+          authenticated: true,
+        },
+      ],
     });
     expect(result.success).toBe(true);
   });

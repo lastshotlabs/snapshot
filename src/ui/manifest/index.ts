@@ -77,9 +77,12 @@ export { ManifestApp, injectStyleSheet } from "./app";
 export {
   ManifestRuntimeProvider,
   ManifestRuntimeContext,
+  OverlayRuntimeProvider,
   RouteRuntimeProvider,
+  OverlayRuntimeContext,
   useManifestRuntime,
   useManifestResourceCache,
+  useOverlayRuntime,
   useRouteRuntime,
 } from "./runtime";
 

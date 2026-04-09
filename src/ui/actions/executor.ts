@@ -11,7 +11,7 @@ import {
   isResourceRef,
   resolveEndpointTarget,
 } from "../manifest/resources";
-import { useManifestRuntime } from "../manifest/runtime";
+import { useManifestRuntime, useOverlayRuntime } from "../manifest/runtime";
 import { runWorkflow } from "../workflows/engine";
 import type { ActionConfig, ActionExecuteFn } from "./types";
 import type { AtomRegistry } from "../context/types";
@@ -89,8 +89,22 @@ function resolveFromRef(
   context: Record<string, unknown>,
   pageRegistry: AtomRegistry | null,
   appRegistry: AtomRegistry | null,
+  overlayRuntime: { id?: string; kind?: string; payload?: unknown } | null,
 ): unknown {
   const refPath = ref.from;
+
+  if (refPath.startsWith("overlay.")) {
+    const overlayValue = {
+      id: overlayRuntime?.id,
+      kind: overlayRuntime?.kind,
+      payload: overlayRuntime?.payload,
+    };
+    return applyTransform(
+      getNestedValue(overlayValue, refPath.slice(8)),
+      ref.transform,
+      ref.transformArg,
+    );
+  }
 
   if (refPath.startsWith("global.")) {
     const cleanPath = refPath.slice(7);
@@ -132,9 +146,16 @@ function resolveWorkflowValue(
   context: Record<string, unknown>,
   pageRegistry: AtomRegistry | null,
   appRegistry: AtomRegistry | null,
+  overlayRuntime: { id?: string; kind?: string; payload?: unknown } | null,
 ): unknown {
   if (isFromRef(value)) {
-    return resolveFromRef(value, context, pageRegistry, appRegistry);
+    return resolveFromRef(
+      value,
+      context,
+      pageRegistry,
+      appRegistry,
+      overlayRuntime,
+    );
   }
 
   if (typeof value === "string") {
@@ -167,12 +188,17 @@ export function useActionExecutor(): ActionExecuteFn {
   const toastManager = useToastManager();
   const confirmManager = useConfirmManager();
   const runtime = useManifestRuntime();
+  const overlayRuntime = useOverlayRuntime();
 
   const execute: ActionExecuteFn = useCallback(
     async (
       action: ActionConfig | ActionConfig[],
       context: Record<string, unknown> = {},
     ): Promise<void> => {
+      const executionContext =
+        context.overlay === undefined && overlayRuntime
+          ? { ...context, overlay: overlayRuntime }
+          : context;
       const executeBuiltinAction = async (
         builtin: ActionConfig,
         builtinContext: Record<string, unknown>,
@@ -185,6 +211,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                overlayRuntime,
               ),
             );
             if (builtin.replace) {
@@ -212,6 +239,7 @@ export function useActionExecutor(): ActionExecuteFn {
                       builtinContext,
                       pageRegistry,
                       appRegistry,
+                      overlayRuntime,
                     ),
                   )
                 : (resolveWorkflowValue(
@@ -219,6 +247,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    overlayRuntime,
                   ) as typeof builtin.endpoint);
 
             const params =
@@ -228,6 +257,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                overlayRuntime,
               ) as Record<string, unknown>);
 
             const request = resolveEndpointTarget(
@@ -246,6 +276,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                overlayRuntime,
               );
 
             try {
@@ -281,7 +312,18 @@ export function useActionExecutor(): ActionExecuteFn {
           }
 
           case "open-modal":
-            modalManager.open(builtin.modal);
+            modalManager.open(
+              builtin.modal,
+              builtin.payload !== undefined
+                ? resolveWorkflowValue(
+                    builtin.payload,
+                    builtinContext,
+                    pageRegistry,
+                    appRegistry,
+                    overlayRuntime,
+                  )
+                : undefined,
+            );
             return;
 
           case "close-modal":
@@ -310,6 +352,7 @@ export function useActionExecutor(): ActionExecuteFn {
               builtinContext,
               pageRegistry,
               appRegistry,
+              overlayRuntime,
             );
             const { registry, targetId } = resolveRegistry(
               builtin.target,
@@ -338,6 +381,7 @@ export function useActionExecutor(): ActionExecuteFn {
                       builtinContext,
                       pageRegistry,
                       appRegistry,
+                      overlayRuntime,
                     ),
                   )
                 : (resolveWorkflowValue(
@@ -345,6 +389,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    overlayRuntime,
                   ) as typeof builtin.endpoint);
 
             const request = resolveEndpointTarget(
@@ -365,6 +410,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                overlayRuntime,
               ),
             );
             const confirmed = await confirmManager.show({
@@ -386,6 +432,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                overlayRuntime,
               ),
             );
             toastManager.show({
@@ -410,9 +457,15 @@ export function useActionExecutor(): ActionExecuteFn {
       try {
         await runWorkflow(action, {
           workflows: runtime?.raw.workflows,
-          context,
+          context: executionContext,
           resolveValue: (value, nextContext) =>
-            resolveWorkflowValue(value, nextContext, pageRegistry, appRegistry),
+            resolveWorkflowValue(
+              value,
+              nextContext,
+              pageRegistry,
+              appRegistry,
+              overlayRuntime,
+            ),
           executeAction: executeBuiltinAction,
         });
       } catch (error) {

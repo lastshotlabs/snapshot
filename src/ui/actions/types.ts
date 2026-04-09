@@ -58,6 +58,8 @@ export interface OpenModalAction {
   type: "open-modal";
   /** The id of the modal/drawer component to open. */
   modal: string;
+  /** Optional runtime payload exposed to the overlay. */
+  payload?: unknown;
 }
 
 /**
@@ -182,6 +184,7 @@ export const openModalActionSchema = z
   .object({
     type: z.literal("open-modal"),
     modal: z.string(),
+    payload: z.unknown().optional(),
   })
   .strict();
 

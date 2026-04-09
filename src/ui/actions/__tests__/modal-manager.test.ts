@@ -22,6 +22,12 @@ describe("useModalManager", () => {
     expect(result.current.isOpen("edit-user")).toBe(true);
   });
 
+  it("stores payloads for opened overlays", () => {
+    const { result } = renderHook(() => useModalManager(), { wrapper });
+    act(() => result.current.open("edit-user", { userId: "1" }));
+    expect(result.current.getPayload("edit-user")).toEqual({ userId: "1" });
+  });
+
   it("opens multiple modals in stack order", () => {
     const { result } = renderHook(() => useModalManager(), { wrapper });
     act(() => {
@@ -40,6 +46,7 @@ describe("useModalManager", () => {
     act(() => result.current.close("modal-a"));
     expect(result.current.stack).toEqual(["modal-b"]);
     expect(result.current.isOpen("modal-a")).toBe(false);
+    expect(result.current.getPayload("modal-a")).toBeUndefined();
   });
 
   it("closes the topmost modal when no id is provided", () => {

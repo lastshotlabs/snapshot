@@ -7,17 +7,20 @@ import { useCallback } from "react";
  * The last element is the topmost modal.
  */
 export const modalStackAtom = atom<string[]>([]);
+export const modalPayloadAtom = atom<Record<string, unknown>>({});
 
 /**
  * Return type of useModalManager.
  */
 export interface ModalManager {
   /** Open a modal by id. If already open, moves it to the top of the stack. */
-  open: (id: string) => void;
+  open: (id: string, payload?: unknown) => void;
   /** Close a modal by id, or close the topmost modal if no id is provided. */
   close: (id?: string) => void;
   /** Check if a modal is currently open. */
   isOpen: (id: string) => boolean;
+  /** Read the payload for a modal/drawer id. */
+  getPayload: (id: string) => unknown;
   /** The current modal stack (bottom to top). */
   stack: readonly string[];
 }
@@ -38,24 +41,41 @@ export interface ModalManager {
  */
 export function useModalManager(): ModalManager {
   const [stack, setStack] = useAtom(modalStackAtom);
+  const [payloads, setPayloads] = useAtom(modalPayloadAtom);
 
   const open = useCallback(
-    (id: string) => {
+    (id: string, payload?: unknown) => {
       setStack((prev) => [...prev.filter((m) => m !== id), id]);
+      if (payload !== undefined) {
+        setPayloads((prev) => ({
+          ...prev,
+          [id]: payload,
+        }));
+      }
     },
-    [setStack],
+    [setPayloads, setStack],
   );
 
   const close = useCallback(
     (id?: string) => {
-      setStack((prev) =>
-        id ? prev.filter((m) => m !== id) : prev.slice(0, -1),
-      );
+      let removedId: string | undefined;
+      setStack((prev) => {
+        removedId = id ?? prev[prev.length - 1];
+        return id ? prev.filter((m) => m !== id) : prev.slice(0, -1);
+      });
+      if (removedId) {
+        setPayloads((prev) => {
+          const next = { ...prev };
+          delete next[removedId!];
+          return next;
+        });
+      }
     },
-    [setStack],
+    [setPayloads, setStack],
   );
 
   const isOpen = useCallback((id: string) => stack.includes(id), [stack]);
+  const getPayload = useCallback((id: string) => payloads[id], [payloads]);
 
-  return { open, close, isOpen, stack };
+  return { open, close, isOpen, getPayload, stack };
 }

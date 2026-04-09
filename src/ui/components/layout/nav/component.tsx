@@ -28,6 +28,9 @@ function NavItem({
   if (!item.isVisible) return null;
 
   const handleClick = () => {
+    if (item.isDisabled) {
+      return;
+    }
     if (item.path && onNavigate) {
       onNavigate(item.path);
     }
@@ -40,6 +43,8 @@ function NavItem({
         onClick={handleClick}
         data-nav-link=""
         aria-current={item.isActive ? "page" : undefined}
+        aria-disabled={item.isDisabled || undefined}
+        disabled={item.isDisabled}
         aria-expanded={
           item.children && item.children.length > 0 ? true : undefined
         }
@@ -56,8 +61,9 @@ function NavItem({
           color: item.isActive
             ? "var(--sn-nav-active-foreground, var(--sn-color-accent-foreground))"
             : "inherit",
+          opacity: item.isDisabled ? 0.55 : 1,
           borderRadius: "var(--sn-radius-md, 0.375rem)",
-          cursor: "pointer",
+          cursor: item.isDisabled ? "not-allowed" : "pointer",
           textAlign: "left",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           fontFamily: "inherit",

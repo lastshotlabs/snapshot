@@ -9,6 +9,8 @@ export interface ResolvedNavItem extends NavItemConfig {
   isActive: boolean;
   /** Whether this item is visible to the current user (role-based). */
   isVisible: boolean;
+  /** Whether the item is disabled. */
+  isDisabled: boolean;
   /** Resolved badge count (from static value or FromRef). Null if no badge. */
   resolvedBadge: number | null;
   /** Resolved children with the same enrichments. */

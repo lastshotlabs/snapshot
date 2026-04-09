@@ -15,6 +15,12 @@ const navItemBaseSchema = z
     icon: z.string().optional(),
     /** Badge count or FromRef to resolve badge dynamically. */
     badge: z.union([z.number(), fromRefSchema]).optional(),
+    /** Whether the item is visible. */
+    visible: z.union([z.boolean(), fromRefSchema]).optional(),
+    /** Whether the item is disabled. */
+    disabled: z.union([z.boolean(), fromRefSchema]).optional(),
+    /** Whether the item requires an authenticated or guest user. */
+    authenticated: z.boolean().optional(),
     /** Roles that can see this item. If omitted, visible to all. */
     roles: z.array(z.string()).optional(),
   })

@@ -9,6 +9,7 @@ import { AppContextProvider, useResolveFrom, useSubscribe } from "../context/ind
 import { Nav } from "../components/layout/nav";
 import { DrawerComponent } from "../components/overlay/drawer";
 import { ModalComponent } from "../components/overlay/modal";
+import { useSetStateValue } from "../state";
 import { resolveTokens } from "../tokens/resolve";
 import { compileManifest } from "./compiler";
 import {
@@ -89,6 +90,56 @@ function evaluateRouteGuard(
   }
 
   return true;
+}
+
+function inferAuthScreenPath(
+  manifest: CompiledManifest,
+  screen: "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "mfa",
+): string | undefined {
+  const routeById = manifest.routes.find((route) => route.id === screen);
+  if (routeById) {
+    return routeById.path;
+  }
+
+  const candidates: Record<typeof screen, string[]> = {
+    login: ["/login", "/auth/login"],
+    register: ["/register", "/auth/register"],
+    "forgot-password": ["/forgot-password", "/auth/forgot-password"],
+    "reset-password": ["/reset-password", "/auth/reset-password"],
+    "verify-email": ["/verify-email", "/auth/verify-email"],
+    mfa: ["/mfa", "/auth/mfa"],
+  };
+
+  return candidates[screen].find((path) => manifest.routeMap[path] != null);
+}
+
+function AuthRuntimeBridge({
+  manifest,
+  useUser,
+}: {
+  manifest: CompiledManifest;
+  useUser: ReturnType<typeof createSnapshot>["useUser"];
+}) {
+  const setUser = useSetStateValue("user", { scope: "app" });
+  const setAuth = useSetStateValue("auth", { scope: "app" });
+  const { user, isLoading, isError } = useUser();
+
+  useEffect(() => {
+    if (!manifest.auth) {
+      return;
+    }
+
+    setUser(user ?? null);
+    setAuth({
+      user: user ?? null,
+      isAuthenticated: Boolean(user),
+      isLoading,
+      isError,
+      screens: manifest.auth.screens,
+    });
+  }, [isError, isLoading, manifest.auth, setAuth, setUser, user]);
+
+  return null;
 }
 
 function OverlayHost({
@@ -235,9 +286,18 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
   const execute = useActionExecutor();
   const resourceCache = useManifestResourceCache();
   const previousRouteRef = useRef<CompiledRoute | null>(null);
+  const authState = useSubscribe({ from: "global.auth" }) as
+    | {
+        user?: Record<string, unknown> | null;
+        isAuthenticated?: boolean;
+        isLoading?: boolean;
+      }
+    | null;
   const rawUser = useSubscribe({ from: "global.user" }) as
     | Record<string, unknown>
     | null;
+  const user = (authState?.user as Record<string, unknown> | null | undefined) ?? rawUser;
+  const authLoading = manifest.auth ? Boolean(authState?.isLoading ?? true) : false;
 
   const navigate = useCallback((to: string, options?: { replace?: boolean }) => {
     if (options?.replace) {
@@ -267,22 +327,38 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
   const resolvedGuard = useResolveFrom({
     condition: route?.guard?.condition ?? null,
   }).condition;
-  const routeAllowed = evaluateRouteGuard(route, rawUser, resolvedGuard);
+  const routeAllowed = evaluateRouteGuard(route, user, resolvedGuard);
 
   useEffect(() => {
     if (!route || routeAllowed) {
       return;
     }
 
+    if (route.guard?.authenticated && authLoading) {
+      return;
+    }
+
     const fallback =
       route.guard?.redirectTo ??
+      (route.guard?.authenticated
+        ? inferAuthScreenPath(manifest, "login")
+        : undefined) ??
       manifest.app.home ??
       manifest.firstRoute?.path ??
       "/";
     if (fallback !== currentPath) {
       navigate(fallback, { replace: true });
     }
-  }, [currentPath, manifest.app.home, manifest.firstRoute?.path, navigate, route, routeAllowed]);
+  }, [
+    authLoading,
+    currentPath,
+    manifest,
+    manifest.app.home,
+    manifest.firstRoute?.path,
+    navigate,
+    route,
+    routeAllowed,
+  ]);
 
   useEffect(() => {
     if (!route || !routeAllowed) {
@@ -346,7 +422,19 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
     };
   }, [execute, resourceCache, route, routeAllowed]);
 
-  if (!route || !routeAllowed) {
+  if (!route) {
+    return null;
+  }
+
+  if (route.guard?.authenticated && authLoading) {
+    return (
+      <div data-snapshot-auth-loading="" style={{ padding: "1rem" }}>
+        Loading...
+      </div>
+    );
+  }
+
+  if (!routeAllowed) {
     return null;
   }
 
@@ -403,6 +491,12 @@ export function ManifestApp({
             resources={compiledManifest.resources}
             api={snapshot.api}
           >
+            {compiledManifest.auth ? (
+              <AuthRuntimeBridge
+                manifest={compiledManifest}
+                useUser={snapshot.useUser}
+              />
+            ) : null}
             <ManifestRouter manifest={compiledManifest} api={snapshot.api} />
             <OverlayHost overlays={compiledManifest.overlays} />
           </AppContextProvider>

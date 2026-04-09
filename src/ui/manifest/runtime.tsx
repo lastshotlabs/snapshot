@@ -49,9 +49,17 @@ interface RouteRuntimeValue {
   isPreloading: boolean;
 }
 
+interface OverlayRuntimeValue {
+  id: string;
+  kind: "modal" | "drawer";
+  payload: unknown;
+}
+
 const ManifestResourceCacheContext =
   createContext<ManifestResourceCacheValue | null>(null);
 const RouteRuntimeContext = createContext<RouteRuntimeValue | null>(null);
+export const OverlayRuntimeContext =
+  createContext<OverlayRuntimeValue | null>(null);
 
 export function ManifestRuntimeProvider({
   manifest,
@@ -186,6 +194,20 @@ export function RouteRuntimeProvider({
   );
 }
 
+export function OverlayRuntimeProvider({
+  value,
+  children,
+}: {
+  value: OverlayRuntimeValue;
+  children: ReactNode;
+}) {
+  return (
+    <OverlayRuntimeContext.Provider value={value}>
+      {children}
+    </OverlayRuntimeContext.Provider>
+  );
+}
+
 export function useManifestRuntime(): CompiledManifest | null {
   return useContext(ManifestRuntimeContext);
 }
@@ -196,4 +218,8 @@ export function useManifestResourceCache(): ManifestResourceCacheValue | null {
 
 export function useRouteRuntime(): RouteRuntimeValue | null {
   return useContext(RouteRuntimeContext);
+}
+
+export function useOverlayRuntime(): OverlayRuntimeValue | null {
+  return useContext(OverlayRuntimeContext);
 }

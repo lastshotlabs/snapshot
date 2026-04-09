@@ -200,6 +200,94 @@ describe("Nav component", () => {
       );
       expect(queryByText("Public")).not.toBeNull();
     });
+
+    it("shows authenticated-only items when a user exists", () => {
+      const config: NavConfig = {
+        type: "nav",
+        items: [{ label: "Account", path: "/account", authenticated: true }],
+      };
+      const { queryByText } = renderWithContext(
+        <Nav config={config} pathname="/" />,
+        { user: { name: "Alice", role: "member" } },
+      );
+      expect(queryByText("Account")).not.toBeNull();
+    });
+
+    it("hides authenticated-only items when no user exists", () => {
+      const config: NavConfig = {
+        type: "nav",
+        items: [{ label: "Account", path: "/account", authenticated: true }],
+      };
+      const { queryByText } = renderWithContext(
+        <Nav config={config} pathname="/" />,
+      );
+      expect(queryByText("Account")).toBeNull();
+    });
+
+    it("shows guest-only items when no user exists", () => {
+      const config: NavConfig = {
+        type: "nav",
+        items: [{ label: "Sign In", path: "/login", authenticated: false }],
+      };
+      const { queryByText } = renderWithContext(
+        <Nav config={config} pathname="/" />,
+      );
+      expect(queryByText("Sign In")).not.toBeNull();
+    });
+
+    it("hides guest-only items when a user exists", () => {
+      const config: NavConfig = {
+        type: "nav",
+        items: [{ label: "Sign In", path: "/login", authenticated: false }],
+      };
+      const { queryByText } = renderWithContext(
+        <Nav config={config} pathname="/" />,
+        { user: { name: "Alice" } },
+      );
+      expect(queryByText("Sign In")).toBeNull();
+    });
+  });
+
+  describe("state-driven visibility and disabled states", () => {
+    it("hides items when visible resolves to false", () => {
+      const config: NavConfig = {
+        type: "nav",
+        items: [
+          {
+            label: "Billing",
+            path: "/billing",
+            visible: { from: "global.flags.showBilling" },
+          },
+        ],
+      };
+      const { queryByText } = renderWithContext(
+        <Nav config={config} pathname="/" />,
+        { flags: { showBilling: false } },
+      );
+      expect(queryByText("Billing")).toBeNull();
+    });
+
+    it("disables items when disabled resolves to true", () => {
+      const onNavigate = vi.fn();
+      const config: NavConfig = {
+        type: "nav",
+        items: [
+          {
+            label: "Reports",
+            path: "/reports",
+            disabled: { from: "global.flags.reportsDisabled" },
+          },
+        ],
+      };
+      const { getByRole } = renderWithContext(
+        <Nav config={config} pathname="/" onNavigate={onNavigate} />,
+        { flags: { reportsDisabled: true } },
+      );
+      const button = getByRole("button", { name: "Reports" });
+      expect(button.getAttribute("aria-disabled")).toBe("true");
+      fireEvent.click(button);
+      expect(onNavigate).not.toHaveBeenCalled();
+    });
   });
 
   describe("active state detection", () => {

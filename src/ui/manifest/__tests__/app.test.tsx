@@ -25,6 +25,7 @@ import { ManifestApp, injectStyleSheet } from "../app";
 import { registerComponent } from "../component-registry";
 import { registerComponentSchema } from "../schema";
 import type { ManifestConfig } from "../types";
+import { useSubscribe } from "../../context";
 import { useSetStateValue, useStateValue } from "../../state";
 
 import "../structural";
@@ -44,6 +45,38 @@ registerComponent("route-state-probe", function RouteStateProbe() {
       {String(value ?? 0)}
     </button>
   );
+});
+
+registerComponentSchema(
+  "app-state-probe",
+  z.object({
+    type: z.literal("app-state-probe"),
+    key: z.string(),
+  }),
+);
+registerComponent("app-state-probe", function AppStateProbe({
+  config,
+}: {
+  config: Record<string, unknown>;
+}) {
+  const value = useStateValue(String(config.key ?? ""), { scope: "app" });
+  return <div>{String(value ?? "")}</div>;
+});
+
+registerComponentSchema(
+  "auth-value-probe",
+  z.object({
+    type: z.literal("auth-value-probe"),
+    from: z.string(),
+  }),
+);
+registerComponent("auth-value-probe", function AuthValueProbe({
+  config,
+}: {
+  config: Record<string, unknown>;
+}) {
+  const value = useSubscribe({ from: String(config.from ?? "") });
+  return <div>{typeof value === "string" ? value : String(value ?? "")}</div>;
 });
 
 const minimalManifest: ManifestConfig = {
@@ -284,7 +317,7 @@ describe("ManifestApp", () => {
   });
 
   it("preloads route resources before rendering page content", async () => {
-    let resolveFetch: ((response: Response) => void) | null = null;
+    let resolveFetch!: (response: Response) => void;
     global.fetch = vi.fn(
       () =>
         new Promise<Response>((resolve) => {
@@ -312,7 +345,7 @@ describe("ManifestApp", () => {
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
     expect(screen.getByText("Loading...")).toBeDefined();
 
-    resolveFetch?.(
+    resolveFetch(
       new Response(JSON.stringify({ id: 1, name: "Ada" }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -321,6 +354,166 @@ describe("ManifestApp", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Ready")).toBeDefined();
+    });
+  });
+
+  it("runs route leave and enter workflows during navigation", async () => {
+    const manifest: ManifestConfig = {
+      state: {
+        enterStatus: {
+          scope: "app",
+          default: "",
+        },
+        leaveStatus: {
+          scope: "app",
+          default: "",
+        },
+      },
+      navigation: {
+        mode: "sidebar",
+        items: [
+          { label: "Home", path: "/" },
+          { label: "About", path: "/about" },
+        ],
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          leave: [
+            {
+              type: "set-value",
+              target: "global.leaveStatus",
+              value: "left {route.id}",
+            },
+          ],
+          content: [{ type: "heading", text: "Home Page" }],
+        },
+        {
+          id: "about",
+          path: "/about",
+          enter: [
+            {
+              type: "set-value",
+              target: "global.enterStatus",
+              value: "entered {route.id}",
+            },
+          ],
+          content: [
+            { type: "heading", text: "About Page" },
+            { type: "app-state-probe", key: "enterStatus" },
+            { type: "app-state-probe", key: "leaveStatus" },
+          ],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+    fireEvent.click(screen.getByRole("button", { name: "About" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("About Page")).toBeDefined();
+      expect(screen.getByText("entered about")).toBeDefined();
+      expect(screen.getByText("left home")).toBeDefined();
+    });
+  });
+
+  it("hydrates auth state from the session user before rendering a protected route", async () => {
+    window.history.replaceState({}, "", "/private");
+    global.fetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/auth/me")) {
+        return new Response(JSON.stringify({ name: "Ada", role: "admin" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+
+    const manifest: ManifestConfig = {
+      app: {
+        home: "/private",
+      },
+      auth: {
+        screens: ["login"],
+      },
+      routes: [
+        {
+          id: "login",
+          path: "/login",
+          content: [{ type: "heading", text: "Login Page" }],
+        },
+        {
+          id: "private",
+          path: "/private",
+          guard: {
+            authenticated: true,
+          },
+          content: [
+            { type: "heading", text: "Private Page" },
+            { type: "auth-value-probe", from: "global.user.name" },
+            { type: "auth-value-probe", from: "global.auth.isAuthenticated" },
+          ],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Private Page")).toBeDefined();
+      expect(screen.getByText("Ada")).toBeDefined();
+      expect(screen.getByText("true")).toBeDefined();
+    });
+  });
+
+  it("redirects protected routes to the inferred login route after auth bootstrap", async () => {
+    window.history.replaceState({}, "", "/private");
+    global.fetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/auth/me")) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+
+    const manifest: ManifestConfig = {
+      auth: {
+        screens: ["login"],
+      },
+      routes: [
+        {
+          id: "login",
+          path: "/login",
+          content: [{ type: "heading", text: "Login Page" }],
+        },
+        {
+          id: "private",
+          path: "/private",
+          guard: {
+            authenticated: true,
+          },
+          content: [{ type: "heading", text: "Private Page" }],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Login Page")).toBeDefined();
     });
   });
 });

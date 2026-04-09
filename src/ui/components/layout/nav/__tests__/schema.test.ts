@@ -14,6 +14,9 @@ describe("navItemSchema", () => {
       path: "/dashboard",
       icon: "layout-dashboard",
       badge: 5,
+      visible: true,
+      disabled: false,
+      authenticated: true,
       roles: ["admin"],
     });
     expect(result.success).toBe(true);
@@ -24,6 +27,16 @@ describe("navItemSchema", () => {
       label: "Notifications",
       path: "/notifications",
       badge: { from: "global.notifications.unread" },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts FromRef visibility and disabled states", () => {
+    const result = navItemSchema.safeParse({
+      label: "Billing",
+      path: "/billing",
+      visible: { from: "global.flags.billingNav" },
+      disabled: { from: "global.flags.billingDisabled" },
     });
     expect(result.success).toBe(true);
   });

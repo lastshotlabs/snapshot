@@ -9,16 +9,38 @@ import type { AuthUser, ResolvedNavItem, UseNavResult } from "./types";
 function resolveNavItem(
   item: NavItemConfig,
   pathname: string,
+  user: AuthUser | null,
   userRoles: string[],
   subscribedBadge: unknown,
+  subscribedVisible: unknown,
+  subscribedDisabled: unknown,
 ): ResolvedNavItem {
   const isActive = item.path
     ? pathname === item.path || pathname.startsWith(item.path + "/")
     : false;
-  const isVisible =
+  const resolvedVisible =
+    typeof item.visible === "boolean"
+      ? item.visible
+      : typeof subscribedVisible === "boolean"
+        ? subscribedVisible
+        : true;
+  const resolvedDisabled =
+    typeof item.disabled === "boolean"
+      ? item.disabled
+      : typeof subscribedDisabled === "boolean"
+        ? subscribedDisabled
+        : false;
+  const matchesAuth =
+    item.authenticated === undefined
+      ? true
+      : item.authenticated
+        ? Boolean(user)
+        : !user;
+  const matchesRole =
     !item.roles ||
     item.roles.length === 0 ||
     item.roles.some((role: string) => userRoles.includes(role));
+  const isVisible = resolvedVisible && matchesAuth && matchesRole;
 
   let resolvedBadge: number | null = null;
   if (typeof item.badge === "number") {
@@ -28,13 +50,22 @@ function resolveNavItem(
   }
 
   const resolvedChildren = item.children?.map((child: NavItemConfig) =>
-    resolveNavItem(child, pathname, userRoles, undefined),
+    resolveNavItem(
+      child,
+      pathname,
+      user,
+      userRoles,
+      undefined,
+      undefined,
+      undefined,
+    ),
   );
 
   return {
     ...item,
     isActive,
     isVisible,
+    isDisabled: resolvedDisabled,
     resolvedBadge,
     children: resolvedChildren,
   };
@@ -106,14 +137,82 @@ export function useNav(config: NavConfig, pathname: string): UseNavResult {
     0,
     config.items.length,
   );
+  const visibilityRef = (index: number) => {
+    const item = config.items[index];
+    if (
+      item &&
+      typeof item.visible === "object" &&
+      item.visible !== null &&
+      "from" in item.visible
+    ) {
+      return item.visible;
+    }
+    return undefined;
+  };
+  const v0 = useSubscribe(visibilityRef(0));
+  const v1 = useSubscribe(visibilityRef(1));
+  const v2 = useSubscribe(visibilityRef(2));
+  const v3 = useSubscribe(visibilityRef(3));
+  const v4 = useSubscribe(visibilityRef(4));
+  const v5 = useSubscribe(visibilityRef(5));
+  const v6 = useSubscribe(visibilityRef(6));
+  const v7 = useSubscribe(visibilityRef(7));
+  const v8 = useSubscribe(visibilityRef(8));
+  const v9 = useSubscribe(visibilityRef(9));
+  const visibilityValues: unknown[] = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9].slice(
+    0,
+    config.items.length,
+  );
+  const disabledRef = (index: number) => {
+    const item = config.items[index];
+    if (
+      item &&
+      typeof item.disabled === "object" &&
+      item.disabled !== null &&
+      "from" in item.disabled
+    ) {
+      return item.disabled;
+    }
+    return undefined;
+  };
+  const d0 = useSubscribe(disabledRef(0));
+  const d1 = useSubscribe(disabledRef(1));
+  const d2 = useSubscribe(disabledRef(2));
+  const d3 = useSubscribe(disabledRef(3));
+  const d4 = useSubscribe(disabledRef(4));
+  const d5 = useSubscribe(disabledRef(5));
+  const d6 = useSubscribe(disabledRef(6));
+  const d7 = useSubscribe(disabledRef(7));
+  const d8 = useSubscribe(disabledRef(8));
+  const d9 = useSubscribe(disabledRef(9));
+  const disabledValues: unknown[] = [d0, d1, d2, d3, d4, d5, d6, d7, d8, d9].slice(
+    0,
+    config.items.length,
+  );
 
   const items = useMemo(() => {
     return config.items.map((item, index) =>
-      resolveNavItem(item, pathname, userRoles, badgeValues[index]),
+      resolveNavItem(
+        item,
+        pathname,
+        user,
+        userRoles,
+        badgeValues[index],
+        visibilityValues[index],
+        disabledValues[index],
+      ),
     );
     // badgeValues is intentionally spread to avoid array reference instability
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.items, pathname, userRoles, ...badgeValues]);
+  }, [
+    config.items,
+    pathname,
+    user,
+    userRoles,
+    ...badgeValues,
+    ...visibilityValues,
+    ...disabledValues,
+  ]);
 
   const activeItem = useMemo(() => findActiveItem(items), [items]);
 

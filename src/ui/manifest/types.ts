@@ -39,6 +39,9 @@ export interface NavItem {
   label: string;
   path: string;
   icon?: string;
+  visible?: boolean | FromRef;
+  disabled?: boolean | FromRef;
+  authenticated?: boolean;
   roles?: string[];
   badge?: number | FromRef;
   children?: NavItem[];

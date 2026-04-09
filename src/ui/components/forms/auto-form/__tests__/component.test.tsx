@@ -44,6 +44,8 @@ function createWrapper(options: {
       Provider,
       null,
       createElement(ManifestRuntimeProvider, {
+        api:
+          api as unknown as import("../../../../../api/client").ApiClient,
         manifest: {
           raw: { routes: [{ id: "test", path: "/", content: [] }], resources },
           app: {},

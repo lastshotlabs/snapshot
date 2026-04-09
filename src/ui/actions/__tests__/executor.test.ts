@@ -40,6 +40,7 @@ function createWrapper(options: {
         SnapshotApiContext.Provider,
         { value: api as unknown as import("../../../api/client").ApiClient },
         createElement(ManifestRuntimeProvider as React.ComponentType<any>, {
+          api: api as unknown as import("../../../api/client").ApiClient,
           manifest:
             manifest ??
             ({
@@ -78,25 +79,18 @@ describe("useActionExecutor", () => {
   it("executes a navigate action", async () => {
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
     const { result } = renderHook(() => useActionExecutor(), { wrapper });
-
-    // Mock window.location
-    const originalHref = window.location.href;
-    Object.defineProperty(window, "location", {
-      value: { href: "", replace: vi.fn() },
-      writable: true,
-    });
+    const pushStateSpy = vi.spyOn(window.history, "pushState");
+    const popStateSpy = vi.fn();
+    window.addEventListener("popstate", popStateSpy);
 
     await act(async () => {
       await result.current({ type: "navigate", to: "/users" });
     });
 
-    expect(window.location.href).toBe("/users");
-
-    // Restore
-    Object.defineProperty(window, "location", {
-      value: { href: originalHref, replace: vi.fn() },
-      writable: true,
-    });
+    expect(pushStateSpy).toHaveBeenCalledWith({}, "", "/users");
+    expect(window.location.pathname).toBe("/users");
+    expect(popStateSpy).toHaveBeenCalledTimes(1);
+    window.removeEventListener("popstate", popStateSpy);
   });
 
   it("executes an api GET action", async () => {

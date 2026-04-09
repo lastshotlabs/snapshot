@@ -3,6 +3,7 @@ import { atom } from "jotai";
 import { useAtomValue } from "jotai/react";
 import type { PrimitiveAtom } from "jotai";
 import { PageRegistryContext, AppRegistryContext } from "./providers";
+import { useOverlayRuntime } from "../manifest/runtime";
 import {
   getNestedValue,
   isFromRef,
@@ -91,7 +92,23 @@ export function useSubscribe(ref: FromRef | unknown): unknown {
   const isRef = isFromRef(ref);
   const pageRegistry = useContext(PageRegistryContext);
   const appRegistry = useContext(AppRegistryContext);
+  const overlayRuntime = useOverlayRuntime();
   const refPath = isRef ? ref.from : "";
+
+  if (isRef && refPath.startsWith("overlay.")) {
+    const overlayValue = {
+      id: overlayRuntime?.id,
+      kind: overlayRuntime?.kind,
+      payload: overlayRuntime?.payload,
+    };
+    const resolved = getNestedValue(overlayValue, refPath.slice(8));
+    return applyTransform(
+      resolved,
+      (ref as FromRef).transform,
+      (ref as FromRef).transformArg,
+    );
+  }
+
   const { registry, cleanPath } = resolveSubscriptionTarget(
     refPath,
     pageRegistry,
