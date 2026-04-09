@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ApiError } from "../../api/error";
 import { mergeContract, type AuthContract } from "../../auth/contract";
+import { useSetStateValue } from "../state";
 import type {
   AuthErrorContext,
   AuthUser,
@@ -110,6 +111,22 @@ function useLocationSearch(): URLSearchParams {
 
 function resolveHomePath(manifest: CompiledManifest): string {
   return manifest.app.home ?? manifest.firstRoute?.path ?? "/";
+}
+
+function useApplyAuthenticatedUser(manifest: CompiledManifest) {
+  const setUser = useSetStateValue("user", { scope: "app" });
+  const setAuth = useSetStateValue("auth", { scope: "app" });
+
+  return (user: AuthUser | null) => {
+    setUser(user);
+    setAuth({
+      user,
+      isAuthenticated: Boolean(user),
+      isLoading: false,
+      isError: false,
+      screens: manifest.auth?.screens ?? [],
+    });
+  };
 }
 
 function applyAuthTokens(
@@ -483,6 +500,7 @@ function LoginScreen({
   navigate: (to: string) => void;
   setPendingChallenge: (challenge: MfaChallenge | null) => void;
 }) {
+  const applyAuthenticatedUser = useApplyAuthenticatedUser(manifest);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const loginPath = inferAuthScreenPath(manifest, "login");
@@ -526,6 +544,7 @@ function LoginScreen({
       }
 
       setPendingChallenge(null);
+      applyAuthenticatedUser(result.user);
       snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, result.user);
       navigate(resolveHomePath(manifest));
     },
@@ -602,6 +621,7 @@ function RegisterScreen({
   runtimeConfig: ManifestAuthRuntimeConfig;
   navigate: (to: string) => void;
 }) {
+  const applyAuthenticatedUser = useApplyAuthenticatedUser(manifest);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -616,6 +636,7 @@ function RegisterScreen({
       return snapshot.api.get<AuthUser>(runtimeConfig.contract.endpoints.me);
     },
     onSuccess: (user) => {
+      applyAuthenticatedUser(user);
       snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, user);
       navigate(resolveHomePath(manifest));
     },
@@ -903,6 +924,7 @@ function MfaScreen({
   pendingChallenge: MfaChallenge | null;
   setPendingChallenge: (challenge: MfaChallenge | null) => void;
 }) {
+  const applyAuthenticatedUser = useApplyAuthenticatedUser(manifest);
   const [code, setCode] = useState("");
   const [method, setMethod] = useState<MfaMethod>(
     pendingChallenge?.mfaMethods[0] ?? ("totp" as const),
@@ -933,6 +955,7 @@ function MfaScreen({
     },
     onSuccess: (user) => {
       setPendingChallenge(null);
+      applyAuthenticatedUser(user);
       snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, user);
       navigate(resolveHomePath(manifest));
     },
