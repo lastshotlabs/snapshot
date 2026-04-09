@@ -30,6 +30,13 @@ describe("manifestConfigSchema", () => {
         user: { data: "GET /api/me", default: null },
         filters: { scope: "route", default: { status: "all" } },
       },
+      resources: {
+        "user.list": {
+          method: "GET",
+          endpoint: "/api/users",
+          cacheMs: 30000,
+        },
+      },
       navigation: {
         mode: "sidebar",
         items: [

@@ -10,8 +10,8 @@ export interface UseModalReturn {
   open: () => void;
   /** Close the modal. */
   close: () => void;
-  /** Resolved title string (FromRef resolved to value). */
-  title: string | undefined;
+  /** Current overlay payload. */
+  payload: unknown;
 }
 
 /**

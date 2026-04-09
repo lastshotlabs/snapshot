@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import type { ActionConfig } from "../../../actions/types";
+import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
+import { OverlayRuntimeProvider } from "../../../manifest/runtime";
 import type { ComponentConfig } from "../../../manifest/types";
 import {
   getButtonStyle,
@@ -40,14 +42,14 @@ const ALIGN_MAP: Record<string, string> = {
  * @param props.config - The modal config from the manifest
  */
 export function ModalComponent({ config }: { config: ModalConfig }) {
-  const { isOpen, close, title } = useModal(config);
-  const execute = useActionExecutor();
+  const { isOpen, close, payload } = useModal(config);
   const dialogRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const overlayId = config.id ?? "";
 
-  const size = config.size ?? "md";
-  const maxWidth = SIZE_MAP[size] ?? SIZE_MAP.md;
+  const size: keyof typeof SIZE_MAP = config.size ?? "md";
+  const maxWidth: string = SIZE_MAP[size] ?? SIZE_MAP.md!;
 
   // Handle mount/unmount with animation.
   // Uses setTimeout instead of double-rAF for reliable animation
@@ -95,6 +97,46 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
   if (!mounted) return null;
 
   return (
+    <OverlayRuntimeProvider
+      value={{ id: overlayId, kind: "modal", payload }}
+    >
+      <ModalSurface
+        config={config}
+        dialogRef={dialogRef}
+        maxWidth={maxWidth}
+        size={size}
+        animating={animating}
+        close={close}
+        handleKeyDown={handleKeyDown}
+        handleOverlayClick={handleOverlayClick}
+      />
+    </OverlayRuntimeProvider>
+  );
+}
+
+function ModalSurface({
+  config,
+  dialogRef,
+  maxWidth,
+  size,
+  animating,
+  close,
+  handleKeyDown,
+  handleOverlayClick,
+}: {
+  config: ModalConfig;
+  dialogRef: React.RefObject<HTMLDivElement | null>;
+  maxWidth: string;
+  size: string;
+  animating: boolean;
+  close: () => void;
+  handleKeyDown: (e: React.KeyboardEvent) => void;
+  handleOverlayClick: (e: React.MouseEvent) => void;
+}) {
+  const execute = useActionExecutor();
+  const title = useSubscribe(config.title) as string | undefined;
+
+  return (
     <div
       data-snapshot-component="modal"
       className={config.className}
@@ -111,7 +153,6 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
         ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
-      {/* Overlay */}
       <div
         data-snapshot-modal-overlay=""
         data-testid="modal-overlay"
@@ -126,7 +167,6 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
         }}
       />
 
-      {/* Dialog */}
       <div
         ref={dialogRef}
         tabIndex={-1}

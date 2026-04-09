@@ -5,6 +5,7 @@ import { createElement, type ReactNode } from "react";
 import { Provider } from "jotai/react";
 import { useActionExecutor, SnapshotApiContext } from "../executor";
 import { ManifestRuntimeProvider } from "../../manifest/runtime";
+import { useManifestResourceCache } from "../../manifest/runtime";
 import {
   PageRegistryContext,
   AppRegistryContext,
@@ -233,6 +234,46 @@ describe("useActionExecutor", () => {
 
     expect(pageRegistry.get("__refresh_table-a")).toBeDefined();
     expect(pageRegistry.get("__refresh_table-b")).toBeDefined();
+  });
+
+  it("invalidates named resources through refresh actions", async () => {
+    const manifest = {
+      raw: {
+        routes: [],
+        resources: {
+          users: {
+            method: "GET",
+            endpoint: "/api/users",
+          },
+        },
+      },
+      app: {},
+      resources: {
+        users: {
+          method: "GET" as const,
+          endpoint: "/api/users",
+        },
+      },
+      routes: [],
+      routeMap: {},
+      firstRoute: null,
+    } as import("../../manifest/types").CompiledManifest;
+    const wrapper = createWrapper({ api: mockApi, pageRegistry, manifest });
+    const { result } = renderHook(
+      () => ({
+        execute: useActionExecutor(),
+        resourceCache: useManifestResourceCache(),
+      }),
+      { wrapper },
+    );
+
+    expect(result.current.resourceCache?.getResourceVersion("users")).toBe(0);
+
+    await act(async () => {
+      await result.current.execute({ type: "refresh", target: "resource:users" });
+    });
+
+    expect(result.current.resourceCache?.getResourceVersion("users")).toBe(1);
   });
 
   it("executes set-value action", async () => {

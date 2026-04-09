@@ -13,12 +13,10 @@ import type { UseModalReturn } from "./types";
  * @returns Modal state and controls
  */
 export function useModal(config: ModalConfig): UseModalReturn {
-  const { open, close, isOpen } = useModalManager();
+  const { open, close, isOpen, getPayload } = useModalManager();
   const id = config.id ?? "";
   const currentlyOpen = isOpen(id);
-
-  // Resolve title from ref or static value
-  const resolvedTitle = useSubscribe(config.title) as string | undefined;
+  const payload = getPayload(id);
 
   // Resolve trigger from ref
   const triggerValue = useSubscribe(config.trigger);
@@ -46,6 +44,6 @@ export function useModal(config: ModalConfig): UseModalReturn {
     isOpen: currentlyOpen,
     open: () => open(id),
     close: () => close(id),
-    title: resolvedTitle,
+    payload,
   };
 }

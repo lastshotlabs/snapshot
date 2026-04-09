@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import type { ActionConfig } from "../../../actions/types";
+import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
+import { OverlayRuntimeProvider } from "../../../manifest/runtime";
 import type { ComponentConfig } from "../../../manifest/types";
 import {
   getButtonStyle,
@@ -40,15 +42,15 @@ const ALIGN_MAP: Record<string, string> = {
  * @param props.config - The drawer config from the manifest
  */
 export function DrawerComponent({ config }: { config: DrawerConfig }) {
-  const { isOpen, close, title } = useDrawer(config);
-  const execute = useActionExecutor();
+  const { isOpen, close, payload } = useDrawer(config);
   const panelRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const overlayId = config.id ?? "";
 
-  const side = config.side ?? "right";
-  const size = config.size ?? "md";
-  const width = SIZE_MAP[size] ?? SIZE_MAP.md;
+  const side: "left" | "right" = config.side ?? "right";
+  const size: keyof typeof SIZE_MAP = config.size ?? "md";
+  const width: string = SIZE_MAP[size] ?? SIZE_MAP.md!;
 
   // Handle mount/unmount with animation.
   // Uses setTimeout(0) instead of double-rAF for reliable animation
@@ -105,6 +107,49 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
         : "translateX(100%)";
 
   return (
+    <OverlayRuntimeProvider
+      value={{ id: overlayId, kind: "drawer", payload }}
+    >
+      <DrawerSurface
+        config={config}
+        panelRef={panelRef}
+        side={side}
+        width={width}
+        animating={animating}
+        translateValue={translateValue}
+        close={close}
+        handleKeyDown={handleKeyDown}
+        handleOverlayClick={handleOverlayClick}
+      />
+    </OverlayRuntimeProvider>
+  );
+}
+
+function DrawerSurface({
+  config,
+  panelRef,
+  side,
+  width,
+  animating,
+  translateValue,
+  close,
+  handleKeyDown,
+  handleOverlayClick,
+}: {
+  config: DrawerConfig;
+  panelRef: React.RefObject<HTMLDivElement | null>;
+  side: string;
+  width: string;
+  animating: boolean;
+  translateValue: string;
+  close: () => void;
+  handleKeyDown: (e: React.KeyboardEvent) => void;
+  handleOverlayClick: (e: React.MouseEvent) => void;
+}) {
+  const execute = useActionExecutor();
+  const title = useSubscribe(config.title) as string | undefined;
+
+  return (
     <div
       data-snapshot-component="drawer"
       className={config.className}
@@ -119,7 +164,6 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
         ...((config.style as React.CSSProperties) ?? {}),
       }}
     >
-      {/* Overlay */}
       <div
         data-snapshot-drawer-overlay=""
         onClick={handleOverlayClick}
@@ -133,7 +177,6 @@ export function DrawerComponent({ config }: { config: DrawerConfig }) {
         }}
       />
 
-      {/* Panel */}
       <div
         ref={panelRef}
         tabIndex={-1}

@@ -139,6 +139,7 @@ describe("Action Zod Schemas", () => {
       const result = openModalActionSchema.safeParse({
         type: "open-modal",
         modal: "edit-user",
+        payload: { userId: "1" },
       });
       expect(result.success).toBe(true);
     });

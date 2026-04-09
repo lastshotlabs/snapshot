@@ -144,6 +144,10 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
         )
       : null;
   const path = request ? buildRequestUrl(request.endpoint, request.params) : "";
+  const resourceVersion =
+    resolvedTarget && isResourceRef(resolvedTarget)
+      ? (resourceCache?.getResourceVersion(resolvedTarget.resource) ?? 0)
+      : 0;
 
   // Check if all required params are resolved (no undefined values for params used in the path)
   const allParamsResolved =
@@ -152,7 +156,7 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
 
   // Fetch data from endpoint when data is a string
   const queryResult = useQuery({
-    queryKey: ["detail-card", path, request?.method],
+    queryKey: ["detail-card", path, request?.method, resourceVersion],
     queryFn: async () => {
       if (!api) {
         throw new Error(

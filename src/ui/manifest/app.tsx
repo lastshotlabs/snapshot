@@ -36,6 +36,86 @@ export function injectStyleSheet(id: string, css: string): void {
   el.textContent = css;
 }
 
+function normalizePathname(path: string): string {
+  if (!path) {
+    return "/";
+  }
+
+  if (path.length > 1 && path.endsWith("/")) {
+    return path.slice(0, -1);
+  }
+
+  return path;
+}
+
+function matchRoutePath(
+  routePath: string,
+  currentPath: string,
+): Record<string, string> | null {
+  const patternParts = normalizePathname(routePath).split("/").filter(Boolean);
+  const currentParts = normalizePathname(currentPath).split("/").filter(Boolean);
+
+  if (patternParts.length !== currentParts.length) {
+    return null;
+  }
+
+  const params: Record<string, string> = {};
+  for (let i = 0; i < patternParts.length; i += 1) {
+    const patternPart = patternParts[i]!;
+    const currentPart = currentParts[i]!;
+    const paramMatch = patternPart.match(/^\{(.+)\}$/);
+    if (paramMatch) {
+      params[paramMatch[1]!] = decodeURIComponent(currentPart);
+      continue;
+    }
+
+    if (patternPart !== currentPart) {
+      return null;
+    }
+  }
+
+  return params;
+}
+
+function resolveRouteMatch(
+  manifest: CompiledManifest,
+  currentPath: string,
+): { route: CompiledRoute | null; params: Record<string, string> } {
+  const normalizedCurrentPath = normalizePathname(currentPath);
+  const exactRoute = manifest.routeMap[normalizedCurrentPath];
+  if (exactRoute) {
+    return { route: exactRoute, params: {} };
+  }
+
+  for (const route of manifest.routes) {
+    const params = matchRoutePath(route.path, normalizedCurrentPath);
+    if (params) {
+      return { route, params };
+    }
+  }
+
+  if (manifest.app.home) {
+    const homeRoute = manifest.routeMap[normalizePathname(manifest.app.home)];
+    if (homeRoute) {
+      return { route: homeRoute, params: {} };
+    }
+  }
+
+  if (manifest.firstRoute) {
+    return { route: manifest.firstRoute, params: {} };
+  }
+
+  if (manifest.app.notFound) {
+    const notFoundRoute =
+      manifest.routeMap[normalizePathname(manifest.app.notFound)];
+    if (notFoundRoute) {
+      return { route: notFoundRoute, params: {} };
+    }
+  }
+
+  return { route: null, params: {} };
+}
+
 function evaluateRouteGuard(
   route: CompiledRoute | null,
   user: Record<string, unknown> | null,
@@ -217,7 +297,7 @@ function AppShell({
       ) : (
         <PageRenderer
           page={route.page}
-          routeId={route.id}
+          routeId={currentPath}
           state={manifest.state}
           resources={manifest.resources}
           api={api}
@@ -285,7 +365,11 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
   const [isPreloading, setIsPreloading] = useState(false);
   const execute = useActionExecutor();
   const resourceCache = useManifestResourceCache();
-  const previousRouteRef = useRef<CompiledRoute | null>(null);
+  const previousMatchRef = useRef<{
+    route: CompiledRoute | null;
+    currentPath: string;
+    params: Record<string, string>;
+  } | null>(null);
   const authState = useSubscribe({ from: "global.auth" }) as
     | {
         user?: Record<string, unknown> | null;
@@ -317,12 +401,10 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  const route =
-    manifest.routeMap[currentPath] ??
-    (manifest.app.home ? manifest.routeMap[manifest.app.home] : undefined) ??
-    manifest.firstRoute ??
-    (manifest.app.notFound ? manifest.routeMap[manifest.app.notFound] : undefined) ??
-    null;
+  const { route, params } = useMemo(
+    () => resolveRouteMatch(manifest, currentPath),
+    [currentPath, manifest],
+  );
 
   const resolvedGuard = useResolveFrom({
     condition: route?.guard?.condition ?? null,
@@ -368,30 +450,53 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
     let cancelled = false;
 
     const runLifecycle = async () => {
-      const previousRoute = previousRouteRef.current;
-      if (previousRoute && previousRoute.id !== route.id && previousRoute.leave) {
-        if (typeof previousRoute.leave === "string") {
+      const previousMatch = previousMatchRef.current;
+      if (
+        previousMatch &&
+        (previousMatch.currentPath !== currentPath ||
+          previousMatch.route?.id !== route.id) &&
+        previousMatch.route?.leave
+      ) {
+        if (typeof previousMatch.route.leave === "string") {
           await execute(
-            { type: "run-workflow", workflow: previousRoute.leave },
+            { type: "run-workflow", workflow: previousMatch.route.leave },
             {
-              route: previousRoute,
+              route: {
+                id: previousMatch.route.id,
+                path: previousMatch.currentPath,
+                pattern: previousMatch.route.path,
+                params: previousMatch.params,
+              },
+              params: previousMatch.params,
             },
           );
         } else {
-          await execute(previousRoute.leave as never, {
-            route: previousRoute,
+          await execute(previousMatch.route.leave as never, {
+            route: {
+              id: previousMatch.route.id,
+              path: previousMatch.currentPath,
+              pattern: previousMatch.route.path,
+              params: previousMatch.params,
+            },
+            params: previousMatch.params,
           });
         }
       }
 
-      previousRouteRef.current = route;
+      previousMatchRef.current = {
+        route,
+        currentPath,
+        params,
+      };
 
       if (route.preload && route.preload.length > 0) {
         setIsPreloading(true);
         try {
           await Promise.all(
             route.preload.map((name) =>
-              resourceCache ? resourceCache.preloadResource(name) : Promise.resolve(),
+              resourceCache
+                ? resourceCache.preloadResource(name, params)
+                : Promise.resolve(),
             ),
           );
         } finally {
@@ -407,10 +512,26 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
         if (typeof route.enter === "string") {
           await execute(
             { type: "run-workflow", workflow: route.enter },
-            { route },
+            {
+              route: {
+                id: route.id,
+                path: currentPath,
+                pattern: route.path,
+                params,
+              },
+              params,
+            },
           );
         } else {
-          await execute(route.enter as never, { route });
+          await execute(route.enter as never, {
+            route: {
+              id: route.id,
+              path: currentPath,
+              pattern: route.path,
+              params,
+            },
+            params,
+          });
         }
       }
     };
@@ -420,7 +541,7 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
     return () => {
       cancelled = true;
     };
-  }, [execute, resourceCache, route, routeAllowed]);
+  }, [currentPath, execute, params, resourceCache, route, routeAllowed]);
 
   if (!route) {
     return null;
@@ -443,6 +564,7 @@ function ManifestRouter({ manifest, api }: ManifestRouterProps) {
       value={{
         currentPath,
         currentRoute: route,
+        params,
         navigate,
         isPreloading,
       }}

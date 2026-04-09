@@ -79,6 +79,22 @@ registerComponent("auth-value-probe", function AuthValueProbe({
   return <div>{typeof value === "string" ? value : String(value ?? "")}</div>;
 });
 
+registerComponentSchema(
+  "params-probe",
+  z.object({
+    type: z.literal("params-probe"),
+    from: z.string(),
+  }),
+);
+registerComponent("params-probe", function ParamsProbe({
+  config,
+}: {
+  config: Record<string, unknown>;
+}) {
+  const value = useSubscribe({ from: String(config.from ?? "") });
+  return <div>{typeof value === "string" ? value : String(value ?? "")}</div>;
+});
+
 const minimalManifest: ManifestConfig = {
   app: {
     title: "Snapshot App",
@@ -282,11 +298,36 @@ describe("ManifestApp", () => {
 
   it("renders named overlays opened by actions", async () => {
     const manifest: ManifestConfig = {
+      state: {
+        overlayResult: {
+          scope: "app",
+          default: "",
+        },
+      },
       overlays: {
         help: {
           type: "modal",
-          title: "Need Help?",
-          content: [{ type: "heading", text: "Overlay Content" }],
+          title: { from: "overlay.payload.title" },
+          content: [
+            {
+              type: "heading",
+              text: { from: "overlay.payload.message" },
+            },
+            { type: "app-state-probe", key: "overlayResult" },
+          ],
+          footer: {
+            actions: [
+              {
+                label: "Apply",
+                dismiss: true,
+                action: {
+                  type: "set-value",
+                  target: "global.overlayResult",
+                  value: "{overlay.payload.result}",
+                },
+              },
+            ],
+          },
         },
       },
       routes: [
@@ -300,6 +341,11 @@ describe("ManifestApp", () => {
               action: {
                 type: "open-modal",
                 modal: "help",
+                payload: {
+                  title: "Need Help?",
+                  message: "Overlay Content",
+                  result: "applied",
+                },
               },
             },
           ],
@@ -313,6 +359,12 @@ describe("ManifestApp", () => {
     await waitFor(() => {
       expect(screen.getByText("Need Help?")).toBeDefined();
       expect(screen.getByText("Overlay Content")).toBeDefined();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("applied")).toBeDefined();
     });
   });
 
@@ -354,6 +406,53 @@ describe("ManifestApp", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Ready")).toBeDefined();
+    });
+  });
+
+  it("passes dynamic route params into route preload resources", async () => {
+    window.history.replaceState({}, "", "/users/42");
+
+    let requestedUrl = "";
+    let resolveFetch!: (response: Response) => void;
+    global.fetch = vi.fn(
+      (input: RequestInfo | URL) => {
+        requestedUrl = String(input);
+        return new Promise<Response>((resolve) => {
+          resolveFetch = resolve;
+        });
+      },
+    ) as typeof fetch;
+
+    const manifest: ManifestConfig = {
+      resources: {
+        user: {
+          method: "GET",
+          endpoint: "/api/users/{id}",
+        },
+      },
+      routes: [
+        {
+          id: "user-detail",
+          path: "/users/{id}",
+          preload: ["user"],
+          content: [{ type: "heading", text: "User Ready" }],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+    expect(screen.getByText("Loading...")).toBeDefined();
+    expect(requestedUrl).toContain("/api/users/42");
+
+    resolveFetch(
+      new Response(JSON.stringify({ id: 42, name: "Ada" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("User Ready")).toBeDefined();
     });
   });
 
@@ -415,6 +514,54 @@ describe("ManifestApp", () => {
       expect(screen.getByText("About Page")).toBeDefined();
       expect(screen.getByText("entered about")).toBeDefined();
       expect(screen.getByText("left home")).toBeDefined();
+    });
+  });
+
+  it("matches dynamic routes and exposes params to bindings", async () => {
+    window.history.replaceState({}, "", "/users/42");
+
+    const manifest: ManifestConfig = {
+      state: {
+        routeCounter: {
+          scope: "route",
+          default: 0,
+        },
+      },
+      routes: [
+        {
+          id: "user-detail",
+          path: "/users/{id}",
+          content: [
+            { type: "params-probe", from: "params.id" },
+            { type: "params-probe", from: "route.path" },
+            { type: "params-probe", from: "route.pattern" },
+            { type: "route-state-probe" },
+          ],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("42")).toBeDefined();
+      expect(screen.getByText("/users/42")).toBeDefined();
+      expect(screen.getByText("/users/{id}")).toBeDefined();
+      expect(screen.getByRole("button", { name: "0" })).toBeDefined();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "0" }));
+    expect(screen.getByRole("button", { name: "1" })).toBeDefined();
+
+    await act(async () => {
+      window.history.replaceState({}, "", "/users/84");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("84")).toBeDefined();
+      expect(screen.getByText("/users/84")).toBeDefined();
+      expect(screen.getByRole("button", { name: "0" })).toBeDefined();
     });
   });
 

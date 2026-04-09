@@ -211,6 +211,9 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   // Determine if data is from a FromRef (already resolved) or needs fetching
   const isDataFromRef = isFromRef(config.data);
   const isResolvedResource = isResourceRef(resolvedData);
+  const resourceVersion = isResolvedResource
+    ? (resourceCache?.getResourceVersion(resolvedData.resource) ?? 0)
+    : 0;
 
   // Handle inline data (arrays passed directly or from FromRef)
   useEffect(() => {
@@ -316,6 +319,7 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
     api,
     runtime?.resources,
     resourceCache,
+    resourceVersion,
     refreshCounter,
     JSON.stringify(resolvedParams),
   ]);

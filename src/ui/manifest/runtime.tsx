@@ -9,6 +9,7 @@ import {
 import type { ApiClient } from "../../api/client";
 import {
   buildRequestUrl,
+  isResourceRef,
   resolveEndpointTarget,
   type EndpointTarget,
 } from "./resources";
@@ -22,10 +23,13 @@ export interface ResourceCacheEntry {
   status: "loading" | "ready" | "error";
   data?: unknown;
   error?: Error;
+  updatedAt?: number;
+  resourceName?: string;
 }
 
 interface ManifestResourceCacheValue {
   entries: Record<string, ResourceCacheEntry>;
+  getResourceVersion: (name: string) => number;
   getCacheKey: (
     target: EndpointTarget,
     params?: Record<string, unknown>,
@@ -39,12 +43,17 @@ interface ManifestResourceCacheValue {
     target: EndpointTarget,
     params?: Record<string, unknown>,
   ) => Promise<unknown>;
-  preloadResource: (name: string) => Promise<unknown>;
+  preloadResource: (
+    name: string,
+    params?: Record<string, unknown>,
+  ) => Promise<unknown>;
+  invalidateResource: (name: string) => void;
 }
 
 interface RouteRuntimeValue {
   currentPath: string;
   currentRoute: CompiledRoute | null;
+  params: Record<string, string>;
   navigate: (to: string, options?: { replace?: boolean }) => void;
   isPreloading: boolean;
 }
@@ -71,6 +80,33 @@ export function ManifestRuntimeProvider({
   children: ReactNode;
 }) {
   const [entries, setEntries] = useState<Record<string, ResourceCacheEntry>>({});
+  const [resourceVersions, setResourceVersions] = useState<Record<string, number>>({});
+
+  const isEntryFresh = useCallback(
+    (entry: ResourceCacheEntry | undefined) => {
+      if (!entry || entry.status !== "ready") {
+        return false;
+      }
+
+      if (!entry.resourceName) {
+        return true;
+      }
+
+      const cacheMs = manifest.resources?.[entry.resourceName]?.cacheMs;
+      if (cacheMs === undefined) {
+        return true;
+      }
+
+      if (cacheMs === 0) {
+        return false;
+      }
+
+      return (
+        entry.updatedAt !== undefined && Date.now() - entry.updatedAt <= cacheMs
+      );
+    },
+    [manifest.resources],
+  );
 
   const getCacheKey = useCallback(
     (target: EndpointTarget, params: Record<string, unknown> = {}) => {
@@ -97,8 +133,8 @@ export function ManifestRuntimeProvider({
       const url = buildRequestUrl(request.endpoint, request.params);
       const key = `${request.method} ${url}`;
       const existing = entries[key];
-      if (existing?.status === "ready") {
-        return existing.data;
+      if (isEntryFresh(existing)) {
+        return existing!.data;
       }
 
       setEntries((current) => ({
@@ -106,6 +142,7 @@ export function ManifestRuntimeProvider({
         [key]: {
           status: "loading",
           data: current[key]?.data,
+          resourceName: isResourceRef(target) ? target.resource : current[key]?.resourceName,
         },
       }));
 
@@ -133,6 +170,8 @@ export function ManifestRuntimeProvider({
           [key]: {
             status: "ready",
             data,
+            updatedAt: Date.now(),
+            resourceName: isResourceRef(target) ? target.resource : undefined,
           },
         }));
 
@@ -145,17 +184,19 @@ export function ManifestRuntimeProvider({
           [key]: {
             status: "error",
             error: resolvedError,
+            resourceName: isResourceRef(target) ? target.resource : current[key]?.resourceName,
           },
         }));
         throw resolvedError;
       }
     },
-    [api, entries, manifest.resources],
+    [api, entries, isEntryFresh, manifest.resources],
   );
 
   const cacheValue = useMemo<ManifestResourceCacheValue>(
     () => ({
       entries,
+      getResourceVersion: (name) => resourceVersions[name] ?? 0,
       getCacheKey,
       getEntry: (target, params) => {
         const key = getCacheKey(target, params);
@@ -163,12 +204,26 @@ export function ManifestRuntimeProvider({
       },
       getData: (target, params) => {
         const key = getCacheKey(target, params);
-        return key ? entries[key]?.data : undefined;
+        const entry = key ? entries[key] : undefined;
+        return isEntryFresh(entry) ? entry?.data : undefined;
       },
       loadTarget,
-      preloadResource: (name) => loadTarget({ resource: name }),
+      preloadResource: (name, params) => loadTarget({ resource: name }, params),
+      invalidateResource: (name) => {
+        setEntries((current) =>
+          Object.fromEntries(
+            Object.entries(current).filter(
+              ([, entry]) => entry.resourceName !== name,
+            ),
+          ),
+        );
+        setResourceVersions((current) => ({
+          ...current,
+          [name]: (current[name] ?? 0) + 1,
+        }));
+      },
     }),
-    [entries, getCacheKey, loadTarget],
+    [entries, getCacheKey, isEntryFresh, loadTarget, resourceVersions],
   );
 
   return (

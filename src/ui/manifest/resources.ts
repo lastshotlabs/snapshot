@@ -82,6 +82,7 @@ export const resourceConfigSchema = z
     method: httpMethodSchema.optional(),
     endpoint: z.string().min(1),
     params: z.record(z.unknown()).optional(),
+    cacheMs: z.number().int().min(0).optional(),
   })
   .strict();
 

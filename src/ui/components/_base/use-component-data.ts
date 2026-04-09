@@ -84,6 +84,9 @@ export function useComponentData(
   const dataString =
     typeof resolvedData === "string" ? resolvedData : undefined;
   const resourceTarget = isResourceRef(resolvedData) ? resolvedData : undefined;
+  const resourceVersion = resourceTarget
+    ? (resourceCache?.getResourceVersion(resourceTarget.resource) ?? 0)
+    : 0;
 
   // Handle inline data (arrays/objects passed directly instead of an endpoint string)
   const isInlineData =
@@ -163,6 +166,7 @@ export function useComponentData(
     fetchCount,
     isInlineData,
     resolvedData,
+    resourceVersion,
     JSON.stringify(resolvedParams),
   ]);
 

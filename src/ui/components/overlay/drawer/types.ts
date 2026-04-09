@@ -8,6 +8,6 @@ export interface UseDrawerReturn {
   open: () => void;
   /** Close the drawer. */
   close: () => void;
-  /** Resolved title string (FromRef resolved to value). */
-  title: string | undefined;
+  /** Current overlay payload. */
+  payload: unknown;
 }

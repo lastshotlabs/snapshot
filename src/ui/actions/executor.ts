@@ -11,7 +11,12 @@ import {
   isResourceRef,
   resolveEndpointTarget,
 } from "../manifest/resources";
-import { useManifestRuntime, useOverlayRuntime } from "../manifest/runtime";
+import {
+  useManifestResourceCache,
+  useManifestRuntime,
+  useOverlayRuntime,
+  useRouteRuntime,
+} from "../manifest/runtime";
 import { runWorkflow } from "../workflows/engine";
 import type { ActionConfig, ActionExecuteFn } from "./types";
 import type { AtomRegistry } from "../context/types";
@@ -89,9 +94,38 @@ function resolveFromRef(
   context: Record<string, unknown>,
   pageRegistry: AtomRegistry | null,
   appRegistry: AtomRegistry | null,
+  routeRuntime:
+    | {
+        currentPath?: string;
+        currentRoute?: { id?: string; path?: string } | null;
+        params?: Record<string, string>;
+      }
+    | null,
   overlayRuntime: { id?: string; kind?: string; payload?: unknown } | null,
 ): unknown {
   const refPath = ref.from;
+
+  if (refPath.startsWith("params.")) {
+    return applyTransform(
+      getNestedValue(routeRuntime?.params, refPath.slice(7)),
+      ref.transform,
+      ref.transformArg,
+    );
+  }
+
+  if (refPath.startsWith("route.")) {
+    const routeValue = {
+      id: routeRuntime?.currentRoute?.id,
+      path: routeRuntime?.currentPath,
+      pattern: routeRuntime?.currentRoute?.path,
+      params: routeRuntime?.params,
+    };
+    return applyTransform(
+      getNestedValue(routeValue, refPath.slice(6)),
+      ref.transform,
+      ref.transformArg,
+    );
+  }
 
   if (refPath.startsWith("overlay.")) {
     const overlayValue = {
@@ -146,6 +180,13 @@ function resolveWorkflowValue(
   context: Record<string, unknown>,
   pageRegistry: AtomRegistry | null,
   appRegistry: AtomRegistry | null,
+  routeRuntime:
+    | {
+        currentPath?: string;
+        currentRoute?: { id?: string; path?: string } | null;
+        params?: Record<string, string>;
+      }
+    | null,
   overlayRuntime: { id?: string; kind?: string; payload?: unknown } | null,
 ): unknown {
   if (isFromRef(value)) {
@@ -154,6 +195,7 @@ function resolveWorkflowValue(
       context,
       pageRegistry,
       appRegistry,
+      routeRuntime,
       overlayRuntime,
     );
   }
@@ -164,7 +206,14 @@ function resolveWorkflowValue(
 
   if (Array.isArray(value)) {
     return value.map((item) =>
-      resolveWorkflowValue(item, context, pageRegistry, appRegistry),
+      resolveWorkflowValue(
+        item,
+        context,
+        pageRegistry,
+        appRegistry,
+        routeRuntime,
+        overlayRuntime,
+      ),
     );
   }
 
@@ -172,7 +221,14 @@ function resolveWorkflowValue(
     return Object.fromEntries(
       Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
         key,
-        resolveWorkflowValue(nested, context, pageRegistry, appRegistry),
+        resolveWorkflowValue(
+          nested,
+          context,
+          pageRegistry,
+          appRegistry,
+          routeRuntime,
+          overlayRuntime,
+        ),
       ]),
     );
   }
@@ -188,6 +244,8 @@ export function useActionExecutor(): ActionExecuteFn {
   const toastManager = useToastManager();
   const confirmManager = useConfirmManager();
   const runtime = useManifestRuntime();
+  const resourceCache = useManifestResourceCache();
+  const routeRuntime = useRouteRuntime();
   const overlayRuntime = useOverlayRuntime();
 
   const execute: ActionExecuteFn = useCallback(
@@ -196,9 +254,25 @@ export function useActionExecutor(): ActionExecuteFn {
       context: Record<string, unknown> = {},
     ): Promise<void> => {
       const executionContext =
-        context.overlay === undefined && overlayRuntime
-          ? { ...context, overlay: overlayRuntime }
-          : context;
+        {
+          ...context,
+          ...(context.route === undefined && routeRuntime
+            ? {
+                route: {
+                  id: routeRuntime.currentRoute?.id,
+                  path: routeRuntime.currentPath,
+                  pattern: routeRuntime.currentRoute?.path,
+                  params: routeRuntime.params,
+                },
+              }
+            : null),
+          ...(context.params === undefined && routeRuntime
+            ? { params: routeRuntime.params }
+            : null),
+          ...(context.overlay === undefined && overlayRuntime
+            ? { overlay: overlayRuntime }
+            : null),
+        };
       const executeBuiltinAction = async (
         builtin: ActionConfig,
         builtinContext: Record<string, unknown>,
@@ -211,6 +285,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                routeRuntime,
                 overlayRuntime,
               ),
             );
@@ -239,6 +314,7 @@ export function useActionExecutor(): ActionExecuteFn {
                       builtinContext,
                       pageRegistry,
                       appRegistry,
+                      routeRuntime,
                       overlayRuntime,
                     ),
                   )
@@ -247,6 +323,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    routeRuntime,
                     overlayRuntime,
                   ) as typeof builtin.endpoint);
 
@@ -257,6 +334,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                routeRuntime,
                 overlayRuntime,
               ) as Record<string, unknown>);
 
@@ -276,6 +354,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                routeRuntime,
                 overlayRuntime,
               );
 
@@ -320,6 +399,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    routeRuntime,
                     overlayRuntime,
                   )
                 : undefined,
@@ -333,6 +413,13 @@ export function useActionExecutor(): ActionExecuteFn {
           case "refresh": {
             const targets = builtin.target.split(",").map((target) => target.trim());
             for (const target of targets) {
+              if (target.startsWith("resource:")) {
+                const resourceName = target.slice(9);
+                if (resourceName && runtime?.resources?.[resourceName]) {
+                  resourceCache?.invalidateResource(resourceName);
+                }
+                continue;
+              }
               const { registry } = resolveRegistry(
                 `__refresh_${target}`,
                 pageRegistry,
@@ -352,6 +439,7 @@ export function useActionExecutor(): ActionExecuteFn {
               builtinContext,
               pageRegistry,
               appRegistry,
+              routeRuntime,
               overlayRuntime,
             );
             const { registry, targetId } = resolveRegistry(
@@ -381,6 +469,7 @@ export function useActionExecutor(): ActionExecuteFn {
                       builtinContext,
                       pageRegistry,
                       appRegistry,
+                      routeRuntime,
                       overlayRuntime,
                     ),
                   )
@@ -389,6 +478,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    routeRuntime,
                     overlayRuntime,
                   ) as typeof builtin.endpoint);
 
@@ -410,6 +500,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                routeRuntime,
                 overlayRuntime,
               ),
             );
@@ -432,6 +523,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                routeRuntime,
                 overlayRuntime,
               ),
             );
@@ -464,6 +556,7 @@ export function useActionExecutor(): ActionExecuteFn {
               nextContext,
               pageRegistry,
               appRegistry,
+              routeRuntime,
               overlayRuntime,
             ),
           executeAction: executeBuiltinAction,
