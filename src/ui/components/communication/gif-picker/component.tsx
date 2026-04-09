@@ -12,6 +12,11 @@ import {
   SnapshotApiContext,
 } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import {
+  buildRequestUrl,
+  resolveEndpointTarget,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import type { GifPickerConfig, GifEntry } from "./types";
 
 /**
@@ -25,6 +30,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const api = useContext(SnapshotApiContext);
+  const runtime = useManifestRuntime();
 
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<GifEntry[]>([]);
@@ -58,14 +64,30 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
 
       setLoading(true);
       try {
-        const separator = endpoint.includes("?") ? "&" : "?";
-        const url = query
-          ? `${endpoint}${separator}q=${encodeURIComponent(query)}`
-          : endpoint;
-
-        // Use the API client to route through the backend proxy
         if (!api) throw new Error("No API client available");
-        const raw = await api.get(url);
+        const request = resolveEndpointTarget(
+          endpoint,
+          runtime?.resources,
+          query ? { q: query } : undefined,
+        );
+        const url = buildRequestUrl(request.endpoint, request.params);
+        let raw: unknown;
+        switch (request.method) {
+          case "POST":
+            raw = await api.post(url, undefined);
+            break;
+          case "PUT":
+            raw = await api.put(url, undefined);
+            break;
+          case "PATCH":
+            raw = await api.patch(url, undefined);
+            break;
+          case "DELETE":
+            raw = await api.delete(url);
+            break;
+          default:
+            raw = await api.get(url);
+        }
         const data = raw as Record<string, unknown>;
 
         const items = Array.isArray(data)
@@ -95,6 +117,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
       api,
       config.searchEndpoint,
       config.trendingEndpoint,
+      runtime?.resources,
       urlField,
       previewField,
       titleField,

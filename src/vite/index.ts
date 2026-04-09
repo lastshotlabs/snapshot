@@ -197,6 +197,128 @@ export interface SnapshotSsrOptions {
    * @default false
    */
   analyze?: boolean;
+
+  /**
+   * Enable Partial Prerendering (PPR) build-time manifest generation.
+   *
+   * When `true`, the `closeBundle` hook scans the `serverRoutesDir` for route
+   * files that export `ppr: true` and writes a `ppr-routes.json` manifest to
+   * the client output directory. This manifest is consumed at server startup by
+   * `prerenderPprShells()` to pre-compute static shells for all PPR-enabled routes.
+   *
+   * Shells are NOT pre-computed during the Vite build itself — that requires a
+   * running React tree with real loader data and a live database. The manifest
+   * only lists which routes opted into PPR so the startup step knows which shells
+   * to build. Call `prerenderPprShells()` from `bunshot-ssr/ppr` at server startup
+   * after reading this manifest.
+   *
+   * @default false
+   */
+  ppr?: boolean;
+}
+
+/**
+ * Options for `staticParamsPlugin()`.
+ * @internal — consumed by `snapshotSsr()`. Not intended for direct use.
+ */
+interface StaticParamsPluginOptions {
+  /**
+   * Absolute path to the server routes directory.
+   * Defaults to `process.cwd() + '/server/routes'`.
+   */
+  serverRoutesDir?: string;
+  /**
+   * The resolved client output directory.
+   * `static-params.json` is written here alongside `prefetch-manifest.json`.
+   */
+  clientOutDir: string;
+}
+
+/**
+ * Vite plugin that scans the server routes directory for `generateStaticParams`
+ * exports at build time and writes `static-params.json` to the client output
+ * directory.
+ *
+ * `static-params.json` is a build-time artifact consumed by the ISR pre-renderer
+ * and by deployment tooling. It maps route patterns to their enumerated param sets.
+ *
+ * This plugin runs during the `buildEnd` hook and only fires for client builds
+ * (not the SSR bundle build). It is automatically included in the plugin array
+ * returned by `snapshotSsr()` — you do not need to add it manually.
+ *
+ * @param opts - Plugin configuration.
+ * @returns A Vite `Plugin` object.
+ *
+ * @example Standalone usage (if needed outside snapshotSsr)
+ * ```ts
+ * import { staticParamsPlugin } from '@lastshotlabs/snapshot/vite'
+ *
+ * // vite.config.ts
+ * export default defineConfig({
+ *   plugins: [staticParamsPlugin({ clientOutDir: 'dist/client' })],
+ * })
+ * ```
+ */
+export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
+  // Resolved at config time when the Vite UserConfig is available.
+  let resolvedClientOutDir = opts.clientOutDir;
+  // Whether this is a client (non-SSR) build.
+  let isClientBuild = false;
+
+  return {
+    name: "snapshot-static-params",
+
+    config(
+      config: UserConfig,
+      { command, isSsrBuild }: { command: string; isSsrBuild?: boolean },
+    ): null {
+      if (command === "build") {
+        isClientBuild = !isSsrBuild;
+        if (!isSsrBuild) {
+          resolvedClientOutDir = config.build?.outDir ?? opts.clientOutDir;
+        }
+      }
+      return null;
+    },
+
+    async buildEnd(error) {
+      // Only run for client builds, and only when the build succeeded.
+      if (!isClientBuild || error) return;
+
+      const serverRoutesDir =
+        opts.serverRoutesDir ?? path.join(process.cwd(), "server/routes");
+
+      try {
+        // Dynamic import so the Vite plugin does not bundle bunshot-ssr into the
+        // client bundle — this runs only in the Vite build process (Node/Bun).
+        // Typed via structural cast — bunshot-ssr is an optional peer dep of snapshot.
+        type StaticParamsModule = {
+          scanStaticParams: (dir: string) => Promise<unknown[]>;
+          writeStaticParamsManifest: (routes: unknown[], outDir: string) => Promise<void>;
+        };
+
+        const { scanStaticParams, writeStaticParamsManifest } = (await import(
+          "@lastshotlabs/bunshot-ssr/static-params"
+        )) as unknown as StaticParamsModule;
+
+        const routes = await scanStaticParams(serverRoutesDir);
+        await writeStaticParamsManifest(routes, resolvedClientOutDir);
+
+        if (routes.length > 0) {
+          console.info(
+            `[snapshot-static-params] Wrote static-params.json — ${routes.length} route(s) with generateStaticParams.`,
+          );
+        }
+      } catch (err) {
+        // Static param scanning is a best-effort build artifact — warn but do
+        // not fail the build if bunshot-ssr is not installed or scanning throws.
+        console.warn(
+          "[snapshot-static-params] Failed to generate static-params.json:",
+          err instanceof Error ? err.message : err,
+        );
+      }
+    },
+  };
 }
 
 /**
@@ -487,7 +609,7 @@ export function snapshotSsr(opts: SnapshotSsrOptions = {}): Plugin[] {
     },
   };
 
-  const plugins: Plugin[] = [ssrPlugin];
+  const plugins: Plugin[] = [ssrPlugin, staticParamsPlugin({ serverRoutesDir: opts.serverRoutesDir, clientOutDir })];
 
   // Prepend the server actions transform unless explicitly disabled.
   if (opts.serverActions !== false) {
@@ -550,6 +672,155 @@ export function snapshotSsr(opts: SnapshotSsrOptions = {}): Plugin[] {
       },
     };
     plugins.push(analyzePlugin);
+  }
+
+  // ── PPR manifest plugin ─────────────────────────────────────────────────────
+  // Scans the server routes directory for route files that opt into PPR
+  // (`ppr: true` exported from the route module) and writes `ppr-routes.json`
+  // to the client output directory. The server startup step reads this manifest
+  // and calls `prerenderPprShells()` to pre-compute static shells.
+  //
+  // NOTE: Shell pre-computation cannot happen during the Vite build because it
+  // requires a live React tree with real database connections and loader data.
+  // The manifest is a build artifact that enables the server startup step to
+  // know which routes need PPR shells without re-scanning the filesystem.
+  if (opts.ppr) {
+    const pprPlugin: Plugin = {
+      name: "snapshot-ppr",
+
+      async closeBundle() {
+        // Only run after the client build.
+        if (!isClientBuild) return;
+
+        const serverRoutesDir =
+          opts.serverRoutesDir ?? path.join(process.cwd(), "server/routes");
+
+        console.log(
+          "[snapshot-ssr] PPR: scanning routes for ppr:true exports…",
+        );
+
+        // Collect all .ts / .tsx route files recursively from the server routes dir.
+        let routeFiles: string[] = [];
+        try {
+          const { readdir: readdirFn } = await import("node:fs/promises");
+          const { existsSync } = await import("node:fs");
+
+          if (!existsSync(serverRoutesDir)) {
+            console.warn(
+              `[snapshot-ssr] PPR: server routes directory not found: ${serverRoutesDir}`,
+            );
+            return;
+          }
+
+          // Recursive directory walker — avoids shell interpolation (Rule 3).
+          async function collectRouteFiles(dir: string): Promise<string[]> {
+            const entries = await readdirFn(dir, { withFileTypes: true });
+            const collected: string[] = [];
+            for (const entry of entries) {
+              const fullPath = path.join(dir, entry.name);
+              if (entry.isDirectory()) {
+                const nested = await collectRouteFiles(fullPath);
+                collected.push(...nested);
+              } else if (
+                entry.isFile() &&
+                (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx")) &&
+                // Exclude convention files — only plain route entry files
+                !entry.name.startsWith("layout") &&
+                !entry.name.startsWith("loading") &&
+                !entry.name.startsWith("error") &&
+                !entry.name.startsWith("not-found") &&
+                !entry.name.startsWith("middleware") &&
+                !entry.name.startsWith("meta")
+              ) {
+                collected.push(fullPath);
+              }
+            }
+            return collected;
+          }
+
+          routeFiles = await collectRouteFiles(serverRoutesDir);
+        } catch (err) {
+          console.warn(
+            "[snapshot-ssr] PPR: failed to scan server routes directory:",
+            err,
+          );
+          return;
+        }
+
+        // Inspect each route file's source text for a `ppr: true` export.
+        // We use a lightweight regex scan rather than importing the module
+        // (build-time modules may have side effects or missing dependencies).
+        //
+        // Patterns matched:
+        //   export const ppr = true
+        //   export const experimental_ppr = true
+        //   ppr: true   (inside a defineRoute({}) call)
+        const PPR_PATTERN =
+          /\bppr\s*[=:]\s*true\b|experimental_ppr\s*[=:]\s*true\b/;
+
+        const pprRoutes: Array<{ path: string; filePath: string }> = [];
+
+        const { readFileSync } = await import("node:fs");
+
+        for (const filePath of routeFiles) {
+          let source: string;
+          try {
+            source = readFileSync(filePath, "utf-8");
+          } catch {
+            continue;
+          }
+
+          if (!PPR_PATTERN.test(source)) continue;
+
+          // Derive the URL path from the file path relative to serverRoutesDir.
+          // e.g. /app/server/routes/dashboard/index.ts → /dashboard
+          const relative = filePath
+            .slice(serverRoutesDir.length)
+            .replace(/\\/g, "/")
+            .replace(/\/(index)?\.(ts|tsx)$/, "")
+            .replace(/\/\[([^\]]+)\]/g, "/:$1") // [slug] → :slug
+            || "/";
+
+          pprRoutes.push({ path: relative, filePath });
+          console.log(`[snapshot-ssr] PPR:   found ppr:true in ${relative}`);
+        }
+
+        if (pprRoutes.length === 0) {
+          console.log(
+            "[snapshot-ssr] PPR: no PPR-enabled routes found — skipping ppr-routes.json.",
+          );
+          return;
+        }
+
+        // Write ppr-routes.json to the client output directory.
+        // The manifest schema is intentionally minimal — only path and filePath
+        // are needed by the server startup step.
+        const manifest = Object.freeze({
+          version: 1,
+          generatedAt: new Date().toISOString(),
+          routes: pprRoutes.map((r) => Object.freeze({ path: r.path, filePath: r.filePath })),
+        });
+
+        try {
+          const { writeFileSync, mkdirSync } = await import("node:fs");
+          mkdirSync(clientOutDir, { recursive: true });
+          writeFileSync(
+            path.join(clientOutDir, "ppr-routes.json"),
+            JSON.stringify(manifest, null, 2),
+            "utf-8",
+          );
+          console.log(
+            `[snapshot-ssr] PPR: wrote ppr-routes.json with ${pprRoutes.length} route(s) to ${clientOutDir}`,
+          );
+          console.log(
+            "[snapshot-ssr] PPR: call prerenderPprShells() at server startup to pre-compute shells.",
+          );
+        } catch (err) {
+          console.warn("[snapshot-ssr] PPR: failed to write ppr-routes.json:", err);
+        }
+      },
+    };
+    plugins.push(pprPlugin);
   }
 
   return plugins;

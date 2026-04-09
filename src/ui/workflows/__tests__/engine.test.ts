@@ -136,4 +136,65 @@ describe("runWorkflow", () => {
       label: "Ada",
     });
   });
+
+  it("supports wait nodes", async () => {
+    vi.useFakeTimers();
+    const executeAction = vi.fn(async () => {});
+
+    const runPromise = runWorkflow(
+      [
+        { type: "wait", duration: 100 },
+        { type: "toast", message: "done" },
+      ],
+      {
+        executeAction,
+        resolveValue: (value) => value,
+      },
+    );
+
+    expect(executeAction).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(100);
+    await runPromise;
+
+    expect(executeAction).toHaveBeenCalledTimes(1);
+    expect(executeAction).toHaveBeenCalledWith(
+      { type: "toast", message: "done" },
+      {},
+    );
+    vi.useRealTimers();
+  });
+
+  it("supports parallel branches", async () => {
+    const calls: ActionConfig[] = [];
+    const executeAction = vi.fn(async (action: ActionConfig) => {
+      calls.push(action);
+    });
+
+    await runWorkflow(
+      {
+        type: "parallel",
+        branches: [
+          [
+            { type: "toast", message: "left-1" },
+            { type: "toast", message: "left-2" },
+          ],
+          { type: "toast", message: "right" },
+        ],
+      },
+      {
+        executeAction,
+        resolveValue: (value) => value,
+      },
+    );
+
+    expect(executeAction).toHaveBeenCalledTimes(3);
+    expect(calls).toEqual(
+      expect.arrayContaining([
+        { type: "toast", message: "left-1" },
+        { type: "toast", message: "left-2" },
+        { type: "toast", message: "right" },
+      ]),
+    );
+  });
 });

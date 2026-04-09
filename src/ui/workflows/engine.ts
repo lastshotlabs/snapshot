@@ -1,8 +1,10 @@
 import { ACTION_TYPES, type ActionConfig } from "../actions/types";
 import { getRegisteredWorkflowAction } from "./registry";
 import {
+  isParallelWorkflowNode,
   isIfWorkflowNode,
   isRunWorkflowAction,
+  isWaitWorkflowNode,
   normalizeWorkflowDefinition,
 } from "./builtins";
 import type {
@@ -34,6 +36,12 @@ function evaluateCondition(
     default:
       return Boolean(left);
   }
+}
+
+function delay(duration: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration);
+  });
 }
 
 export async function runWorkflow(
@@ -82,6 +90,18 @@ export async function runWorkflow(
         if (branch) {
           await runDefinition(branch, nextContext);
         }
+        continue;
+      }
+
+      if (isWaitWorkflowNode(node)) {
+        await delay(node.duration);
+        continue;
+      }
+
+      if (isParallelWorkflowNode(node)) {
+        await Promise.all(
+          node.branches.map((branch) => runDefinition(branch, nextContext)),
+        );
         continue;
       }
 

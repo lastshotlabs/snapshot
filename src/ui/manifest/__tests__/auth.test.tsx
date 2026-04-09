@@ -24,6 +24,36 @@ vi.hoisted(() => {
 });
 
 const originalFetch = global.fetch;
+const originalCredentials = navigator.credentials;
+const originalPublicKeyCredential = window.PublicKeyCredential;
+
+function installPasskeyMocks() {
+  class MockPublicKeyCredential {}
+
+  Object.defineProperty(window, "PublicKeyCredential", {
+    writable: true,
+    value: MockPublicKeyCredential,
+  });
+
+  Object.defineProperty(navigator, "credentials", {
+    writable: true,
+    value: {
+      get: vi.fn(async () => ({
+        id: "credential-1",
+        rawId: Uint8Array.from([1, 2, 3]).buffer,
+        type: "public-key",
+        authenticatorAttachment: "platform",
+        getClientExtensionResults: () => ({}),
+        response: {
+          clientDataJSON: Uint8Array.from([4, 5, 6]).buffer,
+          authenticatorData: Uint8Array.from([7, 8, 9]).buffer,
+          signature: Uint8Array.from([10, 11, 12]).buffer,
+          userHandle: null,
+        },
+      })),
+    },
+  });
+}
 
 function buildAuthManifest(): ManifestConfig {
   return {
@@ -99,6 +129,14 @@ function buildAuthManifest(): ManifestConfig {
 describe("Manifest auth runtime", () => {
   afterEach(() => {
     global.fetch = originalFetch;
+    Object.defineProperty(navigator, "credentials", {
+      writable: true,
+      value: originalCredentials,
+    });
+    Object.defineProperty(window, "PublicKeyCredential", {
+      writable: true,
+      value: originalPublicKeyCredential,
+    });
     window.history.replaceState({}, "", "/");
     vi.restoreAllMocks();
   });
@@ -309,6 +347,215 @@ describe("Manifest auth runtime", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Dashboard")).toBeDefined();
+    });
+  });
+
+  it("uses manifest auth screen options and redirect config", async () => {
+    window.history.replaceState({}, "", "/login");
+
+    let meRequestCount = 0;
+    global.fetch = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+
+        if (url.endsWith("/auth/me")) {
+          meRequestCount += 1;
+          if (meRequestCount === 1) {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
+              status: 401,
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+
+          return new Response(
+            JSON.stringify({ id: "1", email: "ada@example.com" }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+
+        if (url.endsWith("/auth/login")) {
+          expect(init?.method).toBe("POST");
+          return new Response(
+            JSON.stringify({ token: "token-1", userId: "1" }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+
+        return new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      },
+    ) as typeof fetch;
+
+    const manifest = buildAuthManifest();
+    manifest.auth = {
+      ...manifest.auth!,
+      passkey: true,
+      redirects: {
+        afterLogin: "/reports",
+      },
+      screenOptions: {
+        login: {
+          title: "Welcome back",
+          description: "Use your workspace account",
+          submitLabel: "Continue",
+          providers: false,
+          passkey: false,
+          fields: {
+            email: {
+              label: "Work email",
+              placeholder: "me@workspace.com",
+            },
+            password: {
+              label: "Secret phrase",
+              placeholder: "Your secret phrase",
+            },
+          },
+          links: [{ label: "Make an account", screen: "register" }],
+        },
+      },
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    expect(screen.getByText("Welcome back")).toBeDefined();
+    expect(screen.getByText("Use your workspace account")).toBeDefined();
+    expect(screen.getByRole("button", { name: "Continue" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Make an account" })).toBeDefined();
+    expect(screen.queryByText("Continue with a provider")).toBeNull();
+    expect(
+      screen.queryByText("Passkey sign-in can be enabled from the Snapshot auth runtime."),
+    ).toBeNull();
+
+    fireEvent.change(screen.getByLabelText("Work email"), {
+      target: { value: "ada@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Secret phrase"), {
+      target: { value: "secret" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Reports")).toBeDefined();
+    });
+  });
+
+  it("runs a real manifest-controlled passkey login flow", async () => {
+    window.history.replaceState({}, "", "/login");
+    installPasskeyMocks();
+
+    let meRequestCount = 0;
+    global.fetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+
+      if (url.endsWith("/auth/me")) {
+        meRequestCount += 1;
+        if (meRequestCount === 1) {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        return new Response(
+          JSON.stringify({ id: "1", email: "ada@example.com" }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      if (url.endsWith("/auth/passkey/login-options")) {
+        return new Response(
+          JSON.stringify({
+            passkeyToken: "passkey-token",
+            options: {
+              challenge: "AQID",
+              rpId: "localhost",
+              userVerification: "preferred",
+            },
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      if (url.endsWith("/auth/passkey/login")) {
+        return new Response(
+          JSON.stringify({ token: "token-1", userId: "1" }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+
+    const manifest = buildAuthManifest();
+    manifest.auth = {
+      ...manifest.auth!,
+      providers: [
+        {
+          provider: "google",
+          label: "Continue with Google Workspace",
+          description: "Recommended for your team account",
+        },
+      ],
+      passkey: true,
+      redirects: {
+        afterLogin: "/reports",
+      },
+      screenOptions: {
+        login: {
+          sections: ["providers", "passkey", "form", "links"],
+          labels: {
+            providersHeading: "Use a provider",
+            passkeyButton: "Use a passkey",
+          },
+        },
+      },
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    const providersHeading = screen.getByText("Use a provider");
+    expect(
+      screen.getByRole("button", {
+        name: /Continue with Google Workspace/i,
+      }),
+    ).toBeDefined();
+    expect(screen.getByText("Recommended for your team account")).toBeDefined();
+    const passkeyButton = screen.getByRole("button", { name: "Use a passkey" });
+    const emailField = screen.getByLabelText("Email");
+
+    expect(
+      providersHeading.compareDocumentPosition(emailField) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      passkeyButton.compareDocumentPosition(emailField) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+
+    fireEvent.click(passkeyButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Reports")).toBeDefined();
     });
   });
 

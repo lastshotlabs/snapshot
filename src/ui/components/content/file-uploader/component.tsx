@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
+import {
+  buildRequestUrl,
+  resolveEndpointTarget,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import type { FileUploaderConfig, UploadFileEntry } from "./types";
 
 /**
@@ -38,6 +43,7 @@ function formatFileSize(bytes: number): string {
 export function FileUploader({ config }: { config: FileUploaderConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
+  const runtime = useManifestRuntime();
   const inputRef = useRef<HTMLInputElement>(null);
   const fileIdCounterRef = useRef(0);
   const [files, setFiles] = useState<UploadFileEntry[]>([]);
@@ -85,6 +91,13 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
       );
 
       try {
+        const request = resolveEndpointTarget(
+          config.uploadEndpoint,
+          runtime?.resources,
+          undefined,
+          "POST",
+        );
+        const endpoint = buildRequestUrl(request.endpoint, request.params);
         const formData = new FormData();
         formData.append("file", entry.file);
 
@@ -115,7 +128,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             reject(new Error("Upload aborted")),
           );
 
-          xhr.open("POST", config.uploadEndpoint!);
+          xhr.open(request.method, endpoint);
           xhr.send(formData);
         });
 
@@ -145,7 +158,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
         );
       }
     },
-    [config.uploadEndpoint, config.onUpload, execute],
+    [config.uploadEndpoint, config.onUpload, execute, runtime?.resources],
   );
 
   const addFiles = useCallback(

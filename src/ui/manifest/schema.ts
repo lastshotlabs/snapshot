@@ -238,12 +238,72 @@ const authScreenLinkSchema = z
     }
   });
 
+const authFieldConfigSchema = z
+  .object({
+    label: z.string().optional(),
+    placeholder: z.string().optional(),
+  })
+  .strict();
+
+const authProviderNameSchema = z.enum([
+  "google",
+  "github",
+  "apple",
+  "microsoft",
+]);
+
+const authProviderConfigSchema = z
+  .object({
+    provider: authProviderNameSchema,
+    label: z.string().optional(),
+    description: z.string().optional(),
+  })
+  .strict();
+
+const authProviderListSchema = z.array(
+  z.union([authProviderNameSchema, authProviderConfigSchema]),
+);
+
+const authScreenSectionSchema = z.enum([
+  "form",
+  "providers",
+  "passkey",
+  "links",
+]);
+
 const authScreenOptionsSchema = z
   .object({
     title: z.string().optional(),
     description: z.string().optional(),
     submitLabel: z.string().optional(),
     successMessage: z.string().optional(),
+    sections: z.array(authScreenSectionSchema).min(1).optional(),
+    labels: z
+      .object({
+        providersHeading: z.string().optional(),
+        passkeyButton: z.string().optional(),
+        method: z.string().optional(),
+        resend: z.string().optional(),
+      })
+      .strict()
+      .optional(),
+    providers: z
+      .union([
+        authProviderListSchema,
+        z.literal(false),
+      ])
+      .optional(),
+    passkey: z.boolean().optional(),
+    fields: z
+      .object({
+        email: authFieldConfigSchema.optional(),
+        password: authFieldConfigSchema.optional(),
+        name: authFieldConfigSchema.optional(),
+        code: authFieldConfigSchema.optional(),
+        method: authFieldConfigSchema.optional(),
+      })
+      .strict()
+      .optional(),
     links: z.array(authScreenLinkSchema).optional(),
   })
   .strict();
@@ -251,9 +311,7 @@ const authScreenOptionsSchema = z
 export const authScreenConfigSchema = z
   .object({
     screens: z.array(authScreenNameSchema).min(1),
-    providers: z
-      .array(z.enum(["google", "github", "apple", "microsoft"]))
-      .optional(),
+    providers: authProviderListSchema.optional(),
     passkey: z.boolean().optional(),
     branding: z
       .object({

@@ -46,6 +46,17 @@ describe("fileUploaderConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts a resource-backed upload endpoint", () => {
+    const result = fileUploaderConfigSchema.safeParse({
+      ...baseConfig,
+      uploadEndpoint: {
+        resource: "uploads",
+        params: { folder: "docs" },
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("rejects missing type", () => {
     const result = fileUploaderConfigSchema.safeParse({});
     expect(result.success).toBe(false);

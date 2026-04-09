@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { endpointTargetSchema } from "../../../manifest/resources";
 
 /**
  * Zod config schema for the FileUploader component.
@@ -37,7 +38,7 @@ export const fileUploaderConfigSchema = z
     /** Visual layout variant. Default: "dropzone". */
     variant: z.enum(["dropzone", "button", "compact"]).optional(),
     /** Endpoint to POST files to (as FormData). */
-    uploadEndpoint: z.string().optional(),
+    uploadEndpoint: endpointTargetSchema.optional(),
     /** Action dispatched after a successful upload. */
     onUpload: actionSchema.optional(),
     // --- BaseComponentConfig fields ---

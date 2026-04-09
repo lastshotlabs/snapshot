@@ -59,6 +59,30 @@ describe("manifestConfigSchema", () => {
       auth: {
         screens: ["login", "register"] as const,
         providers: ["google", "github"] as const,
+        redirects: {
+          authenticated: "/dashboard",
+          afterLogin: "/users",
+        },
+        screenOptions: {
+          login: {
+            title: "Welcome back",
+            submitLabel: "Log in",
+            sections: ["providers", "passkey", "form", "links"],
+            labels: {
+              providersHeading: "Use a provider",
+              passkeyButton: "Use a passkey",
+            },
+            providers: false,
+            passkey: false,
+            fields: {
+              email: {
+                label: "Work email",
+                placeholder: "me@company.com",
+              },
+            },
+            links: [{ label: "Create one", screen: "register" }],
+          },
+        },
       },
       workflows: {
         "users.delete": {
@@ -423,14 +447,80 @@ describe("authScreenConfigSchema", () => {
   it("validates auth config", () => {
     const result = authScreenConfigSchema.safeParse({
       screens: ["login", "register", "forgot-password"],
-      providers: ["google", "github"],
+      providers: [
+        "google",
+        {
+          provider: "github",
+          label: "Continue with GitHub Enterprise",
+          description: "Use your engineering identity",
+        },
+      ],
       passkey: true,
       branding: {
         logo: "/logo.svg",
         title: "My App",
         description: "Welcome back",
       },
+      redirects: {
+        authenticated: "/dashboard",
+        afterLogin: "/reports",
+      },
+      screenOptions: {
+        login: {
+          title: "Welcome back",
+          description: "Use your work account",
+          submitLabel: "Continue",
+          sections: ["providers", "form", "links"],
+          labels: {
+            providersHeading: "Use a provider",
+            passkeyButton: "Use a passkey",
+          },
+          providers: false,
+          passkey: false,
+          fields: {
+            email: {
+              label: "Work email",
+              placeholder: "me@company.com",
+            },
+            password: {
+              label: "Secret phrase",
+            },
+          },
+          links: [{ label: "Create account", screen: "register" }],
+        },
+      },
     });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects auth links without a path or screen target", () => {
+    const result = authScreenConfigSchema.safeParse({
+      screens: ["login"],
+      screenOptions: {
+        login: {
+          links: [{ label: "Broken link" }],
+        },
+      },
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts provider presentation config in screen options", () => {
+    const result = authScreenConfigSchema.safeParse({
+      screens: ["login"],
+      screenOptions: {
+        login: {
+          providers: [
+            {
+              provider: "google",
+              label: "Use Google Workspace",
+              description: "Recommended for internal users",
+            },
+          ],
+        },
+      },
+    });
+
     expect(result.success).toBe(true);
   });
 });

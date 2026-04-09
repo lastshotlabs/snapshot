@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { AtomRegistryImpl } from "../../../../context/registry";
@@ -8,20 +8,42 @@ import {
   AppRegistryContext,
 } from "../../../../context/providers";
 import { SnapshotApiContext } from "../../../../actions/executor";
+import { ManifestRuntimeProvider } from "../../../../manifest/runtime";
 import { FileUploader } from "../component";
 import type { FileUploaderConfig } from "../types";
 
-function createTestWrapper() {
+function createTestWrapper(options?: {
+  resources?: Record<
+    string,
+    {
+      method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      endpoint: string;
+      params?: Record<string, unknown>;
+    }
+  >;
+}) {
   const registry = new AtomRegistryImpl();
   return function TestWrapper({ children }: { children: ReactNode }) {
     return (
-      <AppRegistryContext.Provider value={null}>
-        <PageRegistryContext.Provider value={registry}>
-          <SnapshotApiContext.Provider value={null}>
-            {children}
-          </SnapshotApiContext.Provider>
-        </PageRegistryContext.Provider>
-      </AppRegistryContext.Provider>
+      <ManifestRuntimeProvider
+        api={undefined}
+        manifest={{
+          raw: { routes: [] },
+          app: {},
+          resources: options?.resources,
+          routes: [],
+          routeMap: {},
+          firstRoute: null,
+        }}
+      >
+        <AppRegistryContext.Provider value={null}>
+          <PageRegistryContext.Provider value={registry}>
+            <SnapshotApiContext.Provider value={null}>
+              {children}
+            </SnapshotApiContext.Provider>
+          </PageRegistryContext.Provider>
+        </AppRegistryContext.Provider>
+      </ManifestRuntimeProvider>
     );
   };
 }
@@ -33,6 +55,10 @@ const baseConfig: FileUploaderConfig = {
 describe("FileUploader", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it("renders with data-snapshot-component attribute", () => {
@@ -222,5 +248,62 @@ describe("FileUploader", () => {
     const dropzone = screen.getByTestId("file-uploader-dropzone");
     expect(dropzone.getAttribute("role")).toBe("button");
     expect(dropzone.getAttribute("tabindex")).toBe("0");
+  });
+
+  it("resolves resource-backed upload endpoints before sending files", () => {
+    const open = vi.fn();
+    const send = vi.fn();
+
+    class MockXMLHttpRequest {
+      upload = {
+        addEventListener: vi.fn(),
+      };
+
+      status = 201;
+
+      addEventListener(event: string, callback: () => void) {
+        if (event === "load") {
+          setTimeout(callback, 0);
+        }
+      }
+
+      open = open;
+      send = send;
+    }
+
+    vi.stubGlobal("XMLHttpRequest", MockXMLHttpRequest);
+
+    const wrapper = createTestWrapper({
+      resources: {
+        uploads: {
+          method: "PUT",
+          endpoint: "/api/uploads/{folder}",
+          params: {
+            folder: "docs",
+          },
+        },
+      },
+    });
+    const config: FileUploaderConfig = {
+      ...baseConfig,
+      uploadEndpoint: {
+        resource: "uploads",
+        params: {
+          scope: "contracts",
+        },
+      },
+    };
+
+    render(<FileUploader config={config} />, { wrapper });
+
+    const input = screen.getByTestId("file-uploader-input") as HTMLInputElement;
+    const file = new File(["hello"], "test.txt", { type: "text/plain" });
+    fireEvent.change(input, { target: { files: [file] } });
+
+    expect(open).toHaveBeenCalledWith(
+      "PUT",
+      "/api/uploads/docs?scope=contracts",
+    );
+    expect(send).toHaveBeenCalled();
   });
 });

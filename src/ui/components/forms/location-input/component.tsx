@@ -5,6 +5,11 @@ import {
   SnapshotApiContext,
 } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import {
+  buildRequestUrl,
+  resolveEndpointTarget,
+} from "../../../manifest/resources";
+import { useManifestRuntime } from "../../../manifest/runtime";
 import type { LocationInputConfig } from "./types";
 
 /** Shape of a resolved location. */
@@ -32,6 +37,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const api = useContext(SnapshotApiContext);
+  const runtime = useManifestRuntime();
 
   const [query, setQuery] = useState(initialValue || "");
   const [results, setResults] = useState<LocationResult[]>([]);
@@ -68,9 +74,29 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
       setLoading(true);
       try {
         if (!api) throw new Error("API client not available");
-        const separator = config.searchEndpoint.includes("?") ? "&" : "?";
-        const url = `${config.searchEndpoint}${separator}q=${encodeURIComponent(q)}`;
-        const data = (await api.get(url)) as Record<string, unknown>;
+        const request = resolveEndpointTarget(
+          config.searchEndpoint,
+          runtime?.resources,
+          { q },
+        );
+        const url = buildRequestUrl(request.endpoint, request.params);
+        let data: unknown;
+        switch (request.method) {
+          case "POST":
+            data = await api.post(url, undefined);
+            break;
+          case "PUT":
+            data = await api.put(url, undefined);
+            break;
+          case "PATCH":
+            data = await api.patch(url, undefined);
+            break;
+          case "DELETE":
+            data = await api.delete(url);
+            break;
+          default:
+            data = await api.get(url);
+        }
 
         const items = Array.isArray(data)
           ? data
@@ -107,6 +133,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
       latField,
       lngField,
       minChars,
+      runtime?.resources,
     ],
   );
 

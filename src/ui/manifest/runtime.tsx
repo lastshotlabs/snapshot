@@ -149,6 +149,9 @@ export function ManifestRuntimeProvider({
       const request = resolveEndpointTarget(target, manifest.resources, params);
       const url = buildRequestUrl(request.endpoint, request.params);
       const key = `${request.method} ${url}`;
+      const resourceConfig = isResourceRef(target)
+        ? manifest.resources?.[target.resource]
+        : undefined;
       const existing = entries[key];
       if (isEntryFresh(existing)) {
         return existing!.data;
@@ -166,22 +169,44 @@ export function ManifestRuntimeProvider({
       }));
 
       try {
+        const maxAttempts = (resourceConfig?.retry ?? 0) + 1;
+        const retryDelayMs = resourceConfig?.retryDelayMs ?? 250;
         let data: unknown;
-        switch (request.method) {
-          case "POST":
-            data = await api.post(url, undefined);
+        let lastError: unknown;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+          try {
+            switch (request.method) {
+              case "POST":
+                data = await api.post(url, undefined);
+                break;
+              case "PUT":
+                data = await api.put(url, undefined);
+                break;
+              case "PATCH":
+                data = await api.patch(url, undefined);
+                break;
+              case "DELETE":
+                data = await api.delete(url);
+                break;
+              default:
+                data = await api.get(url);
+            }
+            lastError = undefined;
             break;
-          case "PUT":
-            data = await api.put(url, undefined);
-            break;
-          case "PATCH":
-            data = await api.patch(url, undefined);
-            break;
-          case "DELETE":
-            data = await api.delete(url);
-            break;
-          default:
-            data = await api.get(url);
+          } catch (error) {
+            lastError = error;
+            if (attempt >= maxAttempts - 1) {
+              throw error;
+            }
+            await new Promise((resolve) => {
+              setTimeout(resolve, retryDelayMs);
+            });
+          }
+        }
+
+        if (lastError !== undefined) {
+          throw lastError;
         }
 
         setEntries((current) => ({

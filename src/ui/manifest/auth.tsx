@@ -16,6 +16,7 @@ import type {
   SnapshotInstance,
   VerifyEmailBody,
 } from "../../types";
+import { isPasskeySupported, startPasskeyAuthentication } from "./passkey";
 import type { CompiledManifest, CompiledRoute } from "./types";
 
 const AUTH_QUERY_KEY = ["auth", "me"] as const;
@@ -28,6 +29,12 @@ export type AuthScreen =
   | "reset-password"
   | "verify-email"
   | "mfa";
+
+interface AuthProviderConfig {
+  provider: OAuthProvider;
+  label?: string;
+  description?: string;
+}
 
 interface ManifestAuthRuntimeConfig {
   authMode: SnapshotConfig["auth"];
@@ -142,6 +149,18 @@ function resolveConfiguredLinks(
     .filter((value): value is { label: string; path: string } => value != null);
 }
 
+function normalizeProviderConfig(
+  provider:
+    | OAuthProvider
+    | {
+        provider: OAuthProvider;
+        label?: string;
+        description?: string;
+      },
+): AuthProviderConfig {
+  return typeof provider === "string" ? { provider } : provider;
+}
+
 function resolveAuthHeading(
   manifest: CompiledManifest,
   screen: AuthScreen,
@@ -187,12 +206,67 @@ function resolveSubmitLabel(
   return getAuthScreenOptions(manifest, screen)?.submitLabel ?? fallback;
 }
 
+function resolveSectionOrder(
+  manifest: CompiledManifest,
+  screen: AuthScreen,
+  fallback: Array<"form" | "providers" | "passkey" | "links">,
+): Array<"form" | "providers" | "passkey" | "links"> {
+  return getAuthScreenOptions(manifest, screen)?.sections ?? fallback;
+}
+
+function resolveAuxLabel(
+  manifest: CompiledManifest,
+  screen: AuthScreen,
+  key: "providersHeading" | "passkeyButton" | "method" | "resend",
+  fallback: string,
+): string {
+  return getAuthScreenOptions(manifest, screen)?.labels?.[key] ?? fallback;
+}
+
 function resolveSuccessMessage(
   manifest: CompiledManifest,
   screen: AuthScreen,
   fallback: string,
 ): string {
   return getAuthScreenOptions(manifest, screen)?.successMessage ?? fallback;
+}
+
+function resolveScreenProviders(
+  manifest: CompiledManifest,
+  screen: AuthScreen,
+): AuthProviderConfig[] {
+  const providers = getAuthScreenOptions(manifest, screen)?.providers;
+  if (providers === false) {
+    return [];
+  }
+
+  return (providers ?? manifest.auth?.providers ?? []).map(normalizeProviderConfig);
+}
+
+function resolvePasskeyEnabled(
+  manifest: CompiledManifest,
+  screen: AuthScreen,
+): boolean {
+  return getAuthScreenOptions(manifest, screen)?.passkey ?? Boolean(manifest.auth?.passkey);
+}
+
+function resolveFieldMeta(
+  manifest: CompiledManifest,
+  screen: AuthScreen,
+  field: "email" | "password" | "name" | "code" | "method",
+  fallback: {
+    label: string;
+    placeholder?: string;
+  },
+): {
+  label: string;
+  placeholder?: string;
+} {
+  const fieldConfig = getAuthScreenOptions(manifest, screen)?.fields?.[field];
+  return {
+    label: fieldConfig?.label ?? fallback.label,
+    placeholder: fieldConfig?.placeholder ?? fallback.placeholder,
+  };
 }
 
 function resolvePostAuthPath(
@@ -580,12 +654,28 @@ function LinksRow({
   );
 }
 
+function renderScreenSections(
+  sections: Array<"form" | "providers" | "passkey" | "links">,
+  blocks: Partial<Record<"form" | "providers" | "passkey" | "links", React.ReactNode>>,
+) {
+  return sections.map((section) => {
+    const content = blocks[section];
+    if (!content) {
+      return null;
+    }
+
+    return <div key={section}>{content}</div>;
+  });
+}
+
 function OAuthButtons({
   providers,
   getOAuthUrl,
+  heading,
 }: {
-  providers: OAuthProvider[];
+  providers: AuthProviderConfig[];
   getOAuthUrl: (provider: OAuthProvider) => string;
+  heading: string;
 }) {
   if (providers.length === 0) {
     return null;
@@ -602,18 +692,40 @@ function OAuthButtons({
           fontSize: "0.825rem",
         }}
       >
-        Continue with a provider
+        {heading}
       </div>
       <div style={{ display: "grid", gap: "0.625rem" }}>
-        {providers.map((provider) => (
+        {providers.map((providerConfig) => (
           <SecondaryButton
-            key={provider}
+            key={providerConfig.provider}
             onClick={() => {
-              window.location.href = getOAuthUrl(provider);
+              window.location.href = getOAuthUrl(providerConfig.provider);
             }}
           >
-            Continue with {provider[0]?.toUpperCase()}
-            {provider.slice(1)}
+            <span
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: providerConfig.description ? "0.25rem" : 0,
+              }}
+            >
+              <span>
+                {providerConfig.label ??
+                  `Continue with ${providerConfig.provider[0]?.toUpperCase()}${providerConfig.provider.slice(1)}`}
+              </span>
+              {providerConfig.description ? (
+                <span
+                  style={{
+                    fontSize: "0.8rem",
+                    fontWeight: 400,
+                    color: "#475569",
+                  }}
+                >
+                  {providerConfig.description}
+                </span>
+              ) : null}
+            </span>
           </SecondaryButton>
         ))}
       </div>
@@ -642,6 +754,34 @@ function LoginScreen({
   const registerPath = inferAuthScreenPath(manifest, "register");
   const forgotPasswordPath = inferAuthScreenPath(manifest, "forgot-password");
   const mfaPath = inferAuthScreenPath(manifest, "mfa");
+  const providers = resolveScreenProviders(manifest, "login");
+  const passkeyEnabled = resolvePasskeyEnabled(manifest, "login");
+  const sectionOrder = resolveSectionOrder(manifest, "login", [
+    "form",
+    "providers",
+    "passkey",
+    "links",
+  ]);
+  const emailField = resolveFieldMeta(manifest, "login", "email", {
+    label: "Email",
+    placeholder: "you@example.com",
+  });
+  const passwordField = resolveFieldMeta(manifest, "login", "password", {
+    label: "Password",
+    placeholder: "Enter your password",
+  });
+  const configuredLinks = resolveConfiguredLinks(manifest, "login");
+  const links =
+    configuredLinks.length > 0
+      ? configuredLinks
+      : [
+          ...(registerPath && registerPath !== loginPath
+            ? [{ label: "Create account", path: registerPath }]
+            : []),
+          ...(forgotPasswordPath && forgotPasswordPath !== loginPath
+            ? [{ label: "Forgot password?", path: forgotPasswordPath }]
+            : []),
+        ];
   const mutation = useMutation<
     { type: "user"; user: AuthUser } | { type: "mfa"; challenge: MfaChallenge },
     ApiError,
@@ -681,66 +821,158 @@ function LoginScreen({
       setPendingChallenge(null);
       applyAuthenticatedUser(result.user);
       snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, result.user);
-      navigate(resolvePostAuthPath(manifest, search));
+      navigate(resolvePostAuthPath(manifest, search, "login"));
     },
   });
+  const passkeyMutation = useMutation<
+    { type: "user"; user: AuthUser } | { type: "mfa"; challenge: MfaChallenge },
+    ApiError | Error,
+    void
+  >({
+    mutationFn: async () => {
+      const { options, passkeyToken } = await snapshot.api.post<{
+        options: unknown;
+        passkeyToken: string;
+      }>(runtimeConfig.contract.endpoints.passkeyLoginOptions, {
+        identifier: email || undefined,
+      });
+      const assertionResponse = await startPasskeyAuthentication(options);
+      const response = await snapshot.api.post<LoginResponse>(
+        runtimeConfig.contract.endpoints.passkeyLogin,
+        {
+          passkeyToken,
+          assertionResponse,
+        },
+      );
+
+      if (response.mfaRequired && response.mfaToken) {
+        return {
+          type: "mfa",
+          challenge: {
+            mfaToken: response.mfaToken,
+            mfaMethods: response.mfaMethods ?? [],
+          },
+        };
+      }
+
+      applyAuthTokens(runtimeConfig.authMode, snapshot, response);
+      const user = await snapshot.api.get<AuthUser>(
+        runtimeConfig.contract.endpoints.me,
+      );
+      return { type: "user", user };
+    },
+    onSuccess: (result) => {
+      if (result.type === "mfa") {
+        setPendingChallenge(result.challenge);
+        if (mfaPath) {
+          navigate(mfaPath);
+        }
+        return;
+      }
+
+      setPendingChallenge(null);
+      applyAuthenticatedUser(result.user);
+      snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, result.user);
+      navigate(resolvePostAuthPath(manifest, search, "login"));
+    },
+  });
+  const showPasskey = passkeyEnabled && isPasskeySupported();
+  const formBlock = (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        mutation.mutate({ email, password });
+      }}
+    >
+      <Field
+        label={emailField.label}
+        type="email"
+        value={email}
+        onChange={setEmail}
+        placeholder={emailField.placeholder}
+      />
+      <Field
+        label={passwordField.label}
+        type="password"
+        value={password}
+        onChange={setPassword}
+        placeholder={passwordField.placeholder}
+      />
+      <ErrorMessage
+        error={(mutation.error as ApiError | null) ?? null}
+        formatError={snapshot.formatAuthError}
+        context="login"
+      />
+      <PrimaryButton
+        type="submit"
+        disabled={mutation.isPending || email.length === 0 || password.length === 0}
+      >
+        {mutation.isPending
+          ? "Signing in..."
+          : resolveSubmitLabel(manifest, "login", "Sign in")}
+      </PrimaryButton>
+    </form>
+  );
+  const providersBlock = (
+    <OAuthButtons
+      providers={providers}
+      getOAuthUrl={snapshot.getOAuthUrl}
+      heading={resolveAuxLabel(
+        manifest,
+        "login",
+        "providersHeading",
+        "Continue with a provider",
+      )}
+    />
+  );
+  const passkeyBlock = showPasskey ? (
+    <div style={{ marginTop: "1rem", display: "grid", gap: "0.75rem" }}>
+      <ErrorMessage
+        error={
+          passkeyMutation.error instanceof Error &&
+          "status" in passkeyMutation.error
+            ? (passkeyMutation.error as ApiError)
+            : null
+        }
+        formatError={snapshot.formatAuthError}
+        context="login"
+      />
+      <SecondaryButton
+        disabled={passkeyMutation.isPending}
+        onClick={() => {
+          void passkeyMutation
+            .mutateAsync()
+            .catch((error: unknown) => {
+              if (
+                error instanceof DOMException &&
+                error.name === "NotAllowedError"
+              ) {
+                passkeyMutation.reset();
+              }
+            });
+        }}
+      >
+        {passkeyMutation.isPending
+          ? "Signing in..."
+          : resolveAuxLabel(
+              manifest,
+              "login",
+              "passkeyButton",
+              "Sign in with passkey",
+            )}
+      </SecondaryButton>
+    </div>
+  ) : null;
+  const linksBlock = <LinksRow items={links} navigate={navigate} />;
 
   return (
     <AuthShell manifest={manifest} screen="login">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          mutation.mutate({ email, password });
-        }}
-      >
-        <Field
-          label="Email"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          placeholder="you@example.com"
-        />
-        <Field
-          label="Password"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          placeholder="Enter your password"
-        />
-        <ErrorMessage
-          error={mutation.error ?? null}
-          formatError={snapshot.formatAuthError}
-          context="login"
-        />
-        <PrimaryButton
-          type="submit"
-          disabled={
-            mutation.isPending || email.length === 0 || password.length === 0
-          }
-        >
-          {mutation.isPending ? "Signing in..." : "Sign in"}
-        </PrimaryButton>
-      </form>
-      <OAuthButtons
-        providers={manifest.auth?.providers ?? []}
-        getOAuthUrl={snapshot.getOAuthUrl}
-      />
-      {manifest.auth?.passkey ? (
-        <p style={{ marginTop: "1rem", color: "#64748b", fontSize: "0.9rem" }}>
-          Passkey sign-in can be enabled from the Snapshot auth runtime.
-        </p>
-      ) : null}
-      <LinksRow
-        items={[
-          ...(registerPath && registerPath !== loginPath
-            ? [{ label: "Create account", path: registerPath }]
-            : []),
-          ...(forgotPasswordPath && forgotPasswordPath !== loginPath
-            ? [{ label: "Forgot password?", path: forgotPasswordPath }]
-            : []),
-        ]}
-        navigate={navigate}
-      />
+      {renderScreenSections(sectionOrder, {
+        form: formBlock,
+        providers: providersBlock,
+        passkey: passkeyBlock,
+        links: linksBlock,
+      })}
     </AuthShell>
   );
 }
@@ -762,6 +994,25 @@ function RegisterScreen({
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const loginPath = inferAuthScreenPath(manifest, "login");
+  const providers = resolveScreenProviders(manifest, "register");
+  const sectionOrder = resolveSectionOrder(manifest, "register", [
+    "form",
+    "providers",
+    "links",
+  ]);
+  const nameField = resolveFieldMeta(manifest, "register", "name", {
+    label: "Name",
+    placeholder: "Your name",
+  });
+  const emailField = resolveFieldMeta(manifest, "register", "email", {
+    label: "Email",
+    placeholder: "you@example.com",
+  });
+  const passwordField = resolveFieldMeta(manifest, "register", "password", {
+    label: "Password",
+    placeholder: "Create a password",
+  });
+  const configuredLinks = resolveConfiguredLinks(manifest, "register");
   const mutation = useMutation<AuthUser, ApiError, RegisterVars>({
     mutationFn: async (body) => {
       const response = await snapshot.api.post<Record<string, unknown>>(
@@ -774,60 +1025,83 @@ function RegisterScreen({
     onSuccess: (user) => {
       applyAuthenticatedUser(user);
       snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, user);
-      navigate(resolvePostAuthPath(manifest, search));
+      navigate(resolvePostAuthPath(manifest, search, "register"));
     },
   });
+  const formBlock = (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        mutation.mutate({ email, password, name });
+      }}
+    >
+      <Field
+        label={nameField.label}
+        value={name}
+        onChange={setName}
+        placeholder={nameField.placeholder}
+      />
+      <Field
+        label={emailField.label}
+        type="email"
+        value={email}
+        onChange={setEmail}
+        placeholder={emailField.placeholder}
+      />
+      <Field
+        label={passwordField.label}
+        type="password"
+        value={password}
+        onChange={setPassword}
+        placeholder={passwordField.placeholder}
+      />
+      <ErrorMessage
+        error={mutation.error ?? null}
+        formatError={snapshot.formatAuthError}
+        context="register"
+      />
+      <PrimaryButton
+        type="submit"
+        disabled={mutation.isPending || email.length === 0 || password.length === 0}
+      >
+        {mutation.isPending
+          ? "Creating account..."
+          : resolveSubmitLabel(manifest, "register", "Create account")}
+      </PrimaryButton>
+    </form>
+  );
+  const providersBlock = (
+    <OAuthButtons
+      providers={providers}
+      getOAuthUrl={snapshot.getOAuthUrl}
+      heading={resolveAuxLabel(
+        manifest,
+        "register",
+        "providersHeading",
+        "Continue with a provider",
+      )}
+    />
+  );
+  const linksBlock = (
+    <LinksRow
+      items={
+        configuredLinks.length > 0
+          ? configuredLinks
+          : loginPath
+            ? [{ label: "Already have an account? Sign in", path: loginPath }]
+            : []
+      }
+      navigate={navigate}
+    />
+  );
 
   return (
     <AuthShell manifest={manifest} screen="register">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          mutation.mutate({ email, password, name });
-        }}
-      >
-        <Field
-          label="Name"
-          value={name}
-          onChange={setName}
-          placeholder="Your name"
-        />
-        <Field
-          label="Email"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          placeholder="you@example.com"
-        />
-        <Field
-          label="Password"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          placeholder="Create a password"
-        />
-        <ErrorMessage
-          error={mutation.error ?? null}
-          formatError={snapshot.formatAuthError}
-          context="register"
-        />
-        <PrimaryButton
-          type="submit"
-          disabled={
-            mutation.isPending || email.length === 0 || password.length === 0
-          }
-        >
-          {mutation.isPending ? "Creating account..." : "Create account"}
-        </PrimaryButton>
-      </form>
-      <LinksRow
-        items={
-          loginPath
-            ? [{ label: "Already have an account? Sign in", path: loginPath }]
-            : []
-        }
-        navigate={navigate}
-      />
+      {renderScreenSections(sectionOrder, {
+        form: formBlock,
+        providers: providersBlock,
+        links: linksBlock,
+      })}
     </AuthShell>
   );
 }
@@ -846,6 +1120,15 @@ function ForgotPasswordScreen({
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const loginPath = inferAuthScreenPath(manifest, "login");
+  const sectionOrder = resolveSectionOrder(manifest, "forgot-password", [
+    "form",
+    "links",
+  ]);
+  const emailField = resolveFieldMeta(manifest, "forgot-password", "email", {
+    label: "Email",
+    placeholder: "you@example.com",
+  });
+  const configuredLinks = resolveConfiguredLinks(manifest, "forgot-password");
   const mutation = useMutation<
     { message?: string } | void,
     ApiError,
@@ -860,44 +1143,64 @@ function ForgotPasswordScreen({
       setMessage(
         data && typeof data === "object" && typeof data["message"] === "string"
           ? String(data["message"])
-          : "If that email is registered, you will receive a reset link shortly.",
+          : resolveSuccessMessage(
+              manifest,
+              "forgot-password",
+              "If that email is registered, you will receive a reset link shortly.",
+            ),
       );
     },
   });
+  const formBlock = (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        setMessage(null);
+        mutation.mutate({ email });
+      }}
+    >
+      <Field
+        label={emailField.label}
+        type="email"
+        value={email}
+        onChange={setEmail}
+        placeholder={emailField.placeholder}
+      />
+      <SuccessMessage message={message} />
+      <ErrorMessage
+        error={mutation.error ?? null}
+        formatError={snapshot.formatAuthError}
+        context="forgot-password"
+      />
+      <PrimaryButton
+        type="submit"
+        disabled={mutation.isPending || email.length === 0}
+      >
+        {mutation.isPending
+          ? "Sending reset link..."
+          : resolveSubmitLabel(manifest, "forgot-password", "Send reset link")}
+      </PrimaryButton>
+    </form>
+  );
+  const linksBlock = (
+    <LinksRow
+      items={
+        configuredLinks.length > 0
+          ? configuredLinks
+          : loginPath
+            ? [{ label: "Back to sign in", path: loginPath }]
+            : []
+      }
+      navigate={navigate}
+    />
+  );
 
   return (
     <AuthShell manifest={manifest} screen="forgot-password">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setMessage(null);
-          mutation.mutate({ email });
-        }}
-      >
-        <Field
-          label="Email"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          placeholder="you@example.com"
-        />
-        <SuccessMessage message={message} />
-        <ErrorMessage
-          error={mutation.error ?? null}
-          formatError={snapshot.formatAuthError}
-          context="forgot-password"
-        />
-        <PrimaryButton
-          type="submit"
-          disabled={mutation.isPending || email.length === 0}
-        >
-          {mutation.isPending ? "Sending reset link..." : "Send reset link"}
-        </PrimaryButton>
-      </form>
-      <LinksRow
-        items={loginPath ? [{ label: "Back to sign in", path: loginPath }] : []}
-        navigate={navigate}
-      />
+      {renderScreenSections(sectionOrder, {
+        form: formBlock,
+        links: linksBlock,
+      })}
     </AuthShell>
   );
 }
@@ -918,6 +1221,15 @@ function ResetPasswordScreen({
   const [message, setMessage] = useState<string | null>(null);
   const token = search.get("token") ?? "";
   const loginPath = inferAuthScreenPath(manifest, "login");
+  const sectionOrder = resolveSectionOrder(manifest, "reset-password", [
+    "form",
+    "links",
+  ]);
+  const passwordField = resolveFieldMeta(manifest, "reset-password", "password", {
+    label: "New password",
+    placeholder: "Create a new password",
+  });
+  const configuredLinks = resolveConfiguredLinks(manifest, "reset-password");
   const mutation = useMutation<
     { message?: string },
     ApiError,
@@ -929,56 +1241,72 @@ function ResetPasswordScreen({
         body,
       ),
     onSuccess: (data) => {
-      setMessage(data.message ?? "Your password has been reset.");
+      setMessage(
+        data.message ??
+          resolveSuccessMessage(
+            manifest,
+            "reset-password",
+            "Your password has been reset.",
+          ),
+      );
     },
   });
+  const formBlock = (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (!token) {
+          return;
+        }
+        setMessage(null);
+        mutation.mutate({ token, password });
+      }}
+    >
+      <Field
+        label={passwordField.label}
+        type="password"
+        value={password}
+        onChange={setPassword}
+        placeholder={passwordField.placeholder}
+      />
+      {!token ? (
+        <p role="alert" style={{ color: "#b91c1c", marginTop: 0 }}>
+          This reset link is missing a token.
+        </p>
+      ) : null}
+      <SuccessMessage message={message} />
+      <ErrorMessage
+        error={mutation.error ?? null}
+        formatError={snapshot.formatAuthError}
+        context="reset-password"
+      />
+      <PrimaryButton
+        type="submit"
+        disabled={mutation.isPending || password.length === 0 || token.length === 0}
+      >
+        {mutation.isPending
+          ? "Resetting password..."
+          : resolveSubmitLabel(manifest, "reset-password", "Reset password")}
+      </PrimaryButton>
+    </form>
+  );
+  const linksBlock =
+    configuredLinks.length > 0 ? (
+      <LinksRow items={configuredLinks} navigate={navigate} />
+    ) : loginPath ? (
+      <ActionsRow>
+        <SecondaryButton onClick={() => navigate(loginPath)}>
+          Back to sign in
+        </SecondaryButton>
+      </ActionsRow>
+    ) : null;
 
   return (
     <AuthShell manifest={manifest} screen="reset-password">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!token) {
-            return;
-          }
-          setMessage(null);
-          mutation.mutate({ token, password });
-        }}
-      >
-        <Field
-          label="New password"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          placeholder="Create a new password"
-        />
-        {!token ? (
-          <p role="alert" style={{ color: "#b91c1c", marginTop: 0 }}>
-            This reset link is missing a token.
-          </p>
-        ) : null}
-        <SuccessMessage message={message} />
-        <ErrorMessage
-          error={mutation.error ?? null}
-          formatError={snapshot.formatAuthError}
-          context="reset-password"
-        />
-        <PrimaryButton
-          type="submit"
-          disabled={
-            mutation.isPending || password.length === 0 || token.length === 0
-          }
-        >
-          {mutation.isPending ? "Resetting password..." : "Reset password"}
-        </PrimaryButton>
-      </form>
-      <ActionsRow>
-        {loginPath ? (
-          <SecondaryButton onClick={() => navigate(loginPath)}>
-            Back to sign in
-          </SecondaryButton>
-        ) : null}
-      </ActionsRow>
+      {renderScreenSections(sectionOrder, {
+        form: formBlock,
+        links: linksBlock,
+      })}
     </AuthShell>
   );
 }
@@ -999,6 +1327,15 @@ function VerifyEmailScreen({
   const [message, setMessage] = useState<string | null>(null);
   const token = search.get("token") ?? "";
   const loginPath = inferAuthScreenPath(manifest, "login");
+  const sectionOrder = resolveSectionOrder(manifest, "verify-email", [
+    "form",
+    "links",
+  ]);
+  const emailField = resolveFieldMeta(manifest, "verify-email", "email", {
+    label: "Email",
+    placeholder: "you@example.com",
+  });
+  const configuredLinks = resolveConfiguredLinks(manifest, "verify-email");
   const hasTriggeredRef = useRef(false);
   const mutation = useMutation<{ message?: string }, ApiError, VerifyEmailBody>(
     {
@@ -1008,7 +1345,14 @@ function VerifyEmailScreen({
           body,
         ),
       onSuccess: (data) => {
-        setMessage(data.message ?? "Your email has been verified.");
+        setMessage(
+          data.message ??
+            resolveSuccessMessage(
+              manifest,
+              "verify-email",
+              "Your email has been verified.",
+            ),
+        );
       },
     },
   );
@@ -1023,7 +1367,14 @@ function VerifyEmailScreen({
         body,
       ),
     onSuccess: (data) => {
-      setMessage(data.message ?? "Verification email sent.");
+      setMessage(
+        data.message ??
+          resolveSuccessMessage(
+            manifest,
+            "verify-email",
+            "Verification email sent.",
+          ),
+      );
     },
   });
 
@@ -1035,9 +1386,8 @@ function VerifyEmailScreen({
     hasTriggeredRef.current = true;
     mutation.mutate({ token });
   }, [mutation, token]);
-
-  return (
-    <AuthShell manifest={manifest} screen="verify-email">
+  const formBlock = (
+    <>
       {!token ? (
         <>
           <p role="alert" style={{ color: "#b91c1c", marginTop: 0 }}>
@@ -1051,11 +1401,11 @@ function VerifyEmailScreen({
             }}
           >
             <Field
-              label="Email"
+              label={emailField.label}
               type="email"
               value={email}
               onChange={setEmail}
-              placeholder="you@example.com"
+              placeholder={emailField.placeholder}
             />
             <PrimaryButton
               type="submit"
@@ -1063,7 +1413,11 @@ function VerifyEmailScreen({
             >
               {resendMutation.isPending
                 ? "Sending verification..."
-                : "Resend verification email"}
+                : resolveSubmitLabel(
+                    manifest,
+                    "verify-email",
+                    "Resend verification email",
+                  )}
             </PrimaryButton>
           </form>
         </>
@@ -1074,13 +1428,25 @@ function VerifyEmailScreen({
         formatError={snapshot.formatAuthError}
         context="verify-email"
       />
+    </>
+  );
+  const linksBlock =
+    configuredLinks.length > 0 ? (
+      <LinksRow items={configuredLinks} navigate={navigate} />
+    ) : loginPath ? (
       <ActionsRow>
-        {loginPath ? (
-          <PrimaryButton onClick={() => navigate(loginPath)}>
-            Continue to sign in
-          </PrimaryButton>
-        ) : null}
+        <PrimaryButton onClick={() => navigate(loginPath)}>
+          Continue to sign in
+        </PrimaryButton>
       </ActionsRow>
+    ) : null;
+
+  return (
+    <AuthShell manifest={manifest} screen="verify-email">
+      {renderScreenSections(sectionOrder, {
+        form: formBlock,
+        links: linksBlock,
+      })}
     </AuthShell>
   );
 }
@@ -1108,6 +1474,18 @@ function MfaScreen({
   );
   const [message, setMessage] = useState<string | null>(null);
   const loginPath = inferAuthScreenPath(manifest, "login");
+  const sectionOrder = resolveSectionOrder(manifest, "mfa", [
+    "form",
+    "links",
+  ]);
+  const codeField = resolveFieldMeta(manifest, "mfa", "code", {
+    label: "Verification code",
+    placeholder: "Enter the code",
+  });
+  const methodField = resolveFieldMeta(manifest, "mfa", "method", {
+    label: "Method",
+  });
+  const configuredLinks = resolveConfiguredLinks(manifest, "mfa");
   const mutation = useMutation<
     AuthUser,
     ApiError,
@@ -1134,7 +1512,7 @@ function MfaScreen({
       setPendingChallenge(null);
       applyAuthenticatedUser(user);
       snapshot.queryClient.setQueryData(AUTH_QUERY_KEY, user);
-      navigate(resolvePostAuthPath(manifest, search));
+      navigate(resolvePostAuthPath(manifest, search, "mfa"));
     },
   });
   const resendMutation = useMutation<{ message?: string }, ApiError, void>({
@@ -1151,7 +1529,14 @@ function MfaScreen({
       );
     },
     onSuccess: (data) => {
-      setMessage(data.message ?? "A new verification code has been sent.");
+      setMessage(
+        data.message ??
+          resolveSuccessMessage(
+            manifest,
+            "mfa",
+            "A new verification code has been sent.",
+          ),
+      );
     },
   });
 
@@ -1160,95 +1545,102 @@ function MfaScreen({
       setMethod(pendingChallenge.mfaMethods[0]);
     }
   }, [pendingChallenge]);
+  const formBlock = !pendingChallenge ? (
+    <p style={{ color: "#475569", marginTop: 0 }}>
+      There is no active verification challenge.
+    </p>
+  ) : (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        setMessage(null);
+        mutation.mutate({ code, method });
+      }}
+    >
+      <Field
+        label={codeField.label}
+        value={code}
+        onChange={setCode}
+        placeholder={codeField.placeholder}
+      />
+      {pendingChallenge.mfaMethods.length > 1 ? (
+        <label
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.375rem",
+            marginBottom: "0.875rem",
+          }}
+        >
+          <span style={{ fontSize: "0.925rem", fontWeight: 600 }}>
+            {methodField.label}
+          </span>
+          <select
+            value={method}
+            onChange={(event) => setMethod(event.currentTarget.value as MfaMethod)}
+            style={{
+              border: "1px solid rgba(15,23,42,0.14)",
+              borderRadius: "0.75rem",
+              padding: "0.75rem 0.875rem",
+              fontSize: "1rem",
+            }}
+          >
+            {pendingChallenge.mfaMethods.map((candidate) => (
+              <option key={candidate} value={candidate}>
+                {candidate}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+      <SuccessMessage message={message} />
+      <ErrorMessage
+        error={(mutation.error as ApiError | null) ?? null}
+        formatError={snapshot.formatAuthError}
+        context="login"
+      />
+      <PrimaryButton
+        type="submit"
+        disabled={mutation.isPending || code.length === 0}
+      >
+        {mutation.isPending
+          ? "Verifying..."
+          : resolveSubmitLabel(manifest, "mfa", "Verify")}
+      </PrimaryButton>
+      {pendingChallenge.mfaMethods.includes("emailOtp") ? (
+        <div style={{ marginTop: "0.75rem" }}>
+          <SecondaryButton
+            disabled={resendMutation.isPending}
+            onClick={() => {
+              setMessage(null);
+              resendMutation.mutate();
+            }}
+          >
+            {resendMutation.isPending
+              ? "Sending..."
+              : resolveAuxLabel(manifest, "mfa", "resend", "Resend code")}
+          </SecondaryButton>
+        </div>
+      ) : null}
+    </form>
+  );
+  const linksBlock =
+    configuredLinks.length > 0 ? (
+      <LinksRow items={configuredLinks} navigate={navigate} />
+    ) : loginPath ? (
+      <ActionsRow>
+        <PrimaryButton onClick={() => navigate(loginPath)}>
+          Back to sign in
+        </PrimaryButton>
+      </ActionsRow>
+    ) : null;
 
   return (
     <AuthShell manifest={manifest} screen="mfa">
-      {!pendingChallenge ? (
-        <>
-          <p style={{ color: "#475569", marginTop: 0 }}>
-            There is no active verification challenge.
-          </p>
-          <ActionsRow>
-            {loginPath ? (
-              <PrimaryButton onClick={() => navigate(loginPath)}>
-                Back to sign in
-              </PrimaryButton>
-            ) : null}
-          </ActionsRow>
-        </>
-      ) : (
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setMessage(null);
-            mutation.mutate({ code, method });
-          }}
-        >
-          <Field
-            label="Verification code"
-            value={code}
-            onChange={setCode}
-            placeholder="Enter the code"
-          />
-          {pendingChallenge.mfaMethods.length > 1 ? (
-            <label
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.375rem",
-                marginBottom: "0.875rem",
-              }}
-            >
-              <span style={{ fontSize: "0.925rem", fontWeight: 600 }}>
-                Method
-              </span>
-              <select
-                value={method}
-                onChange={(event) =>
-                  setMethod(event.currentTarget.value as MfaMethod)
-                }
-                style={{
-                  border: "1px solid rgba(15,23,42,0.14)",
-                  borderRadius: "0.75rem",
-                  padding: "0.75rem 0.875rem",
-                  fontSize: "1rem",
-                }}
-              >
-                {pendingChallenge.mfaMethods.map((candidate) => (
-                  <option key={candidate} value={candidate}>
-                    {candidate}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
-          <SuccessMessage message={message} />
-          <ErrorMessage
-            error={(mutation.error as ApiError | null) ?? null}
-            formatError={snapshot.formatAuthError}
-            context="login"
-          />
-          <PrimaryButton
-            type="submit"
-            disabled={mutation.isPending || code.length === 0}
-          >
-            {mutation.isPending ? "Verifying..." : "Verify"}
-          </PrimaryButton>
-          {pendingChallenge.mfaMethods.includes("emailOtp") ? (
-            <div style={{ marginTop: "0.75rem" }}>
-              <SecondaryButton
-                disabled={resendMutation.isPending}
-                onClick={() => {
-                  setMessage(null);
-                  resendMutation.mutate();
-                }}
-              >
-                {resendMutation.isPending ? "Sending..." : "Resend code"}
-              </SecondaryButton>
-            </div>
-          ) : null}
-        </form>
-      )}
+      {renderScreenSections(sectionOrder, {
+        form: formBlock,
+        links: linksBlock,
+      })}
     </AuthShell>
   );
 }

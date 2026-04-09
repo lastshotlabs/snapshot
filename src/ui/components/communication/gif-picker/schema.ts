@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { endpointTargetSchema } from "../../../manifest/resources";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -46,9 +47,9 @@ export const gifPickerConfigSchema = z
     /** Component type discriminator. */
     type: z.literal("gif-picker"),
     /** Backend endpoint for GIF search. Query appended as `?q={search}`. */
-    searchEndpoint: z.string().optional(),
+    searchEndpoint: endpointTargetSchema.optional(),
     /** Backend endpoint for trending GIFs (shown by default). */
-    trendingEndpoint: z.string().optional(),
+    trendingEndpoint: endpointTargetSchema.optional(),
     /** Static GIF data (for demos without a backend). */
     gifs: z
       .array(

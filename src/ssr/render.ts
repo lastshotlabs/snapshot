@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { getNoStore, withRequestStore } from "./cache";
+import type { PprCacheEntry } from "./ppr-cache";
 import type { RscOptions } from "./rsc";
 import { serializeQueryState } from "./state";
 import type { SsrRequestContext, SsrShellShape } from "./types";
@@ -257,6 +258,161 @@ function buildConcatenatedStream(
       } catch (err) {
         controller.error(err);
       }
+    },
+  });
+}
+
+// ─── PPR streaming renderer ───────────────────────────────────────────────────
+
+/**
+ * Options for `renderPprPage()`.
+ */
+export interface RenderPprOptions {
+  /**
+   * The full React element tree for the page, including all providers and
+   * Suspense boundaries. Used to generate the dynamic update scripts that
+   * fill Suspense holes after the shell has been sent.
+   */
+  element: React.ReactElement;
+  /**
+   * Pre-computed static shell from the PPR cache. When provided, the shell HTML
+   * is sent as the first chunk of the response for immediate first paint.
+   *
+   * When `undefined`, the function falls back to `renderPage()` (standard SSR).
+   */
+  shell?: PprCacheEntry;
+  /**
+   * Pre-built `<head>` HTML string (charset, viewport, meta, asset tags,
+   * dehydrated state). Injected before the shell body content.
+   */
+  head: string;
+  /**
+   * Client JS URLs to inject via `bootstrapScripts` in `renderToReadableStream`.
+   * These are the hashed module chunks that hydrate the page on the client.
+   */
+  scripts: string[];
+}
+
+/**
+ * Render a PPR (Partial Prerendering) route.
+ *
+ * When a pre-computed shell is available in the PPR cache, this function:
+ * 1. Immediately sends the shell HTML (including Suspense fallbacks) as the
+ *    first chunk of a streaming `Response` — this achieves instant TTFB.
+ * 2. Pipes `renderToReadableStream` output after the shell. React's streaming
+ *    renderer emits inline `<script>` chunks that replace each Suspense
+ *    fallback with the resolved dynamic content as promises settle.
+ *
+ * When no shell is cached, the function returns a standard streaming SSR
+ * response via `renderPage()` as a transparent fallback so the route still
+ * works correctly before build-time pre-rendering has run.
+ *
+ * **Streaming contract:**
+ * - Response uses `Transfer-Encoding: chunked` and `Content-Type: text/html`.
+ * - The shell chunk is written before any async work begins.
+ * - React's hydration `<script>` tags keep the client in sync with the server.
+ *
+ * @param options - PPR render options including the element tree, shell, head,
+ *   and bootstrap script URLs.
+ * @returns A streaming `Response` with `Content-Type: text/html; charset=utf-8`.
+ */
+export async function renderPprPage(options: RenderPprOptions): Promise<Response> {
+  const { element, shell, head, scripts } = options;
+
+  // ── No cached shell — fall back to standard SSR ───────────────────────────
+  // This path is taken before build-time pre-rendering has populated the cache,
+  // or for routes where shell extraction failed.
+  if (!shell) {
+    console.warn(
+      "[snapshot-ssr] renderPprPage called without a cached shell — falling back to standard SSR.",
+    );
+    // Build a minimal streaming response using the element tree directly.
+    const fallbackStream = await renderToReadableStream(element, {
+      bootstrapScripts: scripts,
+      onError(error: unknown) {
+        console.error("[snapshot-ssr] PPR fallback renderToReadableStream error:", error);
+      },
+    });
+
+    const encoder = new TextEncoder();
+    const headBytes = encoder.encode(head);
+    const body = buildConcatenatedStream(headBytes, fallbackStream, new Uint8Array(0));
+
+    return new Response(body, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+      },
+    });
+  }
+
+  // ── PPR fast path: shell first, then dynamic update scripts ──────────────
+  //
+  // Architecture:
+  //   chunk 1  →  shell HTML  (pre-computed static content + Suspense fallbacks)
+  //   chunk 2+ →  React dynamic stream (inline <script> tags filling Suspense holes)
+  //
+  // React's renderToReadableStream in React 19 automatically emits <script>
+  // chunks that instruct the browser to replace each Suspense fallback with the
+  // resolved children. We send the shell up-front so the browser can paint
+  // immediately, then let React's stream fill in the dynamic content.
+  //
+  // The `head` parameter already contains the full <head> block built by the
+  // caller (preamble: <!DOCTYPE html><html><head>...</head><body><div id="root">).
+  // The shell HTML is the React-rendered body content with fallbacks in-place.
+  // After that, React's dynamic stream closes </div></body></html>.
+
+  const encoder = new TextEncoder();
+  const headBytes = encoder.encode(head);
+  const shellBytes = encoder.encode(shell.shellHtml);
+
+  // Start the full React stream for dynamic slot resolution.
+  // bootstrapScripts causes React to emit <script type="module"> tags that
+  // hydrate the client bundle. The stream itself emits additional inline
+  // <script> chunks to flush resolved Suspense boundaries.
+  const dynamicStream = await renderToReadableStream(element, {
+    bootstrapScripts: scripts,
+    onError(error: unknown) {
+      console.error("[snapshot-ssr] PPR dynamic renderToReadableStream error:", error);
+    },
+  });
+
+  // Build the concatenated response stream:
+  //   head bytes → shell bytes → dynamic React stream
+  //
+  // The dynamic stream from React 19 includes the hydration scripts and the
+  // out-of-order Suspense content that fills the fallback slots in the shell.
+  const responseStream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      try {
+        // 1. Send <head> preamble immediately.
+        controller.enqueue(headBytes);
+
+        // 2. Send pre-computed shell HTML with Suspense fallbacks.
+        controller.enqueue(shellBytes);
+
+        // 3. Pipe the dynamic React stream (Suspense resolution scripts).
+        const reader = dynamicStream.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (value) controller.enqueue(value);
+        }
+
+        controller.close();
+      } catch (err) {
+        controller.error(err);
+      }
+    },
+  });
+
+  return new Response(responseStream, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Transfer-Encoding": "chunked",
+      "X-Ppr": "shell",
     },
   });
 }

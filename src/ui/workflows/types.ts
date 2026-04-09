@@ -25,7 +25,21 @@ export interface IfWorkflowNode extends WorkflowBaseNode {
   else?: WorkflowDefinition;
 }
 
-export type WorkflowNode = ActionConfig | IfWorkflowNode;
+export interface WaitWorkflowNode extends WorkflowBaseNode {
+  type: "wait";
+  duration: number;
+}
+
+export interface ParallelWorkflowNode extends WorkflowBaseNode {
+  type: "parallel";
+  branches: WorkflowDefinition[];
+}
+
+export type WorkflowNode =
+  | ActionConfig
+  | IfWorkflowNode
+  | WaitWorkflowNode
+  | ParallelWorkflowNode;
 export type WorkflowDefinition = WorkflowNode | WorkflowNode[];
 export type WorkflowMap = Record<string, WorkflowDefinition>;
 

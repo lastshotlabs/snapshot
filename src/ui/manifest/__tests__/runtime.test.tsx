@@ -45,6 +45,12 @@ function createWrapper(options?: { api?: ApiClient }) {
               endpoint: "/api/dashboard",
               dependsOn: ["users"],
             },
+            flakyUsers: {
+              method: "GET",
+              endpoint: "/api/flaky-users",
+              retry: 2,
+              retryDelayMs: 10,
+            },
           },
           routes: [],
           routeMap: {},
@@ -102,6 +108,39 @@ describe("ManifestRuntimeProvider", () => {
 
     expect(result.current?.getResourceVersion("users")).toBe(1);
 
+    vi.useRealTimers();
+  });
+
+  it("retries resource loads when the resource config enables retry", async () => {
+    vi.useFakeTimers();
+    const get = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("temporary"))
+      .mockResolvedValueOnce([{ id: 1 }]);
+    const api = {
+      get,
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    } as unknown as ApiClient;
+    const { result } = renderHook(() => useManifestResourceCache(), {
+      wrapper: createWrapper({ api }),
+    });
+
+    let loadPromise: Promise<unknown> | undefined;
+    await act(async () => {
+      loadPromise = result.current?.loadTarget({ resource: "flakyUsers" });
+      await vi.advanceTimersByTimeAsync(10);
+      await loadPromise;
+    });
+
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(get).toHaveBeenNthCalledWith(1, "/api/flaky-users");
+    expect(get).toHaveBeenNthCalledWith(2, "/api/flaky-users");
+    expect(result.current?.getData({ resource: "flakyUsers" })).toEqual([
+      { id: 1 },
+    ]);
     vi.useRealTimers();
   });
 });

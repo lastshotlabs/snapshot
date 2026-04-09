@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { endpointTargetSchema } from "../../../manifest/resources";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -51,7 +52,7 @@ export const locationInputConfigSchema = z
      * Backend endpoint for geocode search. Query appended as `?q={search}`.
      * Must return an array of location objects.
      */
-    searchEndpoint: z.string(),
+    searchEndpoint: endpointTargetSchema,
     /** Field name for location display name in results. Default: "name". */
     nameField: z.string().optional(),
     /** Field name for address/secondary text in results. Default: "address". */

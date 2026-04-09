@@ -43,6 +43,16 @@ export interface ServerRouteMatchShape {
    * `null` when no not-found convention file is co-located.
    */
   readonly notFoundFilePath?: string | null;
+  /**
+   * The `generateStaticParams` function exported from this route module, if any.
+   *
+   * Populated by the renderer after dynamically importing the route file.
+   * `undefined` when the route module does not export `generateStaticParams`.
+   *
+   * Used at build time by the static-params scanner to enumerate all concrete
+   * URL paths for pre-rendering. Not called at request time.
+   */
+  readonly generateStaticParams?: ((ctx: unknown) => Promise<Record<string, string>[]> | Record<string, string>[]) | undefined;
 }
 
 /**
@@ -85,6 +95,18 @@ export interface SsrShellShape {
    * @internal Do not use in application code.
    */
   readonly _isr?: IsrSinkShape;
+  /**
+   * Whether the current request is in draft mode.
+   *
+   * Set by the bunshot-ssr middleware to `true` when the request carries the
+   * draft mode cookie. The renderer reads this and exposes it as `ctx.draftMode()`
+   * in every route load function.
+   *
+   * When `true`, the ISR cache is bypassed for this request.
+   *
+   * @internal Do not use in application code outside of renderer implementations.
+   */
+  readonly _draftMode?: boolean;
 }
 
 // ─── Per-request isolation ────────────────────────────────────────────────────
@@ -260,6 +282,31 @@ export interface SsrLoadContext {
    * Cast to `BunshotContext` inside the route file with `import type` from bunshot-core.
    */
   readonly bsCtx: unknown;
+  /**
+   * Returns the draft mode status for the current request.
+   *
+   * When `isEnabled` is `true`, the request carries the draft mode cookie.
+   * Use this to fetch unpublished/draft content from your CMS instead of
+   * the published version. The ISR cache is automatically bypassed for
+   * draft requests.
+   *
+   * Draft mode is enabled via `GET /api/draft/enable?secret=<token>` and
+   * disabled via `GET /api/draft/disable`.
+   *
+   * @returns An object with `isEnabled: boolean`.
+   *
+   * @example
+   * ```ts
+   * export async function load(ctx: SsrLoadContext) {
+   *   const { isEnabled } = ctx.draftMode();
+   *   const post = isEnabled
+   *     ? await cms.getDraftPost(ctx.params.slug)
+   *     : await cms.getPublishedPost(ctx.params.slug);
+   *   return { data: { post } };
+   * }
+   * ```
+   */
+  draftMode(): { isEnabled: boolean };
 }
 
 // ─── Manifest renderer config ─────────────────────────────────────────────────

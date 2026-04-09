@@ -46,6 +46,50 @@ describe("compiler", () => {
     expect(compiled.routeMap["/dashboard"]?.page.title).toBe("Dashboard");
   });
 
+  it("preserves auth screen options and redirects", () => {
+    const compiled = compileManifest({
+      auth: {
+        screens: ["login"],
+        redirects: {
+          afterLogin: "/reports",
+        },
+        screenOptions: {
+          login: {
+            title: "Welcome back",
+            submitLabel: "Continue",
+            sections: ["providers", "form"],
+            providers: [
+              {
+                provider: "google",
+                label: "Use Google Workspace",
+              },
+            ],
+          },
+        },
+      },
+      routes: [
+        {
+          id: "login",
+          path: "/login",
+          content: [{ type: "heading", text: "Login" }],
+        },
+      ],
+    });
+
+    expect(compiled.auth?.redirects?.afterLogin).toBe("/reports");
+    expect(compiled.auth?.screenOptions?.login?.title).toBe("Welcome back");
+    expect(compiled.auth?.screenOptions?.login?.sections).toEqual([
+      "providers",
+      "form",
+    ]);
+    expect(compiled.auth?.screenOptions?.login?.providers).toEqual([
+      {
+        provider: "google",
+        label: "Use Google Workspace",
+      },
+    ]);
+  });
+
   it("defaults app.home to the first route when omitted", () => {
     const compiled = compileManifest({
       routes: [

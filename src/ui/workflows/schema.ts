@@ -26,6 +26,24 @@ export const workflowNodeSchema: z.ZodType = z.lazy(() =>
           .optional(),
       })
       .strict(),
+    z
+      .object({
+        type: z.literal("wait"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        duration: z.number().int().min(0),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("parallel"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        branches: z
+          .array(z.union([workflowNodeSchema, z.array(workflowNodeSchema)]))
+          .min(1),
+      })
+      .strict(),
   ]),
 );
 

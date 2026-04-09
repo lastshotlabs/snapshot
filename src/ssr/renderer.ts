@@ -157,6 +157,8 @@ function wrapWithErrorBoundary(
  *
  * Provides direct bunshot adapter access via `bsCtx` without an HTTP round-trip.
  * Auth resolution via `getUser()` calls into bunshot-auth's plugin state.
+ * Draft mode status is forwarded from the shell's `_draftMode` flag, which the
+ * bunshot-ssr middleware sets based on the incoming request cookie.
  *
  * @internal
  */
@@ -164,6 +166,7 @@ function buildLoadContext(
   match: ServerRouteMatchShape,
   request: Request,
   bsCtx: unknown,
+  draftModeEnabled = false,
 ) {
   const cookieHeader = request.headers.get("cookie");
 
@@ -193,6 +196,17 @@ function buildLoadContext(
       } catch {
         return null;
       }
+    },
+    /**
+     * Returns the draft mode status for the current request.
+     *
+     * Reflects whether the incoming request carried the bunshot draft mode cookie.
+     * The SSR middleware sets `shell._draftMode` before calling the renderer.
+     *
+     * @returns `{ isEnabled: boolean }` snapshot for this request.
+     */
+    draftMode(): { isEnabled: boolean } {
+      return { isEnabled: draftModeEnabled };
     },
   };
 }
@@ -320,7 +334,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       // are not available here — bunshot-ssr doesn't forward the raw Request yet).
       // TODO: forward raw Request when Track A Phase 4 is updated to pass it.
       const fakeRequest = new Request(match.url.toString());
-      const loadContext = buildLoadContext(match, fakeRequest, bsCtx);
+      const loadContext = buildLoadContext(match, fakeRequest, bsCtx, shell._draftMode ?? false);
 
       // 1. Dynamic import the route module
       let routeModule: Record<string, unknown>;
@@ -330,6 +344,19 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         throw new Error(
           `[snapshot-ssr] Failed to import route module ${match.filePath}: ${String(err)}`,
         );
+      }
+
+      // Attach generateStaticParams to the match when the route exports it.
+      // This makes the function available to the framework at build time without
+      // requiring a separate import pass. Structural assignment — match is a plain
+      // object produced by the resolver, so we can safely spread-override the field.
+      const generateStaticParamsFn = routeModule["generateStaticParams"] as
+        | ((ctx: unknown) => Promise<Record<string, string>[]> | Record<string, string>[])
+        | undefined;
+      if (generateStaticParamsFn !== undefined && match.generateStaticParams === undefined) {
+        // Widen match to mutable for the one-time attachment.
+        (match as { generateStaticParams?: unknown }).generateStaticParams =
+          generateStaticParamsFn;
       }
 
       const loadFn = routeModule["load"] as
@@ -464,7 +491,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       bsCtx: unknown,
     ): Promise<Response> {
       const fakeRequest = new Request(chain.page.url.toString());
-      const pageLoadContext = buildLoadContext(chain.page, fakeRequest, bsCtx);
+      const pageLoadContext = buildLoadContext(chain.page, fakeRequest, bsCtx, shell._draftMode ?? false);
 
       // 1. Import all route modules in parallel (layouts + page)
       const [layoutModules, pageModule] = await Promise.all([
@@ -490,9 +517,23 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         })(),
       ]);
 
+      // Attach generateStaticParams from the page module to the page match when present.
+      // This makes the function available to the framework at build time without a
+      // separate import pass (mirrors the same step in render()).
+      const pageGenerateStaticParams = pageModule["generateStaticParams"] as
+        | ((ctx: unknown) => Promise<Record<string, string>[]> | Record<string, string>[])
+        | undefined;
+      if (
+        pageGenerateStaticParams !== undefined &&
+        chain.page.generateStaticParams === undefined
+      ) {
+        (chain.page as { generateStaticParams?: unknown }).generateStaticParams =
+          pageGenerateStaticParams;
+      }
+
       // 2. Execute load() for all layouts in parallel, then page
       const layoutLoadContexts = chain.layouts.map((layout) =>
-        buildLoadContext(layout, fakeRequest, bsCtx),
+        buildLoadContext(layout, fakeRequest, bsCtx, shell._draftMode ?? false),
       );
 
       const [layoutResults, pageResult] = await Promise.all([
@@ -664,7 +705,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
               const slotLoadFn = slotMod["load"] as
                 | ((ctx: unknown) => Promise<unknown>)
                 | undefined;
-              const slotLoadCtx = buildLoadContext(slot.match, fakeRequest, bsCtx);
+              const slotLoadCtx = buildLoadContext(slot.match, fakeRequest, bsCtx, shell._draftMode ?? false);
               const slotResult = slotLoadFn ? await slotLoadFn(slotLoadCtx) : { data: {} };
 
               if (!isLoadResult(slotResult)) {

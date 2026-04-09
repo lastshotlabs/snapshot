@@ -122,6 +122,51 @@ export type {
  */
 export type { SsrMetaShape as SsrMeta } from "./head";
 
+// ─── PPR (Partial Prerendering) ───────────────────────────────────────────────
+
+/**
+ * Extract the static shell of a React tree for PPR (Partial Prerendering).
+ *
+ * Called at build time / server startup for each PPR-enabled route. Suspense
+ * boundaries are rendered with their fallback content only — no async children
+ * are awaited. The resulting HTML is stored in the PPR cache and sent immediately
+ * on every subsequent request for instant TTFB.
+ */
+export { extractPprShell } from "./ppr";
+
+/**
+ * Wraps a React tree so that all Suspense boundaries render only their fallbacks.
+ * Used internally by `extractPprShell()` — rarely needed directly.
+ */
+export { StaticShellWrapper } from "./ppr";
+
+/** Result of a PPR shell extraction. */
+export type { PprShell } from "./ppr";
+
+/**
+ * Create an in-memory PPR shell cache.
+ *
+ * Instantiate once at server startup. Pass to `prerenderPprShells()` (from
+ * `@lastshotlabs/bunshot-ssr/ppr`) to populate at startup, then pass to
+ * `renderPprPage()` to serve cached shells at request time.
+ */
+export { createPprCache } from "./ppr-cache";
+
+/** A single entry in the PPR shell cache. */
+export type { PprCacheEntry } from "./ppr-cache";
+
+/** The PPR shell cache interface. */
+export type { PprCache } from "./ppr-cache";
+
+/**
+ * Render a PPR route: send the static shell immediately, then stream dynamic slots.
+ * Falls back to standard streaming SSR if no shell is cached.
+ */
+export { renderPprPage } from "./render";
+
+/** Options for `renderPprPage()`. */
+export type { RenderPprOptions } from "./render";
+
 // ─── State utilities (exported for testing / advanced use) ────────────────────
 
 /** XSS-safe JSON serialization. Safe to embed in `<script>` tags. */
