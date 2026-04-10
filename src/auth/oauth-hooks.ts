@@ -16,6 +16,23 @@ const AUTH_QUERY_KEY = ["auth", "me"] as const;
 interface OAuthHooksConfig {
   auth?: "cookie" | "token";
   homePath?: string;
+  providers?: Record<
+    string,
+    {
+      type:
+        | "google"
+        | "github"
+        | "microsoft"
+        | "apple"
+        | "facebook"
+        | "discord"
+        | "custom";
+      clientId?: string;
+      scopes?: string[];
+      callbackPath?: string;
+      name?: string;
+    }
+  >;
 }
 
 interface OAuthHooksOptions {
@@ -36,12 +53,72 @@ export function createOAuthHooks({
   contract,
   onLoginSuccess,
 }: OAuthHooksOptions) {
+  function resolveProviderTarget(provider: OAuthProvider): OAuthProvider {
+    const providerConfig = config.providers?.[provider];
+    if (!providerConfig) {
+      return provider;
+    }
+
+    if (providerConfig.type === "custom") {
+      return (providerConfig.name ?? provider) as OAuthProvider;
+    }
+
+    return providerConfig.type as OAuthProvider;
+  }
+
+  function appendProviderQuery(
+    url: string,
+    providerConfig:
+      | {
+          clientId?: string;
+          scopes?: string[];
+          callbackPath?: string;
+        }
+      | undefined,
+  ): string {
+    if (!providerConfig) {
+      return url;
+    }
+
+    const hasQueryValues =
+      !!providerConfig.clientId ||
+      (providerConfig.scopes?.length ?? 0) > 0 ||
+      !!providerConfig.callbackPath;
+    if (!hasQueryValues || typeof URL === "undefined") {
+      return url;
+    }
+
+    const origin =
+      typeof window !== "undefined" &&
+      window.location.origin &&
+      window.location.origin !== "null"
+        ? window.location.origin
+        : "http://localhost";
+    const parsed = new URL(url, origin);
+
+    if (providerConfig.clientId) {
+      parsed.searchParams.set("client_id", providerConfig.clientId);
+    }
+    if (providerConfig.scopes && providerConfig.scopes.length > 0) {
+      parsed.searchParams.set("scope", providerConfig.scopes.join(" "));
+    }
+    if (providerConfig.callbackPath) {
+      parsed.searchParams.set("redirect_uri", providerConfig.callbackPath);
+    }
+
+    return parsed.toString();
+  }
+
   function getOAuthUrl(provider: OAuthProvider): string {
-    return contract.oauthUrl(provider);
+    const providerConfig = config.providers?.[provider];
+    const target = resolveProviderTarget(provider);
+    return appendProviderQuery(contract.oauthUrl(target), providerConfig);
   }
 
   function getLinkUrl(provider: OAuthProvider): string {
-    return contract.oauthLinkUrl(provider);
+    const providerConfig = config.providers?.[provider];
+    const target = resolveProviderTarget(provider);
+    return appendProviderQuery(contract.oauthLinkUrl(target), providerConfig);
   }
 
   /**

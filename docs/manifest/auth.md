@@ -1,7 +1,6 @@
 # Manifest Auth
 
-Snapshot auth is configured in the manifest. During B2, the session settings
-move under `manifest.auth.session`.
+Snapshot auth is fully manifest-driven.
 
 ## Session
 
@@ -18,25 +17,71 @@ move under `manifest.auth.session`.
 }
 ```
 
-### Fields
+- `mode`: `cookie` or `token` (default `cookie`)
+- `storage`: `localStorage` | `sessionStorage` | `memory` (default `sessionStorage`)
+- `key`: token key (default `snapshot.token`)
 
-- `mode` controls whether Snapshot uses cookie auth or token auth.
-- `storage` controls where tokens are stored when `mode` is `token`.
-- `key` sets the token storage key.
+## Providers
 
-### Defaults
+OAuth providers are declared once in `auth.providers` and referenced by name in
+screen options:
 
-- `mode`: `cookie`
-- `storage`: `sessionStorage`
-- `key`: `snapshot.token`
+```json
+{
+  "auth": {
+    "providers": {
+      "google": {
+        "type": "google",
+        "clientId": { "env": "GOOGLE_ID" },
+        "scopes": ["openid", "email"],
+        "callbackPath": "/auth/callback/google"
+      }
+    },
+    "screenOptions": {
+      "login": {
+        "providers": ["google"]
+      }
+    }
+  }
+}
+```
 
-When the session block is omitted, Snapshot keeps cookie mode and no-op token
-storage behavior for the current bootstrap defaults.
+For custom providers use:
+
+```json
+{
+  "type": "custom",
+  "name": "my-provider-name"
+}
+```
+
+## MFA + WebAuthn
+
+`auth.mfa` and `auth.webauthn` provide shared runtime config:
+
+```json
+{
+  "auth": {
+    "mfa": {
+      "issuer": "Snapshot",
+      "period": 30,
+      "methods": ["totp", "webauthn"]
+    },
+    "webauthn": {
+      "rpId": "example.com",
+      "rpName": "Example App",
+      "attestation": "none"
+    }
+  }
+}
+```
+
+`useMfaSetup()` reads `auth.mfa`, and `useWebAuthnRegisterOptions()` reads
+`auth.webauthn`.
 
 ## Contract
 
-Use `manifest.auth.contract` to override the API contract JSON that Snapshot
-merges into its built-in auth contract.
+Use `auth.contract` to override default auth endpoints/headers:
 
 ```json
 {
@@ -54,13 +99,7 @@ merges into its built-in auth contract.
 }
 ```
 
-All values are plain JSON overrides. Snapshot keeps the built-in defaults for
-anything you omit.
-
-## Redirects
-
-`manifest.auth.redirects` controls auth flow paths that the runtime uses when it
-needs to send the user somewhere after auth-related checks.
+## Redirects and Handlers
 
 ```json
 {
@@ -72,20 +111,7 @@ needs to send the user somewhere after auth-related checks.
       "afterMfa": "/dashboard",
       "unauthenticated": "/login",
       "forbidden": "/403"
-    }
-  }
-}
-```
-
-## Handlers
-
-`manifest.auth.on` maps auth events to workflow names. Use this when you want
-the manifest to run side effects on 401/403/logout instead of hardcoding those
-callbacks in TypeScript.
-
-```json
-{
-  "auth": {
+    },
     "on": {
       "unauthenticated": "auth-401",
       "forbidden": "auth-403",
@@ -95,4 +121,4 @@ callbacks in TypeScript.
 }
 ```
 
-Each value must name a workflow in `manifest.workflows`.
+Every `auth.on.*` value must reference a workflow in `manifest.workflows`.

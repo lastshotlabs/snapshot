@@ -26,6 +26,11 @@ interface WebAuthnHooksConfig {
   auth?: "cookie" | "token";
   mfaPath?: string;
   homePath?: string;
+  webauthn?: {
+    rpId?: string;
+    rpName?: string;
+    attestation?: "none" | "indirect" | "direct";
+  };
 }
 
 interface WebAuthnHooksOptions {
@@ -57,7 +62,15 @@ export function createWebAuthnHooks({
       mutationFn: () =>
         api.post<WebAuthnRegisterOptionsResponse>(
           contract.endpoints.webauthnRegisterOptions,
-          {},
+          {
+            ...(config.webauthn?.rpId ? { rpId: config.webauthn.rpId } : null),
+            ...(config.webauthn?.rpName
+              ? { rpName: config.webauthn.rpName }
+              : null),
+            ...(config.webauthn?.attestation
+              ? { attestation: config.webauthn.attestation }
+              : null),
+          },
         ),
     });
   }

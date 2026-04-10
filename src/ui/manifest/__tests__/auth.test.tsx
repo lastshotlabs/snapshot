@@ -70,7 +70,11 @@ function buildAuthManifest(): ManifestConfig {
         "verify-email",
         "mfa",
       ],
-      providers: ["google"],
+      providers: {
+        google: {
+          type: "google",
+        },
+      },
       branding: {
         title: "Snapshot Auth",
         description: "Built-in auth runtime",
@@ -463,7 +467,7 @@ describe("Manifest auth runtime", () => {
           title: "Welcome back",
           description: "Use your workspace account",
           submitLabel: "Continue",
-          providers: false,
+          providers: [],
           passkey: false,
           fields: {
             email: {
@@ -566,13 +570,13 @@ describe("Manifest auth runtime", () => {
     const manifest = buildAuthManifest();
     manifest.auth = {
       ...manifest.auth!,
-      providers: [
-        {
-          provider: "google",
+      providers: {
+        google: {
+          type: "google",
           label: "Continue with Google Workspace",
           description: "Recommended for your team account",
         },
-      ],
+      },
       passkey: true,
       redirects: {
         afterLogin: "/reports",
@@ -728,23 +732,17 @@ describe("Manifest auth runtime", () => {
     manifest.auth = {
       ...manifest.auth!,
       providerMode: "auto",
-      providers: [
-        {
-          provider: "google",
+      providers: {
+        google: {
+          type: "google",
           label: "Continue with Google Workspace",
           autoRedirect: true,
         },
-      ],
+      },
       screenOptions: {
         register: {
           providerMode: "auto",
-          providers: [
-            {
-              provider: "google",
-              label: "Continue with Google Workspace",
-              autoRedirect: true,
-            },
-          ],
+          providers: ["google"],
           sections: ["providers", "form", "links"],
         },
       },

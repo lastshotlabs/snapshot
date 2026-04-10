@@ -31,6 +31,11 @@ interface MfaHooksConfig {
   auth?: "cookie" | "token";
   homePath?: string;
   staleTime?: number;
+  mfa?: {
+    issuer?: string;
+    period?: number;
+    methods?: Array<"totp" | "email" | "sms" | "webauthn">;
+  };
 }
 
 interface MfaHooksOptions {
@@ -92,7 +97,11 @@ export function createMfaHooks({
   function useMfaSetup() {
     return useMutation<MfaSetupResponse, ApiError, void>({
       mutationFn: () =>
-        api.post<MfaSetupResponse>(contract.endpoints.mfaSetup, {}),
+        api.post<MfaSetupResponse>(contract.endpoints.mfaSetup, {
+          ...(config.mfa?.issuer ? { issuer: config.mfa.issuer } : null),
+          ...(config.mfa?.period ? { period: config.mfa.period } : null),
+          ...(config.mfa?.methods ? { methods: config.mfa.methods } : null),
+        }),
     });
   }
 
