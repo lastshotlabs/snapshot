@@ -5,6 +5,8 @@
  * whose `id` matches the enabled auth screen name.
  */
 
+import type { CompiledManifest } from "./types";
+
 /**
  * Canonical auth screen names supported by the manifest auth runtime.
  */
@@ -16,14 +18,18 @@ export type AuthScreen =
   | "verify-email"
   | "mfa";
 
-interface AuthScreenRoute {
-  id: string;
-  path: string;
-}
-
-interface AuthScreenManifest {
-  routes: AuthScreenRoute[];
-}
+/**
+ * Minimal manifest shape needed to validate auth screen ids.
+ */
+export type AuthRouteManifest = {
+  auth?: {
+    screens: AuthScreen[];
+  };
+  routes: {
+    id: string;
+    path: string;
+  }[];
+};
 
 /**
  * Resolve the path for an auth screen by matching the route id.
@@ -33,7 +39,7 @@ interface AuthScreenManifest {
  * @returns The matching route path, or undefined when the route id is absent
  */
 export function getAuthScreenPath(
-  manifest: AuthScreenManifest,
+  manifest: CompiledManifest,
   screen: AuthScreen,
 ): string | undefined {
   return manifest.routes.find((route) => route.id === screen)?.path;
@@ -46,10 +52,7 @@ export function getAuthScreenPath(
  * @returns Enabled auth screens that do not have a matching route id
  */
 export function getMissingAuthScreenIds(
-  manifest: {
-    auth?: { screens: AuthScreen[] } | undefined;
-    routes: AuthScreenRoute[];
-  },
+  manifest: AuthRouteManifest,
 ): AuthScreen[] {
   if (!manifest.auth) {
     return [];

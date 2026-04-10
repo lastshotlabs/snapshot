@@ -14,4 +14,5 @@ export const feedbackBaseConfigSchema = z
   })
   .strict();
 
+/** Shared config shape for the built-in feedback components. */
 export type FeedbackBaseConfig = z.infer<typeof feedbackBaseConfigSchema>;

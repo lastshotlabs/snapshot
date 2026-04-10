@@ -10,4 +10,5 @@ export const offlineBannerConfigSchema = feedbackBaseConfigSchema.extend({
   description: z.string().optional(),
 });
 
+/** Config for the default offline feedback component. */
 export type OfflineBannerConfig = z.infer<typeof offlineBannerConfigSchema>;

@@ -12,4 +12,5 @@ export const errorPageConfigSchema = feedbackBaseConfigSchema.extend({
   retryLabel: z.string().optional(),
 });
 
+/** Config for the default error feedback component. */
 export type ErrorPageConfig = z.infer<typeof errorPageConfigSchema>;

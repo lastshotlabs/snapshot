@@ -10,4 +10,5 @@ export const spinnerConfigSchema = feedbackBaseConfigSchema.extend({
   label: z.string().optional(),
 });
 
+/** Config for the default loading feedback component. */
 export type SpinnerConfig = z.infer<typeof spinnerConfigSchema>;

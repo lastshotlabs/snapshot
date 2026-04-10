@@ -592,14 +592,6 @@ function collectNavPaths(items: z.infer<typeof navItemSchema>[]): string[] {
   return paths;
 }
 
-function hasRouteTarget(
-  routeIds: Set<string>,
-  routePaths: Set<string>,
-  target: string,
-): boolean {
-  return routeIds.has(target) || routePaths.has(target);
-}
-
 export const manifestConfigSchema = z
   .object({
     $schema: z.string().optional(),
@@ -653,14 +645,38 @@ export const manifestConfigSchema = z
       });
     }
 
-    if (
-      data.app?.notFound &&
-      !hasRouteTarget(routeIds, routePaths, data.app.notFound)
-    ) {
+    if (typeof data.app?.loading === "string" && !routeIds.has(data.app.loading)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["app", "loading"],
+        message: `App loading route id "${data.app.loading}" does not exist`,
+      });
+    }
+
+    if (typeof data.app?.error === "string" && !routeIds.has(data.app.error)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["app", "error"],
+        message: `App error route id "${data.app.error}" does not exist`,
+      });
+    }
+
+    if (data.app?.notFound && !routeIds.has(data.app.notFound)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["app", "notFound"],
-        message: `App notFound target "${data.app.notFound}" does not exist`,
+        message: `App notFound route id "${data.app.notFound}" does not exist`,
+      });
+    }
+
+    if (
+      typeof data.app?.offline === "string" &&
+      !routeIds.has(data.app.offline)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["app", "offline"],
+        message: `App offline route id "${data.app.offline}" does not exist`,
       });
     }
 

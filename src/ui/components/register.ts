@@ -1,6 +1,8 @@
 /**
- * Registers all built-in config-driven components with the manifest system.
- * Import this module as a side-effect to make all components available for manifest rendering.
+ * Built-in config-driven components and their schemas.
+ *
+ * The bootstrap layer registers these explicitly so importing the UI package
+ * stays side-effect free.
  */
 import { registerComponent } from "../manifest/component-registry";
 import { registerComponentSchema } from "../manifest/schema";

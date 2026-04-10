@@ -179,10 +179,7 @@ function resolveRouteByTarget(
     return byId;
   }
 
-  const normalizedTarget =
-    target.length > 1 && target.endsWith("/") ? target.slice(0, -1) : target;
-
-  return manifest.routeMap[normalizedTarget] ?? null;
+  return null;
 }
 
 function AppFallback({

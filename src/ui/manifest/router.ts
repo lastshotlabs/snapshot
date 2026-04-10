@@ -13,16 +13,11 @@ export function normalizePathname(path: string): string {
   return path;
 }
 
-function findRouteByTarget(
+function findRouteById(
   manifest: CompiledManifest,
   target: string,
 ): CompiledRoute | undefined {
-  const byId = manifest.routes.find((route) => route.id === target);
-  if (byId) {
-    return byId;
-  }
-
-  return manifest.routeMap[normalizePathname(target)];
+  return manifest.routes.find((route) => route.id === target);
 }
 
 export function matchRoutePath(
@@ -74,14 +69,14 @@ export function resolveRouteMatch(
   }
 
   if (manifest.app.notFound) {
-    const notFoundRoute = findRouteByTarget(manifest, manifest.app.notFound);
+    const notFoundRoute = findRouteById(manifest, manifest.app.notFound);
     if (notFoundRoute) {
       return { route: notFoundRoute, params: {} };
     }
   }
 
   if (manifest.app.home) {
-    const homeRoute = findRouteByTarget(manifest, manifest.app.home);
+    const homeRoute = manifest.routeMap[normalizePathname(manifest.app.home)];
     if (homeRoute) {
       return { route: homeRoute, params: {} };
     }

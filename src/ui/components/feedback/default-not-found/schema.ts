@@ -11,4 +11,5 @@ export const notFoundConfigSchema = feedbackBaseConfigSchema.extend({
   homeLabel: z.string().optional(),
 });
 
+/** Config for the default not-found feedback component. */
 export type NotFoundConfig = z.infer<typeof notFoundConfigSchema>;
