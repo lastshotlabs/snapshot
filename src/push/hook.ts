@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useManifestRuntime } from "../ui/manifest/runtime";
 
 /**
  * Convert a URL-safe base64 string to a Uint8Array.
@@ -23,12 +24,14 @@ export type PushState =
   | "unsubscribed";
 
 export interface UsePushNotificationsOpts {
-  /** URL to fetch the VAPID public key from. Default: '/__push/vapid-public-key' */
-  vapidPublicKeyUrl?: string;
+  /** Optional override for the manifest VAPID key. */
+  vapidPublicKey?: string;
+  /** Optional override for the application server key. */
+  applicationServerKey?: string;
   /** URL for subscribe/unsubscribe requests. Default: '/__push/subscribe' */
   subscribeUrl?: string;
-  /** Service worker path. Default: '/sw.js' */
-  swPath?: string;
+  /** Optional override for the manifest service worker path. */
+  serviceWorkerPath?: string;
 }
 
 export interface UsePushNotificationsResult {
@@ -55,10 +58,15 @@ export interface UsePushNotificationsResult {
 export function usePushNotifications(
   opts?: UsePushNotificationsOpts,
 ): UsePushNotificationsResult {
-  const vapidPublicKeyUrl =
-    opts?.vapidPublicKeyUrl ?? "/__push/vapid-public-key";
+  const manifestRuntime = useManifestRuntime();
+  const manifestPush = manifestRuntime?.push;
+  const vapidPublicKey = opts?.vapidPublicKey ?? manifestPush?.vapidPublicKey;
+  const applicationServerKey =
+    opts?.applicationServerKey ??
+    manifestPush?.applicationServerKey ??
+    vapidPublicKey;
   const subscribeUrl = opts?.subscribeUrl ?? "/__push/subscribe";
-  const swPath = opts?.swPath ?? "/sw.js";
+  const swPath = opts?.serviceWorkerPath ?? manifestPush?.serviceWorkerPath ?? "/sw.js";
 
   const isSupported =
     typeof window !== "undefined" &&
@@ -102,12 +110,13 @@ export function usePushNotifications(
     await navigator.serviceWorker.register(swPath);
     const registration = await navigator.serviceWorker.ready;
 
-    const keyRes = await fetch(vapidPublicKeyUrl);
-    if (!keyRes.ok)
-      throw new Error(`Failed to fetch VAPID public key: ${keyRes.status}`);
-    const { publicKey } = (await keyRes.json()) as { publicKey: string };
+    if (!applicationServerKey) {
+      throw new Error(
+        "Push config missing vapidPublicKey. Set manifest.push.vapidPublicKey or pass usePushNotifications({ vapidPublicKey }).",
+      );
+    }
 
-    const keyBytes = urlBase64ToUint8Array(publicKey);
+    const keyBytes = urlBase64ToUint8Array(applicationServerKey);
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: keyBytes.buffer as ArrayBuffer,
@@ -130,7 +139,7 @@ export function usePushNotifications(
     if (!res.ok)
       throw new Error(`Failed to save push subscription: ${res.status}`);
     setState("subscribed");
-  }, [isSupported, vapidPublicKeyUrl, subscribeUrl, swPath]);
+  }, [applicationServerKey, isSupported, subscribeUrl, swPath]);
 
   const unsubscribe = useCallback(async () => {
     if (!isSupported) return;
