@@ -7,16 +7,25 @@
  */
 
 import type { ApiClient } from "../../api/client";
-import { PageContextProvider, useSubscribe } from "../context/index";
+import {
+  PageContextProvider,
+  useResolveFrom,
+  useSubscribe,
+} from "../context/index";
 import { ComponentWrapper } from "../components/_base/component-wrapper";
 import { useResponsiveValue } from "../hooks/use-breakpoint";
+import { evaluatePolicy } from "../policies/evaluate";
+import { isPolicyRef, type PolicyExpr } from "../policies/types";
 import { getRegisteredComponent } from "./component-registry";
+import { useManifestRuntime } from "./runtime";
 import type {
   ComponentConfig,
   PageConfig,
   ResourceConfigMap,
   StateConfig,
 } from "./types";
+
+const EMPTY_POLICY_MAP: Record<string, unknown> = {};
 
 /** Props for the ComponentRenderer component. */
 export interface ComponentRendererProps {
@@ -31,7 +40,21 @@ export function ComponentRenderer({ config }: ComponentRendererProps) {
   const visible = useSubscribe(
     config.visible !== undefined ? config.visible : true,
   );
-  if (visible === false) return null;
+  const manifest = useManifestRuntime();
+  const policyDefinitions = (manifest?.raw.policies ??
+    EMPTY_POLICY_MAP) as Record<string, unknown>;
+  const resolvedPolicies = useResolveFrom(policyDefinitions) as Record<
+    string,
+    unknown
+  >;
+  const isVisible = isPolicyRef(config.visible)
+    ? evaluatePolicy(
+        config.visible.policy,
+        resolvedPolicies[config.visible.policy] as PolicyExpr | undefined,
+        { policies: resolvedPolicies as Record<string, PolicyExpr> },
+      )
+    : visible !== false;
+  if (!isVisible) return null;
 
   const Component = getRegisteredComponent(config.type);
   if (!Component) {

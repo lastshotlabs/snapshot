@@ -7,14 +7,17 @@
  */
 
 import { useState, useId, type CSSProperties } from "react";
-import { useSubscribe, usePublish } from "../context/index";
+import { usePublish, useResolveFrom, useSubscribe } from "../context/index";
 import { getRegisteredComponent } from "./component-registry";
 import { useActionExecutor } from "../actions/executor";
 import { useResponsiveValue } from "../hooks/use-breakpoint";
+import { evaluatePolicy } from "../policies/evaluate";
+import { isPolicyRef, type PolicyExpr } from "../policies/types";
 import {
   getButtonStyle,
   BUTTON_INTERACTIVE_CSS,
 } from "../components/_base/button-styles";
+import { useManifestRuntime } from "./runtime";
 import type {
   RowConfig,
   HeadingConfig,
@@ -22,6 +25,8 @@ import type {
   SelectConfig,
   ComponentConfig,
 } from "./types";
+
+const EMPTY_POLICY_MAP: Record<string, unknown> = {};
 
 // ── Spacing token map ───────────────────────────────────────────────────────
 
@@ -93,7 +98,21 @@ function InlineComponentRenderer({ config }: { config: ComponentConfig }) {
   const visible = useSubscribe(
     config.visible !== undefined ? config.visible : true,
   );
-  if (visible === false) return null;
+  const manifest = useManifestRuntime();
+  const policyDefinitions = (manifest?.raw.policies ??
+    EMPTY_POLICY_MAP) as Record<string, unknown>;
+  const resolvedPolicies = useResolveFrom(policyDefinitions) as Record<
+    string,
+    unknown
+  >;
+  const isVisible = isPolicyRef(config.visible)
+    ? evaluatePolicy(
+        config.visible.policy,
+        resolvedPolicies[config.visible.policy] as PolicyExpr | undefined,
+        { policies: resolvedPolicies as Record<string, PolicyExpr> },
+      )
+    : visible !== false;
+  if (!isVisible) return null;
 
   const Component = getRegisteredComponent(config.type);
   if (!Component) {
@@ -228,6 +247,7 @@ function Heading({ config }: { config: Record<string, unknown> }) {
  */
 function Button({ config }: { config: Record<string, unknown> }) {
   const buttonConfig = config as unknown as ButtonConfig;
+  const label = useSubscribe(buttonConfig.label);
   const disabled = useSubscribe(
     buttonConfig.disabled !== undefined ? buttonConfig.disabled : false,
   );
@@ -259,7 +279,7 @@ function Button({ config }: { config: Record<string, unknown> }) {
         ...configStyle,
       }}
     >
-      {buttonConfig.label}
+      {typeof label === "string" ? label : String(label ?? "")}
     </button>
   );
 }
