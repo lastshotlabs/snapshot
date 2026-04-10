@@ -14,6 +14,7 @@ export {
   downloadActionSchema,
   confirmActionSchema,
   toastActionSchema,
+  trackActionSchema,
   runWorkflowActionSchema,
 } from "./types";
 export type {
@@ -28,6 +29,7 @@ export type {
   DownloadAction,
   ConfirmAction,
   ToastAction,
+  TrackAction,
   RunWorkflowAction,
 } from "./types";
 export type { ModalManager } from "./modal-manager";

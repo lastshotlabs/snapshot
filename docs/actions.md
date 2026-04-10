@@ -17,6 +17,7 @@ modals, toasts, confirmations, and data flow. Actions compose into chains.
 | `download`    | Download a file from an endpoint        |
 | `confirm`     | Show a confirmation dialog              |
 | `toast`       | Show a toast notification               |
+| `track`       | Emit an analytics event                 |
 
 ## Usage
 
@@ -29,6 +30,23 @@ modals, toasts, confirmations, and data flow. Actions compose into chains.
     { "type": "api", "method": "DELETE", "endpoint": "/api/users/{id}" },
     { "type": "refresh", "target": "users-table" },
     { "type": "toast", "message": "User deleted", "variant": "success" }
+  ]
+}
+```
+
+### Track action
+
+Use `track` to emit analytics events to every provider declared in
+`manifest.analytics.providers`:
+
+```json
+{
+  "actions": [
+    {
+      "type": "track",
+      "event": "user.signup",
+      "props": { "plan": "{plan}" }
+    }
   ]
 }
 ```
@@ -109,6 +127,55 @@ The `api` action calls an endpoint and supports recursive `onSuccess`/`onError` 
 
 The API response is available as `{result}` in `onSuccess` actions. The error is
 available as `{error}` in `onError` actions.
+
+## Resource-Level Invalidation and Optimistic Rules
+
+When an action or form submits through a manifest resource reference, cache behavior can
+be declared directly on that resource:
+
+```json
+{
+  "resources": {
+    "create-comment": {
+      "method": "POST",
+      "endpoint": "/api/comments",
+      "invalidates": [
+        "comments-list",
+        { "key": ["GET", "/api/stats/comments"] }
+      ],
+      "optimistic": {
+        "target": "comments-list",
+        "merge": "append"
+      }
+    }
+  }
+}
+```
+
+- `invalidates` accepts resource names and explicit query keys.
+- `optimistic` applies an optimistic cache write before the request, then restores the
+  snapshot on failure.
+
+## Auto-Form Lifecycle Workflows
+
+`form` components can run workflows around submit lifecycle moments:
+
+```json
+{
+  "type": "form",
+  "submit": { "resource": "create-comment" },
+  "on": {
+    "beforeSubmit": "validate-comment",
+    "afterSubmit": "track-comment-created",
+    "error": "report-submit-error"
+  }
+}
+```
+
+- `beforeSubmit` runs before the request.
+- `afterSubmit` runs after a successful submit.
+- `error` runs when submit fails.
+- `beforeSubmit` can cancel submission by returning `{ "halt": true }`.
 
 ## Modal Manager
 

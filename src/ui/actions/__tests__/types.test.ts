@@ -11,6 +11,7 @@ import {
   downloadActionSchema,
   confirmActionSchema,
   toastActionSchema,
+  trackActionSchema,
   runWorkflowActionSchema,
 } from "../types";
 
@@ -336,6 +337,17 @@ describe("Action Zod Schemas", () => {
     });
   });
 
+  describe("trackActionSchema", () => {
+    it("accepts a valid track action", () => {
+      const result = trackActionSchema.safeParse({
+        type: "track",
+        event: "user.signup",
+        props: { plan: "pro" },
+      });
+      expect(result.success).toBe(true);
+    });
+  });
+
   describe("actionSchema (discriminated union)", () => {
     it("parses each valid action type", () => {
       const configs = [
@@ -348,6 +360,7 @@ describe("Action Zod Schemas", () => {
         { type: "download", endpoint: "/file" },
         { type: "confirm", message: "Sure?" },
         { type: "toast", message: "Done" },
+        { type: "track", event: "button.clicked" },
         { type: "run-workflow", workflow: "users.delete" },
       ];
       for (const config of configs) {

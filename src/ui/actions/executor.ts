@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext } from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
 import { AppRegistryContext, PageRegistryContext } from "../context/providers";
 import type { FromRef } from "../context/types";
 import { applyTransform, getNestedValue, isFromRef } from "../context/utils";
@@ -17,6 +17,7 @@ import {
   useOverlayRuntime,
   useRouteRuntime,
 } from "../manifest/runtime";
+import { createAnalyticsDispatcher } from "../analytics/dispatch";
 import { runWorkflow } from "../workflows/engine";
 import type { ActionConfig, ActionExecuteFn } from "./types";
 import type { AtomRegistry } from "../context/types";
@@ -266,6 +267,10 @@ export function useActionExecutor(): ActionExecuteFn {
   const toastManager = useToastManager();
   const confirmManager = useConfirmManager();
   const runtime = useManifestRuntime();
+  const analyticsDispatcher = useMemo(
+    () => createAnalyticsDispatcher(runtime?.analytics),
+    [runtime?.analytics],
+  );
   const resourceCache = useManifestResourceCache();
   const routeRuntime = useRouteRuntime();
   const overlayRuntime = useOverlayRuntime();
@@ -595,8 +600,8 @@ export function useActionExecutor(): ActionExecuteFn {
             );
             toastManager.show({
               message,
-              variant: builtin.variant ?? "info",
-              duration: builtin.duration ?? 5000,
+              variant: builtin.variant,
+              duration: builtin.duration,
               action: builtin.action
                 ? {
                     label: builtin.action.label,
@@ -606,6 +611,31 @@ export function useActionExecutor(): ActionExecuteFn {
                 : undefined,
             });
             return message;
+          }
+
+          case "track": {
+            const event = String(
+              resolveWorkflowValue(
+                builtin.event,
+                builtinContext,
+                pageRegistry,
+                appRegistry,
+                routeRuntime,
+                overlayRuntime,
+              ),
+            );
+            const props = builtin.props
+              ? (resolveWorkflowValue(
+                  builtin.props,
+                  builtinContext,
+                  pageRegistry,
+                  appRegistry,
+                  routeRuntime,
+                  overlayRuntime,
+                ) as Record<string, unknown>)
+              : undefined;
+            await analyticsDispatcher.track(event, props);
+            return event;
           }
 
           case "run-workflow":
@@ -643,6 +673,7 @@ export function useActionExecutor(): ActionExecuteFn {
       pageRegistry,
       runtime?.raw.workflows,
       runtime?.resources,
+      analyticsDispatcher,
       toastManager,
     ],
   );

@@ -14,6 +14,7 @@ export const ACTION_TYPES = [
   "download",
   "confirm",
   "toast",
+  "track",
   "run-workflow",
 ] as const;
 
@@ -142,6 +143,17 @@ export interface ToastAction {
 }
 
 /**
+ * Track an analytics event through all manifest-configured providers.
+ */
+export interface TrackAction {
+  type: "track";
+  /** Analytics event name. Supports `{param}` interpolation. */
+  event: string;
+  /** Optional event properties. Supports nested `{ from: "..." }` refs. */
+  props?: Record<string, unknown>;
+}
+
+/**
  * Run a named manifest workflow.
  */
 export interface RunWorkflowAction {
@@ -165,6 +177,7 @@ export type ActionConfig =
   | DownloadAction
   | ConfirmAction
   | ToastAction
+  | TrackAction
   | RunWorkflowAction;
 
 /**
@@ -303,6 +316,15 @@ function buildToastActionSchema(): z.ZodType<ToastAction> {
     .strict();
 }
 
+/** Schema for track action. */
+export const trackActionSchema = z
+  .object({
+    type: z.literal("track"),
+    event: z.string().min(1),
+    props: z.record(z.unknown()).optional(),
+  })
+  .strict();
+
 /** Schema for api action. Uses z.lazy() for recursive onSuccess/onError. */
 export const apiActionSchema: z.ZodType<ApiAction> = buildApiActionSchema();
 
@@ -327,6 +349,7 @@ export const actionSchema: z.ZodType<ActionConfig> = z.lazy(() =>
     confirmActionSchema,
     apiActionSchema,
     toastActionSchema,
+    trackActionSchema,
     runWorkflowActionSchema,
   ]),
 ) as z.ZodType<ActionConfig>;
