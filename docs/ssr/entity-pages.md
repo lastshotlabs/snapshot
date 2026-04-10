@@ -106,3 +106,6 @@ Entity-driven SSR pages are a manifest-first bridge, not a parallel feature. The
 bunshot manifest declaration generate the same Snapshot manifest config you could have
 written by hand. That keeps rendering, theming, action handling, and hydration on the
 existing Snapshot runtime instead of introducing a second rendering stack.
+
+For manifest-declared SSR routing features (nested layouts, slots, SSR middleware, and
+convention fallbacks), see [manifest-routing.md](./manifest-routing.md).
