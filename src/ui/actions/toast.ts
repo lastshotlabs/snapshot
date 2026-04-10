@@ -3,6 +3,16 @@ import { useAtom } from "jotai/react";
 import { useCallback } from "react";
 import type { ReactNode } from "react";
 import { createElement } from "react";
+import { useManifestRuntime } from "../manifest/runtime";
+
+type ToastVariant = "success" | "error" | "warning" | "info";
+type ToastPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 
 /** A single toast notification in the queue. */
 export interface ToastItem {
@@ -11,15 +21,26 @@ export interface ToastItem {
   /** The message to display. */
   message: string;
   /** Visual variant. */
-  variant: "success" | "error" | "warning" | "info";
+  variant: ToastVariant;
   /** Auto-dismiss duration in ms. 0 means no auto-dismiss. */
   duration: number;
+  /** Optional icon text configured by manifest.toast.variants. */
+  icon?: string;
+  /** Optional color override configured by manifest.toast.variants. */
+  color?: string;
   /** Optional action button. */
   action?: { label: string; onClick: () => void };
 }
 
 /** Options for showing a toast (id is generated automatically). */
-export type ShowToastOptions = Omit<ToastItem, "id">;
+export interface ShowToastOptions {
+  message: string;
+  variant?: ToastVariant;
+  duration?: number;
+  icon?: string;
+  color?: string;
+  action?: { label: string; onClick: () => void };
+}
 
 /**
  * Atom holding the current toast queue.
@@ -50,12 +71,28 @@ let toastCounter = 0;
  * ```
  */
 export function useToastManager(): ToastManager {
+  const runtime = useManifestRuntime();
   const [, setQueue] = useAtom(toastQueueAtom);
+  const manifestToast = runtime?.toast;
 
   const show = useCallback(
     (options: ShowToastOptions): string => {
       const id = `toast-${++toastCounter}-${Date.now()}`;
-      const toast: ToastItem = { ...options, id };
+      const variant = options.variant ?? "info";
+      const variantDefaults = manifestToast?.variants?.[variant];
+      const toast: ToastItem = {
+        id,
+        message: options.message,
+        variant,
+        duration:
+          options.duration ??
+          variantDefaults?.duration ??
+          manifestToast?.duration ??
+          4000,
+        icon: options.icon ?? variantDefaults?.icon,
+        color: options.color ?? variantDefaults?.color,
+        action: options.action,
+      };
       setQueue((prev) => [...prev, toast]);
 
       if (toast.duration !== 0) {
@@ -66,7 +103,7 @@ export function useToastManager(): ToastManager {
 
       return id;
     },
-    [setQueue],
+    [manifestToast?.duration, manifestToast?.variants, setQueue],
   );
 
   const dismiss = useCallback(
@@ -91,6 +128,49 @@ const variantStyles: Record<ToastItem["variant"], string> = {
   info: "background: var(--sn-color-info, #3b82f6); color: var(--sn-color-info-foreground, #fff);",
 };
 
+function resolveToastContainerPositionStyle(position: ToastPosition): {
+  top?: string;
+  right?: string;
+  bottom?: string;
+  left?: string;
+  transform?: string;
+} {
+  switch (position) {
+    case "top-left":
+      return {
+        top: "var(--sn-spacing-md, 1rem)",
+        left: "var(--sn-spacing-md, 1rem)",
+      };
+    case "top-center":
+      return {
+        top: "var(--sn-spacing-md, 1rem)",
+        left: "50%",
+        transform: "translateX(-50%)",
+      };
+    case "top-right":
+      return {
+        top: "var(--sn-spacing-md, 1rem)",
+        right: "var(--sn-spacing-md, 1rem)",
+      };
+    case "bottom-left":
+      return {
+        bottom: "var(--sn-spacing-md, 1rem)",
+        left: "var(--sn-spacing-md, 1rem)",
+      };
+    case "bottom-center":
+      return {
+        bottom: "var(--sn-spacing-md, 1rem)",
+        left: "50%",
+        transform: "translateX(-50%)",
+      };
+    default:
+      return {
+        bottom: "var(--sn-spacing-md, 1rem)",
+        right: "var(--sn-spacing-md, 1rem)",
+      };
+  }
+}
+
 /**
  * Renders the toast notification queue. Place once at the app root.
  * Uses basic HTML + semantic token styling. Will be upgraded to polished
@@ -104,7 +184,9 @@ const variantStyles: Record<ToastItem["variant"], string> = {
  * ```
  */
 export function ToastContainer(): ReactNode {
+  const runtime = useManifestRuntime();
   const [queue, setQueue] = useAtom(toastQueueAtom);
+  const position = runtime?.toast?.position ?? "bottom-right";
 
   if (queue.length === 0) return null;
 
@@ -113,8 +195,7 @@ export function ToastContainer(): ReactNode {
     {
       style: {
         position: "fixed",
-        bottom: "var(--sn-spacing-md, 1rem)",
-        right: "var(--sn-spacing-md, 1rem)",
+        ...resolveToastContainerPositionStyle(position),
         zIndex: "var(--sn-z-index-toast, 9999)" as unknown as number,
         display: "flex",
         flexDirection: "column" as const,
@@ -139,10 +220,25 @@ export function ToastContainer(): ReactNode {
               string,
               string
             >),
+            ...(toast.color
+              ? {
+                  backgroundColor: toast.color,
+                  color: "var(--sn-color-foreground, #fff)",
+                }
+              : null),
           },
           role: "status",
           "aria-live": "polite" as const,
         },
+        toast.icon
+          ? createElement(
+              "span",
+              {
+                "aria-hidden": true,
+              },
+              toast.icon,
+            )
+          : null,
         createElement("span", { style: { flex: 1 } }, toast.message),
         toast.action
           ? createElement(
