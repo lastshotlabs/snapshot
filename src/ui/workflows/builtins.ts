@@ -1,4 +1,12 @@
 import type { RunWorkflowAction } from "../actions/types";
+import {
+  halt as haltSsrMiddleware,
+  redirect as redirectSsrMiddleware,
+  rewrite as rewriteSsrMiddleware,
+  setHeader as setHeaderSsrMiddleware,
+  setStatus as setStatusSsrMiddleware,
+} from "./builtins/ssr-middleware";
+import { registerWorkflowAction } from "./registry";
 import type {
   AssignWorkflowNode,
   CaptureWorkflowNode,
@@ -10,6 +18,59 @@ import type {
   WorkflowDefinition,
   WorkflowNode,
 } from "./types";
+
+let ssrMiddlewareBuiltinsRegistered = false;
+
+/**
+ * Register SSR middleware workflow actions in the workflow action registry.
+ *
+ * Safe to call multiple times.
+ */
+export function registerSsrMiddlewareWorkflowActions(): void {
+  if (ssrMiddlewareBuiltinsRegistered) {
+    return;
+  }
+
+  ssrMiddlewareBuiltinsRegistered = true;
+
+  registerWorkflowAction("set-status", async (node, runtime) => {
+    setStatusSsrMiddleware(
+      {
+        status: Number(runtime.resolveValue(node["status"], runtime.context)),
+      },
+      { input: runtime.context as { ssr?: unknown } },
+    );
+  });
+  registerWorkflowAction("redirect", async (node, runtime) => {
+    redirectSsrMiddleware(
+      {
+        url: String(runtime.resolveValue(node["url"], runtime.context)),
+        permanent: Boolean(
+          runtime.resolveValue(node["permanent"], runtime.context),
+        ),
+      },
+      { input: runtime.context as { ssr?: unknown } },
+    );
+  });
+  registerWorkflowAction("rewrite", async (node, runtime) => {
+    rewriteSsrMiddleware(
+      { url: String(runtime.resolveValue(node["url"], runtime.context)) },
+      { input: runtime.context as { ssr?: unknown } },
+    );
+  });
+  registerWorkflowAction("set-header", async (node, runtime) => {
+    setHeaderSsrMiddleware(
+      {
+        name: String(runtime.resolveValue(node["name"], runtime.context)),
+        value: String(runtime.resolveValue(node["value"], runtime.context)),
+      },
+      { input: runtime.context as { ssr?: unknown } },
+    );
+  });
+  registerWorkflowAction("halt", async (_node, runtime) => {
+    haltSsrMiddleware({}, { input: runtime.context as { ssr?: unknown } });
+  });
+}
 
 export function normalizeWorkflowDefinition(
   definition: WorkflowDefinition,
