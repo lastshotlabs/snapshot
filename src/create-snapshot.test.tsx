@@ -43,6 +43,103 @@ describe("createSnapshot", () => {
     expect(snapshot.queryClient.getDefaultOptions().queries?.retry).toBe(3);
   });
 
+  it("uses manifest.app.apiUrl when provided", () => {
+    const createdUrls: string[] = [];
+    class MockWebSocket {
+      static OPEN = 1;
+      readyState = 0;
+      url: string;
+      onopen: (() => void) | null = null;
+      onclose: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+
+      constructor(url: string) {
+        this.url = url;
+        createdUrls.push(url);
+      }
+
+      send(): void {}
+
+      close(): void {}
+    }
+
+    global.WebSocket = MockWebSocket as unknown as typeof WebSocket;
+
+    createSnapshot({
+      apiUrl: "https://api.bootstrap.example.com",
+      manifest: {
+        app: {
+          apiUrl: "https://api.manifest.example.com",
+        },
+        realtime: {
+          ws: {
+            reconnectOnLogin: false,
+          },
+        },
+        routes: [
+          {
+            id: "home",
+            path: "/",
+            content: [{ type: "heading", text: "Home" }],
+          },
+        ],
+      },
+    });
+
+    expect(createdUrls).toEqual(["wss://api.manifest.example.com"]);
+  });
+
+  it("resolves manifest env refs from the provided env source", () => {
+    const createdUrls: string[] = [];
+    class MockWebSocket {
+      static OPEN = 1;
+      readyState = 0;
+      url: string;
+      onopen: (() => void) | null = null;
+      onclose: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+
+      constructor(url: string) {
+        this.url = url;
+        createdUrls.push(url);
+      }
+
+      send(): void {}
+
+      close(): void {}
+    }
+
+    global.WebSocket = MockWebSocket as unknown as typeof WebSocket;
+
+    createSnapshot({
+      apiUrl: "https://api.bootstrap.example.com",
+      env: {
+        SNAPSHOT_API_URL: "https://api.from.env.example.com",
+      },
+      manifest: {
+        app: {
+          apiUrl: { env: "SNAPSHOT_API_URL" },
+        },
+        realtime: {
+          ws: {
+            reconnectOnLogin: false,
+          },
+        },
+        routes: [
+          {
+            id: "home",
+            path: "/",
+            content: [{ type: "heading", text: "Home" }],
+          },
+        ],
+      },
+    });
+
+    expect(createdUrls).toEqual(["wss://api.from.env.example.com"]);
+  });
+
   it("uses the manifest auth session for token storage", () => {
     const snapshot = createSnapshot({
       apiUrl: "https://api.example.com",

@@ -31,7 +31,7 @@ move under `manifest.auth.session`.
 - `key`: `snapshot.token`
 
 When the session block is omitted, Snapshot keeps cookie mode and no-op token
-storage behavior for the current bootstrap path.
+storage behavior for the current bootstrap defaults.
 
 ## Contract
 

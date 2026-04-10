@@ -951,22 +951,20 @@ function ManifestRouter({
 export function ManifestApp({
   manifest,
   apiUrl,
-  snapshotConfig,
 }: ManifestAppProps) {
   const compiledManifest = useMemo(() => compileManifest(manifest), [manifest]);
+  const runtimeApiUrl = compiledManifest.app.apiUrl ?? apiUrl;
   const snapshot = useMemo(
     () =>
       createSnapshot({
-        apiUrl,
-        ...snapshotConfig,
+        apiUrl: runtimeApiUrl,
+        manifest: compiledManifest.raw,
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [apiUrl],
+    [compiledManifest.raw, runtimeApiUrl],
   );
   const authRuntimeConfig = useMemo(
-    () =>
-      createManifestAuthRuntimeConfig(apiUrl, compiledManifest, snapshotConfig),
-    [apiUrl, compiledManifest, snapshotConfig],
+    () => createManifestAuthRuntimeConfig(runtimeApiUrl, compiledManifest),
+    [compiledManifest, runtimeApiUrl],
   );
 
   useEffect(() => {

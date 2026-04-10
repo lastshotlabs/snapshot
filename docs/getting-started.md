@@ -337,7 +337,10 @@ import {
 } from "@lastshotlabs/snapshot/ui";
 import { createSnapshot } from "@lastshotlabs/snapshot";
 
-const snapshot = createSnapshot({ baseUrl: "https://api.example.com" });
+const snapshot = createSnapshot({
+  apiUrl: "https://api.example.com",
+  manifest,
+});
 const css = resolveTokens(manifest.theme);
 injectStyleSheet(css);
 

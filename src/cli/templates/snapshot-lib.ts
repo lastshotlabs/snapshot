@@ -1,24 +1,21 @@
 import type { ScaffoldConfig } from "../types";
 
 export function generateSnapshotLib(config: ScaffoldConfig): string {
-  const wsConfig = config.webSocket
-    ? `
-  ws: {
-    url: import.meta.env.VITE_WS_URL,
-    reconnectOnLogin: true,
-    reconnectOnFocus: true,
-  },`
-    : "";
-
-  const sseConfig = config.sse
-    ? `\n  sse: {\n    // Add /__sse/ endpoint keys here. Example: '/__sse/feed': true\n    endpoints: {},\n  },`
-    : "";
-
-  const mfaConfig = config.mfaPages
-    ? `
-  mfaPath: '/auth/mfa-verify',
-  mfaSetupPath: '/mfa-setup',`
-    : "";
+  const realtimeConfig =
+    config.webSocket || config.sse
+      ? `
+    realtime: {${config.webSocket ? `
+      ws: {
+        url: import.meta.env.VITE_WS_URL,
+        reconnectOnLogin: true,
+        reconnectOnFocus: true,
+      },` : ""}${config.sse ? `
+      sse: {
+        // Add /__sse/ endpoint keys here. Example: '/__sse/feed': true
+        endpoints: {},
+      },` : ""}
+    },`
+      : "";
 
   const wsExports = config.webSocket
     ? `  useSocket,
@@ -75,9 +72,18 @@ export function generateSnapshotLib(config: ScaffoldConfig): string {
 
 export const snapshot = createSnapshot({
   apiUrl: import.meta.env.VITE_API_URL,${bearerTokenLine}
-  loginPath: '/auth/login',
-  homePath: '/',
-  forbiddenPath: '/403',${wsConfig}${sseConfig}${mfaConfig}
+  manifest: {
+    app: {
+      home: '/',
+    },
+    routes: [
+      {
+        id: 'home',
+        path: '/',
+        content: [{ type: 'heading', text: 'Home' }],
+      },
+    ],${realtimeConfig}
+  },
 })
 
 export const {

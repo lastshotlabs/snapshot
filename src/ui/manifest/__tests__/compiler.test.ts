@@ -491,6 +491,34 @@ describe("compiler", () => {
     }
   });
 
+  it("resolves manifest.app.apiUrl env refs at compile time", () => {
+    const original = process.env["SNAPSHOT_API_URL"];
+    process.env["SNAPSHOT_API_URL"] = "https://api.env.example.com";
+
+    try {
+      const compiled = compileManifest({
+        app: {
+          apiUrl: { env: "SNAPSHOT_API_URL" },
+        },
+        routes: [
+          {
+            id: "home",
+            path: "/",
+            content: [{ type: "heading", text: "Home" }],
+          },
+        ],
+      });
+
+      expect(compiled.app.apiUrl).toBe("https://api.env.example.com");
+    } finally {
+      if (original === undefined) {
+        delete process.env["SNAPSHOT_API_URL"];
+      } else {
+        process.env["SNAPSHOT_API_URL"] = original;
+      }
+    }
+  });
+
   it("uses env ref defaults when the env var is missing", () => {
     const compiled = compileManifest({
       app: {

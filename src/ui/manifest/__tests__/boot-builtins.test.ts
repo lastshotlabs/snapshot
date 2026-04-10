@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { SnapshotConfig } from "../../../types";
-
 describe("bootBuiltins", () => {
   it("keeps registries empty until createSnapshot runs", async () => {
     vi.resetModules();

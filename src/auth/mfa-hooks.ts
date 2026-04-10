@@ -8,7 +8,6 @@ import type { TokenStorage } from "./storage";
 import type {
   AuthUser,
   LoginResponse,
-  SnapshotConfig,
   MfaChallenge,
   MfaMethod,
   MfaVerifyBody,
@@ -28,10 +27,16 @@ import type { AuthContract } from "../auth/contract";
 
 const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
+interface MfaHooksConfig {
+  auth?: "cookie" | "token";
+  homePath?: string;
+  staleTime?: number;
+}
+
 interface MfaHooksOptions {
   api: ApiClient;
   storage: TokenStorage;
-  config: Pick<SnapshotConfig, "auth" | "homePath" | "staleTime">;
+  config: MfaHooksConfig;
   contract: AuthContract;
   pendingMfaChallengeAtom: WritableAtom<
     MfaChallenge | null,
@@ -41,6 +46,9 @@ interface MfaHooksOptions {
   onLoginSuccess?: () => void;
 }
 
+/**
+ * Create MFA-related hooks bound to a single snapshot instance.
+ */
 export function createMfaHooks({
   api,
   storage,

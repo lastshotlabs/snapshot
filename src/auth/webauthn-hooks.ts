@@ -5,7 +5,6 @@ import type { WritableAtom } from "jotai";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
 import type { TokenStorage } from "../auth/storage";
-import type { SnapshotConfig } from "../types";
 import type {
   AuthUser,
   WebAuthnRegisterOptionsResponse,
@@ -23,10 +22,16 @@ import type { AuthContract } from "../auth/contract";
 
 const WEBAUTHN_CREDENTIALS_KEY = ["auth", "webauthn", "credentials"] as const;
 
+interface WebAuthnHooksConfig {
+  auth?: "cookie" | "token";
+  mfaPath?: string;
+  homePath?: string;
+}
+
 interface WebAuthnHooksOptions {
   api: ApiClient;
   storage: TokenStorage;
-  config: Pick<SnapshotConfig, "auth" | "mfaPath" | "homePath">;
+  config: WebAuthnHooksConfig;
   contract: AuthContract;
   pendingMfaChallengeAtom: WritableAtom<
     MfaChallenge | null,
@@ -36,6 +41,9 @@ interface WebAuthnHooksOptions {
   onLoginSuccess?: () => void;
 }
 
+/**
+ * Create WebAuthn and passkey hooks bound to a single snapshot instance.
+ */
 export function createWebAuthnHooks({
   api,
   storage,

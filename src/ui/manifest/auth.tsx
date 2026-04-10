@@ -12,7 +12,6 @@ import type {
   OAuthProvider,
   RegisterVars,
   ResetPasswordBody,
-  SnapshotConfig,
   SnapshotInstance,
   VerifyEmailBody,
 } from "../../types";
@@ -36,7 +35,7 @@ interface AuthPasskeyConfig {
 }
 
 interface ManifestAuthRuntimeConfig {
-  authMode: SnapshotConfig["auth"];
+  authMode: "cookie" | "token";
   contract: AuthContract;
 }
 
@@ -388,7 +387,7 @@ function useApplyAuthenticatedUser(manifest: CompiledManifest) {
 }
 
 function applyAuthTokens(
-  authMode: SnapshotConfig["auth"],
+  authMode: "cookie" | "token",
   snapshot: Pick<SnapshotInstance, "tokenStorage">,
   response: LoginResponse | Record<string, unknown>,
 ): void {
@@ -1845,37 +1844,18 @@ export function ManifestAuthScreen({
 }
 
 /**
- * Build the runtime auth config from bootstrap config and manifest overrides.
+ * Build the runtime auth config from the compiled manifest.
  *
  * @param apiUrl - Backend API base URL
  * @param manifest - Compiled manifest, used for auth contract overrides
- * @param snapshotConfig - Optional snapshot bootstrap config
  * @returns Runtime auth configuration derived from bootstrap settings
  */
 export function createManifestAuthRuntimeConfig(
   apiUrl: string,
   manifest: CompiledManifest,
-  snapshotConfig?: Record<string, unknown>,
 ): ManifestAuthRuntimeConfig {
-  const typedConfig = (snapshotConfig ?? {}) as Partial<SnapshotConfig>;
-  const manifestContract = manifest.auth?.contract
-    ? {
-        ...typedConfig.contract,
-        endpoints: {
-          ...typedConfig.contract?.endpoints,
-          ...manifest.auth.contract.endpoints,
-        },
-        headers: {
-          ...typedConfig.contract?.headers,
-          ...manifest.auth.contract.headers,
-        },
-        csrfCookieName:
-          manifest.auth.contract.csrfCookieName ??
-          typedConfig.contract?.csrfCookieName,
-      }
-    : typedConfig.contract;
   return {
-    authMode: typedConfig.auth ?? "cookie",
-    contract: mergeContract(apiUrl, manifestContract),
+    authMode: manifest.auth?.session?.mode ?? "cookie",
+    contract: mergeContract(apiUrl, manifest.auth?.contract),
   };
 }

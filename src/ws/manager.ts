@@ -1,8 +1,22 @@
-import type { SnapshotConfig } from "../types";
+interface WsConfig {
+  url: string;
+  autoReconnect?: boolean;
+  reconnectOnLogin?: boolean;
+  reconnectOnFocus?: boolean;
+  maxReconnectAttempts?: number;
+  reconnectBaseDelay?: number;
+  reconnectMaxDelay?: number;
+  onConnected?: () => void;
+  onDisconnected?: () => void;
+  onReconnecting?: (attempt: number) => void;
+  onReconnectFailed?: () => void;
+}
 
-type WsConfig = NonNullable<SnapshotConfig["ws"]>;
 type EventHandler<T = unknown> = (data: T) => void;
 
+/**
+ * Per-instance WebSocket connection manager.
+ */
 export class WebSocketManager<
   TEvents extends Record<string, unknown> = Record<string, unknown>,
 > {

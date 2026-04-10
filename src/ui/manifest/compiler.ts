@@ -28,9 +28,11 @@ function toPageConfig(route: RouteConfig): PageConfig {
   };
 }
 
-function resolveManifestEnvRefs<T>(value: T, path: string[] = []): T {
-  const env = getDefaultEnvSource();
-
+function resolveManifestEnvRefs<T>(
+  value: T,
+  env: Record<string, string | undefined>,
+  path: string[] = [],
+): T {
   const resolve = (input: unknown, currentPath: string[]): unknown => {
     if (isEnvRef(input)) {
       const resolved = resolveEnvRef(input, env);
@@ -65,9 +67,13 @@ function resolveManifestEnvRefs<T>(value: T, path: string[] = []): T {
   return resolve(value, path) as T;
 }
 
-function buildCompiledManifest(manifest: ManifestConfig): CompiledManifest {
+function buildCompiledManifest(
+  manifest: ManifestConfig,
+  env: Record<string, string | undefined>,
+): CompiledManifest {
   const resolvedManifest = resolveManifestEnvRefs(
     manifest,
+    env,
   ) as EnvResolvedManifest;
   const missingAuthScreens = getMissingAuthScreenIds(resolvedManifest);
   if (missingAuthScreens.length > 0) {
@@ -140,6 +146,7 @@ function buildCompiledManifest(manifest: ManifestConfig): CompiledManifest {
   return {
     raw: resolvedManifest,
     app: {
+      apiUrl: resolvedManifest.app?.apiUrl,
       shell: resolvedManifest.app?.shell ?? "full-width",
       title: resolvedManifest.app?.title,
       cache: {
@@ -212,7 +219,21 @@ export function safeParseManifest(
  * @returns The compiled manifest runtime model
  */
 export function compileManifest(manifest: unknown): CompiledManifest {
-  return buildCompiledManifest(parseManifest(manifest));
+  return buildCompiledManifest(parseManifest(manifest), getDefaultEnvSource());
+}
+
+/**
+ * Parse and compile a manifest into the runtime shape using a custom env source.
+ *
+ * @param manifest - Manifest JSON or object
+ * @param env - Environment source used to resolve `{ env: "..." }` values
+ * @returns The compiled manifest runtime model
+ */
+export function compileManifestWithEnv(
+  manifest: unknown,
+  env: Record<string, string | undefined>,
+): CompiledManifest {
+  return buildCompiledManifest(parseManifest(manifest), env);
 }
 
 /**
@@ -238,6 +259,6 @@ export function safeCompileManifest(manifest: unknown):
   return {
     success: true,
     manifest: parsed.data,
-    compiled: buildCompiledManifest(parsed.data),
+    compiled: buildCompiledManifest(parsed.data, getDefaultEnvSource()),
   };
 }

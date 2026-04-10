@@ -5,7 +5,6 @@ import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
 import type { TokenStorage } from "./storage";
 import type {
-  SnapshotConfig,
   ResetPasswordBody,
   VerifyEmailBody,
   ResendVerificationBody,
@@ -17,15 +16,22 @@ import type {
 } from "../types";
 import type { AuthContract } from "../auth/contract";
 
+interface AccountHooksConfig {
+  loginPath?: string;
+}
+
 interface AccountHooksOptions {
   api: ApiClient;
   storage: TokenStorage;
-  config: Pick<SnapshotConfig, "loginPath">;
+  config: AccountHooksConfig;
   contract: AuthContract;
   onUnauthenticated?: () => void;
   queryClient: QueryClient;
 }
 
+/**
+ * Create account-management hooks bound to a single snapshot instance.
+ */
 export function createAccountHooks({
   api,
   storage,

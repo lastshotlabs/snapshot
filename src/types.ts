@@ -5,7 +5,7 @@ import type { ApiError } from "./api/error";
 import type { TokenStorage } from "./auth/storage";
 import type { WebSocketManager } from "./ws/manager";
 import type { SseConnectionStatus } from "./sse/manager";
-import type { AuthContractConfig } from "./auth/contract";
+import type { ManifestConfig } from "./ui/manifest/types";
 import type { CommunityHooks } from "./community/hooks";
 import type { WebhookHooks } from "./webhooks/hooks";
 
@@ -302,63 +302,17 @@ export interface UseCommunityNotificationsResult {
 // ── Config ────────────────────────────────────────────────────────────────────
 
 export interface SnapshotConfig {
+  /** API base URL for this snapshot instance. */
   apiUrl: string;
-  /** Manifest configuration for config-driven UI rendering. */
-  manifest?: Record<string, unknown>;
-  /** `'cookie'` is the default and is the recommended mode for browser apps. */
-  auth?: "cookie" | "token";
+  /** Optional environment source used to resolve `{ env: "..." }` manifest refs. */
+  env?: Record<string, string | undefined>;
   /**
    * Static API credential. Not a user session token. Do not use in browser
-   * deployments — emits a runtime warning in browser contexts.
+   * deployments - emits a runtime warning in browser contexts.
    */
   bearerToken?: string;
-
-  // Redirect paths — no hardcoded defaults
-  loginPath?: string;
-  homePath?: string;
-  forbiddenPath?: string;
-  mfaPath?: string;
-  mfaSetupPath?: string;
-
-  // Route guard callbacks
-  onUnauthenticated?: () => void;
-  onForbidden?: () => void;
-  onLogoutSuccess?: () => void;
-  authErrors?: AuthErrorConfig;
-
-  /**
-   * When `auth: 'token'` is used, `'sessionStorage'` is the default (tab-scoped, survives
-   * refresh). `'memory'` is a stricter opt-in (loses state on page reload, does not share
-   * across tabs). `'localStorage'` is not recommended for auth tokens.
-   */
-  tokenStorage?: "localStorage" | "sessionStorage" | "memory";
-  tokenKey?: string;
-
-  staleTime?: number;
-  gcTime?: number;
-  retry?: number;
-
-  contract?: AuthContractConfig;
-
-  // SSE — entire block optional
-  sse?: SseConfig;
-
-  // WebSocket — entire block optional
-  ws?: {
-    url: string;
-
-    autoReconnect?: boolean;
-    reconnectOnLogin?: boolean;
-    reconnectOnFocus?: boolean;
-    maxReconnectAttempts?: number;
-    reconnectBaseDelay?: number;
-    reconnectMaxDelay?: number;
-
-    onConnected?: () => void;
-    onDisconnected?: () => void;
-    onReconnecting?: (attempt: number) => void;
-    onReconnectFailed?: () => void;
-  };
+  /** The frontend manifest for the running app. */
+  manifest: ManifestConfig;
 }
 
 // ── Instance ──────────────────────────────────────────────────────────────────

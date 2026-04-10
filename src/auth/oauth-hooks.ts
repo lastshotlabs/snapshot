@@ -4,7 +4,6 @@ import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
 import type { TokenStorage } from "./storage";
 import type {
-  SnapshotConfig,
   AuthUser,
   OAuthProvider,
   OAuthExchangeBody,
@@ -14,14 +13,22 @@ import type { AuthContract } from "../auth/contract";
 
 const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
+interface OAuthHooksConfig {
+  auth?: "cookie" | "token";
+  homePath?: string;
+}
+
 interface OAuthHooksOptions {
   api: ApiClient;
   storage: TokenStorage;
-  config: Pick<SnapshotConfig, "auth" | "homePath">;
+  config: OAuthHooksConfig;
   contract: AuthContract;
   onLoginSuccess?: () => void;
 }
 
+/**
+ * Create OAuth-related hooks bound to a single snapshot instance.
+ */
 export function createOAuthHooks({
   api,
   storage,

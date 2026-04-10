@@ -22,7 +22,6 @@ import { useTheme } from "./theme/hook";
 import { createLoaders } from "./routing/loaders";
 import { QueryProviderInner } from "./providers/QueryProvider";
 import { createAuthErrorFormatter } from "./auth/error-format";
-import { warnOnce } from "./auth/warnings";
 import { getAuthScreenPath } from "./ui/manifest/auth-routes";
 import type {
   SnapshotConfig,
@@ -35,8 +34,8 @@ import type {
 } from "./types";
 import type { ManifestConfig } from "./ui/manifest/types";
 import { bootBuiltins } from "./ui/manifest/boot-builtins";
-import { compileManifest } from "./ui/manifest/compiler";
-import { mergeContract } from "./auth/contract";
+import { compileManifestWithEnv } from "./ui/manifest/compiler";
+import { getDefaultEnvSource } from "./ui/manifest/env";
 
 const MANIFEST_AUTH_WORKFLOW_EVENT = "snapshot:manifest-auth-workflow";
 const MANIFEST_REALTIME_WORKFLOW_EVENT =
@@ -111,27 +110,31 @@ function createManifestRealtimeCallback(
   };
 }
 
+/**
+ * Create a per-instance snapshot runtime from bootstrap config and a manifest.
+ *
+ * @param config - Four-field bootstrap config
+ * @returns A fully initialized snapshot instance
+ */
 export function createSnapshot<
   TWSEvents extends Record<string, unknown> = Record<string, unknown>,
 >(config: SnapshotConfig): SnapshotInstance<TWSEvents> {
   bootBuiltins();
-  const compiledManifest = config.manifest
-    ? compileManifest(config.manifest as ManifestConfig)
-    : null;
-  const manifestSession = compiledManifest?.auth?.session;
-  const runtimeConfig: SnapshotConfig = {
-    ...config,
-    auth: manifestSession?.mode ?? config.auth,
-    tokenStorage: manifestSession?.storage ?? config.tokenStorage,
-    tokenKey: manifestSession?.key ?? config.tokenKey,
-    staleTime: compiledManifest?.app?.cache?.staleTime ?? config.staleTime,
-    gcTime: compiledManifest?.app?.cache?.gcTime ?? config.gcTime,
-    retry: compiledManifest?.app?.cache?.retry ?? config.retry,
-  };
-  const runtimeRealtime = compiledManifest?.realtime;
+  const compiledManifest = compileManifestWithEnv(
+    config.manifest,
+    config.env ?? getDefaultEnvSource(),
+  );
+  const runtimeApiUrl = compiledManifest.app.apiUrl ?? config.apiUrl;
+  const runtimeRealtime = compiledManifest.realtime;
+  const runtimeAuthMode = compiledManifest.auth?.session?.mode ?? "cookie";
+  const runtimeSession = compiledManifest.auth?.session;
+  const authRuntimeConfig = createManifestAuthRuntimeConfig(
+    runtimeApiUrl,
+    compiledManifest,
+  );
   const runtimeWsConfig = runtimeRealtime?.ws
     ? {
-        url: runtimeRealtime.ws.url ?? resolveWebSocketUrl(config.apiUrl),
+        url: runtimeRealtime.ws.url ?? resolveWebSocketUrl(runtimeApiUrl),
         autoReconnect: runtimeRealtime.ws.autoReconnect,
         reconnectOnLogin: runtimeRealtime.ws.reconnectOnLogin,
         reconnectOnFocus: runtimeRealtime.ws.reconnectOnFocus,
@@ -141,135 +144,90 @@ export function createSnapshot<
         onConnected: createManifestRealtimeCallback(
           { channel: "ws", kind: "connected" },
           runtimeRealtime.ws.on?.connected,
-          config.ws?.onConnected,
         ),
         onDisconnected: createManifestRealtimeCallback(
           { channel: "ws", kind: "disconnected" },
           runtimeRealtime.ws.on?.disconnected,
-          config.ws?.onDisconnected,
         ),
         onReconnecting: createManifestRealtimeCallback(
           { channel: "ws", kind: "reconnecting" },
           runtimeRealtime.ws.on?.reconnecting,
-          config.ws?.onReconnecting,
         ),
         onReconnectFailed: createManifestRealtimeCallback(
           { channel: "ws", kind: "reconnectFailed" },
           runtimeRealtime.ws.on?.reconnectFailed,
-          config.ws?.onReconnectFailed,
         ),
       }
-    : config.ws;
+    : undefined;
   const runtimeSseConfig = runtimeRealtime?.sse
     ? {
         reconnectOnLogin: runtimeRealtime.sse.reconnectOnLogin,
         endpoints: Object.fromEntries(
-          Array.from(
-            new Set([
-              ...Object.keys(config.sse?.endpoints ?? {}),
-              ...Object.keys(runtimeRealtime.sse.endpoints),
-            ]),
-          ).map((path) => {
-            const bootstrapEndpoint = config.sse?.endpoints[path];
-            const manifestEndpoint = runtimeRealtime.sse.endpoints[path];
-            return [
-              path,
-              {
-                withCredentials:
-                  manifestEndpoint?.withCredentials ??
-                  bootstrapEndpoint?.withCredentials,
-                onConnected: createManifestRealtimeCallback(
-                  { channel: "sse", kind: "connected", endpoint: path },
-                  manifestEndpoint?.on?.connected,
-                  bootstrapEndpoint?.onConnected,
-                ),
-                onError: createManifestRealtimeCallback(
-                  { channel: "sse", kind: "error", endpoint: path },
-                  manifestEndpoint?.on?.error,
-                  bootstrapEndpoint?.onError,
-                ),
-                onClosed: createManifestRealtimeCallback(
-                  { channel: "sse", kind: "closed", endpoint: path },
-                  manifestEndpoint?.on?.closed,
-                  bootstrapEndpoint?.onClosed,
-                ),
-              },
-            ] as const;
-          }),
+          Object.entries(runtimeRealtime.sse.endpoints).map(
+            ([path, manifestEndpoint]) =>
+              [
+                path,
+                {
+                  withCredentials: manifestEndpoint.withCredentials,
+                  onConnected: createManifestRealtimeCallback(
+                    { channel: "sse", kind: "connected", endpoint: path },
+                    manifestEndpoint.on?.connected,
+                  ),
+                  onError: createManifestRealtimeCallback(
+                    { channel: "sse", kind: "error", endpoint: path },
+                    manifestEndpoint.on?.error,
+                  ),
+                  onClosed: createManifestRealtimeCallback(
+                    { channel: "sse", kind: "closed", endpoint: path },
+                    manifestEndpoint.on?.closed,
+                  ),
+                },
+              ] as const,
+          ),
         ),
       }
-    : config.sse;
-  const { manifest: _manifest, ...snapshotConfigForManifestApp } =
-    runtimeConfig;
-  const loginScreenPath = compiledManifest?.auth
-    ? (getAuthScreenPath(compiledManifest, "login") ?? runtimeConfig.loginPath)
-    : runtimeConfig.loginPath;
-  const mfaScreenPath = compiledManifest?.auth
-    ? (getAuthScreenPath(compiledManifest, "mfa") ?? runtimeConfig.mfaPath)
-    : runtimeConfig.mfaPath;
-  const homeScreenPath = compiledManifest?.app?.home ?? runtimeConfig.homePath;
+    : undefined;
+  const loginScreenPath = compiledManifest.auth
+    ? getAuthScreenPath(compiledManifest, "login")
+    : undefined;
+  const mfaScreenPath = compiledManifest.auth
+    ? getAuthScreenPath(compiledManifest, "mfa")
+    : undefined;
+  const homeScreenPath = compiledManifest.app.home ?? compiledManifest.firstRoute?.path;
   const loaderLoginPath =
-    compiledManifest?.auth?.redirects?.unauthenticated ?? loginScreenPath;
-  const manifestContract = compiledManifest?.auth?.contract
-    ? {
-        ...runtimeConfig.contract,
-        endpoints: {
-          ...runtimeConfig.contract?.endpoints,
-          ...compiledManifest.auth.contract.endpoints,
-        },
-        headers: {
-          ...runtimeConfig.contract?.headers,
-          ...compiledManifest.auth.contract.headers,
-        },
-        csrfCookieName:
-          compiledManifest.auth.contract.csrfCookieName ??
-          runtimeConfig.contract?.csrfCookieName,
-      }
-    : runtimeConfig.contract;
+    compiledManifest.auth?.redirects?.unauthenticated ?? loginScreenPath;
 
-  function createManifestAuthCallback(
-    kind: ManifestAuthWorkflowKind,
-    fallback?: () => void,
-  ): () => void {
+  function createManifestAuthCallback(kind: ManifestAuthWorkflowKind): () => void {
     return () => {
-      if (compiledManifest?.auth?.on?.[kind] && typeof window !== "undefined") {
+      if (compiledManifest.auth?.on?.[kind] && typeof window !== "undefined") {
         dispatchManifestAuthWorkflow(kind);
         return;
       }
-
-      fallback?.();
     };
   }
 
   // ── Auth contract ────────────────────────────────────────────────────────────
-  const contract = mergeContract(runtimeConfig.apiUrl, manifestContract);
+  const contract = authRuntimeConfig.contract;
 
   // ── API client ──────────────────────────────────────────────────────────────
   const api = new ApiClient({
-    apiUrl: runtimeConfig.apiUrl,
-    auth: runtimeConfig.auth,
-    bearerToken: runtimeConfig.bearerToken,
+    apiUrl: runtimeApiUrl,
+    auth: runtimeAuthMode,
+    bearerToken: config.bearerToken,
     onUnauthenticated: createManifestAuthCallback(
       "unauthenticated",
-      runtimeConfig.onUnauthenticated,
     ),
     onForbidden: createManifestAuthCallback(
       "forbidden",
-      runtimeConfig.onForbidden,
     ),
-    onMfaSetupRequired: runtimeConfig.mfaSetupPath
-      ? () => {
-          window.location.href = runtimeConfig.mfaSetupPath!;
-        }
-      : undefined,
     contract,
   });
 
   // ── Token storage ───────────────────────────────────────────────────────────
   const tokenStorage = createTokenStorage({
-    auth: runtimeConfig.auth,
-    tokenStorage: runtimeConfig.tokenStorage,
-    tokenKey: runtimeConfig.tokenKey,
+    auth: runtimeAuthMode,
+    tokenStorage: runtimeSession?.storage,
+    tokenKey: runtimeSession?.key,
   });
   api.setStorage(tokenStorage);
 
@@ -277,30 +235,17 @@ export function createSnapshot<
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: runtimeConfig.staleTime ?? 5 * 60 * 1000,
-        gcTime: runtimeConfig.gcTime ?? 10 * 60 * 1000,
-        retry: runtimeConfig.retry ?? 1,
+        staleTime: compiledManifest.app.cache?.staleTime ?? 5 * 60 * 1000,
+        gcTime: compiledManifest.app.cache?.gcTime ?? 10 * 60 * 1000,
+        retry: compiledManifest.app.cache?.retry ?? 1,
       },
     },
   });
 
   // ── Security posture warnings ─────────────────────────────────────────────
   // Warning 4: verbose auth errors enabled on non-localhost
-  const authErrorsConfig = (runtimeConfig as unknown as Record<string, unknown>)
-    .authErrors as { verbose?: boolean } | undefined;
-  if (authErrorsConfig?.verbose === true && typeof window !== "undefined") {
-    const hostname = window.location.hostname;
-    const isLocal =
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "::1";
-    if (!isLocal) {
-      warnOnce(
-        "auth-errors:verbose-on-non-localhost",
-        "[snapshot] Verbose error messages enabled on non-localhost origin. " +
-          "Set authErrors.verbose: false for production deployments.",
-      );
-    }
+  
+  if (false) {
   }
 
   // ── WebSocket manager (created once if ws config present) ──────────────────
@@ -316,7 +261,7 @@ export function createSnapshot<
   if (runtimeSseConfig) {
     const { endpoints } = runtimeSseConfig;
     for (const [path, endpointCfg] of Object.entries(endpoints)) {
-      const url = `${runtimeConfig.apiUrl}${path}`;
+      const url = `${runtimeApiUrl}${path}`;
       const manager = new SseManager({
         withCredentials: endpointCfg.withCredentials,
         onConnected: endpointCfg.onConnected,
@@ -580,14 +525,12 @@ export function createSnapshot<
       api,
       storage: tokenStorage,
       config: {
-        ...runtimeConfig,
+        auth: runtimeAuthMode,
+        staleTime: compiledManifest.app.cache?.staleTime,
         loginPath: loginScreenPath,
         homePath: homeScreenPath,
         mfaPath: mfaScreenPath,
-        onLogoutSuccess: createManifestAuthCallback(
-          "logout",
-          runtimeConfig.onLogoutSuccess,
-        ),
+        onLogoutSuccess: createManifestAuthCallback("logout"),
       },
       contract,
       pendingMfaChallengeAtom,
@@ -603,7 +546,11 @@ export function createSnapshot<
   const mfaHooks = createMfaHooks({
     api,
     storage: tokenStorage,
-    config: runtimeConfig,
+    config: {
+      auth: runtimeAuthMode,
+      homePath: homeScreenPath,
+      staleTime: compiledManifest.app.cache?.staleTime,
+    },
     contract,
     pendingMfaChallengeAtom,
     onLoginSuccess: () => {
@@ -617,14 +564,10 @@ export function createSnapshot<
     api,
     storage: tokenStorage,
     config: {
-      ...runtimeConfig,
       loginPath: loginScreenPath,
     },
     contract,
-    onUnauthenticated: createManifestAuthCallback(
-      "unauthenticated",
-      runtimeConfig.onUnauthenticated,
-    ),
+    onUnauthenticated: createManifestAuthCallback("unauthenticated"),
     queryClient,
   });
 
@@ -633,7 +576,7 @@ export function createSnapshot<
     api,
     storage: tokenStorage,
     config: {
-      ...runtimeConfig,
+      auth: runtimeAuthMode,
       homePath: homeScreenPath,
     },
     contract,
@@ -648,7 +591,7 @@ export function createSnapshot<
     api,
     storage: tokenStorage,
     config: {
-      ...runtimeConfig,
+      auth: runtimeAuthMode,
       homePath: homeScreenPath,
       mfaPath: mfaScreenPath,
     },
@@ -663,22 +606,17 @@ export function createSnapshot<
   // ── Routing ─────────────────────────────────────────────────────────────────
   const { protectedBeforeLoad, guestBeforeLoad } = createLoaders(
     {
-      ...runtimeConfig,
       loginPath: loaderLoginPath,
       homePath: homeScreenPath,
-      onUnauthenticated: createManifestAuthCallback(
-        "unauthenticated",
-        runtimeConfig.onUnauthenticated,
-      ),
+      onUnauthenticated: createManifestAuthCallback("unauthenticated"),
+      staleTime: compiledManifest.app.cache?.staleTime,
     },
     api,
     contract,
   );
 
   // ── Auth error formatter ────────────────────────────────────────────────────
-  const boundFormatAuthError = createAuthErrorFormatter(
-    runtimeConfig.authErrors,
-  );
+  const boundFormatAuthError = createAuthErrorFormatter();
 
   // ── QueryProvider pre-bound to this instance's queryClient ─────────────────
   function QueryProvider({ children }: { children: ReactNode }) {
@@ -689,26 +627,18 @@ export function createSnapshot<
 
   // ── ManifestApp (created when manifest config is provided) ──────────────────
   let ManifestAppComponent: React.ComponentType | undefined;
-  if (runtimeConfig.manifest) {
-    const manifestConfig = runtimeConfig.manifest as unknown as ManifestConfig;
-    const capturedApiUrl = runtimeConfig.apiUrl;
-    const capturedManifest = manifestConfig;
+  if (compiledManifest.raw) {
+    const capturedApiUrl = runtimeApiUrl;
+    const capturedManifest = compiledManifest.raw;
     ManifestAppComponent = function SnapshotManifestApp() {
       // Lazy import to avoid pulling UI code into SDK-only consumers.
       const { ManifestApp: ManifestAppImpl } = require("./ui/manifest/app") as {
         ManifestApp: React.ComponentType<{
           manifest: ManifestConfig;
           apiUrl: string;
-          snapshotConfig?: Record<string, unknown>;
         }>;
       };
-      return (
-        <ManifestAppImpl
-          manifest={capturedManifest}
-          apiUrl={capturedApiUrl}
-          snapshotConfig={snapshotConfigForManifestApp}
-        />
-      );
+      return <ManifestAppImpl manifest={capturedManifest} apiUrl={capturedApiUrl} />;
     };
   }
 

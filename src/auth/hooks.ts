@@ -16,26 +16,26 @@ import type {
   RegisterVars,
   ForgotPasswordBody,
   MfaChallenge,
-  SnapshotConfig,
 } from "../types";
 import { isMfaChallenge } from "../types";
 import type { AuthContract } from "../auth/contract";
 
 const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
+interface AuthHooksConfig {
+  auth?: "cookie" | "token";
+  staleTime?: number;
+  onUnauthenticated?: () => void;
+  loginPath?: string;
+  homePath?: string;
+  mfaPath?: string;
+  onLogoutSuccess?: () => void;
+}
+
 interface AuthHooksOptions {
   api: ApiClient;
   storage: TokenStorage;
-  config: Pick<
-    SnapshotConfig,
-    | "auth"
-    | "staleTime"
-    | "onUnauthenticated"
-    | "loginPath"
-    | "homePath"
-    | "mfaPath"
-    | "onLogoutSuccess"
-  >;
+  config: AuthHooksConfig;
   contract: AuthContract;
   pendingMfaChallengeAtom: WritableAtom<
     MfaChallenge | null,
@@ -46,6 +46,9 @@ interface AuthHooksOptions {
   onLogoutSuccess?: () => void; // called by createSnapshot to trigger SSE close
 }
 
+/**
+ * Create auth-related hooks bound to a single snapshot instance.
+ */
 export function createAuthHooks({
   api,
   storage,

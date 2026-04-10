@@ -54,7 +54,10 @@ export const fromRefSchema = z
   })
   .strict();
 
-const stringOrEnvRef = z.union([z.string(), envRefSchema]);
+/**
+ * Accept either a literal string or an environment reference.
+ */
+export const stringOrEnvRef = z.union([z.string(), envRefSchema]);
 
 const authEndpointConfigSchema = z
   .object({
@@ -658,6 +661,7 @@ export const appCacheSchema = z
 
 export const appConfigSchema = z
   .object({
+    apiUrl: stringOrEnvRef.optional(),
     title: stringOrEnvRef.optional(),
     shell: layoutSchema.default("full-width"),
     cache: appCacheSchema.optional(),

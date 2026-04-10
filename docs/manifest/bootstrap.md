@@ -3,6 +3,22 @@
 Snapshot starts with a small bootstrap surface and resolves environment values
 before it compiles the manifest runtime model.
 
+## Bootstrap Shape
+
+`SnapshotConfig` now has only four fields:
+
+```ts
+{
+  apiUrl: string;
+  env?: Record<string, string | undefined>;
+  bearerToken?: string;
+  manifest: ManifestConfig;
+}
+```
+
+The manifest can override the bootstrap API URL with `manifest.app.apiUrl`
+when you need a per-environment runtime value inside the manifest itself.
+
 ## Env References
 
 Anywhere the manifest accepts a string, it can also accept:

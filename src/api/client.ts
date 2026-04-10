@@ -1,11 +1,21 @@
 import { ApiError } from "./error";
 import { getCsrfToken, isMutatingMethod } from "../auth/csrf";
-import { warnOnce } from "../auth/warnings";
 import type { RequestOptions } from "../types";
 import type { TokenStorage } from "../auth/storage";
-import type { SnapshotConfig } from "../types";
 import type { AuthContract } from "../auth/contract";
 
+interface ApiClientConfig {
+  apiUrl: string;
+  auth?: "cookie" | "token";
+  bearerToken?: string;
+  onUnauthenticated?: () => void;
+  onForbidden?: () => void;
+  contract: AuthContract;
+}
+
+/**
+ * Per-instance API client bound to a single snapshot bootstrap.
+ */
 export class ApiClient {
   private readonly baseUrl: string;
   private readonly authMode: "cookie" | "token";
@@ -14,21 +24,14 @@ export class ApiClient {
   private storage: TokenStorage | null = null;
   private onUnauthenticated: (() => void) | undefined;
   private onForbidden: (() => void) | undefined;
-  private onMfaSetupRequired: (() => void) | undefined;
 
-  constructor(
-    config: Pick<
-      SnapshotConfig,
-      "apiUrl" | "auth" | "bearerToken" | "onUnauthenticated" | "onForbidden"
-    > & { onMfaSetupRequired?: () => void; contract: AuthContract },
-  ) {
+  constructor(config: ApiClientConfig) {
     this.baseUrl = config.apiUrl.replace(/\/$/, "");
     this.authMode = config.auth ?? "cookie";
     this.bearerToken = config.bearerToken;
     this.contract = config.contract;
     this.onUnauthenticated = config.onUnauthenticated;
     this.onForbidden = config.onForbidden;
-    this.onMfaSetupRequired = config.onMfaSetupRequired;
 
     if (this.bearerToken && typeof window !== "undefined") {
       console.warn(
@@ -39,8 +42,7 @@ export class ApiClient {
     }
 
     if (this.authMode === "token" && typeof window !== "undefined") {
-      warnOnce(
-        "auth-mode:token-in-browser",
+      console.warn(
         "[snapshot] Cookie mode is recommended for browser deployments. " +
           "token auth mode is less secure in browser contexts.",
       );
@@ -113,22 +115,7 @@ export class ApiClient {
   private async handleResponse<T>(response: Response): Promise<T> {
     if (response.status === 403) {
       const body = await response.json().catch(() => null);
-      if (
-        body &&
-        typeof body === "object" &&
-        "code" in body &&
-        (body as Record<string, unknown>).code === "MFA_SETUP_REQUIRED"
-      ) {
-        if (!this.onMfaSetupRequired) {
-          warnOnce(
-            "mfa-setup-required:no-path",
-            "[snapshot] MFA_SETUP_REQUIRED returned but no mfaSetupPath configured. Set mfaSetupPath in createSnapshot config.",
-          );
-        }
-        this.onMfaSetupRequired?.();
-      } else {
-        this.onForbidden?.();
-      }
+      this.onForbidden?.();
       throw new ApiError(403, body);
     }
 

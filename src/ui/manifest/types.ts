@@ -141,7 +141,6 @@ export interface CompiledManifest {
 export interface ManifestAppProps {
   manifest: ManifestConfig;
   apiUrl: string;
-  snapshotConfig?: Record<string, unknown>;
 }
 
 export type ConfigDrivenComponent = React.ComponentType<{

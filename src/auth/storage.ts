@@ -1,5 +1,3 @@
-import type { SnapshotConfig } from "../types";
-
 /**
  * Per-instance token storage used by Snapshot auth flows.
  */
@@ -75,13 +73,22 @@ function createNoopStorage(): TokenStorage {
 }
 
 /**
+ * Token storage settings used by the bootstrap runtime.
+ */
+interface TokenStorageConfig {
+  auth?: "cookie" | "token";
+  tokenStorage?: "localStorage" | "sessionStorage" | "memory";
+  tokenKey?: string;
+}
+
+/**
  * Create the token storage implementation for the current auth mode.
  *
  * @param config - Auth/bootstrap token storage options
  * @returns A per-instance token storage backend
  */
 export function createTokenStorage(
-  config: Pick<SnapshotConfig, "auth" | "tokenStorage" | "tokenKey">,
+  config: TokenStorageConfig,
 ): TokenStorage {
   if (config.auth === "cookie") return createNoopStorage();
 

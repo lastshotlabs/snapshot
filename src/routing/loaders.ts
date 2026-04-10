@@ -2,7 +2,7 @@ import { redirect } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
 import type { ApiClient } from "../api/client";
 import { warnOnce } from "../auth/warnings";
-import type { AuthUser, SnapshotConfig } from "../types";
+import type { AuthUser } from "../types";
 import type { AuthContract } from "../auth/contract";
 
 interface RouterContext {
@@ -11,11 +11,16 @@ interface RouterContext {
 
 const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
-type LoaderConfig = Pick<
-  SnapshotConfig,
-  "loginPath" | "homePath" | "forbiddenPath" | "onUnauthenticated" | "staleTime"
->;
+interface LoaderConfig {
+  loginPath?: string;
+  homePath?: string;
+  onUnauthenticated?: () => void;
+  staleTime?: number;
+}
 
+/**
+ * Create router before-load guards bound to a single snapshot instance.
+ */
 export function createLoaders(
   config: LoaderConfig,
   api: ApiClient,
