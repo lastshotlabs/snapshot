@@ -182,8 +182,8 @@ describe("ManifestApp", () => {
     expect(style?.textContent).toContain(":root");
   });
 
-  it("renders the current route when multiple routes exist", () => {
-    window.history.replaceState({}, "", "/about");
+  it("renders the current route when multiple routes exist", async () => {
+    window.history.pushState({}, "", "/about");
 
     const manifest: ManifestConfig = {
       app: {
@@ -205,7 +205,9 @@ describe("ManifestApp", () => {
     };
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
-    expect(screen.getByText("About Page")).toBeDefined();
+    await waitFor(() => {
+      expect(screen.getByText("About Page")).toBeDefined();
+    });
   });
 
   it("resets route-scoped state when navigation changes routes", async () => {
@@ -236,7 +238,7 @@ describe("ManifestApp", () => {
     expect(screen.getByRole("button", { name: "1" })).toBeDefined();
 
     await act(async () => {
-      window.history.replaceState({}, "", "/about");
+      window.history.pushState({}, "", "/about");
       dispatchPopStateEvent();
     });
 
@@ -247,6 +249,9 @@ describe("ManifestApp", () => {
 
   it("renders manifest navigation and navigates within the shell", async () => {
     const manifest: ManifestConfig = {
+      app: {
+        shell: "sidebar",
+      },
       navigation: {
         mode: "sidebar",
         items: [
@@ -484,7 +489,9 @@ describe("ManifestApp", () => {
       ],
     };
 
-    render(<ManifestApp manifest={manifest} apiUrl="https://api.example.com" />);
+    render(
+      <ManifestApp manifest={manifest} apiUrl="https://api.example.com" />,
+    );
 
     await waitFor(() => {
       expect(createdUrls).toEqual(["wss://api.example.com"]);

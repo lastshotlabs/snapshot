@@ -1062,7 +1062,6 @@ function ManifestRouter({
         window.history.pushState({}, "", nextLocation);
       }
       setCurrentPath(url.pathname);
-      dispatchPopState();
     },
     [basePath],
   );

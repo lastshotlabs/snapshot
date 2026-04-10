@@ -22,7 +22,6 @@ import { notFoundConfigSchema } from "../components/feedback/default-not-found";
 import { offlineBannerConfigSchema } from "../components/feedback/default-offline";
 import { envRefSchema } from "./env";
 import { i18nConfigSchema, tRefSchema } from "../i18n/schema";
-import { ACTION_TYPES } from "../actions/types";
 
 /** Zod schema for a FromRef value. */
 export const fromRefSchema = z
@@ -416,8 +415,7 @@ export const customWorkflowActionDeclarationSchema = z
   })
   .strict();
 
-const builtInWorkflowNodeTypeSet = new Set<string>([
-  ...ACTION_TYPES,
+const customWorkflowControlFlowNodeTypeSet = new Set<string>([
   "if",
   "wait",
   "parallel",
@@ -435,10 +433,10 @@ const customWorkflowNodeSchema = z
   })
   .passthrough()
   .superRefine((node, ctx) => {
-    if (builtInWorkflowNodeTypeSet.has(node.type)) {
+    if (customWorkflowControlFlowNodeTypeSet.has(node.type)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Built-in workflow node "${node.type}" must use its built-in schema shape.`,
+        message: `Workflow node "${node.type}" must use its built-in schema shape.`,
       });
     }
   });
@@ -457,7 +455,10 @@ const manifestWorkflowNodeSchema: z.ZodType = z.lazy(() =>
           z.array(manifestWorkflowNodeSchema),
         ]),
         else: z
-          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .union([
+            manifestWorkflowNodeSchema,
+            z.array(manifestWorkflowNodeSchema),
+          ])
           .optional(),
       })
       .strict(),
@@ -476,7 +477,10 @@ const manifestWorkflowNodeSchema: z.ZodType = z.lazy(() =>
         when: workflowConditionSchema.optional(),
         branches: z
           .array(
-            z.union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)]),
+            z.union([
+              manifestWorkflowNodeSchema,
+              z.array(manifestWorkflowNodeSchema),
+            ]),
           )
           .min(1),
       })
@@ -494,7 +498,10 @@ const manifestWorkflowNodeSchema: z.ZodType = z.lazy(() =>
           z.array(manifestWorkflowNodeSchema),
         ]),
         onFailure: z
-          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .union([
+            manifestWorkflowNodeSchema,
+            z.array(manifestWorkflowNodeSchema),
+          ])
           .optional(),
       })
       .strict(),
@@ -516,10 +523,16 @@ const manifestWorkflowNodeSchema: z.ZodType = z.lazy(() =>
           z.array(manifestWorkflowNodeSchema),
         ]),
         catch: z
-          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .union([
+            manifestWorkflowNodeSchema,
+            z.array(manifestWorkflowNodeSchema),
+          ])
           .optional(),
         finally: z
-          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .union([
+            manifestWorkflowNodeSchema,
+            z.array(manifestWorkflowNodeSchema),
+          ])
           .optional(),
       })
       .strict(),
@@ -1049,8 +1062,12 @@ export const routeConfigSchema = pageConfigSchema
     preload: z.array(endpointTargetSchema).optional(),
     refreshOnEnter: z.array(z.string().min(1)).optional(),
     invalidateOnLeave: z.array(z.string().min(1)).optional(),
-    enter: z.union([z.string().min(1), manifestWorkflowDefinitionSchema]).optional(),
-    leave: z.union([z.string().min(1), manifestWorkflowDefinitionSchema]).optional(),
+    enter: z
+      .union([z.string().min(1), manifestWorkflowDefinitionSchema])
+      .optional(),
+    leave: z
+      .union([z.string().min(1), manifestWorkflowDefinitionSchema])
+      .optional(),
     guard: z
       .object({
         authenticated: z.boolean().optional(),
