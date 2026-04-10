@@ -32,6 +32,28 @@ export interface ComponentDataResult {
   refetch: () => void;
 }
 
+function getInitialInlineData(
+  resolvedData: unknown,
+): Record<string, unknown> | null {
+  if (
+    resolvedData == null ||
+    typeof resolvedData === "string" ||
+    isResourceRef(resolvedData)
+  ) {
+    return null;
+  }
+
+  if (Array.isArray(resolvedData)) {
+    return resolvedData as unknown as Record<string, unknown>;
+  }
+
+  if (typeof resolvedData === "object") {
+    return resolvedData as Record<string, unknown>;
+  }
+
+  return null;
+}
+
 /**
  * Shared data-fetching hook for config-driven components.
  *
@@ -79,11 +101,6 @@ export function useComponentData(
     resolvedParams[paramKeys[i]!] = resolvedArr[i];
   }
 
-  const [data, setData] = useState<Record<string, unknown> | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [fetchCount, setFetchCount] = useState(0);
-
   const dataString =
     typeof resolvedData === "string" ? resolvedData : undefined;
   const resourceTarget = isResourceRef(resolvedData) ? resolvedData : undefined;
@@ -100,6 +117,17 @@ export function useComponentData(
     typeof resolvedData !== "string" &&
     !isResourceRef(resolvedData) &&
     (Array.isArray(resolvedData) || typeof resolvedData === "object");
+  const initialInlineData = getInitialInlineData(resolvedData);
+
+  const [data, setData] = useState<Record<string, unknown> | null>(
+    initialInlineData,
+  );
+  const [isLoading, setIsLoading] = useState(
+    initialInlineData == null &&
+      (dataString !== undefined || resourceTarget !== undefined),
+  );
+  const [error, setError] = useState<Error | null>(null);
+  const [fetchCount, setFetchCount] = useState(0);
 
   const fetchData = useCallback(async () => {
     if (isInlineData) {

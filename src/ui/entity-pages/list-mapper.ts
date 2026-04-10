@@ -23,8 +23,8 @@ import {
 export function mapEntityListPage(
   result: PageLoaderResult,
 ): EntityPageMapResult {
-  const declaration =
-    result.declaration.declaration as EntityListPageDeclaration;
+  const declaration = result.declaration
+    .declaration as EntityListPageDeclaration;
   const meta = result.entityMeta[declaration.entity];
   const data = result.data as Extract<PageData, { type: "list" }>;
   const resourceKey = `${declaration.entity.toLowerCase()}-list`;

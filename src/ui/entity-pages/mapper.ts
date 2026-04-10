@@ -4,10 +4,7 @@ import type {
   ResourceConfigMap,
   StateConfig,
 } from "../manifest/types";
-import {
-  type PageDeclaration,
-  type PageLoaderResult,
-} from "./bunshot-types";
+import { type PageDeclaration, type PageLoaderResult } from "./bunshot-types";
 import { mapEntityDashboardPage } from "./dashboard-mapper";
 import { mapEntityDetailPage } from "./detail-mapper";
 import { mapEntityFormPage } from "./form-mapper";

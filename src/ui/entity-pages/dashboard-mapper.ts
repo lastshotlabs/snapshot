@@ -5,7 +5,11 @@ import type {
   PageData,
   PageLoaderResult,
 } from "./bunshot-types";
-import { formatFieldLabel, inferTimestampField, resolvePageTitle } from "./utils";
+import {
+  formatFieldLabel,
+  inferTimestampField,
+  resolvePageTitle,
+} from "./utils";
 
 /**
  * Maps an entity-dashboard page declaration to Snapshot page config.
@@ -16,8 +20,8 @@ import { formatFieldLabel, inferTimestampField, resolvePageTitle } from "./utils
 export function mapEntityDashboardPage(
   result: PageLoaderResult,
 ): EntityPageMapResult {
-  const declaration =
-    result.declaration.declaration as EntityDashboardPageDeclaration;
+  const declaration = result.declaration
+    .declaration as EntityDashboardPageDeclaration;
   const data = result.data as Extract<PageData, { type: "dashboard" }>;
   const content: Array<Record<string, unknown>> = [
     {
@@ -76,7 +80,9 @@ export function mapEntityDashboardPage(
     content.push({
       type: "feed",
       data: { from: "entityPageData.activity" },
-      itemKey: data.activity.every((item) => item.id != null) ? "id" : titleField,
+      itemKey: data.activity.every((item) => item.id != null)
+        ? "id"
+        : titleField,
       title: titleField,
       ...(descriptionField ? { description: descriptionField } : undefined),
       ...(timestampField ? { timestamp: timestampField } : undefined),

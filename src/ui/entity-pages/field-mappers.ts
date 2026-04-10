@@ -26,7 +26,10 @@ export interface FieldInputConfig {
   /** HTML input type hint when applicable. */
   readonly htmlType?: "text" | "number";
   /** Select options for enum fields. */
-  readonly options?: readonly { readonly label: string; readonly value: string }[];
+  readonly options?: readonly {
+    readonly label: string;
+    readonly value: string;
+  }[];
 }
 
 /**

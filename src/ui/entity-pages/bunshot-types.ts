@@ -326,12 +326,18 @@ export type PageData =
       readonly page: number;
       readonly pageSize: number;
     }
-  | { readonly type: "detail"; readonly item: Readonly<Record<string, unknown>> }
+  | {
+      readonly type: "detail";
+      readonly item: Readonly<Record<string, unknown>>;
+    }
   | {
       readonly type: "form-create";
       readonly defaults: Readonly<Record<string, unknown>>;
     }
-  | { readonly type: "form-edit"; readonly item: Readonly<Record<string, unknown>> }
+  | {
+      readonly type: "form-edit";
+      readonly item: Readonly<Record<string, unknown>>;
+    }
   | {
       readonly type: "dashboard";
       readonly stats: readonly {
@@ -366,7 +372,9 @@ export interface SsrMeta {
 /**
  * A page declaration after route-table compilation and entity resolution.
  */
-export interface ResolvedPageDeclaration<T extends PageDeclaration = PageDeclaration> {
+export interface ResolvedPageDeclaration<
+  T extends PageDeclaration = PageDeclaration,
+> {
   /** Page key from the manifest. */
   readonly key: string;
   /** Frozen declaration payload. */

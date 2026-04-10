@@ -4,6 +4,7 @@ import type { QueryKey } from "@tanstack/react-query";
 import React from "react";
 import { SnapshotApiContext } from "../ui/actions/executor";
 import { AppContextProvider } from "../ui/context/providers";
+import "../ui/components/register";
 import {
   AppShellWrapper,
   isCustomPage,
@@ -12,6 +13,7 @@ import {
   type CustomPageDeclaration,
   type PageLoaderResult,
 } from "../ui/entity-pages";
+import "../ui/manifest/structural";
 import { compileManifest } from "../ui/manifest/compiler";
 import { PageRenderer } from "../ui/manifest/renderer";
 import type { ManifestConfig } from "../ui/manifest/types";
@@ -489,9 +491,14 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       // requiring a separate import pass. Structural assignment — match is a plain
       // object produced by the resolver, so we can safely spread-override the field.
       const generateStaticParamsFn = routeModule["generateStaticParams"] as
-        | ((ctx: unknown) => Promise<Record<string, string>[]> | Record<string, string>[])
+        | ((
+            ctx: unknown,
+          ) => Promise<Record<string, string>[]> | Record<string, string>[])
         | undefined;
-      if (generateStaticParamsFn !== undefined && match.generateStaticParams === undefined) {
+      if (
+        generateStaticParamsFn !== undefined &&
+        match.generateStaticParams === undefined
+      ) {
         // Widen match to mutable for the one-time attachment.
         (match as { generateStaticParams?: unknown }).generateStaticParams =
           generateStaticParamsFn;
@@ -534,7 +541,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const element = React.createElement(ForbiddenComponent, {});
           const requestContext: SsrRequestContext = {
             queryClient: new QueryClient({
-              defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+              defaultOptions: {
+                queries: { staleTime: Infinity, retry: false },
+              },
             }),
             match,
           };
@@ -545,7 +554,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
             timeoutMs,
             rscOptions,
           );
-          return new Response(resp.body, { status: 403, headers: resp.headers });
+          return new Response(resp.body, {
+            status: 403,
+            headers: resp.headers,
+          });
         }
         return new Response("Forbidden", {
           status: 403,
@@ -562,7 +574,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const element = React.createElement(UnauthorizedComponent, {});
           const requestContext: SsrRequestContext = {
             queryClient: new QueryClient({
-              defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+              defaultOptions: {
+                queries: { staleTime: Infinity, retry: false },
+              },
             }),
             match,
           };
@@ -573,7 +587,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
             timeoutMs,
             rscOptions,
           );
-          return new Response(resp.body, { status: 401, headers: resp.headers });
+          return new Response(resp.body, {
+            status: 401,
+            headers: resp.headers,
+          });
         }
         return new Response("Unauthorized", {
           status: 401,
@@ -742,7 +759,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         ),
         (async () => {
           try {
-            return (await import(chain.page.filePath)) as Record<string, unknown>;
+            return (await import(chain.page.filePath)) as Record<
+              string,
+              unknown
+            >;
           } catch (err) {
             throw new Error(
               `[snapshot-ssr] Failed to import page module ${chain.page.filePath}: ${String(err)}`,
@@ -755,19 +775,28 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       // This makes the function available to the framework at build time without a
       // separate import pass (mirrors the same step in render()).
       const pageGenerateStaticParams = pageModule["generateStaticParams"] as
-        | ((ctx: unknown) => Promise<Record<string, string>[]> | Record<string, string>[])
+        | ((
+            ctx: unknown,
+          ) => Promise<Record<string, string>[]> | Record<string, string>[])
         | undefined;
       if (
         pageGenerateStaticParams !== undefined &&
         chain.page.generateStaticParams === undefined
       ) {
-        (chain.page as { generateStaticParams?: unknown }).generateStaticParams =
-          pageGenerateStaticParams;
+        (
+          chain.page as { generateStaticParams?: unknown }
+        ).generateStaticParams = pageGenerateStaticParams;
       }
 
       // 2. Execute load() for all layouts in parallel, then page
       const layoutLoadContexts = chain.layouts.map((layout) =>
-        buildLoadContext(layout, fakeRequest, bsCtx, shell._draftMode ?? false, shell._after),
+        buildLoadContext(
+          layout,
+          fakeRequest,
+          bsCtx,
+          shell._draftMode ?? false,
+          shell._after,
+        ),
       );
 
       const [layoutResults, pageResult] = await Promise.all([
@@ -810,7 +839,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const element = React.createElement(NotFoundComponent, {});
           const requestContext: SsrRequestContext = {
             queryClient: new QueryClient({
-              defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+              defaultOptions: {
+                queries: { staleTime: Infinity, retry: false },
+              },
             }),
             match: chain.page,
           };
@@ -838,7 +869,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const element = React.createElement(ForbiddenComponent, {});
           const requestContext: SsrRequestContext = {
             queryClient: new QueryClient({
-              defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+              defaultOptions: {
+                queries: { staleTime: Infinity, retry: false },
+              },
             }),
             match: chain.page,
           };
@@ -849,7 +882,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
             timeoutMs,
             rscOptions,
           );
-          return new Response(resp.body, { status: 403, headers: resp.headers });
+          return new Response(resp.body, {
+            status: 403,
+            headers: resp.headers,
+          });
         }
         return new Response("Forbidden", {
           status: 403,
@@ -866,7 +902,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const element = React.createElement(UnauthorizedComponent, {});
           const requestContext: SsrRequestContext = {
             queryClient: new QueryClient({
-              defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+              defaultOptions: {
+                queries: { staleTime: Infinity, retry: false },
+              },
             }),
             match: chain.page,
           };
@@ -877,7 +915,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
             timeoutMs,
             rscOptions,
           );
-          return new Response(resp.body, { status: 401, headers: resp.headers });
+          return new Response(resp.body, {
+            status: 401,
+            headers: resp.headers,
+          });
         }
         return new Response("Unauthorized", {
           status: 401,
@@ -1022,9 +1063,14 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
               // Check for a default.ts fallback in this slot directory
               if (slot.defaultFilePath) {
                 try {
-                  const DefaultComponent = await importConventionComponent(slot.defaultFilePath);
+                  const DefaultComponent = await importConventionComponent(
+                    slot.defaultFilePath,
+                  );
                   if (DefaultComponent) {
-                    slotsMap[slot.name] = React.createElement(DefaultComponent, {});
+                    slotsMap[slot.name] = React.createElement(
+                      DefaultComponent,
+                      {},
+                    );
                   } else {
                     slotsMap[slot.name] = null;
                   }
@@ -1037,12 +1083,23 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
               return;
             }
             try {
-              const slotMod = (await import(slot.match.filePath)) as Record<string, unknown>;
+              const slotMod = (await import(slot.match.filePath)) as Record<
+                string,
+                unknown
+              >;
               const slotLoadFn = slotMod["load"] as
                 | ((ctx: unknown) => Promise<unknown>)
                 | undefined;
-              const slotLoadCtx = buildLoadContext(slot.match, fakeRequest, bsCtx, shell._draftMode ?? false, shell._after);
-              const slotResult = slotLoadFn ? await slotLoadFn(slotLoadCtx) : { data: {} };
+              const slotLoadCtx = buildLoadContext(
+                slot.match,
+                fakeRequest,
+                bsCtx,
+                shell._draftMode ?? false,
+                shell._after,
+              );
+              const slotResult = slotLoadFn
+                ? await slotLoadFn(slotLoadCtx)
+                : { data: {} };
 
               if (!isLoadResult(slotResult)) {
                 slotsMap[slot.name] = null;
@@ -1051,7 +1108,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
               const slotResultTyped = slotResult as SsrLoadResult;
 
               for (const entry of slotResultTyped.queryCache ?? []) {
-                queryClient.setQueryData(entry.queryKey as QueryKey, entry.data);
+                queryClient.setQueryData(
+                  entry.queryKey as QueryKey,
+                  entry.data,
+                );
               }
 
               const SlotComponent = await frozen.resolveComponent(slot.match);
@@ -1082,7 +1142,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       // Apply convention wrappers (innermost first, so suspense is outermost of page)
       element = wrapWithErrorBoundary(
         element,
-        ErrorComponent as React.ComponentType<{ error: Error; reset: () => void }> | null,
+        ErrorComponent as React.ComponentType<{
+          error: Error;
+          reset: () => void;
+        }> | null,
       );
       element = wrapWithSuspense(element, LoadingComponent);
 
@@ -1097,7 +1160,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
 
         // The outermost layout (i === 0) receives the slots map (Phase 26)
         const extraProps: Record<string, unknown> =
-          i === 0 && Object.keys(slotsMap).length > 0 ? { slots: slotsMap } : {};
+          i === 0 && Object.keys(slotsMap).length > 0
+            ? { slots: slotsMap }
+            : {};
 
         // If this layout level has a co-located template.ts, wrap element in the
         // template first. Templates render identically to layouts during SSR;
@@ -1105,7 +1170,8 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         // wrapper a navigation-keyed `key` prop.
         const templateFilePath = chain.layouts[i]?.templateFilePath;
         if (templateFilePath) {
-          const TemplateComponent = await importConventionComponent(templateFilePath);
+          const TemplateComponent =
+            await importConventionComponent(templateFilePath);
           if (TemplateComponent) {
             element = React.createElement(TemplateComponent, {
               loaderData: layoutData, // same data as the parent layout
@@ -1165,8 +1231,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       bsCtx: unknown,
     ): Promise<Response> {
       if (isCustomPage(result.declaration.declaration)) {
-        const handlerRef = (result.declaration.declaration as CustomPageDeclaration)
-          .handler;
+        const handlerRef = (
+          result.declaration.declaration as CustomPageDeclaration
+        ).handler;
         const routeMatch = buildEntityPageMatch(
           handlerRef.handler,
           result.declaration.declaration.path,
@@ -1212,43 +1279,35 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         : undefined;
       const wrappedPage =
         result.navigation && navConfig
-          ? React.createElement(
-              AppShellWrapper,
-              {
-                shell: result.navigation.shell,
-                navConfig,
-                pathname: currentRoute.path,
-                children: pageElement,
-              },
-            )
+          ? React.createElement(AppShellWrapper, {
+              shell: result.navigation.shell,
+              navConfig,
+              pathname: currentRoute.path,
+              children: pageElement,
+            })
           : pageElement;
       const element = React.createElement(
         SnapshotApiContext.Provider,
         { value: api ?? null },
-        React.createElement(
-          ManifestRuntimeProvider,
-          { manifest: compiled, api, children: React.createElement(
-            AppContextProvider,
-            {
-              globals: compiled.state,
-              resources: compiled.resources,
-              api,
-              children: React.createElement(
-                RouteRuntimeProvider,
-                {
-                  value: {
-                    currentPath: currentRoute.path,
-                    currentRoute,
-                    params: {},
-                    navigate: () => {},
-                    isPreloading: false,
-                  },
-                  children: wrappedPage,
-                },
-              ),
-            },
-          ) },
-        ),
+        React.createElement(ManifestRuntimeProvider, {
+          manifest: compiled,
+          api,
+          children: React.createElement(AppContextProvider, {
+            globals: compiled.state,
+            resources: compiled.resources,
+            api,
+            children: React.createElement(RouteRuntimeProvider, {
+              value: {
+                currentPath: currentRoute.path,
+                currentRoute,
+                params: {},
+                navigate: () => {},
+                isPreloading: false,
+              },
+              children: wrappedPage,
+            }),
+          }),
+        }),
       );
 
       const requestContext: SsrRequestContext = {

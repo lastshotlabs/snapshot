@@ -107,9 +107,7 @@ function mapManifestNavigationItem(item: NavigationItem): NavItem {
           ),
         }
       : {}),
-    ...(item.auth && item.auth !== "none"
-      ? { authenticated: true }
-      : {}),
+    ...(item.auth && item.auth !== "none" ? { authenticated: true } : {}),
     ...(item.permission ? { roles: [item.permission] } : {}),
     ...(badge !== undefined ? { badge } : {}),
   };

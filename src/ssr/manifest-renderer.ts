@@ -5,6 +5,7 @@ import React from "react";
 import { QueryClient } from "@tanstack/react-query";
 import { SnapshotApiContext } from "../ui/actions/executor";
 import { AppContextProvider } from "../ui/context/providers";
+import "../ui/components/register";
 import {
   AppShellWrapper,
   isCustomPage,
@@ -13,6 +14,7 @@ import {
   mapPageDeclaration,
   type PageLoaderResult,
 } from "../ui/entity-pages";
+import "../ui/manifest/structural";
 import { compileManifest } from "../ui/manifest/compiler";
 import { PageRenderer } from "../ui/manifest/renderer";
 import type {
@@ -238,8 +240,16 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
   // Declare as a variable so renderChain can reference render() without `this`
   const manifestRenderer: {
     resolve(url: URL, bsCtx: unknown): Promise<SsrRouteMatchShape | null>;
-    render(match: SsrRouteMatchShape, shell: SsrShellShape, bsCtx: unknown): Promise<Response>;
-    renderChain(chain: SsrRouteChainShape, shell: SsrShellShape, bsCtx: unknown): Promise<Response>;
+    render(
+      match: SsrRouteMatchShape,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response>;
+    renderChain(
+      chain: SsrRouteChainShape,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response>;
     renderPage(
       result: PageLoaderResult,
       shell: SsrShellShape,
@@ -496,7 +506,9 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         },
       };
       const compiledWithEntity = compileManifest(augmentedManifest);
-      const currentRoute = compiledWithEntity.routes.find((route) => route.id === routeId);
+      const currentRoute = compiledWithEntity.routes.find(
+        (route) => route.id === routeId,
+      );
 
       if (!currentRoute) {
         throw new Error(
@@ -522,45 +534,33 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
             : "none");
       const wrappedPage =
         navConfig && shellMode !== "none"
-          ? React.createElement(
-              AppShellWrapper,
-              {
-                shell: shellMode,
-                navConfig,
-                pathname: currentRoute.path,
-                children: pageElement,
-              },
-            )
+          ? React.createElement(AppShellWrapper, {
+              shell: shellMode,
+              navConfig,
+              pathname: currentRoute.path,
+              children: pageElement,
+            })
           : pageElement;
       const element = React.createElement(
         SnapshotApiContext.Provider,
         { value: null },
-        React.createElement(
-          ManifestRuntimeProvider,
-          {
-            manifest: compiledWithEntity,
-            children: React.createElement(
-              AppContextProvider,
-              {
-                globals: compiledWithEntity.state,
-                resources: compiledWithEntity.resources,
-                children: React.createElement(
-                  RouteRuntimeProvider,
-                  {
-                    value: {
-                      currentPath: currentRoute.path,
-                      currentRoute,
-                      params: {},
-                      navigate: () => {},
-                      isPreloading: false,
-                    },
-                    children: wrappedPage,
-                  },
-                ),
+        React.createElement(ManifestRuntimeProvider, {
+          manifest: compiledWithEntity,
+          children: React.createElement(AppContextProvider, {
+            globals: compiledWithEntity.state,
+            resources: compiledWithEntity.resources,
+            children: React.createElement(RouteRuntimeProvider, {
+              value: {
+                currentPath: currentRoute.path,
+                currentRoute,
+                params: {},
+                navigate: () => {},
+                isPreloading: false,
               },
-            ),
-          },
-        ),
+              children: wrappedPage,
+            }),
+          }),
+        }),
       );
 
       const requestContext: SsrRequestContext = {

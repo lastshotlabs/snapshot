@@ -89,9 +89,8 @@ export function resolvePageTitle(
   }
 
   return item != null
-    ? title.template.replace(
-        /\{(\w+)\}/g,
-        (_match, key: string) => String(item[key] ?? ""),
+    ? title.template.replace(/\{(\w+)\}/g, (_match, key: string) =>
+        String(item[key] ?? ""),
       )
     : title.template;
 }

@@ -24,8 +24,8 @@ import {
 export function mapEntityDetailPage(
   result: PageLoaderResult,
 ): EntityPageMapResult {
-  const declaration =
-    result.declaration.declaration as EntityDetailPageDeclaration;
+  const declaration = result.declaration
+    .declaration as EntityDetailPageDeclaration;
   const meta = result.entityMeta[declaration.entity];
   const data = result.data as Extract<PageData, { type: "detail" }>;
   const item = data.item;
@@ -153,8 +153,7 @@ export function mapEntityDetailPage(
           field: fieldName,
           label: formatFieldLabel(fieldName),
           format: displayConfig.type,
-          copyable:
-            fieldMeta?.primary === true || fieldMeta?.type === "string",
+          copyable: fieldMeta?.primary === true || fieldMeta?.type === "string",
         };
       }),
     });

@@ -338,6 +338,23 @@ This reads the backend OpenAPI spec and generates:
 - Theme CSS from `snapshot.manifest.json`
 - Route definitions from manifest pages
 
+### Option D: Entity-driven SSR with bunshot
+
+If your backend uses bunshot manifest-declared entities and pages, Snapshot can render those
+pages without duplicating them in a frontend manifest. Bunshot resolves the request and
+loads entity data; Snapshot's SSR renderer maps that result into the existing manifest
+component system.
+
+Typical flow:
+
+1. Define entities and pages in bunshot's `app.manifest.json`.
+2. Configure bunshot SSR with Snapshot's `createReactRenderer()` or
+   `createManifestRenderer()`.
+3. Let bunshot call `renderer.renderPage(...)` for entity pages.
+
+See [SSR entity pages](./ssr/entity-pages.md) for the renderer-side details and component
+mapping behavior.
+
 ## Consumption Levels
 
 The config-driven UI supports three levels of usage, from pure config to full custom code.

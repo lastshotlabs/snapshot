@@ -26,8 +26,8 @@ import {
 export function mapEntityFormPage(
   result: PageLoaderResult,
 ): EntityPageMapResult {
-  const declaration =
-    result.declaration.declaration as EntityFormPageDeclaration;
+  const declaration = result.declaration
+    .declaration as EntityFormPageDeclaration;
   const meta = result.entityMeta[declaration.entity];
   const isEdit = declaration.operation === "update";
   const existingItem = isEdit
@@ -173,14 +173,17 @@ export function mapEntityFormPage(
 
 function resolveFormFieldType(
   overrideType: string | undefined,
-  fallbackType:
-    | "text"
-    | "number"
-    | "checkbox"
-    | "date"
-    | "select"
-    | "textarea",
-): "text" | "email" | "password" | "number" | "textarea" | "select" | "checkbox" | "date" | "file" {
+  fallbackType: "text" | "number" | "checkbox" | "date" | "select" | "textarea",
+):
+  | "text"
+  | "email"
+  | "password"
+  | "number"
+  | "textarea"
+  | "select"
+  | "checkbox"
+  | "date"
+  | "file" {
   switch (overrideType) {
     case "email":
     case "password":

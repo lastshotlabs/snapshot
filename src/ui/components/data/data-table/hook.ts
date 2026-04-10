@@ -148,6 +148,21 @@ function rowMatchesFilters(
   return true;
 }
 
+function getInitialRows(resolvedData: unknown): Record<string, unknown>[] {
+  if (Array.isArray(resolvedData)) {
+    return resolvedData as Record<string, unknown>[];
+  }
+
+  if (resolvedData != null && typeof resolvedData === "object") {
+    const obj = resolvedData as Record<string, unknown>;
+    if (Array.isArray(obj["data"])) {
+      return obj["data"] as Record<string, unknown>[];
+    }
+  }
+
+  return [];
+}
+
 // ── Hook ────────────────────────────────────────────────────────────────────
 
 /**
@@ -192,9 +207,22 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   // Publish state when id is set
   const publish = usePublish(config.id);
 
+  const initialRows =
+    isFromRef(config.data) || Array.isArray(resolvedData)
+      ? getInitialRows(resolvedData)
+      : [];
+
   // State
-  const [allRows, setAllRows] = useState<Record<string, unknown>[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [allRows, setAllRows] =
+    useState<Record<string, unknown>[]>(initialRows);
+  const [isLoading, setIsLoading] = useState(
+    initialRows.length === 0 &&
+      !(
+        isFromRef(config.data) &&
+        resolvedData != null &&
+        typeof resolvedData !== "string"
+      ),
+  );
   const [error, setError] = useState<Error | null>(null);
   const [sort, setSort] = useState<{
     column: string;

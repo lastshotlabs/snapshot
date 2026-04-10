@@ -230,6 +230,11 @@ Headless hook: `useNav` returns resolved nav items with active state and role fi
 
 ## Data Components
 
+Snapshot's entity-driven SSR renderer also targets this component set. Bunshot entity pages
+map onto `data-table`, `detail-card`, `form`, `stat-card`, `chart`, `feed`, `filter-bar`,
+`row`, `heading`, and `button` configs before they are rendered, so these same contracts
+power both hand-authored manifests and server-generated entity pages.
+
 ### stat-card
 
 Displays a single metric with optional trend indicator. Fetches its own data.

@@ -80,6 +80,22 @@ function initializeRegistryState(
   }
 }
 
+function primeRegistryState(
+  registry: AtomRegistry,
+  state: StateConfigMap,
+): void {
+  for (const [id, config] of Object.entries(state)) {
+    if (registry.get(id)) {
+      continue;
+    }
+
+    const atom = registry.register(id);
+    if (config.default !== undefined) {
+      registry.store.set(atom, config.default);
+    }
+  }
+}
+
 export function AppStateProvider({
   state,
   resources,
@@ -92,6 +108,7 @@ export function AppStateProvider({
   }
 
   const scopedState = useMemo(() => filterStateByScope(state, "app"), [state]);
+  primeRegistryState(registryRef.current, scopedState);
 
   useEffect(() => {
     initializeRegistryState(registryRef.current!, scopedState, resources, api);
@@ -125,6 +142,7 @@ export function RouteStateProvider({
     () => filterStateByScope(state, "route"),
     [state],
   );
+  primeRegistryState(registryRef.current, scopedState);
 
   useEffect(() => {
     initializeRegistryState(registryRef.current!, scopedState, resources, api);
