@@ -2,6 +2,23 @@
 import { QueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import React from "react";
+import { SnapshotApiContext } from "../ui/actions/executor";
+import { AppContextProvider } from "../ui/context/providers";
+import {
+  AppShellWrapper,
+  isCustomPage,
+  mapNavComponentConfig,
+  mapPageDeclaration,
+  type CustomPageDeclaration,
+  type PageLoaderResult,
+} from "../ui/entity-pages";
+import { compileManifest } from "../ui/manifest/compiler";
+import { PageRenderer } from "../ui/manifest/renderer";
+import type { ManifestConfig } from "../ui/manifest/types";
+import {
+  ManifestRuntimeProvider,
+  RouteRuntimeProvider,
+} from "../ui/manifest/runtime";
 import { buildHeadTags } from "./head";
 import { renderPage } from "./render";
 import type {
@@ -264,6 +281,70 @@ function buildSpaShell(shell: SsrShellShape): string {
   ].join("\n");
 }
 
+function buildEntityPageMatch(
+  filePath: string,
+  path: string,
+): ServerRouteMatchShape {
+  const pathname = path.startsWith("/") ? path : `/${path}`;
+
+  return {
+    filePath,
+    metaFilePath: null,
+    params: Object.freeze({}),
+    query: Object.freeze({}),
+    url: new URL(`http://snapshot.local${pathname}`),
+    loadingFilePath: null,
+    errorFilePath: null,
+    notFoundFilePath: null,
+    forbiddenFilePath: null,
+    unauthorizedFilePath: null,
+    templateFilePath: null,
+  };
+}
+
+function buildEntityHeadTags(
+  shell: SsrShellShape,
+  result: PageLoaderResult,
+): string {
+  const entityHeadTags = buildHeadTags(
+    result.meta as Parameters<typeof buildHeadTags>[0],
+  );
+  return [shell.headTags, entityHeadTags].filter(Boolean).join("");
+}
+
+function applyEntityPageMetadata(
+  shell: SsrShellShape,
+  result: PageLoaderResult,
+): void {
+  if (!shell._isr) {
+    return;
+  }
+
+  shell._isr.revalidate = result.revalidate;
+  shell._isr.tags = result.tags;
+}
+
+function withEntityPageHeaders(
+  response: Response,
+  result: PageLoaderResult,
+): Response {
+  const headers = new Headers(response.headers);
+
+  if (result.revalidate !== undefined) {
+    headers.set("x-bunshot-revalidate", String(result.revalidate));
+  }
+
+  if (result.tags && result.tags.length > 0) {
+    headers.set("x-bunshot-tags", result.tags.join(","));
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
 /**
@@ -316,12 +397,34 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
     shell: SsrShellShape,
     bsCtx: unknown,
   ): Promise<Response>;
+  renderPage(
+    result: PageLoaderResult,
+    shell: SsrShellShape,
+    bsCtx: unknown,
+  ): Promise<Response>;
 } {
   const frozen = Object.freeze({ ...config });
   const timeoutMs = frozen.renderTimeoutMs ?? 5000;
   const rscOptions = frozen.rscOptions;
 
-  return {
+  const reactRenderer: {
+    resolve(url: URL, bsCtx: unknown): Promise<ServerRouteMatchShape | null>;
+    render(
+      match: ServerRouteMatchShape,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response>;
+    renderChain(
+      chain: SsrRouteChainShape,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response>;
+    renderPage(
+      result: PageLoaderResult,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response>;
+  } = {
     /**
      * Resolve a URL to a server route match.
      *
@@ -1048,5 +1151,128 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
 
       return response;
     },
+
+    /**
+     * Render an entity-driven bunshot page by mapping it onto Snapshot's
+     * manifest component system.
+     *
+     * Custom handler-ref pages are delegated back to the standard route render
+     * path using the handler module path as the route file.
+     */
+    async renderPage(
+      result: PageLoaderResult,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response> {
+      if (isCustomPage(result.declaration.declaration)) {
+        const handlerRef = (result.declaration.declaration as CustomPageDeclaration)
+          .handler;
+        const routeMatch = buildEntityPageMatch(
+          handlerRef.handler,
+          result.declaration.declaration.path,
+        );
+        return reactRenderer.render(routeMatch, shell, bsCtx);
+      }
+
+      const mapped = mapPageDeclaration(result);
+      const routeId = result.declaration.key;
+      const rawManifest: ManifestConfig = {
+        routes: [
+          {
+            id: routeId,
+            path: result.declaration.declaration.path,
+            ...mapped.page,
+          },
+        ],
+        resources: mapped.resources,
+        state: mapped.state,
+        overlays: mapped.overlays,
+      };
+      const compiled = compileManifest(rawManifest);
+      const currentRoute = compiled.routes[0];
+
+      if (!currentRoute) {
+        throw new Error(
+          `[snapshot-ssr] Failed to compile entity page "${routeId}".`,
+        );
+      }
+
+      applyEntityPageMetadata(shell, result);
+
+      const api = frozen.snapshot?.api;
+      const pageElement = React.createElement(PageRenderer, {
+        page: currentRoute.page,
+        routeId: currentRoute.id,
+        state: compiled.state,
+        resources: compiled.resources,
+        api,
+      });
+      const navConfig = result.navigation
+        ? mapNavComponentConfig(result.navigation)
+        : undefined;
+      const wrappedPage =
+        result.navigation && navConfig
+          ? React.createElement(
+              AppShellWrapper,
+              {
+                shell: result.navigation.shell,
+                navConfig,
+                pathname: currentRoute.path,
+                children: pageElement,
+              },
+            )
+          : pageElement;
+      const element = React.createElement(
+        SnapshotApiContext.Provider,
+        { value: api ?? null },
+        React.createElement(
+          ManifestRuntimeProvider,
+          { manifest: compiled, api, children: React.createElement(
+            AppContextProvider,
+            {
+              globals: compiled.state,
+              resources: compiled.resources,
+              api,
+              children: React.createElement(
+                RouteRuntimeProvider,
+                {
+                  value: {
+                    currentPath: currentRoute.path,
+                    currentRoute,
+                    params: {},
+                    navigate: () => {},
+                    isPreloading: false,
+                  },
+                  children: wrappedPage,
+                },
+              ),
+            },
+          ) },
+        ),
+      );
+
+      const requestContext: SsrRequestContext = {
+        queryClient: new QueryClient({
+          defaultOptions: {
+            queries: { staleTime: Infinity, retry: false },
+          },
+        }),
+        match: buildEntityPageMatch(`__page:${routeId}`, currentRoute.path),
+      };
+      const response = await renderPage(
+        element,
+        requestContext,
+        {
+          ...shell,
+          headTags: buildEntityHeadTags(shell, result),
+        },
+        timeoutMs,
+        rscOptions,
+      );
+
+      return withEntityPageHeaders(response, result);
+    },
   };
+
+  return reactRenderer;
 }

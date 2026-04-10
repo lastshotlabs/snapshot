@@ -3,10 +3,28 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import React from "react";
 import { QueryClient } from "@tanstack/react-query";
+import { SnapshotApiContext } from "../ui/actions/executor";
+import { AppContextProvider } from "../ui/context/providers";
+import {
+  AppShellWrapper,
+  isCustomPage,
+  mapAppConfig,
+  mapNavigation,
+  mapPageDeclaration,
+  type PageLoaderResult,
+} from "../ui/entity-pages";
 import { compileManifest } from "../ui/manifest/compiler";
 import { PageRenderer } from "../ui/manifest/renderer";
-import type { CompiledRoute } from "../ui/manifest/types";
-import { escapeHtml } from "./head";
+import type {
+  CompiledManifest,
+  CompiledRoute,
+  ManifestConfig,
+} from "../ui/manifest/types";
+import {
+  ManifestRuntimeProvider,
+  RouteRuntimeProvider,
+} from "../ui/manifest/runtime";
+import { buildHeadTags, escapeHtml } from "./head";
 import { renderPage } from "./render";
 import type { RscManifest } from "./rsc";
 import type {
@@ -53,6 +71,71 @@ interface ManifestRouteEntry {
   route: CompiledRoute;
   pattern: RegExp;
   paramNames: string[];
+}
+
+function buildEntityHeadTags(
+  shell: SsrShellShape,
+  result: PageLoaderResult,
+): string {
+  const entityHeadTags = buildHeadTags(
+    result.meta as Parameters<typeof buildHeadTags>[0],
+  );
+  return [shell.headTags, entityHeadTags].filter(Boolean).join("");
+}
+
+function applyEntityPageMetadata(
+  shell: SsrShellShape,
+  result: PageLoaderResult,
+): void {
+  if (!shell._isr) {
+    return;
+  }
+
+  shell._isr.revalidate = result.revalidate;
+  shell._isr.tags = result.tags;
+}
+
+function withEntityPageHeaders(
+  response: Response,
+  result: PageLoaderResult,
+): Response {
+  const headers = new Headers(response.headers);
+
+  if (result.revalidate !== undefined) {
+    headers.set("x-bunshot-revalidate", String(result.revalidate));
+  }
+
+  if (result.tags && result.tags.length > 0) {
+    headers.set("x-bunshot-tags", result.tags.join(","));
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+function buildManifestNavConfig(
+  manifest: CompiledManifest,
+): Parameters<typeof AppShellWrapper>[0]["navConfig"] {
+  if (!manifest.navigation) {
+    return undefined;
+  }
+
+  return {
+    type: "nav",
+    items: manifest.navigation.items,
+    collapsible: true,
+    ...(manifest.app.title
+      ? {
+          logo: {
+            text: manifest.app.title,
+            path: manifest.app.home ?? manifest.firstRoute?.path ?? "/",
+          },
+        }
+      : {}),
+  };
 }
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
@@ -113,6 +196,11 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
     shell: SsrShellShape,
     bsCtx: unknown,
   ): Promise<Response>;
+  renderPage(
+    result: PageLoaderResult,
+    shell: SsrShellShape,
+    bsCtx: unknown,
+  ): Promise<Response>;
 } {
   const frozen = Object.freeze({ ...rawConfig });
   let rscOptions = frozen.rscOptions;
@@ -152,6 +240,11 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
     resolve(url: URL, bsCtx: unknown): Promise<SsrRouteMatchShape | null>;
     render(match: SsrRouteMatchShape, shell: SsrShellShape, bsCtx: unknown): Promise<Response>;
     renderChain(chain: SsrRouteChainShape, shell: SsrShellShape, bsCtx: unknown): Promise<Response>;
+    renderPage(
+      result: PageLoaderResult,
+      shell: SsrShellShape,
+      bsCtx: unknown,
+    ): Promise<Response>;
   } = {
     /**
      * Resolve a URL to a manifest route match.
@@ -354,6 +447,148 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
       }
 
       return response;
+    },
+
+    /**
+     * Render an entity-driven page by augmenting the existing manifest with a
+     * synthetic route for the resolved page declaration.
+     */
+    async renderPage(
+      result: PageLoaderResult,
+      shell: SsrShellShape,
+      _bsCtx: unknown,
+    ): Promise<Response> {
+      if (isCustomPage(result.declaration.declaration)) {
+        throw new Error(
+          "Custom page declarations are not supported by createManifestRenderer().",
+        );
+      }
+
+      const mapped = mapPageDeclaration(result);
+      const routeId = `entity-page:${result.declaration.key}`;
+      const augmentedManifest: ManifestConfig = {
+        ...frozen.manifest,
+        ...(!frozen.manifest.app && result.navigation
+          ? { app: mapAppConfig(result.navigation) }
+          : {}),
+        ...(!frozen.manifest.navigation && result.navigation
+          ? { navigation: mapNavigation(result.navigation) }
+          : {}),
+        routes: [
+          ...frozen.manifest.routes,
+          {
+            id: routeId,
+            path: result.declaration.declaration.path,
+            ...mapped.page,
+          },
+        ],
+        resources: {
+          ...(frozen.manifest.resources ?? {}),
+          ...mapped.resources,
+        },
+        state: {
+          ...(frozen.manifest.state ?? {}),
+          ...mapped.state,
+        },
+        overlays: {
+          ...(frozen.manifest.overlays ?? {}),
+          ...mapped.overlays,
+        },
+      };
+      const compiledWithEntity = compileManifest(augmentedManifest);
+      const currentRoute = compiledWithEntity.routes.find((route) => route.id === routeId);
+
+      if (!currentRoute) {
+        throw new Error(
+          `[snapshot-ssr] Failed to compile entity page "${routeId}".`,
+        );
+      }
+
+      applyEntityPageMetadata(shell, result);
+
+      const pageElement = React.createElement(PageRenderer, {
+        page: currentRoute.page,
+        routeId: currentRoute.id,
+        state: compiledWithEntity.state,
+        resources: compiledWithEntity.resources,
+      });
+      const navConfig = buildManifestNavConfig(compiledWithEntity);
+      const shellMode =
+        compiledWithEntity.navigation?.mode ??
+        (compiledWithEntity.app.shell === "top-nav"
+          ? "top-nav"
+          : compiledWithEntity.app.shell === "sidebar"
+            ? "sidebar"
+            : "none");
+      const wrappedPage =
+        navConfig && shellMode !== "none"
+          ? React.createElement(
+              AppShellWrapper,
+              {
+                shell: shellMode,
+                navConfig,
+                pathname: currentRoute.path,
+                children: pageElement,
+              },
+            )
+          : pageElement;
+      const element = React.createElement(
+        SnapshotApiContext.Provider,
+        { value: null },
+        React.createElement(
+          ManifestRuntimeProvider,
+          {
+            manifest: compiledWithEntity,
+            children: React.createElement(
+              AppContextProvider,
+              {
+                globals: compiledWithEntity.state,
+                resources: compiledWithEntity.resources,
+                children: React.createElement(
+                  RouteRuntimeProvider,
+                  {
+                    value: {
+                      currentPath: currentRoute.path,
+                      currentRoute,
+                      params: {},
+                      navigate: () => {},
+                      isPreloading: false,
+                    },
+                    children: wrappedPage,
+                  },
+                ),
+              },
+            ),
+          },
+        ),
+      );
+
+      const requestContext: SsrRequestContext = {
+        queryClient: new QueryClient({
+          defaultOptions: {
+            queries: { staleTime: Infinity, retry: false },
+          },
+        }),
+        match: {
+          filePath: `manifest:${routeId}`,
+          metaFilePath: null,
+          params: {},
+          query: {},
+          url: new URL(`http://snapshot.local${currentRoute.path}`),
+        },
+      };
+      const response = await renderPage(
+        element,
+        requestContext,
+        {
+          ...shell,
+          headTags: buildEntityHeadTags(shell, result),
+        },
+        undefined,
+        rscOptions,
+      );
+
+      return withEntityPageHeaders(response, result);
     },
   };
 
