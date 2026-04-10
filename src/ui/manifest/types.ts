@@ -1,8 +1,11 @@
 import type { z } from "zod";
 import type {
+  analyticsConfigSchema,
   appConfigSchema,
+  authProviderSchema,
   manifestConfigSchema,
   authScreenConfigSchema,
+  pushConfigSchema,
   realtimeConfigSchema,
   realtimeSseEndpointSchema,
   realtimeWsSchema,
@@ -15,6 +18,7 @@ import type {
   headingConfigSchema,
   buttonConfigSchema,
   selectConfigSchema,
+  toastConfigSchema,
 } from "./schema";
 import type { FromRef } from "../context/types";
 import type { Responsive, ThemeConfig } from "../tokens/types";
@@ -24,6 +28,14 @@ import type { WorkflowMap } from "../workflows/types";
 export type ManifestConfig = z.infer<typeof manifestConfigSchema>;
 /** Resolved runtime view of `appConfigSchema`. */
 export type AppConfig = Resolved<z.infer<typeof appConfigSchema>>;
+/** Resolved runtime view of `toastConfigSchema`. */
+export type ToastConfig = z.infer<typeof toastConfigSchema>;
+/** Resolved runtime view of `analyticsConfigSchema`. */
+export type AnalyticsConfig = Resolved<z.infer<typeof analyticsConfigSchema>>;
+/** Resolved runtime view of `pushConfigSchema`. */
+export type PushConfig = Resolved<z.infer<typeof pushConfigSchema>>;
+/** Resolved runtime view of `authProviderSchema`. */
+export type AuthProviderConfig = Resolved<z.infer<typeof authProviderSchema>>;
 /** Resolved runtime view of `authScreenConfigSchema`. */
 export type AuthScreenConfig = Resolved<z.infer<typeof authScreenConfigSchema>>;
 /** Resolved runtime view of `realtimeWsSchema`. */
@@ -125,6 +137,9 @@ export interface CompiledRoute {
 export interface CompiledManifest {
   raw: ManifestConfig;
   app: AppConfig;
+  toast?: ToastConfig;
+  analytics?: AnalyticsConfig;
+  push?: PushConfig;
   theme?: ThemeConfig;
   state?: StateConfig;
   resources?: ResourceConfigMap;

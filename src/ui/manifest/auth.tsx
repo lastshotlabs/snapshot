@@ -23,6 +23,7 @@ const AUTH_QUERY_KEY = ["auth", "me"] as const;
 const MANIFEST_AUTH_MFA_STATE_KEY = "__manifestAuth.pendingMfaChallenge";
 
 interface AuthProviderConfig {
+  name: string;
   provider: OAuthProvider;
   label?: string;
   description?: string;
@@ -130,17 +131,44 @@ function resolveConfiguredLinks(
     .filter((value): value is { label: string; path: string } => value != null);
 }
 
-function normalizeProviderConfig(
+function titleCase(value: string): string {
+  if (!value) {
+    return value;
+  }
+
+  return value[0]!.toUpperCase() + value.slice(1).replace(/[-_]/g, " ");
+}
+
+function resolveProviderTarget(
+  name: string,
   provider:
-    | OAuthProvider
     | {
-        provider: OAuthProvider;
+        type:
+          | "google"
+          | "github"
+          | "microsoft"
+          | "apple"
+          | "facebook"
+          | "discord"
+          | "custom";
+        name?: string;
         label?: string;
         description?: string;
         autoRedirect?: boolean;
-      },
-): AuthProviderConfig {
-  return typeof provider === "string" ? { provider } : provider;
+      }
+    | undefined,
+): AuthProviderConfig | null {
+  if (!provider) {
+    return null;
+  }
+
+  return {
+    name,
+    provider: name as OAuthProvider,
+    label: provider.label ?? `Continue with ${titleCase(name)}`,
+    description: provider.description,
+    autoRedirect: provider.autoRedirect,
+  };
 }
 
 function normalizePasskeyConfig(
@@ -239,14 +267,19 @@ function resolveScreenProviders(
   manifest: CompiledManifest,
   screen: AuthScreen,
 ): AuthProviderConfig[] {
-  const providers = getAuthScreenOptions(manifest, screen)?.providers;
-  if (providers === false) {
+  const declaredProviders = manifest.auth?.providers ?? {};
+  const configuredProviderRefs = getAuthScreenOptions(manifest, screen)?.providers;
+  const providerRefs =
+    configuredProviderRefs ?? Object.keys(declaredProviders);
+  if (providerRefs.length === 0) {
     return [];
   }
 
-  return (providers ?? manifest.auth?.providers ?? []).map(
-    normalizeProviderConfig,
-  );
+  return providerRefs
+    .map((providerName) =>
+      resolveProviderTarget(providerName, declaredProviders[providerName]),
+    )
+    .filter((provider): provider is AuthProviderConfig => provider !== null);
 }
 
 function resolveProviderMode(
@@ -745,7 +778,7 @@ function OAuthButtons({
       <div style={{ display: "grid", gap: "0.625rem" }}>
         {providers.map((providerConfig) => (
           <SecondaryButton
-            key={providerConfig.provider}
+            key={providerConfig.name}
             onClick={() => {
               redirectToAuthProvider(providerConfig.provider, getOAuthUrl);
             }}

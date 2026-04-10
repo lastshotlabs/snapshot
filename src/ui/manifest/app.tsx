@@ -4,6 +4,7 @@
 
 import {
   Component,
+  Suspense,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -12,17 +13,27 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { ApiClient, getRegisteredClient, type ApiClientLike } from "../../api/client";
+import { mergeContract } from "../../auth/contract";
 import { createSnapshot } from "../../create-snapshot";
-import { SnapshotApiContext, useActionExecutor } from "../actions/executor";
+import {
+  SnapshotApiContext,
+  ToastContainer,
+  useActionExecutor,
+} from "../actions/executor";
 import {
   AppContextProvider,
   useResolveFrom,
   useSubscribe,
 } from "../context/index";
+import { Layout } from "../components/layout/layout";
 import { Nav } from "../components/layout/nav";
 import { DrawerComponent } from "../components/overlay/drawer";
 import { ModalComponent } from "../components/overlay/modal";
-import { useSetStateValue } from "../state";
+import { useSetStateValue, useStateValue } from "../state";
+import { resolveDetectedLocale, resolveI18nRefs } from "../i18n/resolve";
+import { evaluatePolicy } from "../policies/evaluate";
+import type { PolicyExpr } from "../policies/types";
 import { resolveTokens } from "../tokens/resolve";
 import {
   createManifestAuthRuntimeConfig,
@@ -36,7 +47,10 @@ import {
   RouteRuntimeProvider,
   useManifestResourceCache,
 } from "./runtime";
-import { resolveDocumentTitle, resolveRouteMatch } from "./router";
+import {
+  normalizePathname,
+  resolveRouteMatch,
+} from "./router";
 import { ComponentRenderer, PageRenderer } from "./renderer";
 import type { EndpointTarget } from "./resources";
 import type {
@@ -46,6 +60,8 @@ import type {
   ManifestAppProps,
   OverlayConfig,
 } from "./types";
+
+const EMPTY_OBJECT: Record<string, unknown> = {};
 
 /**
  * Inject or update a stylesheet in the document head.
@@ -67,7 +83,8 @@ export function injectStyleSheet(id: string, css: string): void {
 function evaluateRouteGuard(
   route: CompiledRoute | null,
   user: Record<string, unknown> | null,
-  resolvedCondition: unknown,
+  policies: Record<string, PolicyExpr>,
+  parentPolicies?: Record<string, PolicyExpr>,
 ): boolean {
   if (!route?.guard) {
     return true;
@@ -92,29 +109,13 @@ function evaluateRouteGuard(
     return false;
   }
 
-  if (route.guard.condition) {
-    const operator = route.guard.condition.operator ?? "truthy";
-    const left =
-      resolvedCondition && typeof resolvedCondition === "object"
-        ? (resolvedCondition as Record<string, unknown>)["left"]
-        : undefined;
-    const right =
-      resolvedCondition && typeof resolvedCondition === "object"
-        ? (resolvedCondition as Record<string, unknown>)["right"]
-        : undefined;
-
-    switch (operator) {
-      case "falsy":
-        return !left;
-      case "equals":
-        return left === right;
-      case "not-equals":
-        return left !== right;
-      case "exists":
-        return left !== undefined && left !== null;
-      default:
-        return Boolean(left);
-    }
+  if (route.guard.policy) {
+    const expression =
+      policies[route.guard.policy] ?? parentPolicies?.[route.guard.policy];
+    return evaluatePolicy(route.guard.policy, expression, {
+      policies,
+      parentPolicies,
+    });
   }
 
   return true;
@@ -145,6 +146,170 @@ function dispatchPopState(): void {
   }
 
   window.dispatchEvent(new Event("popstate"));
+}
+
+interface SubAppInheritConfig {
+  theme: boolean;
+  i18n: boolean;
+  policies: boolean;
+  state: boolean;
+}
+
+interface ResolvedSubAppMatch {
+  subManifest: CompiledManifest;
+  mountPath: string;
+  inherit: SubAppInheritConfig;
+}
+
+function normalizeSubAppInherit(
+  inherit?: Partial<SubAppInheritConfig>,
+): SubAppInheritConfig {
+  return {
+    theme: inherit?.theme ?? true,
+    i18n: inherit?.i18n ?? true,
+    policies: inherit?.policies ?? true,
+    state: inherit?.state ?? false,
+  };
+}
+
+function joinPathPrefix(prefix: string | undefined, path: string): string {
+  const normalizedPath = normalizePathname(path);
+  if (!prefix || prefix === "/") {
+    return normalizedPath;
+  }
+
+  const normalizedPrefix = normalizePathname(prefix);
+  if (normalizedPath === "/") {
+    return normalizedPrefix;
+  }
+
+  return normalizePathname(`${normalizedPrefix}${normalizedPath}`);
+}
+
+function matchesMountPath(currentPath: string, mountPath: string): boolean {
+  const normalizedCurrentPath = normalizePathname(currentPath);
+  const normalizedMountPath = normalizePathname(mountPath);
+  if (normalizedMountPath === "/") {
+    return true;
+  }
+
+  return (
+    normalizedCurrentPath === normalizedMountPath ||
+    normalizedCurrentPath.startsWith(`${normalizedMountPath}/`)
+  );
+}
+
+function stripMountPath(currentPath: string, mountPath: string): string {
+  const normalizedCurrentPath = normalizePathname(currentPath);
+  const normalizedMountPath = normalizePathname(mountPath);
+
+  if (normalizedMountPath === "/") {
+    return normalizedCurrentPath;
+  }
+
+  if (normalizedCurrentPath === normalizedMountPath) {
+    return "/";
+  }
+
+  if (!normalizedCurrentPath.startsWith(`${normalizedMountPath}/`)) {
+    return normalizedCurrentPath;
+  }
+
+  const stripped = normalizedCurrentPath.slice(normalizedMountPath.length);
+  return normalizePathname(stripped || "/");
+}
+
+function resolveSubAppMatch(
+  manifest: CompiledManifest,
+  currentPath: string,
+  prefix?: string,
+): ResolvedSubAppMatch | null {
+  const subApps = manifest.raw.subApps;
+  if (!subApps) {
+    return null;
+  }
+
+  let bestMatch: ResolvedSubAppMatch | null = null;
+  for (const subAppConfig of Object.values(subApps)) {
+    if (typeof subAppConfig.manifest === "string") {
+      continue;
+    }
+
+    const absoluteMountPath = joinPathPrefix(prefix, subAppConfig.mountPath);
+    if (!matchesMountPath(currentPath, absoluteMountPath)) {
+      continue;
+    }
+
+    const compiledSubManifest = compileManifest(subAppConfig.manifest);
+    const inherit = normalizeSubAppInherit(subAppConfig.inherit);
+    const nestedCurrentPath = stripMountPath(currentPath, absoluteMountPath);
+    const nestedMatch = resolveSubAppMatch(
+      compiledSubManifest,
+      nestedCurrentPath,
+      absoluteMountPath,
+    );
+    const candidate = nestedMatch ?? {
+      subManifest: compiledSubManifest,
+      mountPath: absoluteMountPath,
+      inherit,
+    };
+
+    if (
+      !bestMatch ||
+      candidate.mountPath.length > bestMatch.mountPath.length
+    ) {
+      bestMatch = candidate;
+    }
+  }
+
+  return bestMatch;
+}
+
+function buildManifestClientMap(
+  manifest: CompiledManifest,
+  snapshot: ReturnType<typeof createSnapshot>,
+): Record<string, ApiClientLike> {
+  const clients: Record<string, ApiClientLike> = {
+    main: snapshot.api,
+  };
+  const authMode = manifest.auth?.session?.mode ?? "cookie";
+
+  for (const [name, config] of Object.entries(manifest.raw.clients ?? {})) {
+    const apiUrl =
+      typeof config.apiUrl === "string"
+        ? config.apiUrl
+        : config.apiUrl.default;
+    if (!apiUrl) {
+      throw new Error(
+        `Manifest client "${name}" has an unresolved apiUrl. Use a literal string or provide a default for its env ref.`,
+      );
+    }
+
+    if (config.custom) {
+      const factory = getRegisteredClient(config.custom);
+      if (!factory) {
+        throw new Error(
+          `Manifest client "${name}" references unregistered custom client "${config.custom}". Register it with registerClient("${config.custom}", factory).`,
+        );
+      }
+      clients[name] = factory(apiUrl, snapshot.bootstrap);
+      continue;
+    }
+
+    const contractOverride =
+      config.contract && typeof config.contract === "object"
+        ? (config.contract as Parameters<typeof mergeContract>[1])
+        : undefined;
+    const client = new ApiClient({
+      apiUrl,
+      auth: authMode,
+      contract: mergeContract(apiUrl, contractOverride),
+    });
+    client.setStorage(snapshot.tokenStorage);
+    clients[name] = client;
+  }
+
+  return clients;
 }
 
 /**
@@ -235,6 +400,137 @@ function AppFallback({
       config={{ type: FALLBACK_COMPONENT_TYPES[name] } as ComponentConfig}
     />
   );
+}
+
+interface RouteLayoutSlotDeclaration {
+  name: string;
+  required?: boolean;
+  fallback?: ComponentConfig;
+}
+
+type RouteLayoutDeclaration =
+  | string
+  | {
+      type: string;
+      props?: Record<string, unknown>;
+      slots?: RouteLayoutSlotDeclaration[];
+    };
+
+type RouteSlotsDeclaration = Record<string, ComponentConfig[]>;
+
+const BUILT_IN_LAYOUT_TYPES = new Set([
+  "sidebar",
+  "top-nav",
+  "stacked",
+  "minimal",
+  "full-width",
+]);
+
+const SLOT_ENABLED_LAYOUT_TYPES = new Set(["sidebar", "top-nav", "stacked"]);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function getRawRouteRecord(
+  manifest: CompiledManifest,
+  routeId: string,
+): Record<string, unknown> | undefined {
+  const rawRoutes = isRecord(manifest.raw)
+    ? ((manifest.raw as Record<string, unknown>)["routes"] as unknown)
+    : undefined;
+  if (!Array.isArray(rawRoutes)) {
+    return undefined;
+  }
+
+  return rawRoutes.find((route) => {
+    if (!isRecord(route)) {
+      return false;
+    }
+
+    return route["id"] === routeId;
+  }) as Record<string, unknown> | undefined;
+}
+
+function readRouteLayouts(
+  manifest: CompiledManifest,
+  routeId: string,
+): RouteLayoutDeclaration[] {
+  const route = getRawRouteRecord(manifest, routeId);
+  const layouts = route?.["layouts"];
+  if (!Array.isArray(layouts) || layouts.length === 0) {
+    return [manifest.app.shell ?? "full-width"];
+  }
+
+  return layouts.filter(
+    (layout): layout is RouteLayoutDeclaration =>
+      typeof layout === "string" || isRecord(layout),
+  );
+}
+
+function readRouteSlots(
+  manifest: CompiledManifest,
+  routeId: string,
+): RouteSlotsDeclaration {
+  const route = getRawRouteRecord(manifest, routeId);
+  const slots = route?.["slots"];
+  if (!isRecord(slots)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(slots).map(([slotName, value]) => {
+      if (!Array.isArray(value)) {
+        return [slotName, []];
+      }
+
+      return [
+        slotName,
+        value.filter(
+          (item): item is ComponentConfig => isRecord(item) && "type" in item,
+        ),
+      ];
+    }),
+  );
+}
+
+function getLayoutType(layout: RouteLayoutDeclaration): string {
+  if (typeof layout === "string") {
+    return layout;
+  }
+
+  return layout.type;
+}
+
+function getLayoutProps(layout: RouteLayoutDeclaration): Record<string, unknown> {
+  if (typeof layout === "string") {
+    return {};
+  }
+
+  return layout.props ?? {};
+}
+
+function getLayoutSlots(
+  layout: RouteLayoutDeclaration,
+): RouteLayoutSlotDeclaration[] {
+  if (typeof layout === "string") {
+    return [];
+  }
+
+  return Array.isArray(layout.slots) ? layout.slots : [];
+}
+
+function getBuiltInLayoutSlots(type: string): RouteLayoutSlotDeclaration[] {
+  if (!SLOT_ENABLED_LAYOUT_TYPES.has(type)) {
+    return [];
+  }
+
+  return [
+    { name: "header" },
+    { name: "sidebar" },
+    { name: "main", required: true },
+    { name: "footer" },
+  ];
 }
 
 class ManifestErrorBoundary extends Component<
@@ -503,7 +799,6 @@ function AppShell({
   isPreloading: boolean;
   api: ReturnType<typeof createSnapshot>["api"];
 }) {
-  const shell = route.page.layout ?? manifest.app.shell ?? "full-width";
   const navConfig = manifest.navigation
     ? ({
         type: "nav",
@@ -513,82 +808,160 @@ function AppShell({
       } as const)
     : null;
 
-  const page = (
-    <main
-      style={{
-        flex: 1,
-        minWidth: 0,
-        overflow: "auto",
-      }}
-    >
-      {isPreloading ? (
-        <div data-snapshot-route-loading="" style={{ padding: "1rem" }}>
-          <AppFallback manifest={manifest} name="loading" api={api} />
-        </div>
-      ) : (
-        <PageRenderer
-          page={route.page}
-          routeId={currentPath}
-          state={manifest.state}
-          resources={manifest.resources}
-          api={api}
-        />
-      )}
-    </main>
+  const loadingFallback = (
+    <AppFallback manifest={manifest} name="loading" api={api} />
+  );
+  const routeSlots = readRouteSlots(manifest, route.id);
+  const layoutDeclarations = readRouteLayouts(manifest, route.id);
+  const slotLayout = layoutDeclarations.find((layout) =>
+    SLOT_ENABLED_LAYOUT_TYPES.has(getLayoutType(layout)),
+  );
+  if (Object.keys(routeSlots).length > 0) {
+    const layoutType = slotLayout
+      ? getLayoutType(slotLayout)
+      : getLayoutType(layoutDeclarations[0] ?? "full-width");
+    const declaredSlots = new Map<string, RouteLayoutSlotDeclaration>();
+    for (const slot of getBuiltInLayoutSlots(layoutType)) {
+      declaredSlots.set(slot.name, slot);
+    }
+    if (slotLayout) {
+      for (const slot of getLayoutSlots(slotLayout)) {
+        declaredSlots.set(slot.name, slot);
+      }
+    }
+    const availableSlots = [...declaredSlots.keys()];
+    for (const slotName of Object.keys(routeSlots)) {
+      if (!declaredSlots.has(slotName)) {
+        throw new Error(
+          `Layout "${layoutType}" does not declare slot "${slotName}". Available slots: ${availableSlots.join(", ")}.`,
+        );
+      }
+    }
+  }
+  const page = isPreloading ? (
+    <div data-snapshot-route-loading="" style={{ padding: "1rem" }}>
+      {loadingFallback}
+    </div>
+  ) : (
+    <PageRenderer
+      page={route.page}
+      routeId={currentPath}
+      state={manifest.state}
+      resources={manifest.resources}
+      api={api}
+    />
   );
 
-  if (!navConfig || shell === "minimal" || shell === "full-width") {
-    return page;
-  }
+  const renderSlot = (
+    layoutType: string,
+    declaration: RouteLayoutSlotDeclaration | undefined,
+    defaultContent?: ReactNode,
+  ): ReactNode => {
+    const routeSlotConfigs = routeSlots[declaration?.name ?? ""] ?? [];
+    const hasRouteContent = routeSlotConfigs.length > 0;
 
-  if (shell === "top-nav") {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-        }}
-      >
-        <div
-          style={{
-            borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
-          }}
-        >
-          <Nav
-            config={navConfig}
-            pathname={currentPath}
-            onNavigate={(path) => navigate(path)}
+    const content = hasRouteContent ? (
+      <>
+        {routeSlotConfigs.map((slotConfig, index) => (
+          <ComponentRenderer
+            key={`slot:${declaration?.name ?? "unknown"}:${index}`}
+            config={slotConfig}
           />
-        </div>
-        {page}
-      </div>
+        ))}
+      </>
+    ) : declaration?.fallback ? (
+      <ComponentRenderer config={declaration.fallback} />
+    ) : (
+      defaultContent ?? null
     );
-  }
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-      }}
-    >
-      <aside
-        style={{
-          width: "280px",
-          borderRight: "1px solid var(--sn-color-border, #e5e7eb)",
-          flexShrink: 0,
-        }}
+    if (!content) {
+      if (declaration?.required) {
+        throw new Error(
+          `Layout "${layoutType}" requires slot "${declaration.name}" but no content was provided.`,
+        );
+      }
+      return null;
+    }
+
+    const suspenseFallback = declaration?.fallback ? (
+      <ComponentRenderer config={declaration.fallback} />
+    ) : (
+      loadingFallback
+    );
+
+    return (
+      <Suspense
+        key={`slot-boundary:${layoutType}:${declaration?.name ?? "main"}`}
+        fallback={suspenseFallback}
       >
+        {content}
+      </Suspense>
+    );
+  };
+
+  return layoutDeclarations.reduceRight<ReactNode>((children, layout, index) => {
+    const layoutType = getLayoutType(layout);
+    if (!BUILT_IN_LAYOUT_TYPES.has(layoutType)) {
+      return children;
+    }
+
+    const declaredSlots = new Map<string, RouteLayoutSlotDeclaration>();
+    for (const slot of getBuiltInLayoutSlots(layoutType)) {
+      declaredSlots.set(slot.name, slot);
+    }
+    for (const slot of getLayoutSlots(layout)) {
+      declaredSlots.set(slot.name, slot);
+    }
+
+    const slotContent = SLOT_ENABLED_LAYOUT_TYPES.has(layoutType)
+      ? {
+          header: renderSlot(
+            layoutType,
+            declaredSlots.get("header") ?? { name: "header" },
+          ),
+          sidebar: renderSlot(
+            layoutType,
+            declaredSlots.get("sidebar") ?? { name: "sidebar" },
+          ),
+          main: renderSlot(
+            layoutType,
+            declaredSlots.get("main") ?? { name: "main", required: true },
+            children,
+          ),
+          footer: renderSlot(
+            layoutType,
+            declaredSlots.get("footer") ?? { name: "footer" },
+          ),
+        }
+      : undefined;
+
+    const navNode =
+      navConfig && (layoutType === "sidebar" || layoutType === "top-nav") ? (
         <Nav
           config={navConfig}
           pathname={currentPath}
           onNavigate={(path) => navigate(path)}
         />
-      </aside>
-      {page}
-    </div>
-  );
+      ) : undefined;
+
+    return (
+      <Layout
+        key={`layout:${layoutType}:${index}`}
+        config={
+          {
+            type: "layout",
+            variant: layoutType,
+            ...getLayoutProps(layout),
+          } as Parameters<typeof Layout>[0]["config"]
+        }
+        nav={navNode}
+        slots={slotContent}
+      >
+        {children}
+      </Layout>
+    );
+  }, page);
 }
 
 interface ManifestRouterProps {
@@ -596,6 +969,10 @@ interface ManifestRouterProps {
   api: ReturnType<typeof createSnapshot>["api"];
   snapshot: ReturnType<typeof createSnapshot>;
   authRuntimeConfig: ReturnType<typeof createManifestAuthRuntimeConfig>;
+  runtimeClients: Record<string, ApiClientLike>;
+  basePath?: string;
+  parentTheme?: CompiledManifest["theme"];
+  parentPolicies?: Record<string, PolicyExpr>;
 }
 
 function ManifestRouter({
@@ -603,6 +980,10 @@ function ManifestRouter({
   api,
   snapshot,
   authRuntimeConfig,
+  runtimeClients,
+  basePath,
+  parentTheme,
+  parentPolicies,
 }: ManifestRouterProps) {
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window === "undefined") return "/";
@@ -634,6 +1015,37 @@ function ManifestRouter({
   const authLoading = manifest.auth
     ? Boolean(authState?.isLoading ?? true)
     : false;
+  const localeStateValue = useStateValue("locale", { scope: "auto" });
+  const setLocaleState = useSetStateValue("locale", { scope: "auto" });
+  const [navigatorLocale, setNavigatorLocale] = useState<string | undefined>(
+    undefined,
+  );
+
+  const policyDefinitions = (manifest.raw.policies ??
+    EMPTY_OBJECT) as Record<string, unknown>;
+  const resolvedPolicies = useResolveFrom(policyDefinitions) as Record<
+    string,
+    unknown
+  >;
+  const policyMap = resolvedPolicies as Record<string, PolicyExpr>;
+  const localeFromState =
+    typeof localeStateValue === "string" ? localeStateValue : undefined;
+  const activeLocale = useMemo(
+    () =>
+      resolveDetectedLocale(manifest.raw.i18n, {
+        stateLocale: localeFromState,
+        navigatorLanguage: navigatorLocale,
+      }) ?? manifest.raw.i18n?.default,
+    [localeFromState, manifest.raw.i18n, navigatorLocale],
+  );
+  const localizedManifest = useMemo(
+    () =>
+      resolveI18nRefs(manifest, {
+        locale: activeLocale,
+        i18n: manifest.raw.i18n,
+      }),
+    [activeLocale, manifest],
+  );
 
   const navigate = useCallback(
     (to: string, options?: { replace?: boolean }) => {
@@ -641,7 +1053,8 @@ function ManifestRouter({
         window.location.origin && window.location.origin !== "null"
           ? window.location.origin
           : "http://localhost";
-      const url = new URL(to, origin);
+      const nextPath = joinPathPrefix(basePath, to);
+      const url = new URL(nextPath, origin);
       const nextLocation = `${url.pathname}${url.search}${url.hash}`;
       if (options?.replace) {
         window.history.replaceState({}, "", nextLocation);
@@ -651,7 +1064,7 @@ function ManifestRouter({
       setCurrentPath(url.pathname);
       dispatchPopState();
     },
-    [],
+    [basePath],
   );
 
   useEffect(() => {
@@ -681,13 +1094,52 @@ function ManifestRouter({
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof navigator === "undefined") {
+      return;
+    }
+
+    setNavigatorLocale(navigator.language);
+  }, []);
+
+  useEffect(() => {
+    if (!manifest.raw.i18n?.detect?.includes("state") || !activeLocale) {
+      return;
+    }
+
+    if (localeFromState !== activeLocale) {
+      setLocaleState(activeLocale);
+    }
+  }, [activeLocale, localeFromState, manifest.raw.i18n?.detect, setLocaleState]);
+
+  const scopedCurrentPath = useMemo(
+    () => stripMountPath(currentPath, basePath ?? "/"),
+    [basePath, currentPath],
+  );
+  const subAppMatch = useMemo(
+    () => resolveSubAppMatch(localizedManifest, currentPath, basePath),
+    [basePath, currentPath, localizedManifest],
+  );
   const { route, params } = useMemo(
-    () => resolveRouteMatch(manifest, currentPath),
-    [currentPath, manifest],
+    () =>
+      subAppMatch
+        ? { route: null, params: {} as Record<string, string> }
+        : resolveRouteMatch(localizedManifest, scopedCurrentPath),
+    [localizedManifest, scopedCurrentPath, subAppMatch],
   );
   const authScreen = useMemo(
-    () => resolveAuthScreen(manifest, route),
-    [manifest, route],
+    () => resolveAuthScreen(localizedManifest, route),
+    [localizedManifest, route],
+  );
+  const subAppClients = useMemo(
+    () =>
+      subAppMatch
+        ? {
+            ...runtimeClients,
+            ...buildManifestClientMap(subAppMatch.subManifest, snapshot),
+          }
+        : runtimeClients,
+    [runtimeClients, snapshot, subAppMatch],
   );
 
   useEffect(() => {
@@ -695,25 +1147,54 @@ function ManifestRouter({
       return;
     }
 
-    const nextTitle = resolveDocumentTitle(
-      manifest,
-      route,
-      currentPath,
-      params,
-    );
+    const appTitle =
+      typeof localizedManifest.app.title === "string"
+        ? localizedManifest.app.title.trim()
+        : "";
+    const routeTitle =
+      route && typeof route.page.title === "string"
+        ? route.page.title.trim()
+        : "";
+    const interpolatedRouteTitle =
+      routeTitle && route
+        ? routeTitle.replace(/\{([^}]+)\}/g, (match, key: string) => {
+            const value = (params as Record<string, unknown>)[key];
+            return value == null ? match : String(value);
+          })
+        : "";
+    const nextTitle =
+      interpolatedRouteTitle && appTitle
+        ? `${interpolatedRouteTitle} | ${appTitle}`
+        : interpolatedRouteTitle || appTitle;
     if (nextTitle) {
       document.title = nextTitle;
     }
-  }, [currentPath, manifest, params, route]);
+  }, [localizedManifest.app.title, params, route]);
 
   useEffect(() => {
     setRuntimeError(null);
   }, [currentPath, route?.id]);
 
-  const resolvedGuard = useResolveFrom({
-    condition: route?.guard?.condition ?? null,
-  }).condition;
-  const routeAllowed = evaluateRouteGuard(route, user, resolvedGuard);
+  useEffect(() => {
+    if (!subAppMatch?.subManifest.theme) {
+      return;
+    }
+
+    injectStyleSheet("snapshot-tokens", resolveTokens(subAppMatch.subManifest.theme));
+    return () => {
+      const fallbackTheme = parentTheme ?? manifest.theme;
+      if (fallbackTheme) {
+        injectStyleSheet("snapshot-tokens", resolveTokens(fallbackTheme));
+      }
+    };
+  }, [manifest.theme, parentTheme, subAppMatch]);
+
+  const routeAllowed = evaluateRouteGuard(
+    route,
+    user,
+    policyMap,
+    parentPolicies,
+  );
 
   useEffect(() => {
     if (!route || routeAllowed) {
@@ -727,10 +1208,10 @@ function ManifestRouter({
     const baseFallback =
       route.guard?.redirectTo ??
       (route.guard?.authenticated
-        ? getAuthScreenPath(manifest, "login")
+        ? getAuthScreenPath(localizedManifest, "login")
         : undefined) ??
-      manifest.app.home ??
-      manifest.firstRoute?.path ??
+      localizedManifest.app.home ??
+      localizedManifest.firstRoute?.path ??
       "/";
     const fallback =
       route.guard?.authenticated && !route.guard?.redirectTo
@@ -739,18 +1220,18 @@ function ManifestRouter({
             `${window.location.pathname}${window.location.search}`,
           )
         : baseFallback;
-    if (fallback !== currentPath) {
+    if (fallback !== scopedCurrentPath) {
       navigate(fallback, { replace: true });
     }
   }, [
     authLoading,
-    currentPath,
-    manifest,
-    manifest.app.home,
-    manifest.firstRoute?.path,
+    localizedManifest,
+    localizedManifest.app.home,
+    localizedManifest.firstRoute?.path,
     navigate,
     route,
     routeAllowed,
+    scopedCurrentPath,
   ]);
 
   useEffect(() => {
@@ -764,7 +1245,7 @@ function ManifestRouter({
       const previousMatch = previousMatchRef.current;
       if (
         previousMatch &&
-        (previousMatch.currentPath !== currentPath ||
+        (previousMatch.currentPath !== scopedCurrentPath ||
           previousMatch.route?.id !== route.id)
       ) {
         applyRouteResourceInvalidations(
@@ -802,7 +1283,7 @@ function ManifestRouter({
 
       previousMatchRef.current = {
         route,
-        currentPath,
+        currentPath: scopedCurrentPath,
         params,
       };
 
@@ -843,7 +1324,7 @@ function ManifestRouter({
             {
               route: {
                 id: route.id,
-                path: currentPath,
+                path: scopedCurrentPath,
                 pattern: route.path,
                 params,
               },
@@ -854,7 +1335,7 @@ function ManifestRouter({
           await execute(route.enter as never, {
             route: {
               id: route.id,
-              path: currentPath,
+              path: scopedCurrentPath,
               pattern: route.path,
               params,
             },
@@ -877,24 +1358,75 @@ function ManifestRouter({
     return () => {
       cancelled = true;
     };
-  }, [currentPath, execute, params, resourceCache, route, routeAllowed]);
+  }, [execute, params, resourceCache, route, routeAllowed, scopedCurrentPath]);
+
+  if (subAppMatch) {
+    if (typeof window === "undefined") {
+      return (
+        <Suspense
+          fallback={
+            <AppFallback manifest={localizedManifest} name="loading" api={api} />
+          }
+        >
+          <AppFallback manifest={localizedManifest} name="loading" api={api} />
+        </Suspense>
+      );
+    }
+
+    if (!subAppClients) {
+      return null;
+    }
+
+    const subAppTree = (
+      <ManifestRuntimeProvider
+        manifest={subAppMatch.subManifest}
+        api={api}
+        clients={subAppClients}
+      >
+        <ManifestRouter
+          manifest={subAppMatch.subManifest}
+          api={api}
+          snapshot={snapshot}
+          authRuntimeConfig={authRuntimeConfig}
+          runtimeClients={subAppClients}
+          basePath={subAppMatch.mountPath}
+          parentTheme={localizedManifest.theme ?? parentTheme}
+          parentPolicies={policyMap}
+        />
+      </ManifestRuntimeProvider>
+    );
+
+    if (!subAppMatch.inherit.state) {
+      return (
+        <AppContextProvider
+          globals={subAppMatch.subManifest.state}
+          resources={subAppMatch.subManifest.resources}
+          api={api}
+        >
+          {subAppTree}
+        </AppContextProvider>
+      );
+    }
+
+    return subAppTree;
+  }
 
   if (!route) {
-    return <AppFallback manifest={manifest} name="notFound" api={api} />;
+    return <AppFallback manifest={localizedManifest} name="notFound" api={api} />;
   }
 
   if (runtimeError) {
-    return <AppFallback manifest={manifest} name="error" api={api} />;
+    return <AppFallback manifest={localizedManifest} name="error" api={api} />;
   }
 
   if (isOffline) {
-    return <AppFallback manifest={manifest} name="offline" api={api} />;
+    return <AppFallback manifest={localizedManifest} name="offline" api={api} />;
   }
 
   if (route.guard?.authenticated && authLoading) {
     return (
       <div data-snapshot-auth-loading="" style={{ padding: "1rem" }}>
-        <AppFallback manifest={manifest} name="loading" api={api} />
+        <AppFallback manifest={localizedManifest} name="loading" api={api} />
       </div>
     );
   }
@@ -906,7 +1438,7 @@ function ManifestRouter({
   return (
     <RouteRuntimeProvider
       value={{
-        currentPath,
+        currentPath: scopedCurrentPath,
         currentRoute: route,
         params,
         navigate,
@@ -914,13 +1446,15 @@ function ManifestRouter({
       }}
     >
       <ManifestErrorBoundary
-        key={`${currentPath}:${route.id}`}
-        fallback={<AppFallback manifest={manifest} name="error" api={api} />}
+        key={`${scopedCurrentPath}:${route.id}`}
+        fallback={
+          <AppFallback manifest={localizedManifest} name="error" api={api} />
+        }
         onError={setRuntimeError}
       >
         {authScreen ? (
           <ManifestAuthScreen
-            manifest={manifest}
+            manifest={localizedManifest}
             route={route}
             screen={authScreen}
             snapshot={snapshot}
@@ -929,15 +1463,16 @@ function ManifestRouter({
           />
         ) : (
           <AppShell
-            manifest={manifest}
+            manifest={localizedManifest}
             route={route}
-            currentPath={currentPath}
+            currentPath={scopedCurrentPath}
             navigate={navigate}
             isPreloading={isPreloading}
             api={api}
           />
         )}
       </ManifestErrorBoundary>
+      <OverlayHost overlays={localizedManifest.overlays} />
     </RouteRuntimeProvider>
   );
 }
@@ -966,6 +1501,10 @@ export function ManifestApp({
     () => createManifestAuthRuntimeConfig(runtimeApiUrl, compiledManifest),
     [compiledManifest, runtimeApiUrl],
   );
+  const runtimeClients = useMemo(
+    () => buildManifestClientMap(compiledManifest, snapshot),
+    [compiledManifest, snapshot],
+  );
 
   useEffect(() => {
     if (compiledManifest.theme) {
@@ -977,7 +1516,11 @@ export function ManifestApp({
   return (
     <snapshot.QueryProvider>
       <SnapshotApiContext.Provider value={snapshot.api}>
-        <ManifestRuntimeProvider manifest={compiledManifest} api={snapshot.api}>
+        <ManifestRuntimeProvider
+          manifest={compiledManifest}
+          api={snapshot.api}
+          clients={runtimeClients}
+        >
           <AppContextProvider
             globals={compiledManifest.state}
             resources={compiledManifest.resources}
@@ -998,8 +1541,9 @@ export function ManifestApp({
               api={snapshot.api}
               snapshot={snapshot}
               authRuntimeConfig={authRuntimeConfig}
+              runtimeClients={runtimeClients}
             />
-            <OverlayHost overlays={compiledManifest.overlays} />
+            <ToastContainer />
           </AppContextProvider>
         </ManifestRuntimeProvider>
       </SnapshotApiContext.Provider>
