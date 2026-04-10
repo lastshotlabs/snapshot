@@ -75,13 +75,15 @@ describe("manifestConfigSchema", () => {
           },
           csrfCookieName: "custom_csrf",
         },
-        providers: [
-          "google",
-          {
-            provider: "github",
+        providers: {
+          google: {
+            type: "google",
+          },
+          github: {
+            type: "github",
             autoRedirect: true,
           },
-        ] as const,
+        },
         providerMode: "auto" as const,
         passkey: {
           enabled: true,
@@ -107,7 +109,7 @@ describe("manifestConfigSchema", () => {
               providersHeading: "Use a provider",
               passkeyButton: "Use a passkey",
             },
-            providers: false,
+            providers: [],
             providerMode: "buttons" as const,
             passkey: {
               enabled: false,
@@ -696,15 +698,17 @@ describe("authScreenConfigSchema", () => {
   it("validates auth config", () => {
     const result = authScreenConfigSchema.safeParse({
       screens: ["login", "register", "forgot-password"],
-      providers: [
-        "google",
-        {
-          provider: "github",
+      providers: {
+        google: {
+          type: "google",
+        },
+        github: {
+          type: "github",
           label: "Continue with GitHub Enterprise",
           description: "Use your engineering identity",
           autoRedirect: true,
         },
-      ],
+      },
       providerMode: "auto",
       passkey: {
         enabled: true,
@@ -729,7 +733,7 @@ describe("authScreenConfigSchema", () => {
             providersHeading: "Use a provider",
             passkeyButton: "Use a passkey",
           },
-          providers: false,
+          providers: [],
           providerMode: "buttons",
           passkey: {
             enabled: false,
@@ -765,16 +769,17 @@ describe("authScreenConfigSchema", () => {
   it("accepts provider presentation config in screen options", () => {
     const result = authScreenConfigSchema.safeParse({
       screens: ["login"],
+      providers: {
+        google: {
+          type: "google",
+          label: "Use Google Workspace",
+          description: "Recommended for internal users",
+          autoRedirect: true,
+        },
+      },
       screenOptions: {
         login: {
-          providers: [
-            {
-              provider: "google",
-              label: "Use Google Workspace",
-              description: "Recommended for internal users",
-              autoRedirect: true,
-            },
-          ],
+          providers: ["google"],
           providerMode: "auto",
           passkey: {
             enabled: true,

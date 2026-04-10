@@ -32,47 +32,34 @@ Set a flavor in the manifest:
 }
 ```
 
-### Custom Flavors
+### Manifest-Declared Flavors
 
-Define your own flavor with `defineFlavor()`. Register it before calling `resolveTokens()`
-or rendering `ManifestApp`.
+Define custom flavors directly in the manifest by extending an existing flavor:
 
-```ts
-import { defineFlavor, resolveTokens } from "@lastshotlabs/snapshot/ui";
-
-defineFlavor("my-brand", {
-  displayName: "My Brand",
-  colors: {
-    primary: "#1d4ed8",
-    secondary: "#64748b",
-    accent: "#f59e0b",
-    background: "#fafaf9",
-    destructive: "#dc2626",
-    border: "#e2e8f0",
-    input: "#e2e8f0",
-    ring: "#1d4ed8",
-  },
-  darkColors: {
-    primary: "#3b82f6",
-    secondary: "#94a3b8",
-    accent: "#fbbf24",
-    background: "#0c0a09",
-    destructive: "#ef4444",
-    border: "#334155",
-    input: "#334155",
-    ring: "#3b82f6",
-  },
-  radius: "md",
-  spacing: "default",
-  font: {
-    sans: "DM Sans",
-    mono: "JetBrains Mono",
-  },
-});
-
-// Use in manifest
-const css = resolveTokens({ flavor: "my-brand" });
+```json
+{
+  "theme": {
+    "flavor": "my-brand",
+    "flavors": {
+      "my-brand": {
+        "extends": "neutral",
+        "displayName": "My Brand",
+        "colors": {
+          "primary": "0.55 0.18 25",
+          "accent": "0.60 0.15 280"
+        }
+      }
+    }
+  }
+}
 ```
+
+`extends` can reference built-in flavors or other manifest-declared flavors.
+If you override a light color without a corresponding dark override, Snapshot derives
+the dark variant automatically.
+
+Code-side `defineFlavor()` is still supported when you want registration in TypeScript,
+but it is no longer required just to declare a new flavor.
 
 If `darkColors` is omitted, dark mode variants are automatically derived from the light
 colors with adjusted lightness and chroma.
@@ -431,6 +418,45 @@ registerComponent("my-chart", MyChart);
 
 The manifest declaration is what makes the component valid. The runtime
 registration only supplies the React implementation.
+
+## Custom Workflow Actions (Manifest Declaration)
+
+Custom workflow actions are declared in the manifest so workflow configs can be
+validated without loading runtime handlers.
+
+```json
+{
+  "workflows": {
+    "actions": {
+      "custom": {
+        "send-to-slack": {
+          "input": {
+            "channel": { "type": "string", "required": true },
+            "message": { "type": "string", "required": true }
+          }
+        }
+      }
+    },
+    "notify-slack": [
+      {
+        "type": "send-to-slack",
+        "channel": "#alerts",
+        "message": "Deploy completed"
+      }
+    ]
+  }
+}
+```
+
+Register the runtime handler in code:
+
+```ts
+import { registerWorkflowAction } from "@lastshotlabs/snapshot/ui";
+
+registerWorkflowAction("send-to-slack", async (node, runtime) => {
+  // node.channel and node.message are validated by the manifest declaration
+});
+```
 
 ## Responsive Values
 

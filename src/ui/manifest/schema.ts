@@ -9,10 +9,7 @@
 import { z } from "zod";
 import { getMissingAuthScreenIds } from "./auth-routes";
 import { themeConfigSchema } from "../tokens/schema";
-import {
-  workflowConditionSchema,
-  workflowDefinitionSchema,
-} from "../workflows/schema";
+import { workflowConditionSchema } from "../workflows/schema";
 import {
   dataSourceSchema,
   endpointTargetSchema,
@@ -24,6 +21,8 @@ import { errorPageConfigSchema } from "../components/feedback/default-error";
 import { notFoundConfigSchema } from "../components/feedback/default-not-found";
 import { offlineBannerConfigSchema } from "../components/feedback/default-offline";
 import { envRefSchema } from "./env";
+import { i18nConfigSchema, tRefSchema } from "../i18n/schema";
+import { ACTION_TYPES } from "../actions/types";
 
 /** Zod schema for a FromRef value. */
 export const fromRefSchema = z
@@ -58,6 +57,68 @@ export const fromRefSchema = z
  * Accept either a literal string or an environment reference.
  */
 export const stringOrEnvRef = z.union([z.string(), envRefSchema]);
+
+const textWithFromRefSchema = z.union([
+  stringOrEnvRef,
+  fromRefSchema,
+  tRefSchema,
+]);
+const textOrTRefSchema = z.union([stringOrEnvRef, tRefSchema]);
+const plainTextOrTRefSchema = z.union([z.string(), tRefSchema]);
+const overlayTitleSchema = z.union([z.string(), fromRefSchema, tRefSchema]);
+
+const policyRefOrLiteralSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.null(),
+  fromRefSchema,
+  envRefSchema,
+]);
+
+/** Policy reference used by guards and component visibility. */
+export const policyRefSchema = z
+  .object({
+    policy: z.string().min(1),
+  })
+  .strict();
+
+/** Manifest policy expression schema. */
+export const policyExprSchema: z.ZodType = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.object({ all: z.array(policyExprSchema) }).strict(),
+    z.object({ any: z.array(policyExprSchema) }).strict(),
+    z.object({ not: policyExprSchema }).strict(),
+    z
+      .object({
+        equals: z.tuple([policyRefOrLiteralSchema, policyRefOrLiteralSchema]),
+      })
+      .strict(),
+    z
+      .object({
+        "not-equals": z.tuple([
+          policyRefOrLiteralSchema,
+          policyRefOrLiteralSchema,
+        ]),
+      })
+      .strict(),
+    z.object({ exists: policyRefOrLiteralSchema }).strict(),
+    z.object({ truthy: policyRefOrLiteralSchema }).strict(),
+    z.object({ falsy: policyRefOrLiteralSchema }).strict(),
+    z
+      .object({
+        in: z.tuple([
+          policyRefOrLiteralSchema,
+          z.array(policyRefOrLiteralSchema),
+        ]),
+      })
+      .strict(),
+  ]),
+);
+
+/** Top-level named policies schema. */
+export const policiesSchema = z.record(policyExprSchema);
 
 const authEndpointConfigSchema = z
   .object({
@@ -143,7 +204,12 @@ export const baseComponentConfigSchema = z.object({
   type: z.string(),
   id: z.string().optional(),
   visible: z
-    .union([z.boolean(), responsiveSchema(z.boolean()), fromRefSchema])
+    .union([
+      z.boolean(),
+      responsiveSchema(z.boolean()),
+      fromRefSchema,
+      policyRefSchema,
+    ])
     .optional(),
   className: z.string().optional(),
   style: z.record(z.union([z.string(), z.number()])).optional(),
@@ -163,7 +229,7 @@ export const rowConfigSchema: z.ZodType = z.lazy(() =>
 
 export const headingConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("heading"),
-  text: z.union([stringOrEnvRef, fromRefSchema]),
+  text: textWithFromRefSchema,
   level: z
     .union([
       z.literal(1),
@@ -186,7 +252,7 @@ const actionConfigSchema: z.ZodType = z.lazy(() =>
 
 export const buttonConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("button"),
-  label: stringOrEnvRef,
+  label: textOrTRefSchema,
   icon: z.string().optional(),
   variant: z
     .enum(["default", "secondary", "outline", "ghost", "destructive", "link"])
@@ -197,7 +263,7 @@ export const buttonConfigSchema = baseComponentConfigSchema.extend({
 });
 
 const selectOptionSchema = z.object({
-  label: stringOrEnvRef,
+  label: textOrTRefSchema,
   value: z.string(),
 });
 
@@ -206,8 +272,8 @@ export const selectConfigSchema = baseComponentConfigSchema.extend({
   options: z.union([z.array(selectOptionSchema), dataSourceSchema]),
   valueField: z.string().optional(),
   labelField: z.string().optional(),
-  default: stringOrEnvRef.optional(),
-  placeholder: stringOrEnvRef.optional(),
+  default: textOrTRefSchema.optional(),
+  placeholder: textOrTRefSchema.optional(),
 });
 
 const customComponentPropTypeSchema = z.enum(["string", "number", "boolean"]);
@@ -229,6 +295,267 @@ export const customComponentDeclarationSchema = z
   .strict();
 
 /**
+ * Manifest toast defaults used by the `toast` action runtime.
+ */
+export const toastConfigSchema = z
+  .object({
+    position: z
+      .enum([
+        "top-left",
+        "top-center",
+        "top-right",
+        "bottom-left",
+        "bottom-center",
+        "bottom-right",
+      ])
+      .default("bottom-right"),
+    duration: z.number().int().nonnegative().default(4000),
+    variants: z
+      .record(
+        z
+          .object({
+            icon: z.string().optional(),
+            color: z.string().optional(),
+            duration: z.number().int().nonnegative().optional(),
+          })
+          .strict(),
+      )
+      .optional(),
+  })
+  .strict();
+
+/**
+ * Analytics provider declaration schema.
+ */
+export const analyticsProviderSchema = z
+  .object({
+    type: z.enum(["ga4", "posthog", "plausible", "custom"]),
+    name: z.string().optional(),
+    apiKey: stringOrEnvRef.optional(),
+    config: z.record(z.unknown()).optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (value.type === "custom" && !value.name) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Custom analytics providers require a name field",
+      });
+    }
+  });
+
+/**
+ * Manifest analytics runtime configuration.
+ */
+export const analyticsConfigSchema = z
+  .object({
+    providers: z.record(analyticsProviderSchema),
+  })
+  .strict();
+
+/**
+ * Manifest push-notification runtime configuration.
+ */
+export const pushConfigSchema = z
+  .object({
+    vapidPublicKey: stringOrEnvRef,
+    serviceWorkerPath: z.string().default("/sw.js"),
+    applicationServerKey: stringOrEnvRef.optional(),
+  })
+  .strict();
+
+const customWorkflowActionInputTypeSchema = z.enum([
+  "string",
+  "number",
+  "boolean",
+]);
+
+/**
+ * Schema for a single manifest-declared custom workflow action input.
+ */
+export const customWorkflowActionInputSchema = z
+  .object({
+    type: customWorkflowActionInputTypeSchema,
+    required: z.boolean().optional(),
+    default: z
+      .union([z.string(), z.number(), z.boolean(), z.null()])
+      .optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (value.default === undefined || value.default === null) {
+      return;
+    }
+
+    if (value.type === "string" && typeof value.default !== "string") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Custom workflow input default must be a string.",
+      });
+    }
+    if (value.type === "number" && typeof value.default !== "number") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Custom workflow input default must be a number.",
+      });
+    }
+    if (value.type === "boolean" && typeof value.default !== "boolean") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Custom workflow input default must be a boolean.",
+      });
+    }
+  });
+
+/**
+ * Schema for a manifest-declared custom workflow action.
+ */
+export const customWorkflowActionDeclarationSchema = z
+  .object({
+    input: z.record(customWorkflowActionInputSchema).optional(),
+  })
+  .strict();
+
+const builtInWorkflowNodeTypeSet = new Set<string>([
+  ...ACTION_TYPES,
+  "if",
+  "wait",
+  "parallel",
+  "retry",
+  "assign",
+  "try",
+  "capture",
+]);
+
+const customWorkflowNodeSchema = z
+  .object({
+    type: z.string().min(1),
+    id: z.string().optional(),
+    when: workflowConditionSchema.optional(),
+  })
+  .passthrough()
+  .superRefine((node, ctx) => {
+    if (builtInWorkflowNodeTypeSet.has(node.type)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Built-in workflow node "${node.type}" must use its built-in schema shape.`,
+      });
+    }
+  });
+
+const manifestWorkflowNodeSchema: z.ZodType = z.lazy(() =>
+  z.union([
+    customWorkflowNodeSchema,
+    z
+      .object({
+        type: z.literal("if"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        condition: workflowConditionSchema,
+        then: z.union([
+          manifestWorkflowNodeSchema,
+          z.array(manifestWorkflowNodeSchema),
+        ]),
+        else: z
+          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .optional(),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("wait"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        duration: z.number().int().min(0),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("parallel"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        branches: z
+          .array(
+            z.union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)]),
+          )
+          .min(1),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("retry"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        attempts: z.number().int().min(1),
+        delayMs: z.number().int().min(0).optional(),
+        backoffMultiplier: z.number().positive().optional(),
+        step: z.union([
+          manifestWorkflowNodeSchema,
+          z.array(manifestWorkflowNodeSchema),
+        ]),
+        onFailure: z
+          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .optional(),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("assign"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        values: z.record(z.unknown()),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("try"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        step: z.union([
+          manifestWorkflowNodeSchema,
+          z.array(manifestWorkflowNodeSchema),
+        ]),
+        catch: z
+          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .optional(),
+        finally: z
+          .union([manifestWorkflowNodeSchema, z.array(manifestWorkflowNodeSchema)])
+          .optional(),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("capture"),
+        id: z.string().optional(),
+        when: workflowConditionSchema.optional(),
+        action: actionConfigSchema,
+        as: z.string().min(1),
+      })
+      .strict(),
+  ]),
+);
+
+const manifestWorkflowDefinitionSchema: z.ZodType = z.union([
+  manifestWorkflowNodeSchema,
+  z.array(manifestWorkflowNodeSchema),
+]);
+
+const workflowActionsSchema = z
+  .object({
+    custom: z.record(customWorkflowActionDeclarationSchema).optional(),
+  })
+  .strict();
+
+/**
+ * Schema for manifest workflow definitions plus action declarations.
+ */
+export const workflowsConfigSchema = z
+  .object({
+    actions: workflowActionsSchema.optional(),
+  })
+  .catchall(manifestWorkflowDefinitionSchema);
+
+/**
  * Manifest auth contract overrides.
  */
 export const authContractSchema = z
@@ -240,7 +567,26 @@ export const authContractSchema = z
   .strict();
 
 /**
+ * Manifest client declaration for per-resource backend selection.
+ */
+export const clientConfigSchema = z
+  .object({
+    apiUrl: stringOrEnvRef,
+    contract: authContractSchema.optional(),
+    custom: z.string().min(1).optional(),
+  })
+  .strict();
+
+/**
+ * Named client registry in the manifest.
+ */
+export const clientsSchema = z.record(clientConfigSchema);
+
+/**
  * Manifest realtime WebSocket configuration.
+ *
+ * `events` is merged into `on` so runtime workflow resolution can treat
+ * lifecycle hooks and event hooks uniformly.
  */
 export const realtimeWsSchema = z
   .object({
@@ -258,13 +604,24 @@ export const realtimeWsSchema = z
         reconnecting: z.string().optional(),
         reconnectFailed: z.string().optional(),
       })
-      .strict()
+      .catchall(z.string())
       .optional(),
+    events: z.record(z.string()).optional(),
   })
-  .strict();
+  .strict()
+  .transform((value) => ({
+    ...value,
+    on: {
+      ...(value.on ?? {}),
+      ...(value.events ?? {}),
+    },
+  }));
 
 /**
  * Manifest realtime SSE endpoint configuration.
+ *
+ * `events` is merged into `on` so runtime workflow resolution can treat
+ * lifecycle hooks and event hooks uniformly.
  */
 export const realtimeSseEndpointSchema = z
   .object({
@@ -275,10 +632,18 @@ export const realtimeSseEndpointSchema = z
         error: z.string().optional(),
         closed: z.string().optional(),
       })
-      .strict()
+      .catchall(z.string())
       .optional(),
+    events: z.record(z.string()).optional(),
   })
-  .strict();
+  .strict()
+  .transform((value) => ({
+    ...value,
+    on: {
+      ...(value.on ?? {}),
+      ...(value.events ?? {}),
+    },
+  }));
 
 /**
  * Manifest realtime configuration.
@@ -397,7 +762,7 @@ registerComponentSchema("offline-banner", offlineBannerConfigSchema);
 export const navItemSchema: z.ZodType = z.lazy(() =>
   z
     .object({
-      label: z.string(),
+      label: plainTextOrTRefSchema,
       path: z.string().startsWith("/"),
       icon: z.string().optional(),
       visible: z.union([z.boolean(), fromRefSchema]).optional(),
@@ -428,7 +793,7 @@ const authScreenNameSchema = z.enum([
 
 const authScreenLinkSchema = z
   .object({
-    label: stringOrEnvRef,
+    label: textOrTRefSchema,
     path: z.string().startsWith("/").optional(),
     screen: authScreenNameSchema.optional(),
   })
@@ -445,30 +810,49 @@ const authScreenLinkSchema = z
 
 const authFieldConfigSchema = z
   .object({
-    label: stringOrEnvRef.optional(),
-    placeholder: stringOrEnvRef.optional(),
+    label: textOrTRefSchema.optional(),
+    placeholder: textOrTRefSchema.optional(),
   })
   .strict();
 
-const authProviderNameSchema = z.enum([
+const authProviderTypeSchema = z.enum([
   "google",
   "github",
-  "apple",
   "microsoft",
+  "apple",
+  "facebook",
+  "discord",
+  "custom",
 ]);
 
-const authProviderConfigSchema = z
+/**
+ * Auth provider declaration schema.
+ *
+ * Declared at `manifest.auth.providers.<name>`.
+ */
+export const authProviderSchema = z
   .object({
-    provider: authProviderNameSchema,
-    label: stringOrEnvRef.optional(),
-    description: stringOrEnvRef.optional(),
+    type: authProviderTypeSchema,
+    clientId: stringOrEnvRef.optional(),
+    clientSecret: stringOrEnvRef.optional(),
+    scopes: z.array(z.string()).optional(),
+    callbackPath: z.string().optional(),
+    label: textOrTRefSchema.optional(),
+    description: textOrTRefSchema.optional(),
     autoRedirect: z.boolean().optional(),
+    name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((value, ctx) => {
+    if (value.type === "custom" && !value.name) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Custom OAuth providers require a name field",
+      });
+    }
+  });
 
-const authProviderListSchema = z.array(
-  z.union([authProviderNameSchema, authProviderConfigSchema]),
-);
+const authProviderRefListSchema = z.array(z.string());
 
 /**
  * Manifest auth session settings.
@@ -492,21 +876,21 @@ const authScreenSectionSchema = z.enum([
 
 const authScreenOptionsSchema = z
   .object({
-    title: stringOrEnvRef.optional(),
-    description: stringOrEnvRef.optional(),
-    submitLabel: stringOrEnvRef.optional(),
-    successMessage: stringOrEnvRef.optional(),
+    title: textOrTRefSchema.optional(),
+    description: textOrTRefSchema.optional(),
+    submitLabel: textOrTRefSchema.optional(),
+    successMessage: textOrTRefSchema.optional(),
     sections: z.array(authScreenSectionSchema).min(1).optional(),
     labels: z
       .object({
-        providersHeading: stringOrEnvRef.optional(),
-        passkeyButton: stringOrEnvRef.optional(),
-        method: stringOrEnvRef.optional(),
-        resend: stringOrEnvRef.optional(),
+        providersHeading: textOrTRefSchema.optional(),
+        passkeyButton: textOrTRefSchema.optional(),
+        method: textOrTRefSchema.optional(),
+        resend: textOrTRefSchema.optional(),
       })
       .strict()
       .optional(),
-    providers: z.union([authProviderListSchema, z.literal(false)]).optional(),
+    providers: authProviderRefListSchema.optional(),
     providerMode: z.enum(["buttons", "auto"]).optional(),
     passkey: z
       .union([
@@ -548,8 +932,26 @@ export const authScreenConfigSchema = z
     screens: z.array(authScreenNameSchema).min(1),
     session: authSessionSchema.optional(),
     contract: authContractSchema.optional(),
-    providers: authProviderListSchema.optional(),
+    providers: z.record(authProviderSchema).optional(),
     providerMode: z.enum(["buttons", "auto"]).optional(),
+    mfa: z
+      .object({
+        issuer: z.string().optional(),
+        period: z.number().int().positive().default(30),
+        methods: z
+          .array(z.enum(["totp", "email", "sms", "webauthn"]))
+          .optional(),
+      })
+      .strict()
+      .optional(),
+    webauthn: z
+      .object({
+        rpId: z.string().optional(),
+        rpName: z.string().optional(),
+        attestation: z.enum(["none", "indirect", "direct"]).default("none"),
+      })
+      .strict()
+      .optional(),
     passkey: z
       .union([
         z.boolean(),
@@ -564,8 +966,8 @@ export const authScreenConfigSchema = z
     branding: z
       .object({
         logo: stringOrEnvRef.optional(),
-        title: stringOrEnvRef.optional(),
-        description: stringOrEnvRef.optional(),
+        title: textOrTRefSchema.optional(),
+        description: textOrTRefSchema.optional(),
       })
       .optional(),
     redirects: z
@@ -597,34 +999,63 @@ export const authScreenConfigSchema = z
 export const layoutSchema = z.enum([
   "sidebar",
   "top-nav",
+  "stacked",
   "minimal",
   "full-width",
 ]);
 
 export const pageConfigSchema = z
   .object({
-    layout: layoutSchema.optional(),
-    title: stringOrEnvRef.optional(),
+    title: textOrTRefSchema.optional(),
     content: z.array(componentConfigSchema).min(1),
     roles: z.array(z.string()).optional(),
-    breadcrumb: z.string().optional(),
+    breadcrumb: plainTextOrTRefSchema.optional(),
   })
   .strict();
+
+/**
+ * Slot declaration for a route layout.
+ */
+export const routeLayoutSlotSchema = z
+  .object({
+    name: z.string().min(1),
+    required: z.boolean().default(false),
+    fallback: componentConfigSchema.optional(),
+  })
+  .strict();
+
+/**
+ * Route layout declaration.
+ *
+ * Supports built-in layout names and object form for explicit props/slots.
+ */
+export const routeLayoutSchema = z.union([
+  layoutSchema,
+  z
+    .object({
+      type: z.string().min(1),
+      props: z.record(z.unknown()).optional(),
+      slots: z.array(routeLayoutSlotSchema).optional(),
+    })
+    .strict(),
+]);
 
 export const routeConfigSchema = pageConfigSchema
   .extend({
     id: z.string().min(1),
     path: z.string().startsWith("/"),
+    layouts: z.array(routeLayoutSchema).optional(),
+    slots: z.record(z.array(componentConfigSchema)).optional(),
     preload: z.array(endpointTargetSchema).optional(),
     refreshOnEnter: z.array(z.string().min(1)).optional(),
     invalidateOnLeave: z.array(z.string().min(1)).optional(),
-    enter: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
-    leave: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
+    enter: z.union([z.string().min(1), manifestWorkflowDefinitionSchema]).optional(),
+    leave: z.union([z.string().min(1), manifestWorkflowDefinitionSchema]).optional(),
     guard: z
       .object({
         authenticated: z.boolean().optional(),
         roles: z.array(z.string()).optional(),
-        condition: workflowConditionSchema.optional(),
+        policy: z.string().min(1).optional(),
         redirectTo: z.string().startsWith("/").optional(),
       })
       .strict()
@@ -662,7 +1093,7 @@ export const appCacheSchema = z
 export const appConfigSchema = z
   .object({
     apiUrl: stringOrEnvRef.optional(),
-    title: stringOrEnvRef.optional(),
+    title: textOrTRefSchema.optional(),
     shell: layoutSchema.default("full-width"),
     cache: appCacheSchema.optional(),
     home: z.string().startsWith("/").optional(),
@@ -686,12 +1117,22 @@ export const manifestSsrConfigSchema = z
       .string()
       .optional()
       .default("./dist/server/rsc-manifest.json"),
+    middleware: z
+      .array(
+        z
+          .object({
+            match: z.string().optional(),
+            workflow: z.string().min(1),
+          })
+          .strict(),
+      )
+      .optional(),
   })
   .strict();
 
 const overlayFooterActionSchema = z
   .object({
-    label: stringOrEnvRef,
+    label: textOrTRefSchema,
     variant: z
       .enum(["default", "secondary", "destructive", "ghost"])
       .optional(),
@@ -706,12 +1147,14 @@ export const overlayConfigSchema: z.ZodType = z.union([
   z
     .object({
       type: z.literal("modal"),
-      title: z.union([z.string(), fromRefSchema]).optional(),
+      title: overlayTitleSchema.optional(),
       size: z.enum(["sm", "md", "lg", "xl", "full"]).optional(),
       content: z.array(componentConfigSchema).min(1),
-      onOpen: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
+      onOpen: z
+        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
+        .optional(),
       onClose: z
-        .union([z.string().min(1), workflowDefinitionSchema])
+        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
         .optional(),
       className: z.string().optional(),
       style: z.record(z.union([z.string(), z.number()])).optional(),
@@ -726,13 +1169,15 @@ export const overlayConfigSchema: z.ZodType = z.union([
   z
     .object({
       type: z.literal("drawer"),
-      title: z.union([z.string(), fromRefSchema]).optional(),
+      title: overlayTitleSchema.optional(),
       size: z.enum(["sm", "md", "lg", "xl", "full"]).optional(),
       side: z.enum(["left", "right"]).optional(),
       content: z.array(componentConfigSchema).min(1),
-      onOpen: z.union([z.string().min(1), workflowDefinitionSchema]).optional(),
+      onOpen: z
+        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
+        .optional(),
       onClose: z
-        .union([z.string().min(1), workflowDefinitionSchema])
+        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
         .optional(),
       className: z.string().optional(),
       style: z.record(z.union([z.string(), z.number()])).optional(),
@@ -757,23 +1202,58 @@ function collectNavPaths(items: z.infer<typeof navItemSchema>[]): string[] {
   return paths;
 }
 
+const lazyManifestConfigSchema: z.ZodType = z.lazy(() => manifestConfigSchema);
+
+/**
+ * Inheritance flags for mounted sub-manifests.
+ */
+export const subAppInheritSchema = z
+  .object({
+    theme: z.boolean().default(true),
+    i18n: z.boolean().default(true),
+    policies: z.boolean().default(true),
+    state: z.boolean().default(false),
+  })
+  .strict();
+
+/**
+ * Sub-application mount configuration.
+ */
+export const subAppConfigSchema = z
+  .object({
+    mountPath: z.string().startsWith("/"),
+    manifest: z.union([z.string().min(1), lazyManifestConfigSchema]),
+    inherit: subAppInheritSchema.optional(),
+  })
+  .strict();
+
+/**
+ * Named sub-application map keyed by sub-app id.
+ */
+export const subAppsSchema = z.record(subAppConfigSchema);
+
 export const manifestConfigSchema = z
   .object({
     $schema: z.string().optional(),
     app: appConfigSchema.optional(),
     components: componentsConfigSchema.optional(),
     theme: themeConfigSchema.optional(),
+    toast: toastConfigSchema.optional(),
+    analytics: analyticsConfigSchema.optional(),
+    push: pushConfigSchema.optional(),
     ssr: manifestSsrConfigSchema.optional(),
     state: z.record(stateValueConfigSchema).optional(),
     navigation: navigationConfigSchema.optional(),
     auth: authScreenConfigSchema.optional(),
     realtime: realtimeConfigSchema.optional(),
+    clients: clientsSchema.optional(),
     resources: z.record(resourceConfigSchema).optional(),
-    workflows: z.record(workflowDefinitionSchema).optional(),
+    workflows: workflowsConfigSchema.optional(),
     overlays: z.record(overlayConfigSchema).optional(),
     presets: z.record(z.unknown()).optional(),
-    policies: z.record(z.unknown()).optional(),
-    i18n: z.record(z.unknown()).optional(),
+    policies: policiesSchema.optional(),
+    i18n: i18nConfigSchema.optional(),
+    subApps: subAppsSchema.optional(),
     routes: z.array(routeConfigSchema).min(1),
   })
   .strict()
@@ -890,11 +1370,30 @@ export const manifestConfigSchema = z
         }
       }
       for (const target of resource.invalidates ?? []) {
+        if (typeof target !== "string") {
+          continue;
+        }
+
         if (!resourceNames.has(target)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["resources", name, "invalidates"],
             message: `Unknown invalidation target "${target}"`,
+          });
+        }
+      }
+
+      const optimisticTarget = resource.optimistic?.target;
+      if (optimisticTarget) {
+        const targetResource =
+          typeof optimisticTarget === "string"
+            ? optimisticTarget
+            : optimisticTarget.resource;
+        if (!resourceNames.has(targetResource)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["resources", name, "optimistic", "target"],
+            message: `Unknown optimistic target resource "${targetResource}"`,
           });
         }
       }

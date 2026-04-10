@@ -13,6 +13,27 @@ export interface WorkflowCondition {
   right?: unknown;
 }
 
+/** Primitive input kinds supported by manifest-declared custom workflow actions. */
+export type CustomWorkflowActionInputType = "string" | "number" | "boolean";
+
+/** Schema declaration for a single custom workflow action input. */
+export interface CustomWorkflowActionInputSchema {
+  type: CustomWorkflowActionInputType;
+  required?: boolean;
+  default?: string | number | boolean | null;
+}
+
+/** Manifest declaration for a custom workflow action. */
+export interface CustomWorkflowActionDeclaration {
+  input?: Record<string, CustomWorkflowActionInputSchema>;
+}
+
+/** Map of custom workflow action names to manifest declarations. */
+export type CustomWorkflowActionDeclarationMap = Record<
+  string,
+  CustomWorkflowActionDeclaration
+>;
+
 export interface WorkflowBaseNode {
   id?: string;
   when?: WorkflowCondition;

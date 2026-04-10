@@ -142,18 +142,19 @@ describe("compiler", () => {
         redirects: {
           afterLogin: "/reports",
         },
+        providers: {
+          google: {
+            type: "google",
+            label: "Use Google Workspace",
+            autoRedirect: true,
+          },
+        },
         screenOptions: {
           login: {
             title: "Welcome back",
             submitLabel: "Continue",
             sections: ["providers", "form"],
-            providers: [
-              {
-                provider: "google",
-                label: "Use Google Workspace",
-                autoRedirect: true,
-              },
-            ],
+            providers: ["google"],
             providerMode: "auto",
             passkey: {
               enabled: true,
@@ -182,13 +183,12 @@ describe("compiler", () => {
       "providers",
       "form",
     ]);
-    expect(compiled.auth?.screenOptions?.login?.providers).toEqual([
-      {
-        provider: "google",
-        label: "Use Google Workspace",
-        autoRedirect: true,
-      },
-    ]);
+    expect(compiled.auth?.screenOptions?.login?.providers).toEqual(["google"]);
+    expect(compiled.auth?.providers?.google).toMatchObject({
+      type: "google",
+      label: "Use Google Workspace",
+      autoRedirect: true,
+    });
     expect(compiled.auth?.screenOptions?.login?.providerMode).toBe("auto");
     expect(compiled.auth?.screenOptions?.login?.passkey).toEqual({
       enabled: true,
