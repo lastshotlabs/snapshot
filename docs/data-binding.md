@@ -174,6 +174,35 @@ isFromRef("static-string"); // false
 isFromRef(42); // false
 ```
 
+## Realtime Event Binding
+
+Manifest realtime events can dispatch workflows without custom wiring code.
+
+```json
+{
+  "realtime": {
+    "ws": {
+      "events": {
+        "chat.message.created": "append-to-feed"
+      }
+    },
+    "sse": {
+      "endpoints": {
+        "/__sse/feed": {
+          "events": {
+            "feed.updated": "refresh-feed"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- `realtime.ws.events` maps WebSocket event name to workflow name.
+- `realtime.sse.endpoints[path].events` maps SSE event name to workflow name.
+- Each event dispatches the mapped workflow through the same manifest workflow runtime used by actions and route lifecycle hooks.
+
 ## Providers
 
 Wrap your app with `AppContextProvider` (once, at the root) and each page with

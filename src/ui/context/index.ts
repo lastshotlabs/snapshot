@@ -1,3 +1,5 @@
+import { atom } from "jotai";
+
 export { AtomRegistryImpl } from "./registry";
 export { AppContextProvider, PageContextProvider } from "./providers";
 export { usePublish, useSubscribe, useResolveFrom } from "./hooks";
@@ -17,3 +19,8 @@ export type {
   ResolvedConfig,
   JotaiStore,
 } from "./types";
+
+/**
+ * App-level locale atom used by i18n-aware runtime helpers.
+ */
+export const localeAtom = atom<string | null>(null);
