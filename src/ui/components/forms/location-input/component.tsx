@@ -100,12 +100,16 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
             data = await api.get(url);
         }
 
+        const recordData =
+          data && typeof data === "object"
+            ? (data as Record<string, unknown>)
+            : undefined;
         const items = Array.isArray(data)
           ? data
-          : ((data.results ?? data.data ?? data.items ?? []) as Record<
-              string,
-              unknown
-            >[]);
+          : ((recordData?.results ??
+              recordData?.data ??
+              recordData?.items ??
+              []) as Record<string, unknown>[]);
 
         const mapped: LocationResult[] = items.map(
           (item: Record<string, unknown>) => ({

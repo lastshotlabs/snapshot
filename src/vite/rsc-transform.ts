@@ -9,7 +9,7 @@
 //   The result is written to rsc-manifest.json in the output directory.
 
 import path from 'node:path';
-import type { OutputBundle, OutputChunk, Plugin } from 'vite';
+import type { Plugin } from 'vite';
 import {
   buildComponentId,
   hasUseClientDirective,
@@ -24,6 +24,20 @@ const EXPORT_FUNCTION_RE = /^export\s+(?:async\s+)?function\s+([\w$]+)\s*[(<]/gm
 const EXPORT_CONST_RE = /^export\s+const\s+([\w$]+)\s*/gm;
 const EXPORT_CLASS_RE = /^export\s+(?:abstract\s+)?class\s+([\w$]+)\s*[{<(]/gm;
 const EXPORT_DEFAULT_RE = /^export\s+default\s+/m;
+
+interface OutputChunkShape {
+  type: 'chunk';
+  facadeModuleId?: string | null;
+  moduleIds: string[];
+  fileName: string;
+  code: string;
+}
+
+interface OutputAssetShape {
+  type: 'asset';
+}
+
+type OutputBundleShape = Record<string, OutputChunkShape | OutputAssetShape>;
 
 /**
  * Collect all named exports from a source file.
@@ -64,16 +78,15 @@ function extractNamedExports(code: string): string[] {
  */
 function resolveChunkFileName(
   fileId: string,
-  bundle: OutputBundle,
+  bundle: OutputBundleShape,
 ): string | undefined {
-  for (const [, output] of Object.entries(bundle)) {
+  for (const output of Object.values(bundle)) {
     if (output.type !== 'chunk') continue;
-    const chunk = output as OutputChunk;
     if (
-      chunk.facadeModuleId === fileId ||
-      chunk.moduleIds.includes(fileId)
+      output.facadeModuleId === fileId ||
+      output.moduleIds.includes(fileId)
     ) {
-      return chunk.fileName;
+      return output.fileName;
     }
   }
   return undefined;
@@ -214,9 +227,10 @@ export function rscTransform(): Plugin {
       if (clientFiles.size === 0) return;
 
       const components: Record<string, string> = {};
+      const outputBundle = bundle as OutputBundleShape;
 
       for (const [fileId, relativePath] of clientFiles) {
-        const chunkFileName = resolveChunkFileName(fileId, bundle);
+        const chunkFileName = resolveChunkFileName(fileId, outputBundle);
 
         // Named exports from source code.
         // We re-read from the bundle's module graph where possible, but fall
@@ -229,8 +243,8 @@ export function rscTransform(): Plugin {
         //   export const Foo = createClientReference('...');
         //   export default createClientReference('...');
         // We scan these to rebuild the export list without reparsing the original.
-        const chunk = Object.values(bundle).find(
-          (output): output is OutputChunk =>
+        const chunk = Object.values(outputBundle).find(
+          (output): output is OutputChunkShape =>
             output.type === 'chunk' &&
             (output.facadeModuleId === fileId || output.moduleIds.includes(fileId)),
         );

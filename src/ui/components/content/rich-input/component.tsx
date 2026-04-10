@@ -125,44 +125,46 @@ export function RichInput({ config }: { config: RichInputConfig }) {
   // Stable ref for the send callback so the extension doesn't re-create
   const sendRef = useRef<() => void>(() => {});
 
+  const extensions = [
+    StarterKit.configure({
+      bold: featuresSet.has("bold") ? {} : false,
+      italic: featuresSet.has("italic") ? {} : false,
+      strike: featuresSet.has("strike") ? {} : false,
+      code: featuresSet.has("code") ? {} : false,
+      codeBlock: featuresSet.has("code-block") ? {} : false,
+      bulletList: featuresSet.has("bullet-list") ? {} : false,
+      orderedList: featuresSet.has("ordered-list") ? {} : false,
+      // Disable heading in chat input — use it only in rich-text-editor
+      heading: false,
+      // HardBreak for Shift+Enter newlines
+      hardBreak: {},
+    }),
+    ...(featuresSet.has("underline") ? [Underline] : []),
+    ...(featuresSet.has("link")
+      ? [
+          Link.configure({
+            openOnClick: false,
+            HTMLAttributes: {
+              rel: "noopener noreferrer",
+              target: "_blank",
+            },
+          }),
+        ]
+      : []),
+    ...(config.placeholder
+      ? [Placeholder.configure({ placeholder: config.placeholder })]
+      : []),
+    ...(sendOnEnter
+      ? [
+          createSendOnEnterExtension(() => {
+            sendRef.current();
+          }),
+        ]
+      : []),
+  ] as unknown as NonNullable<Parameters<typeof useEditor>[0]["extensions"]>;
+
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bold: featuresSet.has("bold") ? {} : false,
-        italic: featuresSet.has("italic") ? {} : false,
-        strike: featuresSet.has("strike") ? {} : false,
-        code: featuresSet.has("code") ? {} : false,
-        codeBlock: featuresSet.has("code-block") ? {} : false,
-        bulletList: featuresSet.has("bullet-list") ? {} : false,
-        orderedList: featuresSet.has("ordered-list") ? {} : false,
-        // Disable heading in chat input — use it only in rich-text-editor
-        heading: false,
-        // HardBreak for Shift+Enter newlines
-        hardBreak: {},
-      }),
-      ...(featuresSet.has("underline") ? [Underline] : []),
-      ...(featuresSet.has("link")
-        ? [
-            Link.configure({
-              openOnClick: false,
-              HTMLAttributes: {
-                rel: "noopener noreferrer",
-                target: "_blank",
-              },
-            }),
-          ]
-        : []),
-      ...(config.placeholder
-        ? [Placeholder.configure({ placeholder: config.placeholder })]
-        : []),
-      ...(sendOnEnter
-        ? [
-            createSendOnEnterExtension(() => {
-              sendRef.current();
-            }),
-          ]
-        : []),
-    ],
+    extensions,
     editable: !readonly,
     onUpdate: ({ editor: ed }) => {
       const html = ed.getHTML();

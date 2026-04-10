@@ -1,9 +1,5 @@
-// src/ssr/__tests__/ppr-render.test.tsx
-// Unit tests for renderPprPage() — the PPR streaming renderer.
-// Uses bun:test; do NOT run — the full test suite runs after all phases land.
-
 import React from "react";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { renderPprPage } from "../render";
 import type { RenderPprOptions } from "../render";
 import type { PprCacheEntry } from "../ppr-cache";

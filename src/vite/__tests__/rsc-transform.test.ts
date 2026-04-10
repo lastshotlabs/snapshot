@@ -18,6 +18,15 @@ import type { Plugin, ResolvedConfig } from 'vite';
 function createPlugin(options: { isSsrBuild: boolean; root?: string }): Plugin {
   const plugin = rscTransform();
   const root = options.root ?? '/project';
+  const pluginContext = {
+    error(message: string): never {
+      throw new Error(message);
+    },
+    warn() {},
+    info() {},
+    debug() {},
+    meta: {},
+  };
 
   // Minimal ResolvedConfig subset — only the fields the plugin reads.
   const resolvedConfig = {
@@ -29,7 +38,7 @@ function createPlugin(options: { isSsrBuild: boolean; root?: string }): Plugin {
   } as unknown as ResolvedConfig;
 
   if (typeof plugin.configResolved === 'function') {
-    plugin.configResolved(resolvedConfig);
+    plugin.configResolved.call(pluginContext as never, resolvedConfig);
   }
 
   return plugin;
@@ -45,9 +54,18 @@ function callTransform(
   id: string,
 ): { code: string; map: null } | null {
   if (typeof plugin.transform !== 'function') return null;
+  const pluginContext = {
+    error(message: string): never {
+      throw new Error(message);
+    },
+    warn() {},
+    info() {},
+    debug() {},
+    meta: {},
+  };
   // transform() can return string | TransformResult | null | undefined
   const result = plugin.transform.call(
-    {} as never,
+    pluginContext as never,
     code,
     id,
   ) as { code: string; map: null } | null | undefined;

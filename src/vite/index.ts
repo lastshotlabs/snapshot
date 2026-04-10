@@ -588,26 +588,28 @@ export function snapshotSsr(opts: SnapshotSsrOptions = {}): Plugin[] {
 
       // Spawn `bunshot-ssg` CLI. Rule 11: use spawnSync with array args — no shell
       // interpolation.
+      const ssgArgs = [
+        "run",
+        path.resolve(process.cwd(), "node_modules/.bin/bunshot-ssg"),
+        "--assets-manifest",
+        assetsManifest,
+        "--out",
+        ssgOutDir,
+        "--renderer",
+        rendererEntry,
+      ];
+
+      if (opts.rsc) {
+        const rscManifestPath = path.join(serverOutDir, "rsc-manifest.json");
+        ssgArgs.push("--rsc-manifest", rscManifestPath);
+      }
+
       const { spawnSync } = await import("node:child_process");
-      const result = spawnSync(
-        "bun",
-        [
-          "run",
-          // Resolve the bunshot-ssg CLI relative to the project's node_modules
-          path.resolve(process.cwd(), "node_modules/.bin/bunshot-ssg"),
-          "--assets-manifest",
-          assetsManifest,
-          "--out",
-          ssgOutDir,
-          "--renderer",
-          rendererEntry,
-        ],
-        {
-          cwd: process.cwd(),
-          stdio: "inherit",
-          encoding: "utf8",
-        },
-      );
+      const result = spawnSync("bun", ssgArgs, {
+        cwd: process.cwd(),
+        stdio: "inherit",
+        encoding: "utf8",
+      });
 
       if (result.error) {
         // CLI binary not found — fall back to direct module invocation

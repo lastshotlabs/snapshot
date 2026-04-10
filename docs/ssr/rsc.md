@@ -42,6 +42,27 @@ bun add -D react-server-dom-webpack
 
 It is declared as an optional peer dependency. You do not need it if you are not using RSC.
 
+## Enabling RSC from the manifest
+
+If you are using the manifest renderer (`createManifestRenderer()`), you can
+enable RSC directly from `snapshot.manifest.json` without changing any
+TypeScript:
+
+```json
+{
+  "ssr": {
+    "rsc": true,
+    "rscManifestPath": "./dist/server/rsc-manifest.json"
+  }
+}
+```
+
+The manifest renderer automatically loads the RSC manifest from
+`rscManifestPath` at server startup and passes it to `renderPage()`.
+
+You still need `snapshotSsr({ rsc: true })` in your `vite.config.ts` so the
+build generates `rsc-manifest.json` and applies the RSC transform.
+
 ---
 
 ## The `'use client'` directive

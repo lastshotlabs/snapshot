@@ -1,8 +1,7 @@
 // src/ssr/__tests__/ppr-cache.test.ts
 // Unit tests for the PPR shell cache factory.
-// Uses bun:test; do NOT run — the full test suite runs after all phases land.
 
-import { describe, expect, it, beforeEach } from "bun:test";
+import { beforeEach, describe, expect, it } from "vitest";
 import { createPprCache } from "../ppr-cache";
 import type { PprCache } from "../ppr-cache";
 import type { PprShell } from "../ppr";

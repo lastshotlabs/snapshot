@@ -1,5 +1,5 @@
 // snapshot/src/ssr/__tests__/action-client.test.ts
-import { describe, test, expect, beforeEach, afterEach, mock, spyOn } from 'bun:test';
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { __callServerAction__ } from '../action-client';
 
 // ─── Fetch mock helpers ───────────────────────────────────────────────────────
@@ -11,11 +11,11 @@ type FetchResponse = {
   body: object;
 };
 
-let fetchMock: ReturnType<typeof mock>;
+let fetchMock: ReturnType<typeof vi.fn>;
 
 function mockFetch(response: FetchResponse) {
   const { status = 200, redirected = false, url = '/_snapshot/action', body } = response;
-  fetchMock = mock(async () => ({
+  fetchMock = vi.fn(async () => ({
     status,
     redirected,
     url,

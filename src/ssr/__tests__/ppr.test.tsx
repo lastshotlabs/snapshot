@@ -1,9 +1,5 @@
-// src/ssr/__tests__/ppr.test.tsx
-// Unit tests for PPR shell extraction and StaticShellWrapper.
-// Uses bun:test; do NOT run — the full test suite runs after all phases land.
-
 import React from "react";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { extractPprShell, StaticShellWrapper } from "../ppr";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────

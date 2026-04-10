@@ -4,7 +4,7 @@
 // Browser-safe: no Node.js built-ins; only react-dom/server + React.
 
 import React from "react";
-import { renderToReadableStream } from "react-dom/server";
+import { renderToString } from "react-dom/server";
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 
@@ -32,7 +32,7 @@ const StaticShellContext = React.createContext<boolean>(false);
 export function StaticShellWrapper({
   children,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }): React.ReactElement {
   return React.createElement(
     StaticShellContext.Provider,
@@ -65,10 +65,10 @@ export interface PprShell {
  * Render only the static shell of a React tree.
  *
  * Dynamic Suspense boundaries are replaced with their fallback content because
- * `renderToReadableStream` renders fallbacks synchronously for any boundary
- * whose children suspend. Wrapping the tree in `StaticShellWrapper` ensures
- * the entire stream resolves without awaiting async children — only the
- * static parts and pre-populated fallback markup appear in the output.
+ * `renderToString` emits Suspense fallback markup immediately for any boundary
+ * whose children suspend, then terminates without awaiting the async subtree.
+ * Wrapping the tree in `StaticShellWrapper` ensures the output contains only
+ * the static parts and pre-populated fallback markup.
  *
  * Used at build time to pre-render the static portions of PPR routes.
  * The resulting `shellHtml` is stored in the PPR cache and sent immediately
@@ -80,35 +80,10 @@ export interface PprShell {
 export async function extractPprShell(
   element: React.ReactElement,
 ): Promise<PprShell> {
-  const errors: unknown[] = [];
-
   try {
     // Wrap the element so all Suspense boundaries show their fallbacks.
     const wrapped = React.createElement(StaticShellWrapper, {}, element);
-
-    const stream = await renderToReadableStream(wrapped, {
-      onError(error: unknown) {
-        errors.push(error);
-        // Do not rethrow — allow the stream to complete with fallback content.
-      },
-    });
-
-    // allReady resolves when all Suspense boundaries (including nested ones)
-    // have either resolved or settled on their fallback. For shell extraction
-    // we do NOT await allReady — we want only what renders synchronously
-    // (the static shell with fallbacks). We read the stream as-is.
-    const reader = stream.getReader();
-    const chunks: Uint8Array[] = [];
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (value) chunks.push(value);
-    }
-
-    const decoder = new TextDecoder();
-    const shellHtml = chunks.map((c) => decoder.decode(c, { stream: true })).join("") +
-      decoder.decode(); // flush
+    const shellHtml = renderToString(wrapped);
 
     return { shellHtml, ok: true };
   } catch (err) {

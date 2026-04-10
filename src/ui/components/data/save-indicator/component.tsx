@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import type { SaveIndicatorConfig } from "./types";
@@ -47,10 +48,12 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
   const status = useSubscribe(config.status) as string;
   const visible = useSubscribe(config.visible ?? true);
 
+  useEffect(() => {
+    ensureStyles();
+  }, []);
+
   if (visible === false) return null;
   if (status === "idle") return null;
-
-  ensureStyles();
 
   const showIcon = config.showIcon ?? true;
   const savingText = config.savingText ?? "Saving...";

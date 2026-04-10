@@ -421,6 +421,22 @@ export const appConfigSchema = z
   })
   .strict();
 
+/**
+ * Server-side rendering configuration for the manifest app.
+ *
+ * When `rsc` is enabled, the manifest renderer loads `rsc-manifest.json`
+ * once at startup and passes it to `renderPage()` for two-pass RSC rendering.
+ */
+export const manifestSsrConfigSchema = z
+  .object({
+    rsc: z.boolean().optional().default(false),
+    rscManifestPath: z
+      .string()
+      .optional()
+      .default("./dist/server/rsc-manifest.json"),
+  })
+  .strict();
+
 const overlayFooterActionSchema = z
   .object({
     label: z.string(),
@@ -494,6 +510,7 @@ export const manifestConfigSchema = z
     $schema: z.string().optional(),
     app: appConfigSchema.optional(),
     theme: themeConfigSchema.optional(),
+    ssr: manifestSsrConfigSchema.optional(),
     state: z.record(stateValueConfigSchema).optional(),
     navigation: navigationConfigSchema.optional(),
     auth: authScreenConfigSchema.optional(),

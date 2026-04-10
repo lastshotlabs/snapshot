@@ -4,6 +4,7 @@ import { render, fireEvent } from "@testing-library/react";
 import { Provider as JotaiProvider } from "jotai/react";
 import { createStore } from "jotai/vanilla";
 import { atom } from "jotai";
+import { renderToStaticMarkup } from "react-dom/server";
 import { Nav } from "../component";
 import type { NavConfig } from "../schema";
 import {
@@ -482,5 +483,11 @@ describe("Nav component", () => {
     );
     const nav = container.querySelector('[data-snapshot-component="nav"]');
     expect(nav).not.toBeNull();
+  });
+
+  it("renders to static markup without throwing", () => {
+    expect(() =>
+      renderToStaticMarkup(<Nav config={baseConfig} pathname="/" />),
+    ).not.toThrow();
   });
 });

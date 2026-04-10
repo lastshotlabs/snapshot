@@ -103,29 +103,30 @@ describe('unstable_noStore', () => {
 
 describe('cache()', () => {
   // React's cache() is tested exhaustively in the React test suite.
-  // Here we verify the re-export is functional and the deduplication contract
-  // holds within a single async call sequence (simulating a render tree).
+  // Here we verify only the local contract: Snapshot re-exports React's cache()
+  // unchanged. Per-render deduplication is owned by React and only applies
+  // inside an actual React render tree.
 
   it('is exported and callable', async () => {
     const { cache } = await import('../cache');
     expect(typeof cache).toBe('function');
   });
 
-  it('deduplicates calls with the same argument within a call sequence', async () => {
+  it('returns the wrapped function result shape', async () => {
     const { cache } = await import('../cache');
     const spy = vi.fn(async (id: string) => ({ id }));
     const memoized = cache(spy);
 
-    // Within the same "render tree" (before React resets), same args → same call
     const a = memoized('user-1');
     const b = memoized('user-1');
     const c = memoized('user-2');
+    const results = await Promise.all([a, b, c]);
 
-    await Promise.all([a, b, c]);
-
-    // Called twice: once for 'user-1', once for 'user-2'
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenCalledWith('user-1');
-    expect(spy).toHaveBeenCalledWith('user-2');
+    expect(results).toEqual([
+      { id: 'user-1' },
+      { id: 'user-1' },
+      { id: 'user-2' },
+    ]);
+    expect(spy).toHaveBeenCalledTimes(3);
   });
 });

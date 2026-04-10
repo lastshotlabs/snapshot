@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { NavConfig } from "./schema";
 import { useNav } from "./hook";
 import { useActionExecutor } from "../../../actions/executor";
@@ -294,12 +294,19 @@ function UserMenu({
  * @param props - Nav configuration, pathname, and navigation callback
  */
 export function Nav({ config, pathname, onNavigate }: NavComponentProps) {
-  const currentPath =
-    pathname ??
-    (typeof window !== "undefined" ? window.location.pathname : "/");
+  const [currentPath, setCurrentPath] = useState(pathname ?? "/");
   const { items, isCollapsed, toggle, user } = useNav(config, currentPath);
   const showUserMenu =
     config.userMenu !== false && config.userMenu !== undefined;
+
+  useEffect(() => {
+    if (pathname) {
+      setCurrentPath(pathname);
+      return;
+    }
+
+    setCurrentPath(window.location.pathname);
+  }, [pathname]);
 
   return (
     <nav

@@ -119,7 +119,7 @@ describe("createReactRenderer — renderChain structural contract", () => {
     expect(typeof renderer.renderChain).toBe("function");
   });
 
-  it("renderChain accepts a chain with empty layouts and returns a Promise", () => {
+  it("renderChain rejects when the page module cannot be imported", async () => {
     const renderer = createReactRenderer({
       resolveComponent: async () =>
         (() =>
@@ -138,9 +138,9 @@ describe("createReactRenderer — renderChain structural contract", () => {
       middlewareFilePath: null,
     };
 
-    // renderChain with no layouts is similar to render() — returns a Promise
-    const result = renderer.renderChain(chain, emptyShell, {});
-    expect(result).toBeInstanceOf(Promise);
+    await expect(renderer.renderChain(chain, emptyShell, {})).rejects.toThrow(
+      "Failed to import page module",
+    );
   });
 
   it("renderer satisfies BunshotSsrRenderer structural shape with renderChain", () => {
