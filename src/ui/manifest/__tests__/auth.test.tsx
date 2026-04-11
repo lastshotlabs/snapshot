@@ -7,20 +7,18 @@ import { ManifestApp } from "../app";
 import type { ManifestConfig } from "../types";
 import "../structural";
 
-vi.hoisted(() => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: (query: string) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: () => {},
-      removeListener: () => {},
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
-    }),
-  });
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
 });
 
 const originalFetch = global.fetch;
@@ -194,8 +192,10 @@ describe("Manifest auth runtime", () => {
       <ManifestApp manifest={buildAuthManifest()} apiUrl="http://localhost" />,
     );
 
-    expect(screen.getByText("Snapshot Auth")).toBeDefined();
-    expect(screen.getByText("Built-in auth runtime")).toBeDefined();
+    await waitFor(() => {
+      expect(screen.getByText("Snapshot Auth")).toBeDefined();
+      expect(screen.getByText("Built-in auth runtime")).toBeDefined();
+    });
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "ada@example.com" },
@@ -240,6 +240,10 @@ describe("Manifest auth runtime", () => {
       <ManifestApp manifest={buildAuthManifest()} apiUrl="http://localhost" />,
     );
 
+    await waitFor(() => {
+      expect(screen.getByLabelText("Email")).toBeDefined();
+    });
+
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "ada@example.com" },
     });
@@ -281,6 +285,10 @@ describe("Manifest auth runtime", () => {
     );
 
     await waitFor(() => {
+      expect(screen.getByText("Verify email")).toBeDefined();
+    });
+
+    await waitFor(() => {
       expect(screen.getByText("Email verified.")).toBeDefined();
     });
   });
@@ -314,6 +322,10 @@ describe("Manifest auth runtime", () => {
     render(
       <ManifestApp manifest={buildAuthManifest()} apiUrl="http://localhost" />,
     );
+
+    await waitFor(() => {
+      expect(screen.getByText("Verify email")).toBeDefined();
+    });
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "ada@example.com" },
@@ -486,14 +498,16 @@ describe("Manifest auth runtime", () => {
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
 
-    expect(screen.getByText("Welcome back")).toBeDefined();
-    expect(screen.getByText("Use your workspace account")).toBeDefined();
-    expect(screen.getByRole("button", { name: "Continue" })).toBeDefined();
-    expect(screen.getByRole("button", { name: "Make an account" })).toBeDefined();
-    expect(screen.queryByText("Continue with a provider")).toBeNull();
-    expect(
-      screen.queryByText("Passkey sign-in can be enabled from the Snapshot auth runtime."),
-    ).toBeNull();
+    await waitFor(() => {
+      expect(screen.getByText("Welcome back")).toBeDefined();
+      expect(screen.getByText("Use your workspace account")).toBeDefined();
+      expect(screen.getByRole("button", { name: "Continue" })).toBeDefined();
+      expect(screen.getByRole("button", { name: "Make an account" })).toBeDefined();
+      expect(screen.queryByText("Continue with a provider")).toBeNull();
+      expect(
+        screen.queryByText("Passkey sign-in can be enabled from the Snapshot auth runtime."),
+      ).toBeNull();
+    });
 
     fireEvent.change(screen.getByLabelText("Work email"), {
       target: { value: "ada@example.com" },
@@ -594,13 +608,17 @@ describe("Manifest auth runtime", () => {
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
 
+    await waitFor(() => {
+      expect(screen.getByText("Use a provider")).toBeDefined();
+      expect(
+        screen.getByRole("button", {
+          name: /Continue with Google Workspace/i,
+        }),
+      ).toBeDefined();
+      expect(screen.getByText("Recommended for your team account")).toBeDefined();
+    });
+
     const providersHeading = screen.getByText("Use a provider");
-    expect(
-      screen.getByRole("button", {
-        name: /Continue with Google Workspace/i,
-      }),
-    ).toBeDefined();
-    expect(screen.getByText("Recommended for your team account")).toBeDefined();
     const passkeyButton = screen.getByRole("button", { name: "Use a passkey" });
     const emailField = screen.getByLabelText("Email");
 
@@ -697,6 +715,10 @@ describe("Manifest auth runtime", () => {
     };
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Reports")).toBeDefined();
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Reports")).toBeDefined();

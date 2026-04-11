@@ -1,6 +1,5 @@
-import type { SafeParseReturnType, ZodError } from "zod";
+import { ZodError, type SafeParseReturnType } from "zod";
 import { ACTION_TYPES } from "../actions/types";
-import { getDefaultAuthScreenPath } from "./auth-routes";
 import { getDefaultEnvSource, isEnvRef, resolveEnvRef } from "./env";
 import {
   clearCustomFlavors,
@@ -147,42 +146,21 @@ function resolveThemeFlavors(theme: ThemeConfig | undefined): void {
   }
 }
 
-function synthesizeAuthRoutes(manifest: EnvResolvedManifest): RouteConfig[] {
+function validateAuthScreenRoutes(manifest: EnvResolvedManifest): void {
   if (!manifest.auth) {
-    return [];
+    return;
   }
 
-  const existingRouteIds = new Set(manifest.routes.map((route) => route.id));
-  const existingRoutePaths = new Set(manifest.routes.map((route) => route.path));
-  const syntheticRoutes: RouteConfig[] = [];
-
+  const routeIds = new Set(manifest.routes.map((route) => route.id));
   for (const screen of manifest.auth.screens) {
-    if (existingRouteIds.has(screen)) {
+    if (routeIds.has(screen)) {
       continue;
     }
 
-    const path = getDefaultAuthScreenPath(screen);
-    if (existingRoutePaths.has(path)) {
-      throw new Error(
-        `Auth screen "${screen}" is enabled but the synthesized path "${path}" is already used by another route. Add an explicit route with id "${screen}" and a unique path.`,
-      );
-    }
-
-    existingRouteIds.add(screen);
-    existingRoutePaths.add(path);
-    syntheticRoutes.push({
-      id: screen,
-      path,
-      content: [
-        {
-          type: "heading",
-          text: `Auth screen: ${screen}`,
-        },
-      ],
-    });
+    throw new Error(
+      `Auth screen "${screen}" is enabled but no route has id "${screen}". Add { "id": "${screen}", "path": "/your-path", ... } to routes.`,
+    );
   }
-
-  return syntheticRoutes;
 }
 
 function resolveWorkflowMap(
@@ -570,14 +548,8 @@ function buildCompiledManifest(
     env,
   ) as EnvResolvedManifest;
 
-  const synthesizedAuthRoutes = synthesizeAuthRoutes(resolvedManifest);
-  const runtimeManifest: EnvResolvedManifest =
-    synthesizedAuthRoutes.length > 0
-      ? {
-          ...resolvedManifest,
-          routes: [...resolvedManifest.routes, ...synthesizedAuthRoutes],
-        }
-      : resolvedManifest;
+  validateAuthScreenRoutes(resolvedManifest);
+  const runtimeManifest = resolvedManifest;
 
   resolveThemeFlavors(runtimeManifest.theme);
   validatePolicyRefs(runtimeManifest);
@@ -785,9 +757,30 @@ export function safeCompileManifest(manifest: unknown):
     };
   }
 
-  return {
-    success: true,
-    manifest: parsed.data,
-    compiled: buildCompiledManifest(parsed.data, getDefaultEnvSource()),
-  };
+  try {
+    return {
+      success: true,
+      manifest: parsed.data,
+      compiled: buildCompiledManifest(parsed.data, getDefaultEnvSource()),
+    };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        success: false,
+        error,
+      };
+    }
+
+    return {
+      success: false,
+      error: new ZodError([
+        {
+          code: "custom",
+          path: [],
+          message:
+            error instanceof Error ? error.message : "Manifest compilation failed",
+        },
+      ]),
+    };
+  }
 }

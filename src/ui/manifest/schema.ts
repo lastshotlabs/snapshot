@@ -7,7 +7,6 @@
  */
 
 import { z } from "zod";
-import { getDefaultAuthScreenPath } from "./auth-routes";
 import { themeConfigSchema } from "../tokens/schema";
 import { workflowConditionSchema } from "../workflows/schema";
 import {
@@ -1280,7 +1279,6 @@ export const manifestConfigSchema = z
   .superRefine((data, ctx) => {
     const routeIds = new Set<string>();
     const routePaths = new Set<string>();
-    const syntheticAuthRoutes = new Set<string>();
 
     data.routes.forEach((route, index) => {
       if (routeIds.has(route.id)) {
@@ -1303,28 +1301,6 @@ export const manifestConfigSchema = z
         routePaths.add(route.path);
       }
     });
-
-    if (data.auth) {
-      data.auth.screens.forEach((screen, index) => {
-        if (routeIds.has(screen) || syntheticAuthRoutes.has(screen)) {
-          return;
-        }
-
-        const defaultPath = getDefaultAuthScreenPath(screen);
-        if (routePaths.has(defaultPath)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["auth", "screens", index],
-            message: `Auth screen "${screen}" uses synthesized path "${defaultPath}", but another route already owns that path. Add an explicit route with id "${screen}" and a unique path.`,
-          });
-          return;
-        }
-
-        syntheticAuthRoutes.add(screen);
-        routeIds.add(screen);
-        routePaths.add(defaultPath);
-      });
-    }
 
     if (data.app?.home && !routePaths.has(data.app.home)) {
       ctx.addIssue({

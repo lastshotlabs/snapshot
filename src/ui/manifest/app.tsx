@@ -854,12 +854,22 @@ function AppShell({
   isPreloading: boolean;
   api: ReturnType<typeof createSnapshot>["api"];
 }) {
+  const fallbackLogoText =
+    (typeof manifest.app.title === "string" ? manifest.app.title.trim() : "") ||
+    (typeof manifest.raw.app?.title === "string"
+      ? manifest.raw.app.title.trim()
+      : "") ||
+    "Snapshot";
   const navConfig = manifest.navigation
     ? ({
         type: "nav",
         items: manifest.navigation.items,
         collapsible: true,
         userMenu: true,
+        logo: {
+          text: fallbackLogoText,
+          path: manifest.app.home ?? manifest.firstRoute?.path ?? "/",
+        },
       } as const)
     : null;
 
@@ -1562,6 +1572,10 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
   bootBuiltins();
   const compiledManifest = useMemo(() => compileManifest(manifest), [manifest]);
   const runtimeApiUrl = compiledManifest.app.apiUrl ?? apiUrl;
+  const tokenCss = useMemo(
+    () => resolveTokens(compiledManifest.theme ?? {}),
+    [compiledManifest.theme],
+  );
   const snapshot = useMemo(
     () =>
       createSnapshot({
@@ -1579,15 +1593,14 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
     [compiledManifest, snapshot],
   );
 
-  useLayoutEffect(() => {
-    if (compiledManifest.theme) {
-      const css = resolveTokens(compiledManifest.theme);
-      injectStyleSheet("snapshot-tokens", css);
-    }
-  }, [compiledManifest.theme]);
-
   return (
     <snapshot.QueryProvider>
+      <div aria-hidden="true" hidden data-snapshot-token-styles="">
+        <style
+          id="snapshot-tokens"
+          dangerouslySetInnerHTML={{ __html: tokenCss }}
+        />
+      </div>
       <SnapshotApiContext.Provider value={snapshot.api}>
         <ManifestRuntimeProvider
           manifest={compiledManifest}

@@ -384,27 +384,40 @@ describe("compiler", () => {
     });
   });
 
-  it("synthesizes missing auth routes from the enabled screens", () => {
-    const result = safeCompileManifest({
+  it("requires enabled auth screens to have matching route ids", () => {
+    expect(() =>
+      compileManifest({
+        auth: {
+          screens: ["login"],
+        },
+        routes: [
+          {
+            id: "sign-in",
+            path: "/sign-in",
+            content: [{ type: "heading", text: "Login" }],
+          },
+        ],
+      }),
+    ).toThrow(
+      'Auth screen "login" is enabled but no route has id "login". Add { "id": "login", "path": "/your-path", ... } to routes.',
+    );
+  });
+
+  it("accepts custom auth screen paths when the route id matches", () => {
+    const compiled = compileManifest({
       auth: {
         screens: ["login"],
       },
       routes: [
         {
-          id: "sign-in",
+          id: "login",
           path: "/sign-in",
           content: [{ type: "heading", text: "Login" }],
         },
       ],
     });
 
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.compiled.routes.some((route) => route.id === "login")).toBe(
-        true,
-      );
-      expect(result.compiled.routeMap["/login"]?.id).toBe("login");
-    }
+    expect(compiled.routeMap["/sign-in"]?.id).toBe("login");
   });
 
   it("defaults app.home to the first route when omitted", () => {

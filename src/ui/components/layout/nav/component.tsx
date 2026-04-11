@@ -65,17 +65,21 @@ function NavItem({
             : "inherit",
           opacity: item.isDisabled ? 0.55 : 1,
           borderRadius: "var(--sn-radius-md, 0.375rem)",
+          boxShadow: item.isActive
+            ? "inset 0 0 0 1px var(--sn-color-primary)"
+            : "none",
           cursor: item.isDisabled ? "not-allowed" : "pointer",
           textAlign: "left",
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           fontFamily: "inherit",
+          fontWeight: item.isActive ? 600 : 500,
           transition:
             "background var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
         }}
       >
         {item.icon && (
           <span data-nav-icon="" aria-hidden="true">
-            {item.icon}
+            <Icon name={item.icon} size={16} />
           </span>
         )}
         <span

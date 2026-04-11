@@ -51,10 +51,7 @@ export function getAuthScreenPath(
   manifest: CompiledManifest,
   screen: AuthScreen,
 ): string | undefined {
-  return (
-    manifest.routes.find((route) => route.id === screen)?.path ??
-    AUTH_SCREEN_DEFAULT_PATHS[screen]
-  );
+  return manifest.routes.find((route) => route.id === screen)?.path;
 }
 
 /**

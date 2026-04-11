@@ -194,6 +194,16 @@ describe("ManifestApp", () => {
     expect(style?.textContent).toContain(":root");
   });
 
+  it("injects baseline token CSS even when the manifest omits theme", () => {
+    render(
+      <ManifestApp manifest={minimalManifest} apiUrl="http://localhost" />,
+    );
+
+    const style = document.getElementById("snapshot-tokens");
+    expect(style).not.toBeNull();
+    expect(style?.textContent).toContain("--sn-color-background");
+  });
+
   it("renders the current route when multiple routes exist", async () => {
     setTestUrl("http://localhost/about");
 
@@ -263,12 +273,13 @@ describe("ManifestApp", () => {
     const manifest: ManifestConfig = {
       app: {
         shell: "sidebar",
+        title: "Budget App",
       },
       navigation: {
         mode: "sidebar",
         items: [
-          { label: "Home", path: "/" },
-          { label: "About", path: "/about" },
+          { label: "Home", path: "/", icon: "layout-dashboard" },
+          { label: "About", path: "/about", icon: "wallet" },
         ],
       },
       routes: [
@@ -286,6 +297,11 @@ describe("ManifestApp", () => {
     };
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+    expect(screen.getByText("Budget App")).toBeDefined();
+    expect(
+      document.querySelector('[data-nav-icon=""] svg'),
+    ).not.toBeNull();
+    expect(document.querySelector('[data-nav-item][data-active="true"]')).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "About" }));
 
     await waitFor(() => {
