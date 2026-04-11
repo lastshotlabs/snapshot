@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   renderHook,
   render,
   screen,
   act,
   fireEvent,
+  cleanup,
 } from "@testing-library/react";
 import { createElement } from "react";
 import { Provider } from "jotai/react";
@@ -20,6 +21,22 @@ import { useAutoForm, validateField } from "../hook";
 import { AutoForm } from "../component";
 import type { FieldConfig, AutoFormConfig } from "../types";
 import type { AtomRegistry } from "../../../../context/types";
+
+vi.mock("../../../../manifest/runtime", async () => {
+  const actual = await vi.importActual<typeof import("../../../../manifest/runtime")>(
+    "../../../../manifest/runtime",
+  );
+  return {
+    ...actual,
+    useManifestResourceMountRefetch: () => undefined,
+    useManifestResourcePolling: () => undefined,
+    useManifestResourceFocusRefetch: () => undefined,
+  };
+});
+
+afterEach(() => {
+  cleanup();
+});
 
 // --- Mock API client ---
 function createMockApi() {
@@ -613,6 +630,40 @@ describe("AutoForm", () => {
     });
   });
 
+  it("interpolates submit path params from prefetched row values", async () => {
+    const selectedAtom = pageRegistry.register("transactions-table");
+    pageRegistry.store.set(selectedAtom, {
+      selected: {
+        id: "txn-123",
+        amount: 25,
+      },
+    });
+
+    const wrapper = createWrapper({ api: mockApi, pageRegistry });
+    const config: AutoFormConfig = {
+      type: "form",
+      data: { from: "transactions-table.selected" },
+      submit: "/api/transactions/{id}",
+      method: "PUT",
+      fields: [
+        { name: "id", type: "text", label: "Transaction ID" },
+        { name: "amount", type: "number", label: "Amount" },
+      ],
+    };
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    expect(await screen.findByDisplayValue("txn-123")).toBeDefined();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Submit"));
+    });
+
+    expect(mockApi.put).toHaveBeenCalledWith("/api/transactions/txn-123", {
+      id: "txn-123",
+      amount: 25,
+    });
+  });
+
   it("loads initial values from a named resource", async () => {
     mockApi.get.mockResolvedValueOnce({ email: "prefill@example.com" });
     const wrapper = createWrapper({
@@ -677,5 +728,44 @@ describe("AutoForm", () => {
 
     expect(screen.getByText("Admin")).toBeDefined();
     expect(screen.getByText("User")).toBeDefined();
+  });
+
+  it("supports custom select value and label fields", async () => {
+    mockApi.get.mockResolvedValueOnce([
+      { code: "a", displayName: "Alpha" },
+      { code: "b", displayName: "Beta" },
+    ]);
+    const wrapper = createWrapper({
+      api: mockApi,
+      pageRegistry,
+      resources: {
+        roles: {
+          method: "GET",
+          endpoint: "/api/roles",
+        },
+      },
+    });
+    const config: AutoFormConfig = {
+      type: "form",
+      submit: "/api/users",
+      fields: [
+        {
+          name: "role",
+          type: "select",
+          label: "Role",
+          options: { resource: "roles" },
+          labelField: "displayName",
+          valueField: "code",
+        },
+      ],
+    };
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("Alpha")).toBeDefined();
+    expect(screen.getByText("Beta")).toBeDefined();
   });
 });

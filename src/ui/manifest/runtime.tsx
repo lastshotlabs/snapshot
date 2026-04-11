@@ -70,6 +70,7 @@ interface ManifestResourceCacheValue {
     options?: {
       method?: "POST" | "PUT" | "PATCH" | "DELETE";
       params?: Record<string, unknown>;
+      pathParams?: Record<string, unknown>;
       payload?: Record<string, unknown>;
     },
   ) => Promise<unknown>;
@@ -376,7 +377,7 @@ export function ManifestRuntimeProvider({
       const resourceConfig = isResourceRef(target)
         ? manifest.resources?.[target.resource]
         : undefined;
-      const existing = entries[key];
+      const existing = entriesRef.current[key];
       if (isEntryFresh(existing)) {
         return existing!.data;
       }
@@ -463,7 +464,7 @@ export function ManifestRuntimeProvider({
         throw resolvedError;
       }
     },
-    [entries, isEntryFresh, manifest.resources, resolvedClients],
+    [isEntryFresh, manifest.resources, resolvedClients],
   );
 
   const invalidateQueryKey = useCallback((queryKey: string[]) => {
@@ -547,12 +548,14 @@ export function ManifestRuntimeProvider({
       options?: {
         method?: "POST" | "PUT" | "PATCH" | "DELETE";
         params?: Record<string, unknown>;
+        pathParams?: Record<string, unknown>;
         payload?: Record<string, unknown>;
       },
     ): Promise<unknown> => {
       const fallbackMethod = options?.method ?? "POST";
       const payload = options?.payload;
       const params = options?.params ?? {};
+      const pathParams = options?.pathParams ?? params;
 
       const request = resolveEndpointTarget(
         target,
@@ -560,7 +563,11 @@ export function ManifestRuntimeProvider({
         params,
         fallbackMethod,
       );
-      const endpoint = buildRequestUrl(request.endpoint, request.params);
+      const endpoint = buildRequestUrl(
+        request.endpoint,
+        request.params,
+        { ...request.params, ...pathParams },
+      );
       if (request.method === "GET") {
         throw new Error(
           "Manifest runtime mutations require POST, PUT, PATCH, or DELETE.",
@@ -667,18 +674,18 @@ export function ManifestRuntimeProvider({
 
   const cacheValue = useMemo<ManifestResourceCacheValue>(
     () => ({
-      entries,
+      entries: entriesRef.current,
       getResourceVersion: (name) => resourceVersions[name] ?? 0,
       getInvalidationTargets: (name) =>
         getResourceInvalidationTargets(name, manifest.resources),
       getCacheKey,
       getEntry: (target, params) => {
         const key = getCacheKey(target, params);
-        return key ? entries[key] : undefined;
+        return key ? entriesRef.current[key] : undefined;
       },
       getData: (target, params) => {
         const key = getCacheKey(target, params);
-        const entry = key ? entries[key] : undefined;
+        const entry = key ? entriesRef.current[key] : undefined;
         return isEntryFresh(entry) ? entry?.data : undefined;
       },
       loadTarget,
@@ -688,7 +695,6 @@ export function ManifestRuntimeProvider({
       mutateTarget,
     }),
     [
-      entries,
       getCacheKey,
       invalidateQueryKey,
       invalidateResource,

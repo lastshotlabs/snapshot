@@ -46,6 +46,8 @@ describe("fieldConfigSchema", () => {
       name: "role",
       type: "select",
       options: "/api/roles",
+      labelField: "displayName",
+      valueField: "code",
     });
     expect(result.success).toBe(true);
   });
@@ -195,6 +197,15 @@ describe("autoFormConfigSchema", () => {
     const result = autoFormConfigSchema.safeParse({
       type: "form",
       fields: [{ name: "x", type: "text" }],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects submit path placeholders without matching fields", () => {
+    const result = autoFormConfigSchema.safeParse({
+      ...baseConfig,
+      submit: "/api/users/{id}",
+      fields: [{ name: "email", type: "email" }],
     });
     expect(result.success).toBe(false);
   });

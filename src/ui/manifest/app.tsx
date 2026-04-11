@@ -568,6 +568,65 @@ function applyRouteResourceInvalidations(
   }
 }
 
+function setClientDefaultHeadersProvider(
+  client: ApiClientLike | null | undefined,
+  provider?: () => Record<string, string> | undefined,
+): void {
+  if (
+    client &&
+    typeof (client as { setDefaultHeadersProvider?: unknown })
+      .setDefaultHeadersProvider === "function"
+  ) {
+    (client as ApiClient & {
+      setDefaultHeadersProvider: (
+        provider?: () => Record<string, string> | undefined,
+      ) => void;
+    }).setDefaultHeadersProvider(provider);
+  }
+}
+
+function ManifestApiHeadersBridge({
+  manifest,
+  api,
+  clients,
+}: {
+  manifest: CompiledManifest;
+  api: ReturnType<typeof createSnapshot>["api"];
+  clients: Record<string, ApiClientLike>;
+}) {
+  const resolvedHeaders = useResolveFrom(
+    (manifest.app.headers ?? EMPTY_OBJECT) as Record<string, unknown>,
+  ) as Record<string, unknown>;
+
+  const headerValues = useMemo(() => {
+    const next: Record<string, string> = {};
+    for (const [key, value] of Object.entries(resolvedHeaders)) {
+      if (value == null) {
+        continue;
+      }
+      next[key] = String(value);
+    }
+    return next;
+  }, [resolvedHeaders]);
+
+  useLayoutEffect(() => {
+    const provider = () => headerValues;
+    setClientDefaultHeadersProvider(api, provider);
+    for (const client of Object.values(clients)) {
+      setClientDefaultHeadersProvider(client, provider);
+    }
+
+    return () => {
+      setClientDefaultHeadersProvider(api, undefined);
+      for (const client of Object.values(clients)) {
+        setClientDefaultHeadersProvider(client, undefined);
+      }
+    };
+  }, [api, clients, headerValues]);
+
+  return null;
+}
+
 function AuthRuntimeBridge({
   manifest,
   useUser,
@@ -1538,6 +1597,11 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
             resources={compiledManifest.resources}
             api={snapshot.api}
           >
+            <ManifestApiHeadersBridge
+              manifest={compiledManifest}
+              api={snapshot.api}
+              clients={runtimeClients}
+            />
             {compiledManifest.auth || compiledManifest.realtime ? (
               <>
                 <AuthRuntimeBridge

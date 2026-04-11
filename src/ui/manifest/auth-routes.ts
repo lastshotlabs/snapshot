@@ -18,6 +18,15 @@ export type AuthScreen =
   | "verify-email"
   | "mfa";
 
+export const AUTH_SCREEN_DEFAULT_PATHS: Record<AuthScreen, string> = {
+  login: "/login",
+  register: "/register",
+  "forgot-password": "/forgot-password",
+  "reset-password": "/reset-password",
+  "verify-email": "/verify-email",
+  mfa: "/mfa",
+};
+
 /**
  * Minimal manifest shape needed to validate auth screen ids.
  */
@@ -42,7 +51,17 @@ export function getAuthScreenPath(
   manifest: CompiledManifest,
   screen: AuthScreen,
 ): string | undefined {
-  return manifest.routes.find((route) => route.id === screen)?.path;
+  return (
+    manifest.routes.find((route) => route.id === screen)?.path ??
+    AUTH_SCREEN_DEFAULT_PATHS[screen]
+  );
+}
+
+/**
+ * Return the default path used when an auth screen route is synthesized.
+ */
+export function getDefaultAuthScreenPath(screen: AuthScreen): string {
+  return AUTH_SCREEN_DEFAULT_PATHS[screen];
 }
 
 /**

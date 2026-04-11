@@ -71,6 +71,10 @@ export const fieldConfigSchema = z
     validation: fieldValidationSchema.optional(),
     /** Options for select fields. Array of {label, value} or a string endpoint. */
     options: z.union([z.array(fieldOptionSchema), dataSourceSchema]).optional(),
+    /** Field to use as the option label when options come from an endpoint. */
+    labelField: z.string().optional(),
+    /** Field to use as the option value when options come from an endpoint. */
+    valueField: z.string().optional(),
     /** Default value for the field. */
     default: z.unknown().optional(),
     /** Whether the field is disabled. */
@@ -181,4 +185,28 @@ export const autoFormConfigSchema = z
     /** Additional CSS class name. */
     className: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((value, ctx) => {
+    if (typeof value.submit !== "string") {
+      return;
+    }
+
+    if (value.fields === "auto" || !Array.isArray(value.fields)) {
+      return;
+    }
+
+    const fieldNames = new Set(value.fields.map((field) => field.name));
+    const placeholders = [...value.submit.matchAll(/\{(\w+)\}/g)].map(
+      (match) => match[1]!,
+    );
+
+    for (const placeholder of placeholders) {
+      if (!fieldNames.has(placeholder)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["submit"],
+          message: `Submit path placeholder "{${placeholder}}" must match a declared field name.`,
+        });
+      }
+    }
+  });

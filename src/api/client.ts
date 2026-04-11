@@ -66,6 +66,7 @@ interface ApiClientConfig {
   onUnauthenticated?: () => void;
   onForbidden?: () => void;
   contract: AuthContract;
+  defaultHeadersProvider?: () => Record<string, string> | undefined;
 }
 
 /**
@@ -76,6 +77,7 @@ export class ApiClient implements ApiClientLike {
   private readonly authMode: "cookie" | "token";
   private readonly bearerToken: string | undefined;
   private readonly contract: AuthContract;
+  private defaultHeadersProvider?: () => Record<string, string> | undefined;
   private storage: TokenStorage | null = null;
   private onUnauthenticated: (() => void) | undefined;
   private onForbidden: (() => void) | undefined;
@@ -85,6 +87,7 @@ export class ApiClient implements ApiClientLike {
     this.authMode = config.auth ?? "cookie";
     this.bearerToken = config.bearerToken;
     this.contract = config.contract;
+    this.defaultHeadersProvider = config.defaultHeadersProvider;
     this.onUnauthenticated = config.onUnauthenticated;
     this.onForbidden = config.onForbidden;
 
@@ -108,11 +111,18 @@ export class ApiClient implements ApiClientLike {
     this.storage = storage;
   }
 
+  setDefaultHeadersProvider(
+    provider?: () => Record<string, string> | undefined,
+  ): void {
+    this.defaultHeadersProvider = provider;
+  }
+
   private buildHeaders(
     method: string,
     overrides?: Record<string, string>,
   ): Record<string, string> {
     const headers: Record<string, string> = {
+      ...(this.defaultHeadersProvider?.() ?? {}),
       "Content-Type": "application/json",
       ...overrides,
     };

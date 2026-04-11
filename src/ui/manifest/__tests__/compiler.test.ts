@@ -384,7 +384,7 @@ describe("compiler", () => {
     });
   });
 
-  it("rejects auth screens without matching route ids", () => {
+  it("synthesizes missing auth routes from the enabled screens", () => {
     const result = safeCompileManifest({
       auth: {
         screens: ["login"],
@@ -398,11 +398,12 @@ describe("compiler", () => {
       ],
     });
 
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe(
-        'Auth screen "login" is enabled but no route has id "login". Add { "id": "login", "path": "/your-path", ... } to routes.',
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.compiled.routes.some((route) => route.id === "login")).toBe(
+        true,
       );
+      expect(result.compiled.routeMap["/login"]?.id).toBe("login");
     }
   });
 

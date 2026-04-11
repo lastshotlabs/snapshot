@@ -1,6 +1,6 @@
 import type { SafeParseReturnType, ZodError } from "zod";
 import { ACTION_TYPES } from "../actions/types";
-import { getMissingAuthScreenIds } from "./auth-routes";
+import { getDefaultAuthScreenPath } from "./auth-routes";
 import { getDefaultEnvSource, isEnvRef, resolveEnvRef } from "./env";
 import {
   clearCustomFlavors,
@@ -145,6 +145,44 @@ function resolveThemeFlavors(theme: ThemeConfig | undefined): void {
   for (const name of Object.keys(customFlavors)) {
     resolveFlavor(name);
   }
+}
+
+function synthesizeAuthRoutes(manifest: EnvResolvedManifest): RouteConfig[] {
+  if (!manifest.auth) {
+    return [];
+  }
+
+  const existingRouteIds = new Set(manifest.routes.map((route) => route.id));
+  const existingRoutePaths = new Set(manifest.routes.map((route) => route.path));
+  const syntheticRoutes: RouteConfig[] = [];
+
+  for (const screen of manifest.auth.screens) {
+    if (existingRouteIds.has(screen)) {
+      continue;
+    }
+
+    const path = getDefaultAuthScreenPath(screen);
+    if (existingRoutePaths.has(path)) {
+      throw new Error(
+        `Auth screen "${screen}" is enabled but the synthesized path "${path}" is already used by another route. Add an explicit route with id "${screen}" and a unique path.`,
+      );
+    }
+
+    existingRouteIds.add(screen);
+    existingRoutePaths.add(path);
+    syntheticRoutes.push({
+      id: screen,
+      path,
+      content: [
+        {
+          type: "heading",
+          text: `Auth screen: ${screen}`,
+        },
+      ],
+    });
+  }
+
+  return syntheticRoutes;
 }
 
 function resolveWorkflowMap(
@@ -531,22 +569,24 @@ function buildCompiledManifest(
     manifest,
     env,
   ) as EnvResolvedManifest;
-  const missingAuthScreens = getMissingAuthScreenIds(resolvedManifest);
-  if (missingAuthScreens.length > 0) {
-    const screen = missingAuthScreens[0];
-    throw new Error(
-      `Auth screen "${screen}" is enabled but no route has id "${screen}". Add { "id": "${screen}", "path": "/your-path", ... } to routes.`,
-    );
-  }
 
-  resolveThemeFlavors(resolvedManifest.theme);
-  validatePolicyRefs(resolvedManifest);
-  validateCustomClients(resolvedManifest);
-  validateResourceClients(resolvedManifest);
+  const synthesizedAuthRoutes = synthesizeAuthRoutes(resolvedManifest);
+  const runtimeManifest: EnvResolvedManifest =
+    synthesizedAuthRoutes.length > 0
+      ? {
+          ...resolvedManifest,
+          routes: [...resolvedManifest.routes, ...synthesizedAuthRoutes],
+        }
+      : resolvedManifest;
+
+  resolveThemeFlavors(runtimeManifest.theme);
+  validatePolicyRefs(runtimeManifest);
+  validateCustomClients(runtimeManifest);
+  validateResourceClients(runtimeManifest);
 
   const customActionDeclarations =
     (
-      resolvedManifest.workflows as
+    runtimeManifest.workflows as
         | {
             actions?: { custom?: CustomWorkflowActionDeclarationMap };
           }
@@ -555,16 +595,16 @@ function buildCompiledManifest(
   setDeclaredCustomActionSchemas(customActionDeclarations);
 
   for (const { location, definition } of collectWorkflowDefinitions(
-    resolvedManifest,
+    runtimeManifest,
   )) {
     validateWorkflowDefinition(definition, location, customActionDeclarations);
   }
 
   const workflowNames = new Set(
-    Object.keys(resolveWorkflowMap(resolvedManifest.workflows)),
+    Object.keys(resolveWorkflowMap(runtimeManifest.workflows)),
   );
   for (const [kind, workflow] of Object.entries(
-    resolvedManifest.auth?.on ?? {},
+    runtimeManifest.auth?.on ?? {},
   )) {
     if (!workflowNames.has(workflow)) {
       throw new Error(
@@ -574,7 +614,7 @@ function buildCompiledManifest(
   }
 
   for (const [kind, workflow] of Object.entries(
-    resolvedManifest.realtime?.ws?.on ?? {},
+    runtimeManifest.realtime?.ws?.on ?? {},
   )) {
     if (!workflowNames.has(workflow)) {
       throw new Error(
@@ -584,7 +624,7 @@ function buildCompiledManifest(
   }
 
   for (const [path, endpoint] of Object.entries(
-    resolvedManifest.realtime?.sse?.endpoints ?? {},
+    runtimeManifest.realtime?.sse?.endpoints ?? {},
   )) {
     for (const [kind, workflow] of Object.entries(endpoint.on ?? {})) {
       if (!workflowNames.has(workflow)) {
@@ -595,7 +635,7 @@ function buildCompiledManifest(
     }
   }
 
-  const routes: CompiledRoute[] = resolvedManifest.routes.map((route) => {
+  const routes: CompiledRoute[] = runtimeManifest.routes.map((route) => {
     validateRouteSlots(route);
     return {
       id: route.id,
@@ -614,10 +654,10 @@ function buildCompiledManifest(
     routes.map((route) => [route.path, route]),
   ) as Record<string, CompiledRoute>;
 
-  const auth = resolvedManifest.auth
+  const auth = runtimeManifest.auth
     ? {
-        ...resolvedManifest.auth,
-        session: resolvedManifest.auth.session ?? {
+        ...runtimeManifest.auth,
+        session: runtimeManifest.auth.session ?? {
           mode: "cookie" as const,
           storage: "sessionStorage" as const,
           key: "snapshot.token",
@@ -626,33 +666,33 @@ function buildCompiledManifest(
     : undefined;
 
   return {
-    raw: resolvedManifest,
+    raw: runtimeManifest,
     app: {
-      apiUrl: resolvedManifest.app?.apiUrl,
-      shell: resolvedManifest.app?.shell ?? "full-width",
-      title: resolvedManifest.app?.title,
+      apiUrl: runtimeManifest.app?.apiUrl,
+      shell: runtimeManifest.app?.shell ?? "full-width",
+      title: runtimeManifest.app?.title,
       cache: {
-        staleTime: resolvedManifest.app?.cache?.staleTime ?? 5 * 60 * 1000,
-        gcTime: resolvedManifest.app?.cache?.gcTime ?? 10 * 60 * 1000,
-        retry: resolvedManifest.app?.cache?.retry ?? 1,
+        staleTime: runtimeManifest.app?.cache?.staleTime ?? 5 * 60 * 1000,
+        gcTime: runtimeManifest.app?.cache?.gcTime ?? 10 * 60 * 1000,
+        retry: runtimeManifest.app?.cache?.retry ?? 1,
       },
-      home: resolvedManifest.app?.home ?? routes[0]?.path,
-      loading: resolvedManifest.app?.loading,
-      error: resolvedManifest.app?.error,
-      notFound: resolvedManifest.app?.notFound,
-      offline: resolvedManifest.app?.offline,
+      home: runtimeManifest.app?.home ?? routes[0]?.path,
+      loading: runtimeManifest.app?.loading,
+      error: runtimeManifest.app?.error,
+      notFound: runtimeManifest.app?.notFound,
+      offline: runtimeManifest.app?.offline,
     },
-    toast: resolvedManifest.toast,
-    analytics: resolvedManifest.analytics,
-    push: resolvedManifest.push,
-    theme: resolvedManifest.theme,
-    state: resolvedManifest.state,
-    resources: resolvedManifest.resources,
-    workflows: resolveWorkflowMap(resolvedManifest.workflows),
-    overlays: resolvedManifest.overlays,
-    navigation: resolvedManifest.navigation,
+    toast: runtimeManifest.toast,
+    analytics: runtimeManifest.analytics,
+    push: runtimeManifest.push,
+    theme: runtimeManifest.theme,
+    state: runtimeManifest.state,
+    resources: runtimeManifest.resources,
+    workflows: resolveWorkflowMap(runtimeManifest.workflows),
+    overlays: runtimeManifest.overlays,
+    navigation: runtimeManifest.navigation,
     auth,
-    realtime: resolvedManifest.realtime,
+    realtime: runtimeManifest.realtime,
     routes,
     routeMap,
     firstRoute: routes[0] ?? null,

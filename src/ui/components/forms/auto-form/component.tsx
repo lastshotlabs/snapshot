@@ -48,14 +48,20 @@ function isHaltSignal(value: unknown): boolean {
   return value["halt"] === true;
 }
 
-function toFieldOptions(data: unknown) {
+export function toFieldOptions(
+  data: unknown,
+  labelField = "name",
+  valueField = "id",
+) {
   if (Array.isArray(data)) {
     return data
       .map((item) => {
         if (!item || typeof item !== "object") return null;
         const record = item as Record<string, unknown>;
-        const label = record["label"] ?? record["name"] ?? record["title"];
-        const value = record["value"] ?? record["id"] ?? record["key"];
+        const label =
+          record["label"] ?? record[labelField] ?? record["name"] ?? record["title"];
+        const value =
+          record["value"] ?? record[valueField] ?? record["id"] ?? record["key"];
         if (label == null || value == null) return null;
         return { label: String(label), value: String(value) };
       })
@@ -69,7 +75,11 @@ function toFieldOptions(data: unknown) {
     typeof data === "object" &&
     Array.isArray((data as Record<string, unknown>)["data"])
   ) {
-    return toFieldOptions((data as Record<string, unknown>)["data"]);
+    return toFieldOptions(
+      (data as Record<string, unknown>)["data"],
+      labelField,
+      valueField,
+    );
   }
 
   return [];
@@ -185,7 +195,15 @@ function FieldRenderer({
       );
       break;
 
-    case "select":
+    case "select": {
+      const fieldOptions = Array.isArray(field.options)
+        ? field.options
+        : toFieldOptions(
+            optionsResult.data,
+            field.labelField,
+            field.valueField,
+          );
+
       input = (
         <select
           {...commonProps}
@@ -194,10 +212,7 @@ function FieldRenderer({
           style={inputStyle}
         >
           <option value="">{field.placeholder ?? "Select..."}</option>
-          {(Array.isArray(field.options)
-            ? field.options
-            : toFieldOptions(optionsResult.data)
-          ).map((opt) => (
+          {fieldOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
@@ -205,6 +220,7 @@ function FieldRenderer({
         </select>
       );
       break;
+    }
 
     case "checkbox":
       input = (
@@ -524,7 +540,11 @@ async function submitToApi(
     undefined,
     fallbackMethod,
   );
-  const endpoint = buildRequestUrl(request.endpoint, request.params);
+  const endpoint = buildRequestUrl(
+    request.endpoint,
+    request.params,
+    { ...request.params, ...values },
+  );
   switch (request.method) {
     case "PUT":
       return api.put(endpoint, values);
@@ -601,6 +621,7 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
             ? await resourceCache.mutateTarget(config.submit, {
                 method,
                 payload: values,
+                pathParams: values,
               })
             : await submitToApi(
                 api,

@@ -257,12 +257,25 @@ export function resolveEndpointTarget(
 export function buildRequestUrl(
   endpoint: string,
   params: Record<string, unknown> = {},
+  pathParams: Record<string, unknown> = params,
 ): string {
   const usedPathParams = new Set<string>();
-  const interpolatedPath = endpoint.replace(/\{(\w+)\}/g, (_, key: string) => {
-    usedPathParams.add(key);
-    const value = params[key];
-    return value == null ? `{${key}}` : encodeURIComponent(String(value));
+  const interpolatedPath = endpoint.replace(/\{([^}]+)\}/g, (_, token: string) => {
+    const [rawName, ...templateParts] = token.split(':');
+    const name = rawName ?? "";
+    const template = templateParts.join(':');
+
+    if ((name === 'date' || name === 'today') && template) {
+      return formatDateTemplate(new Date(), template);
+    }
+
+    if (name === 'date' || name === 'today') {
+      return formatDateTemplate(new Date(), 'YYYY-MM-DD');
+    }
+
+    usedPathParams.add(name);
+    const value = pathParams[name];
+    return value == null ? `{${token}}` : encodeURIComponent(String(value));
   });
 
   const query = new URLSearchParams();
@@ -273,6 +286,25 @@ export function buildRequestUrl(
 
   const queryString = query.toString();
   return queryString ? `${interpolatedPath}?${queryString}` : interpolatedPath;
+}
+
+function formatDateTemplate(date: Date, template: string): string {
+  const parts: Record<string, string> = {
+    YYYY: String(date.getUTCFullYear()),
+    YY: String(date.getUTCFullYear()).slice(-2),
+    MM: String(date.getUTCMonth() + 1).padStart(2, '0'),
+    M: String(date.getUTCMonth() + 1),
+    DD: String(date.getUTCDate()).padStart(2, '0'),
+    D: String(date.getUTCDate()),
+    HH: String(date.getUTCHours()).padStart(2, '0'),
+    H: String(date.getUTCHours()),
+    mm: String(date.getUTCMinutes()).padStart(2, '0'),
+    m: String(date.getUTCMinutes()),
+    ss: String(date.getUTCSeconds()).padStart(2, '0'),
+    s: String(date.getUTCSeconds()),
+  };
+
+  return template.replace(/YYYY|YY|MM|M|DD|D|HH|H|mm|m|ss|s/g, token => parts[token] ?? token);
 }
 
 export function extractResourceRefs(

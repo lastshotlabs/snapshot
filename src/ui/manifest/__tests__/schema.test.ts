@@ -30,6 +30,9 @@ describe("manifestConfigSchema", () => {
         title: "Snapshot App",
         shell: "sidebar",
         home: "/dashboard",
+        headers: {
+          "x-ledger-id": { from: "global.currentLedgerId" },
+        },
       },
       theme: { flavor: "neutral" },
       state: {
@@ -216,7 +219,7 @@ describe("manifestConfigSchema", () => {
           id: "dashboard",
           path: "/dashboard",
           title: "Dashboard",
-          layout: "sidebar" as const,
+          layouts: ["sidebar" as const],
           preload: [
             "user.list",
             {
@@ -242,14 +245,14 @@ describe("manifestConfigSchema", () => {
           id: "users",
           path: "/users",
           title: "Users",
-          layout: "sidebar" as const,
+          layouts: ["sidebar" as const],
           content: [{ type: "heading", text: "Users" }],
         },
         {
           id: "users-all",
           path: "/users/all",
           title: "All Users",
-          layout: "sidebar" as const,
+          layouts: ["sidebar" as const],
           content: [{ type: "heading", text: "All Users" }],
         },
       ],
@@ -429,7 +432,6 @@ describe("manifestConfigSchema", () => {
 describe("pageConfigSchema", () => {
   it("validates a page with layout and content", () => {
     const result = pageConfigSchema.safeParse({
-      layout: "sidebar",
       title: "Dashboard",
       content: [{ type: "heading", text: "Hello" }],
       roles: ["admin"],

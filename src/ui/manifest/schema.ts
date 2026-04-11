@@ -7,7 +7,7 @@
  */
 
 import { z } from "zod";
-import { getMissingAuthScreenIds } from "./auth-routes";
+import { getDefaultAuthScreenPath } from "./auth-routes";
 import { themeConfigSchema } from "../tokens/schema";
 import { workflowConditionSchema } from "../workflows/schema";
 import {
@@ -1112,6 +1112,9 @@ export const appConfigSchema = z
     apiUrl: stringOrEnvRef.optional(),
     title: textOrTRefSchema.optional(),
     shell: layoutSchema.default("full-width"),
+    headers: z
+      .record(z.union([stringOrEnvRef, fromRefSchema]))
+      .optional(),
     cache: appCacheSchema.optional(),
     home: z.string().startsWith("/").optional(),
     loading: z.union([componentConfigSchema, stringOrEnvRef]).optional(),
@@ -1277,6 +1280,7 @@ export const manifestConfigSchema = z
   .superRefine((data, ctx) => {
     const routeIds = new Set<string>();
     const routePaths = new Set<string>();
+    const syntheticAuthRoutes = new Set<string>();
 
     data.routes.forEach((route, index) => {
       if (routeIds.has(route.id)) {
@@ -1299,6 +1303,28 @@ export const manifestConfigSchema = z
         routePaths.add(route.path);
       }
     });
+
+    if (data.auth) {
+      data.auth.screens.forEach((screen, index) => {
+        if (routeIds.has(screen) || syntheticAuthRoutes.has(screen)) {
+          return;
+        }
+
+        const defaultPath = getDefaultAuthScreenPath(screen);
+        if (routePaths.has(defaultPath)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["auth", "screens", index],
+            message: `Auth screen "${screen}" uses synthesized path "${defaultPath}", but another route already owns that path. Add an explicit route with id "${screen}" and a unique path.`,
+          });
+          return;
+        }
+
+        syntheticAuthRoutes.add(screen);
+        routeIds.add(screen);
+        routePaths.add(defaultPath);
+      });
+    }
 
     if (data.app?.home && !routePaths.has(data.app.home)) {
       ctx.addIssue({
@@ -1361,19 +1387,6 @@ export const manifestConfigSchema = z
         }
       });
     }
-
-    const missingAuthScreens = getMissingAuthScreenIds({
-      auth: data.auth,
-      routes: data.routes,
-    });
-    missingAuthScreens.forEach((screen) => {
-      const screenIndex = data.auth?.screens.indexOf(screen) ?? -1;
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["auth", "screens", screenIndex >= 0 ? screenIndex : 0],
-        message: `Auth screen "${screen}" is enabled but no route has id "${screen}". Add { "id": "${screen}", "path": "/your-path", ... } to routes.`,
-      });
-    });
 
     const resourceNames = new Set(Object.keys(data.resources ?? {}));
     Object.entries(data.resources ?? {}).forEach(([name, resource]) => {
