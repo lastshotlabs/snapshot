@@ -96,13 +96,13 @@ describe("manifest validation logic", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects invalid route layout", () => {
+  it("rejects malformed route layout objects", () => {
     const manifest = {
       routes: [
         {
           id: "home",
           path: "/home",
-          layouts: ["invalid-layout"],
+          layouts: [{ props: { title: "Missing type" } }],
           content: [{ type: "heading", text: "Hi" }],
         },
       ],

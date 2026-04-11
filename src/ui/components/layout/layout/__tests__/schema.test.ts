@@ -35,10 +35,10 @@ describe("layoutConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("rejects an invalid variant", () => {
+  it("rejects an empty variant", () => {
     const result = layoutConfigSchema.safeParse({
       type: "layout",
-      variant: "stacked",
+      variant: "",
     });
     expect(result.success).toBe(false);
   });

@@ -24,6 +24,32 @@ import {
 } from "./color";
 import { getFlavor } from "./flavors";
 
+// ── Known Google Font families ────────────────────────────────────────────────
+
+const KNOWN_GOOGLE_FONTS = new Set([
+  "Inter",
+  "Roboto",
+  "Open Sans",
+  "Lato",
+  "Poppins",
+  "Montserrat",
+  "Nunito",
+  "Raleway",
+  "Source Sans Pro",
+  "DM Sans",
+  "Plus Jakarta Sans",
+  "Outfit",
+  "Geist",
+]);
+
+/**
+ * Build a Google Fonts @import URL for a given family name.
+ */
+function googleFontImport(family: string): string {
+  const encoded = family.replace(/\s+/g, "+");
+  return `@import url(https://fonts.googleapis.com/css2?family=${encoded}:wght@300;400;500;600;700&display=swap);`;
+}
+
 // ── Radius mapping ───────────────────────────────────────────────────────────
 
 const RADIUS_MAP: Record<RadiusScale, string> = {
@@ -257,7 +283,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       );
     }
     if (lines.length > 0) {
-      blocks.push(`[data-snapshot-component="card"] {\n${lines.join("\n")}\n}`);
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -296,7 +322,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     if (lines.length > 0) {
       blocks.push(
-        `[data-snapshot-component="table"] {\n${lines.join("\n")}\n}`,
+        `:root {\n${lines.join("\n")}\n}`,
       );
     }
   }
@@ -322,7 +348,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     if (lines.length > 0) {
       blocks.push(
-        `[data-snapshot-component="button"] {\n${lines.join("\n")}\n}`,
+        `:root {\n${lines.join("\n")}\n}`,
       );
     }
   }
@@ -338,7 +364,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     if (lines.length > 0) {
       blocks.push(
-        `[data-snapshot-component="input"] {\n${lines.join("\n")}\n}`,
+        `:root {\n${lines.join("\n")}\n}`,
       );
     }
   }
@@ -363,7 +389,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     if (lines.length > 0) {
       blocks.push(
-        `[data-snapshot-component="modal"] {\n${lines.join("\n")}\n}`,
+        `:root {\n${lines.join("\n")}\n}`,
       );
     }
   }
@@ -379,7 +405,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       );
     }
     if (lines.length > 0) {
-      blocks.push(`[data-snapshot-component="nav"] {\n${lines.join("\n")}\n}`);
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -395,7 +421,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     if (lines.length > 0) {
       blocks.push(
-        `[data-snapshot-component="badge"] {\n${lines.join("\n")}\n}`,
+        `:root {\n${lines.join("\n")}\n}`,
       );
     }
   }
@@ -410,7 +436,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     if (lines.length > 0) {
       blocks.push(
-        `[data-snapshot-component="toast"] {\n${lines.join("\n")}\n}`,
+        `:root {\n${lines.join("\n")}\n}`,
       );
     }
   }
@@ -668,6 +694,27 @@ export function resolveTokens(config: ThemeConfig = {}): string {
   // 7. Component tokens
   const componentBlocks = generateComponentTokenCss(components);
 
+  // 7.5 Font imports — must appear before any other CSS rules
+  const fontImports: string[] = [];
+
+  if (font.url) {
+    // Explicit font URL takes priority
+    fontImports.push(`@import url(${font.url});`);
+  } else {
+    // Auto-detect known Google Font families from sans, display, and mono
+    const seen = new Set<string>();
+    for (const fontName of [font.sans, font.display, font.mono]) {
+      if (!fontName) continue;
+      // The font value may include fallbacks (e.g. "Inter, sans-serif"),
+      // so extract the first family name
+      const firstName = fontName.split(",")[0]!.trim().replace(/^['"]|['"]$/g, "");
+      if (KNOWN_GOOGLE_FONTS.has(firstName) && !seen.has(firstName)) {
+        seen.add(firstName);
+        fontImports.push(googleFontImport(firstName));
+      }
+    }
+  }
+
   // 8. Build CSS output
   const sections: string[] = [];
 
@@ -682,5 +729,201 @@ export function resolveTokens(config: ThemeConfig = {}): string {
     sections.push(componentBlocks.join("\n\n"));
   }
 
-  return sections.join("\n\n") + "\n";
+  // Prepend @import statements (CSS requires @import before all other rules)
+  const prefix = fontImports.length > 0 ? fontImports.join("\n") + "\n\n" : "";
+
+  return prefix + sections.join("\n\n") + "\n";
+}
+
+// ── Framework styles ─────────────────────────────────────────────────────────
+
+/**
+ * Returns a CSS string containing framework-level styles:
+ *
+ * 1. CSS reset (box-sizing, margin, padding, body defaults, font inherit)
+ * 2. Component polish CSS — data-attribute-driven styles for page layout,
+ *    data-table, stat-card, form, detail-card, and focus rings.
+ *
+ * All values are parameterized via `--sn-*` token custom properties so the
+ * output adapts to whatever theme tokens are active.
+ */
+export function resolveFrameworkStyles(): string {
+  return `/* ── CSS Reset ──────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--sn-font-sans, system-ui, -apple-system, sans-serif);
+  font-size: var(--sn-font-size-md, 1rem);
+  line-height: var(--sn-leading-normal, 1.5);
+  color: var(--sn-color-foreground);
+  background: var(--sn-color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+button, input, textarea, select { font: inherit; }
+
+/* ── Page layout ───────────────────────────────────────────────────────── */
+
+[data-snapshot-page] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sn-spacing-lg, 1.5rem);
+}
+
+/* ── Data table ────────────────────────────────────────────────────────── */
+
+[data-snapshot-component="data-table"] {
+  overflow: hidden;
+  border: var(--sn-card-border, 1px solid var(--sn-color-border));
+  border-radius: var(--sn-radius-lg, 0.75rem);
+  background: var(--sn-color-card, #ffffff);
+}
+[data-snapshot-component="data-table"] [data-table-search] {
+  padding: var(--sn-spacing-md, 1rem) var(--sn-spacing-md, 1rem) 0;
+}
+[data-snapshot-component="data-table"] table {
+  font-size: var(--sn-font-size-sm, 0.875rem);
+}
+[data-snapshot-component="data-table"] thead {
+  background: var(--sn-table-header-bg, var(--sn-color-muted));
+}
+[data-snapshot-component="data-table"] th {
+  color: var(--sn-color-muted-foreground, #667085);
+  font-size: 0.73rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+[data-snapshot-component="data-table"] td,
+[data-snapshot-component="data-table"] th {
+  border-bottom: 1px solid var(--sn-color-border, #e5e7eb);
+}
+[data-snapshot-component="data-table"] tbody tr:last-child td {
+  border-bottom: 0;
+}
+[data-snapshot-component="data-table"] [data-row-action],
+[data-snapshot-component="data-table"] [data-bulk-action],
+[data-snapshot-component="data-table"] [data-table-pagination] button {
+  border: 1px solid var(--sn-color-border, #e5e7eb);
+  border-radius: var(--sn-radius-md, 0.375rem);
+  background: var(--sn-color-background, #ffffff);
+  color: var(--sn-color-foreground, #111827);
+  padding: 0.4rem 0.65rem;
+  font-weight: 500;
+}
+[data-snapshot-component="data-table"] [data-table-pagination] {
+  padding: 0.75rem var(--sn-spacing-md, 1rem);
+}
+[data-snapshot-component="data-table"] [data-table-bulk-actions] {
+  margin: var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem);
+}
+
+/* ── Stat card ─────────────────────────────────────────────────────────── */
+
+[data-snapshot-component="stat-card"] {
+  background: var(--sn-color-card, #ffffff);
+  border: var(--sn-card-border, 1px solid var(--sn-color-border, #e5e7eb));
+  border-radius: var(--sn-radius-lg, 0.75rem);
+  box-shadow: var(--sn-card-shadow, var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.1)));
+  padding: var(--sn-card-padding, var(--sn-spacing-lg, 1.5rem));
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────── */
+
+[data-snapshot-component="form"] form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sn-spacing-md, 1rem);
+  max-width: min(100%, 36rem);
+}
+[data-snapshot-component="form"] [data-sn-field] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+[data-snapshot-component="form"] [data-sn-field] label {
+  font-size: var(--sn-font-size-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--sn-color-foreground, #111);
+}
+[data-snapshot-component="form"] input[type="text"],
+[data-snapshot-component="form"] input[type="email"],
+[data-snapshot-component="form"] input[type="password"],
+[data-snapshot-component="form"] input[type="number"],
+[data-snapshot-component="form"] input[type="date"],
+[data-snapshot-component="form"] textarea,
+[data-snapshot-component="form"] select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--sn-color-border, #e5e7eb);
+  border-radius: var(--sn-radius-md, 0.375rem);
+  background: var(--sn-color-background, #fff);
+  color: var(--sn-color-foreground, #111);
+  font-size: var(--sn-font-size-sm, 0.875rem);
+  line-height: 1.5;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+[data-snapshot-component="form"] input:focus,
+[data-snapshot-component="form"] textarea:focus,
+[data-snapshot-component="form"] select:focus {
+  outline: none;
+  border-color: var(--sn-color-primary, #2563eb);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent);
+}
+[data-snapshot-component="form"] textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+[data-snapshot-component="form"] [data-sn-field] label:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+[data-snapshot-component="form"] input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--sn-color-primary, #2563eb);
+}
+[data-snapshot-component="form"] [data-sn-field-error] {
+  font-size: var(--sn-font-size-xs, 0.75rem);
+  color: var(--sn-color-destructive, #dc2626);
+}
+[data-snapshot-component="form"] [data-sn-submit] {
+  padding: 0.5rem 1rem;
+  background: var(--sn-color-primary, #2563eb);
+  color: var(--sn-color-primary-foreground, #fff);
+  border: none;
+  border-radius: var(--sn-radius-md, 0.375rem);
+  font-size: var(--sn-font-size-sm, 0.875rem);
+  font-weight: 500;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.15s;
+}
+[data-snapshot-component="form"] [data-sn-submit]:hover { opacity: 0.9; }
+[data-snapshot-component="form"] [data-sn-submit]:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Detail card ───────────────────────────────────────────────────────── */
+
+[data-snapshot-component="detail-card"] {
+  max-width: 32rem;
+}
+
+/* ── Generic component constraints ─────────────────────────────────────── */
+
+[data-snapshot-component] {
+  max-width: 100%;
+}
+
+/* ── Focus ring for interactive controls ───────────────────────────────── */
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: 2px;
+}
+`;
 }

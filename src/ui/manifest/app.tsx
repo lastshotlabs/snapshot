@@ -34,7 +34,7 @@ import { ModalComponent } from "../components/overlay/modal";
 import { useSetStateValue, useStateValue } from "../state";
 import { resolveDetectedLocale, resolveI18nRefs } from "../i18n/resolve";
 import type { PolicyExpr } from "../policies/types";
-import { resolveTokens } from "../tokens/resolve";
+import { resolveTokens, resolveFrameworkStyles } from "../tokens/resolve";
 import { getAuthScreenPath } from "./auth-routes";
 import { compileManifest } from "./compiler";
 import {
@@ -1603,6 +1603,71 @@ function ManifestRouter({
   );
 }
 
+const THEME_STORAGE_KEY = "snapshot-theme-mode";
+
+function getSystemPreference(): "light" | "dark" {
+  if (typeof window === "undefined") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyDarkClass(mode: "light" | "dark" | "system") {
+  if (typeof document === "undefined") return;
+  const resolved = mode === "system" ? getSystemPreference() : mode;
+  if (resolved === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+function DarkModeManager({ themeMode }: { themeMode?: "light" | "dark" | "system" }) {
+  const [mode, setMode] = useState<"light" | "dark" | "system">(() => {
+    if (typeof window === "undefined") return themeMode ?? "light";
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "light" || stored === "dark" || stored === "system") return stored;
+    return themeMode ?? "light";
+  });
+
+  // Apply immediately to prevent flash
+  useLayoutEffect(() => {
+    applyDarkClass(mode);
+  }, [mode]);
+
+  // Listen for system preference changes when mode is "system"
+  useEffect(() => {
+    if (mode !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyDarkClass("system");
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [mode]);
+
+  // Persist to localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(THEME_STORAGE_KEY, mode);
+  }, [mode]);
+
+  // Listen for set-theme actions via custom event
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.mode === "light" || detail?.mode === "dark" || detail?.mode === "system") {
+        setMode(detail.mode);
+      } else if (detail?.mode === "toggle") {
+        setMode((prev) => {
+          const resolved = prev === "system" ? getSystemPreference() : prev;
+          return resolved === "dark" ? "light" : "dark";
+        });
+      }
+    };
+    window.addEventListener("snapshot:set-theme", handler);
+    return () => window.removeEventListener("snapshot:set-theme", handler);
+  }, []);
+
+  return null;
+}
+
 /**
  * Render the manifest-driven application shell.
  *
@@ -1617,6 +1682,7 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
     () => resolveTokens(compiledManifest.theme ?? {}),
     [compiledManifest.theme],
   );
+  const frameworkCss = useMemo(() => resolveFrameworkStyles(), []);
   const snapshot = useMemo(
     () =>
       createSnapshot({
@@ -1637,7 +1703,12 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
           id="snapshot-tokens"
           dangerouslySetInnerHTML={{ __html: tokenCss }}
         />
+        <style
+          id="snapshot-framework"
+          dangerouslySetInnerHTML={{ __html: frameworkCss }}
+        />
       </div>
+      <DarkModeManager themeMode={compiledManifest.theme?.mode as "light" | "dark" | "system" | undefined} />
       <SnapshotApiContext.Provider value={snapshot.api}>
         <ManifestRuntimeProvider
           manifest={compiledManifest}

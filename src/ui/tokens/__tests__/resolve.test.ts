@@ -1,6 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { resolveTokens } from "../resolve";
-import { defineFlavor, getFlavor } from "../flavors";
+import { defineFlavor, getFlavor, registerBuiltInFlavors } from "../flavors";
+
+beforeAll(() => {
+  registerBuiltInFlavors();
+});
 
 describe("resolveTokens", () => {
   it("returns valid CSS with no config (defaults to neutral)", () => {
@@ -205,7 +209,6 @@ describe("resolveTokens with component tokens", () => {
         },
       },
     });
-    expect(css).toContain('[data-snapshot-component="card"]');
     expect(css).toContain("--sn-card-shadow:");
     expect(css).toContain("--sn-card-padding:");
     expect(css).toContain("--sn-card-border:");
@@ -219,7 +222,6 @@ describe("resolveTokens with component tokens", () => {
         },
       },
     });
-    expect(css).toContain('[data-snapshot-component="table"]');
     expect(css).toContain("--sn-table-stripe-bg:");
     expect(css).toContain("--sn-table-density: 0.75;");
     expect(css).toContain("--sn-table-hover-bg:");
@@ -233,7 +235,6 @@ describe("resolveTokens with component tokens", () => {
         },
       },
     });
-    expect(css).toContain('[data-snapshot-component="button"]');
     expect(css).toContain("--sn-button-weight: 700;");
     expect(css).toContain("--sn-button-transform: uppercase;");
   });
@@ -246,7 +247,6 @@ describe("resolveTokens with component tokens", () => {
         },
       },
     });
-    expect(css).toContain('[data-snapshot-component="input"]');
     expect(css).toContain("--sn-input-height: 3rem;");
     expect(css).toContain("--sn-input-variant: filled;");
   });
@@ -259,7 +259,6 @@ describe("resolveTokens with component tokens", () => {
         },
       },
     });
-    expect(css).toContain('[data-snapshot-component="modal"]');
     expect(css).toContain("--sn-modal-overlay:");
     expect(css).toContain("--sn-modal-backdrop-filter: blur(4px);");
     expect(css).toContain("--sn-modal-animation: slide-up;");
@@ -280,9 +279,9 @@ describe("resolveTokens with component tokens", () => {
         },
       },
     });
-    expect(css).toContain('[data-snapshot-component="card"]');
-    expect(css).toContain('[data-snapshot-component="table"]');
-    expect(css).toContain('[data-snapshot-component="button"]');
+    expect(css).toContain("--sn-card-shadow:");
+    expect(css).toContain("--sn-table-stripe-bg:");
+    expect(css).toContain("--sn-button-weight:");
   });
 });
 

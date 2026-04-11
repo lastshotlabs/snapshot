@@ -10,7 +10,7 @@
  */
 
 // Tokens & Flavors
-export { resolveTokens } from "./ui/tokens/resolve";
+export { resolveTokens, resolveFrameworkStyles } from "./ui/tokens/resolve";
 export { useTokenEditor } from "./ui/tokens/editor";
 export { defineFlavor, getFlavor, getAllFlavors } from "./ui/tokens/flavors";
 export {

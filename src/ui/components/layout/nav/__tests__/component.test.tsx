@@ -118,7 +118,7 @@ describe("Nav component", () => {
     );
     const icon = container.querySelector("[data-nav-icon]");
     expect(icon).not.toBeNull();
-    expect(icon?.textContent).toBe("home");
+    expect(icon?.querySelector("svg")).not.toBeNull();
   });
 
   it("renders static badge values", () => {

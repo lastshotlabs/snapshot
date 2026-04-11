@@ -1,23 +1,25 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, vi } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { Provider as JotaiProvider, createStore } from "jotai";
 import { AtomRegistryImpl } from "../../context/registry";
 import { PageRegistryContext } from "../../context/providers";
 import { SnapshotApiContext } from "../../actions/executor";
+import { bootBuiltins } from "../boot-builtins";
 import type {
   RowConfig,
   HeadingConfig,
   ButtonConfig,
   SelectConfig,
 } from "../types";
-
-// Ensure structural components are registered
-import "../structural";
 import { getRegisteredComponent } from "../component-registry";
+
+beforeAll(() => {
+  bootBuiltins();
+});
 
 /** Wraps components in a PageContext + Jotai for usePublish/useSubscribe/useActionExecutor to work. */
 function TestPageWrapper({ children }: { children: ReactNode }) {

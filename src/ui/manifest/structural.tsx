@@ -20,6 +20,7 @@ import {
   BUTTON_INTERACTIVE_CSS,
 } from "../components/_base/button-styles";
 import { useManifestRuntime, useRouteRuntime } from "./runtime";
+import { renderIcon } from "../icons/render";
 import type {
   RowConfig,
   HeadingConfig,
@@ -321,10 +322,20 @@ export function Button({
       data-size={size}
       style={{
         ...getButtonStyle(variant, size, !!disabled),
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "var(--sn-spacing-xs, 0.25rem)",
         ...configStyle,
       }}
     >
-      {typeof label === "string" ? label : String(label ?? "")}
+      <>
+        {(config as Record<string, unknown>).icon && (
+          <span style={{ display: "inline-flex", alignItems: "center", flexShrink: 0 }}>
+            {renderIcon((config as Record<string, unknown>).icon as string, 16)}
+          </span>
+        )}
+        {typeof label === "string" ? label : String(label ?? "")}
+      </>
     </button>
   );
 }
@@ -393,6 +404,197 @@ function Select({ config }: { config: Record<string, unknown> }) {
   );
 }
 
+// ── Card ──────────────────────────────────────────────────────────────────────
+
+interface CardConfig {
+  type: "card";
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  children: ComponentConfig[];
+  gap?: string;
+  className?: string;
+  style?: Record<string, string | number>;
+  visible?: unknown;
+}
+
+function Card({ config }: { config: Record<string, unknown> }) {
+  const cardConfig = config as unknown as CardConfig;
+  const gap = useResponsiveValue(cardConfig.gap ?? "md");
+  const configStyle = cardConfig.style as CSSProperties | undefined;
+
+  return (
+    <div
+      data-snapshot-card
+      className={cardConfig.className}
+      style={{
+        backgroundColor: "var(--sn-color-card, #ffffff)",
+        border: "var(--sn-card-border, 1px solid var(--sn-color-border, #e5e7eb))",
+        borderRadius: "var(--sn-radius-lg, 0.75rem)",
+        boxShadow: "var(--sn-card-shadow, var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.1)))",
+        padding: "var(--sn-card-padding, var(--sn-spacing-lg, 1.5rem))",
+        display: "flex",
+        flexDirection: "column",
+        gap: GAP_MAP[gap] ?? GAP_MAP["md"],
+        ...configStyle,
+      }}
+    >
+      {(cardConfig.title || cardConfig.subtitle) && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--sn-spacing-2xs, 0.125rem)" }}>
+          {cardConfig.title && (
+            <h3 style={{
+              fontSize: "var(--sn-font-size-lg, 1.125rem)",
+              fontWeight: "var(--sn-font-weight-semibold, 600)" as CSSProperties["fontWeight"],
+              color: "var(--sn-color-foreground, #111827)",
+              lineHeight: "var(--sn-leading-tight, 1.25)",
+              margin: 0,
+            }}>
+              {cardConfig.title}
+            </h3>
+          )}
+          {cardConfig.subtitle && (
+            <p style={{
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              margin: 0,
+            }}>
+              {cardConfig.subtitle}
+            </p>
+          )}
+        </div>
+      )}
+      {cardConfig.children?.map((child, i) => (
+        <InlineComponentRenderer
+          key={child.id ?? `card-child-${i}`}
+          config={child}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ── Section ───────────────────────────────────────────────────────────────────
+
+interface SectionConfig {
+  type: "section";
+  id?: string;
+  heading?: string;
+  description?: string;
+  children: ComponentConfig[];
+  gap?: string;
+  divider?: boolean;
+  className?: string;
+  style?: Record<string, string | number>;
+  visible?: unknown;
+}
+
+function Section({ config }: { config: Record<string, unknown> }) {
+  const sectionConfig = config as unknown as SectionConfig;
+  const gap = useResponsiveValue(sectionConfig.gap ?? "lg");
+  const configStyle = sectionConfig.style as CSSProperties | undefined;
+
+  return (
+    <section
+      data-snapshot-section
+      className={sectionConfig.className}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: GAP_MAP[gap] ?? GAP_MAP["lg"],
+        ...configStyle,
+      }}
+    >
+      {(sectionConfig.heading || sectionConfig.description) && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+          {sectionConfig.heading && (
+            <h2 style={{
+              fontSize: "var(--sn-font-size-xl, 1.25rem)",
+              fontWeight: "var(--sn-font-weight-semibold, 600)" as CSSProperties["fontWeight"],
+              color: "var(--sn-color-foreground, #111827)",
+              lineHeight: "var(--sn-leading-tight, 1.25)",
+              margin: 0,
+            }}>
+              {sectionConfig.heading}
+            </h2>
+          )}
+          {sectionConfig.description && (
+            <p style={{
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              margin: 0,
+            }}>
+              {sectionConfig.description}
+            </p>
+          )}
+        </div>
+      )}
+      {sectionConfig.divider !== false && (sectionConfig.heading || sectionConfig.description) && (
+        <hr style={{
+          border: "none",
+          borderTop: "1px solid var(--sn-color-border, #e5e7eb)",
+          margin: 0,
+        }} />
+      )}
+      {sectionConfig.children?.map((child, i) => (
+        <InlineComponentRenderer
+          key={child.id ?? `section-child-${i}`}
+          config={child}
+        />
+      ))}
+    </section>
+  );
+}
+
+// ── Container ─────────────────────────────────────────────────────────────────
+
+const CONTAINER_WIDTHS: Record<string, string> = {
+  xs: "var(--sn-container-xs, 20rem)",
+  sm: "var(--sn-container-sm, 24rem)",
+  md: "var(--sn-container-md, 32rem)",
+  lg: "var(--sn-container-lg, 42rem)",
+  xl: "var(--sn-container-xl, 56rem)",
+  "2xl": "var(--sn-container-2xl, 72rem)",
+  full: "var(--sn-container-full, 100%)",
+  prose: "var(--sn-container-prose, 65ch)",
+};
+
+interface ContainerConfig {
+  type: "container";
+  id?: string;
+  maxWidth?: string;
+  children: ComponentConfig[];
+  className?: string;
+  style?: Record<string, string | number>;
+  visible?: unknown;
+}
+
+function Container({ config }: { config: Record<string, unknown> }) {
+  const containerConfig = config as unknown as ContainerConfig;
+  const maxWidth = containerConfig.maxWidth ?? "xl";
+  const configStyle = containerConfig.style as CSSProperties | undefined;
+
+  return (
+    <div
+      data-snapshot-container
+      className={containerConfig.className}
+      style={{
+        maxWidth: CONTAINER_WIDTHS[maxWidth] ?? maxWidth,
+        marginLeft: "auto",
+        marginRight: "auto",
+        width: "100%",
+        ...configStyle,
+      }}
+    >
+      {containerConfig.children?.map((child, i) => (
+        <InlineComponentRenderer
+          key={child.id ?? `container-child-${i}`}
+          config={child}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ── Register all structural components ──────────────────────────────────────
 
 /**
@@ -406,4 +608,7 @@ export const STRUCTURAL_COMPONENTS = {
   heading: Heading,
   button: Button,
   select: Select,
+  card: Card,
+  section: Section,
+  container: Container,
 } as const;

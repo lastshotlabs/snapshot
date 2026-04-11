@@ -1,9 +1,11 @@
 # Manifest-Only Enterprise UI — Implementation Appendix
 
-> **Companion to:** `docs/specs/manifest-only-ui.md`
+> **Status:** Completed (archived 2026-04-11)
+> **Companion to:** `docs/specs/completed/manifest-only-ui.md`
 > **Purpose:** Zero-context implementation detail for every phase. An implementing agent
 > reads this file alongside the main spec and has everything needed to write code without
 > asking questions.
+> **Archive note:** This appendix moved with the canonical spec into `docs/specs/completed/`.
 
 ---
 

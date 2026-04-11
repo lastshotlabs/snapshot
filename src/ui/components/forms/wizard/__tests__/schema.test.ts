@@ -105,7 +105,7 @@ describe("wizardSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects field with invalid type", () => {
+  it("accepts the extended auto-form field types", () => {
     const result = wizardSchema.safeParse({
       type: "wizard",
       steps: [
@@ -115,7 +115,7 @@ describe("wizardSchema", () => {
         },
       ],
     });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it("accepts onComplete as action schema", () => {

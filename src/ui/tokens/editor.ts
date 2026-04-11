@@ -77,6 +77,7 @@ const SPACING_MAP: Record<string, string> = {
 };
 
 const TOKEN_EDITOR_STORAGE_KEY = "snapshot.token-editor.overrides";
+const TOKEN_EDITOR_DARK_STYLE_ID = "snapshot-token-editor-dark";
 
 /**
  * Map a token path to its CSS variable name.
@@ -215,6 +216,43 @@ export function useTokenEditor(): TokenEditor {
   const persistTarget: PersistTarget =
     manifestRuntime?.theme?.editor?.persist ?? "localStorage";
 
+  const renderDarkOverrides = useCallback(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    const darkEntries = [...overridesRef.current.entries()].filter(([path]) =>
+      path.startsWith("darkColors."),
+    );
+    const existing = document.getElementById(
+      TOKEN_EDITOR_DARK_STYLE_ID,
+    ) as HTMLStyleElement | null;
+
+    if (darkEntries.length === 0) {
+      existing?.remove();
+      return;
+    }
+
+    const declarations = darkEntries
+      .map(([path, value]) => {
+        const tokenName = path.slice("darkColors.".length);
+        const [l, c, h] = colorToOklch(value);
+        return `  --sn-color-${tokenName}: oklch(${oklchToString(l, c, h)});`;
+      })
+      .join("\n");
+
+    const element =
+      existing ??
+      (() => {
+        const next = document.createElement("style");
+        next.id = TOKEN_EDITOR_DARK_STYLE_ID;
+        document.head.appendChild(next);
+        return next;
+      })();
+
+    element.textContent = `.dark {\n${declarations}\n}`;
+  }, []);
+
   const notifyListeners = useCallback(() => {
     const current = mapToThemeConfig(overridesRef.current);
     for (const listener of listenersRef.current) {
@@ -270,11 +308,17 @@ export function useTokenEditor(): TokenEditor {
   }, [persistOverrides]);
 
   const applyOverride = useCallback((path: string, value: string) => {
+    if (path.startsWith("darkColors.")) {
+      overridesRef.current.set(path, value);
+      renderDarkOverrides();
+      return;
+    }
+
     const cssVar = tokenPathToCssVar(path);
     const cssValue = convertToCssValue(path, value);
     document.documentElement.style.setProperty(cssVar, cssValue);
     overridesRef.current.set(path, value);
-  }, []);
+  }, [renderDarkOverrides]);
 
   useEffect(() => {
     let cancelled = false;
@@ -387,6 +431,7 @@ export function useTokenEditor(): TokenEditor {
       document.documentElement.style.removeProperty(cssVar);
     }
     appliedFlavorVarsRef.current = [];
+    document.getElementById(TOKEN_EDITOR_DARK_STYLE_ID)?.remove();
 
     notifyListeners();
     persistCurrentOverrides();

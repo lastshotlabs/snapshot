@@ -122,7 +122,8 @@ export function getButtonStyle(
       : undefined,
     borderRadius: "var(--sn-radius-md, 0.375rem)",
     fontFamily: "var(--sn-font-sans, inherit)",
-    fontWeight: "var(--sn-font-weight-medium, 500)",
+    fontWeight: "var(--sn-button-weight, var(--sn-font-weight-medium, 500))" as unknown as CSSProperties["fontWeight"],
+    textTransform: "var(--sn-button-transform, none)" as unknown as CSSProperties["textTransform"],
     lineHeight: "var(--sn-leading-tight, 1.25)",
   };
 }

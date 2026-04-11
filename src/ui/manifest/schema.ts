@@ -280,6 +280,41 @@ export const selectConfigSchema = baseComponentConfigSchema.extend({
   placeholder: textOrTRefSchema.optional(),
 });
 
+export const cardConfigSchema = z.object({
+  type: z.literal("card"),
+  id: z.string().optional(),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  children: z.array(z.lazy(() => componentConfigSchema)).default([]),
+  gap: z.union([z.string(), responsiveSchema(z.string())]).optional(),
+  className: z.string().optional(),
+  style: z.record(z.union([z.string(), z.number()])).optional(),
+  visible: z.union([z.boolean(), fromRefSchema]).optional(),
+}).strict();
+
+export const sectionConfigSchema = z.object({
+  type: z.literal("section"),
+  id: z.string().optional(),
+  heading: z.string().optional(),
+  description: z.string().optional(),
+  children: z.array(z.lazy(() => componentConfigSchema)).default([]),
+  gap: z.union([z.string(), responsiveSchema(z.string())]).optional(),
+  divider: z.boolean().optional(),
+  className: z.string().optional(),
+  style: z.record(z.union([z.string(), z.number()])).optional(),
+  visible: z.union([z.boolean(), fromRefSchema]).optional(),
+}).strict();
+
+export const containerConfigSchema = z.object({
+  type: z.literal("container"),
+  id: z.string().optional(),
+  maxWidth: z.string().optional(),
+  children: z.array(z.lazy(() => componentConfigSchema)).default([]),
+  className: z.string().optional(),
+  style: z.record(z.union([z.string(), z.number()])).optional(),
+  visible: z.union([z.boolean(), fromRefSchema]).optional(),
+}).strict();
+
 const customComponentPropTypeSchema = z.enum(["string", "number", "boolean"]);
 
 export const customComponentPropSchema = z
@@ -814,6 +849,9 @@ registerComponentSchema("row", rowConfigSchema);
 registerComponentSchema("heading", headingConfigSchema);
 registerComponentSchema("button", buttonConfigSchema);
 registerComponentSchema("select", selectConfigSchema);
+registerComponentSchema("card", cardConfigSchema);
+registerComponentSchema("section", sectionConfigSchema);
+registerComponentSchema("container", containerConfigSchema);
 registerComponentSchema("spinner", spinnerConfigSchema);
 registerComponentSchema("error-page", errorPageConfigSchema);
 registerComponentSchema("not-found", notFoundConfigSchema);

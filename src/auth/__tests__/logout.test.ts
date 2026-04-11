@@ -37,7 +37,7 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
   return {
     ...actual,
-    useMutation: mockState.mockUseMutation,
+    useMutation: (...args: unknown[]) => mockState.mockUseMutation(...args),
     useQueryClient: () => ({
       setQueryData: mockState.mockSetQueryData,
       clear: mockState.mockClear,

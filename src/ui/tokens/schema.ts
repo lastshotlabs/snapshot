@@ -78,6 +78,8 @@ export const fontSchema = z
     baseSize: z.number().min(10).max(24).optional(),
     /** Type scale ratio. Default: 1.25 (major third). */
     scale: z.number().min(1.1).max(1.5).optional(),
+    /** Custom font URL (e.g. Google Fonts @import URL). */
+    url: z.string().url().optional(),
   })
   .strict();
 

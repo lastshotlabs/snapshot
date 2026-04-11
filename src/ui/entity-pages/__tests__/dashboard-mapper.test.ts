@@ -1,8 +1,12 @@
-import "../../components/register";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+import { bootBuiltins } from "../../manifest/boot-builtins";
 import { pageConfigSchema } from "../../manifest/schema";
 import { mapEntityDashboardPage } from "../dashboard-mapper";
 import { buildDashboardResult } from "./fixtures";
+
+beforeAll(() => {
+  bootBuiltins();
+});
 
 describe("mapEntityDashboardPage", () => {
   it("returns a valid page config", () => {

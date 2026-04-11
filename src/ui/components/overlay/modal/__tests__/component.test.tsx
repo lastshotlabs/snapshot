@@ -220,7 +220,7 @@ describe("ModalComponent", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     expect(appRegistry.store.get(appRegistry.register("overlayClosed"))).toBe(
-      "true",
+      true,
     );
   });
 });

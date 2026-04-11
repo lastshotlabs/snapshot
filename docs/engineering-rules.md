@@ -79,7 +79,7 @@ src/
 
 ### Manifest-Only Architecture
 
-These rules enforce the vision in `docs/specs/manifest-only-ui.md`. Every new feature,
+These rules enforce the vision in `docs/specs/completed/manifest-only-ui.md`. Every new feature,
 component, and code path must satisfy all of them.
 
 1. **One code path per concept.** If two components solve the same problem differently, one

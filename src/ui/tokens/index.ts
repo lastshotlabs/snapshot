@@ -5,7 +5,7 @@
  * and runtime token editing.
  */
 
-export { resolveTokens } from "./resolve";
+export { resolveTokens, resolveFrameworkStyles } from "./resolve";
 export { useTokenEditor } from "./editor";
 export { defineFlavor, getFlavor, getAllFlavors } from "./flavors";
 export {

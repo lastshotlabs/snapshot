@@ -1,5 +1,14 @@
-import { describe, it, expect } from "vitest";
-import { getFlavor, defineFlavor, getAllFlavors } from "../flavors";
+import { beforeAll, describe, expect, it } from "vitest";
+import {
+  defineFlavor,
+  getAllFlavors,
+  getFlavor,
+  registerBuiltInFlavors,
+} from "../flavors";
+
+beforeAll(() => {
+  registerBuiltInFlavors();
+});
 
 describe("built-in flavors", () => {
   const expectedFlavors = [

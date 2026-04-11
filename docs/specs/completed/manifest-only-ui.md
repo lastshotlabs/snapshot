@@ -1,24 +1,25 @@
 # Manifest-Only Enterprise UI — Canonical Spec
 
-> **Status:** Draft v1
+> **Status:** Completed (archived 2026-04-11)
 > **Owner:** Framework
 > **Scope:** Make snapshot the single surface for building beautiful, fully-customizable, enterprise-grade applications entirely from `snapshot.manifest.json`. Zero `.tsx` / `.ts` / `.css` files in the consuming repo. No escape hatches for "special" screens. No bespoke code paths. The manifest is the source of truth, end to end.
+> **Completion note:** Phases 0-12 were implemented and this spec has been archived under `docs/specs/completed/`.
 >
 > | Phase | Title | Track | Status |
 > |---|---|---|---|
-> | 0 | Foundation fixes | Runtime | Not started |
-> | 1 | Delete the escape hatches | Runtime | Not started |
-> | 2 | Default fragments + merge | Compiler | Not started |
-> | 3 | Layout system completeness | Components | Not started |
-> | 4 | Component library gap-fill | Components | Not started |
-> | 5 | Action language expansion | Actions | Not started |
-> | 6 | Data binding unification | Runtime | Not started |
-> | 7 | Auth fragment rewrite | Compiler | Not started |
-> | 8 | Enterprise features | Runtime | Not started |
-> | 9 | CLI completion + scaffolding | CLI | Not started |
-> | 10 | Accessibility + i18n | Components | Not started |
-> | 11 | Extension points | Runtime | Not started |
-> | 12 | Enforcement + visual regression | CI | Not started |
+> | 0 | Foundation fixes | Runtime | Completed |
+> | 1 | Delete the escape hatches | Runtime | Completed |
+> | 2 | Default fragments + merge | Compiler | Completed |
+> | 3 | Layout system completeness | Components | Completed |
+> | 4 | Component library gap-fill | Components | Completed |
+> | 5 | Action language expansion | Actions | Completed |
+> | 6 | Data binding unification | Runtime | Completed |
+> | 7 | Auth fragment rewrite | Compiler | Completed |
+> | 8 | Enterprise features | Runtime | Completed |
+> | 9 | CLI completion + scaffolding | CLI | Completed |
+> | 10 | Accessibility + i18n | Components | Completed |
+> | 11 | Extension points | Runtime | Completed |
+> | 12 | Enforcement + visual regression | CI | Completed |
 
 ---
 
@@ -1778,7 +1779,7 @@ This spec is done when all of the following are true on `main`:
 - [ ] `docs/actions.md` lists every action with a config example
 - [ ] `docs/auth.md` documents the manifest-only auth flow
 - [ ] `docs/extending.md` documents the single escape hatch
-- [ ] `docs/specs/manifest-only-ui.md` (this file) marked Phase 12 complete
+- [x] `docs/specs/completed/manifest-only-ui.md` (this file) marked Phase 12 complete
 
 ---
 

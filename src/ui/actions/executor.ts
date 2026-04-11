@@ -668,6 +668,11 @@ export function useActionExecutor(): ActionExecuteFn {
                 ).matches;
                 root.classList.toggle("dark", dark);
               }
+              window.dispatchEvent(
+                new CustomEvent("snapshot:set-theme", {
+                  detail: { mode: builtin.mode },
+                }),
+              );
             }
             return nextTheme;
           }

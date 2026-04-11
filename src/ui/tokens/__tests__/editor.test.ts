@@ -1,17 +1,26 @@
 /**
  * @vitest-environment happy-dom
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useTokenEditor } from "../editor";
+import { registerBuiltInFlavors } from "../flavors";
 
 // Spy on actual document.documentElement.style methods
 let setPropertySpy: ReturnType<typeof vi.fn>;
 let removePropertySpy: ReturnType<typeof vi.fn>;
 
+beforeAll(() => {
+  registerBuiltInFlavors();
+});
+
 beforeEach(() => {
   // Clear any inline styles from previous tests
   document.documentElement.removeAttribute("style");
+  window.localStorage.clear();
+  window.sessionStorage.clear();
+  document.getElementById("snapshot-tokens")?.remove();
+  document.getElementById("snapshot-token-editor-dark")?.remove();
 
   setPropertySpy = vi.fn(
     document.documentElement.style.setProperty.bind(

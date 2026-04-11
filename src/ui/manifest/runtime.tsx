@@ -770,6 +770,7 @@ export function useManifestResourcePolling(
 ): void {
   const manifest = useManifestRuntime();
   const resourceCache = useManifestResourceCache();
+  const invalidateResource = resourceCache?.invalidateResource;
   const pollMs = resourceName
     ? manifest?.resources?.[resourceName]?.pollMs
     : undefined;
@@ -780,19 +781,19 @@ export function useManifestResourcePolling(
       !enabled ||
       !resourceName ||
       !pollMs ||
-      !resourceCache
+      !invalidateResource
     ) {
       return;
     }
 
     const intervalId = window.setInterval(() => {
-      resourceCache.invalidateResource(resourceName);
+      invalidateResource(resourceName);
     }, pollMs);
 
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [enabled, pollMs, resourceCache, resourceName]);
+  }, [enabled, invalidateResource, pollMs, resourceName]);
 }
 
 export function useManifestResourceFocusRefetch(
@@ -801,6 +802,7 @@ export function useManifestResourceFocusRefetch(
 ): void {
   const manifest = useManifestRuntime();
   const resourceCache = useManifestResourceCache();
+  const invalidateResource = resourceCache?.invalidateResource;
   const refetchOnWindowFocus = resourceName
     ? manifest?.resources?.[resourceName]?.refetchOnWindowFocus
     : undefined;
@@ -811,20 +813,20 @@ export function useManifestResourceFocusRefetch(
       !enabled ||
       !resourceName ||
       !refetchOnWindowFocus ||
-      !resourceCache
+      !invalidateResource
     ) {
       return;
     }
 
     const handleFocus = () => {
-      resourceCache.invalidateResource(resourceName);
+      invalidateResource(resourceName);
     };
 
     window.addEventListener("focus", handleFocus);
     return () => {
       window.removeEventListener("focus", handleFocus);
     };
-  }, [enabled, refetchOnWindowFocus, resourceCache, resourceName]);
+  }, [enabled, invalidateResource, refetchOnWindowFocus, resourceName]);
 }
 
 export function useManifestResourceMountRefetch(
@@ -833,15 +835,16 @@ export function useManifestResourceMountRefetch(
 ): void {
   const manifest = useManifestRuntime();
   const resourceCache = useManifestResourceCache();
+  const invalidateResource = resourceCache?.invalidateResource;
   const refetchOnMount = resourceName
     ? manifest?.resources?.[resourceName]?.refetchOnMount
     : undefined;
 
   useEffect(() => {
-    if (!enabled || !resourceName || !refetchOnMount || !resourceCache) {
+    if (!enabled || !resourceName || !refetchOnMount || !invalidateResource) {
       return;
     }
 
-    resourceCache.invalidateResource(resourceName);
-  }, [enabled, refetchOnMount, resourceCache, resourceName]);
+    invalidateResource(resourceName);
+  }, [enabled, invalidateResource, refetchOnMount, resourceName]);
 }
