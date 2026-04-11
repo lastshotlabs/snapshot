@@ -11,14 +11,14 @@ export declare const offlineBannerConfigSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     type: "offline-banner";
-    description?: string | undefined;
     title?: string | undefined;
+    description?: string | undefined;
     style?: Record<string, string | number> | undefined;
     className?: string | undefined;
 }, {
     type: "offline-banner";
-    description?: string | undefined;
     title?: string | undefined;
+    description?: string | undefined;
     style?: Record<string, string | number> | undefined;
     className?: string | undefined;
 }>;

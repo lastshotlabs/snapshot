@@ -11,15 +11,15 @@ export declare const spinnerConfigSchema: z.ZodObject<{
     label: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     type: "spinner";
-    size?: "sm" | "md" | "lg" | undefined;
-    style?: Record<string, string | number> | undefined;
     label?: string | undefined;
+    style?: Record<string, string | number> | undefined;
+    size?: "sm" | "md" | "lg" | undefined;
     className?: string | undefined;
 }, {
     type: "spinner";
-    size?: "sm" | "md" | "lg" | undefined;
-    style?: Record<string, string | number> | undefined;
     label?: string | undefined;
+    style?: Record<string, string | number> | undefined;
+    size?: "sm" | "md" | "lg" | undefined;
     className?: string | undefined;
 }>;
 /** Config for the default loading feedback component. */

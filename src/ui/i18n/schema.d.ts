@@ -22,12 +22,12 @@ export declare const i18nConfigSchema: z.ZodObject<{
     default: string;
     locales: string[];
     strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-    detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
+    detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
 }, {
     default: string;
     locales: string[];
     strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-    detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
+    detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
 }>;
 /** Type for `{ "t": "..." }` translation references. */
 export type TRef = z.infer<typeof tRefSchema>;

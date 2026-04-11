@@ -55,32 +55,32 @@ export declare const optimisticConfigSchema: z.ZodEffects<z.ZodObject<{
     merge: z.ZodEnum<["append", "prepend", "replace", "patch", "remove"]>;
     idField: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
-    merge: "replace" | "remove" | "patch" | "append" | "prepend";
     target: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     };
+    merge: "patch" | "replace" | "remove" | "append" | "prepend";
     idField?: string | undefined;
 }, {
-    merge: "replace" | "remove" | "patch" | "append" | "prepend";
     target: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     };
+    merge: "patch" | "replace" | "remove" | "append" | "prepend";
     idField?: string | undefined;
 }>, {
-    merge: "replace" | "remove" | "patch" | "append" | "prepend";
     target: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     };
+    merge: "patch" | "replace" | "remove" | "append" | "prepend";
     idField?: string | undefined;
 }, {
-    merge: "replace" | "remove" | "patch" | "append" | "prepend";
     target: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     };
+    merge: "patch" | "replace" | "remove" | "append" | "prepend";
     idField?: string | undefined;
 }>;
 export declare const endpointTargetSchema: z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -99,11 +99,11 @@ export declare const dataSourceSchema: z.ZodUnion<[z.ZodString, z.ZodObject<{
     transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
 }, "strict", z.ZodTypeAny, {
     from: string;
-    transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+    transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
     transformArg?: string | number | undefined;
 }, {
     from: string;
-    transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+    transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
     transformArg?: string | number | undefined;
 }>, z.ZodObject<{
     resource: z.ZodString;
@@ -151,78 +151,78 @@ export declare const resourceConfigSchema: z.ZodObject<{
         merge: z.ZodEnum<["append", "prepend", "replace", "patch", "remove"]>;
         idField: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
-        merge: "replace" | "remove" | "patch" | "append" | "prepend";
         target: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         };
+        merge: "patch" | "replace" | "remove" | "append" | "prepend";
         idField?: string | undefined;
     }, {
-        merge: "replace" | "remove" | "patch" | "append" | "prepend";
         target: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         };
+        merge: "patch" | "replace" | "remove" | "append" | "prepend";
         idField?: string | undefined;
     }>, {
-        merge: "replace" | "remove" | "patch" | "append" | "prepend";
         target: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         };
+        merge: "patch" | "replace" | "remove" | "append" | "prepend";
         idField?: string | undefined;
     }, {
-        merge: "replace" | "remove" | "patch" | "append" | "prepend";
         target: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         };
+        merge: "patch" | "replace" | "remove" | "append" | "prepend";
         idField?: string | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
     endpoint: string;
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
     params?: Record<string, unknown> | undefined;
+    dependsOn?: string[] | undefined;
+    retry?: number | undefined;
     client?: string | undefined;
     cacheMs?: number | undefined;
     pollMs?: number | undefined;
     refetchOnMount?: boolean | undefined;
     refetchOnWindowFocus?: boolean | undefined;
-    retry?: number | undefined;
     retryDelayMs?: number | undefined;
-    dependsOn?: string[] | undefined;
     invalidates?: (string | {
         key: string[];
     })[] | undefined;
     optimistic?: {
-        merge: "replace" | "remove" | "patch" | "append" | "prepend";
         target: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         };
+        merge: "patch" | "replace" | "remove" | "append" | "prepend";
         idField?: string | undefined;
     } | undefined;
 }, {
     endpoint: string;
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
     params?: Record<string, unknown> | undefined;
+    dependsOn?: string[] | undefined;
+    retry?: number | undefined;
     client?: string | undefined;
     cacheMs?: number | undefined;
     pollMs?: number | undefined;
     refetchOnMount?: boolean | undefined;
     refetchOnWindowFocus?: boolean | undefined;
-    retry?: number | undefined;
     retryDelayMs?: number | undefined;
-    dependsOn?: string[] | undefined;
     invalidates?: (string | {
         key: string[];
     })[] | undefined;
     optimistic?: {
-        merge: "replace" | "remove" | "patch" | "append" | "prepend";
         target: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         };
+        merge: "patch" | "replace" | "remove" | "append" | "prepend";
         idField?: string | undefined;
     } | undefined;
 }>;

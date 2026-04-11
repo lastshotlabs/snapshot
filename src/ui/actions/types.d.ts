@@ -226,12 +226,12 @@ export declare const closeModalActionSchema: z.ZodObject<{
     result: z.ZodOptional<z.ZodUnknown>;
 }, "strict", z.ZodTypeAny, {
     type: "close-modal";
-    result?: unknown;
     modal?: string | undefined;
+    result?: unknown;
 }, {
     type: "close-modal";
-    result?: unknown;
     modal?: string | undefined;
+    result?: unknown;
 }>;
 /** Schema for refresh action. */
 export declare const refreshActionSchema: z.ZodObject<{
@@ -342,14 +342,14 @@ export declare const confirmActionSchema: z.ZodObject<{
     cancelLabel: z.ZodOptional<z.ZodString>;
     variant: z.ZodOptional<z.ZodEnum<["default", "destructive"]>>;
 }, "strict", z.ZodTypeAny, {
-    type: "confirm";
     message: string;
+    type: "confirm";
     variant?: "default" | "destructive" | undefined;
     confirmLabel?: string | undefined;
     cancelLabel?: string | undefined;
 }, {
-    type: "confirm";
     message: string;
+    type: "confirm";
     variant?: "default" | "destructive" | undefined;
     confirmLabel?: string | undefined;
     cancelLabel?: string | undefined;
@@ -388,13 +388,13 @@ export declare const logActionSchema: z.ZodObject<{
     message: z.ZodString;
     data: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strict", z.ZodTypeAny, {
-    type: "log";
     message: string;
+    type: "log";
     level: "info" | "warn" | "error" | "debug";
     data?: Record<string, unknown> | undefined;
 }, {
-    type: "log";
     message: string;
+    type: "log";
     level: "info" | "warn" | "error" | "debug";
     data?: Record<string, unknown> | undefined;
 }>;

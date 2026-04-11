@@ -34,39 +34,39 @@ export declare const themeColorsSchema: z.ZodObject<{
     /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
     chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
 }, "strict", z.ZodTypeAny, {
-    input?: string | undefined;
     info?: string | undefined;
+    input?: string | undefined;
+    warning?: string | undefined;
+    success?: string | undefined;
+    chart?: [string, string, string, string, string] | undefined;
+    sidebar?: string | undefined;
     primary?: string | undefined;
     secondary?: string | undefined;
-    background?: string | undefined;
-    success?: string | undefined;
     muted?: string | undefined;
     accent?: string | undefined;
     destructive?: string | undefined;
-    warning?: string | undefined;
+    background?: string | undefined;
     card?: string | undefined;
     popover?: string | undefined;
-    sidebar?: string | undefined;
     border?: string | undefined;
     ring?: string | undefined;
-    chart?: [string, string, string, string, string] | undefined;
 }, {
-    input?: string | undefined;
     info?: string | undefined;
+    input?: string | undefined;
+    warning?: string | undefined;
+    success?: string | undefined;
+    chart?: [string, string, string, string, string] | undefined;
+    sidebar?: string | undefined;
     primary?: string | undefined;
     secondary?: string | undefined;
-    background?: string | undefined;
-    success?: string | undefined;
     muted?: string | undefined;
     accent?: string | undefined;
     destructive?: string | undefined;
-    warning?: string | undefined;
+    background?: string | undefined;
     card?: string | undefined;
     popover?: string | undefined;
-    sidebar?: string | undefined;
     border?: string | undefined;
     ring?: string | undefined;
-    chart?: [string, string, string, string, string] | undefined;
 }>;
 /** Zod schema for border radius scale. */
 export declare const radiusSchema: z.ZodEnum<["none", "xs", "sm", "md", "lg", "xl", "full"]>;
@@ -127,13 +127,13 @@ export declare const componentTokensSchema: z.ZodObject<{
         density?: "default" | "compact" | "comfortable" | undefined;
         headerBackground?: boolean | undefined;
         hoverRow?: boolean | undefined;
-        borderStyle?: "none" | "horizontal" | "grid" | undefined;
+        borderStyle?: "none" | "grid" | "horizontal" | undefined;
     }, {
         striped?: boolean | undefined;
         density?: "default" | "compact" | "comfortable" | undefined;
         headerBackground?: boolean | undefined;
         hoverRow?: boolean | undefined;
-        borderStyle?: "none" | "horizontal" | "grid" | undefined;
+        borderStyle?: "none" | "grid" | "horizontal" | undefined;
     }>>;
     button: z.ZodOptional<z.ZodObject<{
         weight: z.ZodOptional<z.ZodEnum<["light", "medium", "bold"]>>;
@@ -141,11 +141,11 @@ export declare const componentTokensSchema: z.ZodObject<{
         iconSize: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
     }, "strict", z.ZodTypeAny, {
         uppercase?: boolean | undefined;
-        weight?: "bold" | "light" | "medium" | undefined;
+        weight?: "bold" | "medium" | "light" | undefined;
         iconSize?: "sm" | "md" | "lg" | undefined;
     }, {
         uppercase?: boolean | undefined;
-        weight?: "bold" | "light" | "medium" | undefined;
+        weight?: "bold" | "medium" | "light" | undefined;
         iconSize?: "sm" | "md" | "lg" | undefined;
     }>>;
     input: z.ZodOptional<z.ZodObject<{
@@ -172,10 +172,10 @@ export declare const componentTokensSchema: z.ZodObject<{
         variant: z.ZodOptional<z.ZodEnum<["minimal", "bordered", "filled"]>>;
         activeIndicator: z.ZodOptional<z.ZodEnum<["background", "border-left", "border-bottom", "dot"]>>;
     }, "strict", z.ZodTypeAny, {
-        variant?: "filled" | "minimal" | "bordered" | undefined;
+        variant?: "minimal" | "filled" | "bordered" | undefined;
         activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
     }, {
-        variant?: "filled" | "minimal" | "bordered" | undefined;
+        variant?: "minimal" | "filled" | "bordered" | undefined;
         activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
     }>>;
     badge: z.ZodOptional<z.ZodObject<{
@@ -192,23 +192,27 @@ export declare const componentTokensSchema: z.ZodObject<{
         position: z.ZodOptional<z.ZodEnum<["top-right", "top-center", "bottom-right", "bottom-center"]>>;
         animation: z.ZodOptional<z.ZodEnum<["slide", "fade", "pop"]>>;
     }, "strict", z.ZodTypeAny, {
-        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         animation?: "pop" | "fade" | "slide" | undefined;
+        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
     }, {
-        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         animation?: "pop" | "fade" | "slide" | undefined;
+        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
     input?: {
         size?: "sm" | "md" | "lg" | undefined;
         variant?: "outline" | "filled" | "underline" | undefined;
     } | undefined;
+    badge?: {
+        variant?: "outline" | "solid" | "soft" | undefined;
+        rounded?: boolean | undefined;
+    } | undefined;
     table?: {
         striped?: boolean | undefined;
         density?: "default" | "compact" | "comfortable" | undefined;
         headerBackground?: boolean | undefined;
         hoverRow?: boolean | undefined;
-        borderStyle?: "none" | "horizontal" | "grid" | undefined;
+        borderStyle?: "none" | "grid" | "horizontal" | undefined;
     } | undefined;
     card?: {
         border?: boolean | undefined;
@@ -217,7 +221,7 @@ export declare const componentTokensSchema: z.ZodObject<{
     } | undefined;
     button?: {
         uppercase?: boolean | undefined;
-        weight?: "bold" | "light" | "medium" | undefined;
+        weight?: "bold" | "medium" | "light" | undefined;
         iconSize?: "sm" | "md" | "lg" | undefined;
     } | undefined;
     modal?: {
@@ -225,28 +229,28 @@ export declare const componentTokensSchema: z.ZodObject<{
         animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
     } | undefined;
     nav?: {
-        variant?: "filled" | "minimal" | "bordered" | undefined;
+        variant?: "minimal" | "filled" | "bordered" | undefined;
         activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
     } | undefined;
-    badge?: {
-        variant?: "outline" | "solid" | "soft" | undefined;
-        rounded?: boolean | undefined;
-    } | undefined;
     toast?: {
-        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         animation?: "pop" | "fade" | "slide" | undefined;
+        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
     } | undefined;
 }, {
     input?: {
         size?: "sm" | "md" | "lg" | undefined;
         variant?: "outline" | "filled" | "underline" | undefined;
     } | undefined;
+    badge?: {
+        variant?: "outline" | "solid" | "soft" | undefined;
+        rounded?: boolean | undefined;
+    } | undefined;
     table?: {
         striped?: boolean | undefined;
         density?: "default" | "compact" | "comfortable" | undefined;
         headerBackground?: boolean | undefined;
         hoverRow?: boolean | undefined;
-        borderStyle?: "none" | "horizontal" | "grid" | undefined;
+        borderStyle?: "none" | "grid" | "horizontal" | undefined;
     } | undefined;
     card?: {
         border?: boolean | undefined;
@@ -255,7 +259,7 @@ export declare const componentTokensSchema: z.ZodObject<{
     } | undefined;
     button?: {
         uppercase?: boolean | undefined;
-        weight?: "bold" | "light" | "medium" | undefined;
+        weight?: "bold" | "medium" | "light" | undefined;
         iconSize?: "sm" | "md" | "lg" | undefined;
     } | undefined;
     modal?: {
@@ -263,16 +267,12 @@ export declare const componentTokensSchema: z.ZodObject<{
         animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
     } | undefined;
     nav?: {
-        variant?: "filled" | "minimal" | "bordered" | undefined;
+        variant?: "minimal" | "filled" | "bordered" | undefined;
         activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
     } | undefined;
-    badge?: {
-        variant?: "outline" | "solid" | "soft" | undefined;
-        rounded?: boolean | undefined;
-    } | undefined;
     toast?: {
-        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         animation?: "pop" | "fade" | "slide" | undefined;
+        position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
     } | undefined;
 }>;
 /** Zod schema for shadow scale. */
@@ -306,15 +306,15 @@ export declare const globalTokensSchema: z.ZodObject<{
         inOut: z.ZodOptional<z.ZodString>;
         spring: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
+        default?: string | undefined;
         out?: string | undefined;
         in?: string | undefined;
-        default?: string | undefined;
         inOut?: string | undefined;
         spring?: string | undefined;
     }, {
+        default?: string | undefined;
         out?: string | undefined;
         in?: string | undefined;
-        default?: string | undefined;
         inOut?: string | undefined;
         spring?: string | undefined;
     }>>;
@@ -341,15 +341,15 @@ export declare const globalTokensSchema: z.ZodObject<{
         loose: z.ZodOptional<z.ZodNumber>;
     }, "strict", z.ZodTypeAny, {
         none?: number | undefined;
+        relaxed?: number | undefined;
         normal?: number | undefined;
         tight?: number | undefined;
-        relaxed?: number | undefined;
         loose?: number | undefined;
     }, {
         none?: number | undefined;
+        relaxed?: number | undefined;
         normal?: number | undefined;
         tight?: number | undefined;
-        relaxed?: number | undefined;
         loose?: number | undefined;
     }>>;
     /** Letter-spacing scale overrides. */
@@ -373,13 +373,13 @@ export declare const globalTokensSchema: z.ZodObject<{
         default: z.ZodOptional<z.ZodString>;
         thick: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
-        default?: string | undefined;
         none?: string | undefined;
+        default?: string | undefined;
         thin?: string | undefined;
         thick?: string | undefined;
     }, {
-        default?: string | undefined;
         none?: string | undefined;
+        default?: string | undefined;
         thin?: string | undefined;
         thick?: string | undefined;
     }>>;
@@ -392,9 +392,9 @@ export declare const globalTokensSchema: z.ZodObject<{
         slow?: number | undefined;
     } | undefined;
     easings?: {
+        default?: string | undefined;
         out?: string | undefined;
         in?: string | undefined;
-        default?: string | undefined;
         inOut?: string | undefined;
         spring?: string | undefined;
     } | undefined;
@@ -405,9 +405,9 @@ export declare const globalTokensSchema: z.ZodObject<{
     } | undefined;
     lineHeight?: {
         none?: number | undefined;
+        relaxed?: number | undefined;
         normal?: number | undefined;
         tight?: number | undefined;
-        relaxed?: number | undefined;
         loose?: number | undefined;
     } | undefined;
     tracking?: {
@@ -416,8 +416,8 @@ export declare const globalTokensSchema: z.ZodObject<{
         wide?: string | undefined;
     } | undefined;
     borderWidth?: {
-        default?: string | undefined;
         none?: string | undefined;
+        default?: string | undefined;
         thin?: string | undefined;
         thick?: string | undefined;
     } | undefined;
@@ -430,9 +430,9 @@ export declare const globalTokensSchema: z.ZodObject<{
         slow?: number | undefined;
     } | undefined;
     easings?: {
+        default?: string | undefined;
         out?: string | undefined;
         in?: string | undefined;
-        default?: string | undefined;
         inOut?: string | undefined;
         spring?: string | undefined;
     } | undefined;
@@ -443,9 +443,9 @@ export declare const globalTokensSchema: z.ZodObject<{
     } | undefined;
     lineHeight?: {
         none?: number | undefined;
+        relaxed?: number | undefined;
         normal?: number | undefined;
         tight?: number | undefined;
-        relaxed?: number | undefined;
         loose?: number | undefined;
     } | undefined;
     tracking?: {
@@ -454,8 +454,8 @@ export declare const globalTokensSchema: z.ZodObject<{
         wide?: string | undefined;
     } | undefined;
     borderWidth?: {
-        default?: string | undefined;
         none?: string | undefined;
+        default?: string | undefined;
         thin?: string | undefined;
         thick?: string | undefined;
     } | undefined;
@@ -503,39 +503,39 @@ export declare const flavorOverrideSchema: z.ZodObject<{
         /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
         chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
     }, "strict", z.ZodTypeAny, {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     }, {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     }>>;
     darkColors: z.ZodOptional<z.ZodObject<{
         /** Primary brand color. Generates `--primary` and `--primary-foreground`. */
@@ -571,39 +571,39 @@ export declare const flavorOverrideSchema: z.ZodObject<{
         /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
         chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
     }, "strict", z.ZodTypeAny, {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     }, {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     }>>;
     radius: z.ZodOptional<z.ZodEnum<["none", "xs", "sm", "md", "lg", "xl", "full"]>>;
     spacing: z.ZodOptional<z.ZodEnum<["compact", "default", "comfortable", "spacious"]>>;
@@ -660,13 +660,13 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             density?: "default" | "compact" | "comfortable" | undefined;
             headerBackground?: boolean | undefined;
             hoverRow?: boolean | undefined;
-            borderStyle?: "none" | "horizontal" | "grid" | undefined;
+            borderStyle?: "none" | "grid" | "horizontal" | undefined;
         }, {
             striped?: boolean | undefined;
             density?: "default" | "compact" | "comfortable" | undefined;
             headerBackground?: boolean | undefined;
             hoverRow?: boolean | undefined;
-            borderStyle?: "none" | "horizontal" | "grid" | undefined;
+            borderStyle?: "none" | "grid" | "horizontal" | undefined;
         }>>;
         button: z.ZodOptional<z.ZodObject<{
             weight: z.ZodOptional<z.ZodEnum<["light", "medium", "bold"]>>;
@@ -674,11 +674,11 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             iconSize: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
         }, "strict", z.ZodTypeAny, {
             uppercase?: boolean | undefined;
-            weight?: "bold" | "light" | "medium" | undefined;
+            weight?: "bold" | "medium" | "light" | undefined;
             iconSize?: "sm" | "md" | "lg" | undefined;
         }, {
             uppercase?: boolean | undefined;
-            weight?: "bold" | "light" | "medium" | undefined;
+            weight?: "bold" | "medium" | "light" | undefined;
             iconSize?: "sm" | "md" | "lg" | undefined;
         }>>;
         input: z.ZodOptional<z.ZodObject<{
@@ -705,10 +705,10 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             variant: z.ZodOptional<z.ZodEnum<["minimal", "bordered", "filled"]>>;
             activeIndicator: z.ZodOptional<z.ZodEnum<["background", "border-left", "border-bottom", "dot"]>>;
         }, "strict", z.ZodTypeAny, {
-            variant?: "filled" | "minimal" | "bordered" | undefined;
+            variant?: "minimal" | "filled" | "bordered" | undefined;
             activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
         }, {
-            variant?: "filled" | "minimal" | "bordered" | undefined;
+            variant?: "minimal" | "filled" | "bordered" | undefined;
             activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
         }>>;
         badge: z.ZodOptional<z.ZodObject<{
@@ -725,23 +725,27 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             position: z.ZodOptional<z.ZodEnum<["top-right", "top-center", "bottom-right", "bottom-center"]>>;
             animation: z.ZodOptional<z.ZodEnum<["slide", "fade", "pop"]>>;
         }, "strict", z.ZodTypeAny, {
-            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             animation?: "pop" | "fade" | "slide" | undefined;
+            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         }, {
-            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             animation?: "pop" | "fade" | "slide" | undefined;
+            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
         input?: {
             size?: "sm" | "md" | "lg" | undefined;
             variant?: "outline" | "filled" | "underline" | undefined;
         } | undefined;
+        badge?: {
+            variant?: "outline" | "solid" | "soft" | undefined;
+            rounded?: boolean | undefined;
+        } | undefined;
         table?: {
             striped?: boolean | undefined;
             density?: "default" | "compact" | "comfortable" | undefined;
             headerBackground?: boolean | undefined;
             hoverRow?: boolean | undefined;
-            borderStyle?: "none" | "horizontal" | "grid" | undefined;
+            borderStyle?: "none" | "grid" | "horizontal" | undefined;
         } | undefined;
         card?: {
             border?: boolean | undefined;
@@ -750,7 +754,7 @@ export declare const flavorOverrideSchema: z.ZodObject<{
         } | undefined;
         button?: {
             uppercase?: boolean | undefined;
-            weight?: "bold" | "light" | "medium" | undefined;
+            weight?: "bold" | "medium" | "light" | undefined;
             iconSize?: "sm" | "md" | "lg" | undefined;
         } | undefined;
         modal?: {
@@ -758,28 +762,28 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
         } | undefined;
         nav?: {
-            variant?: "filled" | "minimal" | "bordered" | undefined;
+            variant?: "minimal" | "filled" | "bordered" | undefined;
             activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
         } | undefined;
-        badge?: {
-            variant?: "outline" | "solid" | "soft" | undefined;
-            rounded?: boolean | undefined;
-        } | undefined;
         toast?: {
-            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             animation?: "pop" | "fade" | "slide" | undefined;
+            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         } | undefined;
     }, {
         input?: {
             size?: "sm" | "md" | "lg" | undefined;
             variant?: "outline" | "filled" | "underline" | undefined;
         } | undefined;
+        badge?: {
+            variant?: "outline" | "solid" | "soft" | undefined;
+            rounded?: boolean | undefined;
+        } | undefined;
         table?: {
             striped?: boolean | undefined;
             density?: "default" | "compact" | "comfortable" | undefined;
             headerBackground?: boolean | undefined;
             hoverRow?: boolean | undefined;
-            borderStyle?: "none" | "horizontal" | "grid" | undefined;
+            borderStyle?: "none" | "grid" | "horizontal" | undefined;
         } | undefined;
         card?: {
             border?: boolean | undefined;
@@ -788,7 +792,7 @@ export declare const flavorOverrideSchema: z.ZodObject<{
         } | undefined;
         button?: {
             uppercase?: boolean | undefined;
-            weight?: "bold" | "light" | "medium" | undefined;
+            weight?: "bold" | "medium" | "light" | undefined;
             iconSize?: "sm" | "md" | "lg" | undefined;
         } | undefined;
         modal?: {
@@ -796,16 +800,12 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
         } | undefined;
         nav?: {
-            variant?: "filled" | "minimal" | "bordered" | undefined;
+            variant?: "minimal" | "filled" | "bordered" | undefined;
             activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
         } | undefined;
-        badge?: {
-            variant?: "outline" | "solid" | "soft" | undefined;
-            rounded?: boolean | undefined;
-        } | undefined;
         toast?: {
-            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             animation?: "pop" | "fade" | "slide" | undefined;
+            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         } | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
@@ -816,12 +816,16 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             size?: "sm" | "md" | "lg" | undefined;
             variant?: "outline" | "filled" | "underline" | undefined;
         } | undefined;
+        badge?: {
+            variant?: "outline" | "solid" | "soft" | undefined;
+            rounded?: boolean | undefined;
+        } | undefined;
         table?: {
             striped?: boolean | undefined;
             density?: "default" | "compact" | "comfortable" | undefined;
             headerBackground?: boolean | undefined;
             hoverRow?: boolean | undefined;
-            borderStyle?: "none" | "horizontal" | "grid" | undefined;
+            borderStyle?: "none" | "grid" | "horizontal" | undefined;
         } | undefined;
         card?: {
             border?: boolean | undefined;
@@ -830,7 +834,7 @@ export declare const flavorOverrideSchema: z.ZodObject<{
         } | undefined;
         button?: {
             uppercase?: boolean | undefined;
-            weight?: "bold" | "light" | "medium" | undefined;
+            weight?: "bold" | "medium" | "light" | undefined;
             iconSize?: "sm" | "md" | "lg" | undefined;
         } | undefined;
         modal?: {
@@ -838,53 +842,49 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
         } | undefined;
         nav?: {
-            variant?: "filled" | "minimal" | "bordered" | undefined;
+            variant?: "minimal" | "filled" | "bordered" | undefined;
             activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
         } | undefined;
-        badge?: {
-            variant?: "outline" | "solid" | "soft" | undefined;
-            rounded?: boolean | undefined;
-        } | undefined;
         toast?: {
-            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             animation?: "pop" | "fade" | "slide" | undefined;
+            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         } | undefined;
     } | undefined;
     colors?: {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     } | undefined;
     darkColors?: {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     } | undefined;
     radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
     spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -904,12 +904,16 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             size?: "sm" | "md" | "lg" | undefined;
             variant?: "outline" | "filled" | "underline" | undefined;
         } | undefined;
+        badge?: {
+            variant?: "outline" | "solid" | "soft" | undefined;
+            rounded?: boolean | undefined;
+        } | undefined;
         table?: {
             striped?: boolean | undefined;
             density?: "default" | "compact" | "comfortable" | undefined;
             headerBackground?: boolean | undefined;
             hoverRow?: boolean | undefined;
-            borderStyle?: "none" | "horizontal" | "grid" | undefined;
+            borderStyle?: "none" | "grid" | "horizontal" | undefined;
         } | undefined;
         card?: {
             border?: boolean | undefined;
@@ -918,7 +922,7 @@ export declare const flavorOverrideSchema: z.ZodObject<{
         } | undefined;
         button?: {
             uppercase?: boolean | undefined;
-            weight?: "bold" | "light" | "medium" | undefined;
+            weight?: "bold" | "medium" | "light" | undefined;
             iconSize?: "sm" | "md" | "lg" | undefined;
         } | undefined;
         modal?: {
@@ -926,53 +930,49 @@ export declare const flavorOverrideSchema: z.ZodObject<{
             animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
         } | undefined;
         nav?: {
-            variant?: "filled" | "minimal" | "bordered" | undefined;
+            variant?: "minimal" | "filled" | "bordered" | undefined;
             activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
         } | undefined;
-        badge?: {
-            variant?: "outline" | "solid" | "soft" | undefined;
-            rounded?: boolean | undefined;
-        } | undefined;
         toast?: {
-            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             animation?: "pop" | "fade" | "slide" | undefined;
+            position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
         } | undefined;
     } | undefined;
     colors?: {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     } | undefined;
     darkColors?: {
-        input?: string | undefined;
         info?: string | undefined;
+        input?: string | undefined;
+        warning?: string | undefined;
+        success?: string | undefined;
+        chart?: [string, string, string, string, string] | undefined;
+        sidebar?: string | undefined;
         primary?: string | undefined;
         secondary?: string | undefined;
-        background?: string | undefined;
-        success?: string | undefined;
         muted?: string | undefined;
         accent?: string | undefined;
         destructive?: string | undefined;
-        warning?: string | undefined;
+        background?: string | undefined;
         card?: string | undefined;
         popover?: string | undefined;
-        sidebar?: string | undefined;
         border?: string | undefined;
         ring?: string | undefined;
-        chart?: [string, string, string, string, string] | undefined;
     } | undefined;
     radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
     spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -1027,39 +1027,39 @@ export declare const themeConfigSchema: z.ZodObject<{
             /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
             chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
         }, "strict", z.ZodTypeAny, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }>>;
         darkColors: z.ZodOptional<z.ZodObject<{
             /** Primary brand color. Generates `--primary` and `--primary-foreground`. */
@@ -1095,39 +1095,39 @@ export declare const themeConfigSchema: z.ZodObject<{
             /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
             chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
         }, "strict", z.ZodTypeAny, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }>>;
         radius: z.ZodOptional<z.ZodEnum<["none", "xs", "sm", "md", "lg", "xl", "full"]>>;
         spacing: z.ZodOptional<z.ZodEnum<["compact", "default", "comfortable", "spacious"]>>;
@@ -1184,13 +1184,13 @@ export declare const themeConfigSchema: z.ZodObject<{
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             }, {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             }>>;
             button: z.ZodOptional<z.ZodObject<{
                 weight: z.ZodOptional<z.ZodEnum<["light", "medium", "bold"]>>;
@@ -1198,11 +1198,11 @@ export declare const themeConfigSchema: z.ZodObject<{
                 iconSize: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
             }, "strict", z.ZodTypeAny, {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             }, {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             }>>;
             input: z.ZodOptional<z.ZodObject<{
@@ -1229,10 +1229,10 @@ export declare const themeConfigSchema: z.ZodObject<{
                 variant: z.ZodOptional<z.ZodEnum<["minimal", "bordered", "filled"]>>;
                 activeIndicator: z.ZodOptional<z.ZodEnum<["background", "border-left", "border-bottom", "dot"]>>;
             }, "strict", z.ZodTypeAny, {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             }, {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             }>>;
             badge: z.ZodOptional<z.ZodObject<{
@@ -1249,23 +1249,27 @@ export declare const themeConfigSchema: z.ZodObject<{
                 position: z.ZodOptional<z.ZodEnum<["top-right", "top-center", "bottom-right", "bottom-center"]>>;
                 animation: z.ZodOptional<z.ZodEnum<["slide", "fade", "pop"]>>;
             }, "strict", z.ZodTypeAny, {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             }, {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             }>>;
         }, "strict", z.ZodTypeAny, {
             input?: {
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -1274,7 +1278,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -1282,28 +1286,28 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         }, {
             input?: {
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -1312,7 +1316,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -1320,16 +1324,12 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
@@ -1340,12 +1340,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -1354,7 +1358,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -1362,53 +1366,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -1428,12 +1428,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -1442,7 +1446,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -1450,53 +1454,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -1545,39 +1545,39 @@ export declare const themeConfigSchema: z.ZodObject<{
             /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
             chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
         }, "strict", z.ZodTypeAny, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }>>;
         darkColors: z.ZodOptional<z.ZodObject<{
             /** Primary brand color. Generates `--primary` and `--primary-foreground`. */
@@ -1613,39 +1613,39 @@ export declare const themeConfigSchema: z.ZodObject<{
             /** Chart palette (5 colors). Generates `--chart-1` through `--chart-5`. */
             chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
         }, "strict", z.ZodTypeAny, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }, {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         }>>;
         radius: z.ZodOptional<z.ZodEnum<["none", "xs", "sm", "md", "lg", "xl", "full"]>>;
         spacing: z.ZodOptional<z.ZodEnum<["compact", "default", "comfortable", "spacious"]>>;
@@ -1702,13 +1702,13 @@ export declare const themeConfigSchema: z.ZodObject<{
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             }, {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             }>>;
             button: z.ZodOptional<z.ZodObject<{
                 weight: z.ZodOptional<z.ZodEnum<["light", "medium", "bold"]>>;
@@ -1716,11 +1716,11 @@ export declare const themeConfigSchema: z.ZodObject<{
                 iconSize: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
             }, "strict", z.ZodTypeAny, {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             }, {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             }>>;
             input: z.ZodOptional<z.ZodObject<{
@@ -1747,10 +1747,10 @@ export declare const themeConfigSchema: z.ZodObject<{
                 variant: z.ZodOptional<z.ZodEnum<["minimal", "bordered", "filled"]>>;
                 activeIndicator: z.ZodOptional<z.ZodEnum<["background", "border-left", "border-bottom", "dot"]>>;
             }, "strict", z.ZodTypeAny, {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             }, {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             }>>;
             badge: z.ZodOptional<z.ZodObject<{
@@ -1767,23 +1767,27 @@ export declare const themeConfigSchema: z.ZodObject<{
                 position: z.ZodOptional<z.ZodEnum<["top-right", "top-center", "bottom-right", "bottom-center"]>>;
                 animation: z.ZodOptional<z.ZodEnum<["slide", "fade", "pop"]>>;
             }, "strict", z.ZodTypeAny, {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             }, {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             }>>;
         }, "strict", z.ZodTypeAny, {
             input?: {
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -1792,7 +1796,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -1800,28 +1804,28 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         }, {
             input?: {
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -1830,7 +1834,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -1838,16 +1842,12 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         }>>;
         tokens: z.ZodOptional<z.ZodObject<{
@@ -1878,15 +1878,15 @@ export declare const themeConfigSchema: z.ZodObject<{
                 inOut: z.ZodOptional<z.ZodString>;
                 spring: z.ZodOptional<z.ZodString>;
             }, "strict", z.ZodTypeAny, {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             }, {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             }>>;
@@ -1913,15 +1913,15 @@ export declare const themeConfigSchema: z.ZodObject<{
                 loose: z.ZodOptional<z.ZodNumber>;
             }, "strict", z.ZodTypeAny, {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             }, {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             }>>;
             /** Letter-spacing scale overrides. */
@@ -1945,13 +1945,13 @@ export declare const themeConfigSchema: z.ZodObject<{
                 default: z.ZodOptional<z.ZodString>;
                 thick: z.ZodOptional<z.ZodString>;
             }, "strict", z.ZodTypeAny, {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             }, {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             }>>;
@@ -1964,9 +1964,9 @@ export declare const themeConfigSchema: z.ZodObject<{
                 slow?: number | undefined;
             } | undefined;
             easings?: {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             } | undefined;
@@ -1977,9 +1977,9 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             lineHeight?: {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             } | undefined;
             tracking?: {
@@ -1988,8 +1988,8 @@ export declare const themeConfigSchema: z.ZodObject<{
                 wide?: string | undefined;
             } | undefined;
             borderWidth?: {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             } | undefined;
@@ -2002,9 +2002,9 @@ export declare const themeConfigSchema: z.ZodObject<{
                 slow?: number | undefined;
             } | undefined;
             easings?: {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             } | undefined;
@@ -2015,9 +2015,9 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             lineHeight?: {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             } | undefined;
             tracking?: {
@@ -2026,8 +2026,8 @@ export declare const themeConfigSchema: z.ZodObject<{
                 wide?: string | undefined;
             } | undefined;
             borderWidth?: {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             } | undefined;
@@ -2038,12 +2038,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -2052,7 +2056,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -2060,53 +2064,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -2127,9 +2127,9 @@ export declare const themeConfigSchema: z.ZodObject<{
                 slow?: number | undefined;
             } | undefined;
             easings?: {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             } | undefined;
@@ -2140,9 +2140,9 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             lineHeight?: {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             } | undefined;
             tracking?: {
@@ -2151,8 +2151,8 @@ export declare const themeConfigSchema: z.ZodObject<{
                 wide?: string | undefined;
             } | undefined;
             borderWidth?: {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             } | undefined;
@@ -2163,12 +2163,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -2177,7 +2181,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -2185,53 +2189,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -2252,9 +2252,9 @@ export declare const themeConfigSchema: z.ZodObject<{
                 slow?: number | undefined;
             } | undefined;
             easings?: {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             } | undefined;
@@ -2265,9 +2265,9 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             lineHeight?: {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             } | undefined;
             tracking?: {
@@ -2276,8 +2276,8 @@ export declare const themeConfigSchema: z.ZodObject<{
                 wide?: string | undefined;
             } | undefined;
             borderWidth?: {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             } | undefined;
@@ -2295,17 +2295,17 @@ export declare const themeConfigSchema: z.ZodObject<{
             resource: string;
         }>]>>;
     }, "strict", z.ZodTypeAny, {
-        persist: "localStorage" | "sessionStorage" | "none" | {
+        persist: "none" | "localStorage" | "sessionStorage" | {
             resource: string;
         };
     }, {
-        persist?: "localStorage" | "sessionStorage" | "none" | {
+        persist?: "none" | "localStorage" | "sessionStorage" | {
             resource: string;
         } | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
     editor?: {
-        persist: "localStorage" | "sessionStorage" | "none" | {
+        persist: "none" | "localStorage" | "sessionStorage" | {
             resource: string;
         };
     } | undefined;
@@ -2318,12 +2318,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -2332,7 +2336,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -2340,53 +2344,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -2405,12 +2405,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -2419,7 +2423,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -2427,53 +2431,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -2494,9 +2494,9 @@ export declare const themeConfigSchema: z.ZodObject<{
                 slow?: number | undefined;
             } | undefined;
             easings?: {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             } | undefined;
@@ -2507,9 +2507,9 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             lineHeight?: {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             } | undefined;
             tracking?: {
@@ -2518,8 +2518,8 @@ export declare const themeConfigSchema: z.ZodObject<{
                 wide?: string | undefined;
             } | undefined;
             borderWidth?: {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             } | undefined;
@@ -2528,7 +2528,7 @@ export declare const themeConfigSchema: z.ZodObject<{
     mode?: "system" | "dark" | "light" | undefined;
 }, {
     editor?: {
-        persist?: "localStorage" | "sessionStorage" | "none" | {
+        persist?: "none" | "localStorage" | "sessionStorage" | {
             resource: string;
         } | undefined;
     } | undefined;
@@ -2541,12 +2541,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -2555,7 +2559,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -2563,53 +2567,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -2628,12 +2628,16 @@ export declare const themeConfigSchema: z.ZodObject<{
                 size?: "sm" | "md" | "lg" | undefined;
                 variant?: "outline" | "filled" | "underline" | undefined;
             } | undefined;
+            badge?: {
+                variant?: "outline" | "solid" | "soft" | undefined;
+                rounded?: boolean | undefined;
+            } | undefined;
             table?: {
                 striped?: boolean | undefined;
                 density?: "default" | "compact" | "comfortable" | undefined;
                 headerBackground?: boolean | undefined;
                 hoverRow?: boolean | undefined;
-                borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                borderStyle?: "none" | "grid" | "horizontal" | undefined;
             } | undefined;
             card?: {
                 border?: boolean | undefined;
@@ -2642,7 +2646,7 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             button?: {
                 uppercase?: boolean | undefined;
-                weight?: "bold" | "light" | "medium" | undefined;
+                weight?: "bold" | "medium" | "light" | undefined;
                 iconSize?: "sm" | "md" | "lg" | undefined;
             } | undefined;
             modal?: {
@@ -2650,53 +2654,49 @@ export declare const themeConfigSchema: z.ZodObject<{
                 animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
             } | undefined;
             nav?: {
-                variant?: "filled" | "minimal" | "bordered" | undefined;
+                variant?: "minimal" | "filled" | "bordered" | undefined;
                 activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
             } | undefined;
-            badge?: {
-                variant?: "outline" | "solid" | "soft" | undefined;
-                rounded?: boolean | undefined;
-            } | undefined;
             toast?: {
-                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 animation?: "pop" | "fade" | "slide" | undefined;
+                position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
             } | undefined;
         } | undefined;
         colors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         darkColors?: {
-            input?: string | undefined;
             info?: string | undefined;
+            input?: string | undefined;
+            warning?: string | undefined;
+            success?: string | undefined;
+            chart?: [string, string, string, string, string] | undefined;
+            sidebar?: string | undefined;
             primary?: string | undefined;
             secondary?: string | undefined;
-            background?: string | undefined;
-            success?: string | undefined;
             muted?: string | undefined;
             accent?: string | undefined;
             destructive?: string | undefined;
-            warning?: string | undefined;
+            background?: string | undefined;
             card?: string | undefined;
             popover?: string | undefined;
-            sidebar?: string | undefined;
             border?: string | undefined;
             ring?: string | undefined;
-            chart?: [string, string, string, string, string] | undefined;
         } | undefined;
         radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
         spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -2717,9 +2717,9 @@ export declare const themeConfigSchema: z.ZodObject<{
                 slow?: number | undefined;
             } | undefined;
             easings?: {
+                default?: string | undefined;
                 out?: string | undefined;
                 in?: string | undefined;
-                default?: string | undefined;
                 inOut?: string | undefined;
                 spring?: string | undefined;
             } | undefined;
@@ -2730,9 +2730,9 @@ export declare const themeConfigSchema: z.ZodObject<{
             } | undefined;
             lineHeight?: {
                 none?: number | undefined;
+                relaxed?: number | undefined;
                 normal?: number | undefined;
                 tight?: number | undefined;
-                relaxed?: number | undefined;
                 loose?: number | undefined;
             } | undefined;
             tracking?: {
@@ -2741,8 +2741,8 @@ export declare const themeConfigSchema: z.ZodObject<{
                 wide?: string | undefined;
             } | undefined;
             borderWidth?: {
-                default?: string | undefined;
                 none?: string | undefined;
+                default?: string | undefined;
                 thin?: string | undefined;
                 thick?: string | undefined;
             } | undefined;

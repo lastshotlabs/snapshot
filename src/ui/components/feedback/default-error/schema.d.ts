@@ -13,16 +13,16 @@ export declare const errorPageConfigSchema: z.ZodObject<{
     retryLabel: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     type: "error-page";
-    description?: string | undefined;
     title?: string | undefined;
+    description?: string | undefined;
     style?: Record<string, string | number> | undefined;
     className?: string | undefined;
     showRetry?: boolean | undefined;
     retryLabel?: string | undefined;
 }, {
     type: "error-page";
-    description?: string | undefined;
     title?: string | undefined;
+    description?: string | undefined;
     style?: Record<string, string | number> | undefined;
     className?: string | undefined;
     showRetry?: boolean | undefined;

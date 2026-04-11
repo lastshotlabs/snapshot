@@ -13,11 +13,11 @@ export declare const fromRefSchema: z.ZodObject<{
     transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
 }, "strict", z.ZodTypeAny, {
     from: string;
-    transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+    transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
     transformArg?: string | number | undefined;
 }, {
     from: string;
-    transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+    transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
     transformArg?: string | number | undefined;
 }>;
 /**
@@ -79,11 +79,11 @@ export declare const baseComponentConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>, z.ZodObject<{
         policy: z.ZodString;
@@ -122,7 +122,7 @@ export declare const baseComponentConfigSchema: z.ZodObject<{
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -151,7 +151,7 @@ export declare const baseComponentConfigSchema: z.ZodObject<{
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -207,11 +207,11 @@ export declare const headingConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>, z.ZodObject<{
         policy: z.ZodString;
@@ -261,11 +261,11 @@ export declare const headingConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>, z.ZodObject<{
         t: z.ZodString;
@@ -281,7 +281,6 @@ export declare const headingConfigSchema: z.ZodObject<{
     align: z.ZodOptional<z.ZodEnum<["left", "center", "right"]>>;
     fallback: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    type: "heading";
     text: string | {
         env: string;
         default?: string | undefined;
@@ -290,14 +289,16 @@ export declare const headingConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     };
+    type: "heading";
     id?: string | undefined;
+    level?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -310,7 +311,6 @@ export declare const headingConfigSchema: z.ZodObject<{
         "2xl"?: boolean | undefined;
     } | undefined;
     tokens?: Record<string, string> | undefined;
-    level?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
     className?: string | undefined;
     visibleWhen?: string | undefined;
     span?: number | {
@@ -324,7 +324,6 @@ export declare const headingConfigSchema: z.ZodObject<{
     align?: "left" | "right" | "center" | undefined;
     fallback?: string | undefined;
 }, {
-    type: "heading";
     text: string | {
         env: string;
         default?: string | undefined;
@@ -333,14 +332,16 @@ export declare const headingConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     };
+    type: "heading";
     id?: string | undefined;
+    level?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -353,7 +354,6 @@ export declare const headingConfigSchema: z.ZodObject<{
         "2xl"?: boolean | undefined;
     } | undefined;
     tokens?: Record<string, string> | undefined;
-    level?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
     className?: string | undefined;
     visibleWhen?: string | undefined;
     span?: number | {
@@ -398,11 +398,11 @@ export declare const buttonConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>, z.ZodObject<{
         policy: z.ZodString;
@@ -466,11 +466,11 @@ export declare const buttonConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>]>>;
 }, "strip", z.ZodTypeAny, {
@@ -483,17 +483,18 @@ export declare const buttonConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     };
     id?: string | undefined;
-    size?: "sm" | "md" | "lg" | "icon" | undefined;
-    disabled?: boolean | {
-        from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-        transformArg?: string | number | undefined;
-    } | undefined;
+    icon?: string | undefined;
     style?: Record<string, string | number> | undefined;
     action?: any;
+    size?: "icon" | "sm" | "md" | "lg" | undefined;
+    disabled?: boolean | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -517,7 +518,6 @@ export declare const buttonConfigSchema: z.ZodObject<{
         xl?: number | undefined;
         "2xl"?: number | undefined;
     } | undefined;
-    icon?: string | undefined;
 }, {
     type: "button";
     label: string | {
@@ -528,17 +528,18 @@ export declare const buttonConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     };
     id?: string | undefined;
-    size?: "sm" | "md" | "lg" | "icon" | undefined;
-    disabled?: boolean | {
-        from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-        transformArg?: string | number | undefined;
-    } | undefined;
+    icon?: string | undefined;
     style?: Record<string, string | number> | undefined;
     action?: any;
+    size?: "icon" | "sm" | "md" | "lg" | undefined;
+    disabled?: boolean | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -562,7 +563,6 @@ export declare const buttonConfigSchema: z.ZodObject<{
         xl?: number | undefined;
         "2xl"?: number | undefined;
     } | undefined;
-    icon?: string | undefined;
 }>;
 export declare const selectConfigSchema: z.ZodObject<{
     id: z.ZodOptional<z.ZodString>;
@@ -595,11 +595,11 @@ export declare const selectConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>, z.ZodObject<{
         policy: z.ZodString;
@@ -679,11 +679,11 @@ export declare const selectConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>, z.ZodObject<{
         resource: z.ZodString;
@@ -736,13 +736,12 @@ export declare const selectConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     }>]>>;
 }, "strip", z.ZodTypeAny, {
-    type: "select";
     options: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     } | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         value: string;
@@ -754,6 +753,7 @@ export declare const selectConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         };
     }[];
+    type: "select";
     default?: string | {
         env: string;
         default?: string | undefined;
@@ -762,10 +762,18 @@ export declare const selectConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | undefined;
     id?: string | undefined;
+    placeholder?: string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        t: string;
+        vars?: Record<string, unknown> | undefined;
+    } | undefined;
+    valueField?: string | undefined;
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -788,23 +796,14 @@ export declare const selectConfigSchema: z.ZodObject<{
         xl?: number | undefined;
         "2xl"?: number | undefined;
     } | undefined;
-    valueField?: string | undefined;
     labelField?: string | undefined;
-    placeholder?: string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        t: string;
-        vars?: Record<string, unknown> | undefined;
-    } | undefined;
 }, {
-    type: "select";
     options: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     } | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         value: string;
@@ -816,6 +815,7 @@ export declare const selectConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         };
     }[];
+    type: "select";
     default?: string | {
         env: string;
         default?: string | undefined;
@@ -824,10 +824,18 @@ export declare const selectConfigSchema: z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | undefined;
     id?: string | undefined;
+    placeholder?: string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        t: string;
+        vars?: Record<string, unknown> | undefined;
+    } | undefined;
+    valueField?: string | undefined;
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | {
         policy: string;
@@ -850,15 +858,7 @@ export declare const selectConfigSchema: z.ZodObject<{
         xl?: number | undefined;
         "2xl"?: number | undefined;
     } | undefined;
-    valueField?: string | undefined;
     labelField?: string | undefined;
-    placeholder?: string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        t: string;
-        vars?: Record<string, unknown> | undefined;
-    } | undefined;
 }>;
 export declare const cardConfigSchema: z.ZodObject<{
     type: z.ZodLiteral<"card">;
@@ -896,11 +896,11 @@ export declare const cardConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>]>>;
 }, "strict", z.ZodTypeAny, {
@@ -911,10 +911,11 @@ export declare const cardConfigSchema: z.ZodObject<{
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
     className?: string | undefined;
+    subtitle?: string | undefined;
     gap?: string | {
         default: string;
         sm?: string | undefined;
@@ -923,18 +924,19 @@ export declare const cardConfigSchema: z.ZodObject<{
         xl?: string | undefined;
         "2xl"?: string | undefined;
     } | undefined;
-    subtitle?: string | undefined;
 }, {
     type: "card";
     id?: string | undefined;
     title?: string | undefined;
     style?: Record<string, string | number> | undefined;
+    children?: any[] | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
     className?: string | undefined;
+    subtitle?: string | undefined;
     gap?: string | {
         default: string;
         sm?: string | undefined;
@@ -943,8 +945,6 @@ export declare const cardConfigSchema: z.ZodObject<{
         xl?: string | undefined;
         "2xl"?: string | undefined;
     } | undefined;
-    children?: any[] | undefined;
-    subtitle?: string | undefined;
 }>;
 export declare const sectionConfigSchema: z.ZodObject<{
     type: z.ZodLiteral<"section">;
@@ -983,11 +983,11 @@ export declare const sectionConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>]>>;
 }, "strict", z.ZodTypeAny, {
@@ -998,10 +998,11 @@ export declare const sectionConfigSchema: z.ZodObject<{
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
     className?: string | undefined;
+    heading?: string | undefined;
     gap?: string | {
         default: string;
         sm?: string | undefined;
@@ -1010,19 +1011,20 @@ export declare const sectionConfigSchema: z.ZodObject<{
         xl?: string | undefined;
         "2xl"?: string | undefined;
     } | undefined;
-    heading?: string | undefined;
     divider?: boolean | undefined;
 }, {
     type: "section";
     id?: string | undefined;
     description?: string | undefined;
     style?: Record<string, string | number> | undefined;
+    children?: any[] | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
     className?: string | undefined;
+    heading?: string | undefined;
     gap?: string | {
         default: string;
         sm?: string | undefined;
@@ -1031,8 +1033,6 @@ export declare const sectionConfigSchema: z.ZodObject<{
         xl?: string | undefined;
         "2xl"?: string | undefined;
     } | undefined;
-    children?: any[] | undefined;
-    heading?: string | undefined;
     divider?: boolean | undefined;
 }>;
 export declare const containerConfigSchema: z.ZodObject<{
@@ -1048,11 +1048,11 @@ export declare const containerConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>]>>;
 }, "strict", z.ZodTypeAny, {
@@ -1062,7 +1062,7 @@ export declare const containerConfigSchema: z.ZodObject<{
     style?: Record<string, string | number> | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
     className?: string | undefined;
@@ -1071,14 +1071,204 @@ export declare const containerConfigSchema: z.ZodObject<{
     type: "container";
     id?: string | undefined;
     style?: Record<string, string | number> | undefined;
+    children?: any[] | undefined;
     visible?: boolean | {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
     className?: string | undefined;
-    children?: any[] | undefined;
     maxWidth?: string | undefined;
+}>;
+export declare const backgroundConfigSchema: z.ZodObject<{
+    image: z.ZodOptional<z.ZodString>;
+    position: z.ZodOptional<z.ZodString>;
+    size: z.ZodOptional<z.ZodString>;
+    overlay: z.ZodOptional<z.ZodString>;
+}, "strict", z.ZodTypeAny, {
+    size?: string | undefined;
+    overlay?: string | undefined;
+    position?: string | undefined;
+    image?: string | undefined;
+}, {
+    size?: string | undefined;
+    overlay?: string | undefined;
+    position?: string | undefined;
+    image?: string | undefined;
+}>;
+export declare const gridConfigSchema: z.ZodObject<{
+    type: z.ZodLiteral<"grid">;
+    id: z.ZodOptional<z.ZodString>;
+    columns: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodNumber, z.ZodString]>, z.ZodObject<{
+        default: z.ZodUnion<[z.ZodNumber, z.ZodString]>;
+        sm: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodString]>>;
+        md: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodString]>>;
+        lg: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodString]>>;
+        xl: z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodString]>>;
+        "2xl": z.ZodOptional<z.ZodUnion<[z.ZodNumber, z.ZodString]>>;
+    }, z.UnknownKeysParam, z.ZodTypeAny, {
+        default: string | number;
+        sm?: string | number | undefined;
+        md?: string | number | undefined;
+        lg?: string | number | undefined;
+        xl?: string | number | undefined;
+        "2xl"?: string | number | undefined;
+    }, {
+        default: string | number;
+        sm?: string | number | undefined;
+        md?: string | number | undefined;
+        lg?: string | number | undefined;
+        xl?: string | number | undefined;
+        "2xl"?: string | number | undefined;
+    }>]>]>>;
+    template: z.ZodOptional<z.ZodString>;
+    rows: z.ZodOptional<z.ZodString>;
+    areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    gap: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodUnion<[z.ZodString, z.ZodObject<{
+        default: z.ZodString;
+        sm: z.ZodOptional<z.ZodString>;
+        md: z.ZodOptional<z.ZodString>;
+        lg: z.ZodOptional<z.ZodString>;
+        xl: z.ZodOptional<z.ZodString>;
+        "2xl": z.ZodOptional<z.ZodString>;
+    }, z.UnknownKeysParam, z.ZodTypeAny, {
+        default: string;
+        sm?: string | undefined;
+        md?: string | undefined;
+        lg?: string | undefined;
+        xl?: string | undefined;
+        "2xl"?: string | undefined;
+    }, {
+        default: string;
+        sm?: string | undefined;
+        md?: string | undefined;
+        lg?: string | undefined;
+        xl?: string | undefined;
+        "2xl"?: string | undefined;
+    }>]>]>>;
+    children: z.ZodDefault<z.ZodArray<z.ZodLazy<z.ZodType<any, z.ZodTypeDef, any>>, "many">>;
+    background: z.ZodOptional<z.ZodObject<{
+        image: z.ZodOptional<z.ZodString>;
+        position: z.ZodOptional<z.ZodString>;
+        size: z.ZodOptional<z.ZodString>;
+        overlay: z.ZodOptional<z.ZodString>;
+    }, "strict", z.ZodTypeAny, {
+        size?: string | undefined;
+        overlay?: string | undefined;
+        position?: string | undefined;
+        image?: string | undefined;
+    }, {
+        size?: string | undefined;
+        overlay?: string | undefined;
+        position?: string | undefined;
+        image?: string | undefined;
+    }>>;
+    className: z.ZodOptional<z.ZodString>;
+    style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
+    visible: z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>>;
+}, "strict", z.ZodTypeAny, {
+    type: "grid";
+    children: any[];
+    id?: string | undefined;
+    template?: string | undefined;
+    style?: Record<string, string | number> | undefined;
+    visible?: boolean | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
+    background?: {
+        size?: string | undefined;
+        overlay?: string | undefined;
+        position?: string | undefined;
+        image?: string | undefined;
+    } | undefined;
+    className?: string | undefined;
+    gap?: string | {
+        default: string;
+        sm?: string | undefined;
+        md?: string | undefined;
+        lg?: string | undefined;
+        xl?: string | undefined;
+        "2xl"?: string | undefined;
+    } | undefined;
+    columns?: string | number | {
+        default: string | number;
+        sm?: string | number | undefined;
+        md?: string | number | undefined;
+        lg?: string | number | undefined;
+        xl?: string | number | undefined;
+        "2xl"?: string | number | undefined;
+    } | undefined;
+    rows?: string | undefined;
+    areas?: string[] | undefined;
+}, {
+    type: "grid";
+    id?: string | undefined;
+    template?: string | undefined;
+    style?: Record<string, string | number> | undefined;
+    children?: any[] | undefined;
+    visible?: boolean | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
+    background?: {
+        size?: string | undefined;
+        overlay?: string | undefined;
+        position?: string | undefined;
+        image?: string | undefined;
+    } | undefined;
+    className?: string | undefined;
+    gap?: string | {
+        default: string;
+        sm?: string | undefined;
+        md?: string | undefined;
+        lg?: string | undefined;
+        xl?: string | undefined;
+        "2xl"?: string | undefined;
+    } | undefined;
+    columns?: string | number | {
+        default: string | number;
+        sm?: string | number | undefined;
+        md?: string | number | undefined;
+        lg?: string | number | undefined;
+        xl?: string | number | undefined;
+        "2xl"?: string | number | undefined;
+    } | undefined;
+    rows?: string | undefined;
+    areas?: string[] | undefined;
+}>;
+export declare const spacerConfigSchema: z.ZodObject<{
+    type: z.ZodLiteral<"spacer">;
+    size: z.ZodOptional<z.ZodString>;
+    flex: z.ZodOptional<z.ZodBoolean>;
+    className: z.ZodOptional<z.ZodString>;
+    style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
+}, "strict", z.ZodTypeAny, {
+    type: "spacer";
+    style?: Record<string, string | number> | undefined;
+    size?: string | undefined;
+    className?: string | undefined;
+    flex?: boolean | undefined;
+}, {
+    type: "spacer";
+    style?: Record<string, string | number> | undefined;
+    size?: string | undefined;
+    className?: string | undefined;
+    flex?: boolean | undefined;
 }>;
 export declare const customComponentPropSchema: z.ZodObject<{
     type: z.ZodEnum<["string", "number", "boolean"]>;
@@ -1131,29 +1321,29 @@ export declare const toastConfigSchema: z.ZodObject<{
         color: z.ZodOptional<z.ZodString>;
         duration: z.ZodOptional<z.ZodNumber>;
     }, "strict", z.ZodTypeAny, {
-        duration?: number | undefined;
         icon?: string | undefined;
         color?: string | undefined;
+        duration?: number | undefined;
     }, {
-        duration?: number | undefined;
         icon?: string | undefined;
         color?: string | undefined;
+        duration?: number | undefined;
     }>>>;
 }, "strict", z.ZodTypeAny, {
     position: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left";
     duration: number;
     variants?: Record<string, {
-        duration?: number | undefined;
         icon?: string | undefined;
         color?: string | undefined;
+        duration?: number | undefined;
     }> | undefined;
 }, {
     position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left" | undefined;
     duration?: number | undefined;
     variants?: Record<string, {
-        duration?: number | undefined;
         icon?: string | undefined;
         color?: string | undefined;
+        duration?: number | undefined;
     }> | undefined;
 }>;
 /**
@@ -4987,9 +5177,9 @@ export declare const realtimeWsSchema: z.ZodEffects<z.ZodObject<{
 }>, {
     on: {
         [x: string]: string;
+        reconnecting?: string | undefined;
         connected?: string | undefined;
         disconnected?: string | undefined;
-        reconnecting?: string | undefined;
         reconnectFailed?: string | undefined;
     };
     autoReconnect: boolean;
@@ -5064,8 +5254,8 @@ export declare const realtimeSseEndpointSchema: z.ZodEffects<z.ZodObject<{
     on: {
         [x: string]: string;
         error?: string | undefined;
-        closed?: string | undefined;
         connected?: string | undefined;
+        closed?: string | undefined;
     };
     events?: Record<string, string> | undefined;
     withCredentials?: boolean | undefined;
@@ -5155,9 +5345,9 @@ export declare const realtimeConfigSchema: z.ZodObject<{
     }>, {
         on: {
             [x: string]: string;
+            reconnecting?: string | undefined;
             connected?: string | undefined;
             disconnected?: string | undefined;
-            reconnecting?: string | undefined;
             reconnectFailed?: string | undefined;
         };
         autoReconnect: boolean;
@@ -5227,8 +5417,8 @@ export declare const realtimeConfigSchema: z.ZodObject<{
             on: {
                 [x: string]: string;
                 error?: string | undefined;
-                closed?: string | undefined;
                 connected?: string | undefined;
+                closed?: string | undefined;
             };
             events?: Record<string, string> | undefined;
             withCredentials?: boolean | undefined;
@@ -5247,8 +5437,8 @@ export declare const realtimeConfigSchema: z.ZodObject<{
             on: {
                 [x: string]: string;
                 error?: string | undefined;
-                closed?: string | undefined;
                 connected?: string | undefined;
+                closed?: string | undefined;
             };
             events?: Record<string, string> | undefined;
             withCredentials?: boolean | undefined;
@@ -5270,9 +5460,9 @@ export declare const realtimeConfigSchema: z.ZodObject<{
     ws?: {
         on: {
             [x: string]: string;
+            reconnecting?: string | undefined;
             connected?: string | undefined;
             disconnected?: string | undefined;
-            reconnecting?: string | undefined;
             reconnectFailed?: string | undefined;
         };
         autoReconnect: boolean;
@@ -5292,8 +5482,8 @@ export declare const realtimeConfigSchema: z.ZodObject<{
             on: {
                 [x: string]: string;
                 error?: string | undefined;
-                closed?: string | undefined;
                 connected?: string | undefined;
+                closed?: string | undefined;
             };
             events?: Record<string, string> | undefined;
             withCredentials?: boolean | undefined;
@@ -5460,8 +5650,15 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
     autoRedirect: z.ZodOptional<z.ZodBoolean>;
     name: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
-    type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+    type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
     name?: string | undefined;
+    label?: string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        t: string;
+        vars?: Record<string, unknown> | undefined;
+    } | undefined;
     description?: string | {
         env: string;
         default?: string | undefined;
@@ -5470,13 +5667,6 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | undefined;
     scopes?: string[] | undefined;
-    label?: string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        t: string;
-        vars?: Record<string, unknown> | undefined;
-    } | undefined;
     clientId?: string | {
         env: string;
         default?: string | undefined;
@@ -5488,8 +5678,15 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
     callbackPath?: string | undefined;
     autoRedirect?: boolean | undefined;
 }, {
-    type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+    type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
     name?: string | undefined;
+    label?: string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        t: string;
+        vars?: Record<string, unknown> | undefined;
+    } | undefined;
     description?: string | {
         env: string;
         default?: string | undefined;
@@ -5498,13 +5695,6 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | undefined;
     scopes?: string[] | undefined;
-    label?: string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        t: string;
-        vars?: Record<string, unknown> | undefined;
-    } | undefined;
     clientId?: string | {
         env: string;
         default?: string | undefined;
@@ -5516,8 +5706,15 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
     callbackPath?: string | undefined;
     autoRedirect?: boolean | undefined;
 }>, {
-    type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+    type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
     name?: string | undefined;
+    label?: string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        t: string;
+        vars?: Record<string, unknown> | undefined;
+    } | undefined;
     description?: string | {
         env: string;
         default?: string | undefined;
@@ -5526,13 +5723,6 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | undefined;
     scopes?: string[] | undefined;
-    label?: string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        t: string;
-        vars?: Record<string, unknown> | undefined;
-    } | undefined;
     clientId?: string | {
         env: string;
         default?: string | undefined;
@@ -5544,8 +5734,15 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
     callbackPath?: string | undefined;
     autoRedirect?: boolean | undefined;
 }, {
-    type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+    type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
     name?: string | undefined;
+    label?: string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        t: string;
+        vars?: Record<string, unknown> | undefined;
+    } | undefined;
     description?: string | {
         env: string;
         default?: string | undefined;
@@ -5554,13 +5751,6 @@ export declare const authProviderSchema: z.ZodEffects<z.ZodObject<{
         vars?: Record<string, unknown> | undefined;
     } | undefined;
     scopes?: string[] | undefined;
-    label?: string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        t: string;
-        vars?: Record<string, unknown> | undefined;
-    } | undefined;
     clientId?: string | {
         env: string;
         default?: string | undefined;
@@ -5582,11 +5772,11 @@ export declare const authSessionSchema: z.ZodObject<{
 }, "strict", z.ZodTypeAny, {
     key: string;
     storage: "memory" | "localStorage" | "sessionStorage";
-    mode: "token" | "cookie";
+    mode: "cookie" | "token";
 }, {
     key?: string | undefined;
     storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-    mode?: "token" | "cookie" | undefined;
+    mode?: "cookie" | "token" | undefined;
 }>;
 export declare const authScreenConfigSchema: z.ZodObject<{
     screens: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodEnum<["login", "register", "forgot-password", "reset-password", "verify-email", "mfa", "sso-callback"]>, "many">, z.ZodRecord<z.ZodEnum<["login", "register", "forgot-password", "reset-password", "verify-email", "mfa", "sso-callback"]>, z.ZodUnion<[z.ZodLiteral<"default">, z.ZodLiteral<false>]>>]>>;
@@ -5597,11 +5787,11 @@ export declare const authScreenConfigSchema: z.ZodObject<{
     }, "strict", z.ZodTypeAny, {
         key: string;
         storage: "memory" | "localStorage" | "sessionStorage";
-        mode: "token" | "cookie";
+        mode: "cookie" | "token";
     }, {
         key?: string | undefined;
         storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-        mode?: "token" | "cookie" | undefined;
+        mode?: "cookie" | "token" | undefined;
     }>>;
     contract: z.ZodOptional<z.ZodObject<{
         endpoints: z.ZodOptional<z.ZodObject<{
@@ -6590,8 +6780,15 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         autoRedirect: z.ZodOptional<z.ZodBoolean>;
         name: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
-        type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+        type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
         name?: string | undefined;
+        label?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
         description?: string | {
             env: string;
             default?: string | undefined;
@@ -6600,13 +6797,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         } | undefined;
         scopes?: string[] | undefined;
-        label?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         clientId?: string | {
             env: string;
             default?: string | undefined;
@@ -6618,8 +6808,15 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         callbackPath?: string | undefined;
         autoRedirect?: boolean | undefined;
     }, {
-        type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+        type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
         name?: string | undefined;
+        label?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
         description?: string | {
             env: string;
             default?: string | undefined;
@@ -6628,13 +6825,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         } | undefined;
         scopes?: string[] | undefined;
-        label?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         clientId?: string | {
             env: string;
             default?: string | undefined;
@@ -6646,8 +6836,15 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         callbackPath?: string | undefined;
         autoRedirect?: boolean | undefined;
     }>, {
-        type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+        type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
         name?: string | undefined;
+        label?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
         description?: string | {
             env: string;
             default?: string | undefined;
@@ -6656,13 +6853,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         } | undefined;
         scopes?: string[] | undefined;
-        label?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         clientId?: string | {
             env: string;
             default?: string | undefined;
@@ -6674,8 +6864,15 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         callbackPath?: string | undefined;
         autoRedirect?: boolean | undefined;
     }, {
-        type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+        type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
         name?: string | undefined;
+        label?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
         description?: string | {
             env: string;
             default?: string | undefined;
@@ -6684,13 +6881,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         } | undefined;
         scopes?: string[] | undefined;
-        label?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         clientId?: string | {
             env: string;
             default?: string | undefined;
@@ -6710,11 +6900,11 @@ export declare const authScreenConfigSchema: z.ZodObject<{
     }, "strict", z.ZodTypeAny, {
         period: number;
         issuer?: string | undefined;
-        methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+        methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
     }, {
         issuer?: string | undefined;
         period?: number | undefined;
-        methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+        methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
     }>>;
     webauthn: z.ZodOptional<z.ZodObject<{
         rpId: z.ZodOptional<z.ZodString>;
@@ -6789,13 +6979,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         }>]>>;
     }, "strip", z.ZodTypeAny, {
-        description?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         title?: string | {
             env: string;
             default?: string | undefined;
@@ -6806,15 +6989,15 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         logo?: string | {
             env: string;
             default?: string | undefined;
+        } | undefined;
+        description?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
         } | undefined;
     }, {
-        description?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         title?: string | {
             env: string;
             default?: string | undefined;
@@ -6825,6 +7008,13 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         logo?: string | {
             env: string;
             default?: string | undefined;
+        } | undefined;
+        description?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
         } | undefined;
     }>>;
     redirects: z.ZodOptional<z.ZodObject<{
@@ -6893,14 +7083,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             env: string;
             default?: string | undefined;
         } | undefined;
-        unauthenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        forbidden?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
         afterLogin?: string | {
             env: string;
             default?: string | undefined;
@@ -6910,6 +7092,14 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             default?: string | undefined;
         } | undefined;
         afterMfa?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        unauthenticated?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        forbidden?: string | {
             env: string;
             default?: string | undefined;
         } | undefined;
@@ -6918,14 +7108,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             env: string;
             default?: string | undefined;
         } | undefined;
-        unauthenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        forbidden?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
         afterLogin?: string | {
             env: string;
             default?: string | undefined;
@@ -6935,6 +7117,14 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             default?: string | undefined;
         } | undefined;
         afterMfa?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        unauthenticated?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        forbidden?: string | {
             env: string;
             default?: string | undefined;
         } | undefined;
@@ -7576,7 +7766,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -7608,22 +7798,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -7640,7 +7814,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -7657,7 +7847,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 } | undefined;
             }, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -7689,22 +7879,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -7721,7 +7895,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -7802,15 +7992,8 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
             }>, "many">>;
         }, "strict", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -7842,22 +8025,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -7874,7 +8041,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -7898,22 +8081,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -7928,7 +8109,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -7959,17 +8150,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8001,22 +8184,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -8033,7 +8200,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8057,22 +8240,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -8087,7 +8268,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -8118,7 +8309,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }>>;
         register: z.ZodOptional<z.ZodObject<{
             title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -8698,7 +8888,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8730,22 +8920,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -8762,7 +8936,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8779,7 +8969,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 } | undefined;
             }, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8811,22 +9001,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -8843,7 +9017,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8924,15 +9114,8 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
             }>, "many">>;
         }, "strict", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -8964,22 +9147,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -8996,7 +9163,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -9020,22 +9203,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -9050,7 +9231,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -9081,17 +9272,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -9123,22 +9306,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -9155,7 +9322,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -9179,22 +9362,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -9209,7 +9390,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -9240,7 +9431,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }>>;
         "forgot-password": z.ZodOptional<z.ZodObject<{
             title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -9820,7 +10010,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -9852,22 +10042,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -9884,7 +10058,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -9901,7 +10091,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 } | undefined;
             }, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -9933,22 +10123,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -9965,7 +10139,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -10046,15 +10236,8 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
             }>, "many">>;
         }, "strict", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -10086,22 +10269,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -10118,7 +10285,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -10142,22 +10325,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -10172,7 +10353,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -10203,17 +10394,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -10245,22 +10428,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -10277,7 +10444,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -10301,22 +10484,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -10331,7 +10512,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -10362,7 +10553,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }>>;
         "reset-password": z.ZodOptional<z.ZodObject<{
             title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -10942,7 +11132,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -10974,22 +11164,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -11006,7 +11180,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11023,7 +11213,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 } | undefined;
             }, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11055,22 +11245,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -11087,7 +11261,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11168,15 +11358,8 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
             }>, "many">>;
         }, "strict", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11208,22 +11391,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -11240,7 +11407,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11264,22 +11447,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -11294,7 +11475,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -11325,17 +11516,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11367,22 +11550,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -11399,7 +11566,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -11423,22 +11606,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -11453,7 +11634,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -11484,7 +11675,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }>>;
         "verify-email": z.ZodOptional<z.ZodObject<{
             title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -12064,7 +12254,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12096,22 +12286,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -12128,7 +12302,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12145,7 +12335,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 } | undefined;
             }, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12177,22 +12367,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -12209,7 +12383,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12290,15 +12480,8 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
             }>, "many">>;
         }, "strict", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12330,22 +12513,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -12362,7 +12529,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12386,22 +12569,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -12416,7 +12597,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -12447,17 +12638,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12489,22 +12672,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -12521,7 +12688,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -12545,22 +12728,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -12575,7 +12756,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -12606,7 +12797,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }>>;
         mfa: z.ZodOptional<z.ZodObject<{
             title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -13186,7 +13376,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13218,22 +13408,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -13250,7 +13424,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13267,7 +13457,7 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     } | undefined;
                 } | undefined;
             }, {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13299,22 +13489,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -13331,7 +13505,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13412,15 +13602,8 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
             }>, "many">>;
         }, "strict", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13452,22 +13635,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -13484,7 +13651,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13508,22 +13691,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -13538,7 +13719,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -13569,17 +13760,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13611,22 +13794,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -13643,7 +13810,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13667,22 +13850,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -13697,7 +13878,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -13728,19 +13919,11 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
         mfa?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13772,22 +13955,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -13804,7 +13971,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13828,22 +14011,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -13858,7 +14039,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -13889,18 +14080,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         login?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13932,22 +14115,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -13964,7 +14131,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -13988,22 +14171,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14018,7 +14199,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -14049,18 +14240,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         register?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14092,22 +14275,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -14124,7 +14291,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14148,22 +14331,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14178,7 +14359,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -14209,18 +14400,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "forgot-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14252,22 +14435,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -14284,7 +14451,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14308,22 +14491,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14338,7 +14519,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -14369,18 +14560,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "reset-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14412,22 +14595,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -14444,7 +14611,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14468,22 +14651,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14498,7 +14679,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -14529,18 +14720,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "verify-email"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14572,22 +14755,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -14604,7 +14771,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14628,22 +14811,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14658,7 +14839,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -14689,19 +14880,11 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
     }, {
         mfa?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14733,22 +14916,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -14765,7 +14932,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14789,22 +14972,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14819,7 +15000,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -14850,18 +15041,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         login?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14893,22 +15076,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -14925,7 +15092,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -14949,22 +15132,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -14979,7 +15160,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -15010,18 +15201,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         register?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15053,22 +15236,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -15085,7 +15252,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15109,22 +15292,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -15139,7 +15320,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -15170,18 +15361,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "forgot-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15213,22 +15396,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -15245,7 +15412,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15269,22 +15452,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -15299,7 +15480,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -15330,18 +15521,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "reset-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15373,22 +15556,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -15405,7 +15572,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15429,22 +15612,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -15459,7 +15640,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -15490,18 +15681,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "verify-email"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15533,22 +15716,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -15565,7 +15732,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15589,22 +15772,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -15619,7 +15800,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -15650,42 +15841,48 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
-    mfa?: {
-        period: number;
-        issuer?: string | undefined;
-        methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
-    } | undefined;
-    session?: {
-        key: string;
-        storage: "memory" | "localStorage" | "sessionStorage";
-        mode: "token" | "cookie";
-    } | undefined;
-    on?: {
-        logout?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        unauthenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        forbidden?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-    } | undefined;
     webauthn?: {
         attestation: "none" | "indirect" | "direct";
         rpId?: string | undefined;
         rpName?: string | undefined;
     } | undefined;
+    on?: {
+        logout?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        unauthenticated?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        forbidden?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+    } | undefined;
+    mfa?: {
+        period: number;
+        issuer?: string | undefined;
+        methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+    } | undefined;
+    session?: {
+        key: string;
+        storage: "memory" | "localStorage" | "sessionStorage";
+        mode: "cookie" | "token";
+    } | undefined;
     providers?: Record<string, {
-        type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+        type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
         name?: string | undefined;
+        label?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
         description?: string | {
             env: string;
             default?: string | undefined;
@@ -15694,13 +15891,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         } | undefined;
         scopes?: string[] | undefined;
-        label?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         clientId?: string | {
             env: string;
             default?: string | undefined;
@@ -15858,20 +16048,13 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             default?: string | undefined;
         } | undefined;
     } | undefined;
+    screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+    providerMode?: "auto" | "buttons" | undefined;
     passkey?: boolean | {
         enabled?: boolean | undefined;
         autoPrompt?: boolean | undefined;
     } | undefined;
-    providerMode?: "auto" | "buttons" | undefined;
-    screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
     branding?: {
-        description?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         title?: string | {
             env: string;
             default?: string | undefined;
@@ -15883,17 +16066,16 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             env: string;
             default?: string | undefined;
         } | undefined;
+        description?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
     } | undefined;
     redirects?: {
         authenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        unauthenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        forbidden?: string | {
             env: string;
             default?: string | undefined;
         } | undefined;
@@ -15909,18 +16091,19 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             env: string;
             default?: string | undefined;
         } | undefined;
+        unauthenticated?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        forbidden?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
     } | undefined;
     screenOptions?: {
         mfa?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -15952,22 +16135,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -15984,7 +16151,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16008,22 +16191,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -16038,7 +16219,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -16069,18 +16260,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         login?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16112,22 +16295,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -16144,7 +16311,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16168,22 +16351,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -16198,7 +16379,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -16229,18 +16420,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         register?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16272,22 +16455,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -16304,7 +16471,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16328,22 +16511,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -16358,7 +16539,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -16389,18 +16580,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "forgot-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16432,22 +16615,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -16464,7 +16631,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16488,22 +16671,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -16518,7 +16699,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -16549,18 +16740,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "reset-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16592,22 +16775,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -16624,7 +16791,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16648,22 +16831,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -16678,7 +16859,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -16709,18 +16900,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "verify-email"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16752,22 +16935,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -16784,7 +16951,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -16808,22 +16991,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -16838,7 +17019,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -16869,19 +17060,13 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
     } | undefined;
 }, {
-    mfa?: {
-        issuer?: string | undefined;
-        period?: number | undefined;
-        methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
-    } | undefined;
-    session?: {
-        key?: string | undefined;
-        storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-        mode?: "token" | "cookie" | undefined;
+    webauthn?: {
+        rpId?: string | undefined;
+        rpName?: string | undefined;
+        attestation?: "none" | "indirect" | "direct" | undefined;
     } | undefined;
     on?: {
         logout?: string | {
@@ -16897,14 +17082,26 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             default?: string | undefined;
         } | undefined;
     } | undefined;
-    webauthn?: {
-        rpId?: string | undefined;
-        rpName?: string | undefined;
-        attestation?: "none" | "indirect" | "direct" | undefined;
+    mfa?: {
+        issuer?: string | undefined;
+        period?: number | undefined;
+        methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+    } | undefined;
+    session?: {
+        key?: string | undefined;
+        storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
+        mode?: "cookie" | "token" | undefined;
     } | undefined;
     providers?: Record<string, {
-        type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+        type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
         name?: string | undefined;
+        label?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
         description?: string | {
             env: string;
             default?: string | undefined;
@@ -16913,13 +17110,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             vars?: Record<string, unknown> | undefined;
         } | undefined;
         scopes?: string[] | undefined;
-        label?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         clientId?: string | {
             env: string;
             default?: string | undefined;
@@ -17077,20 +17267,13 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             default?: string | undefined;
         } | undefined;
     } | undefined;
+    screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+    providerMode?: "auto" | "buttons" | undefined;
     passkey?: boolean | {
         enabled?: boolean | undefined;
         autoPrompt?: boolean | undefined;
     } | undefined;
-    providerMode?: "auto" | "buttons" | undefined;
-    screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
     branding?: {
-        description?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
         title?: string | {
             env: string;
             default?: string | undefined;
@@ -17102,17 +17285,16 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             env: string;
             default?: string | undefined;
         } | undefined;
+        description?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
     } | undefined;
     redirects?: {
         authenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        unauthenticated?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        forbidden?: string | {
             env: string;
             default?: string | undefined;
         } | undefined;
@@ -17128,18 +17310,19 @@ export declare const authScreenConfigSchema: z.ZodObject<{
             env: string;
             default?: string | undefined;
         } | undefined;
+        unauthenticated?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        forbidden?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
     } | undefined;
     screenOptions?: {
         mfa?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17171,22 +17354,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -17203,7 +17370,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17227,22 +17410,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -17257,7 +17438,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -17288,18 +17479,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         login?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17331,22 +17514,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -17363,7 +17530,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17387,22 +17570,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -17417,7 +17598,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -17448,18 +17639,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         register?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17491,22 +17674,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -17523,7 +17690,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17547,22 +17730,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -17577,7 +17758,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -17608,18 +17799,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "forgot-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17651,22 +17834,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -17683,7 +17850,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17707,22 +17890,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -17737,7 +17918,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -17768,18 +17959,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "reset-password"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17811,22 +17994,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -17843,7 +18010,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17867,22 +18050,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -17897,7 +18078,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -17928,18 +18119,10 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
         "verify-email"?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             fields?: {
-                email?: {
+                code?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -17971,22 +18154,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                password?: {
-                    label?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                    placeholder?: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    } | undefined;
-                } | undefined;
                 method?: {
                     label?: string | {
                         env: string;
@@ -18003,7 +18170,23 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                code?: {
+                email?: {
+                    label?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                    placeholder?: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    } | undefined;
+                } | undefined;
+                password?: {
                     label?: string | {
                         env: string;
                         default?: string | undefined;
@@ -18027,22 +18210,20 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
+            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             providers?: string[] | undefined;
+            providerMode?: "auto" | "buttons" | undefined;
             passkey?: boolean | {
                 enabled?: boolean | undefined;
                 autoPrompt?: boolean | undefined;
             } | undefined;
-            links?: {
-                label: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                };
-                path?: string | undefined;
-                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-            }[] | undefined;
             submitLabel?: string | {
                 env: string;
                 default?: string | undefined;
@@ -18057,7 +18238,17 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                 t: string;
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
-            sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+            links?: {
+                label: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                };
+                path?: string | undefined;
+                screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+            }[] | undefined;
             labels?: {
                 method?: string | {
                     env: string;
@@ -18088,7 +18279,6 @@ export declare const authScreenConfigSchema: z.ZodObject<{
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
             } | undefined;
-            providerMode?: "auto" | "buttons" | undefined;
         } | undefined;
     } | undefined;
 }>;
@@ -18358,8 +18548,8 @@ export declare const routeConfigSchema: z.ZodObject<{
         render?: any;
     }>]>>;
 }, "strict", z.ZodTypeAny, {
-    id: string;
     path: string;
+    id: string;
     content: any[];
     roles?: string[] | undefined;
     title?: string | {
@@ -18400,8 +18590,8 @@ export declare const routeConfigSchema: z.ZodObject<{
         render?: any;
     } | undefined;
 }, {
-    id: string;
     path: string;
+    id: string;
     content: any[];
     roles?: string[] | undefined;
     title?: string | {
@@ -18457,18 +18647,18 @@ export declare const stateValueConfigSchema: z.ZodObject<{
     default: z.ZodOptional<z.ZodUnknown>;
 }, "strict", z.ZodTypeAny, {
     default?: unknown;
+    scope?: "app" | "route" | undefined;
     data?: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     } | undefined;
-    scope?: "app" | "route" | undefined;
 }, {
     default?: unknown;
+    scope?: "app" | "route" | undefined;
     data?: string | {
         resource: string;
         params?: Record<string, unknown> | undefined;
     } | undefined;
-    scope?: "app" | "route" | undefined;
 }>;
 /**
  * Manifest cache defaults for TanStack Query.
@@ -18532,11 +18722,11 @@ export declare const appConfigSchema: z.ZodObject<{
         transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     }, "strict", z.ZodTypeAny, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }, {
         from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
         transformArg?: string | number | undefined;
     }>]>>>;
     cache: z.ZodOptional<z.ZodObject<{
@@ -18595,12 +18785,20 @@ export declare const appConfigSchema: z.ZodObject<{
     }>]>]>>;
 }, "strict", z.ZodTypeAny, {
     shell: string;
+    error?: any;
+    headers?: Record<string, string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    }> | undefined;
     cache?: {
         retry: number;
         staleTime: number;
         gcTime: number;
     } | undefined;
-    error?: any;
     title?: string | {
         env: string;
         default?: string | undefined;
@@ -18608,14 +18806,6 @@ export declare const appConfigSchema: z.ZodObject<{
         t: string;
         vars?: Record<string, unknown> | undefined;
     } | undefined;
-    headers?: Record<string, string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-        transformArg?: string | number | undefined;
-    }> | undefined;
     apiUrl?: string | {
         env: string;
         default?: string | undefined;
@@ -18628,12 +18818,20 @@ export declare const appConfigSchema: z.ZodObject<{
     } | undefined;
     offline?: any;
 }, {
+    error?: any;
+    headers?: Record<string, string | {
+        env: string;
+        default?: string | undefined;
+    } | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+        transformArg?: string | number | undefined;
+    }> | undefined;
     cache?: {
         retry?: number | undefined;
         staleTime?: number | undefined;
         gcTime?: number | undefined;
     } | undefined;
-    error?: any;
     title?: string | {
         env: string;
         default?: string | undefined;
@@ -18641,19 +18839,11 @@ export declare const appConfigSchema: z.ZodObject<{
         t: string;
         vars?: Record<string, unknown> | undefined;
     } | undefined;
-    headers?: Record<string, string | {
-        env: string;
-        default?: string | undefined;
-    } | {
-        from: string;
-        transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-        transformArg?: string | number | undefined;
-    }> | undefined;
+    shell?: string | undefined;
     apiUrl?: string | {
         env: string;
         default?: string | undefined;
     } | undefined;
-    shell?: string | undefined;
     home?: string | undefined;
     loading?: any;
     notFound?: string | {
@@ -18708,13 +18898,13 @@ export declare const subAppInheritSchema: z.ZodObject<{
 }, "strict", z.ZodTypeAny, {
     theme: boolean;
     state: boolean;
-    policies: boolean;
     i18n: boolean;
+    policies: boolean;
 }, {
     theme?: boolean | undefined;
     state?: boolean | undefined;
-    policies?: boolean | undefined;
     i18n?: boolean | undefined;
+    policies?: boolean | undefined;
 }>;
 /**
  * Sub-application mount configuration.
@@ -18730,13 +18920,13 @@ export declare const subAppConfigSchema: z.ZodObject<{
     }, "strict", z.ZodTypeAny, {
         theme: boolean;
         state: boolean;
-        policies: boolean;
         i18n: boolean;
+        policies: boolean;
     }, {
         theme?: boolean | undefined;
         state?: boolean | undefined;
-        policies?: boolean | undefined;
         i18n?: boolean | undefined;
+        policies?: boolean | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
     mountPath: string;
@@ -18744,8 +18934,8 @@ export declare const subAppConfigSchema: z.ZodObject<{
     inherit?: {
         theme: boolean;
         state: boolean;
-        policies: boolean;
         i18n: boolean;
+        policies: boolean;
     } | undefined;
 }, {
     mountPath: string;
@@ -18753,8 +18943,8 @@ export declare const subAppConfigSchema: z.ZodObject<{
     inherit?: {
         theme?: boolean | undefined;
         state?: boolean | undefined;
-        policies?: boolean | undefined;
         i18n?: boolean | undefined;
+        policies?: boolean | undefined;
     } | undefined;
 }>;
 /**
@@ -18771,13 +18961,13 @@ export declare const subAppsSchema: z.ZodRecord<z.ZodString, z.ZodObject<{
     }, "strict", z.ZodTypeAny, {
         theme: boolean;
         state: boolean;
-        policies: boolean;
         i18n: boolean;
+        policies: boolean;
     }, {
         theme?: boolean | undefined;
         state?: boolean | undefined;
-        policies?: boolean | undefined;
         i18n?: boolean | undefined;
+        policies?: boolean | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
     mountPath: string;
@@ -18785,8 +18975,8 @@ export declare const subAppsSchema: z.ZodRecord<z.ZodString, z.ZodObject<{
     inherit?: {
         theme: boolean;
         state: boolean;
-        policies: boolean;
         i18n: boolean;
+        policies: boolean;
     } | undefined;
 }, {
     mountPath: string;
@@ -18794,8 +18984,8 @@ export declare const subAppsSchema: z.ZodRecord<z.ZodString, z.ZodObject<{
     inherit?: {
         theme?: boolean | undefined;
         state?: boolean | undefined;
-        policies?: boolean | undefined;
         i18n?: boolean | undefined;
+        policies?: boolean | undefined;
     } | undefined;
 }>>;
 export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
@@ -18846,11 +19036,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
         }, "strict", z.ZodTypeAny, {
             from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
             transformArg?: string | number | undefined;
         }, {
             from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
             transformArg?: string | number | undefined;
         }>]>>>;
         cache: z.ZodOptional<z.ZodObject<{
@@ -18909,12 +19099,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         }>]>]>>;
     }, "strict", z.ZodTypeAny, {
         shell: string;
+        error?: any;
+        headers?: Record<string, string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+            transformArg?: string | number | undefined;
+        }> | undefined;
         cache?: {
             retry: number;
             staleTime: number;
             gcTime: number;
         } | undefined;
-        error?: any;
         title?: string | {
             env: string;
             default?: string | undefined;
@@ -18922,14 +19120,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             t: string;
             vars?: Record<string, unknown> | undefined;
         } | undefined;
-        headers?: Record<string, string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-            transformArg?: string | number | undefined;
-        }> | undefined;
         apiUrl?: string | {
             env: string;
             default?: string | undefined;
@@ -18942,12 +19132,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         } | undefined;
         offline?: any;
     }, {
+        error?: any;
+        headers?: Record<string, string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+            transformArg?: string | number | undefined;
+        }> | undefined;
         cache?: {
             retry?: number | undefined;
             staleTime?: number | undefined;
             gcTime?: number | undefined;
         } | undefined;
-        error?: any;
         title?: string | {
             env: string;
             default?: string | undefined;
@@ -18955,19 +19153,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             t: string;
             vars?: Record<string, unknown> | undefined;
         } | undefined;
-        headers?: Record<string, string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-            transformArg?: string | number | undefined;
-        }> | undefined;
+        shell?: string | undefined;
         apiUrl?: string | {
             env: string;
             default?: string | undefined;
         } | undefined;
-        shell?: string | undefined;
         home?: string | undefined;
         loading?: any;
         notFound?: string | {
@@ -19044,39 +19234,39 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 ring: z.ZodOptional<z.ZodString>;
                 chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
             }, "strict", z.ZodTypeAny, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }>>;
             darkColors: z.ZodOptional<z.ZodObject<{
                 primary: z.ZodOptional<z.ZodString>;
@@ -19096,39 +19286,39 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 ring: z.ZodOptional<z.ZodString>;
                 chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
             }, "strict", z.ZodTypeAny, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }>>;
             radius: z.ZodOptional<z.ZodEnum<["none", "xs", "sm", "md", "lg", "xl", "full"]>>;
             spacing: z.ZodOptional<z.ZodEnum<["compact", "default", "comfortable", "spacious"]>>;
@@ -19179,13 +19369,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 }, {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 }>>;
                 button: z.ZodOptional<z.ZodObject<{
                     weight: z.ZodOptional<z.ZodEnum<["light", "medium", "bold"]>>;
@@ -19193,11 +19383,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     iconSize: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
                 }, "strict", z.ZodTypeAny, {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 }, {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 }>>;
                 input: z.ZodOptional<z.ZodObject<{
@@ -19224,10 +19414,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     variant: z.ZodOptional<z.ZodEnum<["minimal", "bordered", "filled"]>>;
                     activeIndicator: z.ZodOptional<z.ZodEnum<["background", "border-left", "border-bottom", "dot"]>>;
                 }, "strict", z.ZodTypeAny, {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 }, {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 }>>;
                 badge: z.ZodOptional<z.ZodObject<{
@@ -19244,23 +19434,27 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     position: z.ZodOptional<z.ZodEnum<["top-right", "top-center", "bottom-right", "bottom-center"]>>;
                     animation: z.ZodOptional<z.ZodEnum<["slide", "fade", "pop"]>>;
                 }, "strict", z.ZodTypeAny, {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 }, {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
                 input?: {
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -19269,7 +19463,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -19277,28 +19471,28 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             }, {
                 input?: {
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -19307,7 +19501,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -19315,16 +19509,12 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             }>>;
         }, "strict", z.ZodTypeAny, {
@@ -19335,12 +19525,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -19349,7 +19543,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -19357,53 +19551,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -19423,12 +19613,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -19437,7 +19631,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -19445,53 +19639,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -19523,39 +19713,39 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 ring: z.ZodOptional<z.ZodString>;
                 chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
             }, "strict", z.ZodTypeAny, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }>>;
             darkColors: z.ZodOptional<z.ZodObject<{
                 primary: z.ZodOptional<z.ZodString>;
@@ -19575,39 +19765,39 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 ring: z.ZodOptional<z.ZodString>;
                 chart: z.ZodOptional<z.ZodTuple<[z.ZodString, z.ZodString, z.ZodString, z.ZodString, z.ZodString], null>>;
             }, "strict", z.ZodTypeAny, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }, {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             }>>;
             radius: z.ZodOptional<z.ZodEnum<["none", "xs", "sm", "md", "lg", "xl", "full"]>>;
             spacing: z.ZodOptional<z.ZodEnum<["compact", "default", "comfortable", "spacious"]>>;
@@ -19658,13 +19848,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 }, {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 }>>;
                 button: z.ZodOptional<z.ZodObject<{
                     weight: z.ZodOptional<z.ZodEnum<["light", "medium", "bold"]>>;
@@ -19672,11 +19862,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     iconSize: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
                 }, "strict", z.ZodTypeAny, {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 }, {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 }>>;
                 input: z.ZodOptional<z.ZodObject<{
@@ -19703,10 +19893,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     variant: z.ZodOptional<z.ZodEnum<["minimal", "bordered", "filled"]>>;
                     activeIndicator: z.ZodOptional<z.ZodEnum<["background", "border-left", "border-bottom", "dot"]>>;
                 }, "strict", z.ZodTypeAny, {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 }, {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 }>>;
                 badge: z.ZodOptional<z.ZodObject<{
@@ -19723,23 +19913,27 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     position: z.ZodOptional<z.ZodEnum<["top-right", "top-center", "bottom-right", "bottom-center"]>>;
                     animation: z.ZodOptional<z.ZodEnum<["slide", "fade", "pop"]>>;
                 }, "strict", z.ZodTypeAny, {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 }, {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 }>>;
             }, "strict", z.ZodTypeAny, {
                 input?: {
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -19748,7 +19942,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -19756,28 +19950,28 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             }, {
                 input?: {
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -19786,7 +19980,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -19794,16 +19988,12 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             }>>;
             tokens: z.ZodOptional<z.ZodObject<{
@@ -19831,15 +20021,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     inOut: z.ZodOptional<z.ZodString>;
                     spring: z.ZodOptional<z.ZodString>;
                 }, "strict", z.ZodTypeAny, {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 }, {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 }>>;
@@ -19864,15 +20054,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     loose: z.ZodOptional<z.ZodNumber>;
                 }, "strict", z.ZodTypeAny, {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 }, {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 }>>;
                 tracking: z.ZodOptional<z.ZodObject<{
@@ -19894,13 +20084,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     default: z.ZodOptional<z.ZodString>;
                     thick: z.ZodOptional<z.ZodString>;
                 }, "strict", z.ZodTypeAny, {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 }, {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 }>>;
@@ -19913,9 +20103,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -19926,9 +20116,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -19937,8 +20127,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -19951,9 +20141,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -19964,9 +20154,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -19975,8 +20165,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -19987,12 +20177,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -20001,7 +20195,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -20009,53 +20203,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -20076,9 +20266,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -20089,9 +20279,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -20100,8 +20290,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -20112,12 +20302,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -20126,7 +20320,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -20134,53 +20328,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -20201,9 +20391,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -20214,9 +20404,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -20225,8 +20415,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -20242,17 +20432,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 resource: string;
             }>]>>;
         }, "strict", z.ZodTypeAny, {
-            persist: "localStorage" | "sessionStorage" | "none" | {
+            persist: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             };
         }, {
-            persist?: "localStorage" | "sessionStorage" | "none" | {
+            persist?: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             } | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
         editor?: {
-            persist: "localStorage" | "sessionStorage" | "none" | {
+            persist: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             };
         } | undefined;
@@ -20265,12 +20455,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -20279,7 +20473,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -20287,53 +20481,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -20352,12 +20542,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -20366,7 +20560,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -20374,53 +20568,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -20441,9 +20631,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -20454,9 +20644,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -20465,8 +20655,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -20475,7 +20665,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         mode?: "system" | "dark" | "light" | undefined;
     }, {
         editor?: {
-            persist?: "localStorage" | "sessionStorage" | "none" | {
+            persist?: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             } | undefined;
         } | undefined;
@@ -20488,12 +20678,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -20502,7 +20696,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -20510,53 +20704,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -20575,12 +20765,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -20589,7 +20783,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -20597,53 +20791,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -20664,9 +20854,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -20677,9 +20867,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -20688,8 +20878,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -20705,29 +20895,29 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             color: z.ZodOptional<z.ZodString>;
             duration: z.ZodOptional<z.ZodNumber>;
         }, "strict", z.ZodTypeAny, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }>>>;
     }, "strict", z.ZodTypeAny, {
         position: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left";
         duration: number;
         variants?: Record<string, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }> | undefined;
     }, {
         position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left" | undefined;
         duration?: number | undefined;
         variants?: Record<string, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }> | undefined;
     }>>;
     analytics: z.ZodOptional<z.ZodObject<{
@@ -20920,18 +21110,18 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         default: z.ZodOptional<z.ZodUnknown>;
     }, "strict", z.ZodTypeAny, {
         default?: unknown;
+        scope?: "app" | "route" | undefined;
         data?: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         } | undefined;
-        scope?: "app" | "route" | undefined;
     }, {
         default?: unknown;
+        scope?: "app" | "route" | undefined;
         data?: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         } | undefined;
-        scope?: "app" | "route" | undefined;
     }>>>;
     navigation: z.ZodOptional<z.ZodObject<{
         mode: z.ZodOptional<z.ZodEnum<["sidebar", "top-nav"]>>;
@@ -20952,11 +21142,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         }, "strict", z.ZodTypeAny, {
             key: string;
             storage: "memory" | "localStorage" | "sessionStorage";
-            mode: "token" | "cookie";
+            mode: "cookie" | "token";
         }, {
             key?: string | undefined;
             storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-            mode?: "token" | "cookie" | undefined;
+            mode?: "cookie" | "token" | undefined;
         }>>;
         contract: z.ZodOptional<z.ZodObject<{
             endpoints: z.ZodOptional<z.ZodObject<{
@@ -21945,8 +22135,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             autoRedirect: z.ZodOptional<z.ZodBoolean>;
             name: z.ZodOptional<z.ZodString>;
         }, "strict", z.ZodTypeAny, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -21955,13 +22152,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -21973,8 +22163,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             callbackPath?: string | undefined;
             autoRedirect?: boolean | undefined;
         }, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -21983,13 +22180,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22001,8 +22191,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             callbackPath?: string | undefined;
             autoRedirect?: boolean | undefined;
         }>, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22011,13 +22208,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22029,8 +22219,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             callbackPath?: string | undefined;
             autoRedirect?: boolean | undefined;
         }, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22039,13 +22236,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22065,11 +22255,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         }, "strict", z.ZodTypeAny, {
             period: number;
             issuer?: string | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
         }, {
             issuer?: string | undefined;
             period?: number | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
         }>>;
         webauthn: z.ZodOptional<z.ZodObject<{
             rpId: z.ZodOptional<z.ZodString>;
@@ -22144,13 +22334,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             }>]>>;
         }, "strip", z.ZodTypeAny, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22161,15 +22344,15 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             logo?: string | {
                 env: string;
                 default?: string | undefined;
+            } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
             } | undefined;
         }, {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22180,6 +22363,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             logo?: string | {
                 env: string;
                 default?: string | undefined;
+            } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
             } | undefined;
         }>>;
         redirects: z.ZodOptional<z.ZodObject<{
@@ -22248,14 +22438,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
             afterLogin?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22265,6 +22447,14 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
             afterMfa?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -22273,14 +22463,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
             afterLogin?: string | {
                 env: string;
                 default?: string | undefined;
@@ -22290,6 +22472,14 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
             afterMfa?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -22931,7 +23121,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     }>>;
                 }, "strict", z.ZodTypeAny, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -22963,22 +23153,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -22995,7 +23169,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23012,7 +23202,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     } | undefined;
                 }, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23044,22 +23234,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -23076,7 +23250,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23157,15 +23347,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
                 }>, "many">>;
             }, "strict", z.ZodTypeAny, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23197,22 +23380,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -23229,7 +23396,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23253,22 +23436,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -23283,7 +23464,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -23314,17 +23505,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23356,22 +23539,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -23388,7 +23555,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -23412,22 +23595,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -23442,7 +23623,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -23473,7 +23664,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }>>;
             register: z.ZodOptional<z.ZodObject<{
                 title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -24053,7 +24243,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     }>>;
                 }, "strict", z.ZodTypeAny, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24085,22 +24275,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -24117,7 +24291,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24134,7 +24324,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     } | undefined;
                 }, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24166,22 +24356,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -24198,7 +24372,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24279,15 +24469,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
                 }>, "many">>;
             }, "strict", z.ZodTypeAny, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24319,22 +24502,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -24351,7 +24518,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24375,22 +24558,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -24405,7 +24586,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -24436,17 +24627,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24478,22 +24661,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -24510,7 +24677,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -24534,22 +24717,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -24564,7 +24745,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -24595,7 +24786,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }>>;
             "forgot-password": z.ZodOptional<z.ZodObject<{
                 title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -25175,7 +25365,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     }>>;
                 }, "strict", z.ZodTypeAny, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25207,22 +25397,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -25239,7 +25413,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25256,7 +25446,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     } | undefined;
                 }, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25288,22 +25478,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -25320,7 +25494,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25401,15 +25591,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
                 }>, "many">>;
             }, "strict", z.ZodTypeAny, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25441,22 +25624,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -25473,7 +25640,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25497,22 +25680,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -25527,7 +25708,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -25558,17 +25749,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25600,22 +25783,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -25632,7 +25799,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -25656,22 +25839,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -25686,7 +25867,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -25717,7 +25908,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }>>;
             "reset-password": z.ZodOptional<z.ZodObject<{
                 title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -26297,7 +26487,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     }>>;
                 }, "strict", z.ZodTypeAny, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26329,22 +26519,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -26361,7 +26535,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26378,7 +26568,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     } | undefined;
                 }, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26410,22 +26600,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -26442,7 +26616,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26523,15 +26713,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
                 }>, "many">>;
             }, "strict", z.ZodTypeAny, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26563,22 +26746,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -26595,7 +26762,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26619,22 +26802,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -26649,7 +26830,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -26680,17 +26871,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26722,22 +26905,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -26754,7 +26921,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -26778,22 +26961,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -26808,7 +26989,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -26839,7 +27030,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }>>;
             "verify-email": z.ZodOptional<z.ZodObject<{
                 title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -27419,7 +27609,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     }>>;
                 }, "strict", z.ZodTypeAny, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27451,22 +27641,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -27483,7 +27657,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27500,7 +27690,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     } | undefined;
                 }, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27532,22 +27722,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -27564,7 +27738,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27645,15 +27835,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
                 }>, "many">>;
             }, "strict", z.ZodTypeAny, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27685,22 +27868,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -27717,7 +27884,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27741,22 +27924,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -27771,7 +27952,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -27802,17 +27993,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27844,22 +28027,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -27876,7 +28043,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -27900,22 +28083,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -27930,7 +28111,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -27961,7 +28152,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }>>;
             mfa: z.ZodOptional<z.ZodObject<{
                 title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
@@ -28541,7 +28731,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     }>>;
                 }, "strict", z.ZodTypeAny, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28573,22 +28763,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -28605,7 +28779,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28622,7 +28812,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         } | undefined;
                     } | undefined;
                 }, {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28654,22 +28844,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -28686,7 +28860,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28767,15 +28957,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
                 }>, "many">>;
             }, "strict", z.ZodTypeAny, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28807,22 +28990,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -28839,7 +29006,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28863,22 +29046,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -28893,7 +29074,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -28924,17 +29115,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }, {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -28966,22 +29149,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -28998,7 +29165,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29022,22 +29205,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -29052,7 +29233,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -29083,19 +29274,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             }>>;
         }, "strict", z.ZodTypeAny, {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29127,22 +29310,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -29159,7 +29326,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29183,22 +29366,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -29213,7 +29394,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -29244,18 +29435,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29287,22 +29470,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -29319,7 +29486,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29343,22 +29526,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -29373,7 +29554,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -29404,18 +29595,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29447,22 +29630,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -29479,7 +29646,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29503,22 +29686,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -29533,7 +29714,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -29564,18 +29755,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29607,22 +29790,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -29639,7 +29806,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29663,22 +29846,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -29693,7 +29874,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -29724,18 +29915,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29767,22 +29950,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -29799,7 +29966,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29823,22 +30006,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -29853,7 +30034,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -29884,18 +30075,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29927,22 +30110,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -29959,7 +30126,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -29983,22 +30166,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30013,7 +30194,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -30044,19 +30235,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         }, {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30088,22 +30271,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -30120,7 +30287,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30144,22 +30327,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30174,7 +30355,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -30205,18 +30396,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30248,22 +30431,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -30280,7 +30447,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30304,22 +30487,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30334,7 +30515,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -30365,18 +30556,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30408,22 +30591,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -30440,7 +30607,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30464,22 +30647,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30494,7 +30675,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -30525,18 +30716,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30568,22 +30751,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -30600,7 +30767,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30624,22 +30807,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30654,7 +30835,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -30685,18 +30876,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30728,22 +30911,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -30760,7 +30927,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30784,22 +30967,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30814,7 +30995,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -30845,18 +31036,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30888,22 +31071,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -30920,7 +31087,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -30944,22 +31127,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -30974,7 +31155,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -31005,42 +31196,48 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
-        mfa?: {
-            period: number;
-            issuer?: string | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
-        } | undefined;
-        session?: {
-            key: string;
-            storage: "memory" | "localStorage" | "sessionStorage";
-            mode: "token" | "cookie";
-        } | undefined;
-        on?: {
-            logout?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-        } | undefined;
         webauthn?: {
             attestation: "none" | "indirect" | "direct";
             rpId?: string | undefined;
             rpName?: string | undefined;
         } | undefined;
+        on?: {
+            logout?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+        } | undefined;
+        mfa?: {
+            period: number;
+            issuer?: string | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+        } | undefined;
+        session?: {
+            key: string;
+            storage: "memory" | "localStorage" | "sessionStorage";
+            mode: "cookie" | "token";
+        } | undefined;
         providers?: Record<string, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -31049,13 +31246,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -31213,20 +31403,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
+        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+        providerMode?: "auto" | "buttons" | undefined;
         passkey?: boolean | {
             enabled?: boolean | undefined;
             autoPrompt?: boolean | undefined;
         } | undefined;
-        providerMode?: "auto" | "buttons" | undefined;
-        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
         branding?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -31238,17 +31421,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
         } | undefined;
         redirects?: {
             authenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -31264,18 +31446,19 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
         } | undefined;
         screenOptions?: {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31307,22 +31490,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -31339,7 +31506,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31363,22 +31546,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -31393,7 +31574,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -31424,18 +31615,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31467,22 +31650,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -31499,7 +31666,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31523,22 +31706,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -31553,7 +31734,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -31584,18 +31775,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31627,22 +31810,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -31659,7 +31826,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31683,22 +31866,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -31713,7 +31894,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -31744,18 +31935,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31787,22 +31970,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -31819,7 +31986,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31843,22 +32026,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -31873,7 +32054,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -31904,18 +32095,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -31947,22 +32130,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -31979,7 +32146,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32003,22 +32186,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -32033,7 +32214,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -32064,18 +32255,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32107,22 +32290,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -32139,7 +32306,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32163,22 +32346,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -32193,7 +32374,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -32224,19 +32415,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         } | undefined;
     }, {
-        mfa?: {
-            issuer?: string | undefined;
-            period?: number | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
-        } | undefined;
-        session?: {
-            key?: string | undefined;
-            storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-            mode?: "token" | "cookie" | undefined;
+        webauthn?: {
+            rpId?: string | undefined;
+            rpName?: string | undefined;
+            attestation?: "none" | "indirect" | "direct" | undefined;
         } | undefined;
         on?: {
             logout?: string | {
@@ -32252,14 +32437,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
-        webauthn?: {
-            rpId?: string | undefined;
-            rpName?: string | undefined;
-            attestation?: "none" | "indirect" | "direct" | undefined;
+        mfa?: {
+            issuer?: string | undefined;
+            period?: number | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+        } | undefined;
+        session?: {
+            key?: string | undefined;
+            storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
+            mode?: "cookie" | "token" | undefined;
         } | undefined;
         providers?: Record<string, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -32268,13 +32465,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -32432,20 +32622,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
+        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+        providerMode?: "auto" | "buttons" | undefined;
         passkey?: boolean | {
             enabled?: boolean | undefined;
             autoPrompt?: boolean | undefined;
         } | undefined;
-        providerMode?: "auto" | "buttons" | undefined;
-        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
         branding?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -32457,17 +32640,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
         } | undefined;
         redirects?: {
             authenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -32483,18 +32665,19 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
         } | undefined;
         screenOptions?: {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32526,22 +32709,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -32558,7 +32725,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32582,22 +32765,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -32612,7 +32793,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -32643,18 +32834,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32686,22 +32869,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -32718,7 +32885,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32742,22 +32925,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -32772,7 +32953,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -32803,18 +32994,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32846,22 +33029,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -32878,7 +33045,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -32902,22 +33085,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -32932,7 +33113,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -32963,18 +33154,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -33006,22 +33189,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -33038,7 +33205,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -33062,22 +33245,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -33092,7 +33273,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -33123,18 +33314,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -33166,22 +33349,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -33198,7 +33365,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -33222,22 +33405,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -33252,7 +33433,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -33283,18 +33474,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -33326,22 +33509,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -33358,7 +33525,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -33382,22 +33565,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -33412,7 +33593,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -33443,7 +33634,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         } | undefined;
     }>>;
@@ -33521,9 +33711,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         }>, {
             on: {
                 [x: string]: string;
+                reconnecting?: string | undefined;
                 connected?: string | undefined;
                 disconnected?: string | undefined;
-                reconnecting?: string | undefined;
                 reconnectFailed?: string | undefined;
             };
             autoReconnect: boolean;
@@ -33593,8 +33783,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 on: {
                     [x: string]: string;
                     error?: string | undefined;
-                    closed?: string | undefined;
                     connected?: string | undefined;
+                    closed?: string | undefined;
                 };
                 events?: Record<string, string> | undefined;
                 withCredentials?: boolean | undefined;
@@ -33613,8 +33803,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 on: {
                     [x: string]: string;
                     error?: string | undefined;
-                    closed?: string | undefined;
                     connected?: string | undefined;
+                    closed?: string | undefined;
                 };
                 events?: Record<string, string> | undefined;
                 withCredentials?: boolean | undefined;
@@ -33636,9 +33826,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         ws?: {
             on: {
                 [x: string]: string;
+                reconnecting?: string | undefined;
                 connected?: string | undefined;
                 disconnected?: string | undefined;
-                reconnecting?: string | undefined;
                 reconnectFailed?: string | undefined;
             };
             autoReconnect: boolean;
@@ -33658,8 +33848,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 on: {
                     [x: string]: string;
                     error?: string | undefined;
-                    closed?: string | undefined;
                     connected?: string | undefined;
+                    closed?: string | undefined;
                 };
                 events?: Record<string, string> | undefined;
                 withCredentials?: boolean | undefined;
@@ -34971,78 +35161,78 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             merge: z.ZodEnum<["append", "prepend", "replace", "patch", "remove"]>;
             idField: z.ZodOptional<z.ZodString>;
         }, "strict", z.ZodTypeAny, {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
             target: string | {
                 resource: string;
                 params?: Record<string, unknown> | undefined;
             };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
             idField?: string | undefined;
         }, {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
             target: string | {
                 resource: string;
                 params?: Record<string, unknown> | undefined;
             };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
             idField?: string | undefined;
         }>, {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
             target: string | {
                 resource: string;
                 params?: Record<string, unknown> | undefined;
             };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
             idField?: string | undefined;
         }, {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
             target: string | {
                 resource: string;
                 params?: Record<string, unknown> | undefined;
             };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
             idField?: string | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
         endpoint: string;
         method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
         params?: Record<string, unknown> | undefined;
+        dependsOn?: string[] | undefined;
+        retry?: number | undefined;
         client?: string | undefined;
         cacheMs?: number | undefined;
         pollMs?: number | undefined;
         refetchOnMount?: boolean | undefined;
         refetchOnWindowFocus?: boolean | undefined;
-        retry?: number | undefined;
         retryDelayMs?: number | undefined;
-        dependsOn?: string[] | undefined;
         invalidates?: (string | {
             key: string[];
         })[] | undefined;
         optimistic?: {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
             target: string | {
                 resource: string;
                 params?: Record<string, unknown> | undefined;
             };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
             idField?: string | undefined;
         } | undefined;
     }, {
         endpoint: string;
         method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
         params?: Record<string, unknown> | undefined;
+        dependsOn?: string[] | undefined;
+        retry?: number | undefined;
         client?: string | undefined;
         cacheMs?: number | undefined;
         pollMs?: number | undefined;
         refetchOnMount?: boolean | undefined;
         refetchOnWindowFocus?: boolean | undefined;
-        retry?: number | undefined;
         retryDelayMs?: number | undefined;
-        dependsOn?: string[] | undefined;
         invalidates?: (string | {
             key: string[];
         })[] | undefined;
         optimistic?: {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
             target: string | {
                 resource: string;
                 params?: Record<string, unknown> | undefined;
             };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
             idField?: string | undefined;
         } | undefined;
     }>>>;
@@ -35133,12 +35323,12 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         default: string;
         locales: string[];
         strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-        detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
+        detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
     }, {
         default: string;
         locales: string[];
         strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-        detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
+        detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
     }>>;
     subApps: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
         mountPath: z.ZodString;
@@ -35151,13 +35341,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         }, "strict", z.ZodTypeAny, {
             theme: boolean;
             state: boolean;
-            policies: boolean;
             i18n: boolean;
+            policies: boolean;
         }, {
             theme?: boolean | undefined;
             state?: boolean | undefined;
-            policies?: boolean | undefined;
             i18n?: boolean | undefined;
+            policies?: boolean | undefined;
         }>>;
     }, "strict", z.ZodTypeAny, {
         mountPath: string;
@@ -35165,8 +35355,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         inherit?: {
             theme: boolean;
             state: boolean;
-            policies: boolean;
             i18n: boolean;
+            policies: boolean;
         } | undefined;
     }, {
         mountPath: string;
@@ -35174,10 +35364,11 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         inherit?: {
             theme?: boolean | undefined;
             state?: boolean | undefined;
-            policies?: boolean | undefined;
             i18n?: boolean | undefined;
+            policies?: boolean | undefined;
         } | undefined;
     }>>>;
+    shortcuts: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodRecord<z.ZodString, z.ZodUnknown>>>;
     routes: z.ZodArray<z.ZodObject<{
         title: z.ZodOptional<z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodObject<{
             env: z.ZodString;
@@ -35284,8 +35475,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             render?: any;
         }>]>>;
     }, "strict", z.ZodTypeAny, {
-        id: string;
         path: string;
+        id: string;
         content: any[];
         roles?: string[] | undefined;
         title?: string | {
@@ -35326,8 +35517,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             render?: any;
         } | undefined;
     }, {
-        id: string;
         path: string;
+        id: string;
         content: any[];
         roles?: string[] | undefined;
         title?: string | {
@@ -35370,8 +35561,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     }>, "many">;
 }, "strict", z.ZodTypeAny, {
     routes: {
-        id: string;
         path: string;
+        id: string;
         content: any[];
         roles?: string[] | undefined;
         title?: string | {
@@ -35412,16 +35603,57 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             render?: any;
         } | undefined;
     }[];
-    auth?: {
-        mfa?: {
-            period: number;
-            issuer?: string | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+    push?: {
+        vapidPublicKey: string | {
+            env: string;
+            default?: string | undefined;
+        };
+        serviceWorkerPath: string;
+        applicationServerKey?: string | {
+            env: string;
+            default?: string | undefined;
         } | undefined;
-        session?: {
-            key: string;
-            storage: "memory" | "localStorage" | "sessionStorage";
-            mode: "token" | "cookie";
+    } | undefined;
+    app?: {
+        shell: string;
+        error?: any;
+        headers?: Record<string, string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+            transformArg?: string | number | undefined;
+        }> | undefined;
+        cache?: {
+            retry: number;
+            staleTime: number;
+            gcTime: number;
+        } | undefined;
+        title?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
+        apiUrl?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        home?: string | undefined;
+        loading?: any;
+        notFound?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        offline?: any;
+    } | undefined;
+    auth?: {
+        webauthn?: {
+            attestation: "none" | "indirect" | "direct";
+            rpId?: string | undefined;
+            rpName?: string | undefined;
         } | undefined;
         on?: {
             logout?: string | {
@@ -35437,14 +35669,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
-        webauthn?: {
-            attestation: "none" | "indirect" | "direct";
-            rpId?: string | undefined;
-            rpName?: string | undefined;
+        mfa?: {
+            period: number;
+            issuer?: string | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+        } | undefined;
+        session?: {
+            key: string;
+            storage: "memory" | "localStorage" | "sessionStorage";
+            mode: "cookie" | "token";
         } | undefined;
         providers?: Record<string, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -35453,13 +35697,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -35617,20 +35854,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
+        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+        providerMode?: "auto" | "buttons" | undefined;
         passkey?: boolean | {
             enabled?: boolean | undefined;
             autoPrompt?: boolean | undefined;
         } | undefined;
-        providerMode?: "auto" | "buttons" | undefined;
-        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
         branding?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -35642,17 +35872,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
         } | undefined;
         redirects?: {
             authenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -35668,18 +35897,19 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
         } | undefined;
         screenOptions?: {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -35711,22 +35941,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -35743,7 +35957,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -35767,22 +35997,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -35797,7 +36025,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -35828,18 +36066,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -35871,22 +36101,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -35903,7 +36117,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -35927,22 +36157,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -35957,7 +36185,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -35988,18 +36226,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36031,22 +36261,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -36063,7 +36277,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36087,22 +36317,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -36117,7 +36345,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -36148,18 +36386,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36191,22 +36421,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -36223,7 +36437,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36247,22 +36477,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -36277,7 +36505,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -36308,18 +36546,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36351,22 +36581,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -36383,7 +36597,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36407,22 +36637,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -36437,7 +36665,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -36468,18 +36706,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36511,22 +36741,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -36543,7 +36757,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -36567,22 +36797,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -36597,7 +36825,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -36628,56 +36866,45 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         } | undefined;
     } | undefined;
-    push?: {
-        vapidPublicKey: string | {
-            env: string;
-            default?: string | undefined;
-        };
-        serviceWorkerPath: string;
-        applicationServerKey?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
+    ssr?: {
+        rsc: boolean;
+        rscManifestPath: string;
+        middleware?: {
+            workflow: string;
+            match?: string | undefined;
+        }[] | undefined;
     } | undefined;
-    app?: {
-        shell: string;
-        cache?: {
-            retry: number;
-            staleTime: number;
-            gcTime: number;
-        } | undefined;
-        error?: any;
-        title?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
-        headers?: Record<string, string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-            transformArg?: string | number | undefined;
-        }> | undefined;
-        apiUrl?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        home?: string | undefined;
-        loading?: any;
-        notFound?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        offline?: any;
+    navigation?: {
+        items: any[];
+        mode?: "sidebar" | "top-nav" | undefined;
     } | undefined;
+    resources?: Record<string, {
+        endpoint: string;
+        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
+        params?: Record<string, unknown> | undefined;
+        dependsOn?: string[] | undefined;
+        retry?: number | undefined;
+        client?: string | undefined;
+        cacheMs?: number | undefined;
+        pollMs?: number | undefined;
+        refetchOnMount?: boolean | undefined;
+        refetchOnWindowFocus?: boolean | undefined;
+        retryDelayMs?: number | undefined;
+        invalidates?: (string | {
+            key: string[];
+        })[] | undefined;
+        optimistic?: {
+            target: string | {
+                resource: string;
+                params?: Record<string, unknown> | undefined;
+            };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
+            idField?: string | undefined;
+        } | undefined;
+    }> | undefined;
     components?: {
         custom?: Record<string, {
             props?: Record<string, {
@@ -36689,7 +36916,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     theme?: {
         editor?: {
-            persist: "localStorage" | "sessionStorage" | "none" | {
+            persist: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             };
         } | undefined;
@@ -36702,12 +36929,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -36716,7 +36947,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -36724,53 +36955,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -36789,12 +37016,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -36803,7 +37034,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -36811,53 +37042,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -36878,9 +37105,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -36891,9 +37118,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -36902,8 +37129,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -36915,19 +37142,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         position: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left";
         duration: number;
         variants?: Record<string, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }> | undefined;
     } | undefined;
     state?: Record<string, {
         default?: unknown;
+        scope?: "app" | "route" | undefined;
         data?: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         } | undefined;
-        scope?: "app" | "route" | undefined;
     }> | undefined;
+    i18n?: {
+        default: string;
+        locales: string[];
+        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
+        detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
+    } | undefined;
+    policies?: Record<string, any> | undefined;
     $schema?: string | undefined;
     analytics?: {
         providers: Record<string, {
@@ -36949,25 +37183,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             sink: string;
         } | undefined;
     } | undefined;
-    ssr?: {
-        rsc: boolean;
-        rscManifestPath: string;
-        middleware?: {
-            workflow: string;
-            match?: string | undefined;
-        }[] | undefined;
-    } | undefined;
-    navigation?: {
-        items: any[];
-        mode?: "sidebar" | "top-nav" | undefined;
-    } | undefined;
     realtime?: {
         ws?: {
             on: {
                 [x: string]: string;
+                reconnecting?: string | undefined;
                 connected?: string | undefined;
                 disconnected?: string | undefined;
-                reconnecting?: string | undefined;
                 reconnectFailed?: string | undefined;
             };
             autoReconnect: boolean;
@@ -36987,8 +37209,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 on: {
                     [x: string]: string;
                     error?: string | undefined;
-                    closed?: string | undefined;
                     connected?: string | undefined;
+                    closed?: string | undefined;
                 };
                 events?: Record<string, string> | undefined;
                 withCredentials?: boolean | undefined;
@@ -37149,30 +37371,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             } | undefined;
         } | undefined;
     }> | undefined;
-    resources?: Record<string, {
-        endpoint: string;
-        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
-        params?: Record<string, unknown> | undefined;
-        client?: string | undefined;
-        cacheMs?: number | undefined;
-        pollMs?: number | undefined;
-        refetchOnMount?: boolean | undefined;
-        refetchOnWindowFocus?: boolean | undefined;
-        retry?: number | undefined;
-        retryDelayMs?: number | undefined;
-        dependsOn?: string[] | undefined;
-        invalidates?: (string | {
-            key: string[];
-        })[] | undefined;
-        optimistic?: {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
-            target: string | {
-                resource: string;
-                params?: Record<string, unknown> | undefined;
-            };
-            idField?: string | undefined;
-        } | undefined;
-    }> | undefined;
     workflows?: {
         actions?: {
             custom?: Record<string, {
@@ -37186,27 +37384,21 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     overlays?: Record<string, any> | undefined;
     presets?: Record<string, unknown> | undefined;
-    policies?: Record<string, any> | undefined;
-    i18n?: {
-        default: string;
-        locales: string[];
-        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-        detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
-    } | undefined;
     subApps?: Record<string, {
         mountPath: string;
         manifest?: any;
         inherit?: {
             theme: boolean;
             state: boolean;
-            policies: boolean;
             i18n: boolean;
+            policies: boolean;
         } | undefined;
     }> | undefined;
+    shortcuts?: Record<string, Record<string, unknown>> | undefined;
 }, {
     routes: {
-        id: string;
         path: string;
+        id: string;
         content: any[];
         roles?: string[] | undefined;
         title?: string | {
@@ -37247,16 +37439,57 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             render?: any;
         } | undefined;
     }[];
-    auth?: {
-        mfa?: {
-            issuer?: string | undefined;
-            period?: number | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+    push?: {
+        vapidPublicKey: string | {
+            env: string;
+            default?: string | undefined;
+        };
+        serviceWorkerPath?: string | undefined;
+        applicationServerKey?: string | {
+            env: string;
+            default?: string | undefined;
         } | undefined;
-        session?: {
-            key?: string | undefined;
-            storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-            mode?: "token" | "cookie" | undefined;
+    } | undefined;
+    app?: {
+        error?: any;
+        headers?: Record<string, string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+            transformArg?: string | number | undefined;
+        }> | undefined;
+        cache?: {
+            retry?: number | undefined;
+            staleTime?: number | undefined;
+            gcTime?: number | undefined;
+        } | undefined;
+        title?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
+        shell?: string | undefined;
+        apiUrl?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        home?: string | undefined;
+        loading?: any;
+        notFound?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        offline?: any;
+    } | undefined;
+    auth?: {
+        webauthn?: {
+            rpId?: string | undefined;
+            rpName?: string | undefined;
+            attestation?: "none" | "indirect" | "direct" | undefined;
         } | undefined;
         on?: {
             logout?: string | {
@@ -37272,14 +37505,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
-        webauthn?: {
-            rpId?: string | undefined;
-            rpName?: string | undefined;
-            attestation?: "none" | "indirect" | "direct" | undefined;
+        mfa?: {
+            issuer?: string | undefined;
+            period?: number | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+        } | undefined;
+        session?: {
+            key?: string | undefined;
+            storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
+            mode?: "cookie" | "token" | undefined;
         } | undefined;
         providers?: Record<string, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -37288,13 +37533,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -37452,20 +37690,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
+        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+        providerMode?: "auto" | "buttons" | undefined;
         passkey?: boolean | {
             enabled?: boolean | undefined;
             autoPrompt?: boolean | undefined;
         } | undefined;
-        providerMode?: "auto" | "buttons" | undefined;
-        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
         branding?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -37477,17 +37708,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
         } | undefined;
         redirects?: {
             authenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -37503,18 +37733,19 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
         } | undefined;
         screenOptions?: {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -37546,22 +37777,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -37578,7 +37793,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -37602,22 +37833,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -37632,7 +37861,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -37663,18 +37902,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -37706,22 +37937,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -37738,7 +37953,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -37762,22 +37993,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -37792,7 +38021,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -37823,18 +38062,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -37866,22 +38097,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -37898,7 +38113,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -37922,22 +38153,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -37952,7 +38181,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -37983,18 +38222,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -38026,22 +38257,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -38058,7 +38273,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -38082,22 +38313,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -38112,7 +38341,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -38143,18 +38382,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -38186,22 +38417,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -38218,7 +38433,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -38242,22 +38473,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -38272,7 +38501,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -38303,18 +38542,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -38346,22 +38577,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -38378,7 +38593,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -38402,22 +38633,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -38432,7 +38661,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -38463,56 +38702,45 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         } | undefined;
     } | undefined;
-    push?: {
-        vapidPublicKey: string | {
-            env: string;
-            default?: string | undefined;
-        };
-        serviceWorkerPath?: string | undefined;
-        applicationServerKey?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
+    ssr?: {
+        middleware?: {
+            workflow: string;
+            match?: string | undefined;
+        }[] | undefined;
+        rsc?: boolean | undefined;
+        rscManifestPath?: string | undefined;
     } | undefined;
-    app?: {
-        cache?: {
-            retry?: number | undefined;
-            staleTime?: number | undefined;
-            gcTime?: number | undefined;
-        } | undefined;
-        error?: any;
-        title?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
-        headers?: Record<string, string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-            transformArg?: string | number | undefined;
-        }> | undefined;
-        apiUrl?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        shell?: string | undefined;
-        home?: string | undefined;
-        loading?: any;
-        notFound?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        offline?: any;
+    navigation?: {
+        items: any[];
+        mode?: "sidebar" | "top-nav" | undefined;
     } | undefined;
+    resources?: Record<string, {
+        endpoint: string;
+        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
+        params?: Record<string, unknown> | undefined;
+        dependsOn?: string[] | undefined;
+        retry?: number | undefined;
+        client?: string | undefined;
+        cacheMs?: number | undefined;
+        pollMs?: number | undefined;
+        refetchOnMount?: boolean | undefined;
+        refetchOnWindowFocus?: boolean | undefined;
+        retryDelayMs?: number | undefined;
+        invalidates?: (string | {
+            key: string[];
+        })[] | undefined;
+        optimistic?: {
+            target: string | {
+                resource: string;
+                params?: Record<string, unknown> | undefined;
+            };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
+            idField?: string | undefined;
+        } | undefined;
+    }> | undefined;
     components?: {
         custom?: Record<string, {
             props?: Record<string, {
@@ -38524,7 +38752,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     theme?: {
         editor?: {
-            persist?: "localStorage" | "sessionStorage" | "none" | {
+            persist?: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             } | undefined;
         } | undefined;
@@ -38537,12 +38765,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -38551,7 +38783,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -38559,53 +38791,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -38624,12 +38852,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -38638,7 +38870,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -38646,53 +38878,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -38713,9 +38941,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -38726,9 +38954,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -38737,8 +38965,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -38750,19 +38978,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left" | undefined;
         duration?: number | undefined;
         variants?: Record<string, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }> | undefined;
     } | undefined;
     state?: Record<string, {
         default?: unknown;
+        scope?: "app" | "route" | undefined;
         data?: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         } | undefined;
-        scope?: "app" | "route" | undefined;
     }> | undefined;
+    i18n?: {
+        default: string;
+        locales: string[];
+        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
+        detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
+    } | undefined;
+    policies?: Record<string, any> | undefined;
     $schema?: string | undefined;
     analytics?: {
         providers: Record<string, {
@@ -38783,18 +39018,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         audit?: {
             sink: string;
         } | undefined;
-    } | undefined;
-    ssr?: {
-        middleware?: {
-            workflow: string;
-            match?: string | undefined;
-        }[] | undefined;
-        rsc?: boolean | undefined;
-        rscManifestPath?: string | undefined;
-    } | undefined;
-    navigation?: {
-        items: any[];
-        mode?: "sidebar" | "top-nav" | undefined;
     } | undefined;
     realtime?: {
         ws?: {
@@ -38982,30 +39205,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             } | undefined;
         } | undefined;
     }> | undefined;
-    resources?: Record<string, {
-        endpoint: string;
-        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
-        params?: Record<string, unknown> | undefined;
-        client?: string | undefined;
-        cacheMs?: number | undefined;
-        pollMs?: number | undefined;
-        refetchOnMount?: boolean | undefined;
-        refetchOnWindowFocus?: boolean | undefined;
-        retry?: number | undefined;
-        retryDelayMs?: number | undefined;
-        dependsOn?: string[] | undefined;
-        invalidates?: (string | {
-            key: string[];
-        })[] | undefined;
-        optimistic?: {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
-            target: string | {
-                resource: string;
-                params?: Record<string, unknown> | undefined;
-            };
-            idField?: string | undefined;
-        } | undefined;
-    }> | undefined;
     workflows?: {
         actions?: {
             custom?: Record<string, {
@@ -39019,27 +39218,21 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     overlays?: Record<string, any> | undefined;
     presets?: Record<string, unknown> | undefined;
-    policies?: Record<string, any> | undefined;
-    i18n?: {
-        default: string;
-        locales: string[];
-        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-        detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
-    } | undefined;
     subApps?: Record<string, {
         mountPath: string;
         manifest?: any;
         inherit?: {
             theme?: boolean | undefined;
             state?: boolean | undefined;
-            policies?: boolean | undefined;
             i18n?: boolean | undefined;
+            policies?: boolean | undefined;
         } | undefined;
     }> | undefined;
+    shortcuts?: Record<string, Record<string, unknown>> | undefined;
 }>, {
     routes: {
-        id: string;
         path: string;
+        id: string;
         content: any[];
         roles?: string[] | undefined;
         title?: string | {
@@ -39080,16 +39273,57 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             render?: any;
         } | undefined;
     }[];
-    auth?: {
-        mfa?: {
-            period: number;
-            issuer?: string | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+    push?: {
+        vapidPublicKey: string | {
+            env: string;
+            default?: string | undefined;
+        };
+        serviceWorkerPath: string;
+        applicationServerKey?: string | {
+            env: string;
+            default?: string | undefined;
         } | undefined;
-        session?: {
-            key: string;
-            storage: "memory" | "localStorage" | "sessionStorage";
-            mode: "token" | "cookie";
+    } | undefined;
+    app?: {
+        shell: string;
+        error?: any;
+        headers?: Record<string, string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+            transformArg?: string | number | undefined;
+        }> | undefined;
+        cache?: {
+            retry: number;
+            staleTime: number;
+            gcTime: number;
+        } | undefined;
+        title?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
+        apiUrl?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        home?: string | undefined;
+        loading?: any;
+        notFound?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        offline?: any;
+    } | undefined;
+    auth?: {
+        webauthn?: {
+            attestation: "none" | "indirect" | "direct";
+            rpId?: string | undefined;
+            rpName?: string | undefined;
         } | undefined;
         on?: {
             logout?: string | {
@@ -39105,14 +39339,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
-        webauthn?: {
-            attestation: "none" | "indirect" | "direct";
-            rpId?: string | undefined;
-            rpName?: string | undefined;
+        mfa?: {
+            period: number;
+            issuer?: string | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+        } | undefined;
+        session?: {
+            key: string;
+            storage: "memory" | "localStorage" | "sessionStorage";
+            mode: "cookie" | "token";
         } | undefined;
         providers?: Record<string, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -39121,13 +39367,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -39285,20 +39524,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
+        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+        providerMode?: "auto" | "buttons" | undefined;
         passkey?: boolean | {
             enabled?: boolean | undefined;
             autoPrompt?: boolean | undefined;
         } | undefined;
-        providerMode?: "auto" | "buttons" | undefined;
-        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
         branding?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -39310,17 +39542,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
         } | undefined;
         redirects?: {
             authenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -39336,18 +39567,19 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
         } | undefined;
         screenOptions?: {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39379,22 +39611,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -39411,7 +39627,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39435,22 +39667,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -39465,7 +39695,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -39496,18 +39736,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39539,22 +39771,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -39571,7 +39787,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39595,22 +39827,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -39625,7 +39855,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -39656,18 +39896,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39699,22 +39931,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -39731,7 +39947,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39755,22 +39987,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -39785,7 +40015,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -39816,18 +40056,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39859,22 +40091,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -39891,7 +40107,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -39915,22 +40147,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -39945,7 +40175,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -39976,18 +40216,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -40019,22 +40251,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -40051,7 +40267,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -40075,22 +40307,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -40105,7 +40335,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -40136,18 +40376,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -40179,22 +40411,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -40211,7 +40427,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -40235,22 +40467,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -40265,7 +40495,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -40296,56 +40536,45 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         } | undefined;
     } | undefined;
-    push?: {
-        vapidPublicKey: string | {
-            env: string;
-            default?: string | undefined;
-        };
-        serviceWorkerPath: string;
-        applicationServerKey?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
+    ssr?: {
+        rsc: boolean;
+        rscManifestPath: string;
+        middleware?: {
+            workflow: string;
+            match?: string | undefined;
+        }[] | undefined;
     } | undefined;
-    app?: {
-        shell: string;
-        cache?: {
-            retry: number;
-            staleTime: number;
-            gcTime: number;
-        } | undefined;
-        error?: any;
-        title?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
-        headers?: Record<string, string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-            transformArg?: string | number | undefined;
-        }> | undefined;
-        apiUrl?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        home?: string | undefined;
-        loading?: any;
-        notFound?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        offline?: any;
+    navigation?: {
+        items: any[];
+        mode?: "sidebar" | "top-nav" | undefined;
     } | undefined;
+    resources?: Record<string, {
+        endpoint: string;
+        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
+        params?: Record<string, unknown> | undefined;
+        dependsOn?: string[] | undefined;
+        retry?: number | undefined;
+        client?: string | undefined;
+        cacheMs?: number | undefined;
+        pollMs?: number | undefined;
+        refetchOnMount?: boolean | undefined;
+        refetchOnWindowFocus?: boolean | undefined;
+        retryDelayMs?: number | undefined;
+        invalidates?: (string | {
+            key: string[];
+        })[] | undefined;
+        optimistic?: {
+            target: string | {
+                resource: string;
+                params?: Record<string, unknown> | undefined;
+            };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
+            idField?: string | undefined;
+        } | undefined;
+    }> | undefined;
     components?: {
         custom?: Record<string, {
             props?: Record<string, {
@@ -40357,7 +40586,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     theme?: {
         editor?: {
-            persist: "localStorage" | "sessionStorage" | "none" | {
+            persist: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             };
         } | undefined;
@@ -40370,12 +40599,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -40384,7 +40617,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -40392,53 +40625,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -40457,12 +40686,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -40471,7 +40704,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -40479,53 +40712,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -40546,9 +40775,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -40559,9 +40788,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -40570,8 +40799,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -40583,19 +40812,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         position: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left";
         duration: number;
         variants?: Record<string, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }> | undefined;
     } | undefined;
     state?: Record<string, {
         default?: unknown;
+        scope?: "app" | "route" | undefined;
         data?: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         } | undefined;
-        scope?: "app" | "route" | undefined;
     }> | undefined;
+    i18n?: {
+        default: string;
+        locales: string[];
+        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
+        detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
+    } | undefined;
+    policies?: Record<string, any> | undefined;
     $schema?: string | undefined;
     analytics?: {
         providers: Record<string, {
@@ -40617,25 +40853,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             sink: string;
         } | undefined;
     } | undefined;
-    ssr?: {
-        rsc: boolean;
-        rscManifestPath: string;
-        middleware?: {
-            workflow: string;
-            match?: string | undefined;
-        }[] | undefined;
-    } | undefined;
-    navigation?: {
-        items: any[];
-        mode?: "sidebar" | "top-nav" | undefined;
-    } | undefined;
     realtime?: {
         ws?: {
             on: {
                 [x: string]: string;
+                reconnecting?: string | undefined;
                 connected?: string | undefined;
                 disconnected?: string | undefined;
-                reconnecting?: string | undefined;
                 reconnectFailed?: string | undefined;
             };
             autoReconnect: boolean;
@@ -40655,8 +40879,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 on: {
                     [x: string]: string;
                     error?: string | undefined;
-                    closed?: string | undefined;
                     connected?: string | undefined;
+                    closed?: string | undefined;
                 };
                 events?: Record<string, string> | undefined;
                 withCredentials?: boolean | undefined;
@@ -40817,30 +41041,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             } | undefined;
         } | undefined;
     }> | undefined;
-    resources?: Record<string, {
-        endpoint: string;
-        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
-        params?: Record<string, unknown> | undefined;
-        client?: string | undefined;
-        cacheMs?: number | undefined;
-        pollMs?: number | undefined;
-        refetchOnMount?: boolean | undefined;
-        refetchOnWindowFocus?: boolean | undefined;
-        retry?: number | undefined;
-        retryDelayMs?: number | undefined;
-        dependsOn?: string[] | undefined;
-        invalidates?: (string | {
-            key: string[];
-        })[] | undefined;
-        optimistic?: {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
-            target: string | {
-                resource: string;
-                params?: Record<string, unknown> | undefined;
-            };
-            idField?: string | undefined;
-        } | undefined;
-    }> | undefined;
     workflows?: {
         actions?: {
             custom?: Record<string, {
@@ -40854,27 +41054,21 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     overlays?: Record<string, any> | undefined;
     presets?: Record<string, unknown> | undefined;
-    policies?: Record<string, any> | undefined;
-    i18n?: {
-        default: string;
-        locales: string[];
-        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-        detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
-    } | undefined;
     subApps?: Record<string, {
         mountPath: string;
         manifest?: any;
         inherit?: {
             theme: boolean;
             state: boolean;
-            policies: boolean;
             i18n: boolean;
+            policies: boolean;
         } | undefined;
     }> | undefined;
+    shortcuts?: Record<string, Record<string, unknown>> | undefined;
 }, {
     routes: {
-        id: string;
         path: string;
+        id: string;
         content: any[];
         roles?: string[] | undefined;
         title?: string | {
@@ -40915,16 +41109,57 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             render?: any;
         } | undefined;
     }[];
-    auth?: {
-        mfa?: {
-            issuer?: string | undefined;
-            period?: number | undefined;
-            methods?: ("email" | "totp" | "webauthn" | "sms")[] | undefined;
+    push?: {
+        vapidPublicKey: string | {
+            env: string;
+            default?: string | undefined;
+        };
+        serviceWorkerPath?: string | undefined;
+        applicationServerKey?: string | {
+            env: string;
+            default?: string | undefined;
         } | undefined;
-        session?: {
-            key?: string | undefined;
-            storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
-            mode?: "token" | "cookie" | undefined;
+    } | undefined;
+    app?: {
+        error?: any;
+        headers?: Record<string, string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "json" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "count" | "sum" | "first" | "lowercase" | "uppercase" | "last" | undefined;
+            transformArg?: string | number | undefined;
+        }> | undefined;
+        cache?: {
+            retry?: number | undefined;
+            staleTime?: number | undefined;
+            gcTime?: number | undefined;
+        } | undefined;
+        title?: string | {
+            env: string;
+            default?: string | undefined;
+        } | {
+            t: string;
+            vars?: Record<string, unknown> | undefined;
+        } | undefined;
+        shell?: string | undefined;
+        apiUrl?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        home?: string | undefined;
+        loading?: any;
+        notFound?: string | {
+            env: string;
+            default?: string | undefined;
+        } | undefined;
+        offline?: any;
+    } | undefined;
+    auth?: {
+        webauthn?: {
+            rpId?: string | undefined;
+            rpName?: string | undefined;
+            attestation?: "none" | "indirect" | "direct" | undefined;
         } | undefined;
         on?: {
             logout?: string | {
@@ -40940,14 +41175,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
-        webauthn?: {
-            rpId?: string | undefined;
-            rpName?: string | undefined;
-            attestation?: "none" | "indirect" | "direct" | undefined;
+        mfa?: {
+            issuer?: string | undefined;
+            period?: number | undefined;
+            methods?: ("totp" | "webauthn" | "email" | "sms")[] | undefined;
+        } | undefined;
+        session?: {
+            key?: string | undefined;
+            storage?: "memory" | "localStorage" | "sessionStorage" | undefined;
+            mode?: "cookie" | "token" | undefined;
         } | undefined;
         providers?: Record<string, {
-            type: "google" | "github" | "custom" | "apple" | "microsoft" | "facebook" | "discord";
+            type: "custom" | "google" | "github" | "apple" | "microsoft" | "facebook" | "discord";
             name?: string | undefined;
+            label?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
             description?: string | {
                 env: string;
                 default?: string | undefined;
@@ -40956,13 +41203,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 vars?: Record<string, unknown> | undefined;
             } | undefined;
             scopes?: string[] | undefined;
-            label?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             clientId?: string | {
                 env: string;
                 default?: string | undefined;
@@ -41120,20 +41360,13 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 default?: string | undefined;
             } | undefined;
         } | undefined;
+        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
+        providerMode?: "auto" | "buttons" | undefined;
         passkey?: boolean | {
             enabled?: boolean | undefined;
             autoPrompt?: boolean | undefined;
         } | undefined;
-        providerMode?: "auto" | "buttons" | undefined;
-        screens?: ("mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback")[] | Partial<Record<"mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback", false | "default">> | undefined;
         branding?: {
-            description?: string | {
-                env: string;
-                default?: string | undefined;
-            } | {
-                t: string;
-                vars?: Record<string, unknown> | undefined;
-            } | undefined;
             title?: string | {
                 env: string;
                 default?: string | undefined;
@@ -41145,17 +41378,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            description?: string | {
+                env: string;
+                default?: string | undefined;
+            } | {
+                t: string;
+                vars?: Record<string, unknown> | undefined;
+            } | undefined;
         } | undefined;
         redirects?: {
             authenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            unauthenticated?: string | {
-                env: string;
-                default?: string | undefined;
-            } | undefined;
-            forbidden?: string | {
                 env: string;
                 default?: string | undefined;
             } | undefined;
@@ -41171,18 +41403,19 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 env: string;
                 default?: string | undefined;
             } | undefined;
+            unauthenticated?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
+            forbidden?: string | {
+                env: string;
+                default?: string | undefined;
+            } | undefined;
         } | undefined;
         screenOptions?: {
             mfa?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41214,22 +41447,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -41246,7 +41463,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41270,22 +41503,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -41300,7 +41531,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -41331,18 +41572,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             login?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41374,22 +41607,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -41406,7 +41623,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41430,22 +41663,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -41460,7 +41691,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -41491,18 +41732,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             register?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41534,22 +41767,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -41566,7 +41783,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41590,22 +41823,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -41620,7 +41851,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -41651,18 +41892,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "forgot-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41694,22 +41927,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -41726,7 +41943,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41750,22 +41983,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -41780,7 +42011,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -41811,18 +42052,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "reset-password"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41854,22 +42087,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -41886,7 +42103,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -41910,22 +42143,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -41940,7 +42171,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -41971,18 +42212,10 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
             "verify-email"?: {
-                description?: string | {
-                    env: string;
-                    default?: string | undefined;
-                } | {
-                    t: string;
-                    vars?: Record<string, unknown> | undefined;
-                } | undefined;
                 fields?: {
-                    email?: {
+                    code?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -42014,22 +42247,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    password?: {
-                        label?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                        placeholder?: string | {
-                            env: string;
-                            default?: string | undefined;
-                        } | {
-                            t: string;
-                            vars?: Record<string, unknown> | undefined;
-                        } | undefined;
-                    } | undefined;
                     method?: {
                         label?: string | {
                             env: string;
@@ -42046,7 +42263,23 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                             vars?: Record<string, unknown> | undefined;
                         } | undefined;
                     } | undefined;
-                    code?: {
+                    email?: {
+                        label?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                        placeholder?: string | {
+                            env: string;
+                            default?: string | undefined;
+                        } | {
+                            t: string;
+                            vars?: Record<string, unknown> | undefined;
+                        } | undefined;
+                    } | undefined;
+                    password?: {
                         label?: string | {
                             env: string;
                             default?: string | undefined;
@@ -42070,22 +42303,20 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
+                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                description?: string | {
+                    env: string;
+                    default?: string | undefined;
+                } | {
+                    t: string;
+                    vars?: Record<string, unknown> | undefined;
+                } | undefined;
                 providers?: string[] | undefined;
+                providerMode?: "auto" | "buttons" | undefined;
                 passkey?: boolean | {
                     enabled?: boolean | undefined;
                     autoPrompt?: boolean | undefined;
                 } | undefined;
-                links?: {
-                    label: string | {
-                        env: string;
-                        default?: string | undefined;
-                    } | {
-                        t: string;
-                        vars?: Record<string, unknown> | undefined;
-                    };
-                    path?: string | undefined;
-                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
-                }[] | undefined;
                 submitLabel?: string | {
                     env: string;
                     default?: string | undefined;
@@ -42100,7 +42331,17 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     t: string;
                     vars?: Record<string, unknown> | undefined;
                 } | undefined;
-                sections?: ("form" | "providers" | "passkey" | "links")[] | undefined;
+                links?: {
+                    label: string | {
+                        env: string;
+                        default?: string | undefined;
+                    } | {
+                        t: string;
+                        vars?: Record<string, unknown> | undefined;
+                    };
+                    path?: string | undefined;
+                    screen?: "mfa" | "login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "sso-callback" | undefined;
+                }[] | undefined;
                 labels?: {
                     method?: string | {
                         env: string;
@@ -42131,56 +42372,45 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                         vars?: Record<string, unknown> | undefined;
                     } | undefined;
                 } | undefined;
-                providerMode?: "auto" | "buttons" | undefined;
             } | undefined;
         } | undefined;
     } | undefined;
-    push?: {
-        vapidPublicKey: string | {
-            env: string;
-            default?: string | undefined;
-        };
-        serviceWorkerPath?: string | undefined;
-        applicationServerKey?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
+    ssr?: {
+        middleware?: {
+            workflow: string;
+            match?: string | undefined;
+        }[] | undefined;
+        rsc?: boolean | undefined;
+        rscManifestPath?: string | undefined;
     } | undefined;
-    app?: {
-        cache?: {
-            retry?: number | undefined;
-            staleTime?: number | undefined;
-            gcTime?: number | undefined;
-        } | undefined;
-        error?: any;
-        title?: string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            t: string;
-            vars?: Record<string, unknown> | undefined;
-        } | undefined;
-        headers?: Record<string, string | {
-            env: string;
-            default?: string | undefined;
-        } | {
-            from: string;
-            transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "default" | "split" | "trim" | "lowercase" | "uppercase" | "first" | "json" | "count" | "last" | "sum" | undefined;
-            transformArg?: string | number | undefined;
-        }> | undefined;
-        apiUrl?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        shell?: string | undefined;
-        home?: string | undefined;
-        loading?: any;
-        notFound?: string | {
-            env: string;
-            default?: string | undefined;
-        } | undefined;
-        offline?: any;
+    navigation?: {
+        items: any[];
+        mode?: "sidebar" | "top-nav" | undefined;
     } | undefined;
+    resources?: Record<string, {
+        endpoint: string;
+        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
+        params?: Record<string, unknown> | undefined;
+        dependsOn?: string[] | undefined;
+        retry?: number | undefined;
+        client?: string | undefined;
+        cacheMs?: number | undefined;
+        pollMs?: number | undefined;
+        refetchOnMount?: boolean | undefined;
+        refetchOnWindowFocus?: boolean | undefined;
+        retryDelayMs?: number | undefined;
+        invalidates?: (string | {
+            key: string[];
+        })[] | undefined;
+        optimistic?: {
+            target: string | {
+                resource: string;
+                params?: Record<string, unknown> | undefined;
+            };
+            merge: "patch" | "replace" | "remove" | "append" | "prepend";
+            idField?: string | undefined;
+        } | undefined;
+    }> | undefined;
     components?: {
         custom?: Record<string, {
             props?: Record<string, {
@@ -42192,7 +42422,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     theme?: {
         editor?: {
-            persist?: "localStorage" | "sessionStorage" | "none" | {
+            persist?: "none" | "localStorage" | "sessionStorage" | {
                 resource: string;
             } | undefined;
         } | undefined;
@@ -42205,12 +42435,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -42219,7 +42453,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -42227,53 +42461,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -42292,12 +42522,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     size?: "sm" | "md" | "lg" | undefined;
                     variant?: "outline" | "filled" | "underline" | undefined;
                 } | undefined;
+                badge?: {
+                    variant?: "outline" | "solid" | "soft" | undefined;
+                    rounded?: boolean | undefined;
+                } | undefined;
                 table?: {
                     striped?: boolean | undefined;
                     density?: "default" | "compact" | "comfortable" | undefined;
                     headerBackground?: boolean | undefined;
                     hoverRow?: boolean | undefined;
-                    borderStyle?: "none" | "horizontal" | "grid" | undefined;
+                    borderStyle?: "none" | "grid" | "horizontal" | undefined;
                 } | undefined;
                 card?: {
                     border?: boolean | undefined;
@@ -42306,7 +42540,7 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 button?: {
                     uppercase?: boolean | undefined;
-                    weight?: "bold" | "light" | "medium" | undefined;
+                    weight?: "bold" | "medium" | "light" | undefined;
                     iconSize?: "sm" | "md" | "lg" | undefined;
                 } | undefined;
                 modal?: {
@@ -42314,53 +42548,49 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     animation?: "none" | "scale" | "fade" | "slide-up" | undefined;
                 } | undefined;
                 nav?: {
-                    variant?: "filled" | "minimal" | "bordered" | undefined;
+                    variant?: "minimal" | "filled" | "bordered" | undefined;
                     activeIndicator?: "background" | "border-left" | "border-bottom" | "dot" | undefined;
                 } | undefined;
-                badge?: {
-                    variant?: "outline" | "solid" | "soft" | undefined;
-                    rounded?: boolean | undefined;
-                } | undefined;
                 toast?: {
-                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                     animation?: "pop" | "fade" | "slide" | undefined;
+                    position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | undefined;
                 } | undefined;
             } | undefined;
             colors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             darkColors?: {
-                input?: string | undefined;
                 info?: string | undefined;
+                input?: string | undefined;
+                warning?: string | undefined;
+                success?: string | undefined;
+                chart?: [string, string, string, string, string] | undefined;
+                sidebar?: string | undefined;
                 primary?: string | undefined;
                 secondary?: string | undefined;
-                background?: string | undefined;
-                success?: string | undefined;
                 muted?: string | undefined;
                 accent?: string | undefined;
                 destructive?: string | undefined;
-                warning?: string | undefined;
+                background?: string | undefined;
                 card?: string | undefined;
                 popover?: string | undefined;
-                sidebar?: string | undefined;
                 border?: string | undefined;
                 ring?: string | undefined;
-                chart?: [string, string, string, string, string] | undefined;
             } | undefined;
             radius?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full" | undefined;
             spacing?: "default" | "compact" | "comfortable" | "spacious" | undefined;
@@ -42381,9 +42611,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     slow?: number | undefined;
                 } | undefined;
                 easings?: {
+                    default?: string | undefined;
                     out?: string | undefined;
                     in?: string | undefined;
-                    default?: string | undefined;
                     inOut?: string | undefined;
                     spring?: string | undefined;
                 } | undefined;
@@ -42394,9 +42624,9 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                 } | undefined;
                 lineHeight?: {
                     none?: number | undefined;
+                    relaxed?: number | undefined;
                     normal?: number | undefined;
                     tight?: number | undefined;
-                    relaxed?: number | undefined;
                     loose?: number | undefined;
                 } | undefined;
                 tracking?: {
@@ -42405,8 +42635,8 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
                     wide?: string | undefined;
                 } | undefined;
                 borderWidth?: {
-                    default?: string | undefined;
                     none?: string | undefined;
+                    default?: string | undefined;
                     thin?: string | undefined;
                     thick?: string | undefined;
                 } | undefined;
@@ -42418,19 +42648,26 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         position?: "top-right" | "top-center" | "bottom-right" | "bottom-center" | "top-left" | "bottom-left" | undefined;
         duration?: number | undefined;
         variants?: Record<string, {
-            duration?: number | undefined;
             icon?: string | undefined;
             color?: string | undefined;
+            duration?: number | undefined;
         }> | undefined;
     } | undefined;
     state?: Record<string, {
         default?: unknown;
+        scope?: "app" | "route" | undefined;
         data?: string | {
             resource: string;
             params?: Record<string, unknown> | undefined;
         } | undefined;
-        scope?: "app" | "route" | undefined;
     }> | undefined;
+    i18n?: {
+        default: string;
+        locales: string[];
+        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
+        detect?: ("header" | "default" | "navigator" | "state")[] | undefined;
+    } | undefined;
+    policies?: Record<string, any> | undefined;
     $schema?: string | undefined;
     analytics?: {
         providers: Record<string, {
@@ -42451,18 +42688,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
         audit?: {
             sink: string;
         } | undefined;
-    } | undefined;
-    ssr?: {
-        middleware?: {
-            workflow: string;
-            match?: string | undefined;
-        }[] | undefined;
-        rsc?: boolean | undefined;
-        rscManifestPath?: string | undefined;
-    } | undefined;
-    navigation?: {
-        items: any[];
-        mode?: "sidebar" | "top-nav" | undefined;
     } | undefined;
     realtime?: {
         ws?: {
@@ -42650,30 +42875,6 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
             } | undefined;
         } | undefined;
     }> | undefined;
-    resources?: Record<string, {
-        endpoint: string;
-        method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
-        params?: Record<string, unknown> | undefined;
-        client?: string | undefined;
-        cacheMs?: number | undefined;
-        pollMs?: number | undefined;
-        refetchOnMount?: boolean | undefined;
-        refetchOnWindowFocus?: boolean | undefined;
-        retry?: number | undefined;
-        retryDelayMs?: number | undefined;
-        dependsOn?: string[] | undefined;
-        invalidates?: (string | {
-            key: string[];
-        })[] | undefined;
-        optimistic?: {
-            merge: "replace" | "remove" | "patch" | "append" | "prepend";
-            target: string | {
-                resource: string;
-                params?: Record<string, unknown> | undefined;
-            };
-            idField?: string | undefined;
-        } | undefined;
-    }> | undefined;
     workflows?: {
         actions?: {
             custom?: Record<string, {
@@ -42687,22 +42888,16 @@ export declare const manifestConfigSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     overlays?: Record<string, any> | undefined;
     presets?: Record<string, unknown> | undefined;
-    policies?: Record<string, any> | undefined;
-    i18n?: {
-        default: string;
-        locales: string[];
-        strings: Record<string, string | Record<string, string | Record<string, unknown>>>;
-        detect?: ("default" | "navigator" | "header" | "state")[] | undefined;
-    } | undefined;
     subApps?: Record<string, {
         mountPath: string;
         manifest?: any;
         inherit?: {
             theme?: boolean | undefined;
             state?: boolean | undefined;
-            policies?: boolean | undefined;
             i18n?: boolean | undefined;
+            policies?: boolean | undefined;
         } | undefined;
     }> | undefined;
+    shortcuts?: Record<string, Record<string, unknown>> | undefined;
 }>;
 export declare function withManifestCustomComponents<T>(manifest: unknown, callback: () => T): T;

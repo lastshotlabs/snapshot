@@ -12,15 +12,15 @@ export declare const notFoundConfigSchema: z.ZodObject<{
     homeLabel: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     type: "not-found";
-    description?: string | undefined;
     title?: string | undefined;
+    description?: string | undefined;
     style?: Record<string, string | number> | undefined;
     className?: string | undefined;
     homeLabel?: string | undefined;
 }, {
     type: "not-found";
-    description?: string | undefined;
     title?: string | undefined;
+    description?: string | undefined;
     style?: Record<string, string | number> | undefined;
     className?: string | undefined;
     homeLabel?: string | undefined;
