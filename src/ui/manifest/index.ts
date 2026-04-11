@@ -25,6 +25,8 @@ export {
   realtimeSseEndpointSchema,
   realtimeWsSchema,
   pageConfigSchema,
+  routeGuardConfigSchema,
+  routeGuardSchema,
   routeConfigSchema,
   overlayConfigSchema,
   stateValueConfigSchema,
@@ -83,6 +85,16 @@ export {
   registerComponent,
   getRegisteredComponent,
 } from "./component-registry";
+export {
+  registerLayout,
+  resolveLayout,
+  getRegisteredLayouts,
+} from "../layouts/registry";
+export {
+  registerGuard,
+  resolveGuard,
+  getRegisteredGuards,
+} from "./guard-registry";
 
 // Rendering
 export { ComponentRenderer, PageRenderer } from "./renderer";
@@ -121,6 +133,8 @@ export type {
   RealtimeSseEndpointConfig,
   RealtimeWsConfig,
   PageConfig,
+  RouteGuard,
+  RouteGuardConfig,
   RouteConfig,
   ResourceConfigMap,
   OverlayConfig,

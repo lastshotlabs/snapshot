@@ -27,18 +27,20 @@ import {
   useResolveFrom,
   useSubscribe,
 } from "../context/index";
-import { resolveFromRef } from "../context/from-ref";
 import { Layout } from "../components/layout/layout";
 import { Nav } from "../components/layout/nav";
 import { DrawerComponent } from "../components/overlay/drawer";
 import { ModalComponent } from "../components/overlay/modal";
 import { useSetStateValue, useStateValue } from "../state";
 import { resolveDetectedLocale, resolveI18nRefs } from "../i18n/resolve";
-import { evaluatePolicy } from "../policies/evaluate";
 import type { PolicyExpr } from "../policies/types";
 import { resolveTokens } from "../tokens/resolve";
 import { getAuthScreenPath } from "./auth-routes";
 import { compileManifest } from "./compiler";
+import {
+  evaluateManifestGuard,
+  guardUsesAuthState,
+} from "./guard-registry";
 import {
   ManifestRuntimeProvider,
   RouteRuntimeProvider,
@@ -74,76 +76,6 @@ export function injectStyleSheet(id: string, css: string): void {
     document.head.appendChild(el);
   }
   el.textContent = css;
-}
-
-function evaluateRouteGuard(
-  route: CompiledRoute | null,
-  user: Record<string, unknown> | null,
-  manifest: CompiledManifest,
-  policies: Record<string, PolicyExpr>,
-  parentPolicies?: Record<string, PolicyExpr>,
-  routeContext?: {
-    id?: string;
-    path?: string;
-    pattern?: string;
-    params?: Record<string, string>;
-    query?: Record<string, string>;
-  },
-): boolean {
-  if (!route?.guard) {
-    return true;
-  }
-
-  const roles = [
-    ...(typeof user?.["role"] === "string" ? [String(user["role"])] : []),
-    ...(Array.isArray(user?.["roles"])
-      ? (user?.["roles"] as unknown[]).map((value) => String(value))
-      : []),
-  ];
-
-  if (route.guard.authenticated && !user) {
-    return false;
-  }
-
-  if (route.guard.authenticated === false && user) {
-    return false;
-  }
-
-  if (
-    route.guard.roles &&
-    route.guard.roles.length > 0 &&
-    !route.guard.roles.some((role) => roles.includes(role))
-  ) {
-    return false;
-  }
-
-  if (route.guard.policy) {
-    const expression =
-      policies[route.guard.policy] ?? parentPolicies?.[route.guard.policy];
-    return evaluatePolicy(route.guard.policy, expression, {
-      policies,
-      parentPolicies,
-      resolveFromRef: (ref) =>
-        resolveFromRef(ref, {
-          context: {
-            global: {
-              user,
-              auth: {
-                user,
-                isAuthenticated: Boolean(user),
-              },
-            },
-          },
-          route: routeContext,
-          manifest: {
-            app: manifest.app as Record<string, unknown>,
-            auth: (manifest.auth ?? {}) as Record<string, unknown>,
-          },
-        }),
-    });
-  }
-
-  return true;
 }
 
 function withRedirectParam(path: string, redirectTo: string): string {
@@ -449,15 +381,6 @@ type RouteLayoutDeclaration =
 
 type RouteSlotsDeclaration = Record<string, ComponentConfig[]>;
 
-const BUILT_IN_LAYOUT_TYPES = new Set([
-  "sidebar",
-  "top-nav",
-  "stacked",
-  "minimal",
-  "full-width",
-  "centered",
-]);
-
 const SLOT_ENABLED_LAYOUT_TYPES = new Set(["sidebar", "top-nav", "stacked"]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -565,6 +488,13 @@ function getBuiltInLayoutSlots(type: string): RouteLayoutSlotDeclaration[] {
     { name: "main", required: true },
     { name: "footer" },
   ];
+}
+
+function layoutSupportsSlots(layout: RouteLayoutDeclaration): boolean {
+  return (
+    SLOT_ENABLED_LAYOUT_TYPES.has(getLayoutType(layout)) ||
+    getLayoutSlots(layout).length > 0
+  );
 }
 
 class ManifestErrorBoundary extends Component<
@@ -916,9 +846,7 @@ function AppShell({
   );
   const routeSlots = readRouteSlots(manifest, route.id);
   const layoutDeclarations = readRouteLayouts(manifest, route.id);
-  const slotLayout = layoutDeclarations.find((layout) =>
-    SLOT_ENABLED_LAYOUT_TYPES.has(getLayoutType(layout)),
-  );
+  const slotLayout = layoutDeclarations.find((layout) => layoutSupportsSlots(layout));
   if (Object.keys(routeSlots).length > 0) {
     const layoutType = slotLayout
       ? getLayoutType(slotLayout)
@@ -1006,10 +934,6 @@ function AppShell({
   return layoutDeclarations.reduceRight<ReactNode>(
     (children, layout, index) => {
       const layoutType = getLayoutType(layout);
-      if (!BUILT_IN_LAYOUT_TYPES.has(layoutType)) {
-        return children;
-      }
-
       const declaredSlots = new Map<string, RouteLayoutSlotDeclaration>();
       for (const slot of getBuiltInLayoutSlots(layoutType)) {
         declaredSlots.set(slot.name, slot);
@@ -1018,26 +942,17 @@ function AppShell({
         declaredSlots.set(slot.name, slot);
       }
 
-      const slotContent = SLOT_ENABLED_LAYOUT_TYPES.has(layoutType)
-        ? {
-            header: renderSlot(
-              layoutType,
-              declaredSlots.get("header") ?? { name: "header" },
-            ),
-            sidebar: renderSlot(
-              layoutType,
-              declaredSlots.get("sidebar") ?? { name: "sidebar" },
-            ),
-            main: renderSlot(
-              layoutType,
-              declaredSlots.get("main") ?? { name: "main", required: true },
-              children,
-            ),
-            footer: renderSlot(
-              layoutType,
-              declaredSlots.get("footer") ?? { name: "footer" },
-            ),
-          }
+      const slotContent = layoutSupportsSlots(layout)
+        ? Object.fromEntries(
+            [...declaredSlots.entries()].map(([slotName, declaration]) => [
+              slotName,
+              renderSlot(
+                layoutType,
+                declaration,
+                slotName === "main" ? children : undefined,
+              ),
+            ]),
+          )
         : undefined;
 
       const navNode =
@@ -1331,36 +1246,38 @@ function ManifestRouter({
     };
   }, [manifest.theme, parentTheme, subAppMatch]);
 
-  const routeAllowed = evaluateRouteGuard(
-    route,
-    user,
-    localizedManifest,
-    policyMap,
-    parentPolicies,
+  const routeGuardResult =
     route
-      ? {
-          id: route.id,
-          path: scopedCurrentPath,
-          pattern: route.path,
-          params,
-          query: routeQuery,
-        }
-      : undefined,
-  );
+      ? evaluateManifestGuard(route.guard, {
+          route,
+          user,
+          manifest: localizedManifest,
+          policies: policyMap,
+          parentPolicies,
+          routeContext: {
+            id: route.id,
+            path: scopedCurrentPath,
+            pattern: route.path,
+            params,
+            query: routeQuery,
+          },
+        })
+      : { allow: true as const };
+  const routeAllowed = routeGuardResult.allow;
 
   useEffect(() => {
-    if (!route || routeAllowed) {
+    if (!route || routeAllowed || routeGuardResult.render) {
       return;
     }
 
-    if (route.guard?.authenticated !== undefined && authLoading) {
+    if (guardUsesAuthState(route.guard) && authLoading) {
       return;
     }
 
     const baseFallback =
-      (route.guard?.redirectTo
+      (routeGuardResult.redirect
         ? resolveTemplate(
-            route.guard.redirectTo,
+            routeGuardResult.redirect,
             {
               app: localizedManifest.app ?? {},
               auth: localizedManifest.auth ?? {},
@@ -1378,14 +1295,21 @@ function ManifestRouter({
             },
           )
         : undefined) ??
-      (route.guard?.authenticated
+      ((typeof route.guard === "string"
+        ? route.guard === "authenticated"
+        : route.guard?.authenticated === true ||
+          route.guard?.name === "authenticated")
         ? getAuthScreenPath(localizedManifest, "login")
         : undefined) ??
       localizedManifest.app.home ??
       localizedManifest.firstRoute?.path ??
       "/";
     const fallback =
-      route.guard?.authenticated && !route.guard?.redirectTo
+      (typeof route.guard === "string"
+        ? route.guard === "authenticated"
+        : route.guard?.authenticated === true ||
+          route.guard?.name === "authenticated") &&
+      !routeGuardResult.redirect
         ? withRedirectParam(
             baseFallback,
             `${currentLocation.pathname}${currentLocation.search}`,
@@ -1406,6 +1330,8 @@ function ManifestRouter({
     params,
     route,
     routeAllowed,
+    routeGuardResult.redirect,
+    routeGuardResult.render,
     scopedCurrentPath,
     scopedCurrentLocation,
     routeQuery,
@@ -1607,11 +1533,37 @@ function ManifestRouter({
     );
   }
 
-  if (route.guard?.authenticated !== undefined && authLoading) {
+  if (guardUsesAuthState(route.guard) && authLoading) {
     return (
       <div data-snapshot-auth-loading="" style={{ padding: "1rem" }}>
         <AppFallback manifest={localizedManifest} name="loading" api={api} />
       </div>
+    );
+  }
+
+  if (!routeAllowed && routeGuardResult.render) {
+    return (
+      <RouteRuntimeProvider
+        value={{
+          currentPath: scopedCurrentPath,
+          currentRoute: route,
+          params,
+          query: routeQuery,
+          navigate,
+          isPreloading,
+        }}
+      >
+        <ManifestErrorBoundary
+          key={`${scopedCurrentPath}:${route.id}:guard`}
+          fallback={
+            <AppFallback manifest={localizedManifest} name="error" api={api} />
+          }
+          onError={setRuntimeError}
+        >
+          <ComponentRenderer config={routeGuardResult.render} />
+        </ManifestErrorBoundary>
+        <OverlayHost overlays={localizedManifest.overlays} />
+      </RouteRuntimeProvider>
     );
   }
 

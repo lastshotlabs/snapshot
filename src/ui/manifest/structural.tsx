@@ -11,6 +11,7 @@ import { usePublish, useResolveFrom, useSubscribe } from "../context/index";
 import { getRegisteredComponent } from "./component-registry";
 import { useActionExecutor } from "../actions/executor";
 import { useResponsiveValue } from "../hooks/use-breakpoint";
+import { resolveRuntimeLocale } from "../i18n/resolve";
 import { evaluatePolicy } from "../policies/evaluate";
 import { isPolicyRef, type PolicyExpr } from "../policies/types";
 import { resolveTemplate } from "../expressions/template";
@@ -213,7 +214,9 @@ export function Heading({ config }: { config: Record<string, unknown> }) {
   const headingConfig = config as unknown as HeadingConfig;
   const route = useRouteRuntime();
   const text = useSubscribe(headingConfig.text);
+  const localeState = useSubscribe({ from: "global.locale" });
   const manifest = useManifestRuntime();
+  const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const level = headingConfig.level ?? 2;
   const Tag = `h${level}` as const;
   const configStyle = headingConfig.style as CSSProperties | undefined;
@@ -234,7 +237,7 @@ export function Heading({ config }: { config: Record<string, unknown> }) {
           : {},
     },
     {
-      locale: manifest?.raw.i18n?.default,
+      locale: activeLocale,
       i18n: manifest?.raw.i18n,
     },
   );

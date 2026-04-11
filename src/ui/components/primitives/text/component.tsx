@@ -1,6 +1,8 @@
 'use client';
 
 import type { CSSProperties } from "react";
+import { useSubscribe } from "../../../context";
+import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { useRouteRuntime } from "../../../manifest/runtime";
 import { resolveTemplate } from "../../../expressions/template";
@@ -39,6 +41,8 @@ export interface TextConfig {
 export function Text({ config }: { config: TextConfig }) {
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
+  const localeState = useSubscribe({ from: "global.locale" });
+  const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const value = resolveTemplate(
     config.value,
     {
@@ -52,7 +56,7 @@ export function Text({ config }: { config: TextConfig }) {
       },
     },
     {
-      locale: manifest?.raw.i18n?.default,
+      locale: activeLocale,
       i18n: manifest?.raw.i18n,
     },
   );

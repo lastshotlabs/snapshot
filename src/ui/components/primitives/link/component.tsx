@@ -1,6 +1,8 @@
 'use client';
 
 import type { CSSProperties } from "react";
+import { useSubscribe } from "../../../context";
+import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useRouteRuntime } from "../../../manifest/runtime";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { resolveTemplate } from "../../../expressions/template";
@@ -44,6 +46,8 @@ function getVariantStyle(
 export function Link({ config }: { config: LinkConfig }) {
   const routeRuntime = useRouteRuntime();
   const manifest = useManifestRuntime();
+  const localeState = useSubscribe({ from: "global.locale" });
+  const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const text = resolveTemplate(
     config.text,
     {
@@ -57,7 +61,7 @@ export function Link({ config }: { config: LinkConfig }) {
       },
     },
     {
-      locale: manifest?.raw.i18n?.default,
+      locale: activeLocale,
       i18n: manifest?.raw.i18n,
     },
   );
@@ -74,7 +78,7 @@ export function Link({ config }: { config: LinkConfig }) {
       },
     },
     {
-      locale: manifest?.raw.i18n?.default,
+      locale: activeLocale,
       i18n: manifest?.raw.i18n,
     },
   );

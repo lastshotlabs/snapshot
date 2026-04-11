@@ -1,20 +1,10 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { dataSourceSchema, fromRefSchema } from "../../_base/types";
-
-/**
- * Schema for base component config fields shared across all config-driven components.
- */
-const baseComponentConfigSchema = z.object({
-  /** Component identifier for publishing state and cross-component references. */
-  id: z.string().optional(),
-  /** Controls visibility. Can be a static boolean or a FromRef. */
-  visible: z.union([z.boolean(), fromRefSchema]).optional(),
-  /** Additional CSS class names. */
-  className: z.string().optional(),
-  /** Grid column span (1-12). */
-  span: z.number().int().min(1).max(12).optional(),
-});
+import {
+  baseComponentConfigSchema,
+  dataSourceSchema,
+  fromRefSchema,
+} from "../../_base/types";
 
 /**
  * Schema for badge color mapping. Maps values to semantic color names.
@@ -168,6 +158,8 @@ export const dataTableConfigSchema = baseComponentConfigSchema
   .extend({
     /** Component type discriminator. */
     type: z.literal("data-table"),
+    /** Grid column span (1-12). */
+    span: z.number().int().min(1).max(12).optional(),
     /** Data source endpoint (e.g. "GET /api/users") or a FromRef. */
     data: dataSourceSchema,
     /** Query parameters for the data endpoint. Values can be static or FromRefs. */
@@ -194,9 +186,5 @@ export const dataTableConfigSchema = baseComponentConfigSchema
     rowClickAction: actionSchema.optional(),
     /** Table density. Affects row padding. */
     density: z.enum(["compact", "default", "comfortable"]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
   })
   .strict();

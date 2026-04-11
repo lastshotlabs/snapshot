@@ -71,6 +71,10 @@ export { dataSourceSchema, endpointTargetSchema, resourceRefSchema };
 export const baseComponentConfigSchema = z.object({
   /** Unique identifier for this component instance. Used for from-ref publishing. */
   id: z.string().optional(),
+  /** Optional token overrides applied to the wrapper. */
+  tokens: z.record(z.string()).optional(),
+  /** String expression that controls visibility. */
+  visibleWhen: z.string().optional(),
   /** Whether the component is visible. Can be a FromRef for conditional rendering. */
   visible: orFromRef(z.boolean()).optional(),
   /** CSS class name(s) to apply to the component wrapper. */

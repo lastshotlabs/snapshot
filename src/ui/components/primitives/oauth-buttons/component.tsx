@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from "react";
+import { useSubscribe } from "../../../context";
+import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { useRouteRuntime } from "../../../manifest/runtime";
 import { useActionExecutor } from "../../../actions/executor";
@@ -30,8 +32,10 @@ function titleCase(value: string): string {
 export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
+  const localeState = useSubscribe({ from: "global.locale" });
   const execute = useActionExecutor();
   const autoRedirectedRef = useRef(false);
+  const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const routeId = routeRuntime?.currentRoute?.id;
   const screenOptions = useMemo(
     () =>
@@ -94,7 +98,7 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
     },
   };
   const templateOptions = {
-    locale: manifest?.raw.i18n?.default,
+    locale: activeLocale,
     i18n: manifest?.raw.i18n,
   };
   const resolvedProviders = providers.map(([providerName, provider]) => {
@@ -161,7 +165,11 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
         },
       }),
     );
-  }, [providerMode, resolvedProviders]);
+    void execute({
+      type: "navigate-external",
+      to: provider.url,
+    } as never);
+  }, [execute, providerMode, resolvedProviders]);
 
   return (
     <div

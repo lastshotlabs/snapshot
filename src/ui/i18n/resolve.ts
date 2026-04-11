@@ -163,6 +163,28 @@ export function resolveDetectedLocale(
 }
 
 /**
+ * Resolve the active runtime locale from state when present, otherwise fall
+ * back to the manifest default locale.
+ */
+export function resolveRuntimeLocale(
+  i18n: I18nConfig | undefined,
+  stateLocale: unknown,
+): string | undefined {
+  if (!i18n) {
+    return typeof stateLocale === "string" ? stateLocale : undefined;
+  }
+
+  return (
+    matchLocale(
+      typeof stateLocale === "string" ? stateLocale : undefined,
+      i18n.locales,
+    ) ??
+    matchLocale(i18n.default, i18n.locales) ??
+    (typeof stateLocale === "string" ? stateLocale : undefined)
+  );
+}
+
+/**
  * Resolve a translation reference for a specific locale.
  *
  * Missing keys return the key and emit a dev warning.

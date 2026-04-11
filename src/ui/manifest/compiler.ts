@@ -12,6 +12,7 @@ import { getRegisteredClient } from "../../api/client";
 import { manifestConfigSchema, withManifestCustomComponents } from "./schema";
 import { buildDefaultAuthFragment } from "./defaults/auth";
 import { defaultFeedbackFragment } from "./defaults/feedback";
+import { resolveGuard } from "./guard-registry";
 import { mergeFragment } from "./merge";
 import { setDeclaredCustomActionSchemas } from "../workflows/registry";
 import type {
@@ -512,6 +513,24 @@ function validateResourceClients(manifest: EnvResolvedManifest): void {
   }
 }
 
+function validateRegisteredGuards(manifest: EnvResolvedManifest): void {
+  for (const route of manifest.routes) {
+    const guardName =
+      typeof route.guard === "string"
+        ? route.guard
+        : route.guard?.name;
+    if (!guardName) {
+      continue;
+    }
+
+    if (!resolveGuard(guardName)) {
+      throw new Error(
+        `Route "${route.id}" references unknown guard "${guardName}". Register it before compiling the manifest.`,
+      );
+    }
+  }
+}
+
 function validateCustomClients(manifest: EnvResolvedManifest): void {
   for (const [name, client] of Object.entries(manifest.clients ?? {})) {
     if (!client.custom) {
@@ -546,6 +565,7 @@ function buildCompiledManifest(
   validatePolicyRefs(runtimeManifest);
   validateCustomClients(runtimeManifest);
   validateResourceClients(runtimeManifest);
+  validateRegisteredGuards(runtimeManifest);
 
   const customActionDeclarations =
     (

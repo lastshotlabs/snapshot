@@ -399,6 +399,23 @@ export function Layout({ config, nav, slots, children }: LayoutProps) {
     );
   }
 
+  if (
+    typeof process !== "undefined" &&
+    process.env?.["NODE_ENV"] !== "production" &&
+    ![
+      "sidebar",
+      "top-nav",
+      "stacked",
+      "minimal",
+      "full-width",
+      "centered",
+    ].includes(config.variant)
+  ) {
+    console.warn(
+      `[snapshot] Unknown layout "${config.variant}", falling back to sidebar.`,
+    );
+  }
+
   switch (config.variant) {
     case "sidebar":
       return (
@@ -445,6 +462,17 @@ export function Layout({ config, nav, slots, children }: LayoutProps) {
         <MinimalLayout slots={slots} style={rootStyle} className={cn}>
           {children}
         </MinimalLayout>
+      );
+    default:
+      return (
+        <SidebarLayout
+          nav={nav}
+          slots={slots}
+          style={rootStyle}
+          className={cn}
+        >
+          {children}
+        </SidebarLayout>
       );
   }
 }

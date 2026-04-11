@@ -94,6 +94,7 @@ export function resolveDocumentTitle(
   route: CompiledRoute | null,
   currentPath: string,
   params: Record<string, string>,
+  locale?: string,
 ): string {
   const appTitle = manifest.app.title?.trim();
   const routeTitle = route?.page.title
@@ -109,7 +110,7 @@ export function resolveDocumentTitle(
           },
         },
         {
-          locale: manifest.raw.i18n?.default,
+          locale: locale ?? manifest.raw.i18n?.default,
           i18n: manifest.raw.i18n,
         },
       ).trim()

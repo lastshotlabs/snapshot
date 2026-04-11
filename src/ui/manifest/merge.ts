@@ -30,10 +30,13 @@ export function mergeFragment(
 ): ManifestConfig {
   const fragmentRoutes = fragment.routes ?? [];
   const baseRoutes = base.routes ?? [];
-  const fragmentRouteIds = new Set(fragmentRoutes.map((route) => route.id));
-  const mergedRoutes = fragmentRoutes.map((route) => {
-    const override = baseRoutes.find((candidate) => candidate.id === route.id);
-    return override ? (deepMerge(route, override) ?? override) : route;
+  const baseRouteIds = new Set(baseRoutes.map((route) => route.id));
+  const fragmentRoutesById = new Map(
+    fragmentRoutes.map((route) => [route.id, route] as const),
+  );
+  const mergedBaseRoutes = baseRoutes.map((route) => {
+    const fragmentRoute = fragmentRoutesById.get(route.id);
+    return fragmentRoute ? (deepMerge(fragmentRoute, route) ?? route) : route;
   });
 
   const fragmentI18n = fragment.i18n;
@@ -42,8 +45,8 @@ export function mergeFragment(
   return {
     ...base,
     routes: [
-      ...mergedRoutes,
-      ...baseRoutes.filter((route) => !fragmentRouteIds.has(route.id)),
+      ...mergedBaseRoutes,
+      ...fragmentRoutes.filter((route) => !baseRouteIds.has(route.id)),
     ],
     theme: deepMerge(fragment.theme, base.theme),
     resources: { ...(fragment.resources ?? {}), ...(base.resources ?? {}) },

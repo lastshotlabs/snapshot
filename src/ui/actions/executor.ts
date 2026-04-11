@@ -1,8 +1,10 @@
 import { createContext, useCallback, useContext, useMemo } from "react";
 import { AppRegistryContext, PageRegistryContext } from "../context/providers";
+import { useSubscribe } from "../context/hooks";
 import { isFromRef } from "../context/utils";
 import { useConfirmManager } from "./confirm";
 import { resolveTemplate } from "../expressions/template";
+import { resolveRuntimeLocale } from "../i18n/resolve";
 import { useModalManager } from "./modal-manager";
 import { useToastManager } from "./toast";
 import {
@@ -93,18 +95,6 @@ function triggerBrowserDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-function readRegistryValue(
-  registry: AtomRegistry | null,
-  id: string,
-): unknown | undefined {
-  const stateAtom = registry?.get(id);
-  if (!stateAtom || !registry) {
-    return undefined;
-  }
-
-  return registry.store.get(stateAtom);
-}
-
 function normalizeWorkflowMap(
   workflows: Record<string, unknown> | undefined,
 ): WorkflowMap | undefined {
@@ -129,6 +119,7 @@ function resolveWorkflowValue(
   context: Record<string, unknown>,
   pageRegistry: AtomRegistry | null,
   appRegistry: AtomRegistry | null,
+  locale: string | undefined,
   manifestRuntime: ReturnType<typeof useManifestRuntime>,
   routeRuntime: {
     currentPath?: string;
@@ -179,7 +170,7 @@ function resolveWorkflowValue(
         },
       },
       {
-        locale: manifestRuntime?.raw.i18n?.default,
+        locale,
         i18n: manifestRuntime?.raw.i18n,
       },
     );
@@ -192,6 +183,7 @@ function resolveWorkflowValue(
         context,
         pageRegistry,
         appRegistry,
+        locale,
         manifestRuntime,
         routeRuntime,
         overlayRuntime,
@@ -208,6 +200,7 @@ function resolveWorkflowValue(
           context,
           pageRegistry,
           appRegistry,
+          locale,
           manifestRuntime,
           routeRuntime,
           overlayRuntime,
@@ -234,6 +227,11 @@ export function useActionExecutor(): ActionExecuteFn {
   const resourceCache = useManifestResourceCache();
   const routeRuntime = useRouteRuntime();
   const overlayRuntime = useOverlayRuntime();
+  const localeState = useSubscribe({ from: "global.locale" });
+  const activeLocale = resolveRuntimeLocale(
+    runtime?.raw.i18n,
+    localeState,
+  );
 
   const execute: ActionExecuteFn = useCallback(
     async (
@@ -272,6 +270,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -293,6 +292,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -322,6 +322,7 @@ export function useActionExecutor(): ActionExecuteFn {
                       builtinContext,
                       pageRegistry,
                       appRegistry,
+                      activeLocale,
                       runtime,
                       routeRuntime,
                       overlayRuntime,
@@ -332,6 +333,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    activeLocale,
                     runtime,
                     routeRuntime,
                     overlayRuntime,
@@ -344,6 +346,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -365,6 +368,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -430,6 +434,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    activeLocale,
                     runtime,
                     routeRuntime,
                     overlayRuntime,
@@ -453,6 +458,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    activeLocale,
                     runtime,
                     routeRuntime,
                     overlayRuntime,
@@ -504,6 +510,7 @@ export function useActionExecutor(): ActionExecuteFn {
               builtinContext,
               pageRegistry,
               appRegistry,
+              activeLocale,
               runtime,
               routeRuntime,
               overlayRuntime,
@@ -535,6 +542,7 @@ export function useActionExecutor(): ActionExecuteFn {
                       builtinContext,
                       pageRegistry,
                       appRegistry,
+                      activeLocale,
                       runtime,
                       routeRuntime,
                       overlayRuntime,
@@ -545,6 +553,7 @@ export function useActionExecutor(): ActionExecuteFn {
                     builtinContext,
                     pageRegistry,
                     appRegistry,
+                    activeLocale,
                     runtime,
                     routeRuntime,
                     overlayRuntime,
@@ -568,6 +577,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -587,6 +597,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -599,6 +610,7 @@ export function useActionExecutor(): ActionExecuteFn {
                   builtinContext,
                   pageRegistry,
                   appRegistry,
+                  activeLocale,
                   runtime,
                   routeRuntime,
                   overlayRuntime,
@@ -658,6 +670,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -682,6 +695,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -709,6 +723,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -720,6 +735,7 @@ export function useActionExecutor(): ActionExecuteFn {
                   builtinContext,
                   pageRegistry,
                   appRegistry,
+                  activeLocale,
                   runtime,
                   routeRuntime,
                   overlayRuntime,
@@ -736,6 +752,7 @@ export function useActionExecutor(): ActionExecuteFn {
                 builtinContext,
                 pageRegistry,
                 appRegistry,
+                activeLocale,
                 runtime,
                 routeRuntime,
                 overlayRuntime,
@@ -747,6 +764,7 @@ export function useActionExecutor(): ActionExecuteFn {
                   builtinContext,
                   pageRegistry,
                   appRegistry,
+                  activeLocale,
                   runtime,
                   routeRuntime,
                   overlayRuntime,
@@ -784,6 +802,7 @@ export function useActionExecutor(): ActionExecuteFn {
               nextContext,
               pageRegistry,
               appRegistry,
+              activeLocale,
               runtime,
               routeRuntime,
               overlayRuntime,
@@ -804,6 +823,7 @@ export function useActionExecutor(): ActionExecuteFn {
       modalManager,
       pageRegistry,
       analyticsDispatcher,
+      activeLocale,
       overlayRuntime,
       resourceCache,
       routeRuntime,

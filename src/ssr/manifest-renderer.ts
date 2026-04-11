@@ -8,6 +8,7 @@ import { AppContextProvider } from "../ui/context/providers";
 import { Layout } from "../ui/components/layout/layout";
 import { Nav } from "../ui/components/layout/nav";
 import { resolveDetectedLocale, resolveI18nRefs } from "../ui/i18n/resolve";
+import type { PolicyExpr } from "../ui/policies/types";
 import "../ui/components/register";
 import {
   AppShellWrapper,
@@ -19,6 +20,7 @@ import {
 } from "../ui/entity-pages";
 import "../ui/manifest/structural";
 import { compileManifest } from "../ui/manifest/compiler";
+import { evaluateManifestGuard } from "../ui/manifest/guard-registry";
 import { ComponentRenderer, PageRenderer } from "../ui/manifest/renderer";
 import type {
   CompiledManifest,
@@ -160,14 +162,6 @@ type RouteLayoutDeclaration =
 
 type RouteSlotsDeclaration = Record<string, Record<string, unknown>[]>;
 
-const BUILT_IN_LAYOUT_TYPES = new Set([
-  "sidebar",
-  "top-nav",
-  "stacked",
-  "minimal",
-  "full-width",
-]);
-
 const SLOT_ENABLED_LAYOUT_TYPES = new Set(["sidebar", "top-nav", "stacked"]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -271,6 +265,13 @@ function getBuiltInLayoutSlots(type: string): RouteLayoutSlotDeclaration[] {
     { name: "main", required: true },
     { name: "footer" },
   ];
+}
+
+function layoutSupportsSlots(layout: RouteLayoutDeclaration): boolean {
+  return (
+    SLOT_ENABLED_LAYOUT_TYPES.has(getLayoutType(layout)) ||
+    getLayoutSlots(layout).length > 0
+  );
 }
 
 function extractRequestHeaders(bsCtx: unknown): Record<string, string> {
@@ -414,10 +415,6 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
     compiled.routes.map(buildRouteEntry);
 
   // Build an ID-keyed map (the compiled routeMap is keyed by path)
-  const routeById: Record<string, CompiledRoute> = Object.fromEntries(
-    compiled.routes.map((r) => [r.id, r]),
-  );
-
   const resolveRouteByPath = (
     pathname: string,
   ): { route: CompiledRoute; params: Record<string, string> } | null => {
@@ -465,9 +462,7 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
       : null;
     const routeLayouts = readRouteLayouts(runtimeManifest, route.id);
     const routeSlots = readRouteSlots(runtimeManifest, route.id);
-    const slotLayout = routeLayouts.find((layout) =>
-      SLOT_ENABLED_LAYOUT_TYPES.has(getLayoutType(layout)),
-    );
+    const slotLayout = routeLayouts.find((layout) => layoutSupportsSlots(layout));
     if (Object.keys(routeSlots).length > 0) {
       const layoutType = slotLayout
         ? getLayoutType(slotLayout)
@@ -565,10 +560,6 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
     const composedNode = routeLayouts.reduceRight<React.ReactNode>(
       (children, layout, index) => {
         const layoutType = getLayoutType(layout);
-        if (!BUILT_IN_LAYOUT_TYPES.has(layoutType)) {
-          return children;
-        }
-
         const slotDeclarations = new Map<string, RouteLayoutSlotDeclaration>();
         for (const slot of getBuiltInLayoutSlots(layoutType)) {
           slotDeclarations.set(slot.name, slot);
@@ -577,29 +568,17 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
           slotDeclarations.set(slot.name, slot);
         }
 
-        const slots = SLOT_ENABLED_LAYOUT_TYPES.has(layoutType)
-          ? {
-              header: renderSlot(
-                layoutType,
-                slotDeclarations.get("header") ?? { name: "header" },
-              ),
-              sidebar: renderSlot(
-                layoutType,
-                slotDeclarations.get("sidebar") ?? { name: "sidebar" },
-              ),
-              main: renderSlot(
-                layoutType,
-                slotDeclarations.get("main") ?? {
-                  name: "main",
-                  required: true,
-                },
-                children,
-              ),
-              footer: renderSlot(
-                layoutType,
-                slotDeclarations.get("footer") ?? { name: "footer" },
-              ),
-            }
+        const slots = layoutSupportsSlots(layout)
+          ? Object.fromEntries(
+              [...slotDeclarations.entries()].map(([slotName, declaration]) => [
+                slotName,
+                renderSlot(
+                  layoutType,
+                  declaration,
+                  slotName === "main" ? children : undefined,
+                ),
+              ]),
+            )
           : undefined;
 
         const navNode =
@@ -764,11 +743,16 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
       shell: SsrShellShape,
       bsCtx: unknown,
     ): Promise<Response> {
+      const requestHeaders = extractRequestHeaders(bsCtx);
+      const runtimeManifest = resolveLocalizedManifest(compiled, requestHeaders);
+      const runtimeRouteById: Record<string, CompiledRoute> = Object.fromEntries(
+        runtimeManifest.routes.map((route) => [route.id, route]),
+      );
       const routeId = match.filePath.startsWith("manifest:")
         ? match.filePath.slice("manifest:".length)
         : null;
 
-      let activeRoute = routeId ? routeById[routeId] : undefined;
+      let activeRoute = routeId ? runtimeRouteById[routeId] : undefined;
       let activeMatch = match;
       const responseHeaders = new Headers();
       let responseStatus: number | undefined;
@@ -812,10 +796,10 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
           SnapshotApiContext.Provider,
           { value: null },
           React.createElement(ManifestRuntimeProvider, {
-            manifest: compiled,
+            manifest: runtimeManifest,
             children: React.createElement(AppContextProvider, {
-              globals: compiled.state,
-              resources: compiled.resources,
+              globals: runtimeManifest.state,
+              resources: runtimeManifest.resources,
               children: element,
             }),
           }),
@@ -832,6 +816,25 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         return applyResponseOverrides(rendered);
       };
 
+      const buildGuardDeniedElement = (
+        route: CompiledRoute,
+        requestMatch: SsrRouteMatchShape,
+        render: Record<string, unknown>,
+      ): React.ReactElement =>
+        React.createElement(RouteRuntimeProvider, {
+          value: {
+            currentPath: requestMatch.url.pathname,
+            currentRoute: route,
+            params: requestMatch.params as Record<string, string>,
+            query: requestMatch.query as Record<string, string>,
+            navigate: () => {},
+            isPreloading: false,
+          },
+          children: React.createElement(ComponentRenderer, {
+            config: render as never,
+          }),
+        });
+
       try {
         const middlewareResult = await runManifestSsrMiddleware({
           manifest: compiled,
@@ -840,7 +843,7 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
           method: "GET",
           params: { ...match.params },
           query: { ...match.query },
-          requestHeaders: extractRequestHeaders(bsCtx),
+          requestHeaders,
           workflows: compiled.workflows,
         });
 
@@ -872,9 +875,13 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
           );
           if (!rewritten) {
             responseStatus = responseStatus ?? 404;
+            const rewrittenUrl = new URL(
+              middlewareResult.response.rewrite,
+              match.url,
+            );
             const fallback = buildManifestFallbackElement(
-              compiled,
-              routeById,
+              runtimeManifest,
+              runtimeRouteById,
               "notFound",
               middlewareResult.response.rewrite,
             );
@@ -882,26 +889,32 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
               fallback,
               {
                 ...match,
-                url: new URL(middlewareResult.response.rewrite, match.url),
+                url: rewrittenUrl,
                 params: {},
+                query: Object.fromEntries(rewrittenUrl.searchParams.entries()),
               },
               shell.headTags,
             );
           }
 
-          activeRoute = rewritten.route;
+          activeRoute = runtimeRouteById[rewritten.route.id];
+          const rewrittenUrl = new URL(
+            middlewareResult.response.rewrite,
+            match.url,
+          );
           activeMatch = {
             ...match,
-            url: new URL(middlewareResult.response.rewrite, match.url),
+            url: rewrittenUrl,
             params: rewritten.params,
+            query: Object.fromEntries(rewrittenUrl.searchParams.entries()),
           };
         }
 
         if (!activeRoute) {
           responseStatus = responseStatus ?? 404;
           const fallback = buildManifestFallbackElement(
-            compiled,
-            routeById,
+            runtimeManifest,
+            runtimeRouteById,
             "notFound",
             activeMatch.url.pathname,
           );
@@ -909,28 +922,54 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         }
 
         if (activeRoute.guard) {
-          const redirectTo = activeRoute.guard.redirectTo ?? "/login";
-          if (activeRoute.guard.authenticated) {
-            const user = frozen.getUser
-              ? await frozen.getUser(new Headers()).catch((): null => null)
-              : null;
-            if (!user) {
-              const redirectResponse = Response.redirect(redirectTo, 302);
-              return applyResponseOverrides(redirectResponse);
+          const user = frozen.getUser
+            ? ((await frozen
+                .getUser(new Headers(requestHeaders))
+                .catch((): null => null)) as Record<string, unknown> | null)
+            : null;
+          const guardResult = evaluateManifestGuard(activeRoute.guard, {
+            route: activeRoute,
+            user,
+            manifest: runtimeManifest,
+            policies: (runtimeManifest.raw.policies ?? {}) as Record<
+              string,
+              PolicyExpr
+            >,
+            routeContext: {
+              id: activeRoute.id,
+              path: activeMatch.url.pathname,
+              pattern: activeRoute.path,
+              params: activeMatch.params as Record<string, string>,
+              query: activeMatch.query as Record<string, string>,
+            },
+          });
+          if (!guardResult.allow) {
+            if (guardResult.render) {
+              const deniedElement = buildGuardDeniedElement(
+                activeRoute,
+                activeMatch,
+                guardResult.render as Record<string, unknown>,
+              );
+              const deniedHeadTags = activeRoute.page.title
+                ? `<title>${escapeHtml(activeRoute.page.title)}</title>`
+                : shell.headTags;
+              return renderWithProviders(
+                deniedElement,
+                activeMatch,
+                deniedHeadTags,
+              );
             }
 
-            if (activeRoute.guard.roles?.length) {
-              const hasRole = activeRoute.guard.roles.some((r: string) =>
-                user.roles.includes(r),
-              );
-              if (!hasRole) {
-                const redirectResponse = Response.redirect(
-                  activeRoute.guard.redirectTo ?? "/",
-                  302,
-                );
-                return applyResponseOverrides(redirectResponse);
-              }
-            }
+            const isAuthenticatedGuard =
+              typeof activeRoute.guard === "string"
+                ? activeRoute.guard === "authenticated"
+                : activeRoute.guard.authenticated === true ||
+                  activeRoute.guard.name === "authenticated";
+            const redirectResponse = Response.redirect(
+              guardResult.redirect ?? (isAuthenticatedGuard ? "/login" : "/"),
+              302,
+            );
+            return applyResponseOverrides(redirectResponse);
           }
         }
 
@@ -962,7 +1001,7 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         }
 
         const pageElement = buildManifestRouteElement(
-          compiled,
+          runtimeManifest,
           activeRoute,
           activeMatch.url.pathname,
           false,
@@ -982,8 +1021,8 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
         console.error("[snapshot-ssr] manifest route render failed:", error);
         responseStatus = responseStatus ?? 500;
         const fallback = buildManifestFallbackElement(
-          compiled,
-          routeById,
+          runtimeManifest,
+          runtimeRouteById,
           "error",
           activeMatch.url.pathname,
         );

@@ -10,6 +10,7 @@ import { registerBuiltInComponents } from "../components/register";
 import { registerBuiltInFlavors } from "../tokens/flavors";
 import { registerBuiltInLayouts } from "../layouts/register";
 import { registerComponent } from "./component-registry";
+import { registerBuiltInGuards } from "./guard-registry";
 
 let booted = false;
 
@@ -30,6 +31,7 @@ export function bootBuiltins(): void {
   }
   registerBuiltInFlavors();
   registerBuiltInLayouts();
+  registerBuiltInGuards();
 }
 
 export function resetBootBuiltins(): void {

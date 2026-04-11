@@ -1,6 +1,8 @@
 'use client';
 
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useSubscribe } from "../../../context";
+import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { SnapshotApiContext, useActionExecutor } from "../../../actions/executor";
 import { startPasskeyAuthentication, isPasskeySupported } from "../../../manifest/passkey";
 import { useManifestRuntime } from "../../../manifest/runtime";
@@ -17,8 +19,10 @@ export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
   const execute = useActionExecutor();
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
+  const localeState = useSubscribe({ from: "global.locale" });
   const [isLoading, setIsLoading] = useState(false);
   const autoPromptedRef = useRef(false);
+  const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
 
   if (!isPasskeySupported()) {
     return null;
@@ -70,7 +74,7 @@ export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
     },
   };
   const templateOptions = {
-    locale: manifest?.raw.i18n?.default,
+    locale: activeLocale,
     i18n: manifest?.raw.i18n,
   };
   const label =

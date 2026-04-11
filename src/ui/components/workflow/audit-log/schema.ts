@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { dataSourceSchema, fromRefSchema } from "../../_base/types";
+import { baseComponentConfigSchema, dataSourceSchema } from "../../_base/types";
 
 /**
  * Schema for a filter dropdown configuration.
@@ -34,8 +34,8 @@ export const auditLogFilterSchema = z
  * }
  * ```
  */
-export const auditLogConfigSchema = z
-  .object({
+export const auditLogConfigSchema = baseComponentConfigSchema
+  .extend({
     /** Component type discriminator. */
     type: z.literal("audit-log"),
     /** API endpoint returning log entries. Supports FromRef. */
@@ -59,14 +59,5 @@ export const auditLogConfigSchema = z
       .optional(),
     /** Filter dropdown configurations. */
     filters: z.array(auditLogFilterSchema).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
   })
   .strict();

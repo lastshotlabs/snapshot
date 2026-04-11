@@ -1064,14 +1064,7 @@ export const authScreenConfigSchema = z
   })
   .strict();
 
-export const layoutSchema = z.enum([
-  "sidebar",
-  "top-nav",
-  "stacked",
-  "minimal",
-  "full-width",
-  "centered",
-]);
+export const layoutSchema = z.string().min(1);
 
 export const pageConfigSchema = z
   .object({
@@ -1109,6 +1102,22 @@ export const routeLayoutSchema = z.union([
     .strict(),
 ]);
 
+export const routeGuardConfigSchema = z
+  .object({
+    name: z.string().min(1).optional(),
+    authenticated: z.boolean().optional(),
+    roles: z.array(z.string()).optional(),
+    policy: z.string().min(1).optional(),
+    redirectTo: z.string().min(1).optional(),
+    render: componentConfigSchema.optional(),
+  })
+  .strict();
+
+export const routeGuardSchema = z.union([
+  z.string().min(1),
+  routeGuardConfigSchema,
+]);
+
 export const routeConfigSchema = pageConfigSchema
   .extend({
     id: z.string().min(1),
@@ -1124,15 +1133,7 @@ export const routeConfigSchema = pageConfigSchema
     leave: z
       .union([z.string().min(1), manifestWorkflowDefinitionSchema])
       .optional(),
-    guard: z
-      .object({
-        authenticated: z.boolean().optional(),
-        roles: z.array(z.string()).optional(),
-        policy: z.string().min(1).optional(),
-        redirectTo: z.string().startsWith("/").optional(),
-      })
-      .strict()
-      .optional(),
+    guard: routeGuardSchema.optional(),
   })
   .strict();
 

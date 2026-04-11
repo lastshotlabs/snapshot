@@ -23,16 +23,7 @@ export const layoutConfigSchema = z
     /** Optional component id for context publishing. */
     id: z.string().optional(),
     /** Layout variant determines the overall page structure. */
-    variant: z
-      .enum([
-        "sidebar",
-        "top-nav",
-        "stacked",
-        "minimal",
-        "full-width",
-        "centered",
-      ])
-      .default("sidebar"),
+    variant: z.string().min(1).default("sidebar"),
     /** Custom sidebar width (CSS value). Default: 16rem. */
     sidebarWidth: z.string().optional(),
     /** Optional slot declarations supported by this layout. */

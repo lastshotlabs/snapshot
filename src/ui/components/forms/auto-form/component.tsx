@@ -24,6 +24,7 @@ import {
   getButtonStyle,
   BUTTON_INTERACTIVE_CSS,
 } from "../../_base/button-styles";
+import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useEvaluateExpression } from "../../../expressions/use-expression";
 import { resolveTemplate } from "../../../expressions/template";
 import { useAutoForm } from "./hook";
@@ -663,6 +664,7 @@ function buildTemplateContext(
 
 function resolveMaybeTemplate(
   value: unknown,
+  locale: string | undefined,
   runtime: ReturnType<typeof useManifestRuntime>,
   routeRuntime: ReturnType<typeof useRouteRuntime>,
 ): unknown {
@@ -674,7 +676,7 @@ function resolveMaybeTemplate(
     value,
     buildTemplateContext(runtime, routeRuntime),
     {
-      locale: runtime?.raw.i18n?.default,
+      locale,
       i18n: runtime?.raw.i18n,
     },
   );
@@ -868,38 +870,58 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
   const routeRuntime = useRouteRuntime();
   const resourceCache = useManifestResourceCache();
   const initialData = useComponentData(config.data ?? "");
+  const localeState = useSubscribe({ from: "global.locale" });
   const autoSubmitAllowed = useEvaluateExpression(config.autoSubmitWhen);
   const autoSubmittedRef = useRef(false);
   const lastPublishedStateRef = useRef<string | null>(null);
+  const activeLocale = resolveRuntimeLocale(runtime?.raw.i18n, localeState);
 
   const allFields = useMemo(() => resolveFields(config), [config]);
   const resolvedFields = useMemo(
     () =>
       allFields.map((field) => ({
         ...field,
-        label: resolveMaybeTemplate(field.label, runtime, routeRuntime) as
+        label: resolveMaybeTemplate(
+          field.label,
+          activeLocale,
+          runtime,
+          routeRuntime,
+        ) as
           | string
           | undefined,
         placeholder: resolveMaybeTemplate(
           field.placeholder,
+          activeLocale,
           runtime,
           routeRuntime,
         ) as string | undefined,
-        helperText: resolveMaybeTemplate(field.helperText, runtime, routeRuntime) as
+        helperText: resolveMaybeTemplate(
+          field.helperText,
+          activeLocale,
+          runtime,
+          routeRuntime,
+        ) as
           | string
           | undefined,
         description: resolveMaybeTemplate(
           field.description,
+          activeLocale,
           runtime,
           routeRuntime,
         ) as string | undefined,
-        default: resolveMaybeTemplate(field.default, runtime, routeRuntime),
+        default: resolveMaybeTemplate(
+          field.default,
+          activeLocale,
+          runtime,
+          routeRuntime,
+        ),
         inlineAction: field.inlineAction
           ? {
               ...field.inlineAction,
               label: String(
                 resolveMaybeTemplate(
                   field.inlineAction.label,
+                  activeLocale,
                   runtime,
                   routeRuntime,
                 ) ?? field.inlineAction.label,
@@ -907,6 +929,7 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
               to: String(
                 resolveMaybeTemplate(
                   field.inlineAction.to,
+                  activeLocale,
                   runtime,
                   routeRuntime,
                 ) ?? field.inlineAction.to,
@@ -914,7 +937,14 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
             }
           : undefined,
       })),
-    [allFields, routeRuntime, runtime?.app, runtime?.auth, runtime?.raw.i18n],
+    [
+      activeLocale,
+      allFields,
+      routeRuntime,
+      runtime?.app,
+      runtime?.auth,
+      runtime?.raw.i18n,
+    ],
   );
   const resolvedFieldMap = useMemo(
     () => new Map(resolvedFields.map((field) => [field.name, field])),
@@ -925,10 +955,16 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       config.sections?.map((section) => ({
         ...section,
         title: String(
-          resolveMaybeTemplate(section.title, runtime, routeRuntime) ?? section.title,
+          resolveMaybeTemplate(
+            section.title,
+            activeLocale,
+            runtime,
+            routeRuntime,
+          ) ?? section.title,
         ),
         description: resolveMaybeTemplate(
           section.description,
+          activeLocale,
           runtime,
           routeRuntime,
         ) as string | undefined,
@@ -936,16 +972,22 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
           (field) => resolvedFieldMap.get(field.name) ?? field,
         ),
       })),
-    [config.sections, resolvedFieldMap, routeRuntime, runtime],
+    [activeLocale, config.sections, resolvedFieldMap, routeRuntime, runtime],
   );
   const method = config.method ?? "POST";
   const submitLabel = String(
-    resolveMaybeTemplate(config.submitLabel ?? "Submit", runtime, routeRuntime) ??
+    resolveMaybeTemplate(
+      config.submitLabel ?? "Submit",
+      activeLocale,
+      runtime,
+      routeRuntime,
+    ) ??
       "Submit",
   );
   const submitLoadingLabel = String(
     resolveMaybeTemplate(
       config.submitLoadingLabel ?? "Submitting...",
+      activeLocale,
       runtime,
       routeRuntime,
     ) ?? "Submitting...",
