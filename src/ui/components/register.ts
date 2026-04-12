@@ -244,6 +244,10 @@ import {
   NavUserMenu,
   navUserMenuConfigSchema,
 } from "./layout/nav-user-menu/index";
+import {
+  ComponentGroup,
+  componentGroupConfigSchema,
+} from "./_base/component-group/index";
 
 let builtInComponentsRegistered = false;
 
@@ -858,6 +862,12 @@ export function registerBuiltInComponents(force = false): void {
     NavUserMenu as unknown as Parameters<typeof registerComponent>[1],
   );
   registerComponentSchema("nav-user-menu", navUserMenuConfigSchema);
+
+  registerComponent(
+    "component-group",
+    ComponentGroup as unknown as Parameters<typeof registerComponent>[1],
+  );
+  registerComponentSchema("component-group", componentGroupConfigSchema);
 }
 
 export function resetBuiltInComponentRegistration(): void {

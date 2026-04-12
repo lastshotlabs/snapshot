@@ -322,6 +322,8 @@ export interface SnapshotConfig {
   bearerToken?: string;
   /** The frontend manifest for the running app. */
   manifest: ManifestConfig;
+  /** Optional plugins to register custom components, groups, and setup hooks. */
+  plugins?: import("./plugin").SnapshotPlugin[];
 }
 
 // ── Instance ──────────────────────────────────────────────────────────────────

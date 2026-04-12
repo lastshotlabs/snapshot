@@ -37,6 +37,9 @@ import type { ManifestConfig } from "./ui/manifest/types";
 import { bootBuiltins } from "./ui/manifest/boot-builtins";
 import { compileManifestWithEnv } from "./ui/manifest/compiler";
 import { getDefaultEnvSource } from "./ui/manifest/env";
+import { registerComponent } from "./ui/manifest/component-registry";
+import { registerComponentSchema } from "./ui/manifest/schema";
+import type { SnapshotPlugin, PluginSetupContext } from "./plugin";
 
 const MANIFEST_AUTH_WORKFLOW_EVENT = "snapshot:manifest-auth-workflow";
 const MANIFEST_REALTIME_WORKFLOW_EVENT = "snapshot:manifest-realtime-workflow";
@@ -121,8 +124,69 @@ export function createSnapshot<
   TWSEvents extends Record<string, unknown> = Record<string, unknown>,
 >(config: SnapshotConfig): SnapshotInstance<TWSEvents> {
   bootBuiltins();
+
+  // ── Plugin registration ───────────────────────────────────────────────────
+  const plugins = config.plugins ?? [];
+  for (const plugin of plugins) {
+    if (plugin.components) {
+      for (const [typeName, entry] of Object.entries(plugin.components)) {
+        registerComponent(
+          typeName,
+          entry.component as Parameters<typeof registerComponent>[1],
+        );
+        registerComponentSchema(typeName, entry.schema);
+      }
+    }
+  }
+
+  // Merge plugin componentGroups into manifest before compilation
+  let manifestWithPlugins = config.manifest;
+  const pluginGroups = plugins.flatMap((p) =>
+    p.componentGroups ? Object.entries(p.componentGroups) : [],
+  );
+  if (pluginGroups.length > 0) {
+    const existingGroups = (manifestWithPlugins as Record<string, unknown>)[
+      "componentGroups"
+    ] as Record<string, unknown> | undefined;
+    manifestWithPlugins = {
+      ...manifestWithPlugins,
+      componentGroups: {
+        ...existingGroups,
+        ...Object.fromEntries(pluginGroups),
+      },
+    } as typeof manifestWithPlugins;
+  }
+
   const env = config.env ?? getDefaultEnvSource();
-  const compiledManifest = compileManifestWithEnv(config.manifest, env);
+  const compiledManifest = compileManifestWithEnv(manifestWithPlugins, env);
+
+  // ── Plugin setup hooks ────────────────────────────────────────────────────
+  if (plugins.length > 0) {
+    const workflowActions = new Map<string, (...args: unknown[]) => unknown>();
+    const guards = new Map<string, (...args: unknown[]) => unknown>();
+    const globalState = new Map<string, unknown>();
+
+    const setupContext: PluginSetupContext = {
+      manifest: Object.freeze({
+        ...compiledManifest.raw,
+      }) as PluginSetupContext["manifest"],
+      registerWorkflowAction: (type, handler) => {
+        workflowActions.set(type, handler);
+      },
+      registerGuard: (name, guard) => {
+        guards.set(name, guard);
+      },
+      setGlobalState: (key, value) => {
+        globalState.set(key, value);
+      },
+    };
+
+    for (const plugin of plugins) {
+      if (plugin.setup) {
+        void plugin.setup(setupContext);
+      }
+    }
+  }
   const runtimeApiUrl = compiledManifest.app.apiUrl ?? config.apiUrl;
   const runtimeRealtime = compiledManifest.realtime;
   const runtimeAuthMode = compiledManifest.auth?.session?.mode ?? "cookie";

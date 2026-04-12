@@ -553,6 +553,7 @@ function validateRouteSlots(route: RouteConfig): void {
         layout === "top-nav" ||
         layout === "stacked"
       ) {
+        declaredSlots.add("nav");
         declaredSlots.add("header");
         declaredSlots.add("sidebar");
         declaredSlots.add("main");
@@ -566,6 +567,7 @@ function validateRouteSlots(route: RouteConfig): void {
       layout.type === "top-nav" ||
       layout.type === "stacked"
     ) {
+      declaredSlots.add("nav");
       declaredSlots.add("header");
       declaredSlots.add("sidebar");
       declaredSlots.add("main");
@@ -578,6 +580,7 @@ function validateRouteSlots(route: RouteConfig): void {
   }
 
   if (declaredSlots.size === 0) {
+    declaredSlots.add("nav");
     declaredSlots.add("main");
   }
 

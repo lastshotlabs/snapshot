@@ -520,6 +520,7 @@ function getBuiltInLayoutSlots(type: string): RouteLayoutSlotDeclaration[] {
   }
 
   return [
+    { name: "nav" },
     { name: "header" },
     { name: "sidebar" },
     { name: "main", required: true },
@@ -847,6 +848,7 @@ function OverlayHost({
 function AppShell({
   manifest,
   route,
+  parents,
   currentPath,
   navigate,
   isPreloading,
@@ -854,6 +856,7 @@ function AppShell({
 }: {
   manifest: CompiledManifest;
   route: CompiledRoute;
+  parents: CompiledRoute[];
   currentPath: string;
   navigate: (to: string, options?: { replace?: boolean }) => void;
   isPreloading: boolean;
@@ -881,31 +884,8 @@ function AppShell({
   const loadingFallback = (
     <AppFallback manifest={manifest} name="loading" api={api} />
   );
-  const routeSlots = readRouteSlots(manifest, route.id);
-  const layoutDeclarations = readRouteLayouts(manifest, route.id);
-  const slotLayout = layoutDeclarations.find((layout) => layoutSupportsSlots(layout));
-  if (Object.keys(routeSlots).length > 0) {
-    const layoutType = slotLayout
-      ? getLayoutType(slotLayout)
-      : getLayoutType(layoutDeclarations[0] ?? "full-width");
-    const declaredSlots = new Map<string, RouteLayoutSlotDeclaration>();
-    for (const slot of getBuiltInLayoutSlots(layoutType)) {
-      declaredSlots.set(slot.name, slot);
-    }
-    if (slotLayout) {
-      for (const slot of getLayoutSlots(slotLayout)) {
-        declaredSlots.set(slot.name, slot);
-      }
-    }
-    const availableSlots = [...declaredSlots.keys()];
-    for (const slotName of Object.keys(routeSlots)) {
-      if (!declaredSlots.has(slotName)) {
-        throw new Error(
-          `Layout "${layoutType}" does not declare slot "${slotName}". Available slots: ${availableSlots.join(", ")}.`,
-        );
-      }
-    }
-  }
+
+  // Leaf page content
   const page = (
     <TransitionWrapper
       config={route.transition}
@@ -927,87 +907,146 @@ function AppShell({
     </TransitionWrapper>
   );
 
-  const renderSlot = (
-    layoutType: string,
-    declaration: RouteLayoutSlotDeclaration | undefined,
-    defaultContent?: ReactNode,
-  ): ReactNode => {
-    const routeSlotConfigs = routeSlots[declaration?.name ?? ""] ?? [];
-    const hasRouteContent = routeSlotConfigs.length > 0;
+  // ── Build layout layers: global shell + route explicit layouts ──────────
+  interface LayoutLayer {
+    layout: RouteLayoutDeclaration;
+    routeSlots: RouteSlotsDeclaration;
+  }
 
-    const content = hasRouteContent ? (
-      <>
-        {routeSlotConfigs.map((slotConfig, index) => (
-          <ComponentRenderer
-            key={`slot:${declaration?.name ?? "unknown"}:${index}`}
-            config={slotConfig}
-          />
-        ))}
-      </>
-    ) : declaration?.fallback ? (
-      <ComponentRenderer config={declaration.fallback} />
-    ) : (
-      (defaultContent ?? null)
-    );
+  const layers: LayoutLayer[] = [];
 
-    if (!content) {
-      if (declaration?.required) {
-        throw new Error(
-          `Layout "${layoutType}" requires slot "${declaration.name}" but no content was provided.`,
-        );
+  // Layer 0: global outer shell (navigation.mode > app.shell > full-width)
+  const globalLayoutType =
+    manifest.navigation?.mode ?? manifest.app.shell ?? "full-width";
+  layers.push({ layout: globalLayoutType, routeSlots: {} });
+
+  // Layers 1+: explicit layouts from each route in the ancestor chain
+  const routeChain = [...parents, route];
+  for (const chainRoute of routeChain) {
+    const rawRoute = getRawRouteRecord(manifest, chainRoute.id);
+    const rawLayouts = rawRoute?.["layouts"];
+    if (Array.isArray(rawLayouts) && rawLayouts.length > 0) {
+      const routeLayouts = rawLayouts.filter(
+        (l): l is RouteLayoutDeclaration =>
+          typeof l === "string" || isRecord(l),
+      );
+      if (routeLayouts.length > 0) {
+        const chainRouteSlots = readRouteSlots(manifest, chainRoute.id);
+        for (const rl of routeLayouts) {
+          layers.push({ layout: rl, routeSlots: chainRouteSlots });
+        }
       }
-      return null;
     }
+  }
 
-    const suspenseFallback = declaration?.fallback ? (
-      <ComponentRenderer config={declaration.fallback} />
-    ) : (
-      loadingFallback
-    );
+  // Determine which layer gets the auto-generated nav (outermost that supports it)
+  const navLayerIndex = layers.findIndex((layer) => {
+    const lt = getLayoutType(layer.layout);
+    return lt === "sidebar" || lt === "top-nav";
+  });
 
-    return (
-      <Suspense
-        key={`slot-boundary:${layoutType}:${declaration?.name ?? "main"}`}
-        fallback={suspenseFallback}
-      >
-        {content}
-      </Suspense>
-    );
-  };
+  // Check if any route in the chain overrides the nav slot (leaf priority)
+  let navSlotOverrideConfigs: ComponentConfig[] | undefined;
+  for (let i = routeChain.length - 1; i >= 0; i--) {
+    const rs = readRouteSlots(manifest, routeChain[i]!.id);
+    if (rs["nav"] && rs["nav"].length > 0) {
+      navSlotOverrideConfigs = rs["nav"];
+      break;
+    }
+  }
 
-  return layoutDeclarations.reduceRight<ReactNode>(
-    (children, layout, index) => {
-      const layoutType = getLayoutType(layout);
+  // ── Compose from innermost to outermost ─────────────────────────────────
+  return layers.reduceRight<ReactNode>(
+    (children, layer, index) => {
+      const layoutType = getLayoutType(layer.layout);
+
+      // Build declared slots for this layout type
       const declaredSlots = new Map<string, RouteLayoutSlotDeclaration>();
       for (const slot of getBuiltInLayoutSlots(layoutType)) {
         declaredSlots.set(slot.name, slot);
       }
-      for (const slot of getLayoutSlots(layout)) {
+      for (const slot of getLayoutSlots(layer.layout)) {
         declaredSlots.set(slot.name, slot);
       }
 
-      const slotContent = layoutSupportsSlots(layout)
+      // Build slot content (excluding "nav" — handled via nav prop)
+      const slotContent = layoutSupportsSlots(layer.layout)
         ? (Object.fromEntries(
-            [...declaredSlots.entries()].map(([slotName, declaration]) => [
-              slotName,
-              renderSlot(
-                layoutType,
-                declaration,
-                slotName === "main" ? children : undefined,
-              ),
-            ]),
+            [...declaredSlots.entries()]
+              .filter(([slotName]) => slotName !== "nav")
+              .map(([slotName, declaration]) => {
+                const routeSlotConfigs =
+                  layer.routeSlots[slotName] ?? [];
+                const hasRouteContent = routeSlotConfigs.length > 0;
+
+                const content = hasRouteContent ? (
+                  <>
+                    {routeSlotConfigs.map((slotConfig, si) => (
+                      <ComponentRenderer
+                        key={`slot:${slotName}:${si}`}
+                        config={slotConfig}
+                      />
+                    ))}
+                  </>
+                ) : declaration?.fallback ? (
+                  <ComponentRenderer config={declaration.fallback} />
+                ) : slotName === "main" ? (
+                  children
+                ) : null;
+
+                if (!content) {
+                  if (declaration?.required) {
+                    throw new Error(
+                      `Layout "${layoutType}" requires slot "${slotName}" but no content was provided.`,
+                    );
+                  }
+                  return [slotName, null];
+                }
+
+                const suspenseFallback = declaration?.fallback ? (
+                  <ComponentRenderer config={declaration.fallback} />
+                ) : (
+                  loadingFallback
+                );
+
+                return [
+                  slotName,
+                  <Suspense
+                    key={`slot-boundary:${layoutType}:${slotName}`}
+                    fallback={suspenseFallback}
+                  >
+                    {content}
+                  </Suspense>,
+                ];
+              }),
           ) as Record<string, ReactNode>)
         : undefined;
 
-      const navNode =
-        navConfig && (layoutType === "sidebar" || layoutType === "top-nav") ? (
+      // Nav: slot override > auto-generated > none
+      const isNavLayer = index === navLayerIndex;
+      let navNode: ReactNode = undefined;
+      if (isNavLayer && navSlotOverrideConfigs) {
+        navNode = (
+          <>
+            {navSlotOverrideConfigs.map((cfg, ni) => (
+              <ComponentRenderer key={`slot:nav:${ni}`} config={cfg} />
+            ))}
+          </>
+        );
+      } else if (
+        isNavLayer &&
+        navConfig &&
+        (layoutType === "sidebar" || layoutType === "top-nav")
+      ) {
+        navNode = (
           <Nav
             config={navConfig}
             pathname={currentPath}
             onNavigate={(path) => navigate(path)}
             variant={layoutType as "sidebar" | "top-nav"}
           />
-        ) : undefined;
+        );
+      }
 
       return (
         <Layout
@@ -1016,7 +1055,7 @@ function AppShell({
             {
               type: "layout",
               variant: layoutType,
-              ...getLayoutProps(layout),
+              ...getLayoutProps(layer.layout),
             } as Parameters<typeof Layout>[0]["config"]
           }
           nav={navNode}
@@ -1263,7 +1302,6 @@ function ManifestRouter({
   );
   const route = match.route;
   const params = match.params;
-  const renderedRoute = match.activeRoutes[0] ?? route;
   const lazyTypes = useMemo(
     () =>
       lazyComponents
@@ -1766,7 +1804,8 @@ function ManifestRouter({
       >
         <AppShell
           manifest={localizedManifest}
-          route={renderedRoute ?? route}
+          route={route}
+          parents={match.parents}
           currentPath={scopedCurrentPath}
           navigate={navigate}
           isPreloading={isPreloading}

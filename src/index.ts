@@ -3,6 +3,14 @@ export { ApiError } from "./api/error";
 export { registerClient, getRegisteredClient } from "./api/client";
 export { isMfaChallenge } from "./types";
 export { formatAuthError, createAuthErrorFormatter } from "./auth/error-format";
+export { definePlugin } from "./plugin";
+export type {
+  SnapshotPlugin,
+  PluginSetupContext,
+  PluginComponentEntry,
+  PluginComponentGroupDefinition,
+} from "./plugin";
+export { generateManifestSchema } from "./schema-generator";
 
 export type {
   SnapshotConfig,

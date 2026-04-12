@@ -1899,6 +1899,14 @@ export const manifestConfigSchema = z
     i18n: i18nConfigSchema.optional(),
     subApps: subAppsSchema.optional(),
     shortcuts: shortcutsConfigSchema.optional(),
+    componentGroups: z
+      .record(
+        z.object({
+          description: z.string().optional(),
+          components: z.array(componentConfigSchema),
+        }),
+      )
+      .optional(),
     routes: z.array(routeConfigSchema).min(1),
   })
   .strict()
