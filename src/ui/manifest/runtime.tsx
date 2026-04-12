@@ -58,10 +58,12 @@ interface ManifestResourceCacheValue {
   loadTarget: (
     target: EndpointTarget,
     params?: Record<string, unknown>,
+    options?: { signal?: AbortSignal },
   ) => Promise<unknown>;
   preloadResource: (
     name: string,
     params?: Record<string, unknown>,
+    options?: { signal?: AbortSignal },
   ) => Promise<unknown>;
   invalidateResource: (name: string) => void;
   invalidateQueryKey: (queryKey: string[]) => void;
@@ -305,6 +307,8 @@ export function ManifestRuntimeProvider({
   const [resourceVersions, setResourceVersions] = useState<
     Record<string, number>
   >({});
+  const resourceVersionsRef = useRef(resourceVersions);
+  resourceVersionsRef.current = resourceVersions;
   const entriesRef = useRef(entries);
   const mutationChainsRef = useRef(new Map<string, Promise<unknown>>());
   const resolvedClients = useMemo(() => {
@@ -359,7 +363,7 @@ export function ManifestRuntimeProvider({
   );
 
   const loadTarget = useCallback(
-    async (target: EndpointTarget, params: Record<string, unknown> = {}) => {
+    async (target: EndpointTarget, params: Record<string, unknown> = {}, options?: { signal?: AbortSignal }) => {
       if (!resolvedClients["main"]) {
         throw new Error(
           "ManifestRuntimeProvider requires an API client for resource loading.",
@@ -404,25 +408,29 @@ export function ManifestRuntimeProvider({
 
         for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
           try {
+            const reqOptions = options?.signal ? { signal: options.signal } : undefined;
             switch (request.method) {
               case "POST":
-                data = await selectedClient.post(url, undefined);
+                data = reqOptions ? await selectedClient.post(url, undefined, reqOptions) : await selectedClient.post(url, undefined);
                 break;
               case "PUT":
-                data = await selectedClient.put(url, undefined);
+                data = reqOptions ? await selectedClient.put(url, undefined, reqOptions) : await selectedClient.put(url, undefined);
                 break;
               case "PATCH":
-                data = await selectedClient.patch(url, undefined);
+                data = reqOptions ? await selectedClient.patch(url, undefined, reqOptions) : await selectedClient.patch(url, undefined);
                 break;
               case "DELETE":
-                data = await selectedClient.delete(url);
+                data = reqOptions ? await selectedClient.delete(url, undefined, reqOptions) : await selectedClient.delete(url);
                 break;
               default:
-                data = await selectedClient.get(url);
+                data = reqOptions ? await selectedClient.get(url, reqOptions) : await selectedClient.get(url);
             }
             lastError = undefined;
             break;
           } catch (error) {
+            if (error instanceof DOMException && error.name === "AbortError") {
+              throw error;
+            }
             lastError = error;
             if (attempt >= maxAttempts - 1) {
               throw error;
@@ -450,6 +458,9 @@ export function ManifestRuntimeProvider({
 
         return data;
       } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          throw error;
+        }
         const resolvedError =
           error instanceof Error ? error : new Error("Failed to load resource");
         setEntries((current) => ({
@@ -677,7 +688,7 @@ export function ManifestRuntimeProvider({
   const cacheValue = useMemo<ManifestResourceCacheValue>(
     () => ({
       entries: entriesRef.current,
-      getResourceVersion: (name) => resourceVersions[name] ?? 0,
+      getResourceVersion: (name) => resourceVersionsRef.current[name] ?? 0,
       getInvalidationTargets: (name) =>
         getResourceInvalidationTargets(name, manifest.resources),
       getCacheKey,
@@ -691,7 +702,7 @@ export function ManifestRuntimeProvider({
         return isEntryFresh(entry) ? entry?.data : undefined;
       },
       loadTarget,
-      preloadResource: (name, params) => loadTarget({ resource: name }, params),
+      preloadResource: (name, params, options) => loadTarget({ resource: name }, params, options),
       invalidateResource,
       invalidateQueryKey,
       mutateTarget,
@@ -704,7 +715,6 @@ export function ManifestRuntimeProvider({
       loadTarget,
       manifest.resources,
       mutateTarget,
-      resourceVersions,
     ],
   );
 

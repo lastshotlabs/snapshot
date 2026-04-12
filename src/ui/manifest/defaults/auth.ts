@@ -43,6 +43,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "login",
     path: "/login",
+    shell: false,
     layouts: centeredLayout(),
     guard: { authenticated: false, redirectTo: "{auth.redirects.afterLogin}" },
     title: "{i18n:auth.login.title}",
@@ -151,6 +152,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "register",
     path: "/register",
+    shell: false,
     layouts: centeredLayout(),
     guard: { authenticated: false, redirectTo: "/" },
     title: "{i18n:auth.register.title}",
@@ -239,6 +241,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "forgot-password",
     path: "/forgot-password",
+    shell: false,
     layouts: centeredLayout(),
     guard: { authenticated: false, redirectTo: "/" },
     title: "{i18n:auth.forgot_password.title}",
@@ -306,6 +309,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "reset-password",
     path: "/reset-password",
+    shell: false,
     layouts: centeredLayout(),
     title: "{i18n:auth.reset_password.title}",
     content: [
@@ -385,6 +389,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "verify-email",
     path: "/verify-email",
+    shell: false,
     layouts: centeredLayout(),
     title: "{i18n:auth.verify_email.title}",
     content: [
@@ -483,6 +488,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "mfa",
     path: "/mfa",
+    shell: false,
     layouts: centeredLayout(),
     title: "{i18n:auth.mfa.title}",
     content: [
@@ -574,6 +580,7 @@ const defaultAuthRoutes: RouteConfig[] = [
   {
     id: "sso-callback",
     path: "/auth/callback",
+    shell: false,
     layouts: centeredLayout(),
     title: "{i18n:auth.sso_callback.title}",
     enter: {

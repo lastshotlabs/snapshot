@@ -12,8 +12,14 @@ export function useRoutePrefetch(endpoints: EndpointTarget[] | undefined): void 
       return;
     }
 
+    const controller = new AbortController();
+
     for (const endpoint of endpoints) {
-      void cache.loadTarget(endpoint).catch(() => undefined);
+      void cache.loadTarget(endpoint, undefined, { signal: controller.signal }).catch(() => undefined);
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [cache, endpoints]);
 }

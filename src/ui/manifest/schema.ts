@@ -1574,6 +1574,7 @@ export const routeConfigSchema: z.ZodType = z.lazy(() =>
       content: z.array(componentConfigSchema).min(1).optional(),
       roles: z.array(z.string()).optional(),
       breadcrumb: plainTextOrTRefSchema.optional(),
+      shell: z.literal(false).optional(),
       layouts: z.array(routeLayoutSchema).optional(),
       slots: z.record(z.array(componentConfigSchema)).optional(),
       preload: z.array(endpointTargetSchema).optional(),

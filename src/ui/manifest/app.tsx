@@ -915,13 +915,20 @@ function AppShell({
 
   const layers: LayoutLayer[] = [];
 
-  // Layer 0: global outer shell (navigation.mode > app.shell > full-width)
-  const globalLayoutType =
-    manifest.navigation?.mode ?? manifest.app.shell ?? "full-width";
-  layers.push({ layout: globalLayoutType, routeSlots: {} });
-
-  // Layers 1+: explicit layouts from each route in the ancestor chain
+  // Check if any route in the chain suppresses the global shell
   const routeChain = [...parents, route];
+  const shellSuppressed = routeChain.some((chainRoute) => {
+    const rawRoute = getRawRouteRecord(manifest, chainRoute.id);
+    return rawRoute?.["shell"] === false;
+  });
+
+  // Layer 0: global outer shell (navigation.mode > app.shell > full-width)
+  // Skipped when the leaf route (or any ancestor) sets shell: false
+  if (!shellSuppressed) {
+    const globalLayoutType =
+      manifest.navigation?.mode ?? manifest.app.shell ?? "full-width";
+    layers.push({ layout: globalLayoutType, routeSlots: {} });
+  }
   for (const chainRoute of routeChain) {
     const rawRoute = getRawRouteRecord(manifest, chainRoute.id);
     const rawLayouts = rawRoute?.["layouts"];
@@ -1545,6 +1552,7 @@ function ManifestRouter({
     }
 
     let cancelled = false;
+    const abortController = new AbortController();
 
     const runLifecycle = async () => {
       const previousMatch = previousMatchRef.current;
@@ -1610,6 +1618,7 @@ function ManifestRouter({
               return resourceCache.loadTarget(
                 resolvedTarget.target,
                 resolvedTarget.params,
+                { signal: abortController.signal },
               );
             }),
           );
@@ -1654,6 +1663,9 @@ function ManifestRouter({
       if (cancelled) {
         return;
       }
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
 
       setRuntimeError(
         error instanceof Error ? error : new Error("Manifest route failed"),
@@ -1662,6 +1674,7 @@ function ManifestRouter({
 
     return () => {
       cancelled = true;
+      abortController.abort();
     };
   }, [execute, params, resourceCache, route, routeAllowed, scopedCurrentPath]);
 

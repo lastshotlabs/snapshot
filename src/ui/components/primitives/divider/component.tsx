@@ -1,6 +1,10 @@
 'use client';
 
 import type { CSSProperties } from "react";
+import { useSubscribe } from "../../../context";
+import { resolveRuntimeLocale } from "../../../i18n/resolve";
+import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
+import { resolveTemplate } from "../../../expressions/template";
 
 export interface DividerConfig {
   label?: string;
@@ -10,6 +14,29 @@ export interface DividerConfig {
 }
 
 export function Divider({ config }: { config: DividerConfig }) {
+  const manifest = useManifestRuntime();
+  const routeRuntime = useRouteRuntime();
+  const localeState = useSubscribe({ from: "global.locale" });
+  const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
+  const resolvedLabel = config.label
+    ? resolveTemplate(
+        config.label,
+        {
+          app: manifest?.app ?? {},
+          auth: manifest?.auth ?? {},
+          route: {
+            ...(routeRuntime?.currentRoute ?? {}),
+            path: routeRuntime?.currentPath,
+            params: routeRuntime?.params,
+            query: routeRuntime?.query,
+          },
+        },
+        {
+          locale: activeLocale,
+          i18n: manifest?.raw.i18n,
+        },
+      )
+    : undefined;
   if (config.orientation === "vertical") {
     return (
       <div
@@ -26,7 +53,7 @@ export function Divider({ config }: { config: DividerConfig }) {
     );
   }
 
-  if (!config.label) {
+  if (!resolvedLabel) {
     return (
       <div
         role="separator"
@@ -65,7 +92,7 @@ export function Divider({ config }: { config: DividerConfig }) {
           fontSize: "var(--sn-font-size-xs, 0.75rem)",
         }}
       >
-        {config.label}
+        {resolvedLabel}
       </span>
       <div
         style={{
