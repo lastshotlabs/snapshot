@@ -44,7 +44,7 @@ export default class Build extends Command {
       this.error(`Failed to load '${flags.manifest}': ${message}`);
     }
 
-    const result = safeCompileManifest(raw, { skipCustomClientChecks: true });
+    const result = safeCompileManifest(raw);
     if (!result.success) {
       const issues = result.error.issues
         .map((issue) => `- ${issue.path.join(".") || "<root>"}: ${issue.message}`)

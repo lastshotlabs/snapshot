@@ -1364,7 +1364,7 @@ export async function readManifest(
     return null;
   }
   const raw = JSON.parse(content) as unknown;
-  const result = safeCompileManifest(raw, { skipCustomClientChecks: true });
+  const result = safeCompileManifest(raw);
   if (!result.success) {
     const issues = result.error.issues
       .map((i) => `  - ${i.path.join(".")}: ${i.message}`)
