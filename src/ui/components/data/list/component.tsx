@@ -178,6 +178,13 @@ function ListItem({
       gap: "var(--sn-spacing-sm, 0.5rem)",
       padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
       transition: `background-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)`,
+      ...(isClickable
+        ? {
+            hover: {
+              bg: "var(--sn-color-accent, #f3f4f6)",
+            },
+          }
+        : {}),
       ...(isCard
         ? {
             border:
@@ -266,23 +273,6 @@ function ListItem({
       data-snapshot-id={`${rootId}-item-${itemIndex}`}
       className={itemSurface.className}
       style={itemSurface.style}
-      onMouseEnter={
-        isClickable
-          ? (e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor =
-                "var(--sn-color-accent, #f3f4f6)";
-            }
-          : undefined
-      }
-      onMouseLeave={
-        isClickable
-          ? (e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = isCard
-                ? "var(--sn-color-card, #ffffff)"
-                : "";
-            }
-          : undefined
-      }
     >
       {draggable ? (
         <span

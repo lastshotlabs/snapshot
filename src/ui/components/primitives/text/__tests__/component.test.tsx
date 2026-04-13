@@ -23,6 +23,10 @@ describe("Text", () => {
         config={{
           type: "text",
           value: "Hello world",
+          variant: "default",
+          size: "md",
+          weight: "normal",
+          align: "left",
           slots: {
             root: {
               className: "text-slot",

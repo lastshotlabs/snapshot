@@ -1,8 +1,8 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, act, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AtomRegistryImpl } from "../../../../context/registry";
@@ -59,6 +59,10 @@ describe("DetailCard", () => {
     mockExecute.mockReset();
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders empty state when data is null", () => {
     const Wrapper = createTestWrapper(registry);
     render(
@@ -100,7 +104,7 @@ describe("DetailCard", () => {
     );
 
     expect(screen.getByText("Name")).toBeTruthy();
-    expect(screen.getByText("Alice")).toBeTruthy();
+    expect(screen.getAllByText("Alice")).toHaveLength(1);
     expect(screen.getByText("Email")).toBeTruthy();
     expect(screen.getByText("alice@example.com")).toBeTruthy();
     expect(screen.getByText("Active")).toBeTruthy();
@@ -208,7 +212,7 @@ describe("DetailCard", () => {
     // The button should exist and clicking should not throw.
     // Action execution is handled by useActionExecutor() internally.
     act(() => {
-      screen.getByText("Edit").click();
+      screen.getByRole("button", { name: "Edit" }).click();
     });
   });
 
@@ -242,7 +246,9 @@ describe("DetailCard", () => {
       </Wrapper>,
     );
 
-    const root = document.querySelector('[data-snapshot-component="detail-card"]');
+    const root = document.querySelector(
+      '[data-snapshot-component="detail-card"][data-snapshot-id="detail-card-slots"]',
+    );
     expect(root?.className).toContain("detail-root-slot");
     const actionButton = screen.getByRole("button", { name: "Edit" });
     expect(actionButton.getAttribute("style")).toContain("min-width: 11rem");
@@ -273,8 +279,8 @@ describe("DetailCard", () => {
       </Wrapper>,
     );
 
-    expect(screen.getByText("Yes")).toBeTruthy();
-    expect(screen.getByText("No")).toBeTruthy();
+    expect(screen.getAllByText("Yes")).toHaveLength(1);
+    expect(screen.getAllByText("No")).toHaveLength(1);
   });
 
   it("renders copyable fields with a copy button", () => {

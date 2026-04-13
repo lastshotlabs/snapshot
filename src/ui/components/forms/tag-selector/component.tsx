@@ -437,11 +437,11 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 <button
                   key={tag.value}
                   data-testid="tag-option"
-                  onClick={() => {
-                    addTag(tag.value);
-                    setIsOpen(false);
-                  }}
-                  style={{
+                onClick={() => {
+                  addTag(tag.value);
+                  setIsOpen(false);
+                }}
+                style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "var(--sn-spacing-sm, 0.5rem)",
@@ -450,19 +450,11 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                       "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
                     border: "none",
                     background: "transparent",
-                    cursor: "pointer",
-                    fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                    color: "var(--sn-color-foreground, #111827)",
-                    textAlign: "left",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor =
-                      "var(--sn-color-secondary, #f1f5f9)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor =
-                      "transparent";
-                  }}
+                  cursor: "pointer",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-foreground, #111827)",
+                  textAlign: "left",
+                }}
                 >
                   {tag.color && (
                     <span
@@ -501,14 +493,6 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                   fontSize: "var(--sn-font-size-sm, 0.875rem)",
                   color: "var(--sn-color-primary, #2563eb)",
                   textAlign: "left",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor =
-                    "var(--sn-color-secondary, #f1f5f9)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor =
-                    "transparent";
                 }}
               >
                 Create &ldquo;{searchText.trim()}&rdquo;

@@ -1,120 +1,181 @@
 'use client';
 
-import { useState, useCallback, useRef, type CSSProperties } from "react";
+import { useCallback, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
-import type { ComponentConfig } from "../../../manifest/types";
+import { ComponentWrapper } from "../../_base/component-wrapper";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import type { SplitPaneConfig } from "./types";
 
-export interface SplitPaneConfig {
-  type: "split-pane";
-  id?: string;
-  direction?: "horizontal" | "vertical";
-  defaultSplit?: number; // percentage 0-100
-  minSize?: number; // pixels
-  children: ComponentConfig[];
-  className?: string;
-  style?: Record<string, string | number>;
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
 }
 
-export function SplitPane({ config }: { config: Record<string, unknown> }) {
-  const splitConfig = config as unknown as SplitPaneConfig;
-  const direction = splitConfig.direction ?? "horizontal";
-  const [split, setSplit] = useState(splitConfig.defaultSplit ?? 50);
+export function SplitPane({ config }: { config: SplitPaneConfig }) {
+  const direction = config.direction ?? "horizontal";
+  const [split, setSplit] = useState(config.defaultSplit ?? 50);
+  const [dragging, setDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
-  const minSize = splitConfig.minSize ?? 100;
+  const minSize = config.minSize ?? 100;
+  const rootId = config.id ?? "split-pane";
+  const isHorizontal = direction === "horizontal";
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     e.preventDefault();
     draggingRef.current = true;
+    setDragging(true);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   }, []);
 
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (!draggingRef.current || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    let pct: number;
-    if (direction === "horizontal") {
-      const x = e.clientX - rect.left;
-      pct = (x / rect.width) * 100;
-    } else {
-      const y = e.clientY - rect.top;
-      pct = (y / rect.height) * 100;
-    }
-    // Clamp to min sizes
-    const minPct = (minSize / (direction === "horizontal" ? rect.width : rect.height)) * 100;
-    pct = Math.max(minPct, Math.min(100 - minPct, pct));
-    setSplit(pct);
-  }, [direction, minSize]);
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!draggingRef.current || !containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      let pct: number;
+      if (direction === "horizontal") {
+        const x = e.clientX - rect.left;
+        pct = (x / rect.width) * 100;
+      } else {
+        const y = e.clientY - rect.top;
+        pct = (y / rect.height) * 100;
+      }
+
+      const minPct =
+        (minSize / (direction === "horizontal" ? rect.width : rect.height)) *
+        100;
+      pct = Math.max(minPct, Math.min(100 - minPct, pct));
+      setSplit(pct);
+    },
+    [direction, minSize],
+  );
 
   const handlePointerUp = useCallback(() => {
     draggingRef.current = false;
+    setDragging(false);
   }, []);
 
-  const isHorizontal = direction === "horizontal";
-  const configStyle = splitConfig.style as CSSProperties | undefined;
-
-  // Only render first two children
-  const children = Array.isArray(splitConfig.children) ? splitConfig.children.slice(0, 2) : [];
-
-  return (
-    <div
-      ref={containerRef}
-      data-snapshot-component="split-pane"
-      className={splitConfig.className}
-      style={{
-        display: "flex",
-        flexDirection: isHorizontal ? "row" : "column",
-        width: "100%",
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      display: "flex",
+      flexDirection: isHorizontal ? "row" : "column",
+      width: "100%",
+      overflow: "hidden",
+      style: {
         height: isHorizontal ? "100%" : undefined,
         minHeight: isHorizontal ? "400px" : undefined,
-        overflow: "hidden",
-        ...configStyle,
-      }}
-    >
-      {/* First pane */}
-      <div
-        style={{
-          [isHorizontal ? "width" : "height"]: `${split}%`,
-          overflow: "auto",
-          minWidth: isHorizontal ? minSize : undefined,
-          minHeight: !isHorizontal ? minSize : undefined,
-        }}
-      >
-        {children[0] != null && (
-          <ComponentRenderer config={children[0]} />
-        )}
-      </div>
+      },
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const paneSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-pane`,
+    implementationBase: {
+      overflow: "auto",
+    },
+    componentSurface: config.slots?.pane,
+  });
+  const firstPaneSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-first-pane`,
+    implementationBase: {
+      overflow: "auto",
+      style: {
+        [isHorizontal ? "width" : "height"]: `${split}%`,
+        minWidth: isHorizontal ? minSize : undefined,
+        minHeight: !isHorizontal ? minSize : undefined,
+      },
+    },
+    componentSurface: config.slots?.firstPane,
+  });
+  const secondPaneSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-second-pane`,
+    implementationBase: {
+      overflow: "auto",
+      flex: "1",
+      style: {
+        minWidth: isHorizontal ? minSize : undefined,
+        minHeight: !isHorizontal ? minSize : undefined,
+      },
+    },
+    componentSurface: config.slots?.secondPane,
+  });
+  const dividerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-divider`,
+    implementationBase: {
+      hover: {
+        bg: "var(--sn-color-primary, #2563eb)",
+      },
+      states: {
+        active: {
+          bg: "var(--sn-color-primary, #2563eb)",
+        },
+      },
+      style: {
+        [isHorizontal ? "width" : "height"]: "4px",
+        [isHorizontal ? "minWidth" : "minHeight"]: "4px",
+        background: "var(--sn-color-border, #e5e7eb)",
+        cursor: isHorizontal ? "col-resize" : "row-resize",
+        flexShrink: 0,
+        transition: "background 0.15s",
+      },
+    },
+    componentSurface: config.slots?.divider,
+    activeStates: dragging ? ["active"] : [],
+  });
 
-      {/* Divider */}
-      <div
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        style={{
-          [isHorizontal ? "width" : "height"]: "4px",
-          [isHorizontal ? "minWidth" : "minHeight"]: "4px",
-          background: "var(--sn-color-border, #e5e7eb)",
-          cursor: isHorizontal ? "col-resize" : "row-resize",
-          flexShrink: 0,
-          transition: "background 0.15s",
-        }}
-        onMouseEnter={(e) => { (e.target as HTMLElement).style.background = "var(--sn-color-primary, #2563eb)"; }}
-        onMouseLeave={(e) => { (e.target as HTMLElement).style.background = "var(--sn-color-border, #e5e7eb)"; }}
-      />
+  const children = Array.isArray(config.children) ? config.children.slice(0, 2) : [];
 
-      {/* Second pane */}
+  return (
+    <ComponentWrapper type="split-pane" id={config.id} config={config}>
       <div
-        style={{
-          flex: 1,
-          overflow: "auto",
-          minWidth: isHorizontal ? minSize : undefined,
-          minHeight: !isHorizontal ? minSize : undefined,
-        }}
+        ref={containerRef}
+        data-snapshot-id={`${rootId}-root`}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
-        {children[1] != null && (
-          <ComponentRenderer config={children[1]} />
-        )}
+        <div
+          data-snapshot-id={`${rootId}-first-pane`}
+          className={[paneSurface.className, firstPaneSurface.className]
+            .filter(Boolean)
+            .join(" ") || undefined}
+          style={{
+            ...(paneSurface.style ?? {}),
+            ...(firstPaneSurface.style ?? {}),
+          }}
+        >
+          {children[0] != null ? <ComponentRenderer config={children[0]} /> : null}
+        </div>
+
+        <div
+          data-snapshot-id={`${rootId}-divider`}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          className={dividerSurface.className}
+          style={dividerSurface.style}
+        />
+
+        <div
+          data-snapshot-id={`${rootId}-second-pane`}
+          className={[paneSurface.className, secondPaneSurface.className]
+            .filter(Boolean)
+            .join(" ") || undefined}
+          style={{
+            ...(paneSurface.style ?? {}),
+            ...(secondPaneSurface.style ?? {}),
+          }}
+        >
+          {children[1] != null ? <ComponentRenderer config={children[1]} /> : null}
+        </div>
       </div>
-    </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={paneSurface.scopedCss} />
+      <SurfaceStyles css={firstPaneSurface.scopedCss} />
+      <SurfaceStyles css={secondPaneSurface.scopedCss} />
+      <SurfaceStyles css={dividerSurface.scopedCss} />
+    </ComponentWrapper>
   );
 }

@@ -20,6 +20,9 @@ describe("Stack", () => {
         config={{
           type: "stack",
           id: "stack-test",
+          gap: "md",
+          align: "stretch",
+          justify: "start",
           children: [{ type: "text", id: "child-a", value: "Hello" }],
           slots: {
             root: { className: "stack-root-slot" },

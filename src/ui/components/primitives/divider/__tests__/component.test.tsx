@@ -23,6 +23,7 @@ describe("Divider", () => {
         config={{
           type: "divider",
           label: "Section",
+          orientation: "horizontal",
           slots: {
             label: {
               className: "divider-label-slot",

@@ -30,6 +30,9 @@ describe("Link", () => {
           text: "Dashboard",
           to: "/dashboard",
           badge: "Beta",
+          external: false,
+          align: "left",
+          variant: "default",
           slots: {
             root: { className: "link-root-slot" },
             label: { className: "link-label-slot" },

@@ -221,7 +221,11 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
 [data-snapshot-component="filter-bar"] [role="option"]:focus {
   outline: none;
 }
+[data-snapshot-component="filter-bar"] [role="option"]:hover {
+  background-color: var(--sn-color-accent, #f3f4f6);
+}
 [data-snapshot-component="filter-bar"] [role="option"]:focus-visible {
+  background-color: var(--sn-color-accent, #f3f4f6);
   outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
   outline-offset: var(--sn-ring-offset, 2px);
 }
@@ -385,27 +389,12 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                           background: selected
                             ? "var(--sn-color-accent, #f3f4f6)"
                             : "none",
-                          cursor: "pointer",
-                          fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                          color: "var(--sn-color-popover-foreground, #111)",
-                          textAlign: "left",
-                          whiteSpace: "nowrap",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!selected) {
-                            (
-                              e.currentTarget as HTMLElement
-                            ).style.backgroundColor =
-                              "var(--sn-color-accent, #f3f4f6)";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!selected) {
-                            (
-                              e.currentTarget as HTMLElement
-                            ).style.backgroundColor = "transparent";
-                          }
-                        }}
+                        cursor: "pointer",
+                        fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                        color: "var(--sn-color-popover-foreground, #111)",
+                        textAlign: "left",
+                        whiteSpace: "nowrap",
+                      }}
                       >
                         {filter.multiple && (
                           <span

@@ -148,21 +148,50 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
           });
           const separatorSurface = resolveSurfacePresentation({
             surfaceId: `${rootId}-separator-${index}`,
+            implementationBase: {
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+            },
             componentSurface: config.slots?.separator,
           });
           const iconSurface = resolveSurfacePresentation({
             surfaceId: `${rootId}-icon-${index}`,
+            implementationBase: {
+              display: "inline-flex",
+              alignItems: "center",
+              style: { flexShrink: 0 },
+            },
             componentSurface: config.slots?.icon,
             itemSurface: !isCollapsed ? item.slots?.icon : undefined,
           });
           const linkSurface = resolveSurfacePresentation({
             surfaceId: `${rootId}-link-${index}`,
+            implementationBase: {
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "xs",
+              hover: {
+                color: "var(--sn-color-foreground, #111827)",
+              },
+              focus: {
+                color: "var(--sn-color-foreground, #111827)",
+              },
+              style: {
+                textDecoration: "none",
+              },
+            },
             componentSurface: config.slots?.link,
             itemSurface: !isCollapsed ? item.slots?.link : undefined,
             activeStates: isLast ? ["current"] : [],
           });
           const currentSurface = resolveSurfacePresentation({
             surfaceId: `${rootId}-current-${index}`,
+            implementationBase: {
+              color: "var(--sn-color-foreground, #111827)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "xs",
+            },
             componentSurface: config.slots?.current,
             itemSurface: !isCollapsed ? item.slots?.current : undefined,
             activeStates: isLast ? ["current"] : [],
@@ -226,14 +255,6 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
                   data-snapshot-id={`${rootId}-link-${index}`}
                   className={linkSurface.className}
                   style={linkSurface.style}
-                  onMouseEnter={(event) => {
-                    event.currentTarget.style.color =
-                      "var(--sn-color-foreground, #111827)";
-                  }}
-                  onMouseLeave={(event) => {
-                    event.currentTarget.style.color =
-                      "var(--sn-color-muted-foreground, #6b7280)";
-                  }}
                 >
                   {(item as BreadcrumbItemConfig).icon ? (
                     <span

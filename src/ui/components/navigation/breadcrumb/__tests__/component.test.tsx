@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { Provider } from "jotai/react";
 import { createStore } from "jotai/vanilla";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { compileManifest } from "../../../../manifest/compiler";
 import {
   ManifestRuntimeProvider,
@@ -11,6 +11,10 @@ import {
 import { BreadcrumbComponent } from "../component";
 
 describe("BreadcrumbComponent", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("derives breadcrumb items from the current route and navigates in-app", () => {
     const navigate = vi.fn();
     const manifest = compileManifest({
@@ -82,5 +86,69 @@ describe("BreadcrumbComponent", () => {
 
     fireEvent.click(screen.getByRole("link", { name: "Users" }));
     expect(navigate).toHaveBeenCalledWith("/users");
+  });
+
+  it("applies canonical link slot styling without imperative hover handlers", () => {
+    const navigate = vi.fn();
+    const manifest = compileManifest({
+      app: { home: "/" },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          title: "Home",
+          breadcrumb: "Home",
+          content: [{ type: "heading", text: "Home Page" }],
+        },
+        {
+          id: "users",
+          path: "/users",
+          title: "Users",
+          breadcrumb: "Users",
+          content: [{ type: "heading", text: "Users List" }],
+        },
+      ],
+    });
+    const route = manifest.routes.find((candidate) => candidate.id === "users");
+
+    render(
+      <Provider store={createStore()}>
+        <ManifestRuntimeProvider manifest={manifest}>
+          <RouteRuntimeProvider
+            value={{
+              currentPath: "/users",
+              currentRoute: route ?? null,
+              match: {
+                route: route ?? null,
+                params: {},
+                parents: [],
+                activeRoutes: [route].filter(Boolean) as typeof manifest.routes,
+              },
+              params: {},
+              query: {},
+              navigate,
+              isPreloading: false,
+            }}
+          >
+            <BreadcrumbComponent
+              config={{
+                type: "breadcrumb",
+                source: "manual",
+                items: [
+                  { label: "Home", path: "/" },
+                  { label: "Users" },
+                ],
+                slots: {
+                  link: { className: "breadcrumb-link-slot" },
+                },
+              }}
+            />
+          </RouteRuntimeProvider>
+        </ManifestRuntimeProvider>
+      </Provider>,
+    );
+
+    const homeLink = screen.getByRole("link", { name: "Home" });
+    expect(homeLink.className).toContain("breadcrumb-link-slot");
   });
 });
