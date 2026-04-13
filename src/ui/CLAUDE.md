@@ -15,6 +15,7 @@ Read this after root `CLAUDE.md` when changing config-driven UI, manifest runtim
 - `src/ui/tokens/resolve.ts`
 - `src/ui/tokens/schema.ts`
 - `playground/src/showcase.tsx`
+- `apps/docs/src/content/docs/contribute/testing.md`
 
 ## Expectations
 
@@ -32,4 +33,5 @@ For UI work, update all relevant layers in the same change:
 - generated manifest or component reference inputs
 - public guides under `apps/docs`
 - playground showcase metadata or examples
+- proving tests in `src/ui/**/__tests__`
 - documentation impact map if the changed surface is new

@@ -11,6 +11,7 @@ This app is the public documentation product for Snapshot.
 - `apps/docs/src/content/docs/build/sdk-apps.md`
 - `apps/docs/src/content/docs/integrate/ssr-rsc.md`
 - `apps/docs/src/content/docs/contribute/overview.md`
+- `apps/docs/src/content/docs/contribute/testing.md`
 - `scripts/docs/generate-all.ts`
 - `docs/documentation-policy.md`
 

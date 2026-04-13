@@ -12,8 +12,9 @@ Use this discovery order:
 2. Read `docs/documentation-policy.md`.
 3. Read root `CLAUDE.md`.
 4. Read the nearest surface `CLAUDE.md`.
-5. Read the public entrypoint for the surface you are changing.
-6. Read the schema, runtime, registry, generator, and example files named by that surface guide.
+5. Read [Contributor Testing](/contribute/testing/).
+6. Read the public entrypoint for the surface you are changing.
+7. Read the schema, runtime, registry, generator, example, and nearest test files named by that surface guide.
 
 For manifest UI work, treat these files as the canonical styling pattern library:
 
@@ -39,8 +40,9 @@ Then execute the change in one pass:
 3. update generated docs inputs
 4. update impacted guides under `apps/docs`
 5. update impacted examples or playground showcase coverage
-6. update the documentation impact map if the surface is new
-7. run `bun run docs:ci`
+6. update or add the nearest proving tests for the changed contract
+7. update the documentation impact map if the surface is new
+8. run `bun run docs:ci`
 
 If you introduce or change a visible surface in manifest UI:
 

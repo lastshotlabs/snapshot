@@ -71,9 +71,9 @@ Generated from `src/ui.ts`.
 | `ColumnConfig` | typealias | `src/ui/components/data/data-table/types.ts` | Inferred column configuration type. |
 | `columnConfigSchema` | variable | `src/ui/components/data/data-table/schema.ts` | Schema for individual column configuration. |
 | `ColumnDef` | interface | `src/ui/presets/types.ts` | A single column definition for the CRUD page table. |
-| `CommandPalette` | function | `src/ui/components/overlay/command-palette/component.tsx` | Render a searchable command palette with static groups, runtime search, and manifest shortcuts. |
+| `CommandPalette` | function | `src/ui/components/overlay/command-palette/component.tsx` | No JSDoc description. |
 | `CommandPaletteConfig` | typealias | `src/ui/components/overlay/command-palette/types.ts` | Inferred config type for the CommandPalette component. |
-| `commandPaletteConfigSchema` | variable | `src/ui/components/overlay/command-palette/schema.ts` | Zod config schema for the CommandPalette component.  A searchable command/action list (like VS Code Ctrl+K or macOS Spotlight). Supports grouped items with icons, shortcuts, descriptions, and actions. |
+| `commandPaletteConfigSchema` | variable | `src/ui/components/overlay/command-palette/schema.ts` | No JSDoc description. |
 | `CommentSection` | function | `src/ui/components/communication/comment-section/component.tsx` | CommentSection — displays a list of comments with author avatars, timestamps, and an embedded rich input for posting new comments. |
 | `CommentSectionConfig` | typealias | `src/ui/components/communication/comment-section/types.ts` | Inferred config type from the CommentSection Zod schema. |
 | `commentSectionConfigSchema` | variable | `src/ui/components/communication/comment-section/schema.ts` | Zod config schema for the CommentSection component. Renders a comment list with nested replies and an embedded rich input for posting new comments. |
@@ -127,7 +127,7 @@ Generated from `src/ui.ts`.
 | `defineManifest` | function | `src/ui/manifest/compiler.ts` | Define a manifest without compiling it. |
 | `deriveDarkVariant` | function | `src/ui/tokens/color.ts` | Derive a dark mode variant of a light color. Adjusts lightness and chroma for dark mode readability: - If the color is light (L > 0.5), reduce lightness moderately - If the color is dark (L <= 0.5), increase lightness for dark backgrounds - Boost chroma slightly for vibrancy in dark mode |
 | `deriveForeground` | function | `src/ui/tokens/color.ts` | Derive a foreground color that passes WCAG AA contrast (4.5:1) against the given background color. Returns a light or dark foreground. |
-| `DetailCard` | function | `src/ui/components/data/detail-card/component.tsx` | DetailCard — displays a single record's fields in a key-value card layout. Used in drawers, modals, and detail pages. Features: - Fetches its own data from an endpoint or subscribes via FromRef - Supports auto-detection of field types or explicit field configuration - Loading skeleton, error state, and empty state - Action buttons in the card header - Publishes record data via id for other components to subscribe to - Copyable field values |
+| `DetailCard` | function | `src/ui/components/data/detail-card/component.tsx` | No JSDoc description. |
 | `DetailCardConfig` | typealias | `src/ui/components/data/detail-card/schema.ts` | DetailCard configuration type inferred from the schema. |
 | `detailCardConfigSchema` | variable | `src/ui/components/data/detail-card/schema.ts` | Zod schema for DetailCard component configuration.  The detail card displays a single record's fields in a key-value layout. Used in drawers, modals, and detail pages. |
 | `detectPlatform` | function | `src/ui/components/content/link-embed/platform.ts` | Detects the platform from a URL and extracts embed info. |
@@ -196,7 +196,7 @@ Generated from `src/ui.ts`.
 | `IconProps` | interface | `src/ui/icons/icon.tsx` | Props for the {@link Icon} component. |
 | `IfWorkflowNode` | interface | `src/ui/workflows/types.ts` | Branch workflow execution based on a condition. |
 | `injectStyleSheet` | function | `src/ui/manifest/app.tsx` | Inject or update a stylesheet in the document head. |
-| `InlineEdit` | function | `src/ui/components/forms/inline-edit/component.tsx` | InlineEdit component — click-to-edit text field. Toggles between a display mode (shows text with a pencil icon on hover) and an edit mode (auto-focused input). Enter or blur saves the value; Escape reverts to the original value (if `cancelOnEscape` is true). Publishes `{ value, editing }` to the page context. |
+| `InlineEdit` | function | `src/ui/components/forms/inline-edit/component.tsx` | InlineEdit component — click-to-edit text field. Toggles between a display mode and an edit mode. Enter or blur saves the value; Escape reverts to the original value when `cancelOnEscape` is enabled. |
 | `InlineEditConfig` | typealias | `src/ui/components/forms/inline-edit/types.ts` | Inferred config type for the InlineEdit component. |
 | `inlineEditConfigSchema` | variable | `src/ui/components/forms/inline-edit/schema.ts` | Zod config schema for the InlineEdit component. A click-to-edit text field that toggles between display and edit modes. Publishes `{ value, editing }` to the page context. |
 | `Input` | function | `src/ui/components/forms/input/component.tsx` | Config-driven Input component — a standalone text input field with label, placeholder, validation, optional icon, and helper/error text. Publishes `{ value: string }` to the page context when an `id` is set. Supports debounced `changeAction` execution on value change. |

@@ -47,6 +47,7 @@ Use this path if Snapshot is being integrated with Bunshot SSR, manifest renderi
 Use this path if you are implementing Snapshot itself and need the repo-native discovery and docs-update workflow.
 
 - Start with [Contributor Flow](/contribute/overview/)
+- Then read [Contributor Testing](/contribute/testing/)
 - Then read [Agent Flow](/contribute/agent-flow/)
 - Then read the relevant surface `CLAUDE.md` plus generated reference for the area you are changing
 - Then update the canonical showcase or docs example that proves the visible behavior on `main`

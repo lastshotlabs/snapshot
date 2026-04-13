@@ -44,12 +44,13 @@ When implementing Snapshot changes, contributors and agents must follow this ord
 2. Read this file
 3. Read root `CLAUDE.md`
 4. Read the nearest surface `CLAUDE.md`
-5. Read the relevant public entrypoint
-6. Read the relevant schema, runtime, and registry files
-7. Implement the code change
-8. Update JSDoc, generated docs inputs, impacted guides, and impacted examples in the same change
-9. Run `bun run docs:ci`
-10. Run the normal repo checks
+5. Read `apps/docs/src/content/docs/contribute/testing.md`
+6. Read the relevant public entrypoint
+7. Read the relevant schema, runtime, registry, and nearest test files
+8. Implement the code change
+9. Update JSDoc, generated docs inputs, impacted guides, impacted examples, and proving tests in the same change
+10. Run `bun run docs:ci`
+11. Run the normal repo checks
 
 ## App Builder Discovery Flow
 

@@ -13,6 +13,7 @@ Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, pre
 - `src/vite/index.ts`
 - `src/vite/rsc-transform.ts`
 - `src/vite/prefetch.ts`
+- `apps/docs/src/content/docs/contribute/testing.md`
 - `apps/docs/src/content/docs/integrate/ssr-rsc.md`
 - `apps/docs/src/content/docs/reference/ssr.md`
 - `apps/docs/src/content/docs/reference/vite.md`
@@ -28,4 +29,5 @@ Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, pre
 - update source-backed SSR/Vite reference content
 - update public SSR/RSC integration guides
 - update impacted examples
+- update proving tests under `src/ssr/__tests__` or `src/vite/__tests__`
 - update the documentation impact map for new SSR/Vite surfaces

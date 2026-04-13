@@ -63,6 +63,7 @@ export default defineConfig({
           label: "Contribute",
           items: [
             { label: "Contributor Flow", link: "/contribute/overview/" },
+            { label: "Contributor Testing", link: "/contribute/testing/" },
             { label: "Agent Flow", link: "/contribute/agent-flow/" },
           ],
         },

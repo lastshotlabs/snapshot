@@ -28,7 +28,7 @@ The fastest top-level jumps for most readers are:
 - manifest builders: [Manifest Apps](/build/manifest-apps/) then `dashboard`, `data`, `forms`, `navigation`, `overlay`, and `presets` in the showcase
 - SDK builders: [SDK Apps](/build/sdk-apps/) then `communication`, `content`, and `feed-chart-wizard` in the showcase
 - platform integrators: [SSR and RSC](/integrate/ssr-rsc/) then [Capabilities](/start-here/capabilities/)
-- contributors: [Contributor Flow](/contribute/overview/) then [Agent Flow](/contribute/agent-flow/)
+- contributors: [Contributor Flow](/contribute/overview/), [Contributor Testing](/contribute/testing/), then [Agent Flow](/contribute/agent-flow/)
 
 ## Canonical Source
 

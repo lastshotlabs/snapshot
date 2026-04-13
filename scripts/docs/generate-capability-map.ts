@@ -123,6 +123,14 @@ export function generateCapabilityMap(): void {
       "playground/src/app.tsx",
       "playground/src/token-editor.tsx",
     ]),
+    detectCapability("Testing infrastructure and contract suites", [
+      "src/test-setup.ts",
+      "src/create-snapshot.test.tsx",
+      "src/ui/manifest/__tests__/schema.test.ts",
+      "src/ssr/__tests__/render.test.tsx",
+      "src/vite/__tests__/plugin.test.ts",
+      "src/cli/__tests__/manifest-validate.test.ts",
+    ]),
   ];
 
   const rows = capabilities.map((capability) => {

@@ -37,6 +37,7 @@ Before changing Snapshot, contributors and implementation agents must read:
 2. `docs/documentation-policy.md`
 3. this file
 4. the nearest surface `CLAUDE.md`
+5. `apps/docs/src/content/docs/contribute/testing.md`
 
 Surface guides:
 

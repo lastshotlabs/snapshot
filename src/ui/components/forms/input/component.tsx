@@ -217,20 +217,6 @@ export function Input({ config }: { config: InputConfig }) {
             cursor: resolvedDisabled ? "not-allowed" : undefined,
             boxSizing: "border-box",
           }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = hasError
-              ? "var(--sn-color-destructive, #ef4444)"
-              : "var(--sn-color-ring, #2563eb)";
-            e.currentTarget.style.boxShadow = hasError
-              ? "0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-destructive, #ef4444) 25%, transparent)"
-              : "0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-ring, var(--sn-color-primary)) 25%, transparent)";
-          }}
-          onBlurCapture={(e) => {
-            e.currentTarget.style.borderColor = hasError
-              ? "var(--sn-color-destructive, #ef4444)"
-              : "var(--sn-color-border, #d1d5db)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
         />
       </div>
 
@@ -264,6 +250,14 @@ export function Input({ config }: { config: InputConfig }) {
           outline: none;
           border-color: var(--sn-color-primary, #2563eb);
           box-shadow: 0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent);
+        }
+        [data-snapshot-component="input"] input[aria-invalid="true"]:focus {
+          border-color: var(--sn-color-destructive, #ef4444);
+          box-shadow: 0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-destructive, #ef4444) 25%, transparent);
+        }
+        [data-snapshot-component="input"] input[aria-invalid="true"]:focus-visible {
+          border-color: var(--sn-color-destructive, #ef4444);
+          box-shadow: 0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-destructive, #ef4444) 25%, transparent);
         }
       `}</style>
     </div>

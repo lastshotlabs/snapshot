@@ -14,6 +14,7 @@ Read this after root `CLAUDE.md` when changing scaffold, sync, manifest commands
 - `src/cli/templates/package-json.ts`
 - `src/cli/templates/snapshot-lib.ts`
 - `src/cli/templates/vite-config.ts`
+- `apps/docs/src/content/docs/contribute/testing.md`
 
 ## Expectations
 
@@ -26,4 +27,5 @@ Read this after root `CLAUDE.md` when changing scaffold, sync, manifest commands
 - update JSDoc and generated CLI reference inputs
 - update app-builder guides under `apps/docs`
 - update examples that rely on scaffold or sync behavior
+- update proving tests under `src/cli/__tests__`
 - update the documentation impact map for new command surfaces
