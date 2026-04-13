@@ -86,7 +86,16 @@ describe("prefetchLinkSchema", () => {
     const result = prefetchLinkSchema.safeParse({
       to: "/posts",
       prefetch: "viewport",
+      id: "prefetch-link",
       className: "nav-link",
+      style: {
+        color: "red",
+      },
+      slots: {
+        root: {
+          className: "prefetch-slot",
+        },
+      },
       target: "_blank",
       rel: "noopener",
     });

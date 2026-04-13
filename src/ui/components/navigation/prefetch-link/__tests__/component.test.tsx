@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { createElement } from "react";
 import { PrefetchLink } from "../component";
 
@@ -55,6 +55,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.clearAllMocks();
+  cleanup();
 });
 
 describe("PrefetchLink", () => {
@@ -94,22 +95,28 @@ describe("PrefetchLink", () => {
   });
 
   describe("prefetch='hover' (default)", () => {
-    it("calls prefetchRoute on mouseenter", () => {
+    it("calls prefetchRoute on pointerenter", () => {
       render(createElement(PrefetchLink, { to: "/posts" }));
-      fireEvent.mouseEnter(screen.getByRole("link"));
+      fireEvent.pointerEnter(screen.getByRole("link"));
       expect(mockPrefetchRoute).toHaveBeenCalledOnce();
       expect(mockPrefetchRoute).toHaveBeenCalledWith("/posts");
     });
 
-    it("calls prefetchRoute with correct path on mouseenter", () => {
+    it("calls prefetchRoute with correct path on pointerenter", () => {
       render(
         createElement(PrefetchLink, {
           to: "/posts/hello-world",
           prefetch: "hover",
         }),
       );
-      fireEvent.mouseEnter(screen.getByRole("link"));
+      fireEvent.pointerEnter(screen.getByRole("link"));
       expect(mockPrefetchRoute).toHaveBeenCalledWith("/posts/hello-world");
+    });
+
+    it("prefetches on focus for keyboard access", () => {
+      render(createElement(PrefetchLink, { to: "/posts" }));
+      fireEvent.focus(screen.getByRole("link"));
+      expect(mockPrefetchRoute).toHaveBeenCalledWith("/posts");
     });
 
     it("does not trigger prefetch on click without hover", () => {
@@ -120,9 +127,9 @@ describe("PrefetchLink", () => {
   });
 
   describe("prefetch='none'", () => {
-    it("does not call prefetchRoute on mouseenter when prefetch='none'", () => {
+    it("does not call prefetchRoute on pointerenter when prefetch='none'", () => {
       render(createElement(PrefetchLink, { to: "/posts", prefetch: "none" }));
-      fireEvent.mouseEnter(screen.getByRole("link"));
+      fireEvent.pointerEnter(screen.getByRole("link"));
       expect(mockPrefetchRoute).not.toHaveBeenCalled();
     });
 
@@ -133,11 +140,11 @@ describe("PrefetchLink", () => {
   });
 
   describe("prefetch='viewport'", () => {
-    it("does not call prefetchRoute on mouseenter when prefetch='viewport'", () => {
+    it("does not call prefetchRoute on pointerenter when prefetch='viewport'", () => {
       render(
         createElement(PrefetchLink, { to: "/posts", prefetch: "viewport" }),
       );
-      fireEvent.mouseEnter(screen.getByRole("link"));
+      fireEvent.pointerEnter(screen.getByRole("link"));
       expect(mockPrefetchRoute).not.toHaveBeenCalled();
     });
 
@@ -187,5 +194,21 @@ describe("PrefetchLink", () => {
 
       expect(disconnectSpy).toHaveBeenCalled();
     });
+  });
+
+  it("applies canonical root slot classes", () => {
+    render(
+      createElement(PrefetchLink, {
+        to: "/posts",
+        id: "prefetch-root",
+        slots: {
+          root: {
+            className: "prefetch-slot",
+          },
+        },
+      }),
+    );
+
+    expect(screen.getByRole("link").className).toContain("prefetch-slot");
   });
 });
