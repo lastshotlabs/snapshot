@@ -344,7 +344,7 @@ describe("Nav component", () => {
         <Nav config={baseConfig} pathname="/" />,
       );
       const toggle = queryBySnapshotId(container, "nav-toggle") as HTMLButtonElement;
-      const nav = container.querySelector('[data-snapshot-component="nav"]');
+      const nav = container.querySelector("nav[aria-label='Main navigation']");
 
       // Initially expanded (isCollapsed defaults to false)
       expect(nav?.getAttribute("data-collapsed")).toBeNull();

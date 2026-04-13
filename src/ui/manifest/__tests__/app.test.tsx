@@ -5,6 +5,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 
 import {
   act,
+  cleanup,
   fireEvent,
   render,
   screen,
@@ -161,6 +162,7 @@ describe("ManifestApp", () => {
   const originalFetch = global.fetch;
 
   afterEach(() => {
+    cleanup();
     const el = document.getElementById("snapshot-tokens");
     if (el) el.remove();
     window.history.replaceState({}, "", "/");
@@ -305,9 +307,9 @@ describe("ManifestApp", () => {
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
     expect(screen.getByText("Budget App")).toBeDefined();
     expect(
-      document.querySelector('[data-nav-icon=""] svg'),
+      document.querySelector('[data-snapshot-id="nav-item-0-/-icon"] svg'),
     ).not.toBeNull();
-    expect(document.querySelector('[data-nav-item][data-active="true"]')).not.toBeNull();
+    expect(document.querySelector('button[aria-current="page"]')).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "About" }));
 
     await waitFor(() => {
@@ -315,7 +317,7 @@ describe("ManifestApp", () => {
     });
   });
 
-  it("defaults to full-width even when navigation mode is top-nav", () => {
+  it("uses the top-nav shell when navigation mode is top-nav", () => {
     const manifest: ManifestConfig = {
       navigation: {
         mode: "top-nav",
@@ -340,7 +342,10 @@ describe("ManifestApp", () => {
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
     expect(screen.getByText("Home Page")).toBeDefined();
-    expect(screen.queryByRole("button", { name: "About" })).toBeNull();
+    expect(
+      document.querySelector('[data-layout-variant="top-nav"]'),
+    ).not.toBeNull();
+    expect(screen.getByRole("button", { name: "About" })).toBeDefined();
   });
 
   it("uses manifest.app.shell when explicitly configured", () => {
