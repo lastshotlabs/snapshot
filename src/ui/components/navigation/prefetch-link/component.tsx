@@ -1,8 +1,14 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect } from "react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef } from "react";
 import { usePrefetchRoute } from "../../../../ssr/prefetch";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { PrefetchLinkProps } from "./schema";
+
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
 
 /**
  * `<PrefetchLink>` — a prefetch primitive that renders a plain `<a>` anchor and
@@ -21,15 +27,19 @@ import type { PrefetchLinkProps } from "./schema";
  * @param config - Config object validated by `prefetchLinkSchema`.
  */
 export function PrefetchLink({
+  id,
   to,
   prefetch = "hover",
   children,
   className,
+  style,
+  slots,
   target,
   rel,
 }: PrefetchLinkProps) {
   const prefetchRoute = usePrefetchRoute();
   const ref = useRef<HTMLAnchorElement>(null);
+  const rootId = id ?? "prefetch-link";
 
   // Viewport prefetch via IntersectionObserver.
   // Only active when prefetch === 'viewport'.
@@ -63,19 +73,46 @@ export function PrefetchLink({
     prefetchRoute(to);
   }, [prefetch, prefetchRoute, to]);
 
-  const handleMouseEnter =
+  const handlePrefetch =
     prefetch === "hover" ? () => prefetchRoute(to) : undefined;
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      color: "var(--sn-color-primary, #2563eb)",
+      cursor: "pointer",
+      focus: {
+        ring: true,
+      },
+      hover: {
+        opacity: 0.84,
+      },
+      style: {
+        textDecoration: "none",
+      },
+    },
+    componentSurface: {
+      className,
+      style,
+    },
+    itemSurface: slots?.root,
+  });
 
   return (
-    <a
-      ref={ref}
-      href={to}
-      onMouseEnter={handleMouseEnter}
-      className={className}
-      target={target}
-      rel={rel}
-    >
-      {children}
-    </a>
+    <>
+      <a
+        ref={ref}
+        href={to}
+        onPointerEnter={handlePrefetch}
+        onFocus={handlePrefetch}
+        data-snapshot-id={`${rootId}-root`}
+        className={rootSurface.className}
+        style={rootSurface.style as CSSProperties | undefined}
+        target={target}
+        rel={rel}
+      >
+        {children}
+      </a>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </>
   );
 }

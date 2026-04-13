@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useState, useRef, useCallback, useEffect, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
-import type { ComponentConfig } from "../../../manifest/types";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import type { CarouselConfig } from "./types";
 
-export interface CarouselConfig {
-  type: "carousel";
-  id?: string;
-  autoPlay?: boolean;
-  interval?: number;
-  showDots?: boolean;
-  showArrows?: boolean;
-  children?: ComponentConfig[];
-  className?: string;
-  style?: Record<string, string | number>;
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
 }
 
 export function Carousel({ config }: { config: CarouselConfig }) {
@@ -21,87 +21,296 @@ export function Carousel({ config }: { config: CarouselConfig }) {
   const children = config.children ?? [];
   const count = children.length;
   const intervalMs = config.interval ?? 5000;
-  const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const rootId = config.id ?? "carousel";
 
-  const goTo = useCallback((idx: number) => {
-    setCurrent(((idx % count) + count) % count);
+  const goTo = useCallback(
+    (index: number) => {
+      if (count === 0) {
+        return;
+      }
+
+      setCurrent(((index % count) + count) % count);
+    },
+    [count],
+  );
+
+  const next = useCallback(() => {
+    setCurrent((currentIndex) => (count <= 0 ? 0 : (currentIndex + 1) % count));
   }, [count]);
 
-  const next = useCallback(() => goTo(current + 1), [current, goTo]);
-  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
+  const prev = useCallback(() => {
+    setCurrent((currentIndex) =>
+      count <= 0 ? 0 : (currentIndex - 1 + count) % count,
+    );
+  }, [count]);
 
-  // Auto-play
+  const stopAutoPlay = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = undefined;
+    }
+  }, []);
+
+  const startAutoPlay = useCallback(() => {
+    stopAutoPlay();
+
+    if (!config.autoPlay || count <= 1) {
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      setCurrent((currentIndex) => (currentIndex + 1) % count);
+    }, intervalMs);
+  }, [config.autoPlay, count, intervalMs, stopAutoPlay]);
+
   useEffect(() => {
-    if (!config.autoPlay || count <= 1) return;
-    timerRef.current = setInterval(next, intervalMs);
-    return () => clearInterval(timerRef.current);
-  }, [config.autoPlay, count, intervalMs, next]);
+    startAutoPlay();
+    return stopAutoPlay;
+  }, [startAutoPlay, stopAutoPlay]);
 
-  // Pause on hover
-  const pause = useCallback(() => clearInterval(timerRef.current), []);
-  const resume = useCallback(() => {
-    if (!config.autoPlay || count <= 1) return;
-    timerRef.current = setInterval(next, intervalMs);
-  }, [config.autoPlay, count, intervalMs, next]);
+  if (count === 0) {
+    return null;
+  }
 
-  if (count === 0) return null;
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      position: "relative",
+      width: "100%",
+      display: "block",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const viewportSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-viewport`,
+    implementationBase: {
+      overflow: "hidden",
+      borderRadius: "lg",
+    },
+    componentSurface: config.slots?.viewport,
+  });
+  const trackSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-track`,
+    implementationBase: {
+      display: "flex",
+      style: {
+        transform: `translateX(-${current * 100}%)`,
+        transition:
+          "transform var(--sn-duration-normal, 300ms) var(--sn-ease-out, ease-out)",
+      },
+    },
+    componentSurface: config.slots?.track,
+  });
+  const controlsSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-controls`,
+    implementationBase: {
+      position: "absolute",
+      inset: "0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "between",
+      padding: "sm",
+      style: {
+        pointerEvents: "none",
+      },
+    },
+    componentSurface: config.slots?.controls,
+  });
+  const indicatorSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-indicator`,
+    implementationBase: {
+      position: "absolute",
+      display: "flex",
+      gap: "xs",
+      style: {
+        left: "50%",
+        bottom: "var(--sn-spacing-sm, 0.5rem)",
+        transform: "translateX(-50%)",
+      },
+    },
+    componentSurface: config.slots?.indicator,
+  });
+  const prevButtonSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-prev-button`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "var(--sn-color-background, #ffffff)",
+      bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 72%, transparent)",
+      borderRadius: "full",
+      cursor: count > 1 ? "pointer" : "not-allowed",
+      focus: {
+        ring: true,
+      },
+      hover: {
+        bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 84%, transparent)",
+      },
+      active: {
+        scale: 0.96,
+      },
+      states: {
+        disabled: {
+          opacity: 0.45,
+          cursor: "not-allowed",
+        },
+      },
+      style: {
+        width: "2.5rem",
+        height: "2.5rem",
+        border: "none",
+        pointerEvents: "auto",
+      },
+    },
+    componentSurface: config.slots?.prevButton,
+    activeStates: count > 1 ? [] : ["disabled"],
+  });
+  const nextButtonSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-next-button`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "var(--sn-color-background, #ffffff)",
+      bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 72%, transparent)",
+      borderRadius: "full",
+      cursor: count > 1 ? "pointer" : "not-allowed",
+      focus: {
+        ring: true,
+      },
+      hover: {
+        bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 84%, transparent)",
+      },
+      active: {
+        scale: 0.96,
+      },
+      states: {
+        disabled: {
+          opacity: 0.45,
+          cursor: "not-allowed",
+        },
+      },
+      style: {
+        width: "2.5rem",
+        height: "2.5rem",
+        border: "none",
+        pointerEvents: "auto",
+      },
+    },
+    componentSurface: config.slots?.nextButton,
+    activeStates: count > 1 ? [] : ["disabled"],
+  });
 
-  const configStyle = config.style as CSSProperties | undefined;
+  const slideSurfaces = useMemo(
+    () =>
+      children.map((_, index) =>
+        resolveSurfacePresentation({
+          surfaceId: `${rootId}-slide-${index}`,
+          implementationBase: {
+            style: {
+              minWidth: "100%",
+              flexShrink: 0,
+            },
+          },
+          componentSurface: config.slots?.slide,
+          activeStates:
+            index === current ? ["active", "selected", "current"] : [],
+        }),
+      ),
+    [children, config.slots?.slide, current, rootId],
+  );
+
+  const indicatorItemSurfaces = useMemo(
+    () =>
+      children.map((_, index) =>
+        resolveSurfacePresentation({
+          surfaceId: `${rootId}-indicator-item-${index}`,
+          implementationBase: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bg: "color-mix(in oklch, var(--sn-color-background, #ffffff) 48%, transparent)",
+            borderRadius: "full",
+            cursor: "pointer",
+            hover: {
+              bg: "color-mix(in oklch, var(--sn-color-background, #ffffff) 72%, transparent)",
+            },
+            focus: {
+              ring: true,
+            },
+            active: {
+              scale: 0.92,
+            },
+            states: {
+              selected: {
+                bg: "var(--sn-color-primary, #2563eb)",
+              },
+              current: {
+                bg: "var(--sn-color-primary, #2563eb)",
+              },
+            },
+            style: {
+              width: "0.625rem",
+              height: "0.625rem",
+              border: "none",
+              padding: 0,
+            },
+          },
+          componentSurface: config.slots?.indicatorItem,
+          activeStates:
+            index === current ? ["active", "selected", "current"] : [],
+        }),
+      ),
+    [children, config.slots?.indicatorItem, current, rootId],
+  );
 
   return (
     <div
       data-snapshot-component="carousel"
-      className={config.className}
-      onMouseEnter={pause}
-      onMouseLeave={resume}
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        borderRadius: "var(--sn-radius-lg, 0.75rem)",
-        ...configStyle,
-      }}
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
+      onPointerEnter={stopAutoPlay}
+      onPointerLeave={startAutoPlay}
+      style={rootSurface.style as CSSProperties | undefined}
     >
-      {/* Slides */}
       <div
-        ref={containerRef}
-        style={{
-          display: "flex",
-          transition: "transform var(--sn-duration-normal, 300ms) var(--sn-ease-out, ease-out)",
-          transform: `translateX(-${current * 100}%)`,
-        }}
+        data-snapshot-id={`${rootId}-viewport`}
+        className={viewportSurface.className}
+        style={viewportSurface.style}
       >
-        {children.map((child, i) => (
-          <div key={child.id ?? `slide-${i}`} style={{ minWidth: "100%", flexShrink: 0 }}>
-            <ComponentRenderer config={child} />
-          </div>
-        ))}
+        <div
+          data-snapshot-id={`${rootId}-track`}
+          className={trackSurface.className}
+          style={trackSurface.style}
+        >
+          {children.map((child, index) => (
+            <div
+              key={child.id ?? `slide-${index}`}
+              data-snapshot-id={`${rootId}-slide-${index}`}
+              className={slideSurfaces[index]?.className}
+              style={slideSurfaces[index]?.style}
+            >
+              <ComponentRenderer config={child} />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Arrows */}
-      {config.showArrows !== false && count > 1 && (
-        <>
+      {config.showArrows !== false && count > 1 ? (
+        <div
+          data-snapshot-id={`${rootId}-controls`}
+          className={controlsSurface.className}
+          style={controlsSurface.style}
+        >
           <button
             type="button"
             onClick={prev}
             aria-label="Previous slide"
-            style={{
-              position: "absolute",
-              left: "var(--sn-spacing-sm, 0.5rem)",
-              top: "50%",
-              transform: "translateY(-50%)",
-              background: "rgba(0,0,0,0.5)",
-              color: "#fff",
-              border: "none",
-              borderRadius: "var(--sn-radius-full, 9999px)",
-              width: "2rem",
-              height: "2rem",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1rem",
-            }}
+            data-snapshot-id={`${rootId}-prev-button`}
+            className={prevButtonSurface.className}
+            style={prevButtonSurface.style}
           >
             &#x2039;
           </button>
@@ -109,59 +318,48 @@ export function Carousel({ config }: { config: CarouselConfig }) {
             type="button"
             onClick={next}
             aria-label="Next slide"
-            style={{
-              position: "absolute",
-              right: "var(--sn-spacing-sm, 0.5rem)",
-              top: "50%",
-              transform: "translateY(-50%)",
-              background: "rgba(0,0,0,0.5)",
-              color: "#fff",
-              border: "none",
-              borderRadius: "var(--sn-radius-full, 9999px)",
-              width: "2rem",
-              height: "2rem",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1rem",
-            }}
+            data-snapshot-id={`${rootId}-next-button`}
+            className={nextButtonSurface.className}
+            style={nextButtonSurface.style}
           >
             &#x203A;
           </button>
-        </>
-      )}
+        </div>
+      ) : null}
 
-      {/* Dots */}
-      {config.showDots !== false && count > 1 && (
-        <div style={{
-          position: "absolute",
-          bottom: "var(--sn-spacing-sm, 0.5rem)",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "var(--sn-spacing-xs, 0.25rem)",
-        }}>
-          {children.map((_, i) => (
+      {config.showDots !== false && count > 1 ? (
+        <div
+          data-snapshot-id={`${rootId}-indicator`}
+          className={indicatorSurface.className}
+          style={indicatorSurface.style}
+        >
+          {children.map((_, index) => (
             <button
-              key={i}
+              key={`indicator-${index}`}
               type="button"
-              onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "var(--sn-radius-full, 9999px)",
-                border: "none",
-                cursor: "pointer",
-                background: i === current ? "var(--sn-color-primary, #fff)" : "rgba(255,255,255,0.5)",
-                transition: "background var(--sn-duration-fast, 150ms)",
-                padding: 0,
-              }}
+              onClick={() => goTo(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              data-snapshot-id={`${rootId}-indicator-item-${index}`}
+              className={indicatorItemSurfaces[index]?.className}
+              style={indicatorItemSurfaces[index]?.style}
             />
           ))}
         </div>
-      )}
+      ) : null}
+
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={viewportSurface.scopedCss} />
+      <SurfaceStyles css={trackSurface.scopedCss} />
+      <SurfaceStyles css={controlsSurface.scopedCss} />
+      <SurfaceStyles css={prevButtonSurface.scopedCss} />
+      <SurfaceStyles css={nextButtonSurface.scopedCss} />
+      <SurfaceStyles css={indicatorSurface.scopedCss} />
+      {slideSurfaces.map((surface, index) => (
+        <SurfaceStyles key={`slide-css-${index}`} css={surface.scopedCss} />
+      ))}
+      {indicatorItemSurfaces.map((surface, index) => (
+        <SurfaceStyles key={`indicator-css-${index}`} css={surface.scopedCss} />
+      ))}
     </div>
   );
 }

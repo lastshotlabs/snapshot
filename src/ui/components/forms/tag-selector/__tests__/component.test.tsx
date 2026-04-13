@@ -2,50 +2,49 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { AtomRegistryImpl } from "../../../../context/registry";
-import {
-  AppRegistryContext,
-  PageRegistryContext,
-} from "../../../../context/providers";
-import { SnapshotApiContext } from "../../../../actions/executor";
+
+const EMPTY: string[] = [];
+
+vi.mock("../../../../context/hooks", () => ({
+  useSubscribe: (value: unknown) => {
+    if (Array.isArray(value) && value.length === 0) {
+      return EMPTY;
+    }
+
+    return value;
+  },
+  usePublish: () => vi.fn(),
+}));
+
+vi.mock("../../../../actions/executor", () => ({
+  useActionExecutor: () => vi.fn(),
+}));
+
+vi.mock("../../../_base/use-component-data", () => ({
+  useComponentData: () => ({
+    data: null,
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  }),
+}));
+
 import { TagSelector } from "../component";
-
-function createWrapper() {
-  const registry = new AtomRegistryImpl();
-
-  function Wrapper({ children }: { children: React.ReactNode }) {
-    return (
-      <AppRegistryContext.Provider value={null}>
-        <PageRegistryContext.Provider value={registry}>
-          <SnapshotApiContext.Provider value={null}>
-            {children}
-          </SnapshotApiContext.Provider>
-        </PageRegistryContext.Provider>
-      </AppRegistryContext.Provider>
-    );
-  }
-
-  return Wrapper;
-}
 
 describe("TagSelector", () => {
   it("selects an available tag from the dropdown", () => {
-    const Wrapper = createWrapper();
-
     render(
-      <Wrapper>
-        <TagSelector
-          config={{
-            type: "tag-selector",
-            tags: [
-              { label: "React", value: "react" },
-              { label: "TypeScript", value: "ts" },
-            ],
-          }}
-        />
-      </Wrapper>,
+      <TagSelector
+        config={{
+          type: "tag-selector",
+          tags: [
+            { label: "React", value: "react" },
+            { label: "TypeScript", value: "ts" },
+          ],
+        }}
+      />,
     );
 
     const input = screen.getByTestId("tag-input");

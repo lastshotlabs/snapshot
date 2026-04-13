@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { useSubscribe } from "../../../context/hooks";
 import type { ComponentConfig } from "../../../manifest/types";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { TooltipConfig } from "./types";
 
 /**
@@ -12,12 +14,12 @@ import type { TooltipConfig } from "./types";
 const PLACEMENT_STYLES: Record<
   string,
   {
-    tooltip: React.CSSProperties;
-    arrow: React.CSSProperties;
+    content: CSSProperties;
+    arrow: CSSProperties;
   }
 > = {
   top: {
-    tooltip: {
+    content: {
       bottom: "100%",
       left: "50%",
       transform: "translateX(-50%)",
@@ -25,18 +27,15 @@ const PLACEMENT_STYLES: Record<
     },
     arrow: {
       position: "absolute",
-      bottom: "-4px",
+      bottom: "-0.25rem",
       left: "50%",
-      transform: "translateX(-50%)",
-      width: 0,
-      height: 0,
-      borderLeft: "5px solid transparent",
-      borderRight: "5px solid transparent",
-      borderTop: "5px solid var(--sn-color-foreground, #111827)",
+      transform: "translateX(-50%) rotate(45deg)",
+      width: "0.5rem",
+      height: "0.5rem",
     },
   },
   bottom: {
-    tooltip: {
+    content: {
       top: "100%",
       left: "50%",
       transform: "translateX(-50%)",
@@ -44,18 +43,15 @@ const PLACEMENT_STYLES: Record<
     },
     arrow: {
       position: "absolute",
-      top: "-4px",
+      top: "-0.25rem",
       left: "50%",
-      transform: "translateX(-50%)",
-      width: 0,
-      height: 0,
-      borderLeft: "5px solid transparent",
-      borderRight: "5px solid transparent",
-      borderBottom: "5px solid var(--sn-color-foreground, #111827)",
+      transform: "translateX(-50%) rotate(45deg)",
+      width: "0.5rem",
+      height: "0.5rem",
     },
   },
   left: {
-    tooltip: {
+    content: {
       right: "100%",
       top: "50%",
       transform: "translateY(-50%)",
@@ -63,18 +59,15 @@ const PLACEMENT_STYLES: Record<
     },
     arrow: {
       position: "absolute",
-      right: "-4px",
+      right: "-0.25rem",
       top: "50%",
-      transform: "translateY(-50%)",
-      width: 0,
-      height: 0,
-      borderTop: "5px solid transparent",
-      borderBottom: "5px solid transparent",
-      borderLeft: "5px solid var(--sn-color-foreground, #111827)",
+      transform: "translateY(-50%) rotate(45deg)",
+      width: "0.5rem",
+      height: "0.5rem",
     },
   },
   right: {
-    tooltip: {
+    content: {
       left: "100%",
       top: "50%",
       transform: "translateY(-50%)",
@@ -82,17 +75,18 @@ const PLACEMENT_STYLES: Record<
     },
     arrow: {
       position: "absolute",
-      left: "-4px",
+      left: "-0.25rem",
       top: "50%",
-      transform: "translateY(-50%)",
-      width: 0,
-      height: 0,
-      borderTop: "5px solid transparent",
-      borderBottom: "5px solid transparent",
-      borderRight: "5px solid var(--sn-color-foreground, #111827)",
+      transform: "translateY(-50%) rotate(45deg)",
+      width: "0.5rem",
+      height: "0.5rem",
     },
   },
 };
+
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
 
 /**
  * Tooltip component — wraps child components and shows informational
@@ -108,6 +102,7 @@ export function TooltipComponent({ config }: { config: TooltipConfig }) {
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tooltipId = React.useId();
+  const rootId = config.id ?? "tooltip";
   const placement = config.placement ?? "top";
   const delay = config.delay ?? 300;
 
@@ -116,6 +111,9 @@ export function TooltipComponent({ config }: { config: TooltipConfig }) {
   const placementStyles = PLACEMENT_STYLES[placement] ?? PLACEMENT_STYLES.top!;
 
   const show = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     timeoutRef.current = setTimeout(() => {
       setVisible(true);
     }, delay);
@@ -148,57 +146,110 @@ export function TooltipComponent({ config }: { config: TooltipConfig }) {
     };
   }, []);
 
-  return (
-    <div
-      data-snapshot-component="tooltip"
-      data-testid="tooltip"
-      className={config.className}
-      aria-describedby={visible ? tooltipId : undefined}
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocus={show}
-      onBlur={hide}
-      onKeyDown={handleKeyDown}
-      style={{
-        position: "relative",
-        display: "inline-block",
-        ...(config.style as React.CSSProperties),
-      }}
-    >
-      {/* Trigger content */}
-      {config.content.map((child, index) => (
-        <ComponentRenderer
-          key={(child as ComponentConfig).id ?? `tooltip-child-${index}`}
-          config={child as ComponentConfig}
-        />
-      ))}
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      position: "relative",
+      display: "inline-block",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const contentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-content`,
+    implementationBase: {
+      position: "absolute",
+      color: "var(--sn-color-background, #ffffff)",
+      bg: "var(--sn-color-foreground, #111827)",
+      borderRadius: "sm",
+      shadow: "md",
+      opacity: 0,
+      states: {
+        open: {
+          opacity: 1,
+        },
+      },
+      style: {
+        zIndex: "var(--sn-z-index-popover, 50)",
+        pointerEvents: "none",
+        whiteSpace: "nowrap",
+        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+        fontSize: "var(--sn-font-size-xs, 0.75rem)",
+        transition:
+          "opacity var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)",
+        visibility: visible ? "visible" : "hidden",
+      },
+    },
+    componentSurface: config.slots?.content,
+    activeStates: visible ? ["open"] : [],
+  });
+  const arrowSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-arrow`,
+    implementationBase: {
+      bg: "var(--sn-color-foreground, #111827)",
+      opacity: 0,
+      states: {
+        open: {
+          opacity: 1,
+        },
+      },
+      style: {
+        position: "absolute",
+      },
+    },
+    componentSurface: config.slots?.arrow,
+    activeStates: visible ? ["open"] : [],
+  });
 
-      {/* Tooltip popup */}
+  return (
+    <>
       <div
-        id={tooltipId}
-        role="tooltip"
-        data-tooltip-content=""
-        data-testid="tooltip-popup"
-        style={{
-          position: "absolute",
-          zIndex: "var(--sn-z-index-popover, 50)" as unknown as number,
-          pointerEvents: "none",
-          whiteSpace: "nowrap",
-          padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-          borderRadius: "var(--sn-radius-sm, 0.25rem)",
-          backgroundColor: "var(--sn-color-foreground, #111827)",
-          color: "var(--sn-color-background, #ffffff)",
-          fontSize: "var(--sn-font-size-xs, 0.75rem)",
-          boxShadow: "var(--sn-shadow-md, 0 4px 6px rgba(0,0,0,0.1))",
-          opacity: visible ? 1 : 0,
-          transition: `opacity var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)`,
-          ...placementStyles.tooltip,
-        }}
+        data-snapshot-component="tooltip"
+        data-testid="tooltip"
+        data-snapshot-id={`${rootId}-root`}
+        className={rootSurface.className}
+        aria-describedby={visible ? tooltipId : undefined}
+        onPointerEnter={show}
+        onPointerLeave={hide}
+        onFocus={show}
+        onBlur={hide}
+        onKeyDown={handleKeyDown}
+        style={rootSurface.style}
       >
-        {resolvedText}
-        {/* Arrow */}
-        <div style={placementStyles.arrow} />
+        {config.content.map((child, index) => (
+          <ComponentRenderer
+            key={(child as ComponentConfig).id ?? `tooltip-child-${index}`}
+            config={child as ComponentConfig}
+          />
+        ))}
+
+        <div
+          id={tooltipId}
+          role="tooltip"
+          aria-hidden={!visible}
+          data-tooltip-content=""
+          data-testid="tooltip-popup"
+          data-snapshot-id={`${rootId}-content`}
+          className={contentSurface.className}
+          style={{
+            ...(contentSurface.style ?? {}),
+            ...placementStyles.content,
+          }}
+        >
+          {resolvedText}
+          <div
+            data-snapshot-id={`${rootId}-arrow`}
+            className={arrowSurface.className}
+            style={{
+              ...(arrowSurface.style ?? {}),
+              ...placementStyles.arrow,
+            }}
+          />
+        </div>
       </div>
-    </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={contentSurface.scopedCss} />
+      <SurfaceStyles css={arrowSurface.scopedCss} />
+    </>
   );
 }

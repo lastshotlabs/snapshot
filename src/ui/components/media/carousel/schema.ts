@@ -1,13 +1,25 @@
 import { z } from "zod";
+import { componentConfigSchema } from "../../../manifest/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
-export const carouselConfigSchema = z.object({
+export const carouselSlotNames = [
+  "root",
+  "viewport",
+  "track",
+  "slide",
+  "controls",
+  "prevButton",
+  "nextButton",
+  "indicator",
+  "indicatorItem",
+] as const;
+
+export const carouselConfigSchema = extendComponentSchema({
   type: z.literal("carousel"),
-  id: z.string().optional(),
   autoPlay: z.boolean().optional(),
-  interval: z.number().optional(),
+  interval: z.number().positive().optional(),
   showDots: z.boolean().optional(),
   showArrows: z.boolean().optional(),
-  children: z.array(z.unknown()).optional(),
-  className: z.string().optional(),
-  style: z.record(z.union([z.string(), z.number()])).optional(),
+  children: z.array(componentConfigSchema).optional(),
+  slots: slotsSchema(carouselSlotNames).optional(),
 }).strict();

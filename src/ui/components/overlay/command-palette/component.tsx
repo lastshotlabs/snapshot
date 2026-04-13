@@ -11,11 +11,12 @@ import React, {
 } from "react";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import {
-  useActionExecutor,
   SnapshotApiContext,
+  useActionExecutor,
 } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { useComponentData } from "../../_base/use-component-data";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import {
   buildRequestUrl,
   resolveEndpointTarget,
@@ -41,6 +42,10 @@ interface CommandGroup {
   items: CommandItem[];
 }
 
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
+
 function flattenItems(
   groups: CommandGroup[],
 ): Array<{ item: CommandItem; groupIndex: number; itemIndex: number }> {
@@ -49,11 +54,13 @@ function flattenItems(
     groupIndex: number;
     itemIndex: number;
   }> = [];
+
   groups.forEach((group, groupIndex) => {
     group.items.forEach((item, itemIndex) => {
       flat.push({ item, groupIndex, itemIndex });
     });
   });
+
   return flat;
 }
 
@@ -66,6 +73,7 @@ function normalizeSearchGroups(data: unknown): CommandGroup[] {
   if (Array.isArray(record.groups)) {
     return record.groups as CommandGroup[];
   }
+
   if (Array.isArray(record.items)) {
     return [
       {
@@ -74,12 +82,10 @@ function normalizeSearchGroups(data: unknown): CommandGroup[] {
       },
     ];
   }
+
   return [];
 }
 
-/**
- * Render a searchable command palette with static groups, runtime search, and manifest shortcuts.
- */
 export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const visible = useSubscribe(config.visible ?? false);
   const publish = usePublish(config.id);
@@ -95,6 +101,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const [recentItems, setRecentItems] = useState<CommandItem[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const rootId = config.id ?? "command-palette";
   const storageKey = `${RECENT_STORAGE_PREFIX}:${config.id ?? "default"}`;
   const placeholder = config.placeholder ?? "Type a command...";
   const emptyMessage = config.emptyMessage ?? "No results found";
@@ -112,6 +119,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
           { label?: string; action: ActionConfig; disabled?: boolean }
         >
       | undefined;
+
     if (!manifestShortcuts) {
       return [];
     }
@@ -138,6 +146,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       if (!stored) {
         return;
       }
+
       const parsed = JSON.parse(stored) as CommandItem[];
       if (Array.isArray(parsed)) {
         setRecentItems(parsed);
@@ -182,6 +191,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
         target?.tagName === "TEXTAREA" ||
         target?.tagName === "SELECT" ||
         target?.isContentEditable;
+
       if (isTyping && !event.ctrlKey && !event.metaKey && !event.altKey) {
         return;
       }
@@ -259,8 +269,9 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
     };
   }, [api, config.searchEndpoint, query, runtime?.resources]);
 
-  const allGroups: CommandGroup[] = useMemo(() => {
+  const allGroups = useMemo(() => {
     const groups: CommandGroup[] = [];
+
     if (
       config.recentItems?.enabled &&
       recentItems.length > 0 &&
@@ -271,9 +282,11 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
         items: recentItems.slice(0, config.recentItems.maxItems),
       });
     }
+
     if (shortcutCommands.length > 0) {
       groups.push({ label: "Shortcuts", items: shortcutCommands });
     }
+
     groups.push(...((config.groups ?? []) as CommandGroup[]));
     groups.push(...normalizeSearchGroups(dataResult.data));
     groups.push(...searchGroups);
@@ -288,10 +301,11 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
     shortcutCommands,
   ]);
 
-  const filteredGroups: CommandGroup[] = useMemo(() => {
+  const filteredGroups = useMemo(() => {
     if (!query.trim()) {
       return allGroups;
     }
+
     const lowerQuery = query.toLowerCase();
     return allGroups
       .map((group) => ({
@@ -305,10 +319,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       .filter((group) => group.items.length > 0);
   }, [allGroups, query]);
 
-  const flatItems = useMemo(
-    () => flattenItems(filteredGroups),
-    [filteredGroups],
-  );
+  const flatItems = useMemo(() => flattenItems(filteredGroups), [filteredGroups]);
 
   useEffect(() => {
     setActiveIndex(0);
@@ -318,10 +329,15 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
     if (!listRef.current) {
       return;
     }
+
     const activeElement = listRef.current.querySelector(
       `[data-command-index="${activeIndex}"]`,
     );
-    if (activeElement) {
+    if (
+      activeElement &&
+      "scrollIntoView" in activeElement &&
+      typeof activeElement.scrollIntoView === "function"
+    ) {
       activeElement.scrollIntoView({ block: "nearest" });
     }
   }, [activeIndex]);
@@ -346,12 +362,12 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const handleSelect = useCallback(
     (item: CommandItem) => {
       persistRecentItem(item);
-      if (publish) {
-        publish({ selectedItem: item });
-      }
+      publish?.({ selectedItem: item });
+
       if (item.action) {
         void executeAction(item.action);
       }
+
       setShortcutVisible(false);
     },
     [executeAction, persistRecentItem, publish],
@@ -381,9 +397,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
         case "Escape":
           event.preventDefault();
           setShortcutVisible(false);
-          if (publish) {
-            publish({ dismissed: true });
-          }
+          publish?.({ dismissed: true });
           break;
         default:
           break;
@@ -393,6 +407,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   );
 
   const isVisible = visible !== false || shortcutVisible;
+
   useEffect(() => {
     if (isVisible) {
       setMounted(true);
@@ -402,6 +417,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       }, 10);
       return () => clearTimeout(enterTimer);
     }
+
     if (mounted) {
       setAnimating(false);
       const exitTimer = setTimeout(() => setMounted(false), ANIMATION_DURATION);
@@ -419,232 +435,334 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
     transition: `opacity var(--sn-duration-fast, ${ANIMATION_DURATION}ms) var(--sn-ease-default, ease), transform var(--sn-duration-fast, ${ANIMATION_DURATION}ms) var(--sn-ease-default, ease)`,
   };
 
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      display: "block",
+      style: animationStyle,
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const panelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-panel`,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      color:
+        "var(--sn-color-popover-foreground, var(--sn-color-foreground, #111827))",
+      bg: "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
+      borderRadius: "lg",
+      shadow: "lg",
+      style: {
+        border:
+          "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+        overflow: "hidden",
+      },
+    },
+    componentSurface: config.slots?.panel,
+  });
+  const searchSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-search`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "sm",
+      style: {
+        padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+        borderBottom:
+          "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    componentSurface: config.slots?.search,
+  });
+  const searchInputSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-search-input`,
+    implementationBase: {
+      color: "var(--sn-color-foreground, #111827)",
+      bg: "transparent",
+      focus: {
+        ring: true,
+      },
+      states: {
+        active: {
+          color: "var(--sn-color-foreground, #111827)",
+        },
+      },
+      style: {
+        flex: 1,
+        border: "none",
+        outline: "none",
+        fontSize: "var(--sn-font-size-sm, 0.875rem)",
+        fontFamily: "inherit",
+        lineHeight: "var(--sn-leading-normal, 1.5)",
+      },
+    },
+    componentSurface: config.slots?.searchInput,
+    activeStates: query.trim().length > 0 ? ["active"] : [],
+  });
+  const listSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-list`,
+    implementationBase: {
+      style: {
+        maxHeight,
+        overflowY: "auto",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.list,
+  });
+  const emptyStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-empty-state`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      textAlign: "center",
+      style: {
+        padding: "var(--sn-spacing-lg, 1.5rem) var(--sn-spacing-md, 1rem)",
+        fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      },
+    },
+    componentSurface: config.slots?.emptyState,
+  });
+  const groupLabelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-group-label`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: {
+        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+        fontSize: "var(--sn-font-size-xs, 0.75rem)",
+        fontWeight: "var(--sn-font-weight-semibold, 600)",
+        textTransform: "uppercase",
+        letterSpacing: "var(--sn-tracking-wide, 0.05em)",
+      },
+    },
+    componentSurface: config.slots?.groupLabel,
+  });
+
   let flatIndex = 0;
 
   return (
     <div
       data-snapshot-component="command-palette"
-      className={config.className}
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
       onKeyDown={handleKeyDown}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        ...animationStyle,
-        backgroundColor:
-          "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
-        color:
-          "var(--sn-color-popover-foreground, var(--sn-color-foreground, #111827))",
-        border:
-          "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
-        borderRadius: "var(--sn-radius-lg, 0.5rem)",
-        boxShadow:
-          "var(--sn-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1))",
-        overflow: "hidden",
-        ...(config.style as React.CSSProperties),
-      }}
+      style={rootSurface.style}
     >
-      <style>{`
-        [data-snapshot-component="command-palette"] [data-snapshot-command-input] input:focus { outline: none; }
-        [data-snapshot-component="command-palette"] [data-snapshot-command-input] input:focus-visible {
-          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
-          outline-offset: var(--sn-ring-offset, 2px);
-          border-radius: var(--sn-radius-sm, 0.25rem);
-        }
-        [data-snapshot-component="command-palette"] [data-snapshot-command-item]:hover {
-          background-color: var(--sn-color-accent, #f3f4f6);
-        }
-      `}</style>
-
       <div
-        data-snapshot-command-input=""
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--sn-spacing-sm, 0.5rem)",
-          padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
-          borderBottom:
-            "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
-        }}
+        data-snapshot-id={`${rootId}-panel`}
+        className={panelSurface.className}
+        style={panelSurface.style}
       >
-        <Icon
-          name="search"
-          size={16}
-          color="var(--sn-color-muted-foreground, #6b7280)"
-        />
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={placeholder}
-          aria-label={placeholder}
-          style={{
-            flex: 1,
-            border: "none",
-            outline: "none",
-            backgroundColor: "transparent",
-            color: "var(--sn-color-foreground, #111827)",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            fontFamily: "inherit",
-            lineHeight: "var(--sn-leading-normal, 1.5)",
-          }}
-        />
-        <kbd
-          style={{
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            fontFamily: "var(--sn-font-mono, monospace)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            backgroundColor: "var(--sn-color-muted, #f3f4f6)",
-            padding:
-              "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
-            borderRadius: "var(--sn-radius-xs, 0.125rem)",
-            border:
-              "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
-          }}
+        <div
+          data-snapshot-id={`${rootId}-search`}
+          className={searchSurface.className}
+          style={searchSurface.style}
         >
-          {config.shortcut}
-        </kbd>
-      </div>
-
-      <div
-        ref={listRef}
-        data-snapshot-command-list=""
-        role="listbox"
-        style={{
-          maxHeight,
-          overflowY: "auto",
-          padding: "var(--sn-spacing-xs, 0.25rem)",
-        }}
-      >
-        {filteredGroups.length === 0 ? (
-          <div
-            data-snapshot-command-empty=""
+          <Icon
+            name="search"
+            size={16}
+            color="var(--sn-color-muted-foreground, #6b7280)"
+          />
+          <input
+            ref={inputRef}
+            data-snapshot-id={`${rootId}-search-input`}
+            className={searchInputSurface.className}
+            style={searchInputSurface.style}
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={placeholder}
+            aria-label={placeholder}
+          />
+          <kbd
             style={{
-              padding:
-                "var(--sn-spacing-lg, 1.5rem) var(--sn-spacing-md, 1rem)",
-              textAlign: "center",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              fontSize: "var(--sn-font-size-xs, 0.75rem)",
+              fontFamily: "var(--sn-font-mono, monospace)",
               color: "var(--sn-color-muted-foreground, #6b7280)",
+              backgroundColor: "var(--sn-color-muted, #f3f4f6)",
+              padding:
+                "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+              borderRadius: "var(--sn-radius-xs, 0.125rem)",
+              border:
+                "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
             }}
           >
-            {emptyMessage}
-          </div>
-        ) : (
-          filteredGroups.map((group, groupIndex) => (
+            {config.shortcut}
+          </kbd>
+        </div>
+
+        <div
+          ref={listRef}
+          data-snapshot-id={`${rootId}-list`}
+          role="listbox"
+          className={listSurface.className}
+          style={listSurface.style}
+        >
+          {filteredGroups.length === 0 ? (
             <div
-              key={`group-${group.label}-${groupIndex}`}
-              data-snapshot-command-group=""
+              data-snapshot-id={`${rootId}-empty-state`}
+              className={emptyStateSurface.className}
+              style={emptyStateSurface.style}
             >
+              {emptyMessage}
+            </div>
+          ) : (
+            filteredGroups.map((group, groupIndex) => (
               <div
-                data-snapshot-command-group-heading=""
-                style={{
-                  padding:
-                    "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                  fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
-                  color: "var(--sn-color-muted-foreground, #6b7280)",
-                  textTransform: "uppercase",
-                  letterSpacing: "var(--sn-tracking-wide, 0.05em)",
-                }}
+                key={`group-${group.label}-${groupIndex}`}
+                data-snapshot-command-group=""
               >
-                {group.label}
-              </div>
-              {group.items.map((item, itemIndex) => {
-                const currentFlatIndex = flatIndex++;
-                const isActive = currentFlatIndex === activeIndex;
-                return (
-                  <div
-                    key={`item-${groupIndex}-${itemIndex}-${item.label}`}
-                    data-command-index={currentFlatIndex}
-                    data-snapshot-command-item=""
-                    role="option"
-                    aria-selected={isActive}
-                    onClick={() => handleSelect(item)}
-                    onMouseEnter={() => setActiveIndex(currentFlatIndex)}
-                    style={{
+                <div
+                  data-snapshot-id={`${rootId}-group-label`}
+                  className={groupLabelSurface.className}
+                  style={groupLabelSurface.style}
+                >
+                  {group.label}
+                </div>
+                {group.items.map((item, itemIndex) => {
+                  const currentFlatIndex = flatIndex++;
+                  const isActive = currentFlatIndex === activeIndex;
+                  const itemSurface = resolveSurfacePresentation({
+                    surfaceId: `${rootId}-item-${currentFlatIndex}`,
+                    implementationBase: {
                       display: "flex",
                       alignItems: "center",
-                      gap: "var(--sn-spacing-sm, 0.5rem)",
-                      padding:
-                        "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-                      borderRadius: "var(--sn-radius-sm, 0.25rem)",
+                      gap: "sm",
+                      borderRadius: "sm",
                       cursor: "pointer",
-                      backgroundColor: isActive
-                        ? "var(--sn-color-accent, #f3f4f6)"
-                        : "transparent",
-                      color: isActive
-                        ? "var(--sn-color-accent-foreground, #111827)"
-                        : "var(--sn-color-foreground, #111827)",
-                      transition:
-                        "background-color var(--sn-duration-fast, 100ms) var(--sn-ease-default, ease)",
-                    }}
-                  >
-                    {item.icon ? (
-                      <Icon
-                        name={item.icon}
-                        size={16}
-                        color="var(--sn-color-muted-foreground, #6b7280)"
-                      />
-                    ) : null}
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                      hover: {
+                        bg: "var(--sn-color-accent, #f3f4f6)",
+                      },
+                      states: {
+                        current: {
+                          bg: "var(--sn-color-accent, #f3f4f6)",
+                          color:
+                            "var(--sn-color-accent-foreground, #111827)",
+                        },
+                      },
+                      style: {
+                        padding:
+                          "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                        transition:
+                          "background-color var(--sn-duration-fast, 100ms) var(--sn-ease-default, ease)",
+                      },
+                    },
+                    componentSurface: config.slots?.item,
+                    activeStates: isActive ? ["current"] : [],
+                  });
+                  const itemIconSurface = resolveSurfacePresentation({
+                    surfaceId: `${rootId}-item-icon-${currentFlatIndex}`,
+                    implementationBase: {
+                      display: "inline-flex",
+                      color: "var(--sn-color-muted-foreground, #6b7280)",
+                    },
+                    componentSurface: config.slots?.itemIcon,
+                  });
+                  const itemLabelSurface = resolveSurfacePresentation({
+                    surfaceId: `${rootId}-item-label-${currentFlatIndex}`,
+                    implementationBase: {
+                      style: {
+                        fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                        fontWeight: "var(--sn-font-weight-normal, 400)",
+                        lineHeight: "var(--sn-leading-normal, 1.5)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      },
+                    },
+                    componentSurface: config.slots?.itemLabel,
+                  });
+
+                  return (
+                    <React.Fragment
+                      key={`item-${groupIndex}-${itemIndex}-${item.label}`}
+                    >
                       <div
-                        style={{
-                          fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                          fontWeight:
-                            "var(--sn-font-weight-normal, 400)" as string,
-                          lineHeight: "var(--sn-leading-normal, 1.5)",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
+                        data-command-index={currentFlatIndex}
+                        data-snapshot-id={`${rootId}-item-${currentFlatIndex}`}
+                        role="option"
+                        aria-selected={isActive}
+                        onClick={() => handleSelect(item)}
+                        onPointerEnter={() => setActiveIndex(currentFlatIndex)}
+                        className={itemSurface.className}
+                        style={itemSurface.style}
                       >
-                        {item.label}
-                      </div>
-                      {item.description ? (
-                        <div
-                          style={{
-                            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                            color: "var(--sn-color-muted-foreground, #6b7280)",
-                            lineHeight: "var(--sn-leading-tight, 1.25)",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {item.description}
+                        {item.icon ? (
+                          <span
+                            data-snapshot-id={`${rootId}-item-icon-${currentFlatIndex}`}
+                            className={itemIconSurface.className}
+                            style={itemIconSurface.style}
+                          >
+                            <Icon name={item.icon} size={16} />
+                          </span>
+                        ) : null}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div
+                            data-snapshot-id={`${rootId}-item-label-${currentFlatIndex}`}
+                            className={itemLabelSurface.className}
+                            style={itemLabelSurface.style}
+                          >
+                            {item.label}
+                          </div>
+                          {item.description ? (
+                            <div
+                              style={{
+                                fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                                color:
+                                  "var(--sn-color-muted-foreground, #6b7280)",
+                                lineHeight: "var(--sn-leading-tight, 1.25)",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {item.description}
+                            </div>
+                          ) : null}
                         </div>
-                      ) : null}
-                    </div>
-                    {item.shortcut ? (
-                      <kbd
-                        data-snapshot-command-shortcut=""
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "var(--sn-spacing-2xs, 0.125rem)",
-                          fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                          fontFamily: "var(--sn-font-mono, monospace)",
-                          color: "var(--sn-color-muted-foreground, #6b7280)",
-                          backgroundColor: "var(--sn-color-muted, #f3f4f6)",
-                          padding:
-                            "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
-                          borderRadius: "var(--sn-radius-xs, 0.125rem)",
-                          border:
-                            "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
-                          lineHeight: "var(--sn-leading-none, 1)",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {item.shortcut}
-                      </kbd>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
-          ))
-        )}
+                        {item.shortcut ? (
+                          <kbd
+                            data-snapshot-command-shortcut=""
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "var(--sn-spacing-2xs, 0.125rem)",
+                              fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                              fontFamily: "var(--sn-font-mono, monospace)",
+                              color: "var(--sn-color-muted-foreground, #6b7280)",
+                              backgroundColor: "var(--sn-color-muted, #f3f4f6)",
+                              padding:
+                                "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+                              borderRadius: "var(--sn-radius-xs, 0.125rem)",
+                              border:
+                                "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+                              lineHeight: "var(--sn-leading-none, 1)",
+                              flexShrink: 0,
+                            }}
+                          >
+                            {item.shortcut}
+                          </kbd>
+                        ) : null}
+                      </div>
+                      <SurfaceStyles css={itemSurface.scopedCss} />
+                      <SurfaceStyles css={itemIconSurface.scopedCss} />
+                      <SurfaceStyles css={itemLabelSurface.scopedCss} />
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            ))
+          )}
+        </div>
       </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={panelSurface.scopedCss} />
+      <SurfaceStyles css={searchSurface.scopedCss} />
+      <SurfaceStyles css={searchInputSurface.scopedCss} />
+      <SurfaceStyles css={listSurface.scopedCss} />
+      <SurfaceStyles css={emptyStateSurface.scopedCss} />
+      <SurfaceStyles css={groupLabelSurface.scopedCss} />
     </div>
   );
 }

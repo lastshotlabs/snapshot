@@ -1,4 +1,8 @@
+import type { ReactNode } from "react";
 import { z } from "zod";
+import { slotsSchema } from "../../_base/schema";
+
+export const prefetchLinkSlotNames = ["root"] as const;
 
 /**
  * Zod schema for `<PrefetchLink>` config.
@@ -25,14 +29,20 @@ export const prefetchLinkSchema = z.object({
     .enum(["hover", "visible", "viewport", "eager", "none"])
     .default("hover"),
   /** Content rendered inside the anchor. */
-  children: z.custom<React.ReactNode>().optional(),
+  children: z.custom<ReactNode>().optional(),
+  /** Optional id used to scope root slot CSS. */
+  id: z.string().optional(),
   /** Additional CSS class name applied to the anchor. */
   className: z.string().optional(),
+  /** Inline style overrides applied to the anchor. */
+  style: z.record(z.union([z.string(), z.number()])).optional(),
+  /** Canonical root slot overrides. */
+  slots: slotsSchema(prefetchLinkSlotNames).optional(),
   /** `target` attribute forwarded to the `<a>` element. */
   target: z.string().optional(),
   /** `rel` attribute forwarded to the `<a>` element. */
   rel: z.string().optional(),
-});
+}).strict();
 
 /**
  * The output type of `prefetchLinkSchema` — all fields fully resolved with
@@ -46,3 +56,4 @@ export type PrefetchLinkConfig = z.infer<typeof prefetchLinkSchema>;
  * `prefetch` and other defaulted fields are optional at the call site.
  */
 export type PrefetchLinkProps = z.input<typeof prefetchLinkSchema>;
+export type PrefetchLinkSlotNames = typeof prefetchLinkSlotNames;

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import {
-  baseComponentConfigSchema,
-  componentConfigSchema,
-  fromRefSchema,
-} from "../../../manifest/schema";
+import { componentConfigSchema } from "../../../manifest/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
+
+export const tooltipSlotNames = ["root", "content", "arrow"] as const;
 
 /**
  * Zod config schema for the Tooltip component.
@@ -21,7 +21,7 @@ import {
  * }
  * ```
  */
-export const tooltipConfigSchema = baseComponentConfigSchema.extend({
+export const tooltipConfigSchema = extendComponentSchema({
   /** Component type discriminator. */
   type: z.literal("tooltip"),
   /** Tooltip text content. Supports FromRef for dynamic text. */
@@ -32,8 +32,6 @@ export const tooltipConfigSchema = baseComponentConfigSchema.extend({
   placement: z.enum(["top", "bottom", "left", "right"]).optional(),
   /** Show delay in milliseconds. */
   delay: z.number().optional(),
-  /** Inline style overrides. */
-  style: z.record(z.union([z.string(), z.number()])).optional(),
-  /** Additional CSS class name. */
-  className: z.string().optional(),
-});
+  /** Canonical slot overrides for the wrapper, bubble, and arrow. */
+  slots: slotsSchema(tooltipSlotNames).optional(),
+}).strict();

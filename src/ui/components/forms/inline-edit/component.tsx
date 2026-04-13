@@ -1,21 +1,21 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { InlineEditConfig } from "./types";
+
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
 
 /**
  * InlineEdit component — click-to-edit text field.
  *
- * Toggles between a display mode (shows text with a pencil icon on hover)
- * and an edit mode (auto-focused input). Enter or blur saves the value;
- * Escape reverts to the original value (if `cancelOnEscape` is true).
- *
- * Publishes `{ value, editing }` to the page context.
- *
- * @param props.config - The inline edit config from the manifest
+ * Toggles between a display mode and an edit mode. Enter or blur saves the
+ * value; Escape reverts to the original value when `cancelOnEscape` is enabled.
  */
 export function InlineEdit({ config }: { config: InlineEditConfig }) {
   const execute = useActionExecutor();
@@ -28,27 +28,26 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
 
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(displayValue);
-  const [hovering, setHovering] = useState(false);
+  const [displayHovered, setDisplayHovered] = useState(false);
+  const [displayFocused, setDisplayFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const rootId = config.id ?? "inline-edit";
 
   const placeholder = config.placeholder ?? "Click to edit";
   const inputType = config.inputType ?? "text";
   const cancelOnEscape = config.cancelOnEscape !== false;
   const fontSize = config.fontSize ?? "var(--sn-font-size-md, 1rem)";
 
-  // Sync resolved value when it changes externally
   useEffect(() => {
     if (!editing) {
       setEditValue(displayValue);
     }
   }, [displayValue, editing]);
 
-  // Publish state
   useEffect(() => {
     publish?.({ value: editing ? editValue : displayValue, editing });
-  }, [editing, editValue, displayValue, publish]);
+  }, [displayValue, editValue, editing, publish]);
 
-  // Auto-focus input when entering edit mode
   useEffect(() => {
     if (editing && inputRef.current) {
       inputRef.current.focus();
@@ -63,10 +62,11 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
 
   const save = useCallback(() => {
     setEditing(false);
+
     if (config.saveAction && editValue !== displayValue) {
       void execute(config.saveAction, { value: editValue });
     }
-  }, [config.saveAction, editValue, displayValue, execute]);
+  }, [config.saveAction, displayValue, editValue, execute]);
 
   const cancel = useCallback(() => {
     setEditValue(displayValue);
@@ -74,128 +74,184 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
   }, [displayValue]);
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
         save();
-      } else if (e.key === "Escape" && cancelOnEscape) {
-        e.preventDefault();
+        return;
+      }
+
+      if (event.key === "Escape" && cancelOnEscape) {
+        event.preventDefault();
         cancel();
       }
     },
-    [save, cancel, cancelOnEscape],
+    [cancel, cancelOnEscape, save],
   );
 
-  const handleBlur = useCallback(() => {
-    save();
-  }, [save]);
+  const displayStates = [
+    ...(displayHovered ? (["hover"] as const) : []),
+    ...(displayFocused ? (["focus"] as const) : []),
+  ];
 
-  // Visibility check
-  if (config.visible === false) return null;
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      minWidth: "0",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const displaySurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-display`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "xs",
+      borderRadius: "sm",
+      cursor: "pointer",
+      hover: {
+        bg: "var(--sn-color-muted, #f9fafb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+      focus: {
+        ring: true,
+      },
+      style: {
+        background: "none",
+        border: "var(--sn-border-default, 1px) solid transparent",
+        padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+        textAlign: "left",
+        transition:
+          "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      },
+    },
+    componentSurface: config.slots?.display,
+    activeStates: displayStates,
+  });
+  const displayTextSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-display-text`,
+    implementationBase: {
+      color: displayValue
+        ? "var(--sn-color-foreground, #111)"
+        : "var(--sn-color-muted-foreground, #6b7280)",
+      fontSize,
+      style: {
+        fontFamily: "inherit",
+        lineHeight: "var(--sn-leading-normal, 1.5)",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+    },
+    componentSurface: config.slots?.displayText,
+  });
+  const displayIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-display-icon`,
+    implementationBase: {
+      display: "inline-flex",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      opacity: 0,
+      states: {
+        hover: {
+          opacity: 1,
+        },
+        focus: {
+          opacity: 1,
+        },
+      },
+      style: {
+        flexShrink: 0,
+        transition:
+          "opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      },
+    },
+    componentSurface: config.slots?.displayIcon,
+    activeStates: displayStates,
+  });
+  const inputSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-input`,
+    implementationBase: {
+      color: "var(--sn-color-foreground, #111)",
+      bg: "var(--sn-color-input, #fff)",
+      borderRadius: "sm",
+      focus: {
+        ring: true,
+      },
+      style: {
+        fontSize,
+        fontFamily: "inherit",
+        lineHeight: "var(--sn-leading-normal, 1.5)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-ring, #2563eb)",
+        padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+        outline: "none",
+        width: "100%",
+        minWidth: "60px",
+      },
+    },
+    componentSurface: config.slots?.input,
+  });
 
   return (
-    <div
-      data-snapshot-component="inline-edit"
-      className={config.className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        minWidth: 0,
-        ...((config.style as React.CSSProperties) ?? {}),
-      }}
-    >
-      <style>{`
-        [data-snapshot-component="inline-edit"] [data-testid="inline-edit-display"]:focus { outline: none; }
-        [data-snapshot-component="inline-edit"] [data-testid="inline-edit-display"]:hover {
-          background-color: var(--sn-color-muted, #f9fafb);
-        }
-        [data-snapshot-component="inline-edit"] [data-testid="inline-edit-display"]:focus-visible {
-          outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
-          outline-offset: var(--sn-ring-offset, 2px);
-        }
-      `}</style>
-
-      {editing ? (
-        /* Edit mode */
-        <input
-          ref={inputRef}
-          type={inputType}
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={handleBlur}
-          data-testid="inline-edit-input"
-          style={{
-            fontSize,
-            fontFamily: "inherit",
-            lineHeight: "var(--sn-leading-normal, 1.5)",
-            color: "var(--sn-color-foreground, #111)",
-            backgroundColor: "var(--sn-color-input, #fff)",
-            border:
-              "var(--sn-border-default, 1px) solid var(--sn-color-ring, #2563eb)",
-            borderRadius: "var(--sn-radius-sm, 0.25rem)",
-            padding:
-              "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
-            outline: "none",
-            width: "100%",
-            minWidth: "60px",
-          }}
-        />
-      ) : (
-        /* Display mode */
-        <button
-          type="button"
-          onClick={startEditing}
-          onMouseEnter={() => setHovering(true)}
-          onMouseLeave={() => setHovering(false)}
-          data-testid="inline-edit-display"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "var(--sn-spacing-xs, 0.25rem)",
-            fontSize,
-            fontFamily: "inherit",
-            lineHeight: "var(--sn-leading-normal, 1.5)",
-            color: displayValue
-              ? "var(--sn-color-foreground, #111)"
-              : "var(--sn-color-muted-foreground, #6b7280)",
-            background: "none",
-            border: "var(--sn-border-default, 1px) solid transparent",
-            borderRadius: "var(--sn-radius-sm, 0.25rem)",
-            padding:
-              "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
-            cursor: "pointer",
-            textAlign: "left",
-            transition:
-              "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-            borderColor: hovering
-              ? "var(--sn-color-border, #e5e7eb)"
-              : "transparent",
-          }}
-        >
-          <span
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
+    <>
+      <div
+        data-snapshot-component="inline-edit"
+        data-snapshot-id={`${rootId}-root`}
+        className={rootSurface.className}
+        style={rootSurface.style}
+      >
+        {editing ? (
+          <input
+            ref={inputRef}
+            type={inputType}
+            value={editValue}
+            onChange={(event) => setEditValue(event.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={save}
+            data-testid="inline-edit-input"
+            data-snapshot-id={`${rootId}-input`}
+            className={inputSurface.className}
+            style={inputSurface.style}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={startEditing}
+            onPointerEnter={() => setDisplayHovered(true)}
+            onPointerLeave={() => setDisplayHovered(false)}
+            onFocus={() => setDisplayFocused(true)}
+            onBlur={() => setDisplayFocused(false)}
+            data-testid="inline-edit-display"
+            data-snapshot-id={`${rootId}-display`}
+            className={displaySurface.className}
+            style={displaySurface.style}
           >
-            {displayValue || placeholder}
-          </span>
-          <span
-            style={{
-              opacity: hovering ? 1 : 0,
-              transition:
-                "opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-              display: "inline-flex",
-              flexShrink: 0,
-              color: "var(--sn-color-muted-foreground, #6b7280)",
-            }}
-          >
-            <Icon name="pencil" size={12} />
-          </span>
-        </button>
-      )}
-    </div>
+            <span
+              data-snapshot-id={`${rootId}-display-text`}
+              className={displayTextSurface.className}
+              style={displayTextSurface.style}
+            >
+              {displayValue || placeholder}
+            </span>
+            <span
+              data-snapshot-id={`${rootId}-display-icon`}
+              className={displayIconSurface.className}
+              style={displayIconSurface.style}
+            >
+              <Icon name="pencil" size={12} />
+            </span>
+          </button>
+        )}
+      </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={displaySurface.scopedCss} />
+      <SurfaceStyles css={displayTextSurface.scopedCss} />
+      <SurfaceStyles css={displayIconSurface.scopedCss} />
+      <SurfaceStyles css={inputSurface.scopedCss} />
+    </>
   );
 }
