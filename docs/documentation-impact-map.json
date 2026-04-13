@@ -4,49 +4,127 @@
       "sources": [
         "src/index.ts",
         "src/create-snapshot.tsx",
-        "src/api/client.ts",
+        "src/api",
+        "src/providers",
+        "src/routing",
+        "src/theme",
+        "src/types.ts",
         "src/plugin.ts",
         "src/schema-generator.ts"
       ],
       "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
         "apps/docs/src/content/docs/build/sdk-apps.md",
         "apps/docs/src/content/docs/reference/sdk.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
       ]
     },
-    "ui-manifest": {
+    "auth-and-identity": {
+      "sources": ["src/auth"],
+      "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/build/sdk-apps.md",
+        "apps/docs/src/content/docs/build/manifest-apps.md",
+        "apps/docs/src/content/docs/reference/sdk.md",
+        "apps/docs/src/content/docs/reference/manifest.md",
+        "apps/docs/src/content/docs/examples/index.md",
+        "apps/docs/src/content/docs/contribute/testing.md"
+      ]
+    },
+    "realtime-and-integrations": {
       "sources": [
-        "src/ui.ts",
-        "src/ui/manifest/schema.ts",
-        "src/ui/manifest/index.ts",
-        "src/ui/components"
+        "src/community",
+        "src/webhooks",
+        "src/ws",
+        "src/sse",
+        "src/push"
       ],
       "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/build/sdk-apps.md",
+        "apps/docs/src/content/docs/integrate/community-and-realtime.md",
+        "apps/docs/src/content/docs/reference/sdk.md",
+        "apps/docs/src/content/docs/examples/index.md",
+        "apps/docs/src/content/docs/contribute/testing.md"
+      ]
+    },
+    "ui-foundation": {
+      "sources": [
+        "src/ui.ts",
+        "src/ui/actions",
+        "src/ui/analytics",
+        "src/ui/context",
+        "src/ui/expressions",
+        "src/ui/hooks",
+        "src/ui/i18n",
+        "src/ui/icons",
+        "src/ui/layouts",
+        "src/ui/manifest",
+        "src/ui/policies",
+        "src/ui/shortcuts",
+        "src/ui/state",
+        "src/ui/tokens",
+        "src/ui/workflows"
+      ],
+      "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
         "apps/docs/src/content/docs/build/manifest-apps.md",
+        "apps/docs/src/content/docs/build/styling-and-slots.md",
         "apps/docs/src/content/docs/reference/ui/index.md",
         "apps/docs/src/content/docs/reference/manifest.md",
-        "apps/docs/src/content/docs/reference/components.md",
+        "apps/docs/src/content/docs/examples/index.md",
+        "apps/docs/src/content/docs/contribute/testing.md"
+      ]
+    },
+    "ui-components-and-presets": {
+      "sources": ["src/ui/components", "src/ui/presets", "src/ui/entity-pages"],
+      "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
         "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/build/manifest-apps.md",
+        "apps/docs/src/content/docs/build/styling-and-slots.md",
+        "apps/docs/src/content/docs/integrate/content-and-media.md",
+        "apps/docs/src/content/docs/integrate/community-and-realtime.md",
+        "apps/docs/src/content/docs/reference/ui/index.md",
+        "apps/docs/src/content/docs/reference/components.md",
+        "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
       ]
     },
     "ssr-vite": {
       "sources": ["src/ssr", "src/vite"],
       "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/build/sdk-apps.md",
         "apps/docs/src/content/docs/integrate/ssr-rsc.md",
         "apps/docs/src/content/docs/reference/ssr.md",
         "apps/docs/src/content/docs/reference/vite.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
       ]
     },
     "cli-sync": {
       "sources": ["src/cli"],
       "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/build/manifest-apps.md",
         "apps/docs/src/content/docs/build/sdk-apps.md",
         "apps/docs/src/content/docs/reference/cli.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
       ]
     },
@@ -57,6 +135,9 @@
         "playground/src/token-editor.tsx"
       ],
       "docs": [
+        "apps/docs/src/content/docs/index.md",
+        "apps/docs/src/content/docs/start-here/index.md",
+        "apps/docs/src/content/docs/start-here/capabilities.md",
         "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/reference/components.md",
         "apps/docs/src/content/docs/contribute/testing.md"

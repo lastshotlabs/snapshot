@@ -1,6 +1,6 @@
 # Snapshot Docs App
 
-This app is the public documentation product for Snapshot.
+This app is Snapshot's public documentation product. It is also the primary discovery surface for app-building agents.
 
 ## Read First
 
@@ -10,19 +10,33 @@ This app is the public documentation product for Snapshot.
 - `apps/docs/src/content/docs/build/manifest-apps.md`
 - `apps/docs/src/content/docs/build/sdk-apps.md`
 - `apps/docs/src/content/docs/integrate/ssr-rsc.md`
+- `apps/docs/src/content/docs/examples/index.md`
 - `apps/docs/src/content/docs/contribute/overview.md`
+- `apps/docs/src/content/docs/contribute/agent-flow.md`
 - `apps/docs/src/content/docs/contribute/testing.md`
 - `scripts/docs/generate-all.ts`
 - `docs/documentation-policy.md`
 
 ## Expectations
 
-- Public docs explain and orient. Generated reference enumerates contracts.
+- Public docs orient readers. Generated reference enumerates exact contracts.
+- Top-level pages must stay honest about what Snapshot can do on `main`.
+- Do not leave app builders guessing whether a capability exists. If a feature is real, the top-level docs should reveal it.
 - Do not hand-maintain source-backed tables that should be generated.
-- If a source surface changes, update the relevant guide and generator input in the same change.
-- Keep top-level pages truthful about actual Snapshot capabilities on `main`.
+- Until dedicated runnable example apps land, the playground is the canonical example surface.
+
+## Cross-Cutting Pages
+
+When a user-facing capability changes, review these pages in addition to the local reference page:
+
+- `apps/docs/src/content/docs/index.md`
+- `apps/docs/src/content/docs/start-here/index.md`
+- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/examples/index.md`
 
 ## Required Follow-Through
 
-- run `bun run docs:ci`
 - update docs links when pages move
+- update generator inputs when source-backed reference changes
+- update persona guides when discovery flow changes
+- run `bun run docs:ci`

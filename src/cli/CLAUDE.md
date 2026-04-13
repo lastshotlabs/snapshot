@@ -13,14 +13,27 @@ Read this after root `CLAUDE.md` when changing scaffold, sync, manifest commands
 - `src/cli/sync.ts`
 - `src/cli/templates/package-json.ts`
 - `src/cli/templates/snapshot-lib.ts`
+- `src/cli/templates/snapshot-config.ts`
 - `src/cli/templates/vite-config.ts`
+- `apps/docs/src/content/docs/build/manifest-apps.md`
+- `apps/docs/src/content/docs/build/sdk-apps.md`
+- `apps/docs/src/content/docs/reference/cli.md`
 - `apps/docs/src/content/docs/contribute/testing.md`
 
 ## Expectations
 
-- CLI docs must match actual generated output and actual flags.
-- If scaffold output changes, update the relevant docs and runnable examples in the same change.
-- If sync output or contract changes, update docs for SDK builders and manifest builders.
+- CLI docs must match actual generated output, flags, and defaults.
+- If scaffold output changes, update the relevant docs and example guidance in the same change.
+- If sync behavior changes, update both the SDK builder flow and any manifest-builder flow that depends on generated contract output.
+
+## Cross-Cutting Docs To Review
+
+- `apps/docs/src/content/docs/index.md`
+- `apps/docs/src/content/docs/start-here/index.md`
+- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/build/manifest-apps.md`
+- `apps/docs/src/content/docs/build/sdk-apps.md`
+- `apps/docs/src/content/docs/examples/index.md`
 
 ## Required Follow-Through
 

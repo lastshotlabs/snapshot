@@ -1,6 +1,29 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
-import { dataSourceSchema, fromRefSchema } from "../../_base/types";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { dataSourceSchema } from "../../_base/types";
+
+export const kanbanSlotNames = [
+  "root",
+  "column",
+  "columnHeader",
+  "columnTitle",
+  "columnCount",
+  "columnBody",
+  "card",
+  "cardTitle",
+  "cardDescription",
+  "cardMeta",
+  "emptyState",
+] as const;
+
+export const kanbanColumnSlotNames = [
+  "column",
+  "columnHeader",
+  "columnTitle",
+  "columnCount",
+  "columnBody",
+] as const;
 
 /**
  * Schema for a Kanban board column definition.
@@ -25,6 +48,8 @@ export const kanbanColumnSchema = z
       .optional(),
     /** Maximum number of cards allowed in this column. */
     limit: z.number().int().min(1).optional(),
+    /** Per-column slot overrides for visible column surfaces. */
+    slots: slotsSchema(kanbanColumnSlotNames).optional(),
   })
   .strict();
 
@@ -50,40 +75,31 @@ export const kanbanColumnSchema = z
  * }
  * ```
  */
-export const kanbanConfigSchema = z
-  .object({
-    /** Component type discriminator. */
-    type: z.literal("kanban"),
-    /** API endpoint returning items with a status/column field. Supports FromRef. */
-    data: dataSourceSchema.optional(),
-    /** Column definitions for the board. */
-    columns: z.array(kanbanColumnSchema),
-    /** Which data field determines column placement. Default: "status". */
-    columnField: z.string().optional(),
-    /** Card title field. Default: "title". */
-    titleField: z.string().optional(),
-    /** Card description field. */
-    descriptionField: z.string().optional(),
-    /** Card assignee field (shows avatar initials). */
-    assigneeField: z.string().optional(),
-    /** Card priority field (shows colored dot). */
-    priorityField: z.string().optional(),
-    /** Action dispatched when a card is clicked. */
-    cardAction: actionSchema.optional(),
-    /** Enable drag-and-drop reordering of cards between columns. Default: false. */
-    sortable: z.boolean().optional(),
-    /** Action dispatched when a card is moved via drag-and-drop. */
-    reorderAction: actionSchema.optional(),
-    /** Message shown when a column has no cards. */
-    emptyMessage: z.string().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-  })
-  .strict();
+export const kanbanConfigSchema = extendComponentSchema({
+  /** Component type discriminator. */
+  type: z.literal("kanban"),
+  /** API endpoint returning items with a status/column field. Supports FromRef. */
+  data: dataSourceSchema.optional(),
+  /** Column definitions for the board. */
+  columns: z.array(kanbanColumnSchema),
+  /** Which data field determines column placement. Default: "status". */
+  columnField: z.string().optional(),
+  /** Card title field. Default: "title". */
+  titleField: z.string().optional(),
+  /** Card description field. */
+  descriptionField: z.string().optional(),
+  /** Card assignee field (shows avatar initials). */
+  assigneeField: z.string().optional(),
+  /** Card priority field (shows colored dot). */
+  priorityField: z.string().optional(),
+  /** Action dispatched when a card is clicked. */
+  cardAction: actionSchema.optional(),
+  /** Enable drag-and-drop reordering of cards between columns. Default: false. */
+  sortable: z.boolean().optional(),
+  /** Action dispatched when a card is moved via drag-and-drop. */
+  reorderAction: actionSchema.optional(),
+  /** Message shown when a column has no cards. */
+  emptyMessage: z.string().optional(),
+  /** Canonical slot contract for visible board surfaces. */
+  slots: slotsSchema(kanbanSlotNames).optional(),
+}).strict();

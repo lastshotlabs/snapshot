@@ -11,4 +11,9 @@ export default defineConfig({
       "@lastshotlabs/snapshot": path.resolve(__dirname, "../src/index.ts"),
     },
   },
+  build: {
+    // The showcase intentionally pulls a broad cross-section of Snapshot surfaces
+    // into one smoke build, so the default warning threshold is too low to be useful.
+    chunkSizeWarningLimit: 3500,
+  },
 });

@@ -50,4 +50,30 @@ describe("NotificationFeed", () => {
       expect.objectContaining({ id: "n1" }),
     );
   });
+
+  it("applies canonical slot styling to header and items", () => {
+    const { container } = render(
+      <NotificationFeed
+        config={{
+          type: "notification-feed",
+          data: "/api/notifications",
+          slots: {
+            header: { className: "feed-header-slot" },
+            item: { className: "feed-item-slot" },
+          },
+        }}
+      />,
+    );
+
+    expect(
+      container
+        .querySelector("[data-notification-header]")
+        ?.classList.contains("feed-header-slot"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector("[data-notification-item]")
+        ?.classList.contains("feed-item-slot"),
+    ).toBe(true);
+  });
 });

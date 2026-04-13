@@ -68,4 +68,36 @@ describe("Timeline", () => {
       expect.objectContaining({ title: "Created", index: 0 }),
     );
   });
+
+  it("applies canonical slot styling to item and title surfaces", () => {
+    const { container } = render(
+      <Timeline
+        config={{
+          type: "timeline",
+          items: [
+            {
+              title: "Created",
+              slots: {
+                item: { className: "timeline-item-slot" },
+              },
+            },
+          ],
+          slots: {
+            title: { className: "timeline-title-slot" },
+          },
+        }}
+      />,
+    );
+
+    expect(
+      container
+        .querySelector('[data-testid="timeline-item"]')
+        ?.classList.contains("timeline-item-slot"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-testid="timeline-title"]')
+        ?.classList.contains("timeline-title-slot"),
+    ).toBe(true);
+  });
 });

@@ -16,7 +16,7 @@ Use this discovery order:
 6. Read the public entrypoint for the surface you are changing.
 7. Read the schema, runtime, registry, generator, example, and nearest test files named by that surface guide.
 
-For manifest UI work, treat these files as the canonical styling pattern library:
+For manifest UI work, treat these files as the canonical styling and composition pattern library:
 
 - `src/ui/components/_base/schema.ts`
 - `src/ui/components/_base/style-surfaces.ts`
@@ -26,12 +26,13 @@ For manifest UI work, treat these files as the canonical styling pattern library
 - `src/ui/components/overlay/popover/component.tsx`
 - `playground/src/showcase.tsx`
 
-For app-builder-facing example truth, treat these files as canonical:
+For app-builder-facing discovery truth, treat these files as canonical:
 
-- `playground/src/showcase.tsx`
-- `playground/src/app.tsx`
-- `apps/docs/src/content/docs/examples/index.md`
+- `apps/docs/src/content/docs/index.md`
+- `apps/docs/src/content/docs/start-here/index.md`
 - `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/examples/index.md`
+- `playground/src/showcase.tsx`
 
 Then execute the change in one pass:
 
@@ -39,12 +40,13 @@ Then execute the change in one pass:
 2. update JSDoc on affected public exports
 3. update generated docs inputs
 4. update impacted guides under `apps/docs`
-5. update impacted examples or playground showcase coverage
-6. update or add the nearest proving tests for the changed contract
-7. update the documentation impact map if the surface is new
-8. run `bun run docs:ci`
+5. update the top-level discovery pages if the capability inventory changed
+6. update impacted examples or playground showcase coverage
+7. update or add the nearest proving tests for the changed contract
+8. update the documentation impact map if the surface is new
+9. run `bun run docs:ci`
 
-If you introduce or change a visible surface in manifest UI:
+If you introduce or change a visible manifest UI surface:
 
 - define or update named `slots`
 - use canonical runtime state names

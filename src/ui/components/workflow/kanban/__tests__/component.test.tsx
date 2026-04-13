@@ -69,4 +69,30 @@ describe("Kanban", () => {
       expect.objectContaining({ id: "task-1" }),
     );
   });
+
+  it("applies canonical slot styling to column and card surfaces", () => {
+    const { container } = render(
+      <Kanban
+        config={{
+          type: "kanban",
+          columns: [{ key: "todo", title: "To Do" }],
+          slots: {
+            column: { className: "board-column" },
+            card: { className: "board-card" },
+          },
+        }}
+      />,
+    );
+
+    expect(
+      container
+        .querySelector('[data-kanban-column="todo"]')
+        ?.classList.contains("board-column"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector("[data-kanban-card]")
+        ?.classList.contains("board-card"),
+    ).toBe(true);
+  });
 });

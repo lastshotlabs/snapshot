@@ -12,10 +12,20 @@ describe("timelineConfigSchema", () => {
           description: "Record created",
           date: "2026-04-13",
           color: "primary",
+          slots: {
+            item: {
+              className: "timeline-item",
+            },
+          },
         },
       ],
       variant: "default",
       showConnector: true,
+      slots: {
+        title: {
+          className: "timeline-title",
+        },
+      },
     });
 
     expect(result.success).toBe(true);

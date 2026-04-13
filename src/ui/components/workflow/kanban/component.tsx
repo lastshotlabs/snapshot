@@ -1,9 +1,15 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  type CSSProperties,
+} from "react";
 import { useComponentData } from "../../_base/use-component-data";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe, usePublish } from "../../../context/hooks";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import {
   DndContext,
   SortableContext,
@@ -33,6 +39,52 @@ const priorityColorMap: Record<string, string> = {
   medium: "var(--sn-color-warning, #f59e0b)",
   low: "var(--sn-color-info, #3b82f6)",
 };
+
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
+
+function asSurfaceConfig(
+  value: unknown,
+): Record<string, unknown> | undefined {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : undefined;
+}
+
+function areRecordListsEqual(
+  left: Record<string, unknown>[],
+  right: Record<string, unknown>[],
+): boolean {
+  if (left === right) {
+    return true;
+  }
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  return left.every((leftItem, index) => {
+    const rightItem = right[index];
+    if (!rightItem) {
+      return false;
+    }
+    if (leftItem === rightItem) {
+      return true;
+    }
+
+    const leftKeys = Object.keys(leftItem);
+    const rightKeys = Object.keys(rightItem);
+    if (leftKeys.length !== rightKeys.length) {
+      return false;
+    }
+
+    return leftKeys.every(
+      (key) =>
+        Object.prototype.hasOwnProperty.call(rightItem, key) &&
+        Object.is(leftItem[key], rightItem[key]),
+    );
+  });
+}
 
 // ── Skeleton ───────────────────────────────────────────────────────────────
 
@@ -75,11 +127,13 @@ function SkeletonCard() {
 function SortableCard({
   item,
   cardId,
+  rootId,
   config,
   execute,
 }: {
   item: Record<string, unknown>;
   cardId: string;
+  rootId: string;
   config: KanbanConfig;
   execute: ReturnType<typeof useActionExecutor>;
 }) {
@@ -96,7 +150,13 @@ function SortableCard({
 
   return (
     <div ref={setNodeRef} {...attributes} {...listeners} style={sortableStyle}>
-      <CardContent item={item} config={config} execute={execute} />
+      <CardContent
+        item={item}
+        cardId={cardId}
+        rootId={rootId}
+        config={config}
+        execute={execute}
+      />
     </div>
   );
 }
@@ -105,12 +165,16 @@ function SortableCard({
 
 function DroppableColumnBody({
   columnKey,
+  snapshotId,
+  className,
   children,
   style,
 }: {
   columnKey: string;
+  snapshotId: string;
+  className?: string;
   children: React.ReactNode;
-  style: React.CSSProperties;
+  style?: CSSProperties;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: `column-${columnKey}` });
 
@@ -118,6 +182,8 @@ function DroppableColumnBody({
     <div
       ref={setNodeRef}
       data-kanban-body
+      data-snapshot-id={snapshotId}
+      className={className}
       style={{
         ...style,
         backgroundColor: isOver
@@ -136,10 +202,14 @@ function DroppableColumnBody({
 
 function CardContent({
   item,
+  cardId,
+  rootId,
   config,
   execute,
 }: {
   item: Record<string, unknown>;
+  cardId: string;
+  rootId: string;
   config: KanbanConfig;
   execute: ReturnType<typeof useActionExecutor>;
 }) {
@@ -154,123 +224,187 @@ function CardContent({
   const priority = config.priorityField
     ? String(item[config.priorityField] ?? "")
     : undefined;
+  const itemSlots = asSurfaceConfig(item.slots);
+  const cardSurfaceId = `${rootId}-card-${cardId}`;
+  const titleSurfaceId = `${cardSurfaceId}-title`;
+  const descriptionSurfaceId = `${cardSurfaceId}-description`;
+  const metaSurfaceId = `${cardSurfaceId}-meta`;
+
+  const cardSurface = resolveSurfacePresentation({
+    surfaceId: cardSurfaceId,
+    implementationBase: {
+      bg: "var(--sn-color-card, #fff)",
+      borderRadius: "sm",
+      padding: "sm",
+      shadow: "sm",
+      cursor: config.sortable
+        ? "grab"
+        : config.cardAction
+          ? "pointer"
+          : "default",
+      hover: {
+        shadow: "md",
+      },
+      focus: {
+        ring: true,
+      },
+      active: {
+        scale: 0.98,
+      },
+      states: {
+        current: {
+          shadow: "lg",
+        },
+      },
+      style: {
+        transition:
+          "box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      },
+    },
+    componentSurface: config.slots?.card,
+    itemSurface: asSurfaceConfig(itemSlots?.card),
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: titleSurfaceId,
+    implementationBase: {
+      fontWeight: "semibold",
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #0f172a)",
+      style: {
+        marginBottom: description ? "var(--sn-spacing-xs, 4px)" : undefined,
+      },
+    },
+    componentSurface: config.slots?.cardTitle,
+    itemSurface: asSurfaceConfig(itemSlots?.cardTitle),
+  });
+  const descriptionSurface = resolveSurfacePresentation({
+    surfaceId: descriptionSurfaceId,
+    implementationBase: {
+      fontSize: "xs",
+      color: "var(--sn-color-muted-foreground, #64748b)",
+      overflow: "hidden",
+      style: {
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        marginBottom: "var(--sn-spacing-xs, 4px)",
+      } as CSSProperties,
+    },
+    componentSurface: config.slots?.cardDescription,
+    itemSurface: asSurfaceConfig(itemSlots?.cardDescription),
+  });
+  const metaSurface = resolveSurfacePresentation({
+    surfaceId: metaSurfaceId,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "between",
+      style: {
+        marginTop: "var(--sn-spacing-xs, 4px)",
+      },
+    },
+    componentSurface: config.slots?.cardMeta,
+    itemSurface: asSurfaceConfig(itemSlots?.cardMeta),
+  });
 
   return (
-    <div
-      data-kanban-card
-      role={config.cardAction ? "button" : undefined}
-      tabIndex={config.cardAction ? 0 : undefined}
-      onClick={
-        config.cardAction
-          ? () => void execute(config.cardAction!, { ...item })
-          : undefined
-      }
-      onKeyDown={
-        config.cardAction
-          ? (e: React.KeyboardEvent) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                void execute(config.cardAction!, { ...item });
-              }
-            }
-          : undefined
-      }
-      style={{
-        backgroundColor: "var(--sn-color-card, #fff)",
-        borderRadius: "var(--sn-radius-sm, 4px)",
-        padding: "var(--sn-spacing-sm, 8px)",
-        boxShadow:
-          "var(--sn-shadow-sm, 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1))",
-        cursor: config.sortable
-          ? "grab"
-          : config.cardAction
-            ? "pointer"
-            : "default",
-        transition:
-          "box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-      }}
-    >
-      {/* Title */}
+    <>
       <div
-        style={{
-          fontWeight:
-            "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-          fontSize: "var(--sn-font-size-sm, 0.875rem)",
-          color: "var(--sn-color-foreground, #0f172a)",
-          marginBottom: description ? "var(--sn-spacing-xs, 4px)" : undefined,
-        }}
+        data-kanban-card
+        data-snapshot-id={cardSurfaceId}
+        className={cardSurface.className}
+        role={config.cardAction ? "button" : undefined}
+        tabIndex={config.cardAction ? 0 : undefined}
+        onClick={
+          config.cardAction
+            ? () => void execute(config.cardAction!, { ...item })
+            : undefined
+        }
+        onKeyDown={
+          config.cardAction
+            ? (e: React.KeyboardEvent) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  void execute(config.cardAction!, { ...item });
+                }
+              }
+            : undefined
+        }
+        style={cardSurface.style}
       >
-        {title}
-      </div>
+      {/* Title */}
+        <div
+          data-snapshot-id={titleSurfaceId}
+          className={titleSurface.className}
+          style={titleSurface.style}
+        >
+          {title}
+        </div>
 
       {/* Description */}
-      {description && (
-        <div
-          style={{
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            color: "var(--sn-color-muted-foreground, #64748b)",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            marginBottom: "var(--sn-spacing-xs, 4px)",
-          }}
-        >
-          {description}
-        </div>
-      )}
+        {description && (
+          <div
+            data-snapshot-id={descriptionSurfaceId}
+            className={descriptionSurface.className}
+            style={descriptionSurface.style}
+          >
+            {description}
+          </div>
+        )}
 
       {/* Footer: assignee + priority */}
-      {(assignee || priority) && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginTop: "var(--sn-spacing-xs, 4px)",
-          }}
-        >
-          {assignee ? (
-            <div
-              data-kanban-assignee
-              title={assignee}
-              style={{
-                width: "24px",
-                height: "24px",
-                borderRadius: "var(--sn-radius-full, 9999px)",
-                backgroundColor: "var(--sn-color-primary, #2563eb)",
-                color: "var(--sn-color-primary-foreground, #fff)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                fontWeight:
-                  "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-              }}
-            >
-              {getInitials(assignee)}
-            </div>
-          ) : (
-            <span />
-          )}
+        {(assignee || priority) && (
+          <div
+            data-snapshot-id={metaSurfaceId}
+            className={metaSurface.className}
+            style={metaSurface.style}
+          >
+            {assignee ? (
+              <div
+                data-kanban-assignee
+                title={assignee}
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "var(--sn-radius-full, 9999px)",
+                  backgroundColor: "var(--sn-color-primary, #2563eb)",
+                  color: "var(--sn-color-primary-foreground, #fff)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                  fontWeight:
+                    "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+                }}
+              >
+                {getInitials(assignee)}
+              </div>
+            ) : (
+              <span />
+            )}
 
-          {priority && (
-            <div
-              data-kanban-priority={priority}
-              title={`Priority: ${priority}`}
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "var(--sn-radius-full, 9999px)",
-                backgroundColor:
-                  priorityColorMap[priority.toLowerCase()] ??
-                  "var(--sn-color-muted, #e5e7eb)",
-              }}
-            />
-          )}
-        </div>
-      )}
-    </div>
+            {priority && (
+              <div
+                data-kanban-priority={priority}
+                title={`Priority: ${priority}`}
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "var(--sn-radius-full, 9999px)",
+                  backgroundColor:
+                    priorityColorMap[priority.toLowerCase()] ??
+                    "var(--sn-color-muted, #e5e7eb)",
+                }}
+              />
+            )}
+          </div>
+        )}
+      </div>
+      <SurfaceStyles css={cardSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={descriptionSurface.scopedCss} />
+      <SurfaceStyles css={metaSurface.scopedCss} />
+    </>
   );
 }
 
@@ -315,7 +449,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
 
   // Sync from server data
   React.useEffect(() => {
-    setItems(rawItems);
+    setItems((currentItems) =>
+      areRecordListsEqual(currentItems, rawItems) ? currentItems : rawItems,
+    );
   }, [rawItems]);
 
   // Get card id
@@ -454,6 +590,21 @@ export function Kanban({ config }: { config: KanbanConfig }) {
   if (visible === false) return null;
 
   const activeItem = activeId ? findItem(activeId) : null;
+  const rootId = config.id ?? "kanban";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      display: "flex",
+      gap: "md",
+      overflow: "auto",
+      style: {
+        overflowX: "auto",
+        padding: "var(--sn-spacing-sm, 8px) 0",
+      },
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
 
   // Column content renderer (shared between sortable and static)
   const renderColumn = (col: (typeof config.columns)[number]) => {
@@ -461,61 +612,134 @@ export function Kanban({ config }: { config: KanbanConfig }) {
     const isOverLimit = col.limit != null && colItems.length > col.limit;
     const accentColor = col.color ?? "muted";
     const cardIds = colItems.map(getCardId);
+    const columnSurfaceId = `${rootId}-column-${col.key}`;
+    const columnHeaderSurfaceId = `${columnSurfaceId}-header`;
+    const columnTitleSurfaceId = `${columnSurfaceId}-title`;
+    const columnCountSurfaceId = `${columnSurfaceId}-count`;
+    const columnBodySurfaceId = `${columnSurfaceId}-body`;
+    const emptyStateSurfaceId = `${columnSurfaceId}-empty`;
+    const columnSurface = resolveSurfacePresentation({
+      surfaceId: columnSurfaceId,
+      implementationBase: {
+        bg: "var(--sn-color-secondary, #f8fafc)",
+        borderRadius: "md",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        style: {
+          minWidth: "min(280px, 85vw)",
+          maxWidth: "min(320px, 85vw)",
+          flex: "0 0 min(280px, 85vw)",
+        },
+      },
+      componentSurface: config.slots?.column,
+      itemSurface: col.slots?.column,
+    });
+    const columnHeaderSurface = resolveSurfacePresentation({
+      surfaceId: columnHeaderSurfaceId,
+      implementationBase: {
+        display: "flex",
+        alignItems: "center",
+        gap: "sm",
+        hover: {
+          bg: "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 40%, transparent)",
+        },
+        style: {
+          borderTop: `3px solid ${colorVar(accentColor)}`,
+          padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
+        },
+      },
+      componentSurface: config.slots?.columnHeader,
+      itemSurface: col.slots?.columnHeader,
+    });
+    const columnTitleSurface = resolveSurfacePresentation({
+      surfaceId: columnTitleSurfaceId,
+      implementationBase: {
+        fontWeight: "semibold",
+        fontSize: "sm",
+        color: isOverLimit
+          ? "var(--sn-color-destructive, #ef4444)"
+          : "var(--sn-color-foreground, #0f172a)",
+      },
+      componentSurface: config.slots?.columnTitle,
+      itemSurface: col.slots?.columnTitle,
+    });
+    const columnCountSurface = resolveSurfacePresentation({
+      surfaceId: columnCountSurfaceId,
+      implementationBase: {
+        fontSize: "xs",
+        borderRadius: "full",
+        textAlign: "center",
+        display: "inline-block",
+        style: {
+          backgroundColor: isOverLimit
+            ? "var(--sn-color-destructive, #ef4444)"
+            : "var(--sn-color-muted, #e5e7eb)",
+          color: isOverLimit
+            ? "var(--sn-color-destructive-foreground, #fff)"
+            : "var(--sn-color-muted-foreground, #64748b)",
+          padding: "0 var(--sn-spacing-xs, 4px)",
+          minWidth: "1.5em",
+        },
+      },
+      componentSurface: config.slots?.columnCount,
+      itemSurface: col.slots?.columnCount,
+    });
+    const columnBodySurface = resolveSurfacePresentation({
+      surfaceId: columnBodySurfaceId,
+      implementationBase: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "sm",
+        style: {
+          flex: 1,
+          overflowY: "auto",
+          minHeight: sortable ? "80px" : "60px",
+          padding:
+            "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px) var(--sn-spacing-sm, 8px)",
+        },
+      },
+      componentSurface: config.slots?.columnBody,
+      itemSurface: col.slots?.columnBody,
+    });
+    const emptyStateSurface = resolveSurfacePresentation({
+      surfaceId: emptyStateSurfaceId,
+      implementationBase: {
+        fontSize: "xs",
+        color: "var(--sn-color-muted-foreground, #94a3b8)",
+        textAlign: "center",
+        padding: "md",
+      },
+      componentSurface: config.slots?.emptyState,
+    });
 
     return (
       <div
         key={col.key}
         data-kanban-column={col.key}
-        style={{
-          minWidth: "min(280px, 85vw)",
-          maxWidth: "min(320px, 85vw)",
-          flex: "0 0 min(280px, 85vw)",
-          backgroundColor: "var(--sn-color-secondary, #f8fafc)",
-          borderRadius: "var(--sn-radius-md, 6px)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
+        data-snapshot-id={columnSurfaceId}
+        className={columnSurface.className}
+        style={columnSurface.style}
       >
         {/* Column header */}
         <div
           data-kanban-header
-          style={{
-            borderTop: `3px solid ${colorVar(accentColor)}`,
-            padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--sn-spacing-sm, 8px)",
-          }}
+          data-snapshot-id={columnHeaderSurfaceId}
+          className={columnHeaderSurface.className}
+          style={columnHeaderSurface.style}
         >
           <span
-            style={{
-              fontWeight:
-                "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              color: isOverLimit
-                ? "var(--sn-color-destructive, #ef4444)"
-                : undefined,
-            }}
+            data-snapshot-id={columnTitleSurfaceId}
+            className={columnTitleSurface.className}
+            style={columnTitleSurface.style}
           >
             {col.title}
           </span>
           <span
             data-kanban-count
-            style={{
-              fontSize: "var(--sn-font-size-xs, 0.75rem)",
-              backgroundColor: isOverLimit
-                ? "var(--sn-color-destructive, #ef4444)"
-                : "var(--sn-color-muted, #e5e7eb)",
-              color: isOverLimit
-                ? "var(--sn-color-destructive-foreground, #fff)"
-                : "var(--sn-color-muted-foreground, #64748b)",
-              borderRadius: "var(--sn-radius-full, 9999px)",
-              padding: "0 var(--sn-spacing-xs, 4px)",
-              minWidth: "1.5em",
-              textAlign: "center",
-              display: "inline-block",
-            }}
+            data-snapshot-id={columnCountSurfaceId}
+            className={columnCountSurface.className}
+            style={columnCountSurface.style}
           >
             {colItems.length}
             {col.limit != null ? `/${col.limit}` : ""}
@@ -526,16 +750,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
         {sortable ? (
           <DroppableColumnBody
             columnKey={col.key}
-            style={{
-              padding:
-                "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px) var(--sn-spacing-sm, 8px)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--sn-spacing-sm, 8px)",
-              flex: 1,
-              overflowY: "auto",
-              minHeight: "80px",
-            }}
+            snapshotId={columnBodySurfaceId}
+            className={columnBodySurface.className}
+            style={columnBodySurface.style}
           >
             {isLoading && (
               <>
@@ -562,12 +779,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
             {!isLoading && !error && colItems.length === 0 && (
               <div
                 data-kanban-empty
-                style={{
-                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                  color: "var(--sn-color-muted-foreground, #94a3b8)",
-                  textAlign: "center",
-                  padding: "var(--sn-spacing-md, 12px)",
-                }}
+                data-snapshot-id={emptyStateSurfaceId}
+                className={emptyStateSurface.className}
+                style={emptyStateSurface.style}
               >
                 {config.emptyMessage ?? "No items"}
               </div>
@@ -583,6 +797,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
                     key={getCardId(item)}
                     item={item}
                     cardId={getCardId(item)}
+                    rootId={rootId}
                     config={config}
                     execute={execute}
                   />
@@ -593,16 +808,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
         ) : (
           <div
             data-kanban-body
-            style={{
-              padding:
-                "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px) var(--sn-spacing-sm, 8px)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--sn-spacing-sm, 8px)",
-              flex: 1,
-              overflowY: "auto",
-              minHeight: "60px",
-            }}
+            data-snapshot-id={columnBodySurfaceId}
+            className={columnBodySurface.className}
+            style={columnBodySurface.style}
           >
             {isLoading && (
               <>
@@ -629,12 +837,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
             {!isLoading && !error && colItems.length === 0 && (
               <div
                 data-kanban-empty
-                style={{
-                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                  color: "var(--sn-color-muted-foreground, #94a3b8)",
-                  textAlign: "center",
-                  padding: "var(--sn-spacing-md, 12px)",
-                }}
+                data-snapshot-id={emptyStateSurfaceId}
+                className={emptyStateSurface.className}
+                style={emptyStateSurface.style}
               >
                 {config.emptyMessage ?? "No items"}
               </div>
@@ -646,12 +851,20 @@ export function Kanban({ config }: { config: KanbanConfig }) {
                 <CardContent
                   key={getCardId(item)}
                   item={item}
+                  cardId={getCardId(item)}
+                  rootId={rootId}
                   config={config}
                   execute={execute}
                 />
               ))}
           </div>
         )}
+        <SurfaceStyles css={columnSurface.scopedCss} />
+        <SurfaceStyles css={columnHeaderSurface.scopedCss} />
+        <SurfaceStyles css={columnTitleSurface.scopedCss} />
+        <SurfaceStyles css={columnCountSurface.scopedCss} />
+        <SurfaceStyles css={columnBodySurface.scopedCss} />
+        <SurfaceStyles css={emptyStateSurface.scopedCss} />
       </div>
     );
   };
@@ -660,32 +873,12 @@ export function Kanban({ config }: { config: KanbanConfig }) {
     <div
       data-snapshot-component="kanban"
       data-testid="kanban"
-      className={config.className}
-      style={{
-        display: "flex",
-        gap: "var(--sn-spacing-md, 12px)",
-        overflowX: "auto",
-        padding: "var(--sn-spacing-sm, 8px) 0",
-        ...(config.style as React.CSSProperties),
-      }}
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
-      {/* Hover/focus styles */}
-      <style>{`
-[data-snapshot-component="kanban"] [data-kanban-card]:hover {
-  box-shadow: var(--sn-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1));
-}
-[data-snapshot-component="kanban"] [data-kanban-card]:focus {
-  outline: none;
-}
-[data-snapshot-component="kanban"] [data-kanban-card]:focus-visible {
-  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
-  outline-offset: var(--sn-ring-offset, 2px);
-}
-[data-snapshot-component="kanban"] [data-kanban-header]:hover {
-  background-color: color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 40%, transparent);
-}
-`}</style>
       {config.columns.map(renderColumn)}
+      <SurfaceStyles css={rootSurface.scopedCss} />
     </div>
   );
 
@@ -705,6 +898,8 @@ export function Kanban({ config }: { config: KanbanConfig }) {
             <div style={{ width: "min(280px, 85vw)" }}>
               <CardContent
                 item={activeItem}
+                cardId={activeId ?? "active"}
+                rootId={rootId}
                 config={config}
                 execute={execute}
               />

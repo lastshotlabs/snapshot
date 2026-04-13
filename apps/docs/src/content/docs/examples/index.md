@@ -6,7 +6,7 @@ draft: false
 
 Snapshot currently treats the playground as the canonical example surface while the dedicated runnable examples workspace is still being built out.
 
-If a user-facing component, preset, or composition changes, the relevant showcase entry should move in the same commit.
+If a user-facing component, preset, or composed workflow changes, the relevant showcase entry should move in the same change.
 
 ## Canonical Example Sources
 
@@ -14,11 +14,12 @@ If a user-facing component, preset, or composition changes, the relevant showcas
 - `playground/src/app.tsx`
 - `playground/src/token-editor.tsx`
 
-## How To Read The Playground
+## What The Playground Currently Proves
 
-- `playground/src/showcase.tsx` is the catalog of sections, fixtures, and canonical compositions.
-- `playground/src/app.tsx` is the runtime shell that boots providers, tokens, mock API data, and global UI surfaces like toasts and confirm dialogs.
-- `playground/src/token-editor.tsx` is the canonical token-editing example for theme and visual-system work.
+- the current component catalog is not just theoretical API surface
+- tokens, slots, and interaction states can be inspected live against real config
+- contributors have a single canonical place to update when visible behavior changes
+- app-building agents can find representative compositions without crawling the repo
 
 ## Showcase Coverage By Section
 
@@ -26,6 +27,7 @@ If a user-facing component, preset, or composition changes, the relevant showcas
 | ------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `dashboard`         | KPI cards, stats, trends, and summary layout composition                               | `playground/src/showcase.tsx`, `src/ui/components/data/stat-card/index.ts`            |
 | `data`              | operational tables, detail cards, filters, selection, and row actions                  | `playground/src/showcase.tsx`, `src/ui/components/data/data-table/index.ts`           |
+| `primitives`        | baseline atoms for text, links, badges, separators, and utility interaction patterns   | `playground/src/showcase.tsx`, `src/ui/components/primitives/link/index.ts`           |
 | `forms`             | form assembly, quick entry, inline editing, tagging, location search, and input states | `playground/src/showcase.tsx`, `src/ui/components/forms/auto-form/index.ts`           |
 | `overlay`           | modal, drawer, popover, context menu, command palette, and transient interactions      | `playground/src/showcase.tsx`, `src/ui/components/overlay/command-palette/index.ts`   |
 | `navigation`        | breadcrumbs, accordions, steppers, tabs, tree view, and dropdown navigation            | `playground/src/showcase.tsx`, `src/ui/components/navigation/tree-view/index.ts`      |
@@ -34,12 +36,6 @@ If a user-facing component, preset, or composition changes, the relevant showcas
 | `communication`     | chat, threads, comments, emoji, GIF, reactions, presence, and typing indicators        | `playground/src/showcase.tsx`, `src/ui/components/communication/chat-window/index.ts` |
 | `presets`           | CRUD, dashboard, and settings page assembly helpers                                    | `playground/src/showcase.tsx`, `src/ui/presets/index.ts`                              |
 | `feed-chart-wizard` | feed streams, chart variants and empty states, and multistep onboarding flows          | `playground/src/showcase.tsx`, `src/ui/components/data/chart/index.ts`                |
-
-## What The Showcase Proves
-
-- The current component catalog is not just theoretical API surface; most major visible surfaces have a composed example on `main`.
-- Tokens, slots, and interaction states can be inspected live against real config.
-- Contributors have a single canonical place to update when visible behavior changes.
 
 ## How To Use It
 

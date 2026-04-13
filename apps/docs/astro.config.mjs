@@ -8,6 +8,7 @@ export default defineConfig({
       title: "Snapshot Docs",
       description:
         "Source-backed documentation for Snapshot's SDK, manifest UI, SSR, Vite, CLI, and contributor workflows.",
+      disable404Route: true,
       social: [
         {
           icon: "github",

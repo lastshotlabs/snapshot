@@ -7,6 +7,14 @@ describe("kanbanConfigSchema", () => {
     const result = kanbanConfigSchema.safeParse({
       type: "kanban",
       columns: [{ key: "todo", title: "To Do" }],
+      slots: {
+        column: {
+          className: "kanban-column",
+          states: {
+            current: { bg: "primary" },
+          },
+        },
+      },
     });
 
     expect(result.success).toBe(true);

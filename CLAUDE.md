@@ -1,35 +1,30 @@
 # Snapshot
 
-**Pre-production. No external consumers.** Change anything freely — no deprecation cycles,
-no backwards compat, no migration theater. If a pattern is wrong, fix it now.
+Snapshot is the frontend framework for bunshot-powered backends.
 
-## What Snapshot Is
+It ships five contributor-facing surfaces:
 
-Frontend SDK + CLI for bunshot-powered backends:
+- SDK runtime in `src/index.ts` and `src/create-snapshot.tsx`
+- config-driven UI runtime in `src/ui.ts` and `src/ui/**`
+- SSR and Vite integration in `src/ssr/**` and `src/vite/**`
+- CLI and scaffold/sync tooling in `src/cli/**`
+- docs and canonical examples in `apps/docs/**` and `playground/**`
 
-- **SDK** — TypeScript library (`createSnapshot` factory, hooks, types) for browser
-- **CLI** — oclif-based tool (`snapshot init`, `snapshot sync`) for Node/Bun
-- **Config-driven UI layer** _(in development)_ — design tokens, config-addressable
-  components, page composition from manifest + OpenAPI, inter-component data binding,
-  action vocabulary
+## What Snapshot Supports On `main`
 
-Never mix browser-only APIs into CLI code or vice versa.
+Snapshot is no longer just an in-progress manifest experiment.
 
-Backend manifest (bunshot) + frontend manifest (snapshot) = complete application.
-`bunshot sync` reads the backend OpenAPI spec → generates typed API client + hooks →
-generates page components and data bindings from frontend manifest + OpenAPI shapes.
+It currently supports:
 
-## Manifest-First Requirement
+- manifest-driven app assembly with routes, resources, workflows, overlays, navigation, tokens, slots, and presets
+- SDK-driven apps with `createSnapshot`, auth, MFA, passkeys, OAuth, community, webhooks, websocket, SSE, and push primitives
+- plugin-driven extension through `definePlugin`, custom components, component groups, and manifest schema generation
+- SSR, manifest rendering, RSC-aware rendering, prefetch manifests, PPR, and SSG-oriented Vite integration
+- a large config-addressable UI catalog across data, forms, layout, navigation, overlays, content, media, communication, commerce, and workflow
 
-**EVERYTHING runs in manifest mode.** If a feature requires writing React/TypeScript to
-activate, it is incomplete. Test: "Can a user enable this by editing manifest JSON with
-no TypeScript?" If no, the design is wrong.
+Manifest-first is a first-class path. Custom React and SSR integration are also first-class paths. Do not force everything through one model when the public API already supports several.
 
-## Rules
-
-All engineering rules, code patterns, component conventions, token rules, SSR rules,
-testing patterns, and definition of done live in [`docs/engineering-rules.md`](docs/engineering-rules.md).
-Documentation workflow rules live in [`docs/documentation-policy.md`](docs/documentation-policy.md).
+## Read Order For Contributors
 
 Before changing Snapshot, contributors and implementation agents must read:
 
@@ -38,6 +33,8 @@ Before changing Snapshot, contributors and implementation agents must read:
 3. this file
 4. the nearest surface `CLAUDE.md`
 5. `apps/docs/src/content/docs/contribute/testing.md`
+6. the relevant public entrypoint
+7. the relevant schema, runtime, registry, example, and nearest test files
 
 Surface guides:
 
@@ -47,6 +44,34 @@ Surface guides:
 - `playground/CLAUDE.md`
 - `apps/docs/CLAUDE.md`
 
+## Read Order For App Builders
+
+App-building agents should not scan the repo.
+
+Use this order:
+
+1. `apps/docs/src/content/docs/index.md`
+2. `apps/docs/src/content/docs/start-here/index.md`
+3. the persona guide for the job:
+   - `apps/docs/src/content/docs/build/manifest-apps.md`
+   - `apps/docs/src/content/docs/build/sdk-apps.md`
+   - `apps/docs/src/content/docs/integrate/ssr-rsc.md`
+4. generated reference for the relevant surface
+5. `apps/docs/src/content/docs/examples/index.md`
+6. only then lower-level source
+
+## Non-Negotiables
+
+- Read actual source before documenting behavior. Guessing is a bug.
+- Public API changes must update JSDoc, generated reference inputs, impacted guides, impacted examples, and proving tests in the same change.
+- Capability changes must review top-level docs, not just reference pages. At minimum consider:
+  - `apps/docs/src/content/docs/index.md`
+  - `apps/docs/src/content/docs/start-here/index.md`
+  - `apps/docs/src/content/docs/start-here/capabilities.md`
+  - `apps/docs/src/content/docs/examples/index.md`
+- If a change affects app-builder discovery, update the persona guide that should send readers to it.
+- `bun run docs:ci` is the default docs validation path for contributor work.
+
 ## Writing Specs
 
-Follow [`docs/spec-process.md`](docs/spec-process.md).
+Follow `docs/spec-process.md`.

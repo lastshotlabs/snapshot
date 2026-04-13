@@ -8,6 +8,10 @@ describe("notificationFeedConfigSchema", () => {
       type: "notification-feed",
       data: "/api/notifications",
       showMarkAllRead: true,
+      slots: {
+        header: { className: "feed-header" },
+        item: { className: "feed-item" },
+      },
     });
 
     expect(result.success).toBe(true);

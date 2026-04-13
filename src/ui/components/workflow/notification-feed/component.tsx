@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, type CSSProperties } from "react";
 import { useComponentData } from "../../_base/use-component-data";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { formatRelativeTime } from "../../_base/utils";
 import type { NotificationFeedConfig } from "./types";
 
-// ── Type icons (SVG) ───────────────────────────────────────────────────────
-
-/** Notification type icon colors. */
 const typeColorMap: Record<string, string> = {
   info: "var(--sn-color-info, #3b82f6)",
   success: "var(--sn-color-success, #22c55e)",
@@ -17,29 +15,50 @@ const typeColorMap: Record<string, string> = {
   error: "var(--sn-color-destructive, #ef4444)",
 };
 
-/**
- * Renders a simple SVG icon based on notification type.
- */
-function TypeIcon({ type }: { type: string }) {
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
+
+function asSurfaceConfig(
+  value: unknown,
+): Record<string, unknown> | undefined {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : undefined;
+}
+
+function TypeIcon({
+  type,
+  surfaceId,
+  className,
+  style,
+}: {
+  type: string;
+  surfaceId: string;
+  className?: string;
+  style?: CSSProperties;
+}) {
   const color = typeColorMap[type] ?? typeColorMap.info!;
   const size = 20;
-
-  const iconStyle: React.CSSProperties = {
+  const iconStyle: CSSProperties = {
     width: size,
     height: size,
     flexShrink: 0,
+    ...style,
   };
 
   switch (type) {
     case "success":
       return (
         <svg
+          data-snapshot-id={surfaceId}
           viewBox="0 0 24 24"
           fill="none"
           stroke={color}
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+          className={className}
           style={iconStyle}
           aria-hidden
         >
@@ -50,12 +69,14 @@ function TypeIcon({ type }: { type: string }) {
     case "warning":
       return (
         <svg
+          data-snapshot-id={surfaceId}
           viewBox="0 0 24 24"
           fill="none"
           stroke={color}
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+          className={className}
           style={iconStyle}
           aria-hidden
         >
@@ -67,12 +88,14 @@ function TypeIcon({ type }: { type: string }) {
     case "error":
       return (
         <svg
+          data-snapshot-id={surfaceId}
           viewBox="0 0 24 24"
           fill="none"
           stroke={color}
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+          className={className}
           style={iconStyle}
           aria-hidden
         >
@@ -82,15 +105,16 @@ function TypeIcon({ type }: { type: string }) {
         </svg>
       );
     default:
-      // info
       return (
         <svg
+          data-snapshot-id={surfaceId}
           viewBox="0 0 24 24"
           fill="none"
           stroke={color}
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+          className={className}
           style={iconStyle}
           aria-hidden
         >
@@ -101,8 +125,6 @@ function TypeIcon({ type }: { type: string }) {
       );
   }
 }
-
-// ── Skeleton ───────────────────────────────────────────────────────────────
 
 function SkeletonItem() {
   return (
@@ -149,17 +171,6 @@ function SkeletonItem() {
   );
 }
 
-// ── Main component ─────────────────────────────────────────────────────────
-
-/**
- * Config-driven NotificationFeed component.
- *
- * Renders a scrollable list of notifications with read/unread states,
- * type-based icons, relative timestamps, a "Mark all read" button,
- * and click actions.
- *
- * @param props - Component props containing the NotificationFeed configuration
- */
 export function NotificationFeed({
   config,
 }: {
@@ -175,8 +186,8 @@ export function NotificationFeed({
   const readField = config.readField ?? "read";
   const typeField = config.typeField ?? "type";
   const showMarkAllRead = config.showMarkAllRead ?? true;
+  const rootId = config.id ?? "notification-feed";
 
-  // Extract items
   const items: Record<string, unknown>[] = useMemo(() => {
     if (!data) return [];
     if (Array.isArray(data)) return data as Record<string, unknown>[];
@@ -187,20 +198,16 @@ export function NotificationFeed({
     return [];
   }, [data]);
 
-  // Unread count
   const unreadCount = useMemo(
     () => items.filter((item) => !item[readField]).length,
     [items, readField],
   );
 
-  // Handle item click
   const handleItemClick = useCallback(
     (item: Record<string, unknown>) => {
-      // Mark as read
       if (config.markReadAction && !item[readField]) {
         void execute(config.markReadAction, { ...item });
       }
-      // Item action
       if (config.itemAction) {
         void execute(config.itemAction, { ...item });
       }
@@ -208,7 +215,6 @@ export function NotificationFeed({
     [config.markReadAction, config.itemAction, readField, execute],
   );
 
-  // Handle mark all read
   const handleMarkAllRead = useCallback(() => {
     if (!config.markReadAction) return;
     for (const item of items) {
@@ -218,28 +224,107 @@ export function NotificationFeed({
     }
   }, [config.markReadAction, items, readField, execute]);
 
-  if (visible === false) return null;
+  if (visible === false) {
+    return null;
+  }
+
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const headerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-header`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "between",
+      style: {
+        padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
+        borderBottom:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
+      },
+    },
+    componentSurface: config.slots?.header,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: {
+      fontSize: "md",
+      fontWeight: "semibold",
+      color: "var(--sn-color-foreground, #0f172a)",
+    },
+    componentSurface: config.slots?.title,
+  });
+  const unreadBadgeSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-unread-badge`,
+    implementationBase: {
+      fontSize: "xs",
+      bg: "var(--sn-color-primary, #2563eb)",
+      color: "var(--sn-color-primary-foreground, #fff)",
+      borderRadius: "full",
+      textAlign: "center",
+      display: "inline-block",
+      style: {
+        padding: "0 var(--sn-spacing-xs, 4px)",
+        minWidth: "1.5em",
+      },
+    },
+    componentSurface: config.slots?.unreadBadge,
+  });
+  const markAllButtonSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-mark-all`,
+    implementationBase: {
+      color: "var(--sn-color-primary, #2563eb)",
+      cursor: "pointer",
+      fontSize: "xs",
+      hover: {
+        opacity: 0.85,
+      },
+      focus: {
+        ring: true,
+      },
+      style: {
+        background: "none",
+        border: "none",
+        padding: 0,
+      },
+    },
+    componentSurface: config.slots?.markAllButton,
+  });
+  const listSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-list`,
+    implementationBase: {
+      style: {
+        maxHeight: config.maxHeight ?? "auto",
+        overflowY: config.maxHeight ? "auto" : undefined,
+      },
+    },
+    componentSurface: config.slots?.list,
+  });
+  const emptyStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-empty`,
+    implementationBase: {
+      padding: "xl",
+      color: "var(--sn-color-muted-foreground, #94a3b8)",
+      fontSize: "sm",
+      textAlign: "center",
+    },
+    componentSurface: config.slots?.emptyState,
+  });
 
   return (
     <div
       data-snapshot-component="notification-feed"
-      className={config.className}
-      style={{
-        ...((config.style as React.CSSProperties) ?? {}),
-      }}
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
-      <style>{`[data-notification-item]:hover { background-color: var(--sn-color-accent, #f0f9ff) !important; }`}</style>
-      {/* Header */}
       <div
         data-notification-header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-          borderBottom:
-            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
-        }}
+        data-snapshot-id={`${rootId}-header`}
+        className={headerSurface.className}
+        style={headerSurface.style}
       >
         <div
           style={{
@@ -249,28 +334,18 @@ export function NotificationFeed({
           }}
         >
           <span
-            style={{
-              fontSize: "var(--sn-font-size-md, 1rem)",
-              fontWeight:
-                "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-              color: "var(--sn-color-foreground, #0f172a)",
-            }}
+            data-snapshot-id={`${rootId}-title`}
+            className={titleSurface.className}
+            style={titleSurface.style}
           >
             Notifications
           </span>
           {unreadCount > 0 && (
             <span
               data-notification-badge
-              style={{
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                backgroundColor: "var(--sn-color-primary, #2563eb)",
-                color: "var(--sn-color-primary-foreground, #fff)",
-                borderRadius: "var(--sn-radius-full, 9999px)",
-                padding: "0 var(--sn-spacing-xs, 4px)",
-                minWidth: "1.5em",
-                textAlign: "center",
-                display: "inline-block",
-              }}
+              data-snapshot-id={`${rootId}-unread-badge`}
+              className={unreadBadgeSurface.className}
+              style={unreadBadgeSurface.style}
             >
               {unreadCount}
             </span>
@@ -280,30 +355,22 @@ export function NotificationFeed({
         {showMarkAllRead && unreadCount > 0 && config.markReadAction && (
           <button
             data-notification-mark-all
+            data-snapshot-id={`${rootId}-mark-all`}
+            className={markAllButtonSurface.className}
             onClick={handleMarkAllRead}
-            style={{
-              background: "none",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-              fontSize: "var(--sn-font-size-xs, 0.75rem)",
-              color: "var(--sn-color-primary, #2563eb)",
-            }}
+            style={markAllButtonSurface.style}
           >
             Mark all read
           </button>
         )}
       </div>
 
-      {/* Scrollable list */}
       <div
         data-notification-list
-        style={{
-          maxHeight: config.maxHeight ?? "auto",
-          overflowY: config.maxHeight ? "auto" : undefined,
-        }}
+        data-snapshot-id={`${rootId}-list`}
+        className={listSurface.className}
+        style={listSurface.style}
       >
-        {/* Loading state */}
         {isLoading && (
           <>
             <SkeletonItem />
@@ -312,7 +379,6 @@ export function NotificationFeed({
           </>
         )}
 
-        {/* Error state */}
         {error && (
           <div
             data-notification-error
@@ -328,26 +394,21 @@ export function NotificationFeed({
           </div>
         )}
 
-        {/* Empty state */}
         {!isLoading && !error && items.length === 0 && (
           <div
             data-notification-empty
-            style={{
-              padding: "var(--sn-spacing-xl, 24px)",
-              color: "var(--sn-color-muted-foreground, #94a3b8)",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              textAlign: "center",
-            }}
+            data-snapshot-id={`${rootId}-empty`}
+            className={emptyStateSurface.className}
+            style={emptyStateSurface.style}
           >
             {config.emptyMessage ?? "No notifications"}
           </div>
         )}
 
-        {/* Notification items */}
         {!isLoading &&
           !error &&
           items.map((item, idx) => {
-            const id = item["id"];
+            const id = item.id;
             const itemKey =
               typeof id === "string" || typeof id === "number" ? id : idx;
             const title = String(item[titleField] ?? "");
@@ -358,32 +419,28 @@ export function NotificationFeed({
               : null;
             const isRead = Boolean(item[readField]);
             const notifType = String(item[typeField] ?? "info");
+            const itemSlots = asSurfaceConfig(item.slots);
 
-            return (
-              <div
-                key={itemKey}
-                data-notification-item
-                data-unread={!isRead ? "" : undefined}
-                role={
+            const itemSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-item-${itemKey}`,
+              implementationBase: {
+                cursor:
                   config.itemAction || config.markReadAction
-                    ? "button"
-                    : undefined
-                }
-                tabIndex={
-                  config.itemAction || config.markReadAction ? 0 : undefined
-                }
-                onClick={() => handleItemClick(item)}
-                onKeyDown={
+                    ? "pointer"
+                    : "default",
+                hover:
                   config.itemAction || config.markReadAction
-                    ? (e: React.KeyboardEvent) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          handleItemClick(item);
-                        }
+                    ? {
+                        bg: "var(--sn-color-accent, #f0f9ff)",
                       }
-                    : undefined
-                }
-                style={{
+                    : undefined,
+                focus:
+                  config.itemAction || config.markReadAction
+                    ? {
+                        ring: true,
+                      }
+                    : undefined,
+                style: {
                   display: "flex",
                   gap: "var(--sn-spacing-sm, 8px)",
                   padding:
@@ -396,69 +453,150 @@ export function NotificationFeed({
                   backgroundColor: isRead
                     ? undefined
                     : "var(--sn-color-accent, #f0f9ff)",
-                  cursor:
-                    config.itemAction || config.markReadAction
-                      ? "pointer"
-                      : "default",
-                  transition:
-                    "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-                }}
+                } as CSSProperties,
+              },
+              componentSurface: config.slots?.item,
+              itemSurface: asSurfaceConfig(itemSlots?.item),
+              activeStates: isRead ? [] : ["current"],
+            });
+            const itemIconSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-item-${itemKey}-icon`,
+              implementationBase: {
+                style: {
+                  paddingTop: "var(--sn-spacing-2xs, 2px)",
+                } as CSSProperties,
+              },
+              componentSurface: config.slots?.itemIcon,
+              itemSurface: asSurfaceConfig(itemSlots?.itemIcon),
+            });
+            const itemTitleSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-item-${itemKey}-title`,
+              implementationBase: {
+                fontSize: "sm",
+                fontWeight: isRead ? "normal" : "semibold",
+                color: "var(--sn-color-foreground, #0f172a)",
+              },
+              componentSurface: config.slots?.itemTitle,
+              itemSurface: asSurfaceConfig(itemSlots?.itemTitle),
+            });
+            const itemMessageSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-item-${itemKey}-message`,
+              implementationBase: {
+                fontSize: "sm",
+                color: "var(--sn-color-muted-foreground, #64748b)",
+                style: {
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  marginTop: "var(--sn-spacing-2xs, 2px)",
+                } as CSSProperties,
+              },
+              componentSurface: config.slots?.itemMessage,
+              itemSurface: asSurfaceConfig(itemSlots?.itemMessage),
+            });
+            const itemTimestampSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-item-${itemKey}-timestamp`,
+              implementationBase: {
+                fontSize: "xs",
+                color: "var(--sn-color-muted-foreground, #94a3b8)",
+                style: {
+                  marginTop: "var(--sn-spacing-xs, 4px)",
+                } as CSSProperties,
+              },
+              componentSurface: config.slots?.itemTimestamp,
+              itemSurface: asSurfaceConfig(itemSlots?.itemTimestamp),
+            });
+
+            return (
+              <div
+                key={itemKey}
+                data-notification-item
+                data-unread={!isRead ? "" : undefined}
+                data-snapshot-id={`${rootId}-item-${itemKey}`}
+                role={
+                  config.itemAction || config.markReadAction
+                    ? "button"
+                    : undefined
+                }
+                tabIndex={
+                  config.itemAction || config.markReadAction ? 0 : undefined
+                }
+                className={itemSurface.className}
+                onClick={() => handleItemClick(item)}
+                onKeyDown={
+                  config.itemAction || config.markReadAction
+                    ? (e: React.KeyboardEvent) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleItemClick(item);
+                        }
+                      }
+                    : undefined
+                }
+                style={itemSurface.style}
               >
-                {/* Type icon */}
-                <div style={{ paddingTop: "var(--sn-spacing-2xs, 2px)" }}>
-                  <TypeIcon type={notifType} />
+                <div
+                  data-snapshot-id={`${rootId}-item-${itemKey}-icon`}
+                  className={itemIconSurface.className}
+                  style={itemIconSurface.style}
+                >
+                  <TypeIcon
+                    type={notifType}
+                    surfaceId={`${rootId}-item-${itemKey}-icon-svg`}
+                    className={undefined}
+                    style={undefined}
+                  />
                 </div>
 
-                {/* Content */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  {/* Title */}
                   <div
-                    style={{
-                      fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                      fontWeight: isRead
-                        ? "normal"
-                        : ("var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"]),
-                      color: "var(--sn-color-foreground, #0f172a)",
-                    }}
+                    data-snapshot-id={`${rootId}-item-${itemKey}-title`}
+                    className={itemTitleSurface.className}
+                    style={itemTitleSurface.style}
                   >
                     {title}
                   </div>
 
-                  {/* Message */}
                   {message && (
                     <div
-                      style={{
-                        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                        color: "var(--sn-color-muted-foreground, #64748b)",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        marginTop: "var(--sn-spacing-2xs, 2px)",
-                      }}
+                      data-snapshot-id={`${rootId}-item-${itemKey}-message`}
+                      className={itemMessageSurface.className}
+                      style={itemMessageSurface.style}
                     >
                       {message}
                     </div>
                   )}
 
-                  {/* Timestamp */}
                   {timestamp && (
                     <div
-                      style={{
-                        fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                        color: "var(--sn-color-muted-foreground, #94a3b8)",
-                        marginTop: "var(--sn-spacing-xs, 4px)",
-                      }}
+                      data-snapshot-id={`${rootId}-item-${itemKey}-timestamp`}
+                      className={itemTimestampSurface.className}
+                      style={itemTimestampSurface.style}
                       title={timestamp.toLocaleString()}
                     >
                       {formatRelativeTime(timestamp, { includeTime: true })}
                     </div>
                   )}
                 </div>
+
+                <SurfaceStyles css={itemSurface.scopedCss} />
+                <SurfaceStyles css={itemIconSurface.scopedCss} />
+                <SurfaceStyles css={itemTitleSurface.scopedCss} />
+                <SurfaceStyles css={itemMessageSurface.scopedCss} />
+                <SurfaceStyles css={itemTimestampSurface.scopedCss} />
               </div>
             );
           })}
       </div>
+
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={headerSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={unreadBadgeSurface.scopedCss} />
+      <SurfaceStyles css={markAllButtonSurface.scopedCss} />
+      <SurfaceStyles css={listSurface.scopedCss} />
+      <SurfaceStyles css={emptyStateSurface.scopedCss} />
     </div>
   );
 }

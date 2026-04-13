@@ -1,6 +1,6 @@
 # Snapshot SSR Surface
 
-Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, prefetch, cache, or server action surfaces.
+Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, PPR, prefetch, cache, or server action surfaces.
 
 ## Read First
 
@@ -9,25 +9,38 @@ Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, pre
 - `src/ssr/renderer.ts`
 - `src/ssr/manifest-renderer.ts`
 - `src/ssr/rsc.ts`
+- `src/ssr/ppr.ts`
+- `src/ssr/ppr-cache.ts`
+- `src/ssr/prefetch.ts`
 - `src/ssr/types.ts`
 - `src/vite/index.ts`
 - `src/vite/rsc-transform.ts`
 - `src/vite/prefetch.ts`
-- `apps/docs/src/content/docs/contribute/testing.md`
 - `apps/docs/src/content/docs/integrate/ssr-rsc.md`
 - `apps/docs/src/content/docs/reference/ssr.md`
 - `apps/docs/src/content/docs/reference/vite.md`
+- `apps/docs/src/content/docs/contribute/testing.md`
 
 ## Expectations
 
 - SSR and RSC docs must describe current runtime behavior, not intended behavior.
-- Any change to server render flow, RSC enablement, manifest renderer behavior, or prefetch behavior requires docs updates in the same change.
+- Public docs should talk about shipping render modes and integration contracts, not internal phase names.
 - If exports in `src/ssr/index.ts` or `src/vite/index.ts` change, update JSDoc and generated reference inputs.
+- If the integration path changed, update the app-builder docs that route readers into SSR, not just the reference page.
+
+## Cross-Cutting Docs To Review
+
+- `apps/docs/src/content/docs/index.md`
+- `apps/docs/src/content/docs/start-here/index.md`
+- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/build/sdk-apps.md`
+- `apps/docs/src/content/docs/integrate/ssr-rsc.md`
+- `apps/docs/src/content/docs/examples/index.md`
 
 ## Required Follow-Through
 
-- update source-backed SSR/Vite reference content
-- update public SSR/RSC integration guides
+- update source-backed SSR and Vite reference content
+- update public SSR and RSC integration guides
 - update impacted examples
 - update proving tests under `src/ssr/__tests__` or `src/vite/__tests__`
-- update the documentation impact map for new SSR/Vite surfaces
+- update the documentation impact map for new SSR or Vite surfaces

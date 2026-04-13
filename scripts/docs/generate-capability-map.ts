@@ -18,10 +18,14 @@ function detectCapability(name: string, files: string[]): Capability {
 
 export function generateCapabilityMap(): void {
   const capabilities = [
-    detectCapability("SDK bootstrap and auth", [
+    detectCapability("SDK bootstrap and typed runtime", [
       "src/index.ts",
       "src/create-snapshot.tsx",
-      "src/auth/hooks.ts",
+      "src/api/client.ts",
+    ]),
+    detectCapability("Plugin system and schema generation", [
+      "src/plugin.ts",
+      "src/schema-generator.ts",
     ]),
     detectCapability("Auth screens, MFA, passkeys, and OAuth", [
       "src/auth/oauth-hooks.ts",
@@ -55,6 +59,18 @@ export function generateCapabilityMap(): void {
       "src/ui/components/_base/schema.ts",
       "src/ui/components/_base/style-surfaces.ts",
     ]),
+    detectCapability("Analytics, shortcuts, expressions, and i18n", [
+      "src/ui/analytics/registry.ts",
+      "src/ui/shortcuts/listener.ts",
+      "src/ui/expressions/parser.ts",
+      "src/ui/i18n/schema.ts",
+    ]),
+    detectCapability("Entity-page mapping and preset-driven assembly", [
+      "src/ui/entity-pages/index.ts",
+      "src/ui/presets/index.ts",
+      "src/ui/presets/crud-page.ts",
+      "src/ui/presets/settings-page.ts",
+    ]),
     detectCapability("SSR and manifest rendering", [
       "src/ssr/index.ts",
       "src/ssr/manifest-renderer.ts",
@@ -64,17 +80,23 @@ export function generateCapabilityMap(): void {
       "src/ssr/rsc.ts",
       "src/vite/rsc-transform.ts",
     ]),
-    detectCapability("Vite app and sync plugins", ["src/vite/index.ts"]),
-    detectCapability("CLI scaffold and sync", [
+    detectCapability("Prefetch, PPR, and SSG-oriented Vite integration", [
+      "src/ssr/prefetch.ts",
+      "src/ssr/ppr.ts",
+      "src/ssr/ppr-cache.ts",
+      "src/vite/index.ts",
+    ]),
+    detectCapability("CLI scaffold, sync, and manifest commands", [
       "src/cli/commands/init.ts",
       "src/cli/commands/sync.ts",
       "src/cli/commands/manifest/init.ts",
+      "src/cli/commands/manifest/validate.ts",
     ]),
-    detectCapability("Community and notification APIs", [
+    detectCapability("Community, notifications, and webhook APIs", [
       "src/community/index.ts",
       "src/webhooks/index.ts",
     ]),
-    detectCapability("Realtime: websocket and SSE", [
+    detectCapability("Realtime: websocket, SSE, and push", [
       "src/ws/manager.ts",
       "src/sse/manager.ts",
       "src/push/hook.ts",
@@ -94,7 +116,7 @@ export function generateCapabilityMap(): void {
       "src/ui/components/media/embed/index.ts",
       "src/ui/components/content/link-embed/index.ts",
     ]),
-    detectCapability("Communication components", [
+    detectCapability("Communication and community UI", [
       "src/ui/components/communication/chat-window/index.ts",
       "src/ui/components/communication/comment-section/index.ts",
       "src/ui/components/communication/message-thread/index.ts",
@@ -105,18 +127,11 @@ export function generateCapabilityMap(): void {
     detectCapability("Workflow, commerce, and operational surfaces", [
       "src/ui/components/workflow/kanban/index.ts",
       "src/ui/components/workflow/calendar/index.ts",
-      "src/ui/presets/index.ts",
       "src/ui/components/workflow/notification-feed/index.ts",
       "src/ui/components/commerce/pricing-table/index.ts",
       "src/ui/components/data/chart/index.ts",
       "src/ui/components/data/feed/index.ts",
       "src/ui/components/forms/wizard/index.ts",
-    ]),
-    detectCapability("Preset-driven page assembly", [
-      "src/ui/presets/crud-page.ts",
-      "src/ui/presets/dashboard-page.ts",
-      "src/ui/presets/settings-page.ts",
-      "src/ui/presets/auth-page.ts",
     ]),
     detectCapability("Visual component showcase and canonical examples", [
       "playground/src/showcase.tsx",
