@@ -85,6 +85,30 @@ describe("Link", () => {
     expect(link.getAttribute("aria-current")).toBe("page");
   });
 
+  it("supports navigation-style links with disabled and current states", () => {
+    render(
+      <Link
+        config={{
+          type: "link",
+          text: "Settings",
+          to: "/current",
+          external: false,
+          align: "left",
+          variant: "navigation",
+          disabled: true,
+          matchChildren: true,
+        }}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: "Settings" });
+    expect(link.getAttribute("aria-current")).toBe("page");
+    expect(link.getAttribute("aria-disabled")).toBe("true");
+
+    fireEvent.click(link);
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
   it.each([
     ["mailto:support@example.com"],
     ["https://example.com/docs"],

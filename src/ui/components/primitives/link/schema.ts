@@ -15,7 +15,10 @@ export const linkConfigSchema = extendComponentSchema({
   icon: z.string().optional(),
   badge: primitiveDisplayValueSchema.optional(),
   external: z.boolean().default(false),
+  disabled: z.boolean().optional(),
+  current: z.boolean().optional(),
+  matchChildren: z.boolean().default(true),
   align: z.enum(["left", "center", "right"]).default("left"),
-  variant: z.enum(["default", "muted", "button"]).default("default"),
+  variant: z.enum(["default", "muted", "button", "navigation"]).default("default"),
   slots: slotsSchema(linkSlotNames).optional(),
 }).strict();

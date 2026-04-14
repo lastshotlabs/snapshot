@@ -36,6 +36,21 @@ describe("HoverCard", () => {
       vi.advanceTimersByTime(100);
     });
 
-    expect(container.querySelector("[data-hover-card]")).toBeTruthy();
+    expect(container.querySelector('[data-snapshot-id="hover-card-panel"]')).toBeTruthy();
+  });
+
+  it("anchors the hover card to a positioned root", () => {
+    const { container } = render(
+      <HoverCard
+        config={{
+          type: "hover-card",
+          trigger: { type: "markdown", id: "hover-trigger", content: "Open" } as never,
+          content: [{ type: "markdown", id: "hover-body", content: "Body" } as never],
+        }}
+      />,
+    );
+
+    const root = container.querySelector('[data-snapshot-id="hover-card-root"]');
+    expect((root as HTMLElement | null)?.style.position).toBe("relative");
   });
 });

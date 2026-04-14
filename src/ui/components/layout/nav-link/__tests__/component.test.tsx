@@ -10,11 +10,20 @@ import {
   PageRegistryContext,
 } from "../../../../context/providers";
 
-const execute = vi.fn();
+const navigate = vi.fn();
 
-vi.mock("../../../../actions/executor", () => ({
-  useActionExecutor: () => execute,
-}));
+vi.mock("../../../../manifest/runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../../../manifest/runtime")>();
+  return {
+    ...actual,
+    useManifestRuntime: () => null,
+    useRouteRuntime: () => ({
+      currentPath: "/",
+      navigate,
+    }),
+    useOverlayRuntime: () => null,
+  };
+});
 
 import { NavLink } from "../component";
 
@@ -70,7 +79,7 @@ function renderWithContext(
 
 describe("NavLink", () => {
   beforeEach(() => {
-    execute.mockClear();
+    navigate.mockClear();
     window.history.replaceState({}, "", "/");
   });
 
@@ -106,8 +115,8 @@ describe("NavLink", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
-    expect(execute).toHaveBeenCalledWith({ type: "navigate", to: "/settings" });
+    fireEvent.click(screen.getByRole("link", { name: "Settings" }));
+    expect(navigate).toHaveBeenCalledWith("/settings");
   });
 
   it("hides when authentication requirements do not match", () => {

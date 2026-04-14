@@ -12,6 +12,11 @@ describe("hoverCardConfigSchema", () => {
       trigger: { type: "markdown", content: "Open" },
       content: [{ type: "markdown", content: "Body" }],
       side: "bottom",
+      slots: {
+        panel: {
+          className: "hover-panel",
+        },
+      },
     });
 
     expect(result.success).toBe(true);

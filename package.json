@@ -43,6 +43,7 @@
   },
   "scripts": {
     "build": "tsup && oclif manifest && bun run scripts/generate-manifest-schema.ts",
+    "build:vite-runtime": "node scripts/build-vite-runtime.mjs",
     "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",
     "test": "vitest run",

@@ -38,6 +38,21 @@ function getVariantStyle(
     };
   }
 
+  if (variant === "navigation") {
+    return {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: "var(--sn-spacing-xs, 0.5rem)",
+      minHeight: "2.25rem",
+      padding: "var(--sn-spacing-2xs, 0.25rem) var(--sn-spacing-sm, 0.75rem)",
+      borderRadius: "var(--sn-radius-md, 0.375rem)",
+      color: "var(--sn-color-foreground, #111827)",
+      textDecoration: "none",
+      whiteSpace: "nowrap",
+    };
+  }
+
   return {
     display: "inline-flex",
     alignItems: "center",
@@ -88,6 +103,15 @@ export function Link({ config }: { config: LinkConfig }) {
   });
   const rootId = config.id ?? "link";
   const align = config.align ?? "left";
+  const isDisabled = config.disabled === true;
+  const currentPath = routeRuntime?.currentPath;
+  const routeIsCurrent =
+    typeof currentPath === "string" && typeof to === "string"
+      ? config.matchChildren !== false
+        ? currentPath === to || currentPath.startsWith(`${to}/`)
+        : currentPath === to
+      : false;
+  const isCurrent = config.current ?? routeIsCurrent;
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
     implementationBase: {
@@ -100,12 +124,38 @@ export function Link({ config }: { config: LinkConfig }) {
           : {}),
         ...getVariantStyle(config.variant ?? "default"),
       },
+      cursor: isDisabled ? "not-allowed" : "pointer",
+      hover:
+        config.variant === "navigation"
+          ? {
+              bg: "var(--sn-color-accent, #f3f4f6)",
+              color: "var(--sn-color-foreground, #111827)",
+            }
+          : {
+              opacity: 0.84,
+            },
+      focus: {
+        ring: true,
+      },
+      states: {
+        current:
+          config.variant === "navigation"
+            ? {
+                bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent)",
+                color: "var(--sn-color-foreground, #111827)",
+                fontWeight: "var(--sn-font-weight-semibold, 600)",
+              }
+            : undefined,
+        disabled: {
+          opacity: "var(--sn-opacity-disabled, 0.5)",
+        },
+      },
     },
     componentSurface: config,
     itemSurface: config.slots?.root,
-    activeStates: [routeRuntime?.currentPath === to ? "current" : undefined].filter(
+    activeStates: [isCurrent ? "current" : undefined, isDisabled ? "disabled" : undefined].filter(
       Boolean,
-    ) as Array<"current">,
+    ) as Array<"current" | "disabled">,
   });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label`,
@@ -175,8 +225,15 @@ export function Link({ config }: { config: LinkConfig }) {
         href={to}
         target={config.external ? "_blank" : undefined}
         rel={config.external ? "noreferrer noopener" : undefined}
-        aria-current={routeRuntime?.currentPath === to ? "page" : undefined}
+        aria-current={isCurrent ? "page" : undefined}
+        aria-disabled={isDisabled || undefined}
+        tabIndex={isDisabled ? -1 : undefined}
         onClick={(event) => {
+          if (isDisabled) {
+            event.preventDefault();
+            return;
+          }
+
           if (
             config.external ||
             !routeRuntime?.navigate ||

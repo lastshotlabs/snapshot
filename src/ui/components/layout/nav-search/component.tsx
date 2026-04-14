@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { usePublish } from "../../../context/index";
 import { useActionExecutor } from "../../../actions/executor";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { NavSearchConfig } from "./types";
+
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
 
 export function NavSearch({ config }: { config: NavSearchConfig }) {
   const [value, setValue] = useState("");
@@ -43,52 +48,83 @@ export function NavSearch({ config }: { config: NavSearchConfig }) {
     }
   };
 
-  const style: CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    position: "relative",
-  };
-
-  const inputStyle: CSSProperties = {
-    width: "100%",
-    minHeight: "2rem",
-    padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-    border: "1px solid var(--sn-color-border, #e5e7eb)",
-    borderRadius: "var(--sn-radius-md, 0.375rem)",
-    background: "var(--sn-color-background, #fff)",
-    color: "var(--sn-color-foreground, #111827)",
-    fontSize: "var(--sn-font-size-sm, 0.875rem)",
-    fontFamily: "inherit",
-    outline: "none",
-    transition:
-      "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-  };
+  const rootId = config.id ?? "nav-search";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      position: "relative",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const inputSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-input`,
+    implementationBase: {
+      width: "100%",
+      minHeight: "2rem",
+      padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+      border: "1px solid var(--sn-color-border, #e5e7eb)",
+      borderRadius: "var(--sn-radius-md, 0.375rem)",
+      background: "var(--sn-color-background, #fff)",
+      color: "var(--sn-color-foreground, #111827)",
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      fontFamily: "inherit",
+      outline: "none",
+      transition:
+        "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      focus: {
+        borderColor: "var(--sn-color-primary, #2563eb)",
+        ring: true,
+      },
+    },
+    componentSurface: config.slots?.input,
+  });
+  const shortcutSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-shortcut`,
+    implementationBase: {
+      position: "absolute",
+      right: "var(--sn-spacing-sm, 0.5rem)",
+      fontSize: "var(--sn-font-size-xs, 0.75rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      pointerEvents: "none",
+      opacity: value ? 0 : 0.6,
+    },
+    componentSurface: config.slots?.shortcut,
+  });
 
   return (
-    <form onSubmit={handleSubmit} style={style} data-nav-search="">
+    <form
+      onSubmit={handleSubmit}
+      data-snapshot-component="nav-search"
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
+      style={rootSurface.style}
+    >
       <input
         ref={inputRef}
         type="search"
         placeholder={config.placeholder ?? "Search..."}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        style={inputStyle}
+        data-snapshot-id={`${rootId}-input`}
+        className={inputSurface.className}
+        style={inputSurface.style as CSSProperties | undefined}
         aria-label={config.placeholder ?? "Search"}
       />
       {config.shortcut && (
         <kbd
-          style={{
-            position: "absolute",
-            right: "var(--sn-spacing-sm, 0.5rem)",
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            color: "var(--sn-color-muted-foreground)",
-            pointerEvents: "none",
-            opacity: value ? 0 : 0.6,
-          }}
+          data-snapshot-id={`${rootId}-shortcut`}
+          className={shortcutSurface.className}
+          style={shortcutSurface.style as CSSProperties | undefined}
         >
           {config.shortcut}
         </kbd>
       )}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={inputSurface.scopedCss} />
+      <SurfaceStyles css={shortcutSurface.scopedCss} />
     </form>
   );
 }

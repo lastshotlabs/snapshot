@@ -8,6 +8,11 @@ describe("navLogoConfigSchema", () => {
       type: "nav-logo",
       text: "Snapshot",
       path: "/",
+      slots: {
+        label: {
+          className: "nav-logo-label",
+        },
+      },
     });
 
     expect(result.success).toBe(true);

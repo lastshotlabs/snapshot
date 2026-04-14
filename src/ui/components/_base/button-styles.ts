@@ -159,6 +159,15 @@ export const BUTTON_INTERACTIVE_CSS = `
 [data-sn-button][data-variant="ghost"]:not(:disabled):hover {
   background-color: var(--sn-color-accent, #f3f4f6);
 }
+[data-sn-button][data-variant="ghost"]:not(:disabled)[data-open="true"],
+[data-sn-button][data-variant="ghost"]:not(:disabled)[data-current="true"],
+[data-sn-button][data-variant="ghost"]:not(:disabled)[data-selected="true"] {
+  background-color: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent);
+  color: var(--sn-color-foreground, #111827);
+}
+[data-sn-button][data-variant="ghost"]:not(:disabled)[data-current="true"] {
+  font-weight: var(--sn-font-weight-semibold, 600);
+}
 [data-sn-button][data-variant="link"]:not(:disabled):hover {
   opacity: var(--sn-opacity-hover, 0.8);
 }

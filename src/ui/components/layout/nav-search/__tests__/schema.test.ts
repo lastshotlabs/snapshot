@@ -8,6 +8,11 @@ describe("navSearchConfigSchema", () => {
       type: "nav-search",
       placeholder: "Search docs",
       shortcut: "ctrl+k",
+      slots: {
+        input: {
+          className: "nav-search-input",
+        },
+      },
     });
 
     expect(result.success).toBe(true);

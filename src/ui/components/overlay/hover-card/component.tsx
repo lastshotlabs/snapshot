@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { FloatingPanel } from "../../primitives/floating-menu";
 import type { HoverCardConfig } from "./types";
+
+function SurfaceStyles({ css }: { css?: string }) {
+  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
+}
 
 export function HoverCard({ config }: { config: HoverCardConfig }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +18,25 @@ export function HoverCard({ config }: { config: HoverCardConfig }) {
 
   const openDelay = config.openDelay ?? 300;
   const closeDelay = config.closeDelay ?? 200;
-  const side = config.side ?? "bottom";
-  const align = config.align ?? "center";
+  const rootId = config.id ?? "hover-card";
+
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      position: "relative",
+      display: "inline-block",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const contentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-content`,
+    implementationBase: {
+      display: "grid",
+      gap: "var(--sn-spacing-xs, 0.5rem)",
+    },
+    componentSurface: config.slots?.content,
+  });
 
   const clearTimers = () => {
     if (openTimerRef.current) {
@@ -29,71 +51,61 @@ export function HoverCard({ config }: { config: HoverCardConfig }) {
 
   const handleEnter = () => {
     clearTimers();
-    openTimerRef.current = setTimeout(() => setIsOpen(true), openDelay);
+    openTimerRef.current = setTimeout(() => {
+      setIsOpen(true);
+      openTimerRef.current = null;
+    }, openDelay);
   };
 
   const handleLeave = () => {
     clearTimers();
-    closeTimerRef.current = setTimeout(() => setIsOpen(false), closeDelay);
+    closeTimerRef.current = setTimeout(() => {
+      setIsOpen(false);
+      closeTimerRef.current = null;
+    }, closeDelay);
   };
 
   useEffect(() => {
     return () => clearTimers();
   }, []);
 
-  const positionStyle: CSSProperties = {};
-  if (side === "bottom") {
-    positionStyle.top = "calc(100% + 4px)";
-  } else if (side === "top") {
-    positionStyle.bottom = "calc(100% + 4px)";
-  } else if (side === "left") {
-    positionStyle.right = "calc(100% + 4px)";
-    positionStyle.top = "0";
-  } else {
-    positionStyle.left = "calc(100% + 4px)";
-    positionStyle.top = "0";
-  }
-
-  if (side === "bottom" || side === "top") {
-    if (align === "start") positionStyle.left = "0";
-    else if (align === "end") positionStyle.right = "0";
-    else {
-      positionStyle.left = "50%";
-      positionStyle.transform = "translateX(-50%)";
-    }
-  }
-
   return (
     <div
       ref={containerRef}
+      data-snapshot-component="hover-card"
+      data-snapshot-id={`${rootId}-root`}
       onPointerEnter={handleEnter}
       onPointerLeave={handleLeave}
-      style={{ position: "relative", display: "inline-block" }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <ComponentRenderer config={config.trigger} />
-      {isOpen && (
+      <FloatingPanel
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        containerRef={containerRef}
+        side={config.side ?? "bottom"}
+        align={config.align ?? "center"}
+        surfaceId={`${rootId}-panel`}
+        slot={config.slots?.panel}
+        activeStates={isOpen ? ["open"] : []}
+        style={config.width ? { width: config.width } : undefined}
+      >
         <div
-          data-hover-card=""
-          style={{
-            position: "absolute",
-            zIndex: "var(--sn-z-index-popover, 50)" as string,
-            width: config.width ?? "auto",
-            background: "var(--sn-color-popover, var(--sn-color-card, #fff))",
-            border: "1px solid var(--sn-color-border, #e5e7eb)",
-            borderRadius: "var(--sn-radius-lg, 0.75rem)",
-            boxShadow:
-              "0 4px 16px -2px rgba(0,0,0,0.12), 0 2px 6px -1px rgba(0,0,0,0.07)",
-            ...positionStyle,
-          }}
+          data-snapshot-id={`${rootId}-content`}
+          className={contentSurface.className}
+          style={contentSurface.style}
         >
-          {config.content.map((child, i) => (
+          {config.content.map((child, index) => (
             <ComponentRenderer
-              key={(child as { id?: string }).id ?? i}
+              key={(child as { id?: string }).id ?? index}
               config={child}
             />
           ))}
         </div>
-      )}
+      </FloatingPanel>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={contentSurface.scopedCss} />
     </div>
   );
 }

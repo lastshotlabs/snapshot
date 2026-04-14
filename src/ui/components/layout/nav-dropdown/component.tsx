@@ -6,7 +6,7 @@ import { useSubscribe } from "../../../context/index";
 import { renderIcon } from "../../../icons/render";
 import { ButtonControl } from "../../forms/button";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
-import { FloatingPanel } from "../../primitives/floating-menu";
+import { FloatingMenuStyles, FloatingPanel } from "../../primitives/floating-menu";
 import type { NavDropdownConfig } from "./types";
 
 function SurfaceStyles({ css }: { css?: string }) {
@@ -16,6 +16,7 @@ function SurfaceStyles({ css }: { css?: string }) {
 export function NavDropdown({ config }: { config: NavDropdownConfig }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerMode = config.trigger ?? "click";
 
   const rawUser = useSubscribe({ from: "global.user" });
   const user = rawUser as { role?: string; roles?: string[] } | null;
@@ -33,6 +34,15 @@ export function NavDropdown({ config }: { config: NavDropdownConfig }) {
   }
 
   const rootId = config.id ?? "nav-dropdown";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      position: "relative",
+      display: "inline-flex",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-trigger-label`,
     implementationBase: {
@@ -52,7 +62,16 @@ export function NavDropdown({ config }: { config: NavDropdownConfig }) {
   });
 
   return (
-    <div ref={containerRef} data-snapshot-component="nav-dropdown">
+    <div
+      ref={containerRef}
+      data-snapshot-component="nav-dropdown"
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
+      style={rootSurface.style}
+      onPointerEnter={triggerMode === "hover" ? () => setIsOpen(true) : undefined}
+      onPointerLeave={triggerMode === "hover" ? () => setIsOpen(false) : undefined}
+    >
+      <FloatingMenuStyles />
       <ButtonControl
         variant="ghost"
         onClick={() => setIsOpen((value) => !value)}
@@ -86,12 +105,15 @@ export function NavDropdown({ config }: { config: NavDropdownConfig }) {
         surfaceId={`${rootId}-panel`}
         slot={config.slots?.panel}
         activeStates={isOpen ? ["open"] : []}
+        minWidth={config.width}
       >
         {config.items.map((item, index) => {
           const itemSurface = resolveSurfacePresentation({
             surfaceId: `${rootId}-item-${index}`,
             implementationBase: {
               display: "block",
+              width: "100%",
+              minWidth: 0,
             },
             componentSurface: config.slots?.item,
           });
@@ -99,7 +121,7 @@ export function NavDropdown({ config }: { config: NavDropdownConfig }) {
           return (
             <div
               key={(item as { id?: string }).id ?? index}
-              role="menuitem"
+              role="none"
               data-snapshot-id={`${rootId}-item-${index}`}
               className={itemSurface.className}
               style={itemSurface.style}
@@ -110,6 +132,7 @@ export function NavDropdown({ config }: { config: NavDropdownConfig }) {
           );
         })}
       </FloatingPanel>
+      <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
       <SurfaceStyles css={iconSurface.scopedCss} />
     </div>

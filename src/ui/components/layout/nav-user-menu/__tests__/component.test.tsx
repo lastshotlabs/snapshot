@@ -93,6 +93,21 @@ describe("NavUserMenu", () => {
     expect(screen.getByText("alice@test.com")).toBeTruthy();
   });
 
+  it("uses a positioned root so the floating panel is anchored structurally", () => {
+    const { container } = renderWithContext(
+      <NavUserMenu
+        config={{
+          type: "nav-user-menu",
+          mode: "full",
+        }}
+      />,
+      { user: { name: "Alice" } },
+    );
+
+    const root = container.querySelector('[data-snapshot-id="nav-user-menu-root"]');
+    expect((root as HTMLElement | null)?.style.position).toBe("relative");
+  });
+
   it("executes menu item actions", () => {
     renderWithContext(
       <NavUserMenu

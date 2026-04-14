@@ -297,7 +297,10 @@ function UserMenu({
   const menuItems = config.items ?? [];
 
   return (
-    <div ref={containerRef} style={isTopNav ? { marginLeft: "auto" } : undefined}>
+    <div
+      ref={containerRef}
+      style={isTopNav ? { marginLeft: "auto", position: "relative" } : { position: "relative" }}
+    >
       <ButtonControl
         variant="ghost"
         onClick={() => setOpen((value) => !value)}

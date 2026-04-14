@@ -1,4 +1,8 @@
 import type { ManifestConfig, RouteConfig } from "../types";
+import {
+  withDefaultAuthFormSlots,
+  withDefaultAuthOAuthButtonSlots,
+} from "../../presets/auth-surfaces";
 import { defaultEnglishCatalog } from "./i18n-en";
 
 export type DefaultAuthScreen =
@@ -67,16 +71,16 @@ const defaultAuthRoutes: RouteConfig[] = [
             variant: "muted",
             align: "center",
           },
-          {
+          withDefaultAuthOAuthButtonSlots({
             type: "oauth-buttons",
             visibleWhen: "defined(auth.providers)",
-          },
+          }),
           {
             type: "divider",
             label: "{i18n:common.or}",
             visibleWhen: "defined(auth.providers)",
           },
-          {
+          withDefaultAuthFormSlots({
             type: "auto-form",
             id: "login-form",
             submit: "{auth.contract.endpoints.login}",
@@ -115,7 +119,7 @@ const defaultAuthRoutes: RouteConfig[] = [
                 message: "{error.message}",
               },
             ],
-          },
+          }),
           {
             type: "passkey-button",
             label: "{i18n:auth.label.passkey_button}",
@@ -176,16 +180,16 @@ const defaultAuthRoutes: RouteConfig[] = [
             variant: "muted",
             align: "center",
           },
-          {
+          withDefaultAuthOAuthButtonSlots({
             type: "oauth-buttons",
             visibleWhen: "defined(auth.providers)",
-          },
+          }),
           {
             type: "divider",
             label: "{i18n:common.or}",
             visibleWhen: "defined(auth.providers)",
           },
-          {
+          withDefaultAuthFormSlots({
             type: "auto-form",
             id: "register-form",
             submit: "{auth.contract.endpoints.register}",
@@ -227,7 +231,7 @@ const defaultAuthRoutes: RouteConfig[] = [
                 message: "{error.message}",
               },
             ],
-          },
+          }),
           {
             type: "link",
             to: "/login",
@@ -264,7 +268,7 @@ const defaultAuthRoutes: RouteConfig[] = [
             variant: "muted",
             align: "center",
           },
-          {
+          withDefaultAuthFormSlots({
             type: "auto-form",
             id: "forgot-password-form",
             submit: "{auth.contract.endpoints.forgotPassword}",
@@ -295,7 +299,7 @@ const defaultAuthRoutes: RouteConfig[] = [
                 message: "{error.message}",
               },
             ],
-          },
+          }),
           {
             type: "link",
             to: "/login",
@@ -337,7 +341,7 @@ const defaultAuthRoutes: RouteConfig[] = [
             description: "{i18n:auth.error.reset_link_missing_token}",
             visibleWhen: "empty(route.query.token)",
           },
-          {
+          withDefaultAuthFormSlots({
             type: "auto-form",
             id: "reset-password-form",
             submit: "{auth.contract.endpoints.resetPassword}",
@@ -375,7 +379,7 @@ const defaultAuthRoutes: RouteConfig[] = [
                 message: "{error.message}",
               },
             ],
-          },
+          }),
           {
             type: "link",
             to: "/login",
@@ -441,7 +445,7 @@ const defaultAuthRoutes: RouteConfig[] = [
               },
             ],
           },
-          {
+          withDefaultAuthFormSlots({
             type: "auto-form",
             id: "resend-verification-form",
             submit: "{auth.contract.endpoints.resendVerification}",
@@ -474,7 +478,7 @@ const defaultAuthRoutes: RouteConfig[] = [
                 message: "{error.message}",
               },
             ],
-          },
+          }),
           {
             type: "link",
             to: "/login",
@@ -516,7 +520,7 @@ const defaultAuthRoutes: RouteConfig[] = [
             description: "{i18n:auth.error.no_active_challenge}",
             visibleWhen: "empty(global.pendingMfaChallenge)",
           },
-          {
+          withDefaultAuthFormSlots({
             type: "auto-form",
             id: "mfa-form",
             submit: "{auth.contract.endpoints.mfaVerify}",
@@ -566,7 +570,7 @@ const defaultAuthRoutes: RouteConfig[] = [
                 message: "{error.message}",
               },
             ],
-          },
+          }),
           {
             type: "link",
             to: "/login",

@@ -27,6 +27,15 @@ export function Popover({ config }: { config: PopoverConfig }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const rootId = config.id ?? "popover";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      position: "relative",
+      display: "inline-flex",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
 
   useEffect(() => {
     publish?.({ isOpen });
@@ -102,12 +111,20 @@ export function Popover({ config }: { config: PopoverConfig }) {
   }
 
   return (
-    <div data-snapshot-component="popover" ref={containerRef}>
+    <div
+      data-snapshot-component="popover"
+      data-snapshot-id={`${rootId}-root`}
+      ref={containerRef}
+      className={rootSurface.className}
+      style={rootSurface.style}
+    >
       <ButtonControl
         variant={config.triggerVariant ?? "outline"}
         onClick={() => setIsOpen((value) => !value)}
         surfaceId={`${rootId}-trigger`}
         surfaceConfig={config.slots?.trigger}
+        ariaExpanded={isOpen}
+        ariaHasPopup="dialog"
         activeStates={isOpen ? ["open"] : []}
       >
         {config.triggerIcon ? (
@@ -203,6 +220,7 @@ export function Popover({ config }: { config: PopoverConfig }) {
           ) : null}
         </div>
       </FloatingPanel>
+      <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={triggerLabelSurface.scopedCss} />
       <SurfaceStyles css={triggerIconSurface.scopedCss} />
       <SurfaceStyles css={contentSurface.scopedCss} />

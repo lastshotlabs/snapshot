@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { componentConfigSchema } from "../../../manifest/schema";
-import { extendComponentSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+
+export const hoverCardSlotNames = ["root", "panel", "content"] as const;
 
 export const hoverCardConfigSchema = extendComponentSchema({
   type: z.literal("hover-card"),
@@ -11,4 +13,5 @@ export const hoverCardConfigSchema = extendComponentSchema({
   openDelay: z.number().optional(),
   closeDelay: z.number().optional(),
   width: z.string().optional(),
+  slots: slotsSchema(hoverCardSlotNames).optional(),
 }).strict();

@@ -64,7 +64,9 @@ describe("floating-menu primitives", () => {
     );
 
     vi.runAllTimers();
-    expect(screen.getByTestId("menu-panel")).toBeTruthy();
+    const panel = screen.getByTestId("menu-panel");
+    expect(panel).toBeTruthy();
+    expect(panel.getAttribute("style")).toContain("var(--sn-color-popover");
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onClose).toHaveBeenCalled();
@@ -90,7 +92,9 @@ describe("floating-menu primitives", () => {
 
     const item = screen.getByRole("menuitem", { name: "Edit" });
     expect(item.getAttribute("data-active")).toBe("true");
+    expect(item.getAttribute("data-current")).toBe("true");
     expect(item.getAttribute("data-snapshot-id")).toBe("menu-item");
+    expect((item as HTMLButtonElement).style.cursor).toBe("pointer");
     expect(screen.getByText("Actions")).toBeTruthy();
     expect(screen.getByRole("separator")).toBeTruthy();
 

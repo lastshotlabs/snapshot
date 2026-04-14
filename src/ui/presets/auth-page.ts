@@ -1,4 +1,8 @@
 import type { PageConfig } from "../manifest/types";
+import {
+  withDefaultAuthFormSlots,
+  withDefaultAuthOAuthButtonSlots,
+} from "./auth-surfaces";
 import type { AuthPageOptions } from "./types";
 
 function slugify(value: string): string {
@@ -14,7 +18,7 @@ function buildAuthForm(
 ): Record<string, unknown> {
   switch (options.screen) {
     case "register":
-      return {
+      return withDefaultAuthFormSlots({
         type: "form",
         id: `${slug}-form`,
         submit: "auth:register",
@@ -39,9 +43,9 @@ function buildAuthForm(
           type: "navigate",
           to: options.redirects?.afterRegister ?? "/auth/verify-email",
         },
-      };
+      });
     case "forgot-password":
-      return {
+      return withDefaultAuthFormSlots({
         type: "form",
         id: `${slug}-form`,
         submit: "auth:forgotPassword",
@@ -55,9 +59,9 @@ function buildAuthForm(
           message: "Reset link sent. Check your email.",
           variant: "success",
         },
-      };
+      });
     case "reset-password":
-      return {
+      return withDefaultAuthFormSlots({
         type: "form",
         id: `${slug}-form`,
         submit: "auth:resetPassword",
@@ -81,7 +85,7 @@ function buildAuthForm(
           type: "navigate",
           to: options.redirects?.login ?? "/auth/login",
         },
-      };
+      });
     case "verify-email":
       return {
         type: "button",
@@ -100,7 +104,7 @@ function buildAuthForm(
       };
     case "login":
     default:
-      return {
+      return withDefaultAuthFormSlots({
         type: "form",
         id: `${slug}-form`,
         submit: "auth:login",
@@ -119,7 +123,7 @@ function buildAuthForm(
           type: "navigate",
           to: options.redirects?.afterLogin ?? "/",
         },
-      };
+      });
   }
 }
 
@@ -160,10 +164,10 @@ export function authPage(options: AuthPageOptions): PageConfig {
   cardChildren.push(buildAuthForm(slug, options));
 
   if (options.oauthProviders?.length) {
-    cardChildren.push({
+    cardChildren.push(withDefaultAuthOAuthButtonSlots({
       type: "oauth-buttons",
       heading: "Continue with",
-    });
+    }));
   }
 
   if (options.passkey) {

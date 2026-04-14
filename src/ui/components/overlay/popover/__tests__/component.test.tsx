@@ -108,4 +108,18 @@ describe("Popover", () => {
 
     expect(screen.queryByRole("button", { name: "More" })).toBeNull();
   });
+
+  it("uses a positioned root so the floating panel is anchored correctly", () => {
+    const { container } = renderWithContext(
+      <Popover
+        config={{
+          type: "popover",
+          trigger: "More",
+        }}
+      />,
+    );
+
+    const root = container.querySelector('[data-snapshot-id="popover-root"]');
+    expect((root as HTMLElement | null)?.style.position).toBe("relative");
+  });
 });

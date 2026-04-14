@@ -7,7 +7,11 @@ import { isTRef, type I18nConfig, type TRef } from "../../../i18n/schema";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { ButtonControl } from "../../forms/button";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
-import { FloatingPanel, MenuItem } from "../../primitives/floating-menu";
+import {
+  FloatingMenuStyles,
+  FloatingPanel,
+  MenuItem,
+} from "../../primitives/floating-menu";
 import { useActionExecutor } from "../../../actions/executor";
 import type { NavUserMenuConfig } from "./types";
 
@@ -62,6 +66,15 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
   );
 
   const rootId = config.id ?? "nav-user-menu";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-root`,
+    implementationBase: {
+      position: "relative",
+      display: "inline-flex",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
   const avatarSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-avatar`,
     implementationBase: {
@@ -78,9 +91,25 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
     },
     componentSurface: config.slots?.avatar,
   });
+  const triggerLabelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-trigger-label`,
+    implementationBase: {
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+    },
+    componentSurface: config.slots?.triggerLabel,
+  });
 
   return (
-    <div ref={containerRef} data-snapshot-component="nav-user-menu">
+    <div
+      ref={containerRef}
+      data-snapshot-component="nav-user-menu"
+      data-snapshot-id={`${rootId}-root`}
+      className={rootSurface.className}
+      style={rootSurface.style}
+    >
+      <FloatingMenuStyles />
       <ButtonControl
         variant="ghost"
         onClick={() => setIsOpen((value) => !value)}
@@ -105,7 +134,15 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
             )}
           </span>
         ) : null}
-        {mode === "full" && showName && user.name ? <span>{user.name}</span> : null}
+        {mode === "full" && showName && user.name ? (
+          <span
+            data-snapshot-id={`${rootId}-trigger-label`}
+            className={triggerLabelSurface.className}
+            style={triggerLabelSurface.style}
+          >
+            {user.name}
+          </span>
+        ) : null}
       </ButtonControl>
 
       <FloatingPanel
@@ -137,7 +174,9 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
           />
         ))}
       </FloatingPanel>
+      <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={avatarSurface.scopedCss} />
+      <SurfaceStyles css={triggerLabelSurface.scopedCss} />
     </div>
   );
 }

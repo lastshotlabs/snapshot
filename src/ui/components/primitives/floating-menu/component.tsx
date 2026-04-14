@@ -196,8 +196,18 @@ export function FloatingPanel({
       position: "absolute",
       zIndex: "var(--sn-z-index-dropdown, 50)",
       minWidth,
+      maxWidth: "min(22rem, calc(100vw - 1rem))",
       listStyle: "none",
       margin: 0,
+      padding: "var(--sn-spacing-2xs, 0.25rem)",
+      background: "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
+      color:
+        "var(--sn-color-popover-foreground, var(--sn-color-card-foreground, #111827))",
+      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      borderRadius: "var(--sn-radius-lg, 0.75rem)",
+      boxShadow:
+        "var(--sn-shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1))",
+      overflow: "hidden",
     },
     componentSurface: slot,
     activeStates: open ? ["open", ...(activeStates ?? [])] : activeStates,
@@ -529,11 +539,18 @@ export function MenuItem({
       alignItems: "center",
       gap: "var(--sn-spacing-sm, 0.5rem)",
       width: "100%",
+      minHeight: "2.25rem",
+      padding: "var(--sn-spacing-xs, 0.5rem) var(--sn-spacing-sm, 0.75rem)",
       border: "none",
       background: "transparent",
       textAlign: "left",
       fontFamily: "inherit",
       appearance: "none",
+      borderRadius: "var(--sn-radius-md, 0.375rem)",
+      cursor: disabled ? "not-allowed" : "pointer",
+      userSelect: "none",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
     },
     componentSurface: slot,
     activeStates,
@@ -568,6 +585,9 @@ export function MenuItem({
         data-menu-item=""
         data-snapshot-id={surfaceId}
         data-active={active ? "true" : undefined}
+        data-current={current ? "true" : undefined}
+        data-selected={selected ? "true" : undefined}
+        data-disabled={disabled ? "true" : undefined}
         aria-disabled={disabled || undefined}
         disabled={disabled}
         onClick={disabled ? undefined : onClick}
@@ -650,7 +670,10 @@ export function MenuLabel({
   const labelSurface = resolveSlotSurface({
     surfaceId,
     implementationBase: {
+      padding: "var(--sn-spacing-xs, 0.5rem) var(--sn-spacing-sm, 0.75rem)",
+      fontSize: "var(--sn-font-size-xs, 0.75rem)",
       fontWeight: 600,
+      color: "var(--sn-color-muted-foreground, #6b7280)",
       userSelect: "none",
     },
     componentSurface: slot,
@@ -674,6 +697,30 @@ export function MenuLabel({
 export function FloatingMenuStyles() {
   return (
     <style>{`
+      [data-floating-panel] {
+        backdrop-filter: blur(8px);
+      }
+      [data-floating-panel] [data-menu-item] {
+        transition: background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
+                    color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
+                    opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
+      }
+      [data-floating-panel] [data-menu-item]:not(:disabled):hover {
+        background: var(--sn-color-accent, #f3f4f6);
+      }
+      [data-floating-panel] [data-menu-item][data-active="true"],
+      [data-floating-panel] [data-menu-item][data-current="true"],
+      [data-floating-panel] [data-menu-item][data-selected="true"] {
+        background: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent);
+        color: var(--sn-color-foreground, #111827);
+      }
+      [data-floating-panel] [data-menu-item][data-current="true"],
+      [data-floating-panel] [data-menu-item][data-selected="true"] {
+        font-weight: var(--sn-font-weight-semibold, 600);
+      }
+      [data-floating-panel] [data-menu-item][data-disabled="true"] {
+        opacity: var(--sn-opacity-disabled, 0.5);
+      }
       [data-floating-panel] [data-menu-item]:focus { outline: none; }
       [data-floating-panel] [data-menu-item]:focus-visible {
         outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
