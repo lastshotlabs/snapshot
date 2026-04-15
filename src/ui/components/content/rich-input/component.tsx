@@ -408,8 +408,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
               }}
               placeholder="Paste URL and press Enter..."
               surfaceId={`${rootId}-linkInput`}
-              className={linkInputSurface.className}
-              style={linkInputSurface.style}
+              surfaceConfig={linkInputSurface.resolvedConfigForWrapper}
               testId="rich-input-link-input"
             />
             <ButtonControl
@@ -424,8 +423,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                 setLinkUrl("");
               }}
               surfaceId={`${rootId}-linkCloseButton`}
-              className={linkCloseSurface.className}
-              style={linkCloseSurface.style}
+              surfaceConfig={linkCloseSurface.resolvedConfigForWrapper}
               variant="ghost"
               size="icon"
             >
@@ -492,15 +490,13 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                       ariaLabel={item.label}
                       disabled={readonly}
                       surfaceId={`${rootId}-toolbarButton-${index}`}
-                      className={buttonSurface.className}
-                      style={buttonSurface.style}
+                      surfaceConfig={buttonSurface.resolvedConfigForWrapper}
                       variant="ghost"
                       size="icon"
                       activeStates={active ? ["active"] : []}
                     >
                       <Icon name={item.icon} size={16} />
                     </ButtonControl>
-                    <SurfaceStyles css={buttonSurface.scopedCss} />
                   </div>
                 );
               })}
@@ -519,8 +515,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
                   disabled={readonly || !charCount || isOverLimit}
                   ariaLabel="Send message"
                   surfaceId={`${rootId}-sendButton`}
-                  className={sendButtonSurface.className}
-                  style={sendButtonSurface.style}
+                  surfaceConfig={sendButtonSurface.resolvedConfigForWrapper}
                   variant="ghost"
                   size="icon"
                   testId="rich-input-send"
@@ -538,13 +533,10 @@ export function RichInput({ config }: { config: RichInputConfig }) {
       <SurfaceStyles css={placeholderSurface.scopedCss} />
       <SurfaceStyles css={linkBarSurface.scopedCss} />
       <SurfaceStyles css={linkIconSurface.scopedCss} />
-      <SurfaceStyles css={linkInputSurface.scopedCss} />
-      <SurfaceStyles css={linkCloseSurface.scopedCss} />
       <SurfaceStyles css={toolbarSurface.scopedCss} />
       <SurfaceStyles css={formattingGroupSurface.scopedCss} />
       <SurfaceStyles css={statusGroupSurface.scopedCss} />
       <SurfaceStyles css={counterSurface.scopedCss} />
-      <SurfaceStyles css={sendButtonSurface.scopedCss} />
     </>
   );
 }

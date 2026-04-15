@@ -240,8 +240,8 @@ export function TabsComponent({ config }: { config: TabsConfig }) {
                 ariaCurrent={isActive ? "page" : undefined}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => setActiveTab(index)}
-                className={tabSurface.className}
-                style={tabSurface.style}
+                surfaceId={`${rootId}-tab-${index}`}
+                surfaceConfig={tabSurface.resolvedConfigForWrapper}
                 activeStates={[
                   ...(isActive ? ["selected", "current"] : []),
                   ...(tab.disabled ? ["disabled"] : []),
@@ -265,7 +265,6 @@ export function TabsComponent({ config }: { config: TabsConfig }) {
                   {tab.label}
                 </span>
               </ButtonControl>
-              <SurfaceStyles css={tabSurface.scopedCss} />
               <SurfaceStyles css={labelSurface.scopedCss} />
               <SurfaceStyles css={iconSurface.scopedCss} />
             </React.Fragment>

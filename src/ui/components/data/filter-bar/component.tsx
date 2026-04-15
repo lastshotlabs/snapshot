@@ -246,36 +246,27 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
     },
     componentSurface: config.slots?.searchIcon,
   });
-  const filterButtonSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-filter-button`,
+  const searchInputSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-search-input`,
     implementationBase: {
-      display: "flex",
-      alignItems: "center",
-      gap: "var(--sn-spacing-2xs, 0.125rem)",
-      cursor: "pointer",
-      hover: {
-        opacity: 0.85,
+      width: "100%",
+      style: {
+        padding:
+          "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+        paddingLeft: "var(--sn-spacing-xl, 2rem)",
+        fontSize: "var(--sn-font-size-sm, 0.875rem)",
+        lineHeight: "var(--sn-leading-normal, 1.5)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+        borderRadius: "var(--sn-radius-md, 0.375rem)",
+        backgroundColor: "var(--sn-color-input, #fff)",
+        color: "var(--sn-color-foreground, #111)",
       },
       focus: {
         ring: true,
       },
-      style: {
-        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        borderRadius: "var(--sn-radius-md, 0.375rem)",
-        whiteSpace: "nowrap",
-      },
-      states: {
-        active: {
-          style: {
-            border: "1px solid var(--sn-color-primary, #2563eb)",
-            backgroundColor: "var(--sn-color-primary, #2563eb)",
-            color: "var(--sn-color-primary-foreground, #fff)",
-          },
-        },
-      },
     },
-    componentSurface: config.slots?.filterButton,
+    componentSurface: config.slots?.searchInput,
   });
   const dropdownSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-dropdown`,
@@ -297,39 +288,6 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
     },
     componentSurface: config.slots?.dropdown,
   });
-  const optionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-option`,
-    implementationBase: {
-      display: "flex",
-      alignItems: "center",
-      gap: "var(--sn-spacing-sm, 0.5rem)",
-      cursor: "pointer",
-      hover: {
-        bg: "var(--sn-color-accent, #f3f4f6)",
-      },
-      focus: {
-        ring: true,
-        bg: "var(--sn-color-accent, #f3f4f6)",
-      },
-      style: {
-        width: "100%",
-        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-        border: "none",
-        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        color: "var(--sn-color-popover-foreground, #111)",
-        textAlign: "left",
-        whiteSpace: "nowrap",
-      },
-      states: {
-        active: {
-          style: {
-            background: "var(--sn-color-accent, #f3f4f6)",
-          },
-        },
-      },
-    },
-    componentSurface: config.slots?.option,
-  });
   const pillSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-pill`,
     implementationBase: {
@@ -345,6 +303,34 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
       },
     },
     componentSurface: config.slots?.pill,
+  });
+  const pillLabelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-pill-label`,
+    implementationBase: {},
+    componentSurface: config.slots?.pillLabel,
+  });
+  const pillRemoveSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-pill-remove`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      hover: {
+        color: "var(--sn-color-foreground, #111)",
+      },
+      focus: {
+        ring: true,
+      },
+      style: {
+        border: "none",
+        background: "none",
+        padding: 0,
+        lineHeight: "var(--sn-leading-none, 1)",
+      },
+    },
+    componentSurface: config.slots?.pillRemove,
   });
   const clearButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-clear`,
@@ -405,19 +391,8 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               onChangeText={handleSearchChange}
               placeholder={config.searchPlaceholder ?? "Search..."}
               testId="filter-bar-search"
-              style={{
-                width: "100%",
-                padding:
-                  "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-                paddingLeft: "var(--sn-spacing-xl, 2rem)",
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                lineHeight: "var(--sn-leading-normal, 1.5)",
-                border:
-                  "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-                borderRadius: "var(--sn-radius-md, 0.375rem)",
-                backgroundColor: "var(--sn-color-input, #fff)",
-                color: "var(--sn-color-foreground, #111)",
-              }}
+              surfaceId={`${rootId}-search-input`}
+              surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
             />
           </div>
         ) : null}
@@ -425,6 +400,10 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
         {filters.map((filter) => {
           const isOpen = openDropdown === filter.key;
           const hasValue = filter.key in filterState;
+          const filterButtonStates = [
+            ...(hasValue ? (["active"] as const) : []),
+            ...(isOpen ? (["open"] as const) : []),
+          ];
 
           return (
             <div
@@ -435,22 +414,50 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               <ButtonControl
                 type="button"
                 testId={`filter-button-${filter.key}`}
-                className={filterButtonSurface.className}
-                style={{
-                  ...(filterButtonSurface.style ?? {}),
-                  border: hasValue
-                    ? "1px solid var(--sn-color-primary, #2563eb)"
-                    : "1px solid var(--sn-color-border, #e5e7eb)",
-                  backgroundColor: hasValue
-                    ? "var(--sn-color-primary, #2563eb)"
-                    : "var(--sn-color-card, #fff)",
-                  color: hasValue
-                    ? "var(--sn-color-primary-foreground, #fff)"
-                    : "var(--sn-color-foreground, #111)",
+                surfaceId={`${rootId}-filter-button-${filter.key}`}
+                surfaceConfig={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--sn-spacing-2xs, 0.125rem)",
+                  cursor: "pointer",
+                  hover: {
+                    opacity: 0.85,
+                  },
+                  focus: {
+                    ring: true,
+                  },
+                  style: {
+                    padding:
+                      "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                    fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                    borderRadius: "var(--sn-radius-md, 0.375rem)",
+                    whiteSpace: "nowrap",
+                    border: "1px solid var(--sn-color-border, #e5e7eb)",
+                    backgroundColor: "var(--sn-color-card, #fff)",
+                    color: "var(--sn-color-foreground, #111)",
+                  },
+                  states: {
+                    active: {
+                      style: {
+                        border: "1px solid var(--sn-color-primary, #2563eb)",
+                        backgroundColor: "var(--sn-color-primary, #2563eb)",
+                        color: "var(--sn-color-primary-foreground, #fff)",
+                      },
+                    },
+                    open: {
+                      style: {
+                        border: "1px solid var(--sn-color-primary, #2563eb)",
+                        backgroundColor: "var(--sn-color-primary, #2563eb)",
+                        color: "var(--sn-color-primary-foreground, #fff)",
+                      },
+                    },
+                  },
                 }}
+                itemSurfaceConfig={config.slots?.filterButton}
                 variant="ghost"
                 size="sm"
                 onClick={() => setOpenDropdown(isOpen ? null : filter.key)}
+                activeStates={filterButtonStates}
               >
                 <span>{filter.label}</span>
                 <Icon name="chevron-down" size={12} color="currentColor" />
@@ -466,21 +473,76 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                 >
                   {filter.options.map((option) => {
                     const selected = isSelected(filter.key, option.value);
+                    const optionId = `${rootId}-option-${filter.key}-${option.value}`;
+                    const optionIndicatorSurface = resolveSurfacePresentation({
+                      surfaceId: `${optionId}-indicator`,
+                      implementationBase: {
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        style: {
+                          width: "14px",
+                          height: "14px",
+                          border: `1px solid ${
+                            selected
+                              ? "var(--sn-color-primary, #2563eb)"
+                              : "var(--sn-color-border, #e5e7eb)"
+                          }`,
+                          borderRadius: "var(--sn-radius-xs, 0.125rem)",
+                          backgroundColor: selected
+                            ? "var(--sn-color-primary, #2563eb)"
+                            : "transparent",
+                          flexShrink: 0,
+                        },
+                      },
+                      componentSurface: config.slots?.optionIndicator,
+                      activeStates: selected ? ["active"] : [],
+                    });
+                    const optionLabelSurface = resolveSurfacePresentation({
+                      surfaceId: `${optionId}-label`,
+                      implementationBase: {},
+                      componentSurface: config.slots?.optionLabel,
+                    });
 
                     return (
-                      <ButtonControl
+                      <React.Fragment key={option.value}>
+                        <ButtonControl
                         key={option.value}
                         type="button"
                         role="option"
                         ariaSelected={selected}
-                        surfaceId={`${rootId}-option`}
-                        className={optionSurface.className}
-                        style={{
-                          ...(optionSurface.style ?? {}),
-                          background: selected
-                            ? "var(--sn-color-accent, #f3f4f6)"
-                            : "none",
+                        surfaceId={optionId}
+                        surfaceConfig={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "var(--sn-spacing-sm, 0.5rem)",
+                          cursor: "pointer",
+                          hover: {
+                            bg: "var(--sn-color-accent, #f3f4f6)",
+                          },
+                          focus: {
+                            ring: true,
+                            bg: "var(--sn-color-accent, #f3f4f6)",
+                          },
+                          style: {
+                            width: "100%",
+                            padding:
+                              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+                            border: "none",
+                            fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                            color: "var(--sn-color-popover-foreground, #111)",
+                            textAlign: "left",
+                            whiteSpace: "nowrap",
+                          },
+                          states: {
+                            active: {
+                              style: {
+                                background: "var(--sn-color-accent, #f3f4f6)",
+                              },
+                            },
+                          },
                         }}
+                        itemSurfaceConfig={config.slots?.option}
                         variant="ghost"
                         size="sm"
                         onClick={() =>
@@ -490,22 +552,13 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                             filter.multiple === true,
                           )
                         }
+                        activeStates={selected ? ["active"] : []}
                       >
                         {filter.multiple ? (
                           <span
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              width: "14px",
-                              height: "14px",
-                              border: `1px solid ${selected ? "var(--sn-color-primary, #2563eb)" : "var(--sn-color-border, #e5e7eb)"}`,
-                              borderRadius: "var(--sn-radius-xs, 0.125rem)",
-                              backgroundColor: selected
-                                ? "var(--sn-color-primary, #2563eb)"
-                                : "transparent",
-                              flexShrink: 0,
-                            }}
+                            data-snapshot-id={`${optionId}-indicator`}
+                            className={optionIndicatorSurface.className}
+                            style={optionIndicatorSurface.style}
                           >
                             {selected ? (
                               <Icon
@@ -516,8 +569,17 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                             ) : null}
                           </span>
                         ) : null}
-                        <span>{option.label}</span>
+                        <span
+                          data-snapshot-id={`${optionId}-label`}
+                          className={optionLabelSurface.className}
+                          style={optionLabelSurface.style}
+                        >
+                          {option.label}
+                        </span>
                       </ButtonControl>
+                      <SurfaceStyles css={optionIndicatorSurface.scopedCss} />
+                      <SurfaceStyles css={optionLabelSurface.scopedCss} />
+                    </React.Fragment>
                     );
                   })}
                 </div>
@@ -531,8 +593,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
             type="button"
             data-testid="filter-bar-clear"
             surfaceId={`${rootId}-clear`}
-            className={clearButtonSurface.className}
-            style={clearButtonSurface.style}
+            surfaceConfig={clearButtonSurface.resolvedConfigForWrapper}
             variant="ghost"
             size="sm"
             onClick={clearAll}
@@ -559,24 +620,21 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               className={pillSurface.className}
               style={pillSurface.style}
             >
-              <span>{pill.displayLabel}</span>
+              <span
+                data-snapshot-id={`${rootId}-pill-label`}
+                className={pillLabelSurface.className}
+                style={pillLabelSurface.style}
+              >
+                {pill.displayLabel}
+              </span>
               <ButtonControl
                 type="button"
                 ariaLabel={`Remove filter ${pill.displayLabel}`}
+                surfaceId={`${rootId}-pill-remove`}
+                surfaceConfig={pillRemoveSurface.resolvedConfigForWrapper}
                 onClick={() => removeFilter(pill.key, pill.value)}
                 variant="ghost"
                 size="icon"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "none",
-                  background: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  color: "var(--sn-color-muted-foreground, #6b7280)",
-                  lineHeight: "var(--sn-leading-none, 1)",
-                }}
               >
                 <Icon name="x" size={12} />
               </ButtonControl>
@@ -589,11 +647,9 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
       <SurfaceStyles css={toolbarSurface.scopedCss} />
       <SurfaceStyles css={searchSurface.scopedCss} />
       <SurfaceStyles css={searchIconSurface.scopedCss} />
-      <SurfaceStyles css={filterButtonSurface.scopedCss} />
       <SurfaceStyles css={dropdownSurface.scopedCss} />
-      <SurfaceStyles css={optionSurface.scopedCss} />
       <SurfaceStyles css={pillSurface.scopedCss} />
-      <SurfaceStyles css={clearButtonSurface.scopedCss} />
+      <SurfaceStyles css={pillLabelSurface.scopedCss} />
     </div>
   );
 }

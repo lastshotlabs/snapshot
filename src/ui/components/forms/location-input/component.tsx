@@ -117,8 +117,7 @@ function LocationResultRow({
         type="button"
         testId="location-result"
         surfaceId={resultId}
-        className={resultSurface.className}
-        style={resultSurface.style}
+        surfaceConfig={resultSurface.resolvedConfigForWrapper}
         onClick={() => onSelect(location)}
         variant="ghost"
         size="sm"
@@ -153,7 +152,6 @@ function LocationResultRow({
           ) : null}
         </div>
       </ButtonControl>
-      <SurfaceStyles css={resultSurface.scopedCss} />
       <SurfaceStyles css={resultIconSurface.scopedCss} />
       <SurfaceStyles css={resultContentSurface.scopedCss} />
       <SurfaceStyles css={resultNameSurface.scopedCss} />
@@ -508,8 +506,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
               }
             }}
             surfaceId={`${rootId}-input`}
-            className={inputSurface.className}
-            style={inputSurface.style}
+            surfaceConfig={inputSurface.resolvedConfigForWrapper}
           />
           {searchResults.isLoading && shouldSearch ? (
             <span
@@ -572,7 +569,6 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
       <SurfaceStyles css={requiredSurface.scopedCss} />
       <SurfaceStyles css={fieldSurface.scopedCss} />
       <SurfaceStyles css={leadingIconSurface.scopedCss} />
-      <SurfaceStyles css={inputSurface.scopedCss} />
       <SurfaceStyles css={loadingIconSurface.scopedCss} />
       <SurfaceStyles css={resultsSurface.scopedCss} />
       <SurfaceStyles css={mapLinkSurface.scopedCss} />

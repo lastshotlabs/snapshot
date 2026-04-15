@@ -180,8 +180,7 @@ function EntityPickerItem({
         testId="entity-picker-item"
         surfaceId={itemBaseId}
         onClick={() => onToggle(entity.value)}
-        className={itemSurface.className}
-        style={itemSurface.style}
+        surfaceConfig={itemSurface.resolvedConfigForWrapper}
         variant="ghost"
         size="sm"
         activeStates={isSelected ? ["selected"] : []}
@@ -249,7 +248,6 @@ function EntityPickerItem({
           </span>
         ) : null}
       </ButtonControl>
-      <SurfaceStyles css={itemSurface.scopedCss} />
       <SurfaceStyles css={itemSelectionSurface.scopedCss} />
       <SurfaceStyles css={itemAvatarSurface.scopedCss} />
       <SurfaceStyles css={itemIconSurface.scopedCss} />
@@ -600,8 +598,7 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
           testId="entity-picker-trigger"
           surfaceId={`${rootId}-trigger`}
           onClick={() => setIsOpen((open) => !open)}
-          className={triggerSurface.className}
-          style={triggerSurface.style}
+          surfaceConfig={triggerSurface.resolvedConfigForWrapper}
           variant="ghost"
           size="sm"
           activeStates={isOpen ? ["open"] : []}
@@ -646,8 +643,7 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
                   placeholder="Search..."
                   value={search}
                   onChangeText={setSearch}
-                  className={searchInputSurface.className}
-                  style={searchInputSurface.style}
+                  surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
                 />
               </div>
             ) : null}
@@ -713,12 +709,10 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
         ) : null}
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={triggerSurface.scopedCss} />
       <SurfaceStyles css={triggerLabelSurface.scopedCss} />
       <SurfaceStyles css={triggerIconSurface.scopedCss} />
       <SurfaceStyles css={dropdownSurface.scopedCss} />
       <SurfaceStyles css={searchContainerSurface.scopedCss} />
-      <SurfaceStyles css={searchInputSurface.scopedCss} />
       <SurfaceStyles css={listSurface.scopedCss} />
       <SurfaceStyles css={loadingSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />

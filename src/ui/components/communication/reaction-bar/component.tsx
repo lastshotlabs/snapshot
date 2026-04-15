@@ -225,8 +225,8 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
                 }
                 variant="ghost"
                 size="sm"
-                className={reactionSurface.className}
-                style={reactionSurface.style}
+                surfaceConfig={reactionSurface.resolvedConfigForWrapper}
+                activeStates={reaction.active ? ["active"] : []}
               >
                 <span
                   data-snapshot-id={`${reactionId}-emoji`}
@@ -243,7 +243,6 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
                   {reaction.count}
                 </span>
               </ButtonControl>
-              <SurfaceStyles css={reactionSurface.scopedCss} />
               <SurfaceStyles css={emojiSurface.scopedCss} />
               <SurfaceStyles css={countSurface.scopedCss} />
             </div>
@@ -264,8 +263,8 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
               onClick={() => setShowPicker(!showPicker)}
               variant="ghost"
               size="icon"
-              className={addButtonSurface.className}
-              style={addButtonSurface.style}
+              surfaceConfig={addButtonSurface.resolvedConfigForWrapper}
+              activeStates={showPicker ? ["open"] : []}
             >
               <Icon name="plus" size={14} />
             </ButtonControl>
@@ -290,7 +289,6 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={addWrapperSurface.scopedCss} />
-      <SurfaceStyles css={addButtonSurface.scopedCss} />
       <SurfaceStyles css={pickerSurface.scopedCss} />
     </>
   );

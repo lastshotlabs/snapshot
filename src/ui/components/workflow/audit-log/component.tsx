@@ -423,8 +423,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
                     onChangeValue={(value) => handleFilterChange(filter.field, value)}
                     ariaLabel={filter.label}
                     surfaceId={`${rootId}-filter-${filter.field}`}
-                    className={filterSurface.className}
-                    style={filterSurface.style}
+                    surfaceConfig={filterSurface.resolvedConfigForWrapper}
                   >
                     <option value="">{filter.label}</option>
                     {filter.options.map((option) => (
@@ -433,7 +432,6 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
                       </option>
                     ))}
                   </SelectControl>
-                  <SurfaceStyles css={filterSurface.scopedCss} />
                 </div>
               );
             })}
@@ -638,8 +636,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
                             ariaExpanded={isExpanded}
                             onClick={() => toggleDetails(index)}
                             surfaceId={`${rootId}-entry-${entryId}-toggleButton`}
-                            className={toggleButtonSurface.className}
-                            style={toggleButtonSurface.style}
+                            surfaceConfig={toggleButtonSurface.resolvedConfigForWrapper}
                             variant="ghost"
                             size="sm"
                           >
@@ -663,7 +660,6 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
                   <SurfaceStyles css={actionTextSurface.scopedCss} />
                   <SurfaceStyles css={userNameSurface.scopedCss} />
                   <SurfaceStyles css={timestampSurface.scopedCss} />
-                  <SurfaceStyles css={toggleButtonSurface.scopedCss} />
                 </div>
               );
             })}
@@ -680,8 +676,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
               type="button"
               onClick={loadMore}
               surfaceId={`${rootId}-loadMoreButton`}
-              className={loadMoreButtonSurface.className}
-              style={loadMoreButtonSurface.style}
+              surfaceConfig={loadMoreButtonSurface.resolvedConfigForWrapper}
               variant="outline"
               size="sm"
             >
@@ -696,7 +691,6 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
       <SurfaceStyles css={emptyStateSurface.scopedCss} />
       <SurfaceStyles css={entriesSurface.scopedCss} />
       <SurfaceStyles css={loadMoreWrapperSurface.scopedCss} />
-      <SurfaceStyles css={loadMoreButtonSurface.scopedCss} />
     </>
   );
 }

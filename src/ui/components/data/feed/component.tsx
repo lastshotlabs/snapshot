@@ -530,15 +530,13 @@ function FeedItemRow({
                       event.stopPropagation();
                       void execute(itemAction.action, { item: item.raw });
                     }}
-                    className={itemActionSurface.className}
-                    style={itemActionSurface.style}
+                    surfaceConfig={itemActionSurface.resolvedConfigForWrapper}
                     variant="ghost"
                     size="sm"
                   >
                     {itemAction.icon ? <Icon name={itemAction.icon} size={14} /> : null}
                     <span>{itemAction.label}</span>
                   </ButtonControl>
-                  <SurfaceStyles css={itemActionSurface.scopedCss} />
                 </div>
               );
             })}
@@ -816,8 +814,7 @@ export function Feed({ config }: { config: FeedConfig }) {
               type="button"
               onClick={refresh}
               surfaceId={`${rootId}-liveButton`}
-              className={liveButtonSurface.className}
-              style={liveButtonSurface.style}
+              surfaceConfig={liveButtonSurface.resolvedConfigForWrapper}
               variant="outline"
               size="sm"
             >
@@ -941,8 +938,7 @@ export function Feed({ config }: { config: FeedConfig }) {
               type="button"
               onClick={loadMore}
               surfaceId={`${rootId}-loadMoreButton`}
-              className={loadMoreButtonSurface.className}
-              style={loadMoreButtonSurface.style}
+              surfaceConfig={loadMoreButtonSurface.resolvedConfigForWrapper}
               variant="ghost"
               size="sm"
             >
@@ -954,13 +950,11 @@ export function Feed({ config }: { config: FeedConfig }) {
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={liveBannerSurface.scopedCss} />
       <SurfaceStyles css={liveTextSurface.scopedCss} />
-      <SurfaceStyles css={liveButtonSurface.scopedCss} />
       <SurfaceStyles css={loadingStateSurface.scopedCss} />
       <SurfaceStyles css={errorStateSurface.scopedCss} />
       <SurfaceStyles css={emptyStateSurface.scopedCss} />
       <SurfaceStyles css={listSurface.scopedCss} />
       <SurfaceStyles css={paginationSurface.scopedCss} />
-      <SurfaceStyles css={loadMoreButtonSurface.scopedCss} />
     </>
   );
 }

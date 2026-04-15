@@ -352,12 +352,12 @@ export function NotificationFeed({
 
         {showMarkAllRead && unreadCount > 0 && config.markReadAction && (
           <ButtonControl
+            type="button"
             surfaceId={`${rootId}-mark-all`}
-            className={markAllButtonSurface.className}
+            surfaceConfig={markAllButtonSurface.resolvedConfigForWrapper}
             onClick={handleMarkAllRead}
             variant="ghost"
             size="sm"
-            style={markAllButtonSurface.style}
           >
             Mark all read
           </ButtonControl>
@@ -593,7 +593,6 @@ export function NotificationFeed({
       <SurfaceStyles css={headerSurface.scopedCss} />
       <SurfaceStyles css={titleSurface.scopedCss} />
       <SurfaceStyles css={unreadBadgeSurface.scopedCss} />
-      <SurfaceStyles css={markAllButtonSurface.scopedCss} />
       <SurfaceStyles css={listSurface.scopedCss} />
       <SurfaceStyles css={emptyStateSurface.scopedCss} />
     </div>

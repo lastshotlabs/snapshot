@@ -102,15 +102,13 @@ function SelectedPill({
           onClick={(event) => onRemove(item.value, event)}
           variant="ghost"
           size="icon"
-          className={pillRemoveSurface.className}
-          style={pillRemoveSurface.style}
+          surfaceConfig={pillRemoveSurface.resolvedConfigForWrapper}
         >
           \u00d7
         </ButtonControl>
       </span>
       <SurfaceStyles css={pillSurface.scopedCss} />
       <SurfaceStyles css={pillLabelSurface.scopedCss} />
-      <SurfaceStyles css={pillRemoveSurface.scopedCss} />
     </>
   );
 }
@@ -203,24 +201,20 @@ function MultiSelectOptionRow({
 
   return (
     <>
-      <div
+      <ButtonControl
+        type="button"
+        variant="ghost"
+        size="sm"
         role="option"
         aria-selected={isChecked}
-        aria-disabled={isDisabled}
-        tabIndex={isDisabled ? -1 : 0}
-        data-snapshot-id={optionId}
-        onClick={() => {
-          if (!isDisabled) {
-            onToggle(option.value);
-          }
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && !isDisabled) {
-            onToggle(option.value);
-          }
-        }}
-        className={optionSurface.className}
-        style={optionSurface.style}
+        disabled={isDisabled}
+        surfaceId={optionId}
+        surfaceConfig={optionSurface.resolvedConfigForWrapper}
+        activeStates={[
+          ...(isChecked ? (["selected"] as const) : []),
+          ...(isDisabled ? (["disabled"] as const) : []),
+        ]}
+        onClick={() => onToggle(option.value)}
       >
         <span
           data-snapshot-id={`${optionId}-indicator`}
@@ -245,8 +239,7 @@ function MultiSelectOptionRow({
         >
           {option.label}
         </span>
-      </div>
-      <SurfaceStyles css={optionSurface.scopedCss} />
+      </ButtonControl>
       <SurfaceStyles css={indicatorSurface.scopedCss} />
       <SurfaceStyles css={iconSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
@@ -667,8 +660,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                   onChangeText={setSearch}
                   onClick={(event) => event.stopPropagation()}
                   surfaceId={`${rootId}-searchInput`}
-                  className={searchInputSurface.className}
-                  style={searchInputSurface.style}
+                  surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
                 />
               </div>
             ) : null}
@@ -700,8 +692,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                   }}
                   variant="ghost"
                   size="sm"
-                  className={retryButtonSurface.className}
-                  style={retryButtonSurface.style}
+                  surfaceConfig={retryButtonSurface.resolvedConfigForWrapper}
                 >
                   Retry
                 </ButtonControl>
@@ -750,10 +741,8 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
       <SurfaceStyles css={chevronSurface.scopedCss} />
       <SurfaceStyles css={dropdownSurface.scopedCss} />
       <SurfaceStyles css={searchContainerSurface.scopedCss} />
-      <SurfaceStyles css={searchInputSurface.scopedCss} />
       <SurfaceStyles css={loadingSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
-      <SurfaceStyles css={retryButtonSurface.scopedCss} />
       <SurfaceStyles css={emptySurface.scopedCss} />
     </>
   );

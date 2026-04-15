@@ -169,8 +169,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
           onChangeText={setValue}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={inputSurface.className}
-          style={inputSurface.style}
+          surfaceConfig={inputSurface.resolvedConfigForWrapper}
         />
 
         {showButton ? (
@@ -182,8 +181,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
             disabled={!canSubmit}
             variant="ghost"
             size="sm"
-            className={buttonSurface.className}
-            style={buttonSurface.style}
+            surfaceConfig={buttonSurface.resolvedConfigForWrapper}
           >
             {buttonText}
           </ButtonControl>
@@ -191,8 +189,6 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={iconSurface.scopedCss} />
-      <SurfaceStyles css={inputSurface.scopedCss} />
-      <SurfaceStyles css={buttonSurface.scopedCss} />
     </>
   );
 }

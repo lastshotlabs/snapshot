@@ -216,8 +216,7 @@ function FileRow({
           ariaLabel={`Remove ${entry.file.name}`}
           variant="ghost"
           size="icon"
-          className={removeSurface.className}
-          style={removeSurface.style}
+          surfaceConfig={removeSurface.resolvedConfigForWrapper}
         >
           {"\u00D7"}
         </ButtonControl>
@@ -236,7 +235,6 @@ function FileRow({
       <SurfaceStyles css={fileNameSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
       <SurfaceStyles css={sizeSurface.scopedCss} />
-      <SurfaceStyles css={removeSurface.scopedCss} />
       <SurfaceStyles css={progressSurface.scopedCss} />
     </>
   );
@@ -607,7 +605,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
         }
       }}
       surfaceId={`${rootId}-input`}
-      style={{ display: "none" }}
+      surfaceConfig={{ style: { display: "none" } }}
     />
   );
 
@@ -664,8 +662,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             onClick={openPicker}
             variant="ghost"
             size="sm"
-            className={triggerSurface.className}
-            style={triggerSurface.style}
+            surfaceConfig={triggerSurface.resolvedConfigForWrapper}
           >
             <span
               aria-hidden="true"
@@ -680,7 +677,6 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           {fileList}
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
-        <SurfaceStyles css={triggerSurface.scopedCss} />
         <SurfaceStyles css={triggerIconSurface.scopedCss} />
       </>
     );
@@ -705,8 +701,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             onClick={openPicker}
             variant="ghost"
             size="sm"
-            className={triggerSurface.className}
-            style={triggerSurface.style}
+            surfaceConfig={triggerSurface.resolvedConfigForWrapper}
           >
             Choose file
           </ButtonControl>
@@ -722,7 +717,6 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           {fileList}
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
-        <SurfaceStyles css={triggerSurface.scopedCss} />
         <SurfaceStyles css={selectedTextSurface.scopedCss} />
       </>
     );

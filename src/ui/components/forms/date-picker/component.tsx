@@ -325,8 +325,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                 key={preset.label}
                 type="button"
                 surfaceId={`${rootId}-presetButton-${index}`}
-                className={presetButtonSurface.className}
-                style={presetButtonSurface.style}
+                surfaceConfig={presetButtonSurface.resolvedConfigForWrapper}
                 variant="ghost"
                 size="sm"
                 onClick={() => {
@@ -360,8 +359,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
             max={config.max}
             placeholder={config.placeholder}
             surfaceId={`${rootId}-singleInput`}
-            className={singleInputSurface.className}
-            style={singleInputSurface.style}
+            surfaceConfig={singleInputSurface.resolvedConfigForWrapper}
             onChangeText={(nextValue) => {
               if (isDisabledDate(nextValue, config.disabledDates)) {
                 return;
@@ -384,8 +382,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
               min={config.min}
               max={config.max}
               surfaceId={`${rootId}-rangeStart`}
-              className={rangeStartSurface.className}
-              style={rangeStartSurface.style}
+              surfaceConfig={rangeStartSurface.resolvedConfigForWrapper}
               onChangeText={(nextValue) => {
                 if (isDisabledDate(nextValue, config.disabledDates)) {
                   return;
@@ -401,8 +398,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
               min={rangeValue.start || config.min}
               max={config.max}
               surfaceId={`${rootId}-rangeEnd`}
-              className={rangeEndSurface.className}
-              style={rangeEndSurface.style}
+              surfaceConfig={rangeEndSurface.resolvedConfigForWrapper}
               onChangeText={(nextValue) => {
                 if (isDisabledDate(nextValue, config.disabledDates)) {
                   return;
@@ -432,15 +428,13 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                 min={config.min}
                 max={config.max}
                 surfaceId={`${rootId}-multipleInput`}
-                className={multipleInputSurface.className}
-                style={multipleInputSurface.style}
+                surfaceConfig={multipleInputSurface.resolvedConfigForWrapper}
                 onChangeText={setMultipleInput}
               />
               <ButtonControl
                 type="button"
                 surfaceId={`${rootId}-multipleAddButton`}
-                className={multipleAddButtonSurface.className}
-                style={multipleAddButtonSurface.style}
+                surfaceConfig={multipleAddButtonSurface.resolvedConfigForWrapper}
                 variant="ghost"
                 size="sm"
                 onClick={() => {
@@ -471,8 +465,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                   key={value}
                   type="button"
                   surfaceId={`${rootId}-multipleValue-${index}`}
-                  className={multipleValueSurface.className}
-                  style={multipleValueSurface.style}
+                  surfaceConfig={multipleValueSurface.resolvedConfigForWrapper}
                   variant="ghost"
                   size="sm"
                   onClick={() => {
@@ -509,17 +502,10 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
       <SurfaceStyles css={presetsSurface.scopedCss} />
-      <SurfaceStyles css={presetButtonSurface.scopedCss} />
-      <SurfaceStyles css={singleInputSurface.scopedCss} />
       <SurfaceStyles css={rangeSurface.scopedCss} />
-      <SurfaceStyles css={rangeStartSurface.scopedCss} />
-      <SurfaceStyles css={rangeEndSurface.scopedCss} />
       <SurfaceStyles css={multipleSurface.scopedCss} />
       <SurfaceStyles css={multipleEntrySurface.scopedCss} />
-      <SurfaceStyles css={multipleInputSurface.scopedCss} />
-      <SurfaceStyles css={multipleAddButtonSurface.scopedCss} />
       <SurfaceStyles css={multipleValuesSurface.scopedCss} />
-      <SurfaceStyles css={multipleValueSurface.scopedCss} />
       <SurfaceStyles css={summarySurface.scopedCss} />
     </>
   );

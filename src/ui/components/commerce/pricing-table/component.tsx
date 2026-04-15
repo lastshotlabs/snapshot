@@ -308,8 +308,7 @@ function TierCard({
           surfaceId={`${cardId}-cta`}
           variant="ghost"
           size="sm"
-          className={ctaSurface.className}
-          style={ctaSurface.style}
+          surfaceConfig={ctaSurface.resolvedConfigForWrapper}
         >
           {ctaLabel}
         </ButtonControl>
@@ -322,7 +321,6 @@ function TierCard({
       <SurfaceStyles css={periodSurface.scopedCss} />
       <SurfaceStyles css={descriptionSurface.scopedCss} />
       <SurfaceStyles css={featureListSurface.scopedCss} />
-      <SurfaceStyles css={ctaSurface.scopedCss} />
     </>
   );
 }
@@ -632,13 +630,11 @@ function TableVariant({
                       surfaceId={`${rootId}-cta-${tierIndex}`}
                       variant="ghost"
                       size="sm"
-                      className={ctaSurface.className}
-                      style={ctaSurface.style}
+                      surfaceConfig={ctaSurface.resolvedConfigForWrapper}
                     >
                       {tier.actionLabel ?? "Get Started"}
                     </ButtonControl>
                     <SurfaceStyles css={ctaCellSurface.scopedCss} />
-                    <SurfaceStyles css={ctaSurface.scopedCss} />
                   </td>
                 );
               })}

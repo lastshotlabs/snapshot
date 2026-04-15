@@ -128,15 +128,13 @@ function TagPill({
             event.stopPropagation();
             onRemove(tag.value);
           }}
-          className={removeButtonSurface.className}
-          style={removeButtonSurface.style}
+          surfaceConfig={removeButtonSurface.resolvedConfigForWrapper}
         >
           \u00d7
         </ButtonControl>
       </span>
       <SurfaceStyles css={pillSurface.scopedCss} />
       <SurfaceStyles css={pillLabelSurface.scopedCss} />
-      <SurfaceStyles css={removeButtonSurface.scopedCss} />
     </>
   );
 }
@@ -202,8 +200,7 @@ function TagOption({
         surfaceId={optionId}
         testId="tag-option"
         onClick={() => onSelect(tag.value)}
-        className={optionSurface.className}
-        style={optionSurface.style}
+        surfaceConfig={optionSurface.resolvedConfigForWrapper}
       >
         {tag.color ? (
           <span
@@ -214,7 +211,6 @@ function TagOption({
         ) : null}
         {tag.label}
       </ButtonControl>
-      <SurfaceStyles css={optionSurface.scopedCss} />
       <SurfaceStyles css={swatchSurface.scopedCss} />
     </>
   );
@@ -590,8 +586,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
             }}
             placeholder={selectedValues.length === 0 ? "Type to search..." : ""}
             disabled={atMax}
-            className={inputSurface.className}
-            style={inputSurface.style}
+            surfaceConfig={inputSurface.resolvedConfigForWrapper}
           />
         </div>
 
@@ -630,8 +625,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                   }}
                   variant="ghost"
                   size="sm"
-                  className={retryButtonSurface.className}
-                  style={retryButtonSurface.style}
+                  surfaceConfig={retryButtonSurface.resolvedConfigForWrapper}
                 >
                   Retry
                 </ButtonControl>
@@ -661,8 +655,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 surfaceId={`${rootId}-createOption`}
                 testId="tag-create-option"
                 onClick={handleCreate}
-                className={createOptionSurface.className}
-                style={createOptionSurface.style}
+                surfaceConfig={createOptionSurface.resolvedConfigForWrapper}
               >
                 Create &ldquo;{searchText.trim()}&rdquo;
               </ButtonControl>
@@ -673,12 +666,9 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
       <SurfaceStyles css={fieldSurface.scopedCss} />
-      <SurfaceStyles css={inputSurface.scopedCss} />
       <SurfaceStyles css={dropdownSurface.scopedCss} />
       <SurfaceStyles css={loadingSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
-      <SurfaceStyles css={retryButtonSurface.scopedCss} />
-      <SurfaceStyles css={createOptionSurface.scopedCss} />
     </>
   );
 }

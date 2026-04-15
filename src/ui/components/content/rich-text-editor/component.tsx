@@ -253,14 +253,12 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                           ariaLabel={item.label}
                           disabled={resolvedReadonly}
                           surfaceId={`${rootId}-toolbarButton-${index}`}
-                          className={buttonSurface.className}
-                          style={buttonSurface.style}
+                          surfaceConfig={buttonSurface.resolvedConfigForWrapper}
                           variant="ghost"
                           size="icon"
                         >
                           <Icon name={item.icon} size={14} />
                         </ButtonControl>
-                        <SurfaceStyles css={buttonSurface.scopedCss} />
                       </div>
                     );
                   })()
@@ -299,15 +297,13 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
                       ariaLabel={`Switch to ${mode} mode`}
                       ariaPressed={active}
                       surfaceId={`${rootId}-modeButton-${index}`}
-                      className={buttonSurface.className}
-                      style={buttonSurface.style}
+                      surfaceConfig={buttonSurface.resolvedConfigForWrapper}
                       variant="ghost"
                       size="sm"
                       activeStates={active ? ["active"] : []}
                     >
                       {mode === "split" ? <Icon name="split" size={12} /> : mode === "preview" ? <Icon name="eye" size={12} /> : <Icon name="edit" size={12} />}
                     </ButtonControl>
-                    <SurfaceStyles css={buttonSurface.scopedCss} />
                   </div>
                 );
               })}

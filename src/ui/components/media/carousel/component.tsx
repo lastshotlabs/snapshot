@@ -309,8 +309,8 @@ export function Carousel({ config }: { config: CarouselConfig }) {
             surfaceId={`${rootId}-prev-button`}
             variant="ghost"
             size="icon"
-            className={prevButtonSurface.className}
-            style={prevButtonSurface.style}
+            surfaceConfig={prevButtonSurface.resolvedConfigForWrapper}
+            activeStates={count > 1 ? [] : ["disabled"]}
           >
             &#x2039;
           </ButtonControl>
@@ -321,8 +321,8 @@ export function Carousel({ config }: { config: CarouselConfig }) {
             surfaceId={`${rootId}-next-button`}
             variant="ghost"
             size="icon"
-            className={nextButtonSurface.className}
-            style={nextButtonSurface.style}
+            surfaceConfig={nextButtonSurface.resolvedConfigForWrapper}
+            activeStates={count > 1 ? [] : ["disabled"]}
           >
             &#x203A;
           </ButtonControl>
@@ -344,8 +344,10 @@ export function Carousel({ config }: { config: CarouselConfig }) {
               surfaceId={`${rootId}-indicator-item-${index}`}
               variant="ghost"
               size="icon"
-              className={indicatorItemSurfaces[index]?.className}
-              style={indicatorItemSurfaces[index]?.style}
+              surfaceConfig={indicatorItemSurfaces[index]?.resolvedConfigForWrapper}
+              activeStates={
+                index === current ? ["active", "selected", "current"] : []
+              }
             />
           ))}
         </div>
@@ -355,14 +357,9 @@ export function Carousel({ config }: { config: CarouselConfig }) {
       <SurfaceStyles css={viewportSurface.scopedCss} />
       <SurfaceStyles css={trackSurface.scopedCss} />
       <SurfaceStyles css={controlsSurface.scopedCss} />
-      <SurfaceStyles css={prevButtonSurface.scopedCss} />
-      <SurfaceStyles css={nextButtonSurface.scopedCss} />
       <SurfaceStyles css={indicatorSurface.scopedCss} />
       {slideSurfaces.map((surface, index) => (
         <SurfaceStyles key={`slide-css-${index}`} css={surface.scopedCss} />
-      ))}
-      {indicatorItemSurfaces.map((surface, index) => (
-        <SurfaceStyles key={`indicator-css-${index}`} css={surface.scopedCss} />
       ))}
     </div>
   );
