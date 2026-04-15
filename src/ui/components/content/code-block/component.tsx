@@ -299,8 +299,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
               variant="ghost"
               size="sm"
               surfaceId={`${rootId}-copyButton`}
-              className={copyButtonSurface.className}
-              style={copyButtonSurface.style}
+              surfaceConfig={copyButtonSurface.resolvedConfigForWrapper}
             >
               {copyLabel}
             </ButtonControl>

@@ -321,8 +321,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
               placeholder="Search emoji..."
               value={search}
               onChangeText={setSearch}
-              className={searchInputSurface.className}
-              style={searchInputSurface.style}
+              surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
             />
           </div>
         </div>
@@ -384,8 +383,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                     )
                   }
                   surfaceId={`${rootId}-categoryTab-${categoryKey}`}
-                  className={categoryTabSurface.className}
-                  style={categoryTabSurface.style}
+                  surfaceConfig={categoryTabSurface.resolvedConfigForWrapper}
                   variant="ghost"
                   size="icon"
                   activeStates={activeCategory === categoryKey ? ["active"] : []}
@@ -515,8 +513,7 @@ export function EmojiPicker({ config }: { config: EmojiPickerConfig }) {
                             title={custom ? `:${custom.shortcode}:` : emoji.name}
                             ariaLabel={custom ? `:${custom.shortcode}:` : emoji.name}
                             surfaceId={`${categoryId}-emoji-${emoji.name}`}
-                            className={emojiButtonSurface.className}
-                            style={emojiButtonSurface.style}
+                            surfaceConfig={emojiButtonSurface.resolvedConfigForWrapper}
                             variant="ghost"
                             size="icon"
                           >

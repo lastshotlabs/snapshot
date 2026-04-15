@@ -30,23 +30,26 @@ export function Vote({ config }: { config: VoteConfig }) {
   const upvoteSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-upvote`,
     implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      states: {
+        active: {
+          color: "var(--sn-color-primary, #2563eb)",
+        },
+      },
+      focus: {
+        ring: true,
+      },
       style: {
         background: "none",
         border: "none",
         cursor: "pointer",
         padding: "var(--sn-spacing-2xs, 2px)",
-        color:
-          voted === "up"
-            ? "var(--sn-color-primary, #2563eb)"
-            : "var(--sn-color-muted-foreground, #6b7280)",
         fontSize: "1.25rem",
         lineHeight: 1,
       },
-      focus: {
-        ring: true,
-      },
     },
     componentSurface: config.slots?.upvote,
+    activeStates: voted === "up" ? ["active"] : [],
   });
   const valueSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-value`,
@@ -64,23 +67,26 @@ export function Vote({ config }: { config: VoteConfig }) {
   const downvoteSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-downvote`,
     implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      states: {
+        active: {
+          color: "var(--sn-color-destructive, #dc2626)",
+        },
+      },
+      focus: {
+        ring: true,
+      },
       style: {
         background: "none",
         border: "none",
         cursor: "pointer",
         padding: "var(--sn-spacing-2xs, 2px)",
-        color:
-          voted === "down"
-            ? "var(--sn-color-destructive, #dc2626)"
-            : "var(--sn-color-muted-foreground, #6b7280)",
         fontSize: "1.25rem",
         lineHeight: 1,
       },
-      focus: {
-        ring: true,
-      },
     },
     componentSurface: config.slots?.downvote,
+    activeStates: voted === "down" ? ["active"] : [],
   });
 
   return (
@@ -105,8 +111,8 @@ export function Vote({ config }: { config: VoteConfig }) {
         variant="ghost"
         size="icon"
         surfaceId={`${rootId}-upvote`}
-        className={upvoteSurface.className}
-        style={upvoteSurface.style}
+        surfaceConfig={upvoteSurface.resolvedConfigForWrapper}
+        activeStates={voted === "up" ? ["active"] : []}
       >
         &#x25B2;
       </ButtonControl>
@@ -129,8 +135,8 @@ export function Vote({ config }: { config: VoteConfig }) {
         variant="ghost"
         size="icon"
         surfaceId={`${rootId}-downvote`}
-        className={downvoteSurface.className}
-        style={downvoteSurface.style}
+        surfaceConfig={downvoteSurface.resolvedConfigForWrapper}
+        activeStates={voted === "down" ? ["active"] : []}
       >
         &#x25BC;
       </ButtonControl>

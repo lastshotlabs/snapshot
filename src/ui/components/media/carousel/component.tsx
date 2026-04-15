@@ -348,7 +348,9 @@ export function Carousel({ config }: { config: CarouselConfig }) {
               activeStates={
                 index === current ? ["active", "selected", "current"] : []
               }
-            />
+            >
+              <span aria-hidden="true" />
+            </ButtonControl>
           ))}
         </div>
       ) : null}

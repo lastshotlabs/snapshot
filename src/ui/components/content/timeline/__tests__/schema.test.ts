@@ -22,6 +22,12 @@ describe("timelineConfigSchema", () => {
       variant: "default",
       showConnector: true,
       slots: {
+        loadingState: {
+          className: "timeline-loading",
+        },
+        header: {
+          className: "timeline-header",
+        },
         title: {
           className: "timeline-title",
         },

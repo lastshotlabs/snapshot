@@ -86,6 +86,86 @@ export function Timeline({ config }: { config: TimelineConfig }) {
     componentSurface: config,
     itemSurface: config.slots?.root,
   });
+  const loadingStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-state`,
+    implementationBase: {
+      padding: "var(--sn-spacing-md, 1rem)",
+    },
+    componentSurface: config.slots?.loadingState,
+  });
+  const loadingItemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-item`,
+    implementationBase: {
+      display: "flex",
+      gap: "var(--sn-spacing-md, 1rem)",
+      style: {
+        marginBottom: "var(--sn-spacing-lg, 1.5rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingItem,
+  });
+  const loadingMarkerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-marker`,
+    implementationBase: {
+      style: {
+        width: 12,
+        height: 12,
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        flexShrink: 0,
+      },
+    },
+    componentSurface: config.slots?.loadingMarker,
+  });
+  const loadingBodySurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-body`,
+    implementationBase: {
+      flex: 1,
+    },
+    componentSurface: config.slots?.loadingBody,
+  });
+  const loadingTitleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-title`,
+    implementationBase: {
+      style: {
+        height: "var(--sn-font-size-sm, 0.875rem)",
+        width: "40%",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+        marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingTitle,
+  });
+  const loadingMetaSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-meta`,
+    implementationBase: {
+      style: {
+        height: "var(--sn-font-size-xs, 0.75rem)",
+        width: "60%",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingMeta,
+  });
+  const errorStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-error-state`,
+    implementationBase: {},
+    componentSurface: config.slots?.errorState,
+  });
+  const emptyStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-empty-state`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: {
+        padding: "var(--sn-spacing-lg, 1.5rem)",
+        textAlign: "center",
+      },
+    },
+    componentSurface: config.slots?.emptyState,
+  });
 
   const handleItemClick = config.action
     ? (item: TimelineItem, index: number) =>
@@ -107,49 +187,48 @@ export function Timeline({ config }: { config: TimelineConfig }) {
       >
         <div
           data-testid="timeline-loading"
-          style={{ padding: "var(--sn-spacing-md, 1rem)" }}
+          data-snapshot-id={`${rootId}-loading-state`}
+          className={loadingStateSurface.className}
+          style={loadingStateSurface.style}
         >
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              style={{
-                display: "flex",
-                gap: "var(--sn-spacing-md, 1rem)",
-                marginBottom: "var(--sn-spacing-lg, 1.5rem)",
-              }}
+              data-snapshot-id={`${rootId}-loading-item-${i}`}
+              className={loadingItemSurface.className}
+              style={loadingItemSurface.style}
             >
               <div
-                style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: "var(--sn-radius-full, 9999px)",
-                  backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-                  flexShrink: 0,
-                }}
+                data-snapshot-id={`${rootId}-loading-marker-${i}`}
+                className={loadingMarkerSurface.className}
+                style={loadingMarkerSurface.style}
               />
-              <div style={{ flex: 1 }}>
+              <div
+                data-snapshot-id={`${rootId}-loading-body-${i}`}
+                className={loadingBodySurface.className}
+                style={loadingBodySurface.style}
+              >
                 <div
-                  style={{
-                    height: "var(--sn-font-size-sm, 0.875rem)",
-                    width: "40%",
-                    backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-                    borderRadius: "var(--sn-radius-sm, 0.25rem)",
-                    marginBottom: "var(--sn-spacing-xs, 0.25rem)",
-                  }}
+                  data-snapshot-id={`${rootId}-loading-title-${i}`}
+                  className={loadingTitleSurface.className}
+                  style={loadingTitleSurface.style}
                 />
                 <div
-                  style={{
-                    height: "var(--sn-font-size-xs, 0.75rem)",
-                    width: "60%",
-                    backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-                    borderRadius: "var(--sn-radius-sm, 0.25rem)",
-                  }}
+                  data-snapshot-id={`${rootId}-loading-meta-${i}`}
+                  className={loadingMetaSurface.className}
+                  style={loadingMetaSurface.style}
                 />
               </div>
             </div>
           ))}
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={loadingStateSurface.scopedCss} />
+        <SurfaceStyles css={loadingItemSurface.scopedCss} />
+        <SurfaceStyles css={loadingMarkerSurface.scopedCss} />
+        <SurfaceStyles css={loadingBodySurface.scopedCss} />
+        <SurfaceStyles css={loadingTitleSurface.scopedCss} />
+        <SurfaceStyles css={loadingMetaSurface.scopedCss} />
       </div>
     );
   }
@@ -163,13 +242,19 @@ export function Timeline({ config }: { config: TimelineConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        <div data-testid="timeline-error">
+        <div
+          data-testid="timeline-error"
+          data-snapshot-id={`${rootId}-error-state`}
+          className={errorStateSurface.className}
+          style={errorStateSurface.style}
+        >
           <AutoErrorState
             config={config.error ?? {}}
             onRetry={config.error?.retry !== undefined ? refetch : undefined}
           />
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={errorStateSurface.scopedCss} />
       </div>
     );
   }
@@ -185,16 +270,14 @@ export function Timeline({ config }: { config: TimelineConfig }) {
       >
         <div
           data-testid="timeline-empty"
-          style={{
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            padding: "var(--sn-spacing-lg, 1.5rem)",
-            textAlign: "center",
-          }}
+          data-snapshot-id={`${rootId}-empty-state`}
+          className={emptyStateSurface.className}
+          style={emptyStateSurface.style}
         >
           No events to display
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={emptyStateSurface.scopedCss} />
       </div>
     );
   }
@@ -278,6 +361,63 @@ export function Timeline({ config }: { config: TimelineConfig }) {
           componentSurface: config.slots?.connector,
           itemSurface: itemSlots?.connector,
         });
+        const markerColumnSurface = resolveSurfacePresentation({
+          surfaceId: `${rootId}-item-${index}-marker-column`,
+          implementationBase: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            style: {
+              flexShrink: 0,
+              width: dotSize,
+            },
+          },
+          componentSurface: config.slots?.markerColumn,
+          itemSurface: itemSlots?.markerColumn,
+        });
+        const bodySurface = resolveSurfacePresentation({
+          surfaceId: `${rootId}-item-${index}-body`,
+          implementationBase: {
+            flex: 1,
+            minWidth: 0,
+          },
+          componentSurface: config.slots?.body,
+          itemSurface: itemSlots?.body,
+        });
+        const headerSurface = resolveSurfacePresentation({
+          surfaceId: `${rootId}-item-${index}-header`,
+          implementationBase: {
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: "var(--sn-spacing-sm, 0.5rem)",
+          },
+          componentSurface: config.slots?.header,
+          itemSurface: itemSlots?.header,
+        });
+        const titleGroupSurface = resolveSurfacePresentation({
+          surfaceId: `${rootId}-item-${index}-title-group`,
+          implementationBase: {
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-xs, 0.25rem)",
+          },
+          componentSurface: config.slots?.titleGroup,
+          itemSurface: itemSlots?.titleGroup,
+        });
+        const itemIconSurface = resolveSurfacePresentation({
+          surfaceId: `${rootId}-item-${index}-icon`,
+          implementationBase: {
+            display: "inline-flex",
+            alignItems: "center",
+            style: {
+              fontSize: "var(--sn-font-size-sm, 0.875rem)",
+              color: dotColor,
+            },
+          },
+          componentSurface: config.slots?.itemIcon,
+          itemSurface: itemSlots?.itemIcon,
+        });
         const titleSurface = resolveSurfacePresentation({
           surfaceId: `${rootId}-item-${index}-title`,
           implementationBase: {
@@ -347,13 +487,9 @@ export function Timeline({ config }: { config: TimelineConfig }) {
             style={itemSurface.style}
           >
             <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                flexShrink: 0,
-                width: dotSize,
-              }}
+              data-snapshot-id={`${rootId}-item-${index}-marker-column`}
+              className={markerColumnSurface.className}
+              style={markerColumnSurface.style}
             >
               <div
                 data-testid="timeline-dot"
@@ -371,30 +507,26 @@ export function Timeline({ config }: { config: TimelineConfig }) {
               )}
             </div>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              data-snapshot-id={`${rootId}-item-${index}-body`}
+              className={bodySurface.className}
+              style={bodySurface.style}
+            >
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: "var(--sn-spacing-sm, 0.5rem)",
-                }}
+                data-snapshot-id={`${rootId}-item-${index}-header`}
+                className={headerSurface.className}
+                style={headerSurface.style}
               >
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "var(--sn-spacing-xs, 0.25rem)",
-                  }}
+                  data-snapshot-id={`${rootId}-item-${index}-title-group`}
+                  className={titleGroupSurface.className}
+                  style={titleGroupSurface.style}
                 >
                   {item.icon && (
                     <span
-                      style={{
-                        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                        color: dotColor,
-                        display: "inline-flex",
-                        alignItems: "center",
-                      }}
+                      data-snapshot-id={`${rootId}-item-${index}-icon`}
+                      className={itemIconSurface.className}
+                      style={itemIconSurface.style}
                       aria-hidden="true"
                     >
                       <Icon name={item.icon} size={14} />
@@ -452,8 +584,13 @@ export function Timeline({ config }: { config: TimelineConfig }) {
             </div>
 
             <SurfaceStyles css={itemSurface.scopedCss} />
+            <SurfaceStyles css={markerColumnSurface.scopedCss} />
             <SurfaceStyles css={markerSurface.scopedCss} />
             <SurfaceStyles css={connectorSurface.scopedCss} />
+            <SurfaceStyles css={bodySurface.scopedCss} />
+            <SurfaceStyles css={headerSurface.scopedCss} />
+            <SurfaceStyles css={titleGroupSurface.scopedCss} />
+            <SurfaceStyles css={itemIconSurface.scopedCss} />
             <SurfaceStyles css={titleSurface.scopedCss} />
             <SurfaceStyles css={metaSurface.scopedCss} />
             <SurfaceStyles css={descriptionSurface.scopedCss} />

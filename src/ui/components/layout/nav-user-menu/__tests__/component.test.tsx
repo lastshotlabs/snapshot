@@ -129,6 +129,35 @@ describe("NavUserMenu", () => {
     expect(execute).toHaveBeenCalledWith({ type: "navigate", to: "/logout" });
   });
 
+  it("applies canonical slot styling to email and avatar image surfaces", () => {
+    const { container } = renderWithContext(
+      <NavUserMenu
+        config={{
+          type: "nav-user-menu",
+          showEmail: true,
+          slots: {
+            email: { className: "user-email-slot" },
+            avatarImage: { className: "user-avatar-image-slot" },
+          },
+        }}
+      />,
+      { user: { name: "Alice", email: "alice@test.com", avatar: "/alice.png" } },
+    );
+
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(
+      container
+        .querySelector('[data-snapshot-id="nav-user-menu-email"]')
+        ?.classList.contains("user-email-slot"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-snapshot-id="nav-user-menu-avatar-image"]')
+        ?.classList.contains("user-avatar-image-slot"),
+    ).toBe(true);
+  });
+
   it("returns null when no user exists", () => {
     renderWithContext(<NavUserMenu config={{ type: "nav-user-menu" }} />);
     expect(screen.queryByRole("button")).toBeNull();

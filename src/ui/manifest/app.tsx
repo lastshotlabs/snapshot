@@ -81,6 +81,28 @@ import { resetRegisteredComponents } from "./component-registry";
 import { resolveTemplate } from "../expressions/template";
 
 const EMPTY_OBJECT: Record<string, unknown> = {};
+const ROUTE_ENTER_REPLAY_WINDOW_MS = 1_500;
+const recentRouteEnterExecutions = new Map<string, number>();
+
+function shouldSkipImmediateRouteEnterReplay(key: string): boolean {
+  if (!import.meta.env.DEV) {
+    return false;
+  }
+
+  const now = Date.now();
+  for (const [entryKey, timestamp] of recentRouteEnterExecutions.entries()) {
+    if (now - timestamp > ROUTE_ENTER_REPLAY_WINDOW_MS) {
+      recentRouteEnterExecutions.delete(entryKey);
+    }
+  }
+
+  const previousExecution = recentRouteEnterExecutions.get(key);
+  recentRouteEnterExecutions.set(key, now);
+  return (
+    typeof previousExecution === "number" &&
+    now - previousExecution < ROUTE_ENTER_REPLAY_WINDOW_MS
+  );
+}
 
 /**
  * Inject or update a stylesheet in the document head.
@@ -1598,6 +1620,7 @@ function ManifestRouter({
       const currentExecute = executeRef.current;
       const currentResourceCache = resourceCacheRef.current;
       const previousMatch = previousMatchRef.current;
+      const routeEnterReplayKey = `${route.id}:${scopedCurrentPath}${currentLocation.search}`;
       if (
         previousMatch &&
         (previousMatch.currentPath !== scopedCurrentPath ||
@@ -1673,7 +1696,10 @@ function ManifestRouter({
         setIsPreloading(false);
       }
 
-      if (route.enter) {
+      if (
+        route.enter &&
+        !shouldSkipImmediateRouteEnterReplay(routeEnterReplayKey)
+      ) {
         if (typeof route.enter === "string") {
           await currentExecute(
             { type: "run-workflow", workflow: route.enter },
@@ -1718,11 +1744,11 @@ function ManifestRouter({
       cancelled = true;
       abortController.abort();
     };
-    // Route lifecycle should only re-fire on actual route changes, not when
+    // Route lifecycle should only re-fire on actual route location changes, not when
     // callback identities shift.  execute and resourceCache are accessed via
     // refs so they always reflect the latest value without being deps.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, route, routeAllowed, scopedCurrentPath]);
+  }, [params, route, routeAllowed, scopedCurrentLocation]);
 
   if (subAppMatch) {
     if (typeof window === "undefined") {

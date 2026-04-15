@@ -280,12 +280,9 @@ function FieldRow({
         {field.copyable ? (
           <ButtonControl
             surfaceId={`${rootId}-copy-button-${fieldIndex}`}
-            surfaceConfig={componentSlots?.copyButton}
-            itemSurfaceConfig={field.slots?.copyButton as Record<string, unknown> | undefined}
+            surfaceConfig={copyButtonSurface.resolvedConfigForWrapper}
             variant="ghost"
             size="sm"
-            style={copyButtonSurface.style}
-            className={copyButtonSurface.className}
             testId={`copy-${field.field}`}
             onClick={() => void copyToClipboard(field.value)}
             ariaLabel={`Copy ${field.label}`}

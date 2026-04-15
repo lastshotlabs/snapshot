@@ -212,9 +212,9 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
             onChangeText={setEditValue}
             onKeyDown={handleKeyDown}
             onBlur={save}
-            data-testid="inline-edit-input"
-            className={inputSurface.className}
-            style={inputSurface.style}
+            testId="inline-edit-input"
+            surfaceId={`${rootId}-input`}
+            surfaceConfig={inputSurface.resolvedConfigForWrapper}
           />
         ) : (
           <ButtonControl
@@ -228,8 +228,7 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
             surfaceId={`${rootId}-display`}
             variant="ghost"
             size="sm"
-            className={displaySurface.className}
-            style={displaySurface.style}
+            surfaceConfig={displaySurface.resolvedConfigForWrapper}
           >
             <span
               data-snapshot-id={`${rootId}-display-text`}

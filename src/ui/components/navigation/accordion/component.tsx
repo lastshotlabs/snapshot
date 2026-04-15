@@ -221,8 +221,8 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
               onClick={() => !isDisabled && toggle(index)}
               disabled={isDisabled}
               ariaExpanded={isOpen}
-              className={triggerSurface.className}
-              style={triggerSurface.style}
+              surfaceId={`${rootId}-trigger-${index}`}
+              surfaceConfig={triggerSurface.resolvedConfigForWrapper}
               activeStates={[
                 ...(isOpen ? ["open"] : []),
                 ...(isDisabled ? ["disabled"] : []),

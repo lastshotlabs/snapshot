@@ -21,6 +21,12 @@ describe("navUserMenuConfigSchema", () => {
         trigger: {
           className: "user-trigger",
         },
+        email: {
+          className: "user-email",
+        },
+        avatarImage: {
+          className: "user-avatar-image",
+        },
         panel: {
           className: "user-panel",
         },

@@ -41,6 +41,7 @@ export const switchConfigSchema = extendComponentSchema({
       "root",
       "track",
       "thumb",
+      "labelGroup",
       "label",
       "description",
     ]).optional(),

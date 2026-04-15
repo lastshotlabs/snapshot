@@ -65,6 +65,22 @@ export function Toggle({ config }: { config: ToggleConfig }) {
   ];
   const variant = config.variant === "outline" ? "outline" : "secondary";
   const rootId = config.id ?? "toggle";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      states: {
+        selected: {
+          style: {
+            backgroundColor: "var(--sn-color-primary, #2563eb)",
+            borderColor: "var(--sn-color-primary, #2563eb)",
+            color: "var(--sn-color-primary-foreground, #ffffff)",
+          },
+        },
+      },
+    },
+    componentSurface: config.slots?.root,
+    activeStates: states,
+  });
 
   const iconSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-icon`,
@@ -99,18 +115,9 @@ export function Toggle({ config }: { config: ToggleConfig }) {
         disabled={resolvedDisabled}
         onClick={handleToggle}
         surfaceId={rootId}
-        surfaceConfig={config.slots?.root}
+        surfaceConfig={rootSurface.resolvedConfigForWrapper}
         activeStates={states}
         ariaPressed={pressed}
-        style={
-          pressed
-            ? {
-                backgroundColor: "var(--sn-color-primary, #2563eb)",
-                borderColor: "var(--sn-color-primary, #2563eb)",
-                color: "var(--sn-color-primary-foreground, #ffffff)",
-              }
-            : undefined
-        }
         testId="toggle"
       >
         {config.icon ? (

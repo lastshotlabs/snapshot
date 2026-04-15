@@ -97,6 +97,27 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
     },
     componentSurface: config.slots?.triggerLabel,
   });
+  const avatarImageSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-avatar-image`,
+    implementationBase: {
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      },
+    },
+    componentSurface: config.slots?.avatarImage,
+  });
+  const emailSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-email`,
+    implementationBase: {
+      style: {
+        padding: "0.5rem 0.75rem",
+        fontSize: "0.75rem",
+      },
+    },
+    componentSurface: config.slots?.email,
+  });
 
   return (
     <div
@@ -124,7 +145,9 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
               <img
                 src={user.avatar}
                 alt={user.name ?? "User"}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                data-snapshot-id={`${rootId}-avatar-image`}
+                className={avatarImageSurface.className}
+                style={avatarImageSurface.style}
               />
             ) : (
               (user.name?.charAt(0)?.toUpperCase() ?? "U")
@@ -151,7 +174,11 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
         slot={config.slots?.panel}
       >
         {showEmail && user.email ? (
-          <div style={{ padding: "0.5rem 0.75rem", fontSize: "0.75rem" }}>
+          <div
+            data-snapshot-id={`${rootId}-email`}
+            className={emailSurface.className}
+            style={emailSurface.style}
+          >
             {user.email}
           </div>
         ) : null}
@@ -173,6 +200,8 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
       </FloatingPanel>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={avatarSurface.scopedCss} />
+      <SurfaceStyles css={avatarImageSurface.scopedCss} />
+      <SurfaceStyles css={emailSurface.scopedCss} />
       <SurfaceStyles css={triggerLabelSurface.scopedCss} />
     </div>
   );

@@ -352,6 +352,12 @@ export function Nav({
     },
     componentSurface: config.slots?.list,
   });
+  const toggleSurface = resolveSurfacePresentation({
+    surfaceId: `${config.id ?? "nav"}-toggle`,
+    implementationBase: {},
+    componentSurface: config.slots?.toggle,
+    activeStates: isCollapsed ? ["active"] : [],
+  });
 
   if (hasTemplate) {
     const templateItems = (config as Record<string, unknown>).template as ComponentConfig[];
@@ -403,6 +409,8 @@ export function Nav({
             variant="ghost"
             onClick={toggle}
             surfaceId={`${config.id ?? "nav"}-toggle`}
+            surfaceConfig={toggleSurface.resolvedConfigForWrapper}
+            activeStates={isCollapsed ? ["active"] : []}
           >
             {isCollapsed ? "Menu" : "Close"}
           </ButtonControl>
@@ -459,6 +467,7 @@ export function Nav({
         ) : null}
 
         <FloatingMenuStyles />
+        <SurfaceStyles css={toggleSurface.scopedCss} />
         <SurfaceStyles css={listSurface.scopedCss} />
       </nav>
     </ComponentWrapper>

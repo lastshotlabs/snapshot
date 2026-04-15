@@ -69,7 +69,7 @@ describe("Timeline", () => {
     );
   });
 
-  it("applies canonical slot styling to item and title surfaces", () => {
+  it("applies canonical slot styling to grouped item surfaces", () => {
     const { container } = render(
       <Timeline
         config={{
@@ -83,6 +83,7 @@ describe("Timeline", () => {
             },
           ],
           slots: {
+            header: { className: "timeline-header-slot" },
             title: { className: "timeline-title-slot" },
           },
         }}
@@ -93,6 +94,11 @@ describe("Timeline", () => {
       container
         .querySelector('[data-testid="timeline-item"]')
         ?.classList.contains("timeline-item-slot"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-snapshot-id="timeline-item-0-header"]')
+        ?.classList.contains("timeline-header-slot"),
     ).toBe(true);
     expect(
       container

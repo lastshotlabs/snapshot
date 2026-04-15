@@ -563,8 +563,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
           <InputControl
             inputRef={inputRef}
             surfaceId={`${rootId}-search-input`}
-            className={searchInputSurface.className}
-            style={searchInputSurface.style}
+            surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
             type="text"
             value={query}
             onChangeText={setQuery}

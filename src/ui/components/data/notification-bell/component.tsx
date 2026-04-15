@@ -167,10 +167,7 @@ export function NotificationBell({
         variant="ghost"
         size="icon"
         surfaceId={`${rootId}-button`}
-        className={buttonSurface.className}
-        style={{
-          ...(buttonSurface.style ?? {}),
-        }}
+        surfaceConfig={buttonSurface.resolvedConfigForWrapper}
       >
         <Icon name="bell" size={iconSize} />
         {showBadge && (

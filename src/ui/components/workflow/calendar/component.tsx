@@ -105,8 +105,7 @@ function EventPill({
           e.stopPropagation();
           onClick?.();
         }}
-        className={surface.className}
-        style={surface.style}
+        surfaceConfig={surface.resolvedConfigForWrapper}
       >
         {event.title}
       </ButtonControl>
@@ -261,8 +260,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
           testId={`calendar-nav-${id}`}
           ariaLabel={ariaLabel}
           surfaceId={`${rootId}-nav-${id}`}
-          className={surface.className}
-          style={surface.style}
+          surfaceConfig={surface.resolvedConfigForWrapper}
         >
           {text}
         </ButtonControl>

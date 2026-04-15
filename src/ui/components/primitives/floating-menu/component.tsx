@@ -628,8 +628,6 @@ export function MenuItem({
     componentSurface: iconSlot,
   });
 
-  const itemClassName = [className, itemSurface.className].filter(Boolean).join(" ");
-
   return (
     <>
       <ButtonControl
@@ -642,9 +640,9 @@ export function MenuItem({
         onClick={disabled ? undefined : onClick}
         tabIndex={tabIndex}
         surfaceId={surfaceId}
-        className={itemClassName || undefined}
+        surfaceConfig={itemSurface.resolvedConfigForWrapper}
+        className={className}
         style={{
-          ...(itemSurface.style ?? {}),
           ...(style ?? {}),
           ...(destructive
             ? { color: "var(--sn-color-destructive, #dc2626)" }

@@ -325,8 +325,7 @@ function CommentItem({
                 type="button"
                 onClick={handleDelete}
                 surfaceId={`${itemId}-deleteButton`}
-                className={deleteButtonSurface.className}
-                style={deleteButtonSurface.style}
+                surfaceConfig={deleteButtonSurface.resolvedConfigForWrapper}
                 title="Delete comment"
                 ariaLabel="Delete comment"
                 variant="ghost"

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
 import { usePublish } from "../../../context/index";
 import { useActionExecutor } from "../../../actions/executor";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -107,15 +106,14 @@ export function NavSearch({ config }: { config: NavSearchConfig }) {
         value={value}
         onChangeText={setValue}
         surfaceId={`${rootId}-input`}
-        className={inputSurface.className}
-        style={inputSurface.style as CSSProperties | undefined}
+        surfaceConfig={inputSurface.resolvedConfigForWrapper}
         ariaLabel={config.placeholder ?? "Search"}
       />
       {config.shortcut && (
         <kbd
           data-snapshot-id={`${rootId}-shortcut`}
           className={shortcutSurface.className}
-          style={shortcutSurface.style as CSSProperties | undefined}
+          style={shortcutSurface.style}
         >
           {config.shortcut}
         </kbd>

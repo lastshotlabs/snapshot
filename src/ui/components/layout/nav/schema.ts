@@ -9,6 +9,7 @@ export const navSlotNames = [
   "brand",
   "brandIcon",
   "brandLabel",
+  "toggle",
   "list",
   "item",
   "itemLabel",

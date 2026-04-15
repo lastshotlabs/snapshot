@@ -864,10 +864,12 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               onChangeChecked={() => table.toggleRow(rowId)}
               ariaLabel={`Select row ${rowId}`}
               surfaceId={`${rootId}-row-select-${rowIndex}`}
-              style={{
-                width: "16px",
-                height: "16px",
-                accentColor: "var(--sn-color-primary, #2563eb)",
+              surfaceConfig={{
+                style: {
+                  width: "16px",
+                  height: "16px",
+                  accentColor: "var(--sn-color-primary, #2563eb)",
+                },
               }}
             />
           </td>
@@ -1072,13 +1074,15 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               onChangeText={table.setSearch}
               ariaLabel="Search table"
               surfaceId={`${rootId}-search`}
-              style={{
-                padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
-                borderRadius: "var(--sn-radius-md, 6px)",
-                border:
-                  "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
-                flex: "1 1 auto",
-                maxWidth: "min(320px, 100%)",
+              surfaceConfig={{
+                style: {
+                  padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
+                  borderRadius: "var(--sn-radius-md, 6px)",
+                  border:
+                    "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+                  flex: "1 1 auto",
+                  maxWidth: "min(320px, 100%)",
+                },
               }}
             />
           )}
@@ -1264,8 +1268,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                           size="sm"
                           onClick={() => table.setSortColumn(col.field)}
                           ariaCurrent={isSorted ? "page" : undefined}
-                          className={headerButtonSurface?.className}
-                          style={headerButtonSurface?.style}
+                          surfaceConfig={headerButtonSurface?.resolvedConfigForWrapper}
                           activeStates={
                             isSorted
                               ? (["current", "selected"] as Array<"current" | "selected">)

@@ -43,6 +43,15 @@ export function DefaultError({ config }: { config: ErrorPageConfig }) {
     },
     componentSurface: config.slots?.description,
   });
+  const actionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-action`,
+    implementationBase: {
+      style: {
+        alignSelf: "start",
+      },
+    },
+    componentSurface: config.slots?.action,
+  });
 
   return (
     <div
@@ -77,8 +86,7 @@ export function DefaultError({ config }: { config: ErrorPageConfig }) {
           size="md"
           onClick={() => window.location.reload()}
           surfaceId={`${rootId}-action`}
-          surfaceConfig={config.slots?.action}
-          style={{ alignSelf: "start" }}
+          surfaceConfig={actionSurface.resolvedConfigForWrapper}
         >
           {config.retryLabel ?? "Try again"}
         </ButtonControl>

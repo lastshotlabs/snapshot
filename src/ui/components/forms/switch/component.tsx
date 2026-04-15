@@ -55,6 +55,21 @@ export function Switch({ config }: { config: SwitchConfig }) {
     ...(checked ? (["selected"] as const) : []),
     ...(resolvedDisabled ? (["disabled"] as const) : []),
   ];
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      width: "auto",
+      minHeight: "auto",
+      padding: 0,
+      gap: "var(--sn-spacing-sm, 0.5rem)",
+      cursor: resolvedDisabled ? "not-allowed" : "pointer",
+      style: {
+        justifyContent: "flex-start",
+      },
+    },
+    componentSurface: config.slots?.root,
+    activeStates: states,
+  });
 
   const trackSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-track`,
@@ -97,6 +112,19 @@ export function Switch({ config }: { config: SwitchConfig }) {
     componentSurface: config.slots?.thumb,
     activeStates: states,
   });
+  const labelGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-label-group`,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+      style: {
+        textAlign: "left",
+      },
+    },
+    componentSurface: config.slots?.labelGroup,
+    activeStates: states,
+  });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label`,
     implementationBase: {
@@ -126,18 +154,11 @@ export function Switch({ config }: { config: SwitchConfig }) {
         disabled={resolvedDisabled}
         onClick={handleToggle}
         surfaceId={rootId}
-        surfaceConfig={config.slots?.root}
+        surfaceConfig={rootSurface.resolvedConfigForWrapper}
         activeStates={states}
         ariaLabel={resolvedLabel ?? config.description ?? "Toggle"}
         ariaChecked={checked}
         role="switch"
-        style={{
-          width: "auto",
-          minHeight: "auto",
-          padding: 0,
-          gap: "var(--sn-spacing-sm, 0.5rem)",
-          cursor: resolvedDisabled ? "not-allowed" : "pointer",
-        }}
         testId="switch"
       >
         <span
@@ -153,12 +174,9 @@ export function Switch({ config }: { config: SwitchConfig }) {
         </span>
         {resolvedLabel || config.description ? (
           <span
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--sn-spacing-xs, 0.25rem)",
-              textAlign: "left",
-            }}
+            data-snapshot-id={`${rootId}-label-group`}
+            className={labelGroupSurface.className}
+            style={labelGroupSurface.style}
           >
             {resolvedLabel ? (
               <span
@@ -183,6 +201,7 @@ export function Switch({ config }: { config: SwitchConfig }) {
       </ButtonControl>
       <SurfaceStyles css={trackSurface.scopedCss} />
       <SurfaceStyles css={thumbSurface.scopedCss} />
+      <SurfaceStyles css={labelGroupSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
       <SurfaceStyles css={descriptionSurface.scopedCss} />
     </div>

@@ -9,6 +9,8 @@ export const navUserMenuSlotNames = [
   "triggerLabel",
   "triggerIcon",
   "avatar",
+  "avatarImage",
+  "email",
   "panel",
   "item",
   "itemLabel",

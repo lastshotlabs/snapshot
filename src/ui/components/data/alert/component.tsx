@@ -112,6 +112,27 @@ export function Alert({ config }: { config: AlertConfig }) {
     },
     componentSurface: config.slots?.description,
   });
+  const actionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-action`,
+    implementationBase: {
+      style: {
+        marginTop: "var(--sn-spacing-sm, 0.5rem)",
+        color: `var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
+        borderColor: `var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
+      },
+    },
+    componentSurface: config.slots?.action,
+  });
+  const dismissSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-dismiss`,
+    implementationBase: {
+      style: {
+        alignSelf: "flex-start",
+        color: "var(--sn-color-muted-foreground, #6b7280)",
+      },
+    },
+    componentSurface: config.slots?.dismiss,
+  });
 
   return (
     <div
@@ -171,13 +192,8 @@ export function Alert({ config }: { config: AlertConfig }) {
               publish?.({ action: true });
             }}
             surfaceId={`${rootId}-action`}
-            surfaceConfig={config.slots?.action}
+            surfaceConfig={actionSurface.resolvedConfigForWrapper}
             testId="alert-action"
-            style={{
-              marginTop: "var(--sn-spacing-sm, 0.5rem)",
-              color: `var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
-              borderColor: `var(--sn-color-${colorToken === "border" ? "primary" : colorToken})`,
-            }}
           >
             {config.actionLabel}
           </ButtonControl>
@@ -192,12 +208,8 @@ export function Alert({ config }: { config: AlertConfig }) {
           onClick={() => setDismissed(true)}
           ariaLabel="Dismiss alert"
           surfaceId={`${rootId}-dismiss`}
-          surfaceConfig={config.slots?.dismiss}
+          surfaceConfig={dismissSurface.resolvedConfigForWrapper}
           testId="alert-dismiss"
-          style={{
-            alignSelf: "flex-start",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-          }}
         >
           <Icon name="x" size={16} />
         </ButtonControl>

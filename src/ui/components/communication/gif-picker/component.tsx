@@ -287,8 +287,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
               placeholder={config.placeholder ?? "Search GIFs..."}
               value={search}
               onChangeText={setSearch}
-              className={searchInputSurface.className}
-              style={searchInputSurface.style}
+              surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
             />
           </div>
         </div>
@@ -382,8 +381,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
                       title={gif.title}
                       ariaLabel={gif.title ?? "Select GIF"}
                       surfaceId={`${rootId}-item-${gif.id}`}
-                      className={itemSurface.className}
-                      style={itemSurface.style}
+                      surfaceConfig={itemSurface.resolvedConfigForWrapper}
                       variant="ghost"
                       size="sm"
                     >

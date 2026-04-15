@@ -253,8 +253,7 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
               triggerChange(nextColor, alpha);
             }}
             surfaceId={`${rootId}-picker`}
-            className={pickerSurface.className}
-            style={pickerSurface.style}
+            surfaceConfig={pickerSurface.resolvedConfigForWrapper}
           />
           {config.allowCustom ? (
             <InputControl
@@ -265,8 +264,7 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
                 triggerChange(nextColor, alpha);
               }}
               surfaceId={`${rootId}-input`}
-              className={inputSurface.className}
-              style={inputSurface.style}
+              surfaceConfig={inputSurface.resolvedConfigForWrapper}
             />
           ) : null}
         </div>
@@ -295,8 +293,7 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
                 triggerChange(color, nextAlpha);
               }}
               surfaceId={`${rootId}-alphaInput`}
-              className={alphaInputSurface.className}
-              style={alphaInputSurface.style}
+              surfaceConfig={alphaInputSurface.resolvedConfigForWrapper}
             />
           </div>
         ) : null}
@@ -334,8 +331,7 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
                       triggerChange(swatch, alpha);
                     }}
                     surfaceId={`${rootId}-swatch-${index}`}
-                    className={swatchSurface.className}
-                    style={swatchSurface.style}
+                    surfaceConfig={swatchSurface.resolvedConfigForWrapper}
                     variant="ghost"
                     size="icon"
                   >
