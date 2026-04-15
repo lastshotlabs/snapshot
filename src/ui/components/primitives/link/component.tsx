@@ -37,7 +37,7 @@ function getVariantStyle(
 
   if (variant === "navigation") {
     return {
-      display: "inline-flex",
+      display: "flex",
       alignItems: "center",
       justifyContent: "flex-start",
       gap: "var(--sn-spacing-xs, 0.5rem)",
@@ -47,6 +47,8 @@ function getVariantStyle(
       color: "var(--sn-color-foreground, #111827)",
       textDecoration: "none",
       whiteSpace: "nowrap",
+      boxSizing: "border-box",
+      minWidth: 0,
     };
   }
 

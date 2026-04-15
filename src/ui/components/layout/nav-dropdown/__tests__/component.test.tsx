@@ -140,4 +140,37 @@ describe("NavDropdown", () => {
 
     expect(onNavigate).toHaveBeenCalledWith("/pricing");
   });
+
+  it("applies dropdown item slots to nav-link children without duplicating the interactive surface on the wrapper", () => {
+    const { container } = renderWithContext(
+      <NavDropdown
+        config={{
+          type: "nav-dropdown",
+          label: "Products",
+          slots: {
+            item: {
+              className: "dropdown-item-slot",
+              width: "100%",
+            },
+          },
+          items: [
+            {
+              type: "nav-link",
+              id: "item-a",
+              label: "Dashboard",
+              path: "/",
+            } as never,
+          ],
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Products" }));
+    const wrapper = container.querySelector('[data-snapshot-id="nav-dropdown-item-0"]');
+    const link = screen.getByRole("link", { name: "Dashboard" });
+
+    expect(wrapper?.className).not.toContain("dropdown-item-slot");
+    expect(link.className).toContain("dropdown-item-slot");
+    expect((link as HTMLElement).style.width).toBe("100%");
+  });
 });

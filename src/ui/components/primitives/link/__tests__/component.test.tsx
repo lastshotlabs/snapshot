@@ -109,6 +109,34 @@ describe("Link", () => {
     expect(navigate).not.toHaveBeenCalled();
   });
 
+  it("renders navigation links as full surfaces so root sizing applies to current state", () => {
+    render(
+      <div style={{ width: "18rem" }}>
+        <Link
+          config={{
+            type: "link",
+            text: "Dashboard",
+            to: "/current",
+            external: false,
+            align: "left",
+            variant: "navigation",
+            slots: {
+              root: {
+                width: "100%",
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    const link = screen.getByRole("link", { name: "Dashboard" });
+    expect(link.style.display).toBe("flex");
+    expect(link.style.width).toBe("100%");
+    expect(link.style.boxSizing).toBe("border-box");
+    expect(link.getAttribute("aria-current")).toBe("page");
+  });
+
   it.each([
     ["mailto:support@example.com"],
     ["https://example.com/docs"],

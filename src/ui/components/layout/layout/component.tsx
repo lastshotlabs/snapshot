@@ -205,6 +205,9 @@ function TopNavLayout({
         <header
           data-layout-header=""
           style={{
+            position: "relative",
+            zIndex: "var(--sn-z-index-popover, 50)",
+            overflow: "visible",
             background: "var(--sn-color-sidebar, var(--sn-color-card))",
             color:
               "var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground))",

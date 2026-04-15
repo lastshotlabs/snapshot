@@ -216,7 +216,7 @@ export function FloatingPanel({
     surfaceId,
     implementationBase: {
       position: "absolute",
-      zIndex: "var(--sn-z-index-dropdown, 50)",
+      zIndex: "var(--sn-z-index-popover, 50)",
       minWidth,
       maxWidth: "min(22rem, calc(100vw - 1rem))",
       listStyle: "none",
@@ -232,6 +232,7 @@ export function FloatingPanel({
       overflow: "hidden",
       style: {
         backdropFilter: "blur(8px)",
+        isolation: "isolate",
       },
     },
     componentSurface: slot,
@@ -631,20 +632,16 @@ export function MenuItem({
 
   return (
     <>
-      <button
-        ref={buttonRef}
+      <ButtonControl
+        buttonRef={buttonRef}
         type="button"
         role={role}
-        data-menu-item=""
-        data-snapshot-id={surfaceId}
-        data-active={active ? "true" : undefined}
-        data-current={current ? "true" : undefined}
-        data-selected={selected ? "true" : undefined}
-        data-disabled={disabled ? "true" : undefined}
-        aria-disabled={disabled || undefined}
+        ariaCurrent={current || undefined}
+        ariaSelected={selected || undefined}
         disabled={disabled}
         onClick={disabled ? undefined : onClick}
         tabIndex={tabIndex}
+        surfaceId={surfaceId}
         className={itemClassName || undefined}
         style={{
           ...(itemSurface.style ?? {}),
@@ -653,6 +650,9 @@ export function MenuItem({
             ? { color: "var(--sn-color-destructive, #dc2626)" }
             : undefined),
         }}
+        variant="ghost"
+        size="sm"
+        activeStates={activeStates}
       >
         {icon ? (
           <span
@@ -672,7 +672,7 @@ export function MenuItem({
         >
           {label}
         </span>
-      </button>
+      </ButtonControl>
       <SurfaceStyles css={itemSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
       <SurfaceStyles css={iconSurface.scopedCss} />

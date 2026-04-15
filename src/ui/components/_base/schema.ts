@@ -18,6 +18,7 @@ import {
   hoverConfigSchema,
   responsiveValue,
   sharedBaseComponentSchema,
+  spacingEnum,
   slotStateNameSchema,
   styleableElementFields as sharedStyleableElementFields,
 } from "@lastshotlabs/frontend-contract/components";
@@ -32,6 +33,7 @@ export {
   exitAnimationSchema,
   focusConfigSchema,
   hoverConfigSchema,
+  spacingEnum,
   slotStateNameSchema,
 };
 

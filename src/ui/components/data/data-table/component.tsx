@@ -28,6 +28,7 @@ import { Icon } from "../../../icons/icon";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
+import { InputControl } from "../../forms/input";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 
 // ── Formatting helpers ──────────────────────────────────────────────────────
@@ -857,11 +858,17 @@ export function DataTable({ config }: { config: DataTableConfig }) {
         )}
         {config.selectable && (
           <td style={{ padding: cellPadding, width: "40px" }}>
-            <input
+            <InputControl
               type="checkbox"
               checked={table.selection.has(rowId)}
-              onChange={() => table.toggleRow(rowId)}
-              aria-label={`Select row ${rowId}`}
+              onChangeChecked={() => table.toggleRow(rowId)}
+              ariaLabel={`Select row ${rowId}`}
+              surfaceId={`${rootId}-row-select-${rowIndex}`}
+              style={{
+                width: "16px",
+                height: "16px",
+                accentColor: "var(--sn-color-primary, #2563eb)",
+              }}
             />
           </td>
         )}
@@ -1058,12 +1065,13 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           }}
         >
           {config.searchable && (
-            <input
+            <InputControl
               type="text"
               placeholder={searchPlaceholder}
               value={table.search}
-              onChange={(e) => table.setSearch(e.target.value)}
-              aria-label="Search table"
+              onChangeText={table.setSearch}
+              ariaLabel="Search table"
+              surfaceId={`${rootId}-search`}
               style={{
                 padding: "var(--sn-spacing-sm, 8px) var(--sn-spacing-md, 12px)",
                 borderRadius: "var(--sn-radius-md, 6px)",
@@ -1163,9 +1171,8 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                   className={headerCellBaseSurface.className}
                   style={{ padding: cellPadding, width: "40px", ...headerCellBaseSurface.style }}
                 >
-                  <input
+                  <InputControl
                     type="checkbox"
-                    onChange={() => table.toggleAll()}
                     checked={
                       renderedRows.length > 0 &&
                       renderedRows.every((row, i) => {
@@ -1177,7 +1184,14 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                         return table.selection.has(rowId);
                       })
                     }
-                    aria-label="Select all rows"
+                    onChangeChecked={() => table.toggleAll()}
+                    ariaLabel="Select all rows"
+                    surfaceId={`${rootId}-header-select-all`}
+                    style={{
+                      width: "16px",
+                      height: "16px",
+                      accentColor: "var(--sn-color-primary, #2563eb)",
+                    }}
                   />
                 </th>
               )}

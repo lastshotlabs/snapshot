@@ -346,6 +346,9 @@ export function Nav({
       padding: 0,
       display: isTopNav ? "flex" : "block",
       gap: isTopNav ? "0.25rem" : undefined,
+      alignItems: isTopNav ? "center" : undefined,
+      flexWrap: isTopNav ? "nowrap" : undefined,
+      overflow: "visible",
     },
     componentSurface: config.slots?.list,
   });

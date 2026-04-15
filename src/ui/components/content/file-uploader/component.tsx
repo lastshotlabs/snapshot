@@ -12,6 +12,7 @@ import { useManifestRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
+import { InputControl } from "../../forms/input";
 import type { FileUploaderConfig, UploadFileEntry } from "./types";
 
 function formatFileSize(bytes: number): string {
@@ -589,13 +590,23 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
   });
 
   const hiddenInput = (
-    <input
-      ref={inputRef}
+    <InputControl
+      inputRef={inputRef}
       type="file"
-      data-testid="file-uploader-input"
+      testId="file-uploader-input"
       accept={config.accept}
       multiple={maxFiles > 1}
-      onChange={handleInputChange}
+      value=""
+      onChangeFiles={(selectedFiles) => {
+        if (!selectedFiles) {
+          return;
+        }
+        addFiles(selectedFiles);
+        if (inputRef.current) {
+          inputRef.current.value = "";
+        }
+      }}
+      surfaceId={`${rootId}-input`}
       style={{ display: "none" }}
     />
   );
