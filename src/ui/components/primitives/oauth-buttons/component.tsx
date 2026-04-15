@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from "react";
-import { useActionExecutor } from "../../../actions/executor";
 import { useResolveFrom, useSubscribe } from "../../../context";
 import { resolveTemplate } from "../../../expressions/template";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
@@ -32,7 +31,6 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
   const localeState = useSubscribe({ from: "global.locale" });
-  const execute = useActionExecutor();
   const autoRedirectedRef = useRef(false);
   const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const routeId = routeRuntime?.currentRoute?.id;
@@ -73,6 +71,10 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
   const oauthStart =
     typeof manifest?.auth?.contract?.endpoints?.oauthStart === "string"
       ? manifest.auth.contract.endpoints.oauthStart
+      : undefined;
+  const apiBase =
+    typeof manifest?.app?.apiUrl === "string"
+      ? manifest.app.apiUrl.replace(/\/$/, "")
       : undefined;
   const heading =
     config.heading ??
@@ -125,8 +127,10 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
     const url = resolveTemplate(
       (typeof providerRecord.startUrl === "string"
         ? providerRecord.startUrl
-        : oauthStart?.replace("{provider}", providerName) ??
-          `/auth/${providerName}/start`) as string,
+        : apiBase
+          ? `${apiBase}/auth/${providerName}`
+          : oauthStart?.replace("{provider}", providerName) ??
+            `/auth/${providerName}`) as string,
       {
         ...templateContext,
         provider: providerName,
@@ -174,7 +178,7 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
     form.action = provider.url;
     document.body.appendChild(form);
     form.submit();
-  }, [execute, hasProviders, providerMode, resolvedProviders]);
+  }, [hasProviders, providerMode, resolvedProviders]);
 
   if (!hasProviders) {
     return null;

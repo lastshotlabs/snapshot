@@ -2,15 +2,23 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
-const execute = vi.fn();
 let manifestRuntime: {
   raw: Record<string, unknown>;
+  app?: {
+    apiUrl?: string;
+  };
   auth: {
     providers: Record<string, unknown>;
     providerMode?: string;
+    contract?: {
+      endpoints?: {
+        oauthStart?: string;
+      };
+      oauthUrl?: (provider: string) => string;
+    };
   };
 };
 
@@ -18,17 +26,6 @@ vi.mock("../../../../context", () => ({
   useSubscribe: () => null,
   useResolveFrom: <T extends Record<string, unknown>>(value: T) => value,
 }));
-
-vi.mock("../../../../actions/executor", async () => {
-  const actual =
-    await vi.importActual<typeof import("../../../../actions/executor")>(
-      "../../../../actions/executor"
-    );
-  return {
-    ...actual,
-    useActionExecutor: () => execute,
-  };
-});
 
 vi.mock("../../../../manifest/runtime", () => ({
   useManifestRuntime: () => manifestRuntime,
@@ -42,9 +39,18 @@ vi.mock("../../../../manifest/runtime", () => ({
 
 import { OAuthButtons } from "../component";
 
+let submitSpy: ReturnType<typeof vi.spyOn>;
+
+beforeEach(() => {
+  submitSpy = vi
+    .spyOn(HTMLFormElement.prototype, "submit")
+    .mockImplementation(() => {});
+});
+
 afterEach(() => {
   cleanup();
-  execute.mockReset();
+  document.body.querySelectorAll("form").forEach((form) => form.remove());
+  submitSpy.mockRestore();
 });
 
 describe("OAuthButtons", () => {
@@ -115,10 +121,9 @@ describe("OAuthButtons", () => {
     );
 
     fireEvent.click(button);
-    expect(execute).toHaveBeenCalledWith({
-      type: "navigate-external",
-      to: "/auth/google/start",
-    });
+    expect(submitSpy).toHaveBeenCalledTimes(1);
+    const form = document.body.querySelector("form");
+    expect(form?.getAttribute("action")).toBe("/auth/google/start");
   });
 
   it("connects provider descriptions through aria-describedby", () => {
@@ -162,11 +167,39 @@ describe("OAuthButtons", () => {
 
     render(<OAuthButtons config={{ type: "oauth-buttons" }} />);
 
-    expect(execute).not.toHaveBeenCalled();
+    expect(submitSpy).not.toHaveBeenCalled();
     expect(
       screen.getByRole("button", {
         name: "Continue with Google",
       }),
     ).toBeTruthy();
+  });
+
+  it("builds an absolute provider URL from manifest.app.apiUrl when no startUrl is provided", () => {
+    manifestRuntime = {
+      raw: {},
+      app: {
+        apiUrl: "http://localhost:2323/",
+      },
+      auth: {
+        providers: {
+          google: {
+            label: "Continue with Google",
+          },
+        },
+      },
+    };
+
+    render(<OAuthButtons config={{ type: "oauth-buttons" }} />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Continue with Google",
+      }),
+    );
+
+    expect(submitSpy).toHaveBeenCalledTimes(1);
+    const form = document.body.querySelector("form");
+    expect(form?.getAttribute("action")).toBe("http://localhost:2323/auth/google");
   });
 });

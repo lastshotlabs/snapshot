@@ -135,7 +135,7 @@ function ToggleItem({
         disabled={itemDisabled}
         onClick={onToggle}
         surfaceId={`${rootId}-item-${index}`}
-        surfaceConfig={item.slots?.item ?? rootSlot?.item}
+        surfaceConfig={itemSurface.resolvedConfigForWrapper}
         activeStates={
           [
             ...(selected ? ["selected"] : []),

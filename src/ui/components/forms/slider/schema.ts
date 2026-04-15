@@ -27,6 +27,8 @@ export const sliderConfigSchema = extendComponentSchema({
     "track",
     "fill",
     "input",
+    "inputStart",
+    "inputEnd",
     "limits",
     "minLabel",
     "maxLabel",

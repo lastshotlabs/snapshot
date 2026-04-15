@@ -6,6 +6,13 @@ import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 export const treeViewSlotNames = [
   "root",
+  "loadingState",
+  "loadingItem",
+  "loadingMarker",
+  "loadingLabel",
+  "loadingLabelSecondary",
+  "errorState",
+  "emptyState",
   "item",
   "row",
   "label",

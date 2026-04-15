@@ -209,6 +209,16 @@ function FieldRenderer({
     componentSurface: slots?.description,
     itemSurface: field.slots?.description,
   });
+  const inputWrapperSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-inputWrapper-${field.name}`,
+    implementationBase:
+      field.type === "password"
+        ? ({ position: "relative" } as Record<string, unknown>)
+        : undefined,
+    componentSurface: slots?.inputWrapper,
+    itemSurface: field.slots?.inputWrapper,
+    activeStates,
+  });
   const inputSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-input-${field.name}`,
     implementationBase: {
@@ -223,6 +233,20 @@ function FieldRenderer({
     },
     componentSurface: slots?.input,
     itemSurface: field.slots?.input,
+    activeStates,
+  });
+  const optionsSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-options-${field.name}`,
+    implementationBase:
+      field.type === "radio-group"
+        ? ({
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--sn-spacing-xs, 0.25rem)",
+          } as Record<string, unknown>)
+        : undefined,
+    componentSurface: slots?.options,
+    itemSurface: field.slots?.options,
     activeStates,
   });
   const helperSurface = resolveSurfacePresentation({
@@ -240,6 +264,52 @@ function FieldRenderer({
     surfaceId: `${rootId}-required-${field.name}`,
     componentSurface: slots?.requiredIndicator,
     itemSurface: field.slots?.requiredIndicator,
+  });
+  const inlineActionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-inlineAction-${field.name}`,
+    implementationBase: {
+      bg: "transparent",
+      color: "var(--sn-color-primary, #2563eb)",
+      hover: {
+        color: "var(--sn-color-primary, #2563eb)",
+        textDecoration: "underline",
+      },
+      focus: {
+        ring: true,
+      },
+      style: {
+        minHeight: "auto",
+        padding: 0,
+        fontSize: "var(--sn-font-size-xs, 0.75rem)",
+        fontWeight: "var(--sn-font-weight-medium, 500)",
+      },
+    } as Record<string, unknown>,
+    componentSurface: slots?.inlineAction,
+    itemSurface: field.slots?.inlineAction,
+  });
+  const passwordToggleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-passwordToggle-${field.name}`,
+    implementationBase: {
+      bg: "transparent",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      hover: {
+        color: "var(--sn-color-foreground, #111827)",
+      },
+      focus: {
+        ring: true,
+      },
+      style: {
+        position: "absolute",
+        right: "var(--sn-spacing-sm, 0.5rem)",
+        top: "50%",
+        transform: "translateY(-50%)",
+        minHeight: "2rem",
+        minWidth: "2rem",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    } as Record<string, unknown>,
+    componentSurface: slots?.passwordToggle,
+    itemSurface: field.slots?.passwordToggle,
   });
 
   const inputStyle: React.CSSProperties = {
@@ -497,54 +567,84 @@ function FieldRenderer({
         <div
           role="radiogroup"
           aria-labelledby={`${fieldId}-legend`}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--sn-spacing-xs, 0.25rem)",
-          }}
+          data-snapshot-id={`${rootId}-options-${field.name}`}
+          className={optionsSurface.className}
+          style={optionsSurface.style}
         >
-          {fieldOptions.map((opt) => (
-            <label
-              key={opt.value}
-              style={{
+          {fieldOptions.map((opt) => {
+            const isSelected = String(value ?? "") === opt.value;
+            const optionActiveStates = [
+              ...(isSelected ? (["selected"] as const) : []),
+              ...(field.disabled ? (["disabled"] as const) : []),
+            ];
+            const optionSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-option-${field.name}-${opt.value}`,
+              implementationBase: {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "var(--sn-spacing-sm, 0.5rem)",
                 fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              }}
-            >
-              <InputControl
-                type="radio"
-                inputId={`${fieldId}-${opt.value}`}
-                name={field.name}
-                checked={String(value ?? "") === opt.value}
-                disabled={field.disabled}
-                required={required}
-                ariaInvalid={hasError}
-                ariaDescribedBy={hasError
-                  ? `${fieldId}-error`
-                  : field.helperText
-                    ? `${fieldId}-helper`
-                    : undefined}
-                ariaLabel={opt.label}
-                onChangeChecked={(checked) => {
-                  if (checked) {
-                    onChange(opt.value);
-                  }
-                }}
-                onBlur={onBlur}
-                surfaceId={`${rootId}-input-${field.name}-${opt.value}`}
-                className={inputSurface.className}
-                style={{
-                  width: "16px",
-                  height: "16px",
-                  accentColor: "var(--sn-color-primary, #2563eb)",
-                  ...(inputSurface.style as React.CSSProperties),
-                }}
-              />
-              <span>{opt.label}</span>
-            </label>
-          ))}
+              } as Record<string, unknown>,
+              componentSurface: slots?.option,
+              itemSurface: field.slots?.option,
+              activeStates: optionActiveStates,
+            });
+            const optionLabelSurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-optionLabel-${field.name}-${opt.value}`,
+              componentSurface: slots?.optionLabel,
+              itemSurface: field.slots?.optionLabel,
+              activeStates: optionActiveStates,
+            });
+
+            return (
+              <label
+                key={opt.value}
+                data-snapshot-id={`${rootId}-option-${field.name}-${opt.value}`}
+                className={optionSurface.className}
+                style={optionSurface.style}
+              >
+                <InputControl
+                  type="radio"
+                  inputId={`${fieldId}-${opt.value}`}
+                  name={field.name}
+                  checked={isSelected}
+                  disabled={field.disabled}
+                  required={required}
+                  ariaInvalid={hasError}
+                  ariaDescribedBy={hasError
+                    ? `${fieldId}-error`
+                    : field.helperText
+                      ? `${fieldId}-helper`
+                      : undefined}
+                  ariaLabel={opt.label}
+                  onChangeChecked={(checked) => {
+                    if (checked) {
+                      onChange(opt.value);
+                    }
+                  }}
+                  onBlur={onBlur}
+                  surfaceId={`${rootId}-input-${field.name}-${opt.value}`}
+                  className={inputSurface.className}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    accentColor: "var(--sn-color-primary, #2563eb)",
+                    ...(inputSurface.style as React.CSSProperties),
+                  }}
+                />
+                <span
+                  data-snapshot-id={`${rootId}-optionLabel-${field.name}-${opt.value}`}
+                  className={optionLabelSurface.className}
+                  style={optionLabelSurface.style}
+                >
+                  {opt.label}
+                </span>
+                <SurfaceStyles css={optionSurface.scopedCss} />
+                <SurfaceStyles css={optionLabelSurface.scopedCss} />
+              </label>
+            );
+          })}
+          <SurfaceStyles css={optionsSurface.scopedCss} />
         </div>
       );
       break;
@@ -692,7 +792,7 @@ function FieldRenderer({
 
     default:
       input = (
-        <div style={field.type === "password" ? { position: "relative" } : undefined}>
+        <>
           <InputControl
             inputId={fieldId}
             name={field.name}
@@ -736,30 +836,12 @@ function FieldRenderer({
               onClick={() => setPasswordVisible((current) => !current)}
               ariaLabel={passwordVisible ? "Hide password" : "Show password"}
               surfaceId={`${rootId}-password-toggle-${field.name}`}
-              surfaceConfig={{
-                bg: "transparent",
-                color: "var(--sn-color-muted-foreground, #6b7280)",
-                hover: {
-                  color: "var(--sn-color-foreground, #111827)",
-                },
-                focus: {
-                  ring: true,
-                },
-                style: {
-                  position: "absolute",
-                  right: "var(--sn-spacing-sm, 0.5rem)",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  minHeight: "2rem",
-                  minWidth: "2rem",
-                  padding: "var(--sn-spacing-xs, 0.25rem)",
-                },
-              }}
+              surfaceConfig={passwordToggleSurface.resolvedConfigForWrapper}
             >
               <Icon name={passwordVisible ? "eye-off" : "eye"} size={16} />
             </ButtonControl>
           ) : null}
-        </div>
+        </>
       );
       break;
   }
@@ -879,29 +961,19 @@ function FieldRenderer({
             variant="ghost"
             size="sm"
             surfaceId={`${rootId}-inline-action-${field.name}`}
-            surfaceConfig={{
-              bg: "transparent",
-              color: "var(--sn-color-primary, #2563eb)",
-              hover: {
-                color: "var(--sn-color-primary, #2563eb)",
-                textDecoration: "underline",
-              },
-              focus: {
-                ring: true,
-              },
-              style: {
-                minHeight: "auto",
-                padding: 0,
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                fontWeight: "var(--sn-font-weight-medium, 500)",
-              },
-            }}
+            surfaceConfig={inlineActionSurface.resolvedConfigForWrapper}
           >
             {field.inlineAction.label}
           </ButtonControl>
         ) : null}
       </label>
-      {input}
+      <div
+        data-snapshot-id={`${rootId}-inputWrapper-${field.name}`}
+        className={inputWrapperSurface.className}
+        style={inputWrapperSurface.style}
+      >
+        {input}
+      </div>
       {field.description && (
         <div
           data-snapshot-id={`${rootId}-description-${field.name}`}
@@ -951,7 +1023,9 @@ function FieldRenderer({
       <SurfaceStyles css={fieldSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />
       <SurfaceStyles css={descriptionSurface.scopedCss} />
+      <SurfaceStyles css={inputWrapperSurface.scopedCss} />
       <SurfaceStyles css={inputSurface.scopedCss} />
+      <SurfaceStyles css={optionsSurface.scopedCss} />
       <SurfaceStyles css={helperSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
       <SurfaceStyles css={requiredIndicatorSurface.scopedCss} />
@@ -1042,13 +1116,58 @@ function SectionRenderer({
   const [collapsed, setCollapsed] = useState(section.defaultCollapsed ?? false);
   const sectionSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-section-${section.title}`,
+    implementationBase: {
+      border: "none",
+      padding: 0,
+      margin: 0,
+      marginBottom: gap,
+    } as Record<string, unknown>,
     componentSurface: slots?.section,
     itemSurface: section.slots?.section,
   });
+  const sectionHeaderSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-section-header-${section.title}`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-sm, 0.5rem)",
+      marginBottom: collapsed ? 0 : gap,
+      cursor: section.collapsible ? "pointer" : undefined,
+    } as Record<string, unknown>,
+    componentSurface: slots?.sectionHeader,
+    itemSurface: section.slots?.sectionHeader,
+    activeStates: section.collapsible && !collapsed ? ["open"] : undefined,
+  });
+  const sectionToggleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-section-toggle-${section.title}`,
+    implementationBase: {
+      display: "inline-flex",
+      transform: collapsed ? "rotate(0deg)" : "rotate(90deg)",
+      transition:
+        "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+    } as Record<string, unknown>,
+    componentSurface: slots?.sectionToggle,
+    itemSurface: section.slots?.sectionToggle,
+    activeStates: section.collapsible && !collapsed ? ["open"] : undefined,
+  });
   const sectionTitleSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-section-title-${section.title}`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-md, 1rem)",
+      fontWeight: "var(--sn-font-weight-semibold, 600)",
+      color: "var(--sn-color-foreground, #111827)",
+    } as Record<string, unknown>,
     componentSurface: slots?.sectionTitle,
     itemSurface: section.slots?.sectionTitle,
+  });
+  const sectionDescriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-section-description-${section.title}`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    } as Record<string, unknown>,
+    componentSurface: slots?.sectionDescription,
+    itemSurface: section.slots?.sectionDescription,
   });
 
   return (
@@ -1056,35 +1175,22 @@ function SectionRenderer({
       data-sn-section={section.title}
       data-snapshot-id={`${rootId}-section-${section.title}`}
       className={sectionSurface.className}
-      style={{
-        border: "none",
-        padding: 0,
-        margin: 0,
-        marginBottom: gap,
-        ...(sectionSurface.style as React.CSSProperties),
-      }}
+      style={sectionSurface.style}
     >
       {/* Section header */}
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--sn-spacing-sm, 0.5rem)",
-          marginBottom: collapsed ? 0 : gap,
-          cursor: section.collapsible ? "pointer" : undefined,
-        }}
+        data-snapshot-id={`${rootId}-section-header-${section.title}`}
+        className={sectionHeaderSurface.className}
+        style={sectionHeaderSurface.style}
         onClick={
           section.collapsible ? () => setCollapsed(!collapsed) : undefined
         }
       >
         {section.collapsible && (
           <span
-            style={{
-              display: "inline-flex",
-              transform: collapsed ? "rotate(0deg)" : "rotate(90deg)",
-              transition:
-                "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-            }}
+            data-snapshot-id={`${rootId}-section-toggle-${section.title}`}
+            className={sectionToggleSurface.className}
+            style={sectionToggleSurface.style}
           >
             <Icon name="chevron-right" size={16} />
           </span>
@@ -1093,22 +1199,15 @@ function SectionRenderer({
           <div
             data-snapshot-id={`${rootId}-section-title-${section.title}`}
             className={sectionTitleSurface.className}
-            style={{
-              fontSize: "var(--sn-font-size-md, 1rem)",
-              fontWeight:
-                "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-              color: "var(--sn-color-foreground, #111827)",
-              ...(sectionTitleSurface.style as React.CSSProperties),
-            }}
+            style={sectionTitleSurface.style}
           >
             {section.title}
           </div>
           {section.description && (
             <div
-              style={{
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                color: "var(--sn-color-muted-foreground, #6b7280)",
-              }}
+              data-snapshot-id={`${rootId}-section-description-${section.title}`}
+              className={sectionDescriptionSurface.className}
+              style={sectionDescriptionSurface.style}
             >
               {section.description}
             </div>
@@ -1128,7 +1227,10 @@ function SectionRenderer({
         />
       )}
       <SurfaceStyles css={sectionSurface.scopedCss} />
+      <SurfaceStyles css={sectionHeaderSurface.scopedCss} />
+      <SurfaceStyles css={sectionToggleSurface.scopedCss} />
       <SurfaceStyles css={sectionTitleSurface.scopedCss} />
+      <SurfaceStyles css={sectionDescriptionSurface.scopedCss} />
     </fieldset>
   );
 }

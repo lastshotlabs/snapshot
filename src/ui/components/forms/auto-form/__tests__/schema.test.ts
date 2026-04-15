@@ -261,19 +261,41 @@ describe("autoFormConfigSchema", () => {
   it("accepts canonical form and field slots", () => {
     const result = autoFormConfigSchema.safeParse({
       ...baseConfig,
-      fields: [
+      fields: [],
+      sections: [
         {
-          name: "email",
-          type: "email",
+          title: "Profile",
+          description: "Manage your account",
           slots: {
-            field: { className: "field-slot" },
-            input: { className: "input-slot" },
+            section: { className: "section-slot" },
+            sectionHeader: { className: "section-header-slot" },
+            sectionToggle: { className: "section-toggle-slot" },
+            sectionTitle: { className: "section-title-slot" },
+            sectionDescription: { className: "section-description-slot" },
           },
+          fields: [
+            {
+              name: "password",
+              type: "password",
+              slots: {
+                field: { className: "field-slot" },
+                inputWrapper: { className: "input-wrapper-slot" },
+                input: { className: "input-slot" },
+                options: { className: "options-slot" },
+                option: { className: "option-slot" },
+                optionLabel: { className: "option-label-slot" },
+                inlineAction: { className: "inline-action-slot" },
+                passwordToggle: { className: "password-toggle-slot" },
+              },
+            },
+          ],
         },
       ],
       slots: {
         root: { className: "form-root" },
-        section: { className: "section-slot" },
+        sectionHeader: { className: "section-header" },
+        inlineAction: { className: "inline-action" },
+        passwordToggle: { className: "password-toggle" },
         submitButton: { className: "submit-slot" },
       },
     });

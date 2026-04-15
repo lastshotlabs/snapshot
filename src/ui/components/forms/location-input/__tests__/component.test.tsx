@@ -38,4 +38,28 @@ describe("LocationInput", () => {
     expect(screen.getByTestId("location-search")).toBeDefined();
     expect(screen.getByText("Search for an address")).toBeDefined();
   });
+
+  it("applies distinct helper and error surfaces", () => {
+    const { container } = render(
+      <LocationInput
+        config={{
+          type: "location-input",
+          id: "office",
+          searchEndpoint: { resource: "locations" },
+          helperText: "Search for an address",
+          errorText: "Location is required",
+          slots: {
+            helper: { className: "helper-slot" },
+            error: { className: "error-slot" },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Location is required")).toBeDefined();
+    expect(container.querySelector('[data-snapshot-id="office-helper"]')).toBeNull();
+    expect(
+      container.querySelector('[data-snapshot-id="office-error"]')?.className,
+    ).toContain("error-slot");
+  });
 });

@@ -841,24 +841,58 @@ describe("AutoForm", () => {
     expect(mockApi.post).toHaveBeenCalledTimes(1);
   });
 
-  it("applies canonical field and submit button slots", () => {
+  it("applies canonical section and field group slots", () => {
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
     const config: AutoFormConfig = {
       ...baseConfig,
       id: "user-form",
-      fields: [
+      fields: [],
+      sections: [
         {
-          name: "email",
-          type: "email",
-          label: "Email",
+          title: "Profile",
+          description: "Manage your account",
+          collapsible: true,
+          fields: [
+            {
+              name: "password",
+              type: "password",
+              label: "Password",
+              inlineAction: {
+                label: "Forgot password?",
+                to: "/forgot-password",
+              },
+              slots: {
+                field: { className: "field-slot" },
+                inputWrapper: { className: "input-wrapper-slot" },
+                input: { className: "input-slot" },
+              },
+            },
+            {
+              name: "role",
+              type: "radio-group",
+              label: "Role",
+              options: [
+                { label: "Admin", value: "admin" },
+                { label: "User", value: "user" },
+              ],
+            },
+          ],
           slots: {
-            field: { className: "field-slot" },
-            input: { className: "input-slot" },
+            section: { className: "section-slot" },
+            sectionHeader: { className: "section-header-slot" },
+            sectionToggle: { className: "section-toggle-slot" },
+            sectionTitle: { className: "section-title-slot" },
+            sectionDescription: { className: "section-description-slot" },
           },
         },
       ],
       slots: {
         root: { className: "form-root-slot" },
+        inlineAction: { className: "inline-action-slot" },
+        passwordToggle: { className: "password-toggle-slot" },
+        options: { className: "options-slot" },
+        option: { className: "option-slot" },
+        optionLabel: { className: "option-label-slot" },
         submitButton: { className: "submit-slot" },
       },
     };
@@ -868,10 +902,43 @@ describe("AutoForm", () => {
     expect(container.querySelector('[data-snapshot-id="user-form-root"]')?.className).toContain(
       "form-root-slot",
     );
-    expect(container.querySelector('[data-snapshot-id="user-form-field-email"]')?.className).toContain(
+    expect(container.querySelector('[data-snapshot-id="user-form-section-Profile"]')?.className).toContain(
+      "section-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-section-header-Profile"]')?.className).toContain(
+      "section-header-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-section-toggle-Profile"]')?.className).toContain(
+      "section-toggle-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-section-title-Profile"]')?.className).toContain(
+      "section-title-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-section-description-Profile"]')?.className).toContain(
+      "section-description-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-field-password"]')?.className).toContain(
       "field-slot",
     );
-    expect(screen.getByLabelText("Email").className).toContain("input-slot");
+    expect(container.querySelector('[data-snapshot-id="user-form-inputWrapper-password"]')?.className).toContain(
+      "input-wrapper-slot",
+    );
+    expect(screen.getByLabelText("Password").className).toContain("input-slot");
+    expect(screen.getByText("Forgot password?").closest("button")?.className).toContain(
+      "inline-action-slot",
+    );
+    expect(screen.getByLabelText("Show password").className).toContain(
+      "password-toggle-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-options-role"]')?.className).toContain(
+      "options-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-option-role-admin"]')?.className).toContain(
+      "option-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="user-form-optionLabel-role-admin"]')?.className).toContain(
+      "option-label-slot",
+    );
     expect(screen.getByText("Submit").closest("button")?.className).toContain(
       "submit-slot",
     );

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { QuickAdd } from "../component";
 
 const executeSpy = vi.fn();
@@ -19,6 +19,10 @@ vi.mock("../../../../actions/executor", () => ({
 vi.mock("../../../../icons/index", () => ({
   Icon: ({ name }: { name: string }) => <span data-testid="quick-add-icon">{name}</span>,
 }));
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("QuickAdd", () => {
   it("submits entered text and clears the input", () => {
@@ -40,5 +44,35 @@ describe("QuickAdd", () => {
 
     expect(executeSpy).toHaveBeenCalledWith({ type: "create-task" });
     expect(input.value).toBe("");
+  });
+
+  it("applies canonical quick-add slots", () => {
+    const { container } = render(
+      <QuickAdd
+        config={{
+          type: "quick-add",
+          id: "task-add",
+          slots: {
+            root: { className: "root-slot" },
+            icon: { className: "icon-slot" },
+            input: { className: "input-slot" },
+            button: { className: "button-slot" },
+          },
+        }}
+      />,
+    );
+
+    expect(container.querySelector('[data-snapshot-id="task-add"]')?.className).toContain(
+      "root-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="task-add-icon"]')?.className).toContain(
+      "icon-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="task-add-input"]')?.className).toContain(
+      "input-slot",
+    );
+    expect(container.querySelector('[data-snapshot-id="task-add-button"]')?.className).toContain(
+      "button-slot",
+    );
   });
 });

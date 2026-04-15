@@ -85,10 +85,6 @@ const ROUTE_ENTER_REPLAY_WINDOW_MS = 1_500;
 const recentRouteEnterExecutions = new Map<string, number>();
 
 function shouldSkipImmediateRouteEnterReplay(key: string): boolean {
-  if (!import.meta.env.DEV) {
-    return false;
-  }
-
   const now = Date.now();
   for (const [entryKey, timestamp] of recentRouteEnterExecutions.entries()) {
     if (now - timestamp > ROUTE_ENTER_REPLAY_WINDOW_MS) {
@@ -1173,6 +1169,7 @@ function ManifestRouter({
     route: CompiledRoute | null;
     currentPath: string;
     params: Record<string, string>;
+    query: Record<string, string>;
   } | null>(null);
   const authState = useSubscribe({ from: "global.auth" }) as {
     user?: Record<string, unknown> | null;
@@ -1641,6 +1638,7 @@ function ManifestRouter({
                   path: previousMatch.currentPath,
                   pattern: previousMatch.route.path,
                   params: previousMatch.params,
+                  query: previousMatch.query,
                 },
                 params: previousMatch.params,
               },
@@ -1652,6 +1650,7 @@ function ManifestRouter({
                 path: previousMatch.currentPath,
                 pattern: previousMatch.route.path,
                 params: previousMatch.params,
+                query: previousMatch.query,
               },
               params: previousMatch.params,
             });
@@ -1663,6 +1662,7 @@ function ManifestRouter({
         route,
         currentPath: scopedCurrentPath,
         params,
+        query: routeQuery,
       };
 
       applyRouteResourceInvalidations(currentResourceCache, route.refreshOnEnter);
@@ -1709,6 +1709,7 @@ function ManifestRouter({
                 path: scopedCurrentPath,
                 pattern: route.path,
                 params,
+                query: routeQuery,
               },
               params,
             },
@@ -1720,6 +1721,7 @@ function ManifestRouter({
               path: scopedCurrentPath,
               pattern: route.path,
               params,
+              query: routeQuery,
             },
             params,
           });
@@ -2092,17 +2094,37 @@ export function ManifestApp({
 
   const compiledManifest = compileState.compiled!;
   const runtimeApiUrl = compiledManifest.app.apiUrl ?? apiUrl;
+  const runtimeManifest = useMemo<CompiledManifest>(() => {
+    return {
+      ...compiledManifest,
+      app: {
+        ...compiledManifest.app,
+        apiUrl: runtimeApiUrl,
+      },
+      auth: compiledManifest.auth
+        ? {
+            ...compiledManifest.auth,
+            contract: mergeContract(
+              runtimeApiUrl,
+              compiledManifest.auth.contract as Parameters<
+                typeof mergeContract
+              >[1],
+            ),
+          }
+        : compiledManifest.auth,
+    };
+  }, [compiledManifest, runtimeApiUrl]);
   const tokenCss = useMemo(
-    () => resolveTokens(compiledManifest.theme ?? {}),
-    [compiledManifest.theme],
+    () => resolveTokens(runtimeManifest.theme ?? {}),
+    [runtimeManifest.theme],
   );
   const frameworkCss = useMemo(
     () =>
       resolveFrameworkStyles({
         respectReducedMotion:
-          compiledManifest.app.a11y?.respectReducedMotion !== false,
+          runtimeManifest.app.a11y?.respectReducedMotion !== false,
       }),
-    [compiledManifest.app.a11y?.respectReducedMotion],
+    [runtimeManifest.app.a11y?.respectReducedMotion],
   );
   const snapshot = useMemo(
     () =>
@@ -2113,8 +2135,8 @@ export function ManifestApp({
     [compiledManifest.raw, runtimeApiUrl],
   );
   const runtimeClients = useMemo(
-    () => buildManifestClientMap(compiledManifest, snapshot),
-    [compiledManifest, snapshot],
+    () => buildManifestClientMap(runtimeManifest, snapshot),
+    [runtimeManifest, snapshot],
   );
 
   useEffect(() => {
@@ -2122,8 +2144,8 @@ export function ManifestApp({
       return;
     }
 
-    validateContrast(compiledManifest.theme);
-  }, [compiledManifest.theme, isDev]);
+    validateContrast(runtimeManifest.theme);
+  }, [runtimeManifest.theme, isDev]);
 
   useLayoutEffect(() => {
     resetLazyRegistry();
@@ -2134,11 +2156,11 @@ export function ManifestApp({
     }
 
     registerBuiltInComponents(true);
-  }, [lazyComponents, compiledManifest]);
+  }, [lazyComponents, runtimeManifest]);
 
   return (
     <snapshot.QueryProvider>
-      <SkipLinks links={compiledManifest.app.a11y?.skipLinks} />
+      <SkipLinks links={runtimeManifest.app.a11y?.skipLinks} />
       <div aria-hidden="true" hidden data-snapshot-token-styles="">
         <style
           id="snapshot-tokens"
@@ -2149,35 +2171,35 @@ export function ManifestApp({
           dangerouslySetInnerHTML={{ __html: frameworkCss }}
         />
       </div>
-      <DarkModeManager themeMode={compiledManifest.theme?.mode as "light" | "dark" | "system" | undefined} />
+      <DarkModeManager themeMode={runtimeManifest.theme?.mode as "light" | "dark" | "system" | undefined} />
       <ManifestRuntimeProvider
-        manifest={compiledManifest}
+        manifest={runtimeManifest}
         api={snapshot.api}
         clients={runtimeClients}
       >
         <AppContextProvider
-          globals={compiledManifest.state}
-          resources={compiledManifest.resources}
+          globals={runtimeManifest.state}
+          resources={runtimeManifest.resources}
           api={snapshot.api}
         >
           <SnapshotDragDropProvider>
             <ManifestApiHeadersBridge
-              manifest={compiledManifest}
+              manifest={runtimeManifest}
               api={snapshot.api}
               clients={runtimeClients}
             />
-            {compiledManifest.auth || compiledManifest.realtime ? (
+            {runtimeManifest.auth || runtimeManifest.realtime ? (
               <>
                 <AuthRuntimeBridge
-                  manifest={compiledManifest}
+                  manifest={runtimeManifest}
                   useUser={snapshot.useUser}
                 />
-                <ManifestAuthWorkflowBridge manifest={compiledManifest} />
-                <ManifestRealtimeWorkflowBridge manifest={compiledManifest} />
+                <ManifestAuthWorkflowBridge manifest={runtimeManifest} />
+                <ManifestRealtimeWorkflowBridge manifest={runtimeManifest} />
               </>
             ) : null}
             <ManifestRouter
-              manifest={compiledManifest}
+              manifest={runtimeManifest}
               api={snapshot.api}
               snapshot={snapshot}
               runtimeClients={runtimeClients}

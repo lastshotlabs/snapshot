@@ -41,6 +41,9 @@ describe("listConfigSchema phase D", () => {
       slots: {
         root: { className: "root-slot" },
         list: { className: "list-slot" },
+        itemBody: { className: "body-slot" },
+        liveBanner: { className: "live-slot" },
+        loadingItem: { className: "loading-item-slot" },
         emptyState: { className: "empty-slot" },
       },
     });

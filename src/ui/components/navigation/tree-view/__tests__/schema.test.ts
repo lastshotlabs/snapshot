@@ -17,6 +17,8 @@ describe("treeViewConfigSchema", () => {
       ],
       slots: {
         root: { className: "tree-root" },
+        loadingState: { className: "tree-loading" },
+        emptyState: { className: "tree-empty" },
         children: { className: "tree-children" },
       },
     });

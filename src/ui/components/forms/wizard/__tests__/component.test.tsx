@@ -327,7 +327,7 @@ describe("Wizard component", () => {
     expect(indicators.length).toBe(2);
   });
 
-  it("applies canonical wizard and field primitive slots", () => {
+  it("applies canonical wizard group and field primitive slots", async () => {
     const { Wrapper } = createWrapper();
     const { container } = render(
       <Wrapper>
@@ -337,8 +337,13 @@ describe("Wizard component", () => {
             steps: [
               {
                 title: "Account Details",
+                description: "Set up your account",
                 slots: {
                   step: { className: "wizard-step-slot" },
+                  stepBody: { className: "wizard-step-body-slot" },
+                  header: { className: "wizard-header-slot" },
+                  title: { className: "wizard-title-slot" },
+                  description: { className: "wizard-description-slot" },
                 },
                 fields: [
                   {
@@ -353,8 +358,16 @@ describe("Wizard component", () => {
                 ],
               },
             ],
+            submitLabel: "Finish",
             slots: {
               root: { className: "wizard-root-slot" },
+              progress: { className: "wizard-progress-slot" },
+              actionGroup: { className: "wizard-action-group-slot" },
+              completionState: { className: "wizard-completion-slot" },
+              completionTitle: { className: "wizard-completion-title-slot" },
+              completionDescription: {
+                className: "wizard-completion-description-slot",
+              },
               submitButton: { className: "wizard-submit-slot" },
             },
           })}
@@ -367,9 +380,17 @@ describe("Wizard component", () => {
         ?.className,
     ).toContain("wizard-root-slot");
     expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-progress"]')
+        ?.className,
+    ).toContain("wizard-progress-slot");
+    expect(
       container.querySelector('[data-snapshot-id="profile-wizard-step-0"]')
         ?.className,
     ).toContain("wizard-step-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-stepBody-0"]')
+        ?.className,
+    ).toContain("wizard-step-body-slot");
     expect(
       container.querySelector(
         '[data-snapshot-id="profile-wizard-field-0-email"]',
@@ -378,8 +399,44 @@ describe("Wizard component", () => {
     expect(screen.getByLabelText("Email").className).toContain(
       "wizard-input-slot",
     );
-    expect(screen.getByText("Submit").className).toContain(
+    expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-header"]')
+        ?.className,
+    ).toContain("wizard-header-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-title"]')
+        ?.className,
+    ).toContain("wizard-title-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-description"]')
+        ?.className,
+    ).toContain("wizard-description-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-actionGroup"]')
+        ?.className,
+    ).toContain("wizard-action-group-slot");
+    expect(screen.getByText("Finish").className).toContain(
       "wizard-submit-slot",
     );
+
+    fireEvent.click(screen.getByText("Finish"));
+    await waitFor(() => expect(screen.getByText("Reset")).toBeDefined());
+
+    expect(
+      container.querySelector(
+        '[data-snapshot-id="profile-wizard-completionState"]',
+      )?.className,
+    ).toContain("wizard-completion-slot");
+    expect(
+      container.querySelector(
+        '[data-snapshot-id="profile-wizard-completionTitle"]',
+      )?.className,
+    ).toContain("wizard-completion-title-slot");
+    expect(
+      container.querySelector(
+        '[data-snapshot-id="profile-wizard-completionDescription"]',
+      )?.className,
+    ).toContain("wizard-completion-description-slot");
+    expect(screen.getByText("Reset").className).toContain("wizard-submit-slot");
   });
 });

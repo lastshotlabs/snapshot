@@ -54,4 +54,35 @@ describe("TagSelector", () => {
 
     expect(screen.getByText("React")).toBeTruthy();
   });
+
+  it("applies canonical option and create-option label slots", () => {
+    const { container } = render(
+      <TagSelector
+        config={{
+          type: "tag-selector",
+          allowCreate: true,
+          tags: [
+            { label: "React", value: "react" },
+          ],
+          slots: {
+            optionLabel: { className: "option-label-slot" },
+            createOptionLabel: { className: "create-option-label-slot" },
+          },
+        }}
+      />,
+    );
+
+    const input = screen.getByTestId("tag-input");
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "Vue" } });
+
+    expect(
+      container.querySelector('[data-snapshot-id="tag-selector-option-react-label"]')
+        ?.className,
+    ).toContain("option-label-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="tag-selector-createOptionLabel"]')
+        ?.className,
+    ).toContain("create-option-label-slot");
+  });
 });

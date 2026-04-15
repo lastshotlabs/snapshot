@@ -52,6 +52,7 @@ describe("ListComponent", () => {
             slots: {
               root: { className: "root-slot" },
               item: { className: "item-slot" },
+              itemBody: { className: "body-slot" },
             },
           }}
         />
@@ -60,6 +61,9 @@ describe("ListComponent", () => {
 
     expect(screen.getByTestId("list").className).toContain("root-slot");
     expect(screen.getByTestId("list-item").className).toContain("item-slot");
+    expect(
+      document.querySelector('[data-snapshot-id="orders-item-body-0"]')?.className,
+    ).toContain("body-slot");
     expect(screen.getByText("Order A").className).toContain("title-slot");
   });
 });

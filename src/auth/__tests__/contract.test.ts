@@ -10,6 +10,8 @@ describe("defaultContract", () => {
     expect(c.endpoints.refresh).toBe("/auth/refresh");
     expect(c.endpoints.mfaVerify).toBe("/auth/mfa/verify");
     expect(c.endpoints.passkeyLogin).toBe("/auth/passkey/login");
+    expect(c.endpoints.oauthStart).toBe("/auth/{provider}");
+    expect(c.endpoints.oauthCallback).toBe("/auth/oauth/exchange");
     expect(c.headers.userToken).toBe("x-user-token");
     expect(c.headers.csrf).toBe("x-csrf-token");
     expect(c.csrfCookieName).toBe("csrf_token");

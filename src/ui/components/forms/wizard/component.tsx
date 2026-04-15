@@ -560,6 +560,15 @@ function WizardProgress({
           itemSurface: step.slots?.stepLabel,
           activeStates: stepStates,
         });
+        const stepBodySurface = resolveSurfacePresentation({
+          surfaceId: `${rootId}-stepBody-${index}`,
+          implementationBase: {
+            minWidth: 0,
+          } as Record<string, unknown>,
+          componentSurface: slots?.stepBody,
+          itemSurface: step.slots?.stepBody,
+          activeStates: stepStates,
+        });
         const descriptionSurface = resolveSurfacePresentation({
           surfaceId: `${rootId}-stepDescription-${index}`,
           implementationBase: {
@@ -605,7 +614,11 @@ function WizardProgress({
               >
                 {isCompleted ? "\u2713" : index + 1}
               </span>
-              <span style={{ minWidth: 0 }}>
+              <span
+                data-snapshot-id={`${rootId}-stepBody-${index}`}
+                className={stepBodySurface.className}
+                style={stepBodySurface.style}
+              >
                 <span
                   data-snapshot-id={`${rootId}-stepLabel-${index}`}
                   className={labelSurface.className}
@@ -636,6 +649,7 @@ function WizardProgress({
             ) : null}
             <SurfaceStyles css={stepSurface.scopedCss} />
             <SurfaceStyles css={markerSurface.scopedCss} />
+            <SurfaceStyles css={stepBodySurface.scopedCss} />
             <SurfaceStyles css={labelSurface.scopedCss} />
             <SurfaceStyles css={descriptionSurface.scopedCss} />
             <SurfaceStyles css={connectorSurface.scopedCss} />
@@ -682,6 +696,87 @@ export function Wizard({ config }: { config: WizardConfig }) {
     itemSurface: currentStepConfig?.slots?.panel,
     activeStates: wizard.isAnimating ? ["active"] : [],
   });
+  const progressSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-progress`,
+    implementationBase: {
+      padding: "var(--sn-spacing-md, 12px) var(--sn-spacing-lg, 16px)",
+      borderBottom:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.progress,
+  });
+  const headerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-header`,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--sn-spacing-xs, 4px)",
+      marginBottom: "var(--sn-spacing-md, 12px)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.header,
+    itemSurface: currentStepConfig?.slots?.header,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: {
+      margin: 0,
+      fontSize: "var(--sn-font-size-lg, 1.125rem)",
+      fontWeight: "var(--sn-font-weight-semibold, 600)",
+      color: "var(--sn-color-foreground, #111827)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.title,
+    itemSurface: currentStepConfig?.slots?.title,
+  });
+  const descriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-description`,
+    implementationBase: {
+      margin: 0,
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.description,
+    itemSurface: currentStepConfig?.slots?.description,
+  });
+  const completionStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-completionState`,
+    implementationBase: {
+      textAlign: "center",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.completionState,
+  });
+  const completionTitleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-completionTitle`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-lg, 1.125rem)",
+      fontWeight: "var(--sn-font-weight-semibold, 600)",
+      color: "var(--sn-color-success, #16a34a)",
+      marginBottom: "var(--sn-spacing-sm, 8px)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.completionTitle,
+  });
+  const completionDescriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-completionDescription`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      marginBottom: "var(--sn-spacing-md, 12px)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.completionDescription,
+  });
+  const submitErrorSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-submitError`,
+    implementationBase: {
+      padding: "var(--sn-spacing-sm, 8px)",
+      marginTop: "var(--sn-spacing-md, 12px)",
+      borderRadius: "var(--sn-radius-md, 6px)",
+      backgroundColor: "var(--sn-color-destructive, #ef4444)",
+      color: "var(--sn-color-destructive-foreground, #fff)",
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.submitError,
+    itemSurface: currentStepConfig?.slots?.submitError,
+    activeStates: wizard.submitError ? ["invalid"] : [],
+  });
   const actionsSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-actions`,
     implementationBase: {
@@ -695,6 +790,14 @@ export function Wizard({ config }: { config: WizardConfig }) {
     } as Record<string, unknown>,
     componentSurface: config.slots?.actions,
   });
+  const actionGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-actionGroup`,
+    implementationBase: {
+      display: "flex",
+      gap: "var(--sn-spacing-sm, 8px)",
+    } as Record<string, unknown>,
+    componentSurface: config.slots?.actionGroup,
+  });
 
   if (wizard.isComplete) {
     return (
@@ -707,44 +810,44 @@ export function Wizard({ config }: { config: WizardConfig }) {
         <div
           data-snapshot-id={`${rootId}-panel`}
           className={panelSurface.className}
-          style={{
-            textAlign: "center",
-            ...(panelSurface.style as React.CSSProperties),
-          }}
+          style={panelSurface.style}
         >
           <div
-            style={{
-              fontSize: "var(--sn-font-size-lg, 1.125rem)",
-              fontWeight: "var(--sn-font-weight-semibold, 600)",
-              color: "var(--sn-color-success, #16a34a)",
-              marginBottom: "var(--sn-spacing-sm, 8px)",
-            }}
+            data-snapshot-id={`${rootId}-completionState`}
+            className={completionStateSurface.className}
+            style={completionStateSurface.style}
           >
-            {"\u2713"} Complete
+            <div
+              data-snapshot-id={`${rootId}-completionTitle`}
+              className={completionTitleSurface.className}
+              style={completionTitleSurface.style}
+            >
+              {"\u2713"} Complete
+            </div>
+            <div
+              data-snapshot-id={`${rootId}-completionDescription`}
+              className={completionDescriptionSurface.className}
+              style={completionDescriptionSurface.style}
+            >
+              Your submission was successful.
+            </div>
+            <ButtonControl
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={wizard.resetWizard}
+              surfaceId={`${rootId}-submitButton`}
+              surfaceConfig={config.slots?.submitButton}
+            >
+              Reset
+            </ButtonControl>
           </div>
-          <div
-            style={{
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              color: "var(--sn-color-muted-foreground, #6b7280)",
-              marginBottom: "var(--sn-spacing-md, 12px)",
-            }}
-          >
-            Your submission was successful.
-          </div>
-          <ButtonControl
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={wizard.resetWizard}
-            surfaceId={`${rootId}-submitButton`}
-            surfaceConfig={config.slots?.submitButton}
-          >
-            Reset
-          </ButtonControl>
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
         <SurfaceStyles css={panelSurface.scopedCss} />
-        <SurfaceStyles css={actionsSurface.scopedCss} />
+        <SurfaceStyles css={completionStateSurface.scopedCss} />
+        <SurfaceStyles css={completionTitleSurface.scopedCss} />
+        <SurfaceStyles css={completionDescriptionSurface.scopedCss} />
       </div>
     );
   }
@@ -757,11 +860,9 @@ export function Wizard({ config }: { config: WizardConfig }) {
       style={rootSurface.style}
     >
       <div
-        style={{
-          padding: "var(--sn-spacing-md, 12px) var(--sn-spacing-lg, 16px)",
-          borderBottom:
-            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-        }}
+        data-snapshot-id={`${rootId}-progress`}
+        className={progressSurface.className}
+        style={progressSurface.style}
       >
         <WizardProgress
           rootId={rootId}
@@ -779,31 +880,30 @@ export function Wizard({ config }: { config: WizardConfig }) {
         style={panelSurface.style}
       >
         {currentStepConfig ? (
-          <>
+          <div
+            data-snapshot-id={`${rootId}-header`}
+            className={headerSurface.className}
+            style={headerSurface.style}
+          >
             <h3
               data-wizard-step-title=""
-              style={{
-                margin: "0 0 var(--sn-spacing-xs, 4px)",
-                fontSize: "var(--sn-font-size-lg, 1.125rem)",
-                fontWeight: "var(--sn-font-weight-semibold, 600)",
-                color: "var(--sn-color-foreground, #111827)",
-              }}
+              data-snapshot-id={`${rootId}-title`}
+              className={titleSurface.className}
+              style={titleSurface.style}
             >
               {currentStepConfig.title}
             </h3>
             {currentStepConfig.description ? (
               <p
                 data-wizard-step-description=""
-                style={{
-                  margin: "0 0 var(--sn-spacing-md, 12px)",
-                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                  color: "var(--sn-color-muted-foreground, #6b7280)",
-                }}
+                data-snapshot-id={`${rootId}-description`}
+                className={descriptionSurface.className}
+                style={descriptionSurface.style}
               >
                 {currentStepConfig.description}
               </p>
             ) : null}
-          </>
+          </div>
         ) : null}
 
         {currentStepConfig?.fields.map((field) => (
@@ -824,14 +924,9 @@ export function Wizard({ config }: { config: WizardConfig }) {
           <div
             role="alert"
             data-wizard-submit-error=""
-            style={{
-              padding: "var(--sn-spacing-sm, 8px)",
-              marginTop: "var(--sn-spacing-md, 12px)",
-              borderRadius: "var(--sn-radius-md, 6px)",
-              backgroundColor: "var(--sn-color-destructive, #ef4444)",
-              color: "var(--sn-color-destructive-foreground, #fff)",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            }}
+            data-snapshot-id={`${rootId}-submitError`}
+            className={submitErrorSurface.className}
+            style={submitErrorSurface.style}
           >
             {wizard.submitError.message}
           </div>
@@ -862,10 +957,9 @@ export function Wizard({ config }: { config: WizardConfig }) {
         </ButtonControl>
 
         <div
-          style={{
-            display: "flex",
-            gap: "var(--sn-spacing-sm, 8px)",
-          }}
+          data-snapshot-id={`${rootId}-actionGroup`}
+          className={actionGroupSurface.className}
+          style={actionGroupSurface.style}
         >
           {isSkippable ? (
             <ButtonControl
@@ -907,8 +1001,14 @@ export function Wizard({ config }: { config: WizardConfig }) {
         </div>
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={progressSurface.scopedCss} />
       <SurfaceStyles css={panelSurface.scopedCss} />
+      <SurfaceStyles css={headerSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={descriptionSurface.scopedCss} />
+      <SurfaceStyles css={submitErrorSurface.scopedCss} />
       <SurfaceStyles css={actionsSurface.scopedCss} />
+      <SurfaceStyles css={actionGroupSurface.scopedCss} />
     </div>
   );
 }

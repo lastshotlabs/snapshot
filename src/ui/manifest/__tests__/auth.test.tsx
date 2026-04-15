@@ -375,7 +375,7 @@ describe("Manifest auth fragments", () => {
       | CustomEvent<{ provider: string; url: string }>
       | undefined;
     expect(event?.detail.provider).toBe("google");
-    expect(event?.detail.url).toContain("/auth/google");
+    expect(event?.detail.url).toBe("http://localhost/auth/google");
 
     window.removeEventListener(
       "snapshot:auth-provider-redirect",

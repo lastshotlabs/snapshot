@@ -12,4 +12,18 @@ describe("quickAddConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical quick-add slots", () => {
+    const result = quickAddConfigSchema.safeParse({
+      type: "quick-add",
+      slots: {
+        root: { className: "root-slot" },
+        icon: { className: "icon-slot" },
+        input: { className: "input-slot" },
+        button: { className: "button-slot" },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

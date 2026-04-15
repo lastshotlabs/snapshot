@@ -71,9 +71,12 @@ export const tagSelectorConfigSchema = extendComponentSchema({
       "dropdown",
       "loading",
       "error",
+      "errorMessage",
       "retryButton",
       "option",
       "optionSwatch",
+      "optionLabel",
       "createOption",
+      "createOptionLabel",
     ]).optional(),
   }).strict();

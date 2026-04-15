@@ -121,16 +121,23 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       color: "var(--sn-color-primary-foreground, #ffffff)",
       bg: "var(--sn-color-primary, #2563eb)",
       borderRadius: "md",
-      cursor: canSubmit ? "pointer" : "not-allowed",
-      opacity: canSubmit ? 1 : 0.5,
+      cursor: "pointer",
+      opacity: 1,
       transition: "opacity",
-      hover: canSubmit
-        ? {
-            opacity: 0.9,
-          }
-        : undefined,
+      hover: {
+        opacity: 0.9,
+      },
       focus: {
         ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+      },
+      states: {
+        disabled: {
+          cursor: "not-allowed",
+          opacity: 0.5,
+          hover: {
+            opacity: 0.5,
+          },
+        },
       },
       style: {
         border: "none",
@@ -138,6 +145,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       },
     },
     componentSurface: config.slots?.button,
+    activeStates: canSubmit ? [] : ["disabled"],
   });
 
   return (
@@ -182,6 +190,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
             variant="ghost"
             size="sm"
             surfaceConfig={buttonSurface.resolvedConfigForWrapper}
+            activeStates={!canSubmit ? ["disabled"] : []}
           >
             {buttonText}
           </ButtonControl>
@@ -189,6 +198,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={iconSurface.scopedCss} />
+      <SurfaceStyles css={buttonSurface.scopedCss} />
     </>
   );
 }

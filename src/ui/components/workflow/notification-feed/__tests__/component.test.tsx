@@ -59,7 +59,9 @@ describe("NotificationFeed", () => {
           data: "/api/notifications",
           slots: {
             header: { className: "feed-header-slot" },
+            headerContent: { className: "feed-header-content-slot" },
             item: { className: "feed-item-slot" },
+            itemBody: { className: "feed-item-body-slot" },
           },
         }}
       />,
@@ -72,8 +74,18 @@ describe("NotificationFeed", () => {
     ).toBe(true);
     expect(
       container
+        .querySelector('[data-snapshot-id="notification-feed-header-content"]')
+        ?.classList.contains("feed-header-content-slot"),
+    ).toBe(true);
+    expect(
+      container
         .querySelector("[data-notification-item]")
         ?.classList.contains("feed-item-slot"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-snapshot-id="notification-feed-item-n1-body"]')
+        ?.classList.contains("feed-item-body-slot"),
     ).toBe(true);
   });
 });

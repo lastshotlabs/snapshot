@@ -86,9 +86,20 @@ function TreeNode({
       border: "none",
       outline: "none",
       textAlign: "left",
-      background: isSelected
-        ? "var(--sn-color-accent, #f1f5f9)"
-        : "transparent",
+      states: {
+        selected: {
+          bg: "var(--sn-color-accent, #f1f5f9)",
+          color: "var(--sn-color-accent-foreground, #0f172a)",
+        },
+        current: {
+          bg: "var(--sn-color-accent, #f1f5f9)",
+          color: "var(--sn-color-accent-foreground, #0f172a)",
+        },
+        disabled: {
+          opacity: "var(--sn-opacity-disabled, 0.5)",
+          cursor: "not-allowed",
+        },
+      },
     } as Record<string, unknown>,
     componentSurface: slots?.row,
     itemSurface: item.slots?.row,
@@ -123,9 +134,18 @@ function TreeNode({
       flexShrink: 0,
       transition:
         "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-      transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
       fontSize: "var(--sn-font-size-xs, 0.75rem)",
       color: "var(--sn-color-muted-foreground, #6b7280)",
+      states: {
+        open: {
+          style: {
+            transform: "rotate(90deg)",
+          },
+        },
+      },
+      style: {
+        transform: "rotate(0deg)",
+      },
     } as Record<string, unknown>,
     componentSurface: slots?.disclosure,
     itemSurface: item.slots?.disclosure,
@@ -214,8 +234,8 @@ function TreeNode({
         variant="ghost"
         size="sm"
         surfaceId={`${rootId}-row-${pathKey}`}
-        className={rowSurface.className}
-        style={rowSurface.style}
+        surfaceConfig={rowSurface.resolvedConfigForWrapper}
+        activeStates={rowStates}
       >
         {showConnectors && depth > 0 ? (
           <span
@@ -240,7 +260,7 @@ function TreeNode({
           <span
             data-snapshot-id={`${rootId}-disclosure-${pathKey}`}
             className={disclosureSurface.className}
-            style={{ width: 16, height: 16, ...(disclosureSurface.style as React.CSSProperties) }}
+            style={disclosureSurface.style}
             aria-hidden="true"
           />
         )}
@@ -355,6 +375,78 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
     componentSurface: config,
     itemSurface: config.slots?.root,
   });
+  const loadingStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-state`,
+    implementationBase: {
+      padding: "var(--sn-spacing-md, 1rem)",
+    },
+    componentSurface: config.slots?.loadingState,
+  });
+  const loadingItemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-item`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-sm, 0.5rem)",
+      style: {
+        padding: "var(--sn-spacing-xs, 0.25rem) 0",
+      },
+    },
+    componentSurface: config.slots?.loadingItem,
+  });
+  const loadingMarkerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-marker`,
+    implementationBase: {
+      style: {
+        width: "var(--sn-font-size-sm, 0.875rem)",
+        height: "var(--sn-font-size-sm, 0.875rem)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+      },
+    },
+    componentSurface: config.slots?.loadingMarker,
+  });
+  const loadingLabelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-label`,
+    implementationBase: {
+      style: {
+        height: "var(--sn-font-size-sm, 0.875rem)",
+        width: "40%",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingLabel,
+  });
+  const loadingLabelSecondarySurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-label-secondary`,
+    implementationBase: {
+      style: {
+        height: "var(--sn-font-size-sm, 0.875rem)",
+        width: "60%",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingLabelSecondary,
+  });
+  const errorStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-error-state`,
+    implementationBase: {},
+    componentSurface: config.slots?.errorState,
+  });
+  const emptyStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-empty-state`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: {
+        padding: "var(--sn-spacing-lg, 1.5rem)",
+        textAlign: "center",
+      },
+    },
+    componentSurface: config.slots?.emptyState,
+  });
 
   const items = useMemo((): TreeItemInput[] => {
     if (!hasEndpoint) {
@@ -457,39 +549,51 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
       >
         <div
           data-testid="tree-view-loading"
-          style={{ padding: "var(--sn-spacing-md, 1rem)" }}
+          data-snapshot-id={`${rootId}-loading-state`}
+          className={loadingStateSurface.className}
+          style={loadingStateSurface.style}
         >
           {[0, 1, 2].map((index) => (
             <div
               key={index}
+              data-snapshot-id={`${rootId}-loading-item-${index}`}
+              className={loadingItemSurface.className}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--sn-spacing-sm, 0.5rem)",
-                padding: "var(--sn-spacing-xs, 0.25rem) 0",
+                ...(loadingItemSurface.style ?? {}),
                 paddingLeft: `calc(${index === 2 ? 1 : 0} * var(--sn-spacing-lg, 1.5rem))`,
               }}
             >
               <div
+                data-snapshot-id={`${rootId}-loading-marker-${index}`}
+                className={loadingMarkerSurface.className}
+                style={loadingMarkerSurface.style}
+              />
+              <div
+                data-snapshot-id={`${rootId}-loading-label-${index}`}
+                className={loadingLabelSurface.className}
                 style={{
-                  width: "var(--sn-font-size-sm, 0.875rem)",
-                  height: "var(--sn-font-size-sm, 0.875rem)",
-                  borderRadius: "var(--sn-radius-sm, 0.25rem)",
-                  backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+                  ...(loadingLabelSurface.style ?? {}),
+                  width: `${40 + index * 20}%`,
                 }}
               />
               <div
+                data-snapshot-id={`${rootId}-loading-label-secondary-${index}`}
+                className={loadingLabelSecondarySurface.className}
                 style={{
-                  height: "var(--sn-font-size-sm, 0.875rem)",
-                  width: `${40 + index * 20}%`,
-                  backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-                  borderRadius: "var(--sn-radius-sm, 0.25rem)",
+                  ...(loadingLabelSecondarySurface.style ?? {}),
+                  width: `${55 + index * 10}%`,
+                  opacity: "var(--sn-opacity-disabled, 0.5)",
                 }}
               />
             </div>
           ))}
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={loadingStateSurface.scopedCss} />
+        <SurfaceStyles css={loadingItemSurface.scopedCss} />
+        <SurfaceStyles css={loadingMarkerSurface.scopedCss} />
+        <SurfaceStyles css={loadingLabelSurface.scopedCss} />
+        <SurfaceStyles css={loadingLabelSecondarySurface.scopedCss} />
       </div>
     );
   }
@@ -503,13 +607,19 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        <div data-testid="tree-view-error">
+        <div
+          data-testid="tree-view-error"
+          data-snapshot-id={`${rootId}-error-state`}
+          className={errorStateSurface.className}
+          style={errorStateSurface.style}
+        >
           <AutoErrorState
             config={config.error ?? {}}
             onRetry={config.error?.retry !== undefined ? refetch : undefined}
           />
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={errorStateSurface.scopedCss} />
       </div>
     );
   }
@@ -525,16 +635,14 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
       >
         <div
           data-testid="tree-view-empty"
-          style={{
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            padding: "var(--sn-spacing-lg, 1.5rem)",
-            textAlign: "center",
-          }}
+          data-snapshot-id={`${rootId}-empty-state`}
+          className={emptyStateSurface.className}
+          style={emptyStateSurface.style}
         >
           No items to display
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={emptyStateSurface.scopedCss} />
       </div>
     );
   }

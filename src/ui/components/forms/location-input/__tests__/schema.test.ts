@@ -15,4 +15,17 @@ describe("locationInputConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical helper and error slots", () => {
+    const result = locationInputConfigSchema.safeParse({
+      type: "location-input",
+      searchEndpoint: { resource: "locations" },
+      slots: {
+        helper: { className: "helper-slot" },
+        error: { className: "error-slot" },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

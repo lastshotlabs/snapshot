@@ -439,14 +439,24 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
     surfaceId: `${rootId}-helper`,
     implementationBase: {
       fontSize: "xs",
-      color: hasError
-        ? "var(--sn-color-destructive, #ef4444)"
-        : "var(--sn-color-muted-foreground, #6b7280)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
       style: {
         marginTop: "var(--sn-spacing-xs, 0.25rem)",
       },
     },
     componentSurface: config.slots?.helper,
+  });
+  const errorSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-error`,
+    implementationBase: {
+      fontSize: "xs",
+      color: "var(--sn-color-destructive, #ef4444)",
+      style: {
+        marginTop: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.error,
+    activeStates: hasError ? ["invalid"] : [],
   });
 
   return (
@@ -554,13 +564,22 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
           </a>
         ) : null}
 
-        {config.helperText || hasError ? (
+        {config.helperText && !hasError ? (
           <div
             data-snapshot-id={`${rootId}-helper`}
             className={helperSurface.className}
             style={helperSurface.style}
           >
-            {hasError ? errorText : config.helperText}
+            {config.helperText}
+          </div>
+        ) : null}
+        {hasError ? (
+          <div
+            data-snapshot-id={`${rootId}-error`}
+            className={errorSurface.className}
+            style={errorSurface.style}
+          >
+            {errorText}
           </div>
         ) : null}
       </div>
@@ -573,6 +592,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
       <SurfaceStyles css={resultsSurface.scopedCss} />
       <SurfaceStyles css={mapLinkSurface.scopedCss} />
       <SurfaceStyles css={helperSurface.scopedCss} />
+      <SurfaceStyles css={errorSurface.scopedCss} />
     </>
   );
 }

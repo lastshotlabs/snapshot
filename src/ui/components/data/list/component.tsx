@@ -34,7 +34,15 @@ function resolveItemSurface(
   rootId: string,
   item: ListItemConfig,
   index: number,
-  slotName: "item" | "itemTitle" | "itemDescription" | "itemIcon" | "itemBadge",
+  slotName:
+    | "item"
+    | "itemBody"
+    | "itemLink"
+    | "itemTitle"
+    | "itemDescription"
+    | "itemIcon"
+    | "itemBadge"
+    | "divider",
   implementationBase?: Record<string, unknown>,
   fallbackSlot?: Record<string, unknown>,
 ) {
@@ -49,41 +57,48 @@ function resolveItemSurface(
 /**
  * Skeleton placeholder row for loading state.
  */
-function ListSkeleton() {
+function ListSkeleton({
+  rootId,
+  index,
+  itemSurface,
+  iconSurface,
+  bodySurface,
+  titleSurface,
+  descriptionSurface,
+}: {
+  rootId: string;
+  index: number;
+  itemSurface: ReturnType<typeof resolveSurfacePresentation>;
+  iconSurface: ReturnType<typeof resolveSurfacePresentation>;
+  bodySurface: ReturnType<typeof resolveSurfacePresentation>;
+  titleSurface: ReturnType<typeof resolveSurfacePresentation>;
+  descriptionSurface: ReturnType<typeof resolveSurfacePresentation>;
+}) {
   return (
     <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "var(--sn-spacing-sm, 0.5rem)",
-        padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
-      }}
+      data-snapshot-id={`${rootId}-loading-item-${index}`}
+      className={itemSurface.className}
+      style={itemSurface.style}
     >
       <div
-        style={{
-          width: "2rem",
-          height: "2rem",
-          borderRadius: "var(--sn-radius-sm, 0.25rem)",
-          backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-        }}
+        data-snapshot-id={`${rootId}-loading-icon-${index}`}
+        className={iconSurface.className}
+        style={iconSurface.style}
       />
-      <div style={{ flex: 1 }}>
+      <div
+        data-snapshot-id={`${rootId}-loading-body-${index}`}
+        className={bodySurface.className}
+        style={bodySurface.style}
+      >
         <div
-          style={{
-            height: "0.75rem",
-            width: "40%",
-            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            borderRadius: "var(--sn-radius-sm, 0.25rem)",
-            marginBottom: "var(--sn-spacing-xs, 0.25rem)",
-          }}
+          data-snapshot-id={`${rootId}-loading-title-${index}`}
+          className={titleSurface.className}
+          style={titleSurface.style}
         />
         <div
-          style={{
-            height: "0.625rem",
-            width: "60%",
-            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            borderRadius: "var(--sn-radius-sm, 0.25rem)",
-          }}
+          data-snapshot-id={`${rootId}-loading-description-${index}`}
+          className={descriptionSurface.className}
+          style={descriptionSurface.style}
         />
       </div>
     </div>
@@ -203,6 +218,19 @@ function ListItem({
     },
     slots?.itemTitle,
   );
+  const bodySurface = resolveItemSurface(
+    rootId,
+    item,
+    itemIndex,
+    "itemBody",
+    {
+      style: {
+        flex: 1,
+        minWidth: 0,
+      },
+    },
+    slots?.itemBody,
+  );
   const descriptionSurface = resolveItemSurface(
     rootId,
     item,
@@ -238,6 +266,32 @@ function ListItem({
         }
       : undefined,
     slots?.itemBadge,
+  );
+  const linkSurface = resolveItemSurface(
+    rootId,
+    item,
+    itemIndex,
+    "itemLink",
+    {
+      style: {
+        textDecoration: "none",
+        color: "inherit",
+      },
+    },
+    slots?.itemLink,
+  );
+  const dividerSurface = resolveItemSurface(
+    rootId,
+    item,
+    itemIndex,
+    "divider",
+    {
+      style: {
+        height: "1px",
+        backgroundColor: "var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    slots?.divider,
   );
 
   const handleClick = () => {
@@ -288,7 +342,11 @@ function ListItem({
       )}
 
       {/* Title + Description */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div
+        data-snapshot-id={`${rootId}-item-body-${itemIndex}`}
+        className={bodySurface.className}
+        style={bodySurface.style}
+      >
         <div
           data-snapshot-id={`${rootId}-item-title-${itemIndex}`}
           className={titleSurface.className}
@@ -325,7 +383,9 @@ function ListItem({
       {item.href && !item.action ? (
         <a
           href={item.href}
-          style={{ textDecoration: "none", color: "inherit" }}
+          data-snapshot-id={`${rootId}-item-link-${itemIndex}`}
+          className={linkSurface.className}
+          style={linkSurface.style}
         >
           {content}
         </a>
@@ -334,17 +394,19 @@ function ListItem({
       )}
       {showDivider && (
         <div
-          style={{
-            height: "1px",
-            backgroundColor: "var(--sn-color-border, #e5e7eb)",
-          }}
+          data-snapshot-id={`${rootId}-divider-${itemIndex}`}
+          className={dividerSurface.className}
+          style={dividerSurface.style}
         />
       )}
       <SurfaceStyles css={itemSurface.scopedCss} />
+      <SurfaceStyles css={bodySurface.scopedCss} />
+      <SurfaceStyles css={linkSurface.scopedCss} />
       <SurfaceStyles css={iconSurface.scopedCss} />
       <SurfaceStyles css={titleSurface.scopedCss} />
       <SurfaceStyles css={descriptionSurface.scopedCss} />
       <SurfaceStyles css={badgeSurface.scopedCss} />
+      <SurfaceStyles css={dividerSurface.scopedCss} />
     </div>
   );
 }
@@ -605,9 +667,88 @@ export function ListComponent({ config }: { config: ListConfig }) {
     surfaceId: `${rootId}-list`,
     componentSurface: config.slots?.list,
   });
+  const liveBannerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-live-banner`,
+    implementationBase: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "0.75rem",
+      style: {
+        padding: "0.75rem 1rem",
+        marginBottom: "0.75rem",
+        borderRadius: "var(--sn-radius-md, 0.5rem)",
+        backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
+      },
+    },
+    componentSurface: config.slots?.liveBanner,
+  });
+  const liveTextSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-live-text`,
+    implementationBase: {},
+    componentSurface: config.slots?.liveText,
+  });
   const loadingSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loading`,
     componentSurface: config.slots?.loadingState,
+  });
+  const loadingItemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-item`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-sm, 0.5rem)",
+      style: {
+        padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingItem,
+  });
+  const loadingIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-icon`,
+    implementationBase: {
+      style: {
+        width: "2rem",
+        height: "2rem",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+      },
+    },
+    componentSurface: config.slots?.loadingIcon,
+  });
+  const loadingBodySurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-body`,
+    implementationBase: {
+      style: {
+        flex: 1,
+      },
+    },
+    componentSurface: config.slots?.loadingBody,
+  });
+  const loadingTitleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-title`,
+    implementationBase: {
+      style: {
+        height: "0.75rem",
+        width: "40%",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+        marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingTitle,
+  });
+  const loadingDescriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-description`,
+    implementationBase: {
+      style: {
+        height: "0.625rem",
+        width: "60%",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.loadingDescription,
   });
   const errorSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-error`,
@@ -634,21 +775,17 @@ export function ListComponent({ config }: { config: ListConfig }) {
     >
       {hasNewData ? (
         <div
-          data-snapshot-id={`${rootId}-loading`}
-          className={loadingSurface.className}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "0.75rem",
-            padding: "0.75rem 1rem",
-            marginBottom: "0.75rem",
-            borderRadius: "var(--sn-radius-md, 0.5rem)",
-            backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
-            ...loadingSurface.style,
-          }}
+          data-snapshot-id={`${rootId}-live-banner`}
+          className={liveBannerSurface.className}
+          style={liveBannerSurface.style}
         >
-          <span>New items available</span>
+          <span
+            data-snapshot-id={`${rootId}-live-text`}
+            className={liveTextSurface.className}
+            style={liveTextSurface.style}
+          >
+            New items available
+          </span>
           <ButtonControl type="button" onClick={refresh} variant="outline" size="sm">
             Refresh
           </ButtonControl>
@@ -666,7 +803,16 @@ export function ListComponent({ config }: { config: ListConfig }) {
             style={loadingSurface.style}
           >
             {[0, 1, 2].map((i) => (
-              <ListSkeleton key={i} />
+              <ListSkeleton
+                key={i}
+                rootId={rootId}
+                index={i}
+                itemSurface={loadingItemSurface}
+                iconSurface={loadingIconSurface}
+                bodySurface={loadingBodySurface}
+                titleSurface={loadingTitleSurface}
+                descriptionSurface={loadingDescriptionSurface}
+              />
             ))}
           </div>
         )
@@ -801,7 +947,14 @@ export function ListComponent({ config }: { config: ListConfig }) {
       ) : null}
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={listSurface.scopedCss} />
+      <SurfaceStyles css={liveBannerSurface.scopedCss} />
+      <SurfaceStyles css={liveTextSurface.scopedCss} />
       <SurfaceStyles css={loadingSurface.scopedCss} />
+      <SurfaceStyles css={loadingItemSurface.scopedCss} />
+      <SurfaceStyles css={loadingIconSurface.scopedCss} />
+      <SurfaceStyles css={loadingBodySurface.scopedCss} />
+      <SurfaceStyles css={loadingTitleSurface.scopedCss} />
+      <SurfaceStyles css={loadingDescriptionSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
       <SurfaceStyles css={emptySurface.scopedCss} />
     </div>

@@ -190,6 +190,11 @@ function TagOption({
     },
     componentSurface: config.slots?.optionSwatch,
   });
+  const optionLabelSurface = resolveSurfacePresentation({
+    surfaceId: `${optionId}-label`,
+    implementationBase: {} as Record<string, unknown>,
+    componentSurface: config.slots?.optionLabel,
+  });
 
   return (
     <>
@@ -209,9 +214,16 @@ function TagOption({
             style={swatchSurface.style}
           />
         ) : null}
-        {tag.label}
+        <span
+          data-snapshot-id={`${optionId}-label`}
+          className={optionLabelSurface.className}
+          style={optionLabelSurface.style}
+        >
+          {tag.label}
+        </span>
       </ButtonControl>
       <SurfaceStyles css={swatchSurface.scopedCss} />
+      <SurfaceStyles css={optionLabelSurface.scopedCss} />
     </>
   );
 }
@@ -466,6 +478,11 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
     },
     componentSurface: config.slots?.error,
   });
+  const errorMessageSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-errorMessage`,
+    implementationBase: {} as Record<string, unknown>,
+    componentSurface: config.slots?.errorMessage,
+  });
   const retryButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-retryButton`,
     implementationBase: {
@@ -511,6 +528,11 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       },
     },
     componentSurface: config.slots?.createOption,
+  });
+  const createOptionLabelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-createOptionLabel`,
+    implementationBase: {} as Record<string, unknown>,
+    componentSurface: config.slots?.createOptionLabel,
   });
 
   return (
@@ -615,7 +637,13 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 className={errorSurface.className}
                 style={errorSurface.style}
               >
-                <div>Failed to load tags</div>
+                <div
+                  data-snapshot-id={`${rootId}-errorMessage`}
+                  className={errorMessageSurface.className}
+                  style={errorMessageSurface.style}
+                >
+                  Failed to load tags
+                </div>
                 <ButtonControl
                   type="button"
                   surfaceId={`${rootId}-retryButton`}
@@ -657,7 +685,13 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 onClick={handleCreate}
                 surfaceConfig={createOptionSurface.resolvedConfigForWrapper}
               >
-                Create &ldquo;{searchText.trim()}&rdquo;
+                <span
+                  data-snapshot-id={`${rootId}-createOptionLabel`}
+                  className={createOptionLabelSurface.className}
+                  style={createOptionLabelSurface.style}
+                >
+                  Create &ldquo;{searchText.trim()}&rdquo;
+                </span>
               </ButtonControl>
             ) : null}
           </div>
@@ -669,6 +703,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       <SurfaceStyles css={dropdownSurface.scopedCss} />
       <SurfaceStyles css={loadingSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
+      <SurfaceStyles css={errorMessageSurface.scopedCss} />
+      <SurfaceStyles css={createOptionLabelSurface.scopedCss} />
     </>
   );
 }

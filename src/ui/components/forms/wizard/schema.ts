@@ -11,14 +11,24 @@ import {
 
 export const wizardSlotNames = [
   "root",
+  "progress",
   "steps",
   "step",
+  "stepMarker",
+  "stepBody",
   "stepLabel",
   "stepDescription",
-  "stepMarker",
   "stepConnector",
   "panel",
+  "header",
+  "title",
+  "description",
+  "completionState",
+  "completionTitle",
+  "completionDescription",
+  "submitError",
   "actions",
+  "actionGroup",
   "backButton",
   "nextButton",
   "submitButton",
@@ -67,7 +77,19 @@ export const wizardStepSchema = z.object({
   onEnter: z.union([actionSchema, z.array(actionSchema)]).optional(),
   /** Actions fired before leaving this step. */
   onLeave: z.union([actionSchema, z.array(actionSchema)]).optional(),
-  slots: slotsSchema(["step", "stepLabel", "stepDescription", "stepMarker", "stepConnector", "panel"]).optional(),
+  slots: slotsSchema([
+    "step",
+    "stepMarker",
+    "stepBody",
+    "stepLabel",
+    "stepDescription",
+    "stepConnector",
+    "panel",
+    "header",
+    "title",
+    "description",
+    "submitError",
+  ]).optional(),
 });
 
 /**

@@ -17,21 +17,34 @@ export const listSlotNames = [
   "root",
   "list",
   "item",
+  "itemBody",
+  "itemLink",
   "itemTitle",
   "itemDescription",
   "itemIcon",
   "itemBadge",
+  "divider",
+  "liveBanner",
+  "liveText",
   "emptyState",
   "loadingState",
+  "loadingItem",
+  "loadingIcon",
+  "loadingBody",
+  "loadingTitle",
+  "loadingDescription",
   "errorState",
 ] as const;
 
 export const listItemSlotNames = [
   "item",
+  "itemBody",
+  "itemLink",
   "itemTitle",
   "itemDescription",
   "itemIcon",
   "itemBadge",
+  "divider",
 ] as const;
 
 /**

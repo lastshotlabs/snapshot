@@ -62,4 +62,51 @@ describe("ToggleGroup", () => {
     );
     expect(screen.getByText("Grid").className).toContain("label-slot");
   });
+
+  it("applies selected item surface states through the shared button wrapper", () => {
+    const Wrapper = createWrapper();
+    const { container } = render(
+      <Wrapper>
+        <ToggleGroup
+          config={{
+            type: "toggle-group",
+            id: "layout-toggle",
+            defaultValue: "grid",
+            items: [
+              {
+                value: "grid",
+                label: "Grid",
+              },
+              {
+                value: "list",
+                label: "List",
+              },
+            ],
+            slots: {
+              item: {
+                states: {
+                  selected: {
+                    className: "item-selected-slot",
+                  },
+                },
+              },
+            },
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(
+      container.querySelector('[data-snapshot-id="layout-toggle-item-0"]')
+        ?.className,
+    ).toContain(
+      "item-selected-slot",
+    );
+    expect(
+      container.querySelector('[data-snapshot-id="layout-toggle-item-1"]')
+        ?.className,
+    ).not.toContain(
+      "item-selected-slot",
+    );
+  });
 });

@@ -245,6 +245,15 @@ export function NotificationFeed({
     },
     componentSurface: config.slots?.header,
   });
+  const headerContentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-header-content`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-sm, 8px)",
+    },
+    componentSurface: config.slots?.headerContent,
+  });
   const titleSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-title`,
     implementationBase: {
@@ -300,6 +309,75 @@ export function NotificationFeed({
     },
     componentSurface: config.slots?.list,
   });
+  const loadingStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-state`,
+    implementationBase: {},
+    componentSurface: config.slots?.loadingState,
+  });
+  const loadingItemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-item`,
+    implementationBase: {
+      display: "flex",
+      gap: "var(--sn-spacing-sm, 8px)",
+      style: {
+        padding: "var(--sn-spacing-md, 12px)",
+      },
+    },
+    componentSurface: config.slots?.loadingItem,
+  });
+  const loadingIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-icon`,
+    implementationBase: {
+      style: {
+        width: "20px",
+        height: "20px",
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        opacity: "var(--sn-opacity-muted, 0.5)",
+        flexShrink: 0,
+      },
+    },
+    componentSurface: config.slots?.loadingIcon,
+  });
+  const loadingTitleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-title`,
+    implementationBase: {
+      style: {
+        height: "1em",
+        width: "50%",
+        borderRadius: "var(--sn-radius-xs, 2px)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        opacity: "var(--sn-opacity-muted, 0.5)",
+        marginBottom: "var(--sn-spacing-xs, 4px)",
+      },
+    },
+    componentSurface: config.slots?.loadingTitle,
+  });
+  const loadingMessageSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loading-message`,
+    implementationBase: {
+      style: {
+        height: "0.75em",
+        width: "80%",
+        borderRadius: "var(--sn-radius-xs, 2px)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        opacity: "var(--sn-opacity-disabled, 0.3)",
+      },
+    },
+    componentSurface: config.slots?.loadingMessage,
+  });
+  const errorStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-error-state`,
+    implementationBase: {
+      style: {
+        padding: "var(--sn-spacing-md, 12px)",
+        color: "var(--sn-color-destructive, #ef4444)",
+        fontSize: "var(--sn-font-size-sm, 0.875rem)",
+        textAlign: "center",
+      },
+    },
+    componentSurface: config.slots?.errorState,
+  });
   const emptyStateSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-empty`,
     implementationBase: {
@@ -325,11 +403,9 @@ export function NotificationFeed({
         style={headerSurface.style}
       >
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--sn-spacing-sm, 8px)",
-          }}
+          data-snapshot-id={`${rootId}-header-content`}
+          className={headerContentSurface.className}
+          style={headerContentSurface.style}
         >
           <span
             data-snapshot-id={`${rootId}-title`}
@@ -371,23 +447,47 @@ export function NotificationFeed({
         style={listSurface.style}
       >
         {isLoading && (
-          <>
-            <SkeletonItem />
-            <SkeletonItem />
-            <SkeletonItem />
-          </>
+          <div
+            data-snapshot-id={`${rootId}-loading-state`}
+            className={loadingStateSurface.className}
+            style={loadingStateSurface.style}
+          >
+            {[0, 1, 2].map((index) => (
+              <div
+                key={index}
+                data-snapshot-id={`${rootId}-loading-item-${index}`}
+                className={loadingItemSurface.className}
+                style={loadingItemSurface.style}
+              >
+                <div
+                  data-snapshot-id={`${rootId}-loading-icon-${index}`}
+                  className={loadingIconSurface.className}
+                  style={loadingIconSurface.style}
+                />
+                <div style={{ flex: 1 }}>
+                  <div
+                    data-snapshot-id={`${rootId}-loading-title-${index}`}
+                    className={loadingTitleSurface.className}
+                    style={loadingTitleSurface.style}
+                  />
+                  <div
+                    data-snapshot-id={`${rootId}-loading-message-${index}`}
+                    className={loadingMessageSurface.className}
+                    style={loadingMessageSurface.style}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         )}
 
         {error && (
           <div
             data-notification-error
             role="alert"
-            style={{
-              padding: "var(--sn-spacing-md, 12px)",
-              color: "var(--sn-color-destructive, #ef4444)",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              textAlign: "center",
-            }}
+            data-snapshot-id={`${rootId}-error-state`}
+            className={errorStateSurface.className}
+            style={errorStateSurface.style}
           >
             Error: {error.message}
           </div>
@@ -478,6 +578,17 @@ export function NotificationFeed({
               componentSurface: config.slots?.itemTitle,
               itemSurface: asSurfaceConfig(itemSlots?.itemTitle),
             });
+            const itemBodySurface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-item-${itemKey}-body`,
+              implementationBase: {
+                style: {
+                  flex: 1,
+                  minWidth: 0,
+                },
+              },
+              componentSurface: config.slots?.itemBody,
+              itemSurface: asSurfaceConfig(itemSlots?.itemBody),
+            });
             const itemMessageSurface = resolveSurfacePresentation({
               surfaceId: `${rootId}-item-${itemKey}-message`,
               implementationBase: {
@@ -548,7 +659,11 @@ export function NotificationFeed({
                   />
                 </div>
 
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  data-snapshot-id={`${rootId}-item-${itemKey}-body`}
+                  className={itemBodySurface.className}
+                  style={itemBodySurface.style}
+                >
                   <div
                     data-snapshot-id={`${rootId}-item-${itemKey}-title`}
                     className={itemTitleSurface.className}
@@ -580,6 +695,7 @@ export function NotificationFeed({
                 </div>
 
                 <SurfaceStyles css={itemSurface.scopedCss} />
+                <SurfaceStyles css={itemBodySurface.scopedCss} />
                 <SurfaceStyles css={itemIconSurface.scopedCss} />
                 <SurfaceStyles css={itemTitleSurface.scopedCss} />
                 <SurfaceStyles css={itemMessageSurface.scopedCss} />
@@ -591,9 +707,16 @@ export function NotificationFeed({
 
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={headerSurface.scopedCss} />
+      <SurfaceStyles css={headerContentSurface.scopedCss} />
       <SurfaceStyles css={titleSurface.scopedCss} />
       <SurfaceStyles css={unreadBadgeSurface.scopedCss} />
       <SurfaceStyles css={listSurface.scopedCss} />
+      <SurfaceStyles css={loadingStateSurface.scopedCss} />
+      <SurfaceStyles css={loadingItemSurface.scopedCss} />
+      <SurfaceStyles css={loadingIconSurface.scopedCss} />
+      <SurfaceStyles css={loadingTitleSurface.scopedCss} />
+      <SurfaceStyles css={loadingMessageSurface.scopedCss} />
+      <SurfaceStyles css={errorStateSurface.scopedCss} />
       <SurfaceStyles css={emptyStateSurface.scopedCss} />
     </div>
   );

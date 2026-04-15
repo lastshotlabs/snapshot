@@ -15,4 +15,17 @@ describe("sliderConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical range input slots", () => {
+    const result = sliderConfigSchema.safeParse({
+      type: "slider",
+      range: true,
+      slots: {
+        inputStart: { className: "input-start-slot" },
+        inputEnd: { className: "input-end-slot" },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

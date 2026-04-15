@@ -134,7 +134,12 @@ describe("wizardSchema", () => {
           title: "Account",
           slots: {
             step: { className: "wizard-step" },
+            stepBody: { className: "wizard-step-body" },
             panel: { className: "wizard-panel" },
+            header: { className: "wizard-header" },
+            title: { className: "wizard-title" },
+            description: { className: "wizard-description" },
+            submitError: { className: "wizard-submit-error" },
           },
           fields: [
             {
@@ -150,6 +155,9 @@ describe("wizardSchema", () => {
       ],
       slots: {
         root: { className: "wizard-root" },
+        progress: { className: "wizard-progress" },
+        completionState: { className: "wizard-complete" },
+        actionGroup: { className: "wizard-actions-group" },
         nextButton: { className: "next-slot" },
       },
     });

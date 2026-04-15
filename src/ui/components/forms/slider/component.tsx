@@ -161,6 +161,22 @@ export function Slider({ config }: { config: SliderConfig }) {
     },
     componentSurface: config.slots?.input,
   });
+  const inputStartSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-inputStart`,
+    implementationBase: {
+      cursor: disabled ? "not-allowed" : "pointer",
+      opacity: disabled ? 0.6 : 1,
+    },
+    componentSurface: config.slots?.inputStart,
+  });
+  const inputEndSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-inputEnd`,
+    implementationBase: {
+      cursor: disabled ? "not-allowed" : "pointer",
+      opacity: disabled ? 0.6 : 1,
+    },
+    componentSurface: config.slots?.inputEnd,
+  });
   const limitsSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-limits`,
     implementationBase: {
@@ -254,8 +270,8 @@ export function Slider({ config }: { config: SliderConfig }) {
                 triggerChange(updated);
               }}
               surfaceId={`${rootId}-input-start`}
-              className={inputSurface.className}
-              style={{ ...rangeInputStyle, ...(inputSurface.style ?? {}), zIndex: 2 }}
+              className={inputStartSurface.className}
+              style={{ ...rangeInputStyle, ...(inputStartSurface.style ?? {}), zIndex: 2 }}
             />
             <InputControl
               type="range"
@@ -274,8 +290,8 @@ export function Slider({ config }: { config: SliderConfig }) {
                 triggerChange(updated);
               }}
               surfaceId={`${rootId}-input-end`}
-              className={inputSurface.className}
-              style={{ ...rangeInputStyle, ...(inputSurface.style ?? {}), zIndex: 3 }}
+              className={inputEndSurface.className}
+              style={{ ...rangeInputStyle, ...(inputEndSurface.style ?? {}), zIndex: 3 }}
             />
           </>
         ) : (
@@ -331,6 +347,8 @@ export function Slider({ config }: { config: SliderConfig }) {
       <SurfaceStyles css={trackSurface.scopedCss} />
       <SurfaceStyles css={fillSurface.scopedCss} />
       <SurfaceStyles css={inputSurface.scopedCss} />
+      <SurfaceStyles css={inputStartSurface.scopedCss} />
+      <SurfaceStyles css={inputEndSurface.scopedCss} />
       <SurfaceStyles css={limitsSurface.scopedCss} />
       <SurfaceStyles css={minLabelSurface.scopedCss} />
       <SurfaceStyles css={maxLabelSurface.scopedCss} />

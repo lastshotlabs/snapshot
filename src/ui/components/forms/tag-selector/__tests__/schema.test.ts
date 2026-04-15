@@ -16,4 +16,21 @@ describe("tagSelectorConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical option and create/error label slots", () => {
+    const result = tagSelectorConfigSchema.safeParse({
+      type: "tag-selector",
+      allowCreate: true,
+      tags: [
+        { label: "React", value: "react" },
+      ],
+      slots: {
+        errorMessage: { className: "error-message-slot" },
+        optionLabel: { className: "option-label-slot" },
+        createOptionLabel: { className: "create-option-label-slot" },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

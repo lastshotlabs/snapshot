@@ -10,14 +10,23 @@ import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 export const autoFormSlotNames = [
   "root",
   "section",
+  "sectionHeader",
+  "sectionToggle",
   "sectionTitle",
+  "sectionDescription",
   "field",
   "label",
   "description",
+  "inputWrapper",
   "input",
+  "options",
+  "option",
+  "optionLabel",
   "helper",
   "error",
   "requiredIndicator",
+  "inlineAction",
+  "passwordToggle",
   "actions",
   "submitButton",
 ] as const;
@@ -26,10 +35,16 @@ export const autoFormFieldSlotNames = [
   "field",
   "label",
   "description",
+  "inputWrapper",
   "input",
+  "options",
+  "option",
+  "optionLabel",
   "helper",
   "error",
   "requiredIndicator",
+  "inlineAction",
+  "passwordToggle",
 ] as const;
 
 /**
@@ -164,7 +179,13 @@ export const fieldSectionSchema = z.object({
   collapsible: z.boolean().optional(),
   /** Whether the section starts collapsed. */
   defaultCollapsed: z.boolean().optional(),
-  slots: slotsSchema(["section", "sectionTitle"]).optional(),
+  slots: slotsSchema([
+    "section",
+    "sectionHeader",
+    "sectionToggle",
+    "sectionTitle",
+    "sectionDescription",
+  ]).optional(),
 });
 
 /**

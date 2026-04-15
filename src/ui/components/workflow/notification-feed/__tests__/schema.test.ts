@@ -10,6 +10,9 @@ describe("notificationFeedConfigSchema", () => {
       showMarkAllRead: true,
       slots: {
         header: { className: "feed-header" },
+        loadingState: { className: "feed-loading" },
+        errorState: { className: "feed-error" },
+        itemBody: { className: "feed-item-body" },
         item: { className: "feed-item" },
       },
     });

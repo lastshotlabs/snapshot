@@ -93,5 +93,6 @@ export const locationInputConfigSchema = extendComponentSchema({
       "resultAddress",
       "mapLink",
       "helper",
+      "error",
     ]).optional(),
   }).strict();
