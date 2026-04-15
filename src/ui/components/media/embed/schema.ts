@@ -1,11 +1,10 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
-export const embedConfigSchema = z.object({
+export const embedConfigSchema = extendComponentSchema({
   type: z.literal("embed"),
-  id: z.string().optional(),
   url: z.string(),
   aspectRatio: z.string().optional(),
   title: z.string().optional(),
-  className: z.string().optional(),
-  style: z.record(z.union([z.string(), z.number()])).optional(),
+  slots: slotsSchema(["root", "frame"]).optional(),
 }).strict();

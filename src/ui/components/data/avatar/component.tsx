@@ -1,8 +1,11 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useState, useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { getInitials } from "../../_base/utils";
 import type { AvatarConfig } from "./types";
 
@@ -91,84 +94,142 @@ export function Avatar({ config }: { config: AvatarConfig }) {
       : "var(--sn-radius-md, 0.5rem)";
 
   const statusDotSize = Math.max(px * 0.25, 8);
-
-  return (
-    <div
-      data-snapshot-component="avatar"
-      data-testid="avatar"
-      className={config.className}
-      style={{
-        position: "relative",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
+  const rootId = config.id ?? "avatar";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      position: "relative",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+      style: {
         width: `${px}px`,
         height: `${px}px`,
         borderRadius,
         backgroundColor: showImage ? "transparent" : `var(--sn-color-${color})`,
         color: showImage ? undefined : `var(--sn-color-${color}-foreground)`,
-        fontSize: INITIALS_FONT_SIZE[size],
-        fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
-        overflow: "hidden",
+        fontSize: initialsFontSize,
+        fontWeight: "var(--sn-font-weight-semibold, 600)",
         flexShrink: 0,
-        ...(config.style as React.CSSProperties),
+      },
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const imageSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-image`,
+    implementationBase: {
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      },
+    },
+    componentSurface: config.slots?.image,
+  });
+  const initialsSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-initials`,
+    componentSurface: config.slots?.initials,
+  });
+  const iconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-icon`,
+    componentSurface: config.slots?.icon,
+  });
+  const fallbackSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-fallback`,
+    componentSurface: config.slots?.fallback,
+  });
+  const statusSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-status`,
+    implementationBase: {
+      position: "absolute",
+      style: {
+        bottom: 0,
+        right: 0,
+        width: `${statusDotSize}px`,
+        height: `${statusDotSize}px`,
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        backgroundColor: config.status ? STATUS_COLORS[config.status] : undefined,
+        border:
+          "var(--sn-border-default, 2px) solid var(--sn-color-card, #ffffff)",
+      },
+    },
+    componentSurface: config.slots?.status,
+  });
+
+  return (
+    <div
+      data-snapshot-component="avatar"
+      data-snapshot-id={rootId}
+      data-testid="avatar"
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
       }}
     >
-      {/* Image */}
       {showImage && (
         <img
+          data-snapshot-id={`${rootId}-image`}
           data-testid="avatar-image"
+          className={imageSurface.className}
           src={resolvedSrc}
           alt={config.alt ?? resolvedName ?? "Avatar"}
           onError={() => setImgError(true)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
+          style={imageSurface.style}
         />
       )}
-
-      {/* Initials fallback */}
       {!showImage && initials && (
-        <span data-testid="avatar-initials" aria-hidden="true">
+        <span
+          data-snapshot-id={`${rootId}-initials`}
+          data-testid="avatar-initials"
+          aria-hidden="true"
+          className={initialsSurface.className}
+          style={initialsSurface.style}
+        >
           {initials}
         </span>
       )}
-
-      {/* Icon fallback */}
       {!showImage && !initials && config.icon && (
-        <span data-testid="avatar-icon" aria-hidden="true">
-          {renderIcon(config.icon, 16)}
+        <span
+          data-snapshot-id={`${rootId}-icon`}
+          data-testid="avatar-icon"
+          aria-hidden="true"
+          className={iconSurface.className}
+          style={iconSurface.style}
+        >
+          {renderIcon(config.icon, Math.max(16, Math.round(px * 0.4)))}
         </span>
       )}
-
-      {/* Generic fallback */}
       {!showImage && !initials && !config.icon && (
-        <span data-avatar-fallback="" data-testid="avatar-fallback" aria-hidden="true">
+        <span
+          data-avatar-fallback=""
+          data-snapshot-id={`${rootId}-fallback`}
+          data-testid="avatar-fallback"
+          aria-hidden="true"
+          className={fallbackSurface.className}
+          style={fallbackSurface.style}
+        >
           ?
         </span>
       )}
-
-      {/* Status dot */}
       {config.status && (
         <span
+          data-snapshot-id={`${rootId}-status`}
           data-testid="avatar-status"
           data-status={config.status}
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            width: `${statusDotSize}px`,
-            height: `${statusDotSize}px`,
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            backgroundColor: STATUS_COLORS[config.status],
-            border:
-              "var(--sn-border-default, 2px) solid var(--sn-color-card, #ffffff)",
-          }}
+          className={statusSurface.className}
+          style={statusSurface.style}
           aria-label={config.status}
         />
       )}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={imageSurface.scopedCss} />
+      <SurfaceStyles css={initialsSurface.scopedCss} />
+      <SurfaceStyles css={iconSurface.scopedCss} />
+      <SurfaceStyles css={fallbackSurface.scopedCss} />
+      <SurfaceStyles css={statusSurface.scopedCss} />
     </div>
   );
 }

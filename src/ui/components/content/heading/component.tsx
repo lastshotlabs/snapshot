@@ -5,6 +5,8 @@ import { useSubscribe } from "../../../context";
 import { resolveTemplate } from "../../../expressions/template";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { HeadingConfig } from "./types";
 
 const HEADING_SIZE: Record<number, string> = {
@@ -30,6 +32,7 @@ export function Heading({ config }: { config: HeadingConfig }) {
   const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const level = config.level ?? 2;
   const Tag = `h${level}` as const;
+  const rootId = config.id ?? "heading";
 
   const resolvedText = resolveTemplate(
     typeof text === "string" ? text : String(text ?? ""),
@@ -65,10 +68,10 @@ export function Heading({ config }: { config: HeadingConfig }) {
           },
         );
 
-  return (
-    <Tag
-      className={config.className}
-      style={{
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      style: {
         fontSize: HEADING_SIZE[level],
         fontWeight:
           level <= 2
@@ -82,10 +85,26 @@ export function Heading({ config }: { config: HeadingConfig }) {
             : "var(--sn-tracking-normal, 0)",
         color: "var(--sn-color-foreground, #111827)",
         margin: 0,
-        ...(config.style as CSSProperties | undefined),
-      }}
-    >
-      {displayText}
-    </Tag>
+      },
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+
+  return (
+    <>
+      <Tag
+        data-snapshot-component="heading"
+        data-snapshot-id={rootId}
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        style={{
+          ...(rootSurface.style ?? {}),
+          ...((config.style as CSSProperties | undefined) ?? {}),
+        }}
+      >
+        {displayText}
+      </Tag>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </>
   );
 }

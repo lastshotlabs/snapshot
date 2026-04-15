@@ -10,6 +10,10 @@ vi.mock("../../../../actions/executor", () => ({
   useActionExecutor: () => executeSpy,
 }));
 
+vi.mock("../../../../context/hooks", () => ({
+  useSubscribe: (value: unknown) => value,
+}));
+
 describe("Vote", () => {
   it("updates the displayed score when upvoted", () => {
     render(

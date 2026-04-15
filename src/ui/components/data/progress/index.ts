@@ -1,3 +1,3 @@
-export { progressConfigSchema } from "./schema";
 export { Progress } from "./component";
+export { progressConfigSchema } from "./schema";
 export type { ProgressConfig } from "./types";

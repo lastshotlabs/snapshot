@@ -669,7 +669,7 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
         const staticParamsModuleSpecifier =
           "@lastshotlabs/bunshot-ssr/static-params";
         const { scanStaticParams, writeStaticParamsManifest } = (await import(
-          staticParamsModuleSpecifier
+          /* @vite-ignore */ staticParamsModuleSpecifier
         )) as unknown as StaticParamsModule;
 
         const routes = await scanStaticParams(serverRoutesDir);

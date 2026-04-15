@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
-import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { TextareaConfig, TextareaControlProps } from "./types";
@@ -208,6 +207,16 @@ export function Textarea({ config }: { config: TextareaConfig }) {
     ...(resolvedDisabled ? (["disabled"] as const) : []),
   ];
 
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+    },
+    componentSurface: config.slots?.root,
+    activeStates: resolvedStates,
+  });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label`,
     implementationBase: {
@@ -271,83 +280,91 @@ export function Textarea({ config }: { config: TextareaConfig }) {
   });
 
   return (
-    <ComponentWrapper type="textarea" id={config.id} config={config}>
-      <div data-testid="textarea">
-        {config.label ? (
-          <label
-            htmlFor={fieldId}
-            data-snapshot-id={`${rootId}-label`}
-            className={labelSurface.className}
-            style={labelSurface.style}
-          >
-            {config.label}
-            {config.required ? (
-              <span
-                data-snapshot-id={`${rootId}-required-indicator`}
-                className={requiredIndicatorSurface.className}
-                style={requiredIndicatorSurface.style}
-              >
-                *
-              </span>
-            ) : null}
-          </label>
-        ) : null}
+    <div
+      data-snapshot-component="textarea"
+      data-testid="textarea"
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
+      }}
+    >
+      {config.label ? (
+        <label
+          htmlFor={fieldId}
+          data-snapshot-id={`${rootId}-label`}
+          className={labelSurface.className}
+          style={labelSurface.style}
+        >
+          {config.label}
+          {config.required ? (
+            <span
+              data-snapshot-id={`${rootId}-required-indicator`}
+              className={requiredIndicatorSurface.className}
+              style={requiredIndicatorSurface.style}
+            >
+              *
+            </span>
+          ) : null}
+        </label>
+      ) : null}
 
-        <TextareaControl
-          textareaId={fieldId}
-          value={value}
-          rows={config.rows ?? 3}
-          placeholder={config.placeholder}
-          disabled={resolvedDisabled}
-          readOnly={resolvedReadonly}
-          maxLength={config.maxLength}
-          required={config.required}
-          resize={config.resize ?? "vertical"}
-          ariaInvalid={Boolean(errorMessage)}
-          ariaDescribedBy={helperId}
-          ariaLabel={config.label ?? config.placeholder}
-          onChangeText={handleChange}
-          onBlur={handleBlur}
-          surfaceId={`${rootId}-control`}
-          surfaceConfig={config.slots?.control}
-          activeStates={resolvedStates}
-        />
+      <TextareaControl
+        textareaId={fieldId}
+        value={value}
+        rows={config.rows ?? 3}
+        placeholder={config.placeholder}
+        disabled={resolvedDisabled}
+        readOnly={resolvedReadonly}
+        maxLength={config.maxLength}
+        required={config.required}
+        resize={config.resize ?? "vertical"}
+        ariaInvalid={Boolean(errorMessage)}
+        ariaDescribedBy={helperId}
+        ariaLabel={config.label ?? config.placeholder}
+        onChangeText={handleChange}
+        onBlur={handleBlur}
+        surfaceId={`${rootId}-control`}
+        surfaceConfig={config.slots?.control}
+        activeStates={resolvedStates}
+      />
 
-        {(config.helperText || errorMessage || config.maxLength !== undefined) ? (
-          <div
-            data-snapshot-id={`${rootId}-meta`}
-            className={metaSurface.className}
-            style={metaSurface.style}
-          >
-            {config.helperText || errorMessage ? (
-              <span
-                id={helperId}
-                role={errorMessage ? "alert" : undefined}
-                data-snapshot-id={`${rootId}-helper`}
-                className={helperSurface.className}
-                style={helperSurface.style}
-              >
-                {errorMessage ?? config.helperText}
-              </span>
-            ) : null}
-            {config.maxLength !== undefined ? (
-              <span
-                data-snapshot-id={`${rootId}-counter`}
-                className={counterSurface.className}
-                style={counterSurface.style}
-              >
-                {value.length}/{config.maxLength}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
+      {(config.helperText || errorMessage || config.maxLength !== undefined) ? (
+        <div
+          data-snapshot-id={`${rootId}-meta`}
+          className={metaSurface.className}
+          style={metaSurface.style}
+        >
+          {config.helperText || errorMessage ? (
+            <span
+              id={helperId}
+              role={errorMessage ? "alert" : undefined}
+              data-snapshot-id={`${rootId}-helper`}
+              className={helperSurface.className}
+              style={helperSurface.style}
+            >
+              {errorMessage ?? config.helperText}
+            </span>
+          ) : null}
+          {config.maxLength !== undefined ? (
+            <span
+              data-snapshot-id={`${rootId}-counter`}
+              className={counterSurface.className}
+              style={counterSurface.style}
+            >
+              {value.length}/{config.maxLength}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
 
-        <SurfaceStyles css={labelSurface.scopedCss} />
-        <SurfaceStyles css={requiredIndicatorSurface.scopedCss} />
-        <SurfaceStyles css={helperSurface.scopedCss} />
-        <SurfaceStyles css={metaSurface.scopedCss} />
-        <SurfaceStyles css={counterSurface.scopedCss} />
-      </div>
-    </ComponentWrapper>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={labelSurface.scopedCss} />
+      <SurfaceStyles css={requiredIndicatorSurface.scopedCss} />
+      <SurfaceStyles css={helperSurface.scopedCss} />
+      <SurfaceStyles css={metaSurface.scopedCss} />
+      <SurfaceStyles css={counterSurface.scopedCss} />
+    </div>
   );
 }

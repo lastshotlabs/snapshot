@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { baseComponentConfigSchema } from "../../../manifest/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 /** Schema for optimized image components rendered through Snapshot's image route. */
-export const snapshotImageSchema = baseComponentConfigSchema.extend({
+export const snapshotImageSchema = extendComponentSchema({
   type: z.literal("image"),
   src: z.string().min(1),
   width: z.number().int().positive().max(4096),
@@ -17,4 +17,5 @@ export const snapshotImageSchema = baseComponentConfigSchema.extend({
   loading: z.enum(["lazy", "eager"]).optional(),
   aspectRatio: z.string().optional(),
   alt: z.string(),
-});
+  slots: slotsSchema(["root", "placeholder", "image"]).optional(),
+}).strict();

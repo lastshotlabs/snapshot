@@ -2,6 +2,8 @@
 
 import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ContainerConfig } from "./types";
 
 const MAX_WIDTH_MAP: Record<string, string> = {
@@ -25,32 +27,57 @@ const PADDING_MAP: Record<string, string> = {
 };
 
 export function Container({ config }: { config: ContainerConfig }) {
-  const style: CSSProperties = {
-    width: "100%",
-    maxWidth:
-      typeof config.maxWidth === "number"
-        ? `${config.maxWidth}px`
-        : MAX_WIDTH_MAP[config.maxWidth ?? "xl"],
-    paddingInline: PADDING_MAP[config.padding ?? "md"],
-    marginInline: config.center === false ? undefined : "auto",
-  };
+  const rootId = config.id ?? "container";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      width: "100%",
+      maxWidth:
+        typeof config.maxWidth === "number"
+          ? `${config.maxWidth}px`
+          : MAX_WIDTH_MAP[config.maxWidth ?? "xl"],
+      style: {
+        paddingInline: PADDING_MAP[config.padding ?? "md"],
+        marginInline: config.center === false ? undefined : "auto",
+      },
+    },
+    componentSurface: config.slots?.root,
+  });
+  const itemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-item`,
+    implementationBase: {},
+    componentSurface: config.slots?.item,
+  });
 
   return (
-    <div style={style}>
+    <div
+      data-snapshot-component="container"
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
+      }}
+    >
       {config.children.map((child, index) => (
         <div
           key={child.id ?? `container-child-${index}`}
+          data-snapshot-id={`${rootId}-item`}
+          className={itemSurface.className}
           style={
             typeof config.animation?.stagger === "number"
               ? ({
+                  ...(itemSurface.style ?? {}),
                   ["--sn-stagger-index" as "--sn-stagger-index"]: index,
                 } as CSSProperties)
-              : undefined
+              : itemSurface.style
           }
         >
           <ComponentRenderer config={child} />
         </div>
       ))}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={itemSurface.scopedCss} />
     </div>
   );
 }

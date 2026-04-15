@@ -1,6 +1,7 @@
 'use client';
 
-import type { CSSProperties } from "react";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SpacerConfig } from "./types";
 
 const SIZE_MAP: Record<string, string> = {
@@ -18,20 +19,41 @@ export function Spacer({ config }: { config: SpacerConfig }) {
     (config.size ? SIZE_MAP[config.size] : undefined) ??
     config.size ??
     "var(--sn-spacing-md, 1rem)";
-  const style: CSSProperties =
-    config.axis === "horizontal"
-      ? {
-          width: size,
-          minWidth: size,
-          flexGrow: config.flex ? 1 : 0,
-          flexShrink: 0,
-        }
-      : {
-          height: size,
-          minHeight: size,
-          flexGrow: config.flex ? 1 : 0,
-          flexShrink: 0,
-        };
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: config.id,
+    implementationBase:
+      config.axis === "horizontal"
+        ? {
+            style: {
+              width: size,
+              minWidth: size,
+              flexGrow: config.flex ? 1 : 0,
+              flexShrink: 0,
+            },
+          }
+        : {
+            style: {
+              height: size,
+              minHeight: size,
+              flexGrow: config.flex ? 1 : 0,
+              flexShrink: 0,
+            },
+          },
+    componentSurface: config.slots?.root,
+  });
 
-  return <div aria-hidden="true" style={style} />;
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        data-snapshot-id={config.id}
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        style={{
+          ...(rootSurface.style ?? {}),
+          ...(config.style ?? {}),
+        }}
+      />
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </>
+  );
 }

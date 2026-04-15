@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 /**
  * Zod config schema for the Skeleton component.
@@ -16,8 +17,7 @@ import { z } from "zod";
  * }
  * ```
  */
-export const skeletonConfigSchema = z
-  .object({
+export const skeletonConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("skeleton"),
     /** Shape variant. Default: "text". */
@@ -30,14 +30,6 @@ export const skeletonConfigSchema = z
     lines: z.number().int().min(1).optional(),
     /** Enable pulse animation. Default: true. */
     animated: z.boolean().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), z.object({ from: z.string() })]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
+    slots: slotsSchema(["root", "line", "shape", "title", "body"]).optional(),
   })
   .strict();

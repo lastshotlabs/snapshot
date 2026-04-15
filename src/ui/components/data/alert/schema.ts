@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -19,8 +20,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const alertConfigSchema = z
-  .object({
+export const alertConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("alert"),
     /** Alert title. Supports FromRef for dynamic text. */
@@ -39,14 +39,14 @@ export const alertConfigSchema = z
     action: actionSchema.optional(),
     /** Label for the action button. */
     actionLabel: z.string().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
+    slots: slotsSchema([
+      "root",
+      "icon",
+      "content",
+      "title",
+      "description",
+      "action",
+      "dismiss",
+    ]).optional(),
   })
   .strict();

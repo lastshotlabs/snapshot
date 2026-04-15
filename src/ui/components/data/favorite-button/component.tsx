@@ -1,36 +1,20 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
 import type { FavoriteButtonConfig } from "./types";
 
-/** Icon sizes per size variant (px). */
 const SIZE_MAP = {
-  sm: 16,
-  md: 20,
-  lg: 24,
+  sm: { button: "sm" as const, icon: 16 },
+  md: { button: "md" as const, icon: 20 },
+  lg: { button: "lg" as const, icon: 24 },
 } as const;
 
-/**
- * FavoriteButton component — a config-driven star toggle for marking favorites.
- *
- * Renders a star icon that toggles between active (filled/warning color) and
- * inactive (muted foreground) states. Dispatches an optional action on toggle
- * and publishes its active state.
- *
- * @param props - Component props containing the favorite button configuration
- *
- * @example
- * ```json
- * {
- *   "type": "favorite-button",
- *   "active": false,
- *   "size": "md"
- * }
- * ```
- */
 export function FavoriteButton({ config }: { config: FavoriteButtonConfig }) {
   const resolvedActive = useSubscribe(config.active ?? false) as boolean;
   const visible = useSubscribe(config.visible ?? true);
@@ -39,65 +23,71 @@ export function FavoriteButton({ config }: { config: FavoriteButtonConfig }) {
 
   const [active, setActive] = useState(resolvedActive);
 
-  // Sync with external from-ref changes
   useEffect(() => {
     setActive(resolvedActive);
   }, [resolvedActive]);
 
-  // Publish state
   useEffect(() => {
-    if (publish) {
-      publish({ active });
-    }
+    publish?.({ active });
   }, [publish, active]);
 
-  if (visible === false) return null;
+  if (visible === false) {
+    return null;
+  }
 
-  const size = config.size ?? "md";
-  const iconSize = SIZE_MAP[size];
-
-  const handleToggle = () => {
-    const next = !active;
-    setActive(next);
-    if (config.toggleAction) {
-      void execute(config.toggleAction as Parameters<typeof execute>[0]);
-    }
-  };
+  const size = SIZE_MAP[config.size ?? "md"];
+  const rootId = config.id ?? "favorite-button";
+  const states = active ? (["selected", "active"] as const) : [];
+  const iconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-icon`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: active
+        ? "var(--sn-color-warning, #f59e0b)"
+        : "var(--sn-color-muted-foreground, #6b7280)",
+    },
+    componentSurface: config.slots?.icon,
+    activeStates: [...states],
+  });
 
   return (
     <div
       data-snapshot-component="favorite-button"
+      className={config.className}
       style={config.style as React.CSSProperties}
     >
-      <style>{`
-[data-snapshot-component="favorite-button"] button:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
-[data-snapshot-component="favorite-button"] button:focus { outline: none; }
-[data-snapshot-component="favorite-button"] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-      `}</style>
-      <button
-        data-testid="favorite-button"
-        data-active={active}
-        className={config.className}
-        onClick={handleToggle}
-        aria-label={active ? "Remove from favorites" : "Add to favorites"}
-        aria-pressed={active}
+      <ButtonControl
+        variant="ghost"
+        size={size.button}
+        onClick={() => {
+          const next = !active;
+          setActive(next);
+          if (config.toggleAction) {
+            void execute(config.toggleAction as Parameters<typeof execute>[0]);
+          }
+        }}
+        surfaceId={rootId}
+        surfaceConfig={config.slots?.root}
+        activeStates={[...states]}
+        ariaLabel={active ? "Remove from favorites" : "Add to favorites"}
+        ariaPressed={active}
+        testId="favorite-button"
         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
           padding: "var(--sn-spacing-xs, 0.25rem)",
-          borderRadius: "var(--sn-radius-sm, 0.25rem)",
-          color: active
-            ? "var(--sn-color-warning, #f59e0b)"
-            : "var(--sn-color-muted-foreground, #6b7280)",
-          transition: `color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)`,
         }}
       >
-        <Icon name="star" size={iconSize} />
-      </button>
+        <span
+          data-snapshot-id={`${rootId}-icon`}
+          data-active={active}
+          className={iconSurface.className}
+          style={iconSurface.style}
+        >
+          <Icon name="star" size={size.icon} />
+        </span>
+      </ButtonControl>
+      <SurfaceStyles css={iconSurface.scopedCss} />
     </div>
   );
 }

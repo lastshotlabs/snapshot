@@ -1,63 +1,91 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
 import type { ErrorPageConfig } from "./types";
 
-/**
- * Default error feedback shown when manifest work fails.
- */
 export function DefaultError({ config }: { config: ErrorPageConfig }) {
-  return (
-    <div
-      role="alert"
-      className={config.className}
-      data-snapshot-feedback="error"
-      style={{
-        display: "grid",
-        gap: "var(--sn-spacing-md, 1rem)",
+  const rootId = config.id ?? "error-page";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "grid",
+      gap: "var(--sn-spacing-md, 1rem)",
+      style: {
         padding: "var(--sn-spacing-xl, 2rem)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
         border: "1px solid var(--sn-color-border, #e2e8f0)",
         background: "var(--sn-color-card, #ffffff)",
         color: "var(--sn-color-foreground, #0f172a)",
-        ...(config.style as CSSProperties),
+      },
+    },
+    componentSurface: config.slots?.root,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: {
+      fontSize: "xl",
+      fontWeight: "semibold",
+      style: {
+        margin: 0,
+      },
+    },
+    componentSurface: config.slots?.title,
+  });
+  const descriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-description`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #64748b)",
+      style: {
+        margin: "var(--sn-spacing-xs, 0.25rem) 0 0",
+      },
+    },
+    componentSurface: config.slots?.description,
+  });
+
+  return (
+    <div
+      role="alert"
+      data-snapshot-feedback="error"
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
       }}
     >
       <div>
         <h2
-          style={{
-            margin: 0,
-            fontSize: "var(--sn-font-size-xl, 1.25rem)",
-            fontWeight: "var(--sn-font-weight-semibold, 600)",
-          }}
+          data-snapshot-id={`${rootId}-title`}
+          className={titleSurface.className}
+          style={titleSurface.style}
         >
           {config.title ?? "Something went wrong"}
         </h2>
         <p
-          style={{
-            margin: "var(--sn-spacing-xs, 0.25rem) 0 0",
-            color: "var(--sn-color-muted-foreground, #64748b)",
-          }}
+          data-snapshot-id={`${rootId}-description`}
+          className={descriptionSurface.className}
+          style={descriptionSurface.style}
         >
           {config.description ?? "Please try again."}
         </p>
       </div>
       {config.showRetry ? (
-        <button
+        <ButtonControl
           type="button"
+          variant="default"
+          size="md"
           onClick={() => window.location.reload()}
-          style={{
-            alignSelf: "start",
-            border: 0,
-            borderRadius: "var(--sn-radius-md, 0.5rem)",
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
-            background: "var(--sn-color-primary, #0f172a)",
-            color: "var(--sn-color-primary-foreground, #ffffff)",
-          }}
+          surfaceId={`${rootId}-action`}
+          surfaceConfig={config.slots?.action}
+          style={{ alignSelf: "start" }}
         >
           {config.retryLabel ?? "Try again"}
-        </button>
+        </ButtonControl>
       ) : null}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={descriptionSurface.scopedCss} />
     </div>
   );
 }

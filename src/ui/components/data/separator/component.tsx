@@ -2,124 +2,149 @@
 
 import { useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SeparatorConfig } from "./types";
 
-/**
- * Separator component — a simple visual divider line (horizontal or vertical).
- *
- * Renders a thin line using the border color token. When a label is provided,
- * it renders centered text flanked by lines on each side (common for
- * "or" dividers, date separators, etc.).
- *
- * @param props.config - The separator config from the manifest
- *
- * @example
- * ```json
- * { "type": "separator" }
- * ```
- *
- * @example
- * ```json
- * { "type": "separator", "label": "Or continue with", "orientation": "horizontal" }
- * ```
- */
 export function Separator({ config }: { config: SeparatorConfig }) {
   const label = useSubscribe(config.label ?? undefined) as string | undefined;
   const visible = useSubscribe(config.visible ?? true);
   const publish = usePublish(config.id);
 
   useEffect(() => {
-    if (publish) {
-      publish({ orientation: config.orientation ?? "horizontal" });
-    }
+    publish?.({ orientation: config.orientation ?? "horizontal" });
   }, [publish, config.orientation]);
 
-  if (visible === false) return null;
+  if (visible === false) {
+    return null;
+  }
 
   const orientation = config.orientation ?? "horizontal";
   const isVertical = orientation === "vertical";
+  const rootId = config.id ?? "separator";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: isVertical
+      ? {
+          display: "inline-block",
+          style: {
+            width: "var(--sn-border-thin, 1px)",
+            alignSelf: "stretch",
+            minHeight: "var(--sn-spacing-lg, 1.5rem)",
+            backgroundColor: "var(--sn-color-border, #e5e7eb)",
+            flexShrink: 0,
+          },
+        }
+      : label
+        ? {
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-sm, 0.5rem)",
+            width: "100%",
+          }
+        : {
+            width: "100%",
+            style: {
+              height: "var(--sn-border-thin, 1px)",
+              backgroundColor: "var(--sn-color-border, #e5e7eb)",
+            },
+          },
+    componentSurface: config.slots?.root,
+  });
+  const lineSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-line`,
+    implementationBase: {
+      flex: "1",
+      style: {
+        height: "var(--sn-border-thin, 1px)",
+        backgroundColor: "var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    componentSurface: config.slots?.line,
+  });
+  const labelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-label`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      fontSize: "xs",
+      fontWeight: "medium",
+      style: {
+        whiteSpace: "nowrap",
+        textTransform: "uppercase",
+        letterSpacing: "var(--sn-tracking-wide, 0.05em)",
+      },
+    },
+    componentSurface: config.slots?.label,
+  });
 
-  // Vertical separator — simple line
   if (isVertical) {
     return (
-      <div
-        data-snapshot-component="separator"
-        role="separator"
-        aria-orientation="vertical"
-        className={config.className}
-        style={{
-          display: "inline-block",
-          width: "var(--sn-border-thin, 1px)",
-          alignSelf: "stretch",
-          minHeight: "var(--sn-spacing-lg, 1.5rem)",
-          backgroundColor: "var(--sn-color-border, #e5e7eb)",
-          flexShrink: 0,
-          ...(config.style as React.CSSProperties),
-        }}
-      />
+      <>
+        <div
+          data-snapshot-component="separator"
+          role="separator"
+          aria-orientation="vertical"
+          className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+          style={{
+            ...(rootSurface.style ?? {}),
+            ...(config.style ?? {}),
+          }}
+        />
+        <SurfaceStyles css={rootSurface.scopedCss} />
+      </>
     );
   }
 
-  // Horizontal separator with label
   if (label) {
     return (
       <div
         data-snapshot-component="separator"
         role="separator"
         aria-orientation="horizontal"
-        className={config.className}
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--sn-spacing-sm, 0.5rem)",
-          width: "100%",
-          ...(config.style as React.CSSProperties),
+          ...(rootSurface.style ?? {}),
+          ...(config.style ?? {}),
         }}
       >
         <div
-          style={{
-            flex: 1,
-            height: "var(--sn-border-thin, 1px)",
-            backgroundColor: "var(--sn-color-border, #e5e7eb)",
-          }}
+          data-snapshot-id={`${rootId}-line`}
+          className={lineSurface.className}
+          style={lineSurface.style}
         />
         <span
           data-snapshot-separator-label=""
-          style={{
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            fontWeight: "var(--sn-font-weight-medium, 500)" as string,
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            whiteSpace: "nowrap",
-            textTransform: "uppercase",
-            letterSpacing: "var(--sn-tracking-wide, 0.05em)",
-          }}
+          data-snapshot-id={`${rootId}-label`}
+          className={labelSurface.className}
+          style={labelSurface.style}
         >
           {label}
         </span>
         <div
-          style={{
-            flex: 1,
-            height: "var(--sn-border-thin, 1px)",
-            backgroundColor: "var(--sn-color-border, #e5e7eb)",
-          }}
+          data-snapshot-id={`${rootId}-line`}
+          className={lineSurface.className}
+          style={lineSurface.style}
         />
+        <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={lineSurface.scopedCss} />
+        <SurfaceStyles css={labelSurface.scopedCss} />
       </div>
     );
   }
 
-  // Horizontal separator without label — simple line
   return (
-    <div
-      data-snapshot-component="separator"
-      role="separator"
-      aria-orientation="horizontal"
-      className={config.className}
-      style={{
-        width: "100%",
-        height: "var(--sn-border-thin, 1px)",
-        backgroundColor: "var(--sn-color-border, #e5e7eb)",
-        ...(config.style as React.CSSProperties),
-      }}
-    />
+    <>
+      <div
+        data-snapshot-component="separator"
+        role="separator"
+        aria-orientation="horizontal"
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        style={{
+          ...(rootSurface.style ?? {}),
+          ...(config.style ?? {}),
+        }}
+      />
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </>
   );
 }

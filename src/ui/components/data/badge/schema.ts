@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -17,8 +18,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const badgeConfigSchema = z
-  .object({
+export const badgeConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("badge"),
     /** Badge display text. Supports FromRef for dynamic text. */
@@ -44,14 +44,6 @@ export const badgeConfigSchema = z
     icon: z.string().optional(),
     /** Use pill shape (fully rounded). Default: true. */
     rounded: z.boolean().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
+    slots: slotsSchema(["root", "dot", "icon", "label"]).optional(),
   })
   .strict();

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { componentConfigSchema } from "../../../manifest/schema";
-import { extendComponentSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 export const containerConfigSchema = extendComponentSchema({
   type: z.literal("container"),
@@ -13,4 +13,5 @@ export const containerConfigSchema = extendComponentSchema({
   padding: z.enum(["none", "xs", "sm", "md", "lg", "xl"]).default("md"),
   center: z.boolean().default(true),
   children: z.array(componentConfigSchema).min(1),
+  slots: slotsSchema(["root", "item"]).optional(),
 }).strict();

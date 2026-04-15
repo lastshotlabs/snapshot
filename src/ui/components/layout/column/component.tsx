@@ -3,6 +3,8 @@
 import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { useResponsiveValue } from "../../../hooks/use-breakpoint";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ColumnConfig } from "./types";
 
 const GAP_MAP: Record<string, string> = {
@@ -31,45 +33,60 @@ const JUSTIFY_MAP: Record<string, string> = {
   around: "space-around",
 };
 
-/**
- * Column layout primitive for vertical composition with the same mental model
- * as `row`.
- */
 export function Column({ config }: { config: ColumnConfig }) {
   const gap = useResponsiveValue(config.gap);
   const resolvedGap = gap ? GAP_MAP[gap] ?? gap : undefined;
+  const rootId = config.id ?? "column";
+
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+      gap: resolvedGap,
+      alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
+      justifyContent: config.justify ? JUSTIFY_MAP[config.justify] : undefined,
+      overflow: config.overflow,
+      maxHeight: config.maxHeight,
+    },
+    componentSurface: config.slots?.root,
+  });
+  const itemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-item`,
+    implementationBase: {},
+    componentSurface: config.slots?.item,
+  });
 
   return (
     <div
-      className={config.className}
+      data-snapshot-component="column"
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
       style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: resolvedGap,
-        alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
-        justifyContent: config.justify
-          ? JUSTIFY_MAP[config.justify]
-          : undefined,
-        overflow: config.overflow,
-        maxHeight: config.maxHeight,
-        ...(config.style as CSSProperties | undefined),
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
       }}
     >
       {config.children.map((child, index) => (
         <div
           key={child.id ?? `column-child-${index}`}
+          data-snapshot-id={`${rootId}-item`}
+          className={itemSurface.className}
           style={
             typeof config.animation?.stagger === "number"
               ? ({
+                  ...(itemSurface.style ?? {}),
                   ["--sn-stagger-index" as "--sn-stagger-index"]: index,
                 } as CSSProperties)
-              : undefined
+              : itemSurface.style
           }
         >
           <ComponentRenderer config={child} />
         </div>
       ))}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={itemSurface.scopedCss} />
     </div>
   );
 }

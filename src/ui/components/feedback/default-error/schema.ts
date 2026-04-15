@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { slotsSchema } from "../../_base/schema";
 import { feedbackBaseConfigSchema } from "../shared";
 
 /**
@@ -10,6 +11,7 @@ export const errorPageConfigSchema = feedbackBaseConfigSchema.extend({
   description: z.string().optional(),
   showRetry: z.boolean().optional(),
   retryLabel: z.string().optional(),
+  slots: slotsSchema(["root", "title", "description", "action"]).optional(),
 });
 
 /** Config for the default error feedback component. */

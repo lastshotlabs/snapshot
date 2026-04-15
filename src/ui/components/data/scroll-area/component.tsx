@@ -1,9 +1,12 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import React, { useId, useMemo } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ScrollAreaConfig } from "./types";
 
 /**
@@ -23,6 +26,7 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
   const orientation = config.orientation ?? "vertical";
   const maxHeight = config.maxHeight ?? "400px";
   const showScrollbar = config.showScrollbar ?? "auto";
+  const rootId = config.id ?? "scroll-area";
 
   const overflowX =
     orientation === "horizontal" || orientation === "both" ? "auto" : "hidden";
@@ -90,21 +94,43 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
   // Visibility check
   if (visible === false) return null;
 
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      position: "relative",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const viewportSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-viewport`,
+    implementationBase: {
+      style: {
+        maxHeight,
+        maxWidth: config.maxWidth,
+        overflowX,
+        overflowY,
+      },
+    },
+    componentSurface: config.slots?.viewport,
+  });
+
   return (
     <div
       data-snapshot-component="scroll-area"
-      className={config.className}
-      style={{ position: "relative" }}
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
+      }}
     >
       <style dangerouslySetInnerHTML={{ __html: scrollbarStyles }} />
       <div
-        className={scopeClass}
+        data-snapshot-id={`${rootId}-viewport`}
+        className={[scopeClass, viewportSurface.className].filter(Boolean).join(" ")}
         style={{
-          maxHeight,
-          maxWidth: config.maxWidth,
-          overflowX,
-          overflowY,
-          ...config.style,
+          ...(viewportSurface.style ?? {}),
         }}
       >
         {content.map((child, i) => (
@@ -114,6 +140,8 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
           />
         ))}
       </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={viewportSurface.scopedCss} />
     </div>
   );
 }

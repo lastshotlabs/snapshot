@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
@@ -23,8 +24,7 @@ import { dataSourceSchema, fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const avatarGroupConfigSchema = z
-  .object({
+export const avatarGroupConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("avatar-group"),
     /** Static avatar list. */
@@ -50,14 +50,5 @@ export const avatarGroupConfigSchema = z
     size: z.enum(["sm", "md", "lg"]).optional(),
     /** Overlap amount in pixels. Negative margin between avatars. Default: auto. */
     overlap: z.number().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-  })
-  .strict();
+    slots: slotsSchema(["root", "item", "image", "initials", "overflow"]).optional(),
+  }).strict();

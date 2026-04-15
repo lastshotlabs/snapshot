@@ -1,7 +1,10 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useMemo } from "react";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { useSubscribe } from "../../../context/hooks";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { getInitials } from "../../_base/utils";
 import type { AvatarGroupConfig } from "./types";
@@ -71,7 +74,6 @@ function nameToColorPair(name: string): ColorPair {
  */
 export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
   const visible = useSubscribe(config.visible ?? true);
-  const publish = usePublish(config.id);
 
   const dataResult = useComponentData(config.data ?? "");
 
@@ -104,59 +106,121 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
 
   const displayed = avatars.slice(0, max);
   const overflow = avatars.length - max;
+  const rootId = config.id ?? "avatar-group";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const itemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-item`,
+    implementationBase: {
+      overflow: "hidden",
+      style: {
+        width: px,
+        height: px,
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        border:
+          "var(--sn-border-default, 2px) solid var(--sn-color-card, #ffffff)",
+        flexShrink: 0,
+        position: "relative",
+      },
+    },
+    componentSurface: config.slots?.item,
+  });
+  const imageSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-image`,
+    implementationBase: {
+      display: "block",
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      },
+    },
+    componentSurface: config.slots?.image,
+  });
+  const initialsSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-initials`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      style: {
+        width: "100%",
+        height: "100%",
+        fontSize: FONT_SIZE_MAP[size],
+        fontWeight: "var(--sn-font-weight-semibold, 600)",
+      },
+    },
+    componentSurface: config.slots?.initials,
+  });
+  const overflowSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-overflow`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      style: {
+        width: px,
+        height: px,
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        border:
+          "var(--sn-border-default, 2px) solid var(--sn-color-card, #ffffff)",
+        backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+        color: "var(--sn-color-muted-foreground, #6b7280)",
+        fontSize: FONT_SIZE_MAP[size],
+        fontWeight: "var(--sn-font-weight-semibold, 600)",
+        flexShrink: 0,
+        position: "relative",
+      },
+    },
+    componentSurface: config.slots?.overflow,
+  });
 
   return (
     <div
       data-snapshot-component="avatar-group"
+      data-snapshot-id={rootId}
       data-testid="avatar-group"
-      className={config.className}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        ...((config.style as React.CSSProperties) ?? {}),
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
       }}
     >
       {displayed.map((avatar, i) => (
         <div
           key={`${avatar.name}-${i}`}
+          data-snapshot-id={`${rootId}-item`}
           title={avatar.name}
+          className={itemSurface.className}
           style={{
-            width: px,
-            height: px,
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            border:
-              "var(--sn-border-default, 2px) solid var(--sn-color-card, #ffffff)",
-            overflow: "hidden",
-            flexShrink: 0,
+            ...(itemSurface.style ?? {}),
             marginLeft: i > 0 ? `-${overlap}px` : undefined,
-            position: "relative",
             zIndex: displayed.length - i,
           }}
         >
           {avatar.src ? (
             <img
+              data-snapshot-id={`${rootId}-image`}
+              className={imageSurface.className}
               src={avatar.src}
               alt={avatar.name}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
+              style={imageSurface.style}
             />
           ) : (
             <div
+              data-snapshot-id={`${rootId}-initials`}
+              className={initialsSurface.className}
               style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                ...(initialsSurface.style ?? {}),
                 backgroundColor: nameToColorPair(avatar.name).bg,
                 color: nameToColorPair(avatar.name).fg,
-                fontSize: FONT_SIZE_MAP[size],
-                fontWeight:
-                  "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
               }}
             >
               {getInitials(avatar.name) || "?"}
@@ -168,31 +232,24 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
       {/* +N overflow */}
       {overflow > 0 && (
         <div
+          data-snapshot-id={`${rootId}-overflow`}
           data-testid="avatar-overflow"
           title={`${overflow} more`}
+          className={overflowSurface.className}
           style={{
-            width: px,
-            height: px,
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            border:
-              "var(--sn-border-default, 2px) solid var(--sn-color-card, #ffffff)",
-            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: FONT_SIZE_MAP[size],
-            fontWeight:
-              "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
+            ...(overflowSurface.style ?? {}),
             marginLeft: `-${overlap}px`,
-            flexShrink: 0,
-            position: "relative",
             zIndex: 0,
           }}
         >
           +{overflow}
         </div>
       )}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={itemSurface.scopedCss} />
+      <SurfaceStyles css={imageSurface.scopedCss} />
+      <SurfaceStyles css={initialsSurface.scopedCss} />
+      <SurfaceStyles css={overflowSurface.scopedCss} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 /**
  * Zod config schema for the EmptyState component.
@@ -19,8 +20,7 @@ import { actionSchema } from "../../../actions/types";
  * }
  * ```
  */
-export const emptyStateConfigSchema = z
-  .object({
+export const emptyStateConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("empty-state"),
     /** Heading text. */
@@ -37,14 +37,12 @@ export const emptyStateConfigSchema = z
     size: z.enum(["sm", "md", "lg"]).optional(),
     /** Icon color token name (e.g., "primary", "info"). */
     iconColor: z.string().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), z.object({ from: z.string() })]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
+    slots: slotsSchema([
+      "root",
+      "icon",
+      "title",
+      "description",
+      "action",
+    ]).optional(),
   })
   .strict();

@@ -172,10 +172,11 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
         },
       }),
     );
-    void execute({
-      type: "navigate-external",
-      to: provider.url,
-    } as never);
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = provider.url;
+    document.body.appendChild(form);
+    form.submit();
   }, [execute, hasProviders, providerMode, resolvedProviders]);
 
   if (!hasProviders) {
@@ -262,12 +263,13 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
                 ariaLabel={provider.label}
                 ariaDescribedBy={provider.description ? descriptionId : undefined}
                 ariaHasPopup={false}
-                onClick={() =>
-                  void execute({
-                    type: "navigate-external",
-                    to: provider.url,
-                  } as never)
-                }
+                onClick={() => {
+                  const form = document.createElement("form");
+                  form.method = "POST";
+                  form.action = provider.url;
+                  document.body.appendChild(form);
+                  form.submit();
+                }}
               >
                 <span
                   data-snapshot-id={`${rootId}-provider-icon-${index}`}

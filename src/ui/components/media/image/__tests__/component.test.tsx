@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { cleanup, render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { SnapshotImage } from "../component";
 import type { SnapshotImageConfig } from "../types";
@@ -20,6 +20,16 @@ function baseConfig(
     ...overrides,
   };
 }
+
+beforeEach(() => {
+  document.head.innerHTML = "";
+});
+
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+  document.head.innerHTML = "";
+});
 
 describe("SnapshotImage component", () => {
   it("renders an img element", () => {

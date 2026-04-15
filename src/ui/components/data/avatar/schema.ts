@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -18,8 +19,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const avatarConfigSchema = z
-  .object({
+export const avatarConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("avatar"),
     /** Image URL. Supports FromRef for dynamic sources. */
@@ -38,14 +38,12 @@ export const avatarConfigSchema = z
     status: z.enum(["online", "offline", "busy", "away"]).optional(),
     /** Background color for initials. Default: "primary". */
     color: z.enum(["primary", "secondary", "muted", "accent"]).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-  })
-  .strict();
+    slots: slotsSchema([
+      "root",
+      "image",
+      "initials",
+      "icon",
+      "fallback",
+      "status",
+    ]).optional(),
+  }).strict();

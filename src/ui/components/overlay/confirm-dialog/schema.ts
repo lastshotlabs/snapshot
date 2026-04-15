@@ -2,6 +2,9 @@ import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { fromRefSchema } from "../../_base/types";
 import { workflowDefinitionSchema } from "../../../workflows/schema";
+import { extendComponentSchema } from "../../_base/schema";
+import { modalSlotNames } from "../modal/schema";
+import { slotsSchema } from "../../_base/schema";
 
 const footerVariantSchema = z.enum([
   "default",
@@ -13,10 +16,8 @@ const footerVariantSchema = z.enum([
 /**
  * Overlay alias schema for manifest-driven confirmation dialogs.
  */
-export const confirmDialogConfigSchema = z
-  .object({
+export const confirmDialogConfigSchema = extendComponentSchema({
     type: z.literal("confirm-dialog"),
-    id: z.string().optional(),
     title: z.union([z.string(), fromRefSchema]).optional(),
     description: z.union([z.string(), fromRefSchema]).optional(),
     size: z.enum(["sm", "md", "lg", "xl", "full"]).optional(),
@@ -34,7 +35,5 @@ export const confirmDialogConfigSchema = z
     trapFocus: z.boolean().default(true),
     initialFocus: z.string().optional(),
     returnFocus: z.boolean().default(true),
-    className: z.string().optional(),
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-  })
-  .strict();
+    slots: slotsSchema(modalSlotNames).optional(),
+  }).strict();

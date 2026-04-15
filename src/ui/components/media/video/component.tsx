@@ -1,38 +1,40 @@
 'use client';
 
 import type { CSSProperties } from "react";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import type { VideoSchemaConfig } from "./types";
 
-export interface VideoConfig {
-  type: "video";
-  id?: string;
-  src: string;
-  poster?: string;
-  controls?: boolean;
-  autoPlay?: boolean;
-  loop?: boolean;
-  muted?: boolean;
-  className?: string;
-  style?: Record<string, string | number>;
-}
+export function Video({ config }: { config: VideoSchemaConfig }) {
+  const rootId = config.id ?? "video";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      width: "100%",
+      borderRadius: "lg",
+    },
+    componentSurface: config.slots?.root,
+  });
 
-export function Video({ config }: { config: VideoConfig }) {
-  const configStyle = config.style as CSSProperties | undefined;
   return (
-    <video
-      data-snapshot-component="video"
-      className={config.className}
-      src={config.src}
-      poster={config.poster}
-      controls={config.controls !== false}
-      autoPlay={config.autoPlay}
-      loop={config.loop}
-      muted={config.muted ?? config.autoPlay}
-      playsInline
-      style={{
-        width: "100%",
-        borderRadius: "var(--sn-radius-lg, 0.75rem)",
-        ...configStyle,
-      }}
-    />
+    <>
+      <video
+        data-snapshot-component="video"
+        data-snapshot-id={rootId}
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        src={config.src}
+        poster={config.poster}
+        controls={config.controls !== false}
+        autoPlay={config.autoPlay}
+        loop={config.loop}
+        muted={config.muted ?? config.autoPlay}
+        playsInline
+        style={{
+          ...(rootSurface.style ?? {}),
+          ...((config.style as CSSProperties | undefined) ?? {}),
+        }}
+      />
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </>
   );
 }

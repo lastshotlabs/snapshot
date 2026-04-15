@@ -518,6 +518,7 @@ export const headingConfigSchema = baseComponentConfigSchema.extend({
     .optional(),
   align: z.enum(["left", "center", "right"]).optional(),
   fallback: z.string().optional(),
+  slots: slotsSchema(["root"]).optional(),
 });
 
 const eventActionValueSchema = z.union([
@@ -1732,6 +1733,7 @@ export const outletComponentSchema = baseComponentConfigSchema
   .extend({
     type: z.literal("outlet"),
     fallback: z.array(componentConfigSchema).optional(),
+    slots: slotsSchema(["root"]).optional(),
   })
   .strict();
 

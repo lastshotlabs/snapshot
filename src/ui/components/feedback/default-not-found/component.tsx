@@ -1,25 +1,64 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { NotFoundConfig } from "./types";
 
-/**
- * Default not-found feedback shown when no route matches.
- */
 export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
-  return (
-    <main
-      aria-labelledby="snapshot-not-found-title"
-      className={config.className}
-      data-snapshot-feedback="not-found"
-      style={{
-        minHeight: "100vh",
-        display: "grid",
+  const rootId = config.id ?? "not-found";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      minHeight: "100vh",
+      display: "grid",
+      style: {
         placeItems: "center",
         padding: "var(--sn-spacing-2xl, 3rem)",
         background: "var(--sn-color-background, #f8fafc)",
         color: "var(--sn-color-foreground, #0f172a)",
-        ...(config.style as CSSProperties),
+      },
+    },
+    componentSurface: config.slots?.root,
+  });
+  const eyebrowSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-eyebrow`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #64748b)",
+      fontSize: "xs",
+      style: {
+        margin: 0,
+        textTransform: "uppercase",
+        letterSpacing: "0.12em",
+      },
+    },
+    componentSurface: config.slots?.eyebrow,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: {
+      fontSize: "4xl",
+      fontWeight: "bold",
+      style: { margin: 0 },
+    },
+    componentSurface: config.slots?.title,
+  });
+  const descriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-description`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #64748b)",
+      style: { margin: 0 },
+    },
+    componentSurface: config.slots?.description,
+  });
+
+  return (
+    <main
+      aria-labelledby="snapshot-not-found-title"
+      data-snapshot-feedback="not-found"
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
       }}
     >
       <section
@@ -31,35 +70,32 @@ export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
         }}
       >
         <p
-          style={{
-            margin: 0,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--sn-color-muted-foreground, #64748b)",
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-          }}
+          data-snapshot-id={`${rootId}-eyebrow`}
+          className={eyebrowSurface.className}
+          style={eyebrowSurface.style}
         >
           404
         </p>
         <h1
           id="snapshot-not-found-title"
-          style={{
-            margin: 0,
-            fontSize: "var(--sn-font-size-4xl, 2.25rem)",
-            fontWeight: "var(--sn-font-weight-bold, 700)",
-          }}
+          data-snapshot-id={`${rootId}-title`}
+          className={titleSurface.className}
+          style={titleSurface.style}
         >
           {config.title ?? "Page not found"}
         </h1>
         <p
-          style={{
-            margin: 0,
-            color: "var(--sn-color-muted-foreground, #64748b)",
-          }}
+          data-snapshot-id={`${rootId}-description`}
+          className={descriptionSurface.className}
+          style={descriptionSurface.style}
         >
           {config.description ?? "The page you are looking for does not exist."}
         </p>
       </section>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={eyebrowSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={descriptionSurface.scopedCss} />
     </main>
   );
 }

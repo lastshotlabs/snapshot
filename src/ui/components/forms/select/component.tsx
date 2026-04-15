@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useComponentData } from "../../_base/use-component-data";
-import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SelectConfig, SelectControlProps } from "./types";
@@ -191,38 +190,40 @@ export function Select({ config }: { config: SelectConfig }) {
   });
 
   return (
-    <ComponentWrapper type="select" id={config.id} config={config}>
-      <div
-        data-snapshot-id={config.id}
-        className={rootSurface.className}
-        style={rootSurface.style}
+    <div
+      data-snapshot-component="select"
+      data-snapshot-id={config.id}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
+      }}
+    >
+      <SelectControl
+        selectId={config.id}
+        value={value}
+        ariaLabel={placeholder || config.id || "Select"}
+        onChangeValue={setValue}
+        surfaceId={`${config.id ?? "select"}-control`}
+        surfaceConfig={config.slots?.control}
       >
-        <SelectControl
-          selectId={config.id}
-          value={value}
-          ariaLabel={placeholder || config.id || "Select"}
-          onChangeValue={setValue}
-          surfaceId={`${config.id ?? "select"}-control`}
-          surfaceConfig={config.slots?.control}
-        >
-          {placeholder ? (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          ) : null}
-          {isLoading ? (
-            <option value="" disabled>
-              Loading...
-            </option>
-          ) : null}
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </SelectControl>
-        <SurfaceStyles css={rootSurface.scopedCss} />
-      </div>
-    </ComponentWrapper>
+        {placeholder ? (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        ) : null}
+        {isLoading ? (
+          <option value="" disabled>
+            Loading...
+          </option>
+        ) : null}
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </SelectControl>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </div>
   );
 }

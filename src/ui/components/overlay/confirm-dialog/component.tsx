@@ -1,6 +1,8 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/hooks";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ModalComponent } from "../modal";
 import type { ModalConfig } from "../modal";
 import type { ConfirmDialogConfig } from "./types";
@@ -14,6 +16,13 @@ export function ConfirmDialogComponent({
   config: ConfirmDialogConfig;
 }) {
   const description = useSubscribe(config.description ?? "") as string;
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: config.id ?? "confirm-dialog",
+    componentSurface: {
+      ...config,
+      slots: undefined,
+    } as Record<string, unknown>,
+  });
 
   const modalConfig: ModalConfig = {
     type: "modal",
@@ -26,8 +35,11 @@ export function ConfirmDialogComponent({
     trapFocus: config.trapFocus ?? true,
     initialFocus: config.initialFocus,
     returnFocus: config.returnFocus ?? true,
-    className: config.className,
-    style: config.style,
+    className: [config.className, rootSurface.className].filter(Boolean).join(" ") || undefined,
+    style: {
+      ...(rootSurface.style ?? {}),
+      ...((config.style as CSSProperties | undefined) ?? {}),
+    },
     content: description
       ? [
           {
@@ -54,6 +66,7 @@ export function ConfirmDialogComponent({
         },
       ],
     },
+    slots: config.slots as ModalConfig["slots"],
   };
 
   return <ModalComponent config={modalConfig} />;

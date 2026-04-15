@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -14,8 +15,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const typingIndicatorConfigSchema = z
-  .object({
+export const typingIndicatorConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("typing-indicator"),
     /** Users currently typing. Can be a FromRef. */
@@ -32,14 +32,5 @@ export const typingIndicatorConfigSchema = z
       .optional(),
     /** Max users to display before "and N others". Default: 3. */
     maxDisplay: z.number().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-  })
-  .strict();
+    slots: slotsSchema(["root", "dots", "dot", "text"]).optional(),
+  }).strict();

@@ -8,3 +8,4 @@ import type { snapshotImageSchema } from "./schema";
  * component accepts. Never define this type manually.
  */
 export type SnapshotImageConfig = z.infer<typeof snapshotImageSchema>;
+export type SnapshotImageConfigInput = z.input<typeof snapshotImageSchema>;

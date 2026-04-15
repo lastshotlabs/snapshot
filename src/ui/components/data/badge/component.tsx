@@ -1,11 +1,13 @@
 'use client';
 
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import type { CSSProperties } from "react";
 import { useEffect } from "react";
+import { useSubscribe, usePublish } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { BadgeConfig } from "./types";
 
-/** Size → font-size token + padding values. */
 const SIZE_MAP = {
   xs: {
     fontSize: "var(--sn-font-size-xs, 0.625rem)",
@@ -25,20 +27,12 @@ const SIZE_MAP = {
   },
 } as const;
 
-/**
- * Colors where the base token is a near-white/dark background, not a vivid
- * accent.  These need special handling — their `-foreground` companion is
- * the readable text color, not the base value itself.
- */
 const BG_COLORS = new Set(["secondary", "muted", "accent"]);
 
-/**
- * Resolve variant-specific styles for a badge.
- */
 function getVariantStyles(
   variant: "solid" | "soft" | "outline" | "dot",
   color: string,
-): React.CSSProperties {
+): CSSProperties {
   const isBgColor = BG_COLORS.has(color);
 
   switch (variant) {
@@ -61,7 +55,7 @@ function getVariantStyles(
       return isBgColor
         ? {
             backgroundColor: "transparent",
-            border: `var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)`,
+            border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
             color: `var(--sn-color-${color}-foreground)`,
           }
         : {
@@ -77,24 +71,6 @@ function getVariantStyles(
   }
 }
 
-/**
- * Badge component — a config-driven badge/pill for labels, statuses, and counts.
- *
- * Supports solid, soft, outline, and dot variants with semantic color tokens.
- *
- * @param props - Component props containing the badge configuration
- *
- * @example
- * ```json
- * {
- *   "type": "badge",
- *   "text": "Active",
- *   "color": "success",
- *   "variant": "soft",
- *   "size": "md"
- * }
- * ```
- */
 export function Badge({ config }: { config: BadgeConfig }) {
   const resolvedText = useSubscribe(config.text) as string;
   const visible = useSubscribe(config.visible ?? true);
@@ -106,61 +82,110 @@ export function Badge({ config }: { config: BadgeConfig }) {
     }
   }, [publish, resolvedText]);
 
-  if (visible === false) return null;
+  if (visible === false) {
+    return null;
+  }
 
   const color = config.color ?? "primary";
   const variant = config.variant ?? "soft";
   const size = config.size ?? "md";
   const rounded = config.rounded ?? true;
-
   const sizeStyles = SIZE_MAP[size];
   const variantStyles = getVariantStyles(variant, color);
+  const rootId = config.id ?? "badge";
 
-  return (
-    <span
-      data-snapshot-component="badge"
-      data-testid="badge"
-      className={config.className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "var(--sn-spacing-xs, 0.25rem)",
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+      fontWeight: "semibold",
+      lineHeight: "tight",
+      maxWidth: "100%",
+      style: {
         padding: sizeStyles.padding,
         fontSize: sizeStyles.fontSize,
-        fontWeight: "var(--sn-font-weight-semibold, 600)" as string,
-        lineHeight: "var(--sn-leading-tight, 1.25)",
         borderRadius: rounded
           ? "var(--sn-radius-full, 9999px)"
           : "var(--sn-radius-sm, 0.25rem)",
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        maxWidth: "100%",
         ...variantStyles,
-        ...(config.style as React.CSSProperties),
+      },
+    },
+    componentSurface: config.slots?.root,
+  });
+  const dotSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-dot`,
+    implementationBase: {
+      style: {
+        width: "0.5rem",
+        height: "0.5rem",
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        backgroundColor: `var(--sn-color-${color})`,
+        flexShrink: 0,
+      },
+    },
+    componentSurface: config.slots?.dot,
+  });
+  const iconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-icon`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    componentSurface: config.slots?.icon,
+  });
+  const labelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-label`,
+    implementationBase: {},
+    componentSurface: config.slots?.label,
+  });
+
+  return (
+    <span
+      data-snapshot-component="badge"
+      data-testid="badge"
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
       }}
     >
-      {/* Dot indicator for "dot" variant */}
-      {variant === "dot" && (
+      {variant === "dot" ? (
         <span
           data-testid="badge-dot"
-          style={{
-            width: "0.5rem",
-            height: "0.5rem",
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            backgroundColor: `var(--sn-color-${color})`,
-            flexShrink: 0,
-          }}
+          data-snapshot-id={`${rootId}-dot`}
           aria-hidden="true"
+          className={dotSurface.className}
+          style={dotSurface.style}
         />
-      )}
-      {/* Icon */}
-      {config.icon && (
-        <span data-testid="badge-icon" aria-hidden="true">
+      ) : null}
+      {config.icon ? (
+        <span
+          data-testid="badge-icon"
+          data-snapshot-id={`${rootId}-icon`}
+          aria-hidden="true"
+          className={iconSurface.className}
+          style={iconSurface.style}
+        >
           <Icon name={config.icon} size={14} />
         </span>
-      )}
-      {resolvedText}
+      ) : null}
+      <span
+        data-snapshot-id={`${rootId}-label`}
+        className={labelSurface.className}
+        style={labelSurface.style}
+      >
+        {resolvedText}
+      </span>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={dotSurface.scopedCss} />
+      <SurfaceStyles css={iconSurface.scopedCss} />
+      <SurfaceStyles css={labelSurface.scopedCss} />
     </span>
   );
 }

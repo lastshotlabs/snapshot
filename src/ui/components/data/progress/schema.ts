@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -18,8 +19,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const progressConfigSchema = z
-  .object({
+export const progressConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("progress"),
     /** Progress value 0-100. Omit for indeterminate mode. Can be a FromRef. */
@@ -48,14 +48,16 @@ export const progressConfigSchema = z
     variant: z.enum(["bar", "circular"]).optional(),
     /** Split the bar into discrete segments. */
     segments: z.number().int().min(1).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
+    slots: slotsSchema([
+      "root",
+      "labelRow",
+      "label",
+      "value",
+      "track",
+      "fill",
+      "segment",
+      "circularTrack",
+      "circularFill",
+    ]).optional(),
   })
   .strict();

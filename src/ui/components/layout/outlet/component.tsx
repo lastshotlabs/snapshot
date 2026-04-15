@@ -1,11 +1,17 @@
 'use client';
 
-import { createContext, useContext } from "react";
+import type { CSSProperties } from "react";
+import { useMemo } from "react";
+import { atom } from "jotai";
+import { Provider as JotaiProvider, useAtomValue } from "jotai/react";
+import { createStore } from "jotai/vanilla";
 import { ComponentRenderer, PageRenderer } from "../../../manifest/renderer";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { OutletConfig } from "./types";
 
-const OutletDepthContext = createContext(0);
+const outletDepthAtom = atom(0);
 
 /**
  * Layout outlet primitive used to render nested child routes from the compiled
@@ -14,31 +20,69 @@ const OutletDepthContext = createContext(0);
 export function Outlet({ config }: { config: OutletConfig }) {
   const routeRuntime = useRouteRuntime();
   const manifest = useManifestRuntime();
-  const outletDepth = useContext(OutletDepthContext);
+  const outletDepth = useAtomValue(outletDepthAtom);
   const activeRoutes = routeRuntime?.match.activeRoutes ?? [];
   const childRoute = activeRoutes[outletDepth + 1] ?? null;
+  const rootId = config.id ?? "outlet";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "contents",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const childStore = useMemo(() => {
+    const store = createStore();
+    store.set(outletDepthAtom, outletDepth + 1);
+    return store;
+  }, [outletDepth]);
 
   if (!childRoute) {
+    if (!config.fallback?.length) {
+      return null;
+    }
+
     return (
-      <>
+      <div
+        data-snapshot-component="outlet"
+        data-snapshot-id={rootId}
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        style={{
+          ...(rootSurface.style ?? {}),
+          ...((config.style as CSSProperties | undefined) ?? {}),
+        }}
+      >
         {config.fallback?.map((child, index) => (
           <ComponentRenderer
             key={child.id ?? `outlet-fallback-${index}`}
             config={child}
           />
         )) ?? null}
-      </>
+        <SurfaceStyles css={rootSurface.scopedCss} />
+      </div>
     );
   }
 
   return (
-    <OutletDepthContext.Provider value={outletDepth + 1}>
-      <PageRenderer
-        page={childRoute.page}
-        routeId={childRoute.id}
-        state={manifest?.state}
-        resources={manifest?.resources}
-      />
-    </OutletDepthContext.Provider>
+    <div
+      data-snapshot-component="outlet"
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
+      }}
+    >
+      <JotaiProvider store={childStore}>
+        <PageRenderer
+          page={childRoute.page}
+          routeId={childRoute.id}
+          state={manifest?.state}
+          resources={manifest?.resources}
+        />
+      </JotaiProvider>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+    </div>
   );
 }

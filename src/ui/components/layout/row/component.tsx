@@ -3,6 +3,9 @@
 import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { useResponsiveValue } from "../../../hooks/use-breakpoint";
+import { ComponentWrapper } from "../../_base/component-wrapper";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { RowConfig } from "./types";
 
 const GAP_MAP: Record<string, string> = {
@@ -34,55 +37,87 @@ const JUSTIFY_MAP: Record<string, string> = {
 export function Row({ config }: { config: RowConfig }) {
   const gap = useResponsiveValue(config.gap);
   const resolvedGap = gap ? GAP_MAP[gap] ?? gap : undefined;
-
-  // Use CSS Grid when any child declares a span — gridColumn requires a grid parent.
   const hasSpans = config.children.some(
-    (c) =>
-      c && typeof c === "object" && "span" in c && (c as Record<string, unknown>).span !== undefined,
+    (child) =>
+      child &&
+      typeof child === "object" &&
+      "span" in child &&
+      (child as Record<string, unknown>).span !== undefined,
   );
+  const rootId = config.id ?? "row";
 
-  const style: CSSProperties = hasSpans
-    ? {
-        display: "grid",
-        gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-        width: "100%",
-        gap: resolvedGap,
-        alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
-      }
-    : {
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        gap: resolvedGap,
-        alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
-        justifyContent: config.justify ? JUSTIFY_MAP[config.justify] : undefined,
-        flexWrap: config.wrap ? "wrap" : undefined,
-        overflow: config.overflow,
-        maxHeight: config.maxHeight,
-      };
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: hasSpans
+      ? {
+          display: "grid",
+          width: "100%",
+          gap: resolvedGap,
+          alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
+          style: {
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+          },
+        }
+      : {
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          gap: resolvedGap,
+          alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
+          justifyContent: config.justify
+            ? JUSTIFY_MAP[config.justify]
+            : undefined,
+          flexWrap: config.wrap ? "wrap" : undefined,
+          overflow: config.overflow,
+          maxHeight: config.maxHeight,
+        },
+    componentSurface: config.slots?.root,
+  });
+  const itemSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-item`,
+    implementationBase: {},
+    componentSurface: config.slots?.item,
+  });
 
   return (
-    <div style={style}>
-      {config.children.map((child, index) =>
-        hasSpans ? (
-          // In grid mode: no intermediate wrapper — ComponentWrapper becomes the direct
-          // grid item and its gridColumn (from span via ComponentRenderer) takes effect.
-          <ComponentRenderer key={child.id ?? `row-child-${index}`} config={child} />
-        ) : (
-          <div
-            key={child.id ?? `row-child-${index}`}
-            style={
-              typeof config.animation?.stagger === "number"
-                ? ({
-                    ["--sn-stagger-index" as "--sn-stagger-index"]: index,
-                  } as CSSProperties)
-                : undefined
-            }
-          >
-            <ComponentRenderer config={child} />
-          </div>
-        ),
-      )}
-    </div>
+    <ComponentWrapper type="row" id={config.id} config={config}>
+      <div
+        data-snapshot-id={rootId}
+        className={rootSurface.className}
+        style={rootSurface.style}
+      >
+        {config.children.map((child, index) => {
+          const itemStyle =
+            typeof config.animation?.stagger === "number"
+              ? ({
+                  ...(itemSurface.style ?? {}),
+                  ["--sn-stagger-index" as "--sn-stagger-index"]: index,
+                } as CSSProperties)
+              : itemSurface.style;
+
+          if (hasSpans) {
+            return (
+              <ComponentRenderer
+                key={child.id ?? `row-child-${index}`}
+                config={child}
+              />
+            );
+          }
+
+          return (
+            <div
+              key={child.id ?? `row-child-${index}`}
+              data-snapshot-id={`${rootId}-item`}
+              className={itemSurface.className}
+              style={itemStyle}
+            >
+              <ComponentRenderer config={child} />
+            </div>
+          );
+        })}
+      </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={itemSurface.scopedCss} />
+    </ComponentWrapper>
   );
 }

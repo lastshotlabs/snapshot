@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { componentConfigSchema } from "../../../manifest/schema";
-import { extendComponentSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 function responsiveValueSchema<T extends z.ZodTypeAny>(valueSchema: T) {
   return z.union([
@@ -27,4 +27,5 @@ export const gridConfigSchema = extendComponentSchema({
     z.enum(["none", "2xs", "xs", "sm", "md", "lg", "xl", "2xl"]),
   ).optional(),
   children: z.array(componentConfigSchema).min(1),
+  slots: slotsSchema(["root", "item"]).optional(),
 }).strict();

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -16,8 +17,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const presenceIndicatorConfigSchema = z
-  .object({
+export const presenceIndicatorConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("presence-indicator"),
     /** Status value. Can be a FromRef for dynamic status. */
@@ -33,14 +33,5 @@ export const presenceIndicatorConfigSchema = z
     showLabel: z.boolean().optional(),
     /** Size variant. Default: "md". */
     size: z.enum(["sm", "md", "lg"]).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-  })
-  .strict();
+    slots: slotsSchema(["root", "dot", "label"]).optional(),
+  }).strict();

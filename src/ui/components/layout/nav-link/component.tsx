@@ -1,6 +1,9 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/index";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { Link } from "../../primitives/link";
 import type { LinkConfig } from "../../primitives/link/types";
 import type { NavLinkConfig } from "./types";
@@ -56,9 +59,25 @@ export function NavLink({
   }
 
   const linkSlots = config.slots as LinkConfig["slots"];
+  const rootId = config.id ?? config.path;
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-nav-link`,
+    implementationBase: {
+      display: "contents",
+    },
+    componentSurface: config,
+  });
 
   return (
-    <div data-snapshot-component="nav-link">
+    <div
+      data-snapshot-component="nav-link"
+      data-snapshot-id={`${rootId}-nav-link`}
+      className={rootSurface.className}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
+      }}
+    >
       <Link
         config={{
           type: "link",
@@ -75,6 +94,7 @@ export function NavLink({
         }}
         onNavigate={onNavigate}
       />
+      <SurfaceStyles css={rootSurface.scopedCss} />
     </div>
   );
 }

@@ -1,9 +1,12 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { NotificationBellConfig } from "./types";
 
 /** Icon sizes per size variant (px). */
@@ -81,6 +84,59 @@ export function NotificationBell({
   const badge = BADGE_SIZE_MAP[size];
   const showBadge = resolvedCount > 0;
   const displayCount = resolvedCount > max ? `${max}+` : String(resolvedCount);
+  const rootId = config.id ?? "notification-bell";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "inline-flex",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const buttonSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-button`,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      style: {
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+        borderRadius: "var(--sn-radius-sm, 0.25rem)",
+        color: "var(--sn-color-foreground, #111827)",
+      },
+      focus: {
+        ring: true,
+      },
+    },
+    componentSurface: config.slots?.button,
+  });
+  const badgeSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-badge`,
+    implementationBase: {
+      position: "absolute",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      style: {
+        top: badge.offset,
+        right: badge.offset,
+        minWidth: badge.minWidth,
+        height: badge.height,
+        padding: badge.padding,
+        fontSize: badge.fontSize,
+        fontWeight: "var(--sn-font-weight-bold, 700)",
+        lineHeight: "var(--sn-leading-none, 1)",
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        backgroundColor: "var(--sn-color-destructive, #ef4444)",
+        color: "var(--sn-color-destructive-foreground, #ffffff)",
+      },
+    },
+    componentSurface: config.slots?.badge,
+  });
 
   const handleClick = () => {
     if (config.clickAction) {
@@ -91,66 +147,44 @@ export function NotificationBell({
   return (
     <div
       data-snapshot-component="notification-bell"
+      data-snapshot-id={rootId}
+      className={rootSurface.className}
       style={{
-        display: "inline-flex",
-        ...(config.style as React.CSSProperties),
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
       }}
     >
-      <style>{`
-[data-snapshot-component="notification-bell"] button:focus { outline: none; }
-[data-snapshot-component="notification-bell"] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-      `}</style>
       <button
+        data-snapshot-id={`${rootId}-button`}
         data-testid="notification-bell"
-        className={config.className}
+        className={buttonSurface.className}
         onClick={handleClick}
         aria-label={
           showBadge
             ? `Notifications (${resolvedCount} unread)`
             : "Notifications"
         }
+        aria-live={config.ariaLive}
         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          padding: "var(--sn-spacing-xs, 0.25rem)",
-          borderRadius: "var(--sn-radius-sm, 0.25rem)",
-          color: "var(--sn-color-foreground, #111827)",
+          ...(buttonSurface.style ?? {}),
         }}
       >
         <Icon name="bell" size={iconSize} />
-
-        {/* Badge */}
         {showBadge && (
           <span
+            data-snapshot-id={`${rootId}-badge`}
             data-testid="notification-badge"
             aria-hidden="true"
-            style={{
-              position: "absolute",
-              top: badge.offset,
-              right: badge.offset,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              minWidth: badge.minWidth,
-              height: badge.height,
-              padding: badge.padding,
-              fontSize: badge.fontSize,
-              fontWeight: "var(--sn-font-weight-bold, 700)" as string,
-              lineHeight: "var(--sn-leading-none, 1)",
-              borderRadius: "var(--sn-radius-full, 9999px)",
-              backgroundColor: "var(--sn-color-destructive, #ef4444)",
-              color: "var(--sn-color-destructive-foreground, #ffffff)",
-            }}
+            className={badgeSurface.className}
+            style={badgeSurface.style}
           >
             {displayCount}
           </span>
         )}
       </button>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={buttonSurface.scopedCss} />
+      <SurfaceStyles css={badgeSurface.scopedCss} />
     </div>
   );
 }

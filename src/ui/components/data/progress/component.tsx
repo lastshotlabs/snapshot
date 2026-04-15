@@ -2,65 +2,79 @@
 
 import { useEffect, useId } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ProgressConfig } from "./types";
 
-/** Height in pixels for each size variant. */
 const SIZE_MAP = { sm: 4, md: 8, lg: 12 } as const;
-
-/** SVG dimensions for each size variant of the circular progress. */
 const CIRCULAR_SIZE_MAP = { sm: 32, md: 48, lg: 64 } as const;
 
-/**
- * Progress component — displays a determinate or indeterminate progress
- * bar or circular ring.
- *
- * When `value` is omitted, renders an indeterminate shimmer animation.
- * When `variant` is "circular", renders an SVG ring.
- *
- * @param props - Component props containing the progress configuration
- *
- * @example
- * ```json
- * {
- *   "type": "progress",
- *   "value": 75,
- *   "label": "Upload",
- *   "showValue": true,
- *   "color": "success",
- *   "size": "lg"
- * }
- * ```
- */
 export function Progress({ config }: { config: ProgressConfig }) {
-  const uniqueId = useId();
+  const uniqueId = useId().replace(/:/g, "");
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
   const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const resolvedValue = useSubscribe(config.value) as number | undefined;
 
   const max = config.max ?? 100;
-  const color = config.color ?? "primary";
   const size = config.size ?? "md";
   const variant = config.variant ?? "bar";
   const showValue = config.showValue ?? false;
   const segments = config.segments;
-
   const percentage =
     resolvedValue !== undefined
       ? Math.min(100, Math.max(0, (resolvedValue / max) * 100))
       : undefined;
   const isIndeterminate = percentage === undefined;
 
-  // Publish value
   useEffect(() => {
     if (publish && percentage !== undefined) {
       publish({ value: resolvedValue, percentage });
     }
   }, [publish, resolvedValue, percentage]);
 
-  if (visible === false) return null;
+  if (visible === false) {
+    return null;
+  }
 
-  const fillColor = `var(--sn-color-${color}, currentColor)`;
+  const rootId = config.id ?? "progress";
+  const states = isIndeterminate ? (["active"] as const) : [];
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+    },
+    componentSurface: config.slots?.root,
+    activeStates: [...states],
+  });
+  const labelRowSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-label-row`,
+    implementationBase: {
+      display: "flex",
+      justifyContent: "between",
+      alignItems: "center",
+      fontSize: "sm",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    },
+    componentSurface: config.slots?.labelRow,
+    activeStates: [...states],
+  });
+  const labelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-label`,
+    implementationBase: {},
+    componentSurface: config.slots?.label,
+    activeStates: [...states],
+  });
+  const valueSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-value`,
+    implementationBase: {},
+    componentSurface: config.slots?.value,
+    activeStates: [...states],
+  });
+
+  const fillColor = `var(--sn-color-${config.color ?? "primary"}, currentColor)`;
   const trackColor = "var(--sn-color-secondary, #e5e7eb)";
 
   if (variant === "circular") {
@@ -71,28 +85,40 @@ export function Progress({ config }: { config: ProgressConfig }) {
     const offset = isIndeterminate
       ? circumference * 0.75
       : circumference - (circumference * (percentage ?? 0)) / 100;
+    const circularTrackSurface = resolveSurfacePresentation({
+      surfaceId: `${rootId}-circular-track`,
+      implementationBase: {},
+      componentSurface: config.slots?.circularTrack,
+      activeStates: [...states],
+    });
+    const circularFillSurface = resolveSurfacePresentation({
+      surfaceId: `${rootId}-circular-fill`,
+      implementationBase: {},
+      componentSurface: config.slots?.circularFill ?? config.slots?.fill,
+      activeStates: [...states],
+    });
 
     return (
       <div
         data-snapshot-component="progress"
         data-testid="progress"
-        className={config.className}
+        data-snapshot-id={rootId}
+        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
         style={{
-          display: "inline-flex",
-          flexDirection: "column",
+          ...(rootSurface.style ?? {}),
+          ...(config.style ?? {}),
           alignItems: "center",
-          gap: "var(--sn-spacing-xs, 0.25rem)",
-          ...(config.style as React.CSSProperties),
+          display: "inline-flex",
         }}
       >
-        {isIndeterminate && (
+        {isIndeterminate ? (
           <style>{`
-            @keyframes sn-progress-spin-${uniqueId.replace(/:/g, "")} {
+            @keyframes sn-progress-spin-${uniqueId} {
               from { transform: rotate(0deg); }
               to { transform: rotate(360deg); }
             }
           `}</style>
-        )}
+        ) : null}
         <svg
           width={svgSize}
           height={svgSize}
@@ -101,7 +127,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
             transform: "rotate(-90deg)",
             ...(isIndeterminate
               ? {
-                  animation: `sn-progress-spin-${uniqueId.replace(/:/g, "")} var(--sn-duration-slow, 1.5s) linear infinite`,
+                  animation: `sn-progress-spin-${uniqueId} var(--sn-duration-slow, 1.5s) linear infinite`,
                 }
               : {}),
           }}
@@ -110,7 +136,6 @@ export function Progress({ config }: { config: ProgressConfig }) {
           aria-valuemin={0}
           aria-valuemax={100}
         >
-          {/* Track */}
           <circle
             cx={svgSize / 2}
             cy={svgSize / 2}
@@ -118,8 +143,9 @@ export function Progress({ config }: { config: ProgressConfig }) {
             fill="none"
             stroke={trackColor}
             strokeWidth={strokeWidth}
+            className={circularTrackSurface.className}
+            style={circularTrackSurface.style}
           />
-          {/* Fill */}
           <circle
             cx={svgSize / 2}
             cy={svgSize / 2}
@@ -130,76 +156,130 @@ export function Progress({ config }: { config: ProgressConfig }) {
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             strokeLinecap="round"
+            className={circularFillSurface.className}
             style={{
-              transition: isIndeterminate
-                ? undefined
-                : "stroke-dashoffset var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
+              ...(circularFillSurface.style ?? {}),
+              ...(isIndeterminate
+                ? {}
+                : {
+                    transition:
+                      "stroke-dashoffset var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
+                  }),
             }}
           />
         </svg>
-        {(resolvedLabel || showValue) && (
+        {resolvedLabel || showValue ? (
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--sn-spacing-xs, 0.25rem)",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              color: "var(--sn-color-muted-foreground, #6b7280)",
-            }}
+            data-snapshot-id={`${rootId}-label-row`}
+            className={labelRowSurface.className}
+            style={labelRowSurface.style}
           >
-            {resolvedLabel && <span>{resolvedLabel}</span>}
-            {showValue && percentage !== undefined && (
-              <span>{Math.round(percentage)}%</span>
-            )}
+            {resolvedLabel ? (
+              <span
+                data-snapshot-id={`${rootId}-label`}
+                className={labelSurface.className}
+                style={labelSurface.style}
+              >
+                {resolvedLabel}
+              </span>
+            ) : null}
+            {showValue && percentage !== undefined ? (
+              <span
+                data-snapshot-id={`${rootId}-value`}
+                className={valueSurface.className}
+                style={valueSurface.style}
+              >
+                {Math.round(percentage)}%
+              </span>
+            ) : null}
           </div>
-        )}
+        ) : null}
+        <SurfaceStyles css={rootSurface.scopedCss} />
+        <SurfaceStyles css={labelRowSurface.scopedCss} />
+        <SurfaceStyles css={labelSurface.scopedCss} />
+        <SurfaceStyles css={valueSurface.scopedCss} />
+        <SurfaceStyles css={circularTrackSurface.scopedCss} />
+        <SurfaceStyles css={circularFillSurface.scopedCss} />
       </div>
     );
   }
 
-  // Bar variant
   const barHeight = SIZE_MAP[size];
+  const trackSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-track`,
+    implementationBase: {
+      width: "100%",
+      overflow: "hidden",
+      style: {
+        height: barHeight,
+        backgroundColor: trackColor,
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        position: "relative",
+      },
+    },
+    componentSurface: config.slots?.track,
+    activeStates: [...states],
+  });
+  const fillSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-fill`,
+    implementationBase: {},
+    componentSurface: config.slots?.fill,
+    activeStates: [...states],
+  });
+  const segmentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-segment`,
+    implementationBase: {},
+    componentSurface: config.slots?.segment,
+    activeStates: [...states],
+  });
 
   return (
     <div
       data-snapshot-component="progress"
       data-testid="progress"
-      className={config.className}
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
       style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--sn-spacing-xs, 0.25rem)",
-        ...(config.style as React.CSSProperties),
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
       }}
     >
-      {isIndeterminate && (
+      {isIndeterminate ? (
         <style>{`
-          @keyframes sn-progress-indeterminate-${uniqueId.replace(/:/g, "")} {
+          @keyframes sn-progress-indeterminate-${uniqueId} {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(300%); }
           }
         `}</style>
-      )}
+      ) : null}
 
-      {/* Label + value row */}
-      {(resolvedLabel || (showValue && percentage !== undefined)) && (
+      {(resolvedLabel || (showValue && percentage !== undefined)) ? (
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-          }}
+          data-snapshot-id={`${rootId}-label-row`}
+          className={labelRowSurface.className}
+          style={labelRowSurface.style}
         >
-          {resolvedLabel && <span>{resolvedLabel}</span>}
-          {showValue && percentage !== undefined && (
-            <span>{Math.round(percentage)}%</span>
-          )}
+          {resolvedLabel ? (
+            <span
+              data-snapshot-id={`${rootId}-label`}
+              className={labelSurface.className}
+              style={labelSurface.style}
+            >
+              {resolvedLabel}
+            </span>
+          ) : null}
+          {showValue && percentage !== undefined ? (
+            <span
+              data-snapshot-id={`${rootId}-value`}
+              className={valueSurface.className}
+              style={valueSurface.style}
+            >
+              {Math.round(percentage)}%
+            </span>
+          ) : null}
         </div>
-      )}
+      ) : null}
 
-      {/* Track */}
       <div
         role="progressbar"
         aria-valuenow={isIndeterminate ? undefined : percentage}
@@ -207,19 +287,16 @@ export function Progress({ config }: { config: ProgressConfig }) {
         aria-valuemax={100}
         aria-label={resolvedLabel ?? "Progress"}
         data-progress-bar=""
-        style={{
-          width: "100%",
-          height: barHeight,
-          backgroundColor: trackColor,
-          borderRadius: "var(--sn-radius-full, 9999px)",
-          overflow: "hidden",
-          position: "relative",
-        }}
+        data-snapshot-id={`${rootId}-track`}
+        className={trackSurface.className}
+        style={trackSurface.style}
       >
-        {/* Fill */}
         {isIndeterminate ? (
           <div
+            data-snapshot-id={`${rootId}-fill`}
+            className={fillSurface.className}
             style={{
+              ...(fillSurface.style ?? {}),
               position: "absolute",
               top: 0,
               left: 0,
@@ -227,7 +304,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
               height: "100%",
               backgroundColor: fillColor,
               borderRadius: "var(--sn-radius-full, 9999px)",
-              animation: `sn-progress-indeterminate-${uniqueId.replace(/:/g, "")} var(--sn-duration-slow, 1.5s) var(--sn-ease-in-out, ease-in-out) infinite`,
+              animation: `sn-progress-indeterminate-${uniqueId} var(--sn-duration-slow, 1.5s) var(--sn-ease-in-out, ease-in-out) infinite`,
             }}
           />
         ) : segments && segments > 1 ? (
@@ -238,15 +315,18 @@ export function Progress({ config }: { config: ProgressConfig }) {
               gap: "var(--sn-spacing-2xs, 2px)",
             }}
           >
-            {Array.from({ length: segments }).map((_, i) => {
-              const segmentThreshold = ((i + 1) / segments) * 100;
+            {Array.from({ length: segments }).map((_, index) => {
+              const segmentThreshold = ((index + 1) / segments) * 100;
               const isFilled = (percentage ?? 0) >= segmentThreshold;
               const isPartial =
-                !isFilled && (percentage ?? 0) > (i / segments) * 100;
+                !isFilled && (percentage ?? 0) > (index / segments) * 100;
               return (
                 <div
-                  key={i}
+                  key={index}
+                  data-snapshot-id={`${rootId}-segment`}
+                  className={segmentSurface.className}
                   style={{
+                    ...(segmentSurface.style ?? {}),
                     flex: 1,
                     height: "100%",
                     backgroundColor:
@@ -262,8 +342,11 @@ export function Progress({ config }: { config: ProgressConfig }) {
           </div>
         ) : (
           <div
+            data-snapshot-id={`${rootId}-fill`}
+            className={fillSurface.className}
             style={{
-              width: `${percentage}%`,
+              ...(fillSurface.style ?? {}),
+              width: `${percentage ?? 0}%`,
               height: "100%",
               backgroundColor: fillColor,
               borderRadius: "var(--sn-radius-full, 9999px)",
@@ -273,6 +356,14 @@ export function Progress({ config }: { config: ProgressConfig }) {
           />
         )}
       </div>
+
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={labelRowSurface.scopedCss} />
+      <SurfaceStyles css={labelSurface.scopedCss} />
+      <SurfaceStyles css={valueSurface.scopedCss} />
+      <SurfaceStyles css={trackSurface.scopedCss} />
+      <SurfaceStyles css={fillSurface.scopedCss} />
+      <SurfaceStyles css={segmentSurface.scopedCss} />
     </div>
   );
 }

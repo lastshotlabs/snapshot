@@ -1,6 +1,9 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/hooks";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { PresenceIndicatorConfig } from "./types";
 
 /** Status → dot color mapping. */
@@ -58,45 +61,76 @@ export function PresenceIndicator({
   const dotSize = DOT_SIZES[size] ?? 8;
   const dotColor = STATUS_COLORS[status] ?? STATUS_COLORS.offline!;
   const displayLabel = label || STATUS_LABELS[status] || status;
+  const rootId = config.id ?? "presence-indicator";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const dotSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-dot`,
+    implementationBase: {
+      display: "inline-block",
+      style: {
+        width: dotSize,
+        height: dotSize,
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        backgroundColor: dotColor,
+        flexShrink: 0,
+      },
+    },
+    componentSurface: config.slots?.dot,
+  });
+  const labelSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-label`,
+    implementationBase: {
+      style: {
+        fontSize: FONT_SIZES[size],
+        color: "var(--sn-color-muted-foreground, #6b7280)",
+      },
+    },
+    componentSurface: config.slots?.label,
+  });
 
   return (
     <div
       data-snapshot-component="presence-indicator"
+      data-snapshot-id={rootId}
       data-testid="presence-indicator"
       role="status"
       aria-label={displayLabel}
-      className={config.className}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "var(--sn-spacing-xs, 0.25rem)",
-        ...(config.style as React.CSSProperties),
+        ...(rootSurface.style ?? {}),
+        ...((config.style as CSSProperties | undefined) ?? {}),
       }}
     >
       {showDot && (
         <span
+          data-snapshot-id={`${rootId}-dot`}
           data-testid="presence-dot"
-          style={{
-            width: dotSize,
-            height: dotSize,
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            backgroundColor: dotColor,
-            flexShrink: 0,
-            display: "inline-block",
-          }}
+          className={dotSurface.className}
+          style={dotSurface.style}
         />
       )}
       {showLabel && (
         <span
+          data-snapshot-id={`${rootId}-label`}
           data-testid="presence-label"
-          style={{
-            fontSize: FONT_SIZES[size],
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-          }}
+          className={labelSurface.className}
+          style={labelSurface.style}
         >
           {displayLabel}
         </span>
       )}
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={dotSurface.scopedCss} />
+      <SurfaceStyles css={labelSurface.scopedCss} />
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { actionSchema } from "../../../actions/types";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -17,8 +19,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const favoriteButtonConfigSchema = z
-  .object({
+export const favoriteButtonConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("favorite-button"),
     /** Whether the favorite is active. Supports FromRef. Default: false. */
@@ -26,15 +27,7 @@ export const favoriteButtonConfigSchema = z
     /** Icon size. Default: "md". */
     size: z.enum(["sm", "md", "lg"]).optional(),
     /** Action dispatched on toggle. */
-    toggleAction: z.lazy(() => z.record(z.unknown()).pipe(z.any())).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
+    toggleAction: actionSchema.optional(),
+    slots: slotsSchema(["root", "icon"]).optional(),
   })
   .strict();

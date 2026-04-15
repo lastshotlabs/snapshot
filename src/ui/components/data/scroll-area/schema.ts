@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -20,8 +21,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const scrollAreaConfigSchema = z
-  .object({
+export const scrollAreaConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("scroll-area"),
     /** Maximum height of the scroll area. Default: "400px". */
@@ -34,14 +34,5 @@ export const scrollAreaConfigSchema = z
     showScrollbar: z.enum(["always", "hover", "auto"]).optional(),
     /** Child components rendered inside the scroll area. */
     content: z.array(z.record(z.unknown())).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-  })
-  .strict();
+    slots: slotsSchema(["root", "viewport"]).optional(),
+  }).strict();

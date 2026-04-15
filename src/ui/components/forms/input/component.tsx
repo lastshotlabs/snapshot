@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
-import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { InputConfig, InputControlProps } from "./types";
@@ -215,6 +214,16 @@ export function Input({ config }: { config: InputConfig }) {
     ...(resolvedDisabled ? (["disabled"] as const) : []),
   ];
 
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+    },
+    componentSurface: config.slots?.root,
+    activeStates: resolvedStates,
+  });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label`,
     implementationBase: {
@@ -274,87 +283,95 @@ export function Input({ config }: { config: InputConfig }) {
   });
 
   return (
-    <ComponentWrapper type="input" id={config.id} config={config}>
-      <div data-testid="input">
-        {config.label ? (
-          <label
-            htmlFor={fieldId}
-            data-snapshot-id={`${rootId}-label`}
-            className={labelSurface.className}
-            style={labelSurface.style}
-          >
-            {config.label}
-            {config.required ? (
-              <span
-                data-snapshot-id={`${rootId}-required-indicator`}
-                className={requiredIndicatorSurface.className}
-                style={requiredIndicatorSurface.style}
-              >
-                *
-              </span>
-            ) : null}
-          </label>
-        ) : null}
-
-        <div
-          data-snapshot-id={`${rootId}-field`}
-          className={fieldSurface.className}
-          style={fieldSurface.style}
+    <div
+      data-snapshot-component="input"
+      data-testid="input"
+      data-snapshot-id={rootId}
+      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      style={{
+        ...(rootSurface.style ?? {}),
+        ...(config.style ?? {}),
+      }}
+    >
+      {config.label ? (
+        <label
+          htmlFor={fieldId}
+          data-snapshot-id={`${rootId}-label`}
+          className={labelSurface.className}
+          style={labelSurface.style}
         >
-          {config.icon ? (
+          {config.label}
+          {config.required ? (
             <span
-              data-snapshot-id={`${rootId}-icon`}
-              className={iconSurface.className}
-              style={iconSurface.style}
+              data-snapshot-id={`${rootId}-required-indicator`}
+              className={requiredIndicatorSurface.className}
+              style={requiredIndicatorSurface.style}
             >
-              <Icon name={config.icon} size={16} />
+              *
             </span>
           ) : null}
-          <InputControl
-            inputId={fieldId}
-            type={inputType}
-            value={value}
-            placeholder={config.placeholder}
-            disabled={resolvedDisabled}
-            readOnly={resolvedReadonly}
-            maxLength={config.maxLength}
-            pattern={config.pattern}
-            required={config.required}
-            ariaInvalid={Boolean(errorMessage)}
-            ariaDescribedBy={helperId}
-            ariaLabel={config.label ?? config.placeholder}
-            onChangeText={handleChange}
-            onBlur={handleBlur}
-            surfaceId={`${rootId}-control`}
-            surfaceConfig={config.slots?.control}
-            activeStates={resolvedStates}
-            style={
-              config.icon
-                ? { paddingLeft: "var(--sn-spacing-2xl, 2.25rem)" }
-                : undefined
-            }
-            testId="input-control"
-          />
-        </div>
+        </label>
+      ) : null}
 
-        {config.helperText || errorMessage ? (
+      <div
+        data-snapshot-id={`${rootId}-field`}
+        className={fieldSurface.className}
+        style={fieldSurface.style}
+      >
+        {config.icon ? (
           <span
-            id={helperId}
-            role={errorMessage ? "alert" : undefined}
-            data-snapshot-id={`${rootId}-helper`}
-            className={helperSurface.className}
-            style={helperSurface.style}
+            data-snapshot-id={`${rootId}-icon`}
+            className={iconSurface.className}
+            style={iconSurface.style}
           >
-            {errorMessage ?? config.helperText}
+            <Icon name={config.icon} size={16} />
           </span>
         ) : null}
-
-        <SurfaceStyles css={labelSurface.scopedCss} />
-        <SurfaceStyles css={requiredIndicatorSurface.scopedCss} />
-        <SurfaceStyles css={fieldSurface.scopedCss} />
-        <SurfaceStyles css={iconSurface.scopedCss} />
-        <SurfaceStyles css={helperSurface.scopedCss} />
+        <InputControl
+          inputId={fieldId}
+          type={inputType}
+          value={value}
+          placeholder={config.placeholder}
+          disabled={resolvedDisabled}
+          readOnly={resolvedReadonly}
+          maxLength={config.maxLength}
+          pattern={config.pattern}
+          required={config.required}
+          ariaInvalid={Boolean(errorMessage)}
+          ariaDescribedBy={helperId}
+          ariaLabel={config.label ?? config.placeholder}
+          onChangeText={handleChange}
+          onBlur={handleBlur}
+          surfaceId={`${rootId}-control`}
+          surfaceConfig={config.slots?.control}
+          activeStates={resolvedStates}
+          style={
+            config.icon
+              ? { paddingLeft: "var(--sn-spacing-2xl, 2.25rem)" }
+              : undefined
+          }
+          testId="input-control"
+        />
       </div>
-    </ComponentWrapper>
+
+      {config.helperText || errorMessage ? (
+        <span
+          id={helperId}
+          role={errorMessage ? "alert" : undefined}
+          data-snapshot-id={`${rootId}-helper`}
+          className={helperSurface.className}
+          style={helperSurface.style}
+        >
+          {errorMessage ?? config.helperText}
+        </span>
+      ) : null}
+
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={labelSurface.scopedCss} />
+      <SurfaceStyles css={requiredIndicatorSurface.scopedCss} />
+      <SurfaceStyles css={fieldSurface.scopedCss} />
+      <SurfaceStyles css={iconSurface.scopedCss} />
+      <SurfaceStyles css={helperSurface.scopedCss} />
+    </div>
   );
 }
