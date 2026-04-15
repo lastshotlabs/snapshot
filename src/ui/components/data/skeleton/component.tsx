@@ -7,6 +7,12 @@ import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SkeletonConfig } from "./types";
 
 const LINE_WIDTHS = ["100%", "90%", "75%", "60%", "85%", "70%", "95%", "65%"];
+const PULSE_KEYFRAMES = `
+  @keyframes sn-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: var(--sn-opacity-muted, 0.5); }
+  }
+`;
 
 function toCss(value: string | number | undefined, fallback: string): string {
   if (value === undefined) return fallback;
@@ -101,14 +107,6 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
           ...(config.style ?? {}),
         }}
       >
-        {animated ? (
-          <style>{`
-            @keyframes sn-pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: var(--sn-opacity-muted, 0.5); }
-            }
-          `}</style>
-        ) : null}
         {Array.from({ length: lines }).map((_, index) => (
           <div
             key={index}
@@ -122,6 +120,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
             }}
           />
         ))}
+        <SurfaceStyles css={animated ? PULSE_KEYFRAMES : undefined} />
         <SurfaceStyles css={rootSurface.scopedCss} />
         <SurfaceStyles css={shapeSurface.scopedCss} />
       </div>
@@ -137,14 +136,6 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
         className={config.className}
         style={config.style as CSSProperties}
       >
-        {animated ? (
-          <style>{`
-            @keyframes sn-pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: var(--sn-opacity-muted, 0.5); }
-            }
-          `}</style>
-        ) : null}
         <div
           data-snapshot-id={`${rootId}-shape`}
           className={shapeSurface.className}
@@ -156,6 +147,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
             animation: animationStyle,
           }}
         />
+        <SurfaceStyles css={animated ? PULSE_KEYFRAMES : undefined} />
         <SurfaceStyles css={shapeSurface.scopedCss} />
       </div>
     );
@@ -169,14 +161,6 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
         className={config.className}
         style={config.style as CSSProperties}
       >
-        {animated ? (
-          <style>{`
-            @keyframes sn-pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: var(--sn-opacity-muted, 0.5); }
-            }
-          `}</style>
-        ) : null}
         <div
           data-snapshot-id={`${rootId}-shape`}
           className={shapeSurface.className}
@@ -187,6 +171,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
             animation: animationStyle,
           }}
         />
+        <SurfaceStyles css={animated ? PULSE_KEYFRAMES : undefined} />
         <SurfaceStyles css={shapeSurface.scopedCss} />
       </div>
     );
@@ -202,14 +187,6 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
         ...(config.style ?? {}),
       }}
     >
-      {animated ? (
-        <style>{`
-          @keyframes sn-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-          }
-        `}</style>
-      ) : null}
       <div
         data-snapshot-id={`${rootId}-title`}
         className={titleSurface.className}
@@ -239,6 +216,7 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
           />
         ))}
       </div>
+      <SurfaceStyles css={animated ? PULSE_KEYFRAMES : undefined} />
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={shapeSurface.scopedCss} />
       <SurfaceStyles css={titleSurface.scopedCss} />

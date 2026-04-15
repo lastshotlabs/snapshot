@@ -545,7 +545,7 @@ describe("useActionExecutor", () => {
           });
         }),
       ),
-    ).rejects.toThrow("SnapshotApiContext not provided");
+    ).rejects.toThrow("API client not provided");
   });
 
   it("runs a named manifest workflow", async () => {

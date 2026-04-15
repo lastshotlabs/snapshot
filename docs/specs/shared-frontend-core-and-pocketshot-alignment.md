@@ -4,17 +4,28 @@
 >
 > | Phase | Title | Status | Track |
 > |---|---|---|---|
-> | 0 | Snapshot-Safe Bootstrap | Not started | Snapshot + Contract |
-> | 1 | Canonical Shared Contract Boundary | Not started | Contract |
-> | 2 | Snapshot Rebased On Shared Contract | Not started | Snapshot |
-> | 3 | Pocketshot Manifest Runtime Rebuilt On Shared Contract | Not started | Pocketshot Runtime |
+> | 0 | Snapshot-Safe Bootstrap | Completed | Snapshot + Contract |
+> | 1 | Canonical Shared Contract Boundary | In progress | Contract |
+> | 2 | Snapshot Rebased On Shared Contract | In progress | Snapshot |
+> | 3 | Pocketshot Manifest Runtime Rebuilt On Shared Contract | In progress | Pocketshot Runtime |
 > | 4 | Native Universal Styling Runtime | Not started | Pocketshot UI |
-> | 5 | Pocketshot Component Library Rebased On Shared Contract | Not started | Pocketshot UI |
-> | 6 | CLI, Fixtures, And Contract Proofs | Not started | Tooling + Tests |
+> | 5 | Pocketshot Component Library Rebased On Shared Contract | In progress | Pocketshot UI |
+> | 6 | CLI, Fixtures, And Contract Proofs | In progress | Tooling + Tests |
 >
 > **Priority:** P0
 >
 > **Product bar:** Snapshot and Pocketshot are peer runtimes over one canonical frontend contract. Neither package is allowed to own cross-platform concepts that belong in the shared contract package.
+
+> **Execution Snapshot - 2026-04-14**
+>
+> The work is no longer theoretical:
+>
+> - `../frontend-contract` now exists and both Snapshot and Pocketshot are wired to it with a local file dependency.
+> - The shared package already owns ref contracts, manifest shared sections, env/resources/actions/i18n/policies/state/workflows contracts, and Snapshot's token contract surface.
+> - Snapshot already imports/re-exports multiple shared contract surfaces while keeping its current runtime/compiler behavior intact.
+> - Pocketshot already consumes shared manifest section types, shared ref types/guards/schemas, and its component schema layer now uses the shared `fromRefSchema` instead of local copies.
+> - Pocketshot's `resolveFromRef()` now honors nested paths and shared transforms, which closes a real contract/runtime mismatch.
+> - Shared-package typecheck/test/build are passing. Pocketshot contract-level validation is currently done with targeted tests and import-smoke checks because the repo's broader RN dependency/type baseline is still incomplete in this workspace.
 
 ---
 

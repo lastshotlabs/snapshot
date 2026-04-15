@@ -6,6 +6,23 @@ import { resolveLayout } from "../../../layouts/registry";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 
+const SIDEBAR_LAYOUT_MOBILE_CSS = `
+  @media (max-width: 768px) {
+    [data-layout-variant="sidebar"] [data-layout-sidebar] {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: var(--sn-z-index-overlay, 30);
+      transform: translateX(-100%);
+      transition: transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
+    }
+    [data-layout-variant="sidebar"] [data-layout-sidebar][data-sidebar-open="true"] {
+      transform: translateX(0);
+    }
+  }
+`;
+
 function readSlot(
   slots: LayoutSlots | undefined,
   name: string,
@@ -135,23 +152,8 @@ function SidebarLayout({
             {footer}
           </footer>
         ) : null}
-        <style>{`
-        @media (max-width: 768px) {
-          [data-layout-variant="sidebar"] [data-layout-sidebar] {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: var(--sn-z-index-overlay, 30);
-            transform: translateX(-100%);
-            transition: transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
-          }
-          [data-layout-variant="sidebar"] [data-layout-sidebar][data-sidebar-open="true"] {
-            transform: translateX(0);
-          }
-        }
-        `}</style>
       </div>
+      <SurfaceStyles css={SIDEBAR_LAYOUT_MOBILE_CSS} />
       <SurfaceStyles css={rootSurface.scopedCss} />
     </>
   );

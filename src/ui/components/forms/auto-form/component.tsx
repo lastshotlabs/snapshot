@@ -208,6 +208,16 @@ function FieldRenderer({
   });
   const inputSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-input-${field.name}`,
+    implementationBase: {
+      focus: {
+        ring: true,
+      },
+      states: {
+        invalid: {
+          borderColor: "var(--sn-color-destructive, #ef4444)",
+        },
+      },
+    },
     componentSurface: slots?.input,
     itemSurface: field.slots?.input,
     activeStates,
@@ -558,24 +568,35 @@ function FieldRenderer({
             }}
           />
           {field.type === "password" ? (
-            <button
+            <ButtonControl
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setPasswordVisible((current) => !current)}
-              aria-label={passwordVisible ? "Hide password" : "Show password"}
-              style={{
-                position: "absolute",
-                right: "var(--sn-spacing-sm, 0.5rem)",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--sn-color-muted-foreground)",
-                padding: "var(--sn-spacing-xs, 0.25rem)",
+              ariaLabel={passwordVisible ? "Hide password" : "Show password"}
+              surfaceId={`${rootId}-password-toggle-${field.name}`}
+              surfaceConfig={{
+                bg: "transparent",
+                color: "var(--sn-color-muted-foreground, #6b7280)",
+                hover: {
+                  color: "var(--sn-color-foreground, #111827)",
+                },
+                focus: {
+                  ring: true,
+                },
+                style: {
+                  position: "absolute",
+                  right: "var(--sn-spacing-sm, 0.5rem)",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  minHeight: "2rem",
+                  minWidth: "2rem",
+                  padding: "var(--sn-spacing-xs, 0.25rem)",
+                },
               }}
             >
               <Icon name={passwordVisible ? "eye-off" : "eye"} size={16} />
-            </button>
+            </ButtonControl>
           ) : null}
         </div>
       );
@@ -689,22 +710,34 @@ function FieldRenderer({
           )}
         </span>
         {field.inlineAction ? (
-          <button
+          <ButtonControl
             type="button"
             onClick={() => {
               void executeAction({ type: "navigate", to: field.inlineAction!.to } as never);
             }}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--sn-color-primary)",
-              fontSize: "var(--sn-font-size-xs, 0.75rem)",
-              padding: 0,
+            variant="ghost"
+            size="sm"
+            surfaceId={`${rootId}-inline-action-${field.name}`}
+            surfaceConfig={{
+              bg: "transparent",
+              color: "var(--sn-color-primary, #2563eb)",
+              hover: {
+                color: "var(--sn-color-primary, #2563eb)",
+                textDecoration: "underline",
+              },
+              focus: {
+                ring: true,
+              },
+              style: {
+                minHeight: "auto",
+                padding: 0,
+                fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                fontWeight: "var(--sn-font-weight-medium, 500)",
+              },
             }}
           >
             {field.inlineAction.label}
-          </button>
+          </ButtonControl>
         ) : null}
       </label>
       {input}
@@ -1217,8 +1250,8 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
     async (values: Record<string, unknown>) => {
       if (!api) {
         throw new Error(
-          "AutoForm: SnapshotApiContext not provided. " +
-            "Wrap your app in <SnapshotApiContext.Provider value={apiClient}>.",
+          "AutoForm: API client not provided. " +
+            "Provide it through the app state runtime.",
         );
       }
 
@@ -1521,23 +1554,6 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
           {form.isSubmitting ? submitLoadingLabel : submitLabel}
         </ButtonControl>
       </div>
-      <style>{`
-        [data-snapshot-component="form"] input:focus,
-        [data-snapshot-component="form"] textarea:focus,
-        [data-snapshot-component="form"] select:focus {
-          outline: none;
-          border-color: var(--sn-color-primary, #2563eb);
-          box-shadow: 0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent);
-        }
-        [data-snapshot-component="form"] input:focus-visible,
-        [data-snapshot-component="form"] textarea:focus-visible,
-        [data-snapshot-component="form"] select:focus-visible {
-          outline: none;
-          border-color: var(--sn-color-primary, #2563eb);
-          box-shadow: 0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent);
-        }
-        ${BUTTON_INTERACTIVE_CSS}
-      `}</style>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={actionsSurface.scopedCss} />
     </form>

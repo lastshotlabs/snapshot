@@ -78,6 +78,7 @@ export {
   useStateValue,
   useSetStateValue,
   useResetStateValue,
+  useApiClient,
 } from "./ui/state/index";
 export type {
   StateScope,

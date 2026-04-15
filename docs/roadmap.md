@@ -1,6 +1,6 @@
 # Roadmap
 
-> **Last updated:** 2026-04-13 - docs infrastructure status reviewed
+> **Last updated:** 2026-04-14 - shared frontend contract execution status updated
 >
 > Modeled on [`bunshot/docs/roadmap.md`](../../bunshot/docs/roadmap.md). Specs progress
 > from `docs/specs/<name>.md` (active) -> `docs/specs/completed/<name>.md` (done) and

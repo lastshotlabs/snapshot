@@ -21,7 +21,7 @@ import {
 } from "../../api/client";
 import { mergeContract } from "../../auth/contract";
 import { createSnapshot } from "../../create-snapshot";
-import { SnapshotApiContext, useActionExecutor } from "../actions/executor";
+import { useActionExecutor } from "../actions/executor";
 import { ToastContainer } from "../actions/toast";
 import {
   AppContextProvider,
@@ -2124,46 +2124,44 @@ export function ManifestApp({
         />
       </div>
       <DarkModeManager themeMode={compiledManifest.theme?.mode as "light" | "dark" | "system" | undefined} />
-      <SnapshotApiContext.Provider value={snapshot.api}>
-        <ManifestRuntimeProvider
-          manifest={compiledManifest}
+      <ManifestRuntimeProvider
+        manifest={compiledManifest}
+        api={snapshot.api}
+        clients={runtimeClients}
+      >
+        <AppContextProvider
+          globals={compiledManifest.state}
+          resources={compiledManifest.resources}
           api={snapshot.api}
-          clients={runtimeClients}
         >
-          <AppContextProvider
-            globals={compiledManifest.state}
-            resources={compiledManifest.resources}
-            api={snapshot.api}
-          >
-            <SnapshotDragDropProvider>
-              <ManifestApiHeadersBridge
-                manifest={compiledManifest}
-                api={snapshot.api}
-                clients={runtimeClients}
-              />
-              {compiledManifest.auth || compiledManifest.realtime ? (
-                <>
-                  <AuthRuntimeBridge
-                    manifest={compiledManifest}
-                    useUser={snapshot.useUser}
-                  />
-                  <ManifestAuthWorkflowBridge manifest={compiledManifest} />
-                  <ManifestRealtimeWorkflowBridge manifest={compiledManifest} />
-                </>
-              ) : null}
-              <ManifestRouter
-                manifest={compiledManifest}
-                api={snapshot.api}
-                snapshot={snapshot}
-                runtimeClients={runtimeClients}
-                lazyComponents={lazyComponents}
-              />
-              <ToastContainer />
-              {isDev ? <ComponentInspector /> : null}
-            </SnapshotDragDropProvider>
-          </AppContextProvider>
-        </ManifestRuntimeProvider>
-      </SnapshotApiContext.Provider>
+          <SnapshotDragDropProvider>
+            <ManifestApiHeadersBridge
+              manifest={compiledManifest}
+              api={snapshot.api}
+              clients={runtimeClients}
+            />
+            {compiledManifest.auth || compiledManifest.realtime ? (
+              <>
+                <AuthRuntimeBridge
+                  manifest={compiledManifest}
+                  useUser={snapshot.useUser}
+                />
+                <ManifestAuthWorkflowBridge manifest={compiledManifest} />
+                <ManifestRealtimeWorkflowBridge manifest={compiledManifest} />
+              </>
+            ) : null}
+            <ManifestRouter
+              manifest={compiledManifest}
+              api={snapshot.api}
+              snapshot={snapshot}
+              runtimeClients={runtimeClients}
+              lazyComponents={lazyComponents}
+            />
+            <ToastContainer />
+            {isDev ? <ComponentInspector /> : null}
+          </SnapshotDragDropProvider>
+        </AppContextProvider>
+      </ManifestRuntimeProvider>
     </snapshot.QueryProvider>
   );
 }

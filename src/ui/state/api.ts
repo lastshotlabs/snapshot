@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import { useRef } from "react";
+import { createElement, Fragment, type ReactNode, useRef } from "react";
 import { atom } from "jotai";
 import { useAtomValue, useStore } from "jotai/react";
 import type { ApiClient } from "../../api/client";
@@ -21,7 +20,7 @@ export function SnapshotApiProvider({
   children,
 }: {
   value: ApiClient | null;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   const store = useStore();
   const lastValueRef = useRef<ApiClient | null | undefined>(undefined);
@@ -31,5 +30,5 @@ export function SnapshotApiProvider({
     lastValueRef.current = value;
   }
 
-  return <>{children}</>;
+  return createElement(Fragment, null, children);
 }

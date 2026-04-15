@@ -2,7 +2,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import React from "react";
-import { SnapshotApiContext } from "../ui/actions/executor";
 import { AppContextProvider } from "../ui/context/providers";
 import {
   AppShellWrapper,
@@ -1284,36 +1283,32 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
               children: pageElement,
             })
           : pageElement;
-      const element = React.createElement(
-        SnapshotApiContext.Provider,
-        { value: api ?? null },
-        React.createElement(ManifestRuntimeProvider, {
-          manifest: compiled,
+      const element = React.createElement(ManifestRuntimeProvider, {
+        manifest: compiled,
+        api,
+        children: React.createElement(AppContextProvider, {
+          globals: compiled.state,
+          resources: compiled.resources,
           api,
-          children: React.createElement(AppContextProvider, {
-            globals: compiled.state,
-            resources: compiled.resources,
-            api,
-            children: React.createElement(RouteRuntimeProvider, {
-              value: {
-                currentPath: currentRoute.path,
-                currentRoute,
-                match: {
-                  route: currentRoute,
-                  params: {},
-                  parents: [],
-                  activeRoutes: [currentRoute],
-                },
+          children: React.createElement(RouteRuntimeProvider, {
+            value: {
+              currentPath: currentRoute.path,
+              currentRoute,
+              match: {
+                route: currentRoute,
                 params: {},
-                query: {},
-                navigate: () => {},
-                isPreloading: false,
+                parents: [],
+                activeRoutes: [currentRoute],
               },
-              children: wrappedPage,
-            }),
+              params: {},
+              query: {},
+              navigate: () => {},
+              isPreloading: false,
+            },
+            children: wrappedPage,
           }),
         }),
-      );
+      });
 
       const requestContext: SsrRequestContext = {
         queryClient: new QueryClient({

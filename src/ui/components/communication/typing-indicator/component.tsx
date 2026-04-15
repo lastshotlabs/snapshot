@@ -115,7 +115,6 @@ export function TypingIndicator({ config }: { config: TypingIndicatorConfig }) {
         ...((config.style as CSSProperties | undefined) ?? {}),
       }}
     >
-      <style>{BOUNCE_KEYFRAMES}</style>
       <span
         data-snapshot-id={`${rootId}-dots`}
         className={dotsSurface.className}
@@ -148,6 +147,7 @@ export function TypingIndicator({ config }: { config: TypingIndicatorConfig }) {
       <SurfaceStyles css={dotsSurface.scopedCss} />
       <SurfaceStyles css={dotSurface.scopedCss} />
       <SurfaceStyles css={textSurface.scopedCss} />
+      <SurfaceStyles css={BOUNCE_KEYFRAMES} />
     </div>
   );
 }

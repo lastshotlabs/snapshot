@@ -14,7 +14,7 @@ import type { ScrollAreaConfig } from "./types";
  *
  * Supports vertical, horizontal, or bidirectional scrolling.
  * Scrollbar visibility can be always, hover-only, or auto.
- * Uses a scoped `<style>` tag for webkit scrollbar pseudo-element styling.
+ * Uses scoped runtime CSS for webkit scrollbar pseudo-element styling.
  *
  * @param props.config - The scroll area config from the manifest
  */
@@ -125,7 +125,6 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
         ...((config.style as CSSProperties | undefined) ?? {}),
       }}
     >
-      <style dangerouslySetInnerHTML={{ __html: scrollbarStyles }} />
       <div
         data-snapshot-id={`${rootId}-viewport`}
         className={[scopeClass, viewportSurface.className].filter(Boolean).join(" ")}
@@ -140,6 +139,7 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
           />
         ))}
       </div>
+      <SurfaceStyles css={scrollbarStyles} />
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={viewportSurface.scopedCss} />
     </div>

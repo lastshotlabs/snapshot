@@ -1,12 +1,12 @@
 'use client';
 
 import React, {
-  createContext,
   useCallback,
-  useContext,
   useMemo,
   useRef,
 } from "react";
+import { atom } from "jotai";
+import { useAtomValue, useStore } from "jotai/react";
 import {
   DndContext,
   closestCenter,
@@ -57,9 +57,8 @@ interface SharedDragDropContextValue {
   registerContainer: (container: SharedDragDropContainer) => () => void;
 }
 
-const SharedDragDropContext = createContext<SharedDragDropContextValue | null>(
-  null,
-);
+const sharedDragDropAtom = atom<SharedDragDropContextValue | null>(null);
+sharedDragDropAtom.debugLabel = "snapshot:shared-drag-drop";
 
 function isDropAllowed(
   source: SharedDragDropContainer,
@@ -111,6 +110,8 @@ export function SnapshotDragDropProvider({
 }) {
   const sensors = useDndSensors();
   const containersRef = useRef(new Map<string, SharedDragDropContainer>());
+  const store = useStore();
+  const lastValueRef = useRef<SharedDragDropContextValue | null>(null);
 
   const registerContainer = useCallback((container: SharedDragDropContainer) => {
     containersRef.current.set(container.id, container);
@@ -188,21 +189,24 @@ export function SnapshotDragDropProvider({
     [registerContainer],
   );
 
+  if (lastValueRef.current !== value) {
+    store.set(sharedDragDropAtom, value);
+    lastValueRef.current = value;
+  }
+
   return (
-    <SharedDragDropContext.Provider value={value}>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        {children}
-      </DndContext>
-    </SharedDragDropContext.Provider>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      {children}
+    </DndContext>
   );
 }
 
 export function useSharedDragDrop(): SharedDragDropContextValue | null {
-  return useContext(SharedDragDropContext);
+  return useAtomValue(sharedDragDropAtom);
 }
 
 export type { SharedDragDropContainerData, SharedDragDropItemData };

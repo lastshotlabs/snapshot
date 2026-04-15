@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import React from "react";
 import { QueryClient } from "@tanstack/react-query";
-import { SnapshotApiContext } from "../ui/actions/executor";
 import { AppContextProvider } from "../ui/context/providers";
 import { Layout } from "../ui/components/layout/layout";
 import { Nav } from "../ui/components/layout/nav";
@@ -796,18 +795,14 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
           match: requestMatch,
         };
 
-        const wrapped = React.createElement(
-          SnapshotApiContext.Provider,
-          { value: null },
-          React.createElement(ManifestRuntimeProvider, {
-            manifest: runtimeManifest,
-            children: React.createElement(AppContextProvider, {
-              globals: runtimeManifest.state,
-              resources: runtimeManifest.resources,
-              children: element,
-            }),
+        const wrapped = React.createElement(ManifestRuntimeProvider, {
+          manifest: runtimeManifest,
+          children: React.createElement(AppContextProvider, {
+            globals: runtimeManifest.state,
+            resources: runtimeManifest.resources,
+            children: element,
           }),
-        );
+        });
 
         const rendered = await renderPage(
           wrapped,
@@ -1161,34 +1156,30 @@ export function createManifestRenderer(rawConfig: ManifestSsrConfig): {
               children: pageElement,
             })
           : pageElement;
-      const element = React.createElement(
-        SnapshotApiContext.Provider,
-        { value: null },
-        React.createElement(ManifestRuntimeProvider, {
-          manifest: compiledWithEntity,
-          children: React.createElement(AppContextProvider, {
-            globals: compiledWithEntity.state,
-            resources: compiledWithEntity.resources,
-            children: React.createElement(RouteRuntimeProvider, {
-              value: {
-                currentPath: currentRoute.path,
-                currentRoute,
-                match: {
-                  route: currentRoute,
-                  params: {},
-                  parents: [],
-                  activeRoutes: [currentRoute],
-                },
+      const element = React.createElement(ManifestRuntimeProvider, {
+        manifest: compiledWithEntity,
+        children: React.createElement(AppContextProvider, {
+          globals: compiledWithEntity.state,
+          resources: compiledWithEntity.resources,
+          children: React.createElement(RouteRuntimeProvider, {
+            value: {
+              currentPath: currentRoute.path,
+              currentRoute,
+              match: {
+                route: currentRoute,
                 params: {},
-                query: {},
-                navigate: () => {},
-                isPreloading: false,
+                parents: [],
+                activeRoutes: [currentRoute],
               },
-              children: wrappedPage,
-            }),
+              params: {},
+              query: {},
+              navigate: () => {},
+              isPreloading: false,
+            },
+            children: wrappedPage,
           }),
         }),
-      );
+      });
 
       const requestContext: SsrRequestContext = {
         queryClient: new QueryClient({

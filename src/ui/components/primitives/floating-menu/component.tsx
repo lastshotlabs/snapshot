@@ -15,6 +15,7 @@ import { useResolveFrom, useSubscribe } from "../../../context";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { renderIcon } from "../../../icons/render";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import {
   resolveSurfacePresentation,
@@ -26,10 +27,6 @@ import type { FloatingMenuConfig, FloatingMenuEntry } from "./types";
 const ANIMATION_DURATION = 150;
 
 type SurfaceConfig = Record<string, unknown>;
-
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
 
 function resolveSlotSurface(params: {
   surfaceId?: string;
@@ -233,6 +230,9 @@ export function FloatingPanel({
       boxShadow:
         "var(--sn-shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1))",
       overflow: "hidden",
+      style: {
+        backdropFilter: "blur(8px)",
+      },
     },
     componentSurface: slot,
     activeStates: open ? ["open", ...(activeStates ?? [])] : activeStates,
@@ -424,7 +424,6 @@ export function FloatingMenu({ config }: { config: FloatingMenuConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        <FloatingMenuStyles />
         <ButtonControl
           buttonRef={triggerRef}
           variant="ghost"
@@ -576,6 +575,35 @@ export function MenuItem({
       userSelect: "none",
       whiteSpace: "nowrap",
       overflow: "hidden",
+      transition:
+        "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      hover: disabled
+        ? undefined
+        : {
+            bg: "var(--sn-color-accent, #f3f4f6)",
+          },
+      focus: {
+        ring: true,
+      },
+      states: {
+        active: {
+          bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent)",
+          color: "var(--sn-color-foreground, #111827)",
+        },
+        current: {
+          bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent)",
+          color: "var(--sn-color-foreground, #111827)",
+          fontWeight: "var(--sn-font-weight-semibold, 600)",
+        },
+        selected: {
+          bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent)",
+          color: "var(--sn-color-foreground, #111827)",
+          fontWeight: "var(--sn-font-weight-semibold, 600)",
+        },
+        disabled: {
+          opacity: "var(--sn-opacity-disabled, 0.5)",
+        },
+      },
     },
     componentSurface: slot,
     activeStates,
@@ -720,37 +748,5 @@ export function MenuLabel({
 }
 
 export function FloatingMenuStyles() {
-  return (
-    <style>{`
-      [data-floating-panel] {
-        backdrop-filter: blur(8px);
-      }
-      [data-floating-panel] [data-menu-item] {
-        transition: background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
-                    color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease),
-                    opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
-      }
-      [data-floating-panel] [data-menu-item]:not(:disabled):hover {
-        background: var(--sn-color-accent, #f3f4f6);
-      }
-      [data-floating-panel] [data-menu-item][data-active="true"],
-      [data-floating-panel] [data-menu-item][data-current="true"],
-      [data-floating-panel] [data-menu-item][data-selected="true"] {
-        background: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent);
-        color: var(--sn-color-foreground, #111827);
-      }
-      [data-floating-panel] [data-menu-item][data-current="true"],
-      [data-floating-panel] [data-menu-item][data-selected="true"] {
-        font-weight: var(--sn-font-weight-semibold, 600);
-      }
-      [data-floating-panel] [data-menu-item][data-disabled="true"] {
-        opacity: var(--sn-opacity-disabled, 0.5);
-      }
-      [data-floating-panel] [data-menu-item]:focus { outline: none; }
-      [data-floating-panel] [data-menu-item]:focus-visible {
-        outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
-        outline-offset: -2px;
-      }
-    `}</style>
-  );
+  return null;
 }

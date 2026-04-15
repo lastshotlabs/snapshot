@@ -654,7 +654,7 @@ export function useActionExecutor(): ActionExecuteFn {
             case "download": {
               if (!api) {
                 throw new Error(
-                  "useActionExecutor: SnapshotApiContext not provided for download action.",
+                  "useActionExecutor: API client not provided for download action.",
                 );
               }
 

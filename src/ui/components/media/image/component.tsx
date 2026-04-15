@@ -7,6 +7,12 @@ import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SnapshotImageConfig } from "./types";
 
 const IMAGE_ROUTE = "/_snapshot/image";
+const IMAGE_SHIMMER_KEYFRAMES = `
+  @keyframes sn-image-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+`;
 
 function buildImageUrl(params: {
   src: string;
@@ -200,14 +206,9 @@ export function SnapshotImage({ config }: { config: SnapshotImageConfig }) {
         style={imageSurface.style}
         onLoad={() => setLoaded(true)}
       />
-      {config.placeholder === "skeleton" ? (
-        <style>{`
-          @keyframes sn-image-shimmer {
-            0% { background-position: 100% 0; }
-            100% { background-position: -100% 0; }
-          }
-        `}</style>
-      ) : null}
+      <SurfaceStyles
+        css={config.placeholder === "skeleton" ? IMAGE_SHIMMER_KEYFRAMES : undefined}
+      />
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={placeholderSurface.scopedCss} />
       <SurfaceStyles css={imageSurface.scopedCss} />
