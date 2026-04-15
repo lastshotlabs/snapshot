@@ -1,4 +1,7 @@
+import { isFromRef as isSharedFromRef } from "@lastshotlabs/frontend-contract/refs";
 import type { FromRef } from "./types";
+
+export const isFromRef = isSharedFromRef;
 
 /**
  * Safely access nested values via dot-path.
@@ -16,22 +19,6 @@ export function getNestedValue(obj: unknown, path: string): unknown {
     current = (current as Record<string, unknown>)[part];
   }
   return current;
-}
-
-/**
- * Type guard for FromRef values.
- * A FromRef is an object with a single `from` string property.
- *
- * @param value - The value to check
- * @returns True if the value is a FromRef
- */
-export function isFromRef(value: unknown): value is FromRef {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "from" in value &&
-    typeof (value as FromRef).from === "string"
-  );
 }
 
 /**

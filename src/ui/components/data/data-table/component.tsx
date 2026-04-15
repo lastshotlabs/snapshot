@@ -26,13 +26,9 @@ import type { DataTableConfig, ResolvedColumn } from "./types";
 import { wsManagerAtom } from "../../../../ws/atom";
 import { Icon } from "../../../icons/icon";
 import { useSubscribe } from "../../../context/hooks";
-import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
-
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
 
 // ── Formatting helpers ──────────────────────────────────────────────────────
 
@@ -452,7 +448,9 @@ function SortableTableRow({
   id,
   containerId,
   children,
+  className,
   style,
+  dataSnapshotId,
   dataSelected,
   onClick,
   onContextMenu,
@@ -460,7 +458,9 @@ function SortableTableRow({
   id: string;
   containerId: string;
   children: React.ReactNode;
+  className?: string;
   style?: React.CSSProperties;
+  dataSnapshotId?: string;
   dataSelected?: string;
   onClick?: () => void;
   onContextMenu?: (event: React.MouseEvent) => void;
@@ -483,7 +483,9 @@ function SortableTableRow({
   return (
     <tr
       ref={setNodeRef}
+      data-snapshot-id={dataSnapshotId}
       data-selected={dataSelected}
+      className={className}
       style={{
         ...style,
         ...getSortableStyle(transform, transition, isDragging),
@@ -779,18 +781,26 @@ export function DataTable({ config }: { config: DataTableConfig }) {
       typeof id === "string" || typeof id === "number" ? id : rowIndex;
     const isExpanded = expandedRows.has(rowId);
 
-    const rowStyle: React.CSSProperties = {
-      backgroundColor: table.selection.has(rowId)
+    const rowStyle = {
+      bg: table.selection.has(rowId)
         ? "var(--sn-color-accent, #dbeafe)"
         : undefined,
       cursor:
         config.expandable || config.rowClickAction || draggable
           ? "pointer"
           : undefined,
+      hover:
+        config.expandable || config.rowClickAction || draggable
+          ? {
+              bg: table.selection.has(rowId)
+                ? "var(--sn-color-accent, #dbeafe)"
+                : "var(--sn-color-secondary, #f3f4f6)",
+            }
+          : undefined,
     };
     const rowSurface = resolveSurfacePresentation({
       surfaceId: `${rootId}-row-${rowIndex}`,
-      implementationBase: rowStyle as Record<string, unknown>,
+      implementationBase: rowStyle,
       componentSurface: config.slots?.row,
       activeStates: table.selection.has(rowId) ? ["selected"] : [],
     });
@@ -936,7 +946,9 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           <SortableTableRow
             id={sortableId ?? String(rowId)}
             containerId={containerId}
+            dataSnapshotId={`${rootId}-row-${rowIndex}`}
             dataSelected={table.selection.has(rowId) ? "" : undefined}
+            className={rowSurface.className}
             style={rowSurface.style}
             onClick={onRowClick}
             onContextMenu={onRowContextMenu}
@@ -1010,24 +1022,6 @@ export function DataTable({ config }: { config: DataTableConfig }) {
       className={rootSurface.className}
       style={rootSurface.style}
     >
-      <style>{`
-[data-snapshot-component="data-table"] tr[style*="cursor"]:hover,
-[data-snapshot-component="data-table"] tr[data-selected]:hover { background-color: var(--sn-color-secondary, #f3f4f6) !important; }
-[data-snapshot-component="data-table"] th[style*="cursor: pointer"]:hover { color: var(--sn-color-primary, #2563eb); }
-[data-snapshot-component="data-table"] th[style*="cursor: pointer"]:focus { outline: none; }
-[data-snapshot-component="data-table"] th[style*="cursor: pointer"]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-[data-snapshot-component="data-table"] [data-table-pagination] button:hover:not(:disabled) { background-color: var(--sn-color-secondary, #f3f4f6); }
-[data-snapshot-component="data-table"] [data-table-pagination] button:focus { outline: none; }
-[data-snapshot-component="data-table"] [data-table-pagination] button:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-[data-snapshot-component="data-table"] input[type="checkbox"]:focus { outline: none; }
-[data-snapshot-component="data-table"] input[type="checkbox"]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-[data-snapshot-component="data-table"] [data-row-action]:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
-[data-snapshot-component="data-table"] [data-row-action]:focus { outline: none; }
-[data-snapshot-component="data-table"] [data-row-action]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-[data-snapshot-component="data-table"] [data-bulk-action]:hover { background-color: var(--sn-color-secondary, #f3f4f6); }
-[data-snapshot-component="data-table"] [data-bulk-action]:focus { outline: none; }
-[data-snapshot-component="data-table"] [data-bulk-action]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); }
-      `}</style>
       {hasNewData ? (
         <div
           data-table-live-indicator=""
@@ -1082,7 +1076,6 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           )}
           {config.toolbar?.length ? (
             <div style={{ display: "flex", gap: "var(--sn-spacing-xs, 0.25rem)", flexShrink: 0 }}>
-              <style>{BUTTON_INTERACTIVE_CSS}</style>
               {config.toolbar.map((item: NonNullable<DataTableConfig["toolbar"]>[number], i: number) => (
                 <ToolbarButton key={i} rootId={rootId} index={i} item={item} execute={execute} />
               ))}
@@ -1190,38 +1183,92 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               )}
 
               {/* Column headers */}
-              {table.columns.map((col) => (
-                <th
-                  key={col.field}
-                  data-snapshot-id={`${rootId}-header-cell-${col.field}`}
-                  className={headerCellBaseSurface.className}
-                  style={{
-                    padding: cellPadding,
-                    textAlign: col.align ?? "left",
-                    cursor: col.sortable ? "pointer" : "default",
-                    width: col.width,
-                    userSelect: "none",
-                    ...headerCellBaseSurface.style,
-                  }}
-                  onClick={
-                    col.sortable
-                      ? () => table.setSortColumn(col.field)
-                      : undefined
-                  }
-                  aria-sort={
-                    table.sort?.column === col.field
-                      ? table.sort.direction === "asc"
-                        ? "ascending"
-                        : "descending"
-                      : undefined
-                  }
-                >
-                  {col.label}
-                  {col.sortable && (
-                    <SortIndicator column={col.field} sort={table.sort} />
-                  )}
-                </th>
-              ))}
+              {table.columns.map((col) => {
+                const isSorted = table.sort?.column === col.field;
+                const headerButtonSurface = col.sortable
+                  ? resolveSurfacePresentation({
+                      surfaceId: `${rootId}-header-button-${col.field}`,
+                      implementationBase: {
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "xs",
+                        width: "100%",
+                        justifyContent:
+                          col.align === "right"
+                            ? "flex-end"
+                            : col.align === "center"
+                              ? "center"
+                              : "flex-start",
+                        color: isSorted
+                          ? "var(--sn-color-primary, #2563eb)"
+                          : "var(--sn-color-foreground, #111827)",
+                        cursor: "pointer",
+                        hover: {
+                          color: "var(--sn-color-primary, #2563eb)",
+                        },
+                        focus: {
+                          ring: true,
+                        },
+                        style: {
+                          border: "none",
+                          background: "none",
+                          padding: 0,
+                          textAlign: col.align ?? "left",
+                        },
+                      },
+                      activeStates: isSorted
+                        ? (["current", "selected"] as Array<"current" | "selected">)
+                        : [],
+                    })
+                  : null;
+
+                return (
+                  <th
+                    key={col.field}
+                    data-snapshot-id={`${rootId}-header-cell-${col.field}`}
+                    className={headerCellBaseSurface.className}
+                    style={{
+                      padding: cellPadding,
+                      textAlign: col.align ?? "left",
+                      width: col.width,
+                      userSelect: "none",
+                      ...headerCellBaseSurface.style,
+                    }}
+                    aria-sort={
+                      table.sort?.column === col.field
+                        ? table.sort.direction === "asc"
+                          ? "ascending"
+                          : "descending"
+                        : undefined
+                    }
+                  >
+                    {col.sortable ? (
+                      <>
+                        <ButtonControl
+                          surfaceId={`${rootId}-header-button-${col.field}`}
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => table.setSortColumn(col.field)}
+                          ariaCurrent={isSorted ? "page" : undefined}
+                          className={headerButtonSurface?.className}
+                          style={headerButtonSurface?.style}
+                          activeStates={
+                            isSorted
+                              ? (["current", "selected"] as Array<"current" | "selected">)
+                              : []
+                          }
+                        >
+                          <span>{col.label}</span>
+                          <SortIndicator column={col.field} sort={table.sort} />
+                        </ButtonControl>
+                        <SurfaceStyles css={headerButtonSurface?.scopedCss} />
+                      </>
+                    ) : (
+                      col.label
+                    )}
+                  </th>
+                );
+              })}
 
               {/* Actions column header */}
               {hasActions && (

@@ -1,4 +1,5 @@
 import { evaluateExpression } from "../expressions/parser";
+import { isExprRef } from "@lastshotlabs/frontend-contract/refs";
 import type { ExprRef, FromRef } from "./types";
 import { applyTransform, getNestedValue } from "./utils";
 
@@ -29,15 +30,6 @@ export interface ResolveFromRefContext {
     app?: Record<string, unknown>;
     auth?: Record<string, unknown>;
   } | null;
-}
-
-function isExprRef(value: unknown): value is ExprRef {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "expr" in value &&
-    typeof (value as ExprRef).expr === "string"
-  );
 }
 
 export function buildExpressionContext(
@@ -240,7 +232,9 @@ export function resolveFromRef(
   const registrySubPath =
     cleanDotIndex === -1 ? "" : cleanPath.slice(cleanDotIndex + 1);
   const value = readRegistryValue(registry, registryId);
-  const resolved = registrySubPath ? getNestedValue(value, registrySubPath) : value;
+  const resolved = registrySubPath
+    ? getNestedValue(value, registrySubPath)
+    : value;
 
   return applyTransform(resolved, ref.transform, ref.transformArg);
 }

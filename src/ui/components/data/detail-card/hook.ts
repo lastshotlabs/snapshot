@@ -1,8 +1,7 @@
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { isFromRef } from "../../../context/utils";
-import { SnapshotApiContext } from "../../../actions/executor";
 import {
   buildRequestUrl,
   isResourceRef,
@@ -15,6 +14,7 @@ import {
   useManifestResourcePolling,
   useManifestRuntime,
 } from "../../../manifest/runtime";
+import { useApiClient } from "../../../state";
 import type { DetailCardConfig, DetailFieldConfig } from "./schema";
 import type { ResolvedField, UseDetailCardResult } from "./types";
 
@@ -117,7 +117,7 @@ function resolveFields(
  * ```
  */
 export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const queryClient = useQueryClient();
   const runtime = useManifestRuntime();
   const resourceCache = useManifestResourceCache();
@@ -183,8 +183,7 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
     queryFn: async () => {
       if (!api) {
         throw new Error(
-          "useDetailCard: SnapshotApiContext not provided. " +
-            "Wrap your app in <SnapshotApiContext.Provider value={apiClient}>.",
+          "useDetailCard: API client not provided. Provide it through the app state runtime.",
         );
       }
       if (resourceCache) {

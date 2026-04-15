@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSubscribe } from "../../context/hooks";
 import { isFromRef } from "../../context/utils";
-import { SnapshotApiContext } from "../../actions/executor";
 import type { FromRef } from "../../context/types";
 import {
   buildRequestUrl,
@@ -17,6 +16,7 @@ import {
   useManifestRuntime,
 } from "../../manifest/runtime";
 import { usePoll } from "../../hooks/use-poll";
+import { useApiClient } from "../../state";
 
 /**
  * Result returned by `useComponentData`.
@@ -67,7 +67,7 @@ function getInitialInlineData(
  *
  * Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint,
  * resolves any `FromRef` values in params via `useSubscribe`, and fetches data
- * using the API client from `SnapshotApiContext`.
+ * using the app-scope API client.
  *
  * When the API client is not available (e.g., in tests or before ManifestApp provides it),
  * the hook returns a loading state without throwing.
@@ -82,7 +82,7 @@ export function useComponentData(
   options?: ComponentDataOptions,
 ): ComponentDataResult {
   const resolvedData = useSubscribe(dataConfig);
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const runtime = useManifestRuntime();
   const resourceCache = useManifestResourceCache();
 
@@ -155,8 +155,7 @@ export function useComponentData(
     }
 
     if (!api) {
-      // No API client — remain in loading state until SnapshotApiContext is provided.
-      // In a full ManifestApp setup, SnapshotApiContext is always provided.
+      // No API client yet — remain in loading state until the app runtime provides one.
       return;
     }
 

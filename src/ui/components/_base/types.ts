@@ -1,5 +1,9 @@
 import { z } from "zod";
 import {
+  fromRefSchema,
+  type FromRef as SharedFromRef,
+} from "@lastshotlabs/frontend-contract/refs";
+import {
   dataSourceSchema,
   endpointTargetSchema,
   resourceRefSchema,
@@ -19,34 +23,10 @@ import {
  * Schema for a FromRef value — a reference to another component's published data.
  * Supports optional transforms (uppercase, lowercase, trim, etc.) and transformArg.
  */
-export const fromRefSchema = z.object({
-  from: z.string(),
-  transform: z
-    .enum([
-      "uppercase",
-      "lowercase",
-      "trim",
-      "length",
-      "number",
-      "boolean",
-      "string",
-      "json",
-      "keys",
-      "values",
-      "first",
-      "last",
-      "count",
-      "sum",
-      "join",
-      "split",
-      "default",
-    ])
-    .optional(),
-  transformArg: z.union([z.string(), z.number()]).optional(),
-});
+export { fromRefSchema };
 
 /** Type for a FromRef value. */
-export type FromRef = z.infer<typeof fromRefSchema>;
+export type FromRef = SharedFromRef;
 
 /**
  * Type guard — returns true if value is a FromRef object.
@@ -83,8 +63,12 @@ export const pollConfigSchema = z
 
 export type ComponentZIndex = z.infer<typeof componentZIndexSchema>;
 export type ComponentAnimationConfig = z.infer<typeof componentAnimationSchema>;
-export type ComponentBackgroundConfig = z.infer<typeof componentBackgroundSchema>;
-export type ComponentTransitionConfig = z.infer<typeof componentTransitionSchema>;
+export type ComponentBackgroundConfig = z.infer<
+  typeof componentBackgroundSchema
+>;
+export type ComponentTransitionConfig = z.infer<
+  typeof componentTransitionSchema
+>;
 export type HoverConfig = z.infer<typeof hoverConfigSchema>;
 export type FocusConfig = z.infer<typeof focusConfigSchema>;
 export type ActiveConfig = z.infer<typeof activeConfigSchema>;

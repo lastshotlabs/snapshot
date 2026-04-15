@@ -1,11 +1,8 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { workflowDefinitionSchema } from "../../../workflows/schema";
-import {
-  baseComponentConfigSchema,
-  fromRefSchema,
-} from "../../../manifest/schema";
-import { slotsSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const drawerSlotNames = [
   "root",
@@ -24,7 +21,7 @@ export const drawerSlotNames = [
  * Drawers are slide-in panels from the left or right edge of the screen.
  * Like modals, they are opened/closed via the modal manager.
  */
-export const drawerConfigSchema = baseComponentConfigSchema.extend({
+export const drawerConfigSchema = extendComponentSchema({
   type: z.literal("drawer"),
   /** Drawer title. Can be static or a FromRef. */
   title: z.union([z.string(), fromRefSchema]).optional(),
@@ -48,10 +45,6 @@ export const drawerConfigSchema = baseComponentConfigSchema.extend({
   initialFocus: z.string().optional(),
   /** Return focus to the previously focused element on close. */
   returnFocus: z.boolean().default(true),
-  /** Inline style overrides. */
-  style: z.record(z.union([z.string(), z.number()])).optional(),
-  /** Additional CSS class name. */
-  className: z.string().optional(),
   /** Footer with action buttons. */
   footer: z
     .object({
@@ -75,7 +68,7 @@ export const drawerConfigSchema = baseComponentConfigSchema.extend({
     })
     .optional(),
   slots: slotsSchema(drawerSlotNames).optional(),
-});
+}).strict();
 
 /** Inferred type for drawer config. */
-export type DrawerConfig = z.infer<typeof drawerConfigSchema>;
+export type DrawerConfig = z.input<typeof drawerConfigSchema>;

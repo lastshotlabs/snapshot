@@ -6,6 +6,7 @@ import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { OverlayRuntimeProvider } from "../../../manifest/runtime";
 import type { ComponentConfig } from "../../../manifest/types";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { useFocusTrap } from "../../_base/use-focus-trap";
 import { ButtonControl } from "../../forms/button";
@@ -27,10 +28,6 @@ const ALIGN_MAP: Record<string, string> = {
   center: "center",
   right: "flex-end",
 };
-
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
 
 export function DrawerComponent({ config }: { config: DrawerConfig }) {
   const { isOpen, close, payload, result } = useDrawer(config);

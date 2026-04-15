@@ -1,70 +1,22 @@
 import type { ReactNode } from "react";
 import type { ApiClient } from "../../api/client";
-import type { ResourceMap } from "../manifest/resources";
+import type { ExprRef, FromRef } from "@lastshotlabs/frontend-contract/refs";
 import type {
-  AtomRegistry,
-  JotaiStore,
-  StateConfig as RuntimeStateConfig,
   StateConfigMap,
-} from "../state/types";
-
-/**
- * A reference to another component's published value.
- * Used in config objects to wire components together reactively.
- *
- * @example
- * ```ts
- * // Reference a page-level component's value
- * { from: "users-table.selected" }
- *
- * // Reference a nested field
- * { from: "users-table.selected.name" }
- *
- * // Reference a global value
- * { from: "global.user" }
- * ```
- */
-export interface FromRef {
-  /** Dot-path reference. Examples: "component-id", "component-id.field", "global.user.name" */
-  from: string;
-  /** Optional transform to apply to the resolved value before returning it. */
-  transform?:
-    | "uppercase"
-    | "lowercase"
-    | "trim"
-    | "length"
-    | "number"
-    | "boolean"
-    | "string"
-    | "json"
-    | "keys"
-    | "values"
-    | "first"
-    | "last"
-    | "count"
-    | "sum"
-    | "join"
-    | "split"
-    | "default";
-  /** Optional argument for transforms that accept one (e.g. join separator, split delimiter, default fallback). */
-  transformArg?: string | number;
-}
-
-/**
- * Safe expression reference used anywhere manifest config supports computed values.
- */
-export interface ExprRef {
-  expr: string;
-}
+  StateValueConfig,
+} from "@lastshotlabs/frontend-contract/state";
+import type { ResourceMap } from "../manifest/resources";
+import type { AtomRegistry, JotaiStore } from "../state/types";
 
 /** Backwards-compatible alias for the shared state registry interface. */
 export type { AtomRegistry, JotaiStore };
+export type { ExprRef, FromRef };
 
 /**
  * Global state definition from the manifest.
  * This now aliases the shared state config used by the runtime.
  */
-export type GlobalConfig = RuntimeStateConfig;
+export type GlobalConfig = StateValueConfig;
 
 /**
  * Props for AppContextProvider.

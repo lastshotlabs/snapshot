@@ -46,6 +46,13 @@ export function DefaultLoading({ config }: { config: SpinnerConfig }) {
     componentSurface: config.slots?.label,
     activeStates: ["active"],
   });
+  const spinCss = `
+    @keyframes sn-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  `;
 
   return (
     <div
@@ -72,13 +79,7 @@ export function DefaultLoading({ config }: { config: SpinnerConfig }) {
       >
         {config.label ?? "Loading"}
       </span>
-      <style>{`
-        @keyframes sn-spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+      <SurfaceStyles css={spinCss} />
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={spinnerSurface.scopedCss} />
       <SurfaceStyles css={labelSurface.scopedCss} />

@@ -1,9 +1,8 @@
-import { useState, useMemo, useCallback, useEffect, useContext } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { useResolveFrom } from "../../../context/hooks";
 import { usePublish } from "../../../context/hooks";
 import { isFromRef } from "../../../context/utils";
-import { SnapshotApiContext } from "../../../actions/executor";
 import { applyClientFilters, applyClientSort } from "../../_base/client-data-ops";
 import {
   buildRequestUrl,
@@ -19,6 +18,7 @@ import {
 } from "../../../manifest/runtime";
 import { usePoll } from "../../../hooks/use-poll";
 import { useUrlSync } from "../../../hooks/use-url-sync";
+import { useApiClient } from "../../../state";
 import type {
   ColumnConfig,
   DataTableConfig,
@@ -240,7 +240,7 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
   const [refreshCounter, setRefreshCounter] = useState(0);
 
   // API client for endpoint fetching
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const runtime = useManifestRuntime();
   const resourceCache = useManifestResourceCache();
 

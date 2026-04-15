@@ -64,6 +64,7 @@ export {
   isFromRef,
 } from "./ui/context/index";
 export type {
+  ExprRef,
   FromRef,
   AtomRegistry,
   GlobalConfig,
@@ -306,9 +307,7 @@ export {
   Column,
   columnConfigSchema as layoutColumnConfigSchema,
 } from "./ui/components/layout/column/index";
-export type {
-  ColumnConfig as LayoutColumnConfig,
-} from "./ui/components/layout/column/index";
+export type { ColumnConfig as LayoutColumnConfig } from "./ui/components/layout/column/index";
 export { Outlet } from "./ui/components/layout/outlet/index";
 
 // DataTable
@@ -395,10 +394,7 @@ export type { RichTextEditorConfig } from "./ui/components/content/rich-text-edi
 export { Heading } from "./ui/components/content/heading/index";
 
 // Components — Code
-export {
-  Code,
-  codeConfigSchema,
-} from "./ui/components/content/code/index";
+export { Code, codeConfigSchema } from "./ui/components/content/code/index";
 export type { CodeConfig } from "./ui/components/content/code/index";
 
 // Components — RichInput (TipTap WYSIWYG)
@@ -525,9 +521,7 @@ export {
   ConfirmDialogComponent,
   confirmDialogConfigSchema,
 } from "./ui/components/overlay/confirm-dialog/index";
-export type {
-  ConfirmDialogConfig,
-} from "./ui/components/overlay/confirm-dialog/index";
+export type { ConfirmDialogConfig } from "./ui/components/overlay/confirm-dialog/index";
 
 // Components — ScrollArea
 export {

@@ -26,6 +26,18 @@ export function Progress({ config }: { config: ProgressConfig }) {
       ? Math.min(100, Math.max(0, (resolvedValue / max) * 100))
       : undefined;
   const isIndeterminate = percentage === undefined;
+  const circularSpinCss = `
+    @keyframes sn-progress-spin-${uniqueId} {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  `;
+  const indeterminateBarCss = `
+    @keyframes sn-progress-indeterminate-${uniqueId} {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300%); }
+    }
+  `;
 
   useEffect(() => {
     if (publish && percentage !== undefined) {
@@ -111,14 +123,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
           display: "inline-flex",
         }}
       >
-        {isIndeterminate ? (
-          <style>{`
-            @keyframes sn-progress-spin-${uniqueId} {
-              from { transform: rotate(0deg); }
-              to { transform: rotate(360deg); }
-            }
-          `}</style>
-        ) : null}
+        {isIndeterminate ? <SurfaceStyles css={circularSpinCss} /> : null}
         <svg
           width={svgSize}
           height={svgSize}
@@ -244,14 +249,7 @@ export function Progress({ config }: { config: ProgressConfig }) {
         ...(config.style ?? {}),
       }}
     >
-      {isIndeterminate ? (
-        <style>{`
-          @keyframes sn-progress-indeterminate-${uniqueId} {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(300%); }
-          }
-        `}</style>
-      ) : null}
+      {isIndeterminate ? <SurfaceStyles css={indeterminateBarCss} /> : null}
 
       {(resolvedLabel || (showValue && percentage !== undefined)) ? (
         <div

@@ -2,7 +2,7 @@ import type { z } from "zod";
 import type { statCardConfigSchema } from "./schema";
 
 /** Inferred config type from the StatCard Zod schema. */
-export type StatCardConfig = z.infer<typeof statCardConfigSchema>;
+export type StatCardConfig = z.input<typeof statCardConfigSchema>;
 
 /**
  * Result returned by the StatCard headless hook or internal logic.

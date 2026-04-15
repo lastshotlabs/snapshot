@@ -1,4 +1,5 @@
 import type { z } from "zod";
+import type { StateConfigMap } from "@lastshotlabs/frontend-contract/state";
 import type {
   analyticsConfigSchema,
   appConfigSchema,
@@ -99,7 +100,7 @@ export type NavigationConfig = z.infer<typeof navigationConfigSchema>;
 /** Runtime state declaration for a single named manifest state value. */
 export type StateValueConfig = z.infer<typeof stateValueConfigSchema>;
 /** Named manifest state map keyed by state id. */
-export type StateConfig = Record<string, StateValueConfig>;
+export type StateConfig = StateConfigMap;
 /** Named manifest resource map keyed by resource id. */
 export type ResourceConfigMap = ResourceMap;
 /** Resolved runtime view of `overlayConfigSchema`. */

@@ -1,8 +1,13 @@
 import type { PrimitiveAtom, WritableAtom } from "jotai";
 import type { createStore } from "jotai/vanilla";
 import type { ReactNode } from "react";
+import type {
+  StateConfigMap as SharedStateConfigMap,
+  StateScope,
+  StateValueConfig,
+} from "@lastshotlabs/frontend-contract/state";
 import type { ApiClient } from "../../api/client";
-import type { EndpointTarget, ResourceMap } from "../manifest/resources";
+import type { ResourceMap } from "../manifest/resources";
 
 /** The Jotai store type, derived from the createStore return type. */
 export type JotaiStore = ReturnType<typeof createStore>;
@@ -21,31 +26,16 @@ export interface AtomRegistry {
   readonly store: JotaiStore;
 }
 
-/** Lifetime scope for manifest state: shared across the app or recreated per route. */
-export type StateScope = "app" | "route";
-
 /**
  * Named state definition from the manifest.
  * App-scope state persists for the app lifetime.
  * Route-scope state is recreated whenever the active route changes.
  */
-export interface StateConfig {
-  scope?: StateScope;
-  data?: EndpointTarget;
-  default?: unknown;
-  compute?: string;
-  persist?:
-    | "none"
-    | "localStorage"
-    | "sessionStorage"
-    | {
-        storage: "localStorage" | "sessionStorage";
-        key?: string;
-      };
-}
+export type { StateScope };
+export type StateConfig = StateValueConfig;
 
 /** Map of named state definitions declared by the manifest runtime. */
-export type StateConfigMap = Record<string, StateConfig>;
+export type StateConfigMap = SharedStateConfigMap;
 
 /** Props accepted by the provider layer that wires manifest state into a React tree. */
 export interface StateProviderProps {

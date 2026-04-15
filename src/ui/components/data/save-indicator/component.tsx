@@ -24,6 +24,12 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
   let text = "";
   let color = "";
   let spinning = false;
+  const spinCss = `
+    @keyframes sn-save-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  `;
 
   switch (status) {
     case "saving":
@@ -86,14 +92,7 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
         ...(config.style ?? {}),
       }}
     >
-      {spinning ? (
-        <style>{`
-          @keyframes sn-save-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
-      ) : null}
+      {spinning ? <SurfaceStyles css={spinCss} /> : null}
       {showIcon && icon ? (
         <span
           aria-hidden="true"

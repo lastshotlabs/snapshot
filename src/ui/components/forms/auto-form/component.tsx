@@ -1,11 +1,8 @@
 'use client';
 
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePublish, useSubscribe } from "../../../context/hooks";
-import {
-  useActionExecutor,
-  SnapshotApiContext,
-} from "../../../actions/executor";
+import { useActionExecutor } from "../../../actions/executor";
 import { useComponentData } from "../../_base/use-component-data";
 import { Icon } from "../../../icons/index";
 import {
@@ -20,22 +17,16 @@ import {
   useManifestRuntime,
 } from "../../../manifest/runtime";
 import { useRouteRuntime } from "../../../manifest/runtime";
-import {
-  getButtonStyle,
-  BUTTON_INTERACTIVE_CSS,
-} from "../../_base/button-styles";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../button";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useEvaluateExpression } from "../../../expressions/use-expression";
 import { resolveTemplateValue } from "../../../expressions/template";
 import { useAutoForm } from "./hook";
+import { useApiClient } from "../../../state";
 import type { AutoFormConfig, FieldConfig, FieldSectionConfig } from "./types";
 import type { ApiClient } from "../../../../api/client";
-
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
 
 // ── Gap map ───────────────────────────────────────────────────────────────
 
@@ -1048,7 +1039,7 @@ async function submitToApi(
  * @param props - Component props containing the form config
  */
 export function AutoForm({ config }: { config: AutoFormConfig }) {
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const executeAction = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);

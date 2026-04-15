@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -9,15 +8,13 @@ import {
 import { usePublish } from "../../../context/hooks";
 import { evaluateExpression } from "../../../expressions/parser";
 import { useEvaluateExpression } from "../../../expressions/use-expression";
-import {
-  useActionExecutor,
-  SnapshotApiContext,
-} from "../../../actions/executor";
+import { useActionExecutor } from "../../../actions/executor";
 import {
   buildRequestUrl,
   resolveEndpointTarget,
 } from "../../../manifest/resources";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
+import { useApiClient } from "../../../state";
 import type { FieldConfig } from "../auto-form/types";
 import type { WizardConfig, UseWizardResult } from "./types";
 
@@ -90,7 +87,7 @@ function isPromiseLike<T>(value: T | Promise<T> | void): value is Promise<T> {
  * Manage wizard step state, validation, submission, and transition flow.
  */
 export function useWizard(config: WizardConfig): UseWizardResult {
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const runtime = useManifestRuntime();

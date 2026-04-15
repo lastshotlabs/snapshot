@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useAtomValue } from "jotai/react";
 import { AppRegistryContext, PageRegistryContext } from "../context/providers";
 import { useSubscribe } from "../context/hooks";
@@ -30,6 +30,7 @@ import type { AtomRegistry } from "../context/types";
 import type { ApiClient } from "../../api/client";
 import type { ActionConfig, ActionExecuteFn } from "./types";
 import type { WorkflowDefinition, WorkflowMap } from "../workflows/types";
+import { SnapshotApiProvider, useApiClient } from "../state";
 
 const WORKFLOW_CANCELLED = Symbol("snapshot.workflow.cancelled");
 
@@ -46,9 +47,11 @@ function dispatchPopStateEvent(): void {
   window.dispatchEvent(new Event("popstate"));
 }
 
-/** API client context consumed by built-in `api`, `download`, and related runtime actions. */
-export const SnapshotApiContext = createContext<ApiClient | null>(null);
-SnapshotApiContext.displayName = "SnapshotApiContext";
+/** Backward-compatible provider shim that writes the API client into Jotai state. */
+export const SnapshotApiContext = {
+  Provider: SnapshotApiProvider,
+  displayName: "SnapshotApiProvider",
+} as const;
 
 function resolveRegistry(
   target: string,
@@ -328,7 +331,7 @@ function getActionTimingKey(action: ActionConfig): string {
  * workflows, and optional API client.
  */
 export function useActionExecutor(): ActionExecuteFn {
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const pageRegistry = useContext(PageRegistryContext);
   const appRegistry = useContext(AppRegistryContext);
   const modalManager = useModalManager();
@@ -423,8 +426,8 @@ export function useActionExecutor(): ActionExecuteFn {
             case "api": {
               if (!api) {
                 throw new Error(
-                  "useActionExecutor: SnapshotApiContext not provided. " +
-                    "Wrap your app in <SnapshotApiContext.Provider value={apiClient}>.",
+                  "useActionExecutor: API client not provided. " +
+                    "Provide it through the app state runtime.",
                 );
               }
 

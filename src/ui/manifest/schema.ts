@@ -7,6 +7,11 @@
  */
 
 import { z } from "zod";
+import {
+  exprRefSchema,
+  fromRefSchema,
+} from "@lastshotlabs/frontend-contract/refs";
+import { stateValueConfigSchema } from "@lastshotlabs/frontend-contract/state";
 import { themeConfigSchema } from "../tokens/schema";
 import { workflowConditionSchema } from "../workflows/schema";
 import {
@@ -35,34 +40,7 @@ import { confirmDialogConfigSchema } from "../components/overlay/confirm-dialog/
 import { envRefSchema } from "./env";
 import { i18nConfigSchema, tRefSchema } from "../i18n/schema";
 
-/** Zod schema for a FromRef value. */
-export const fromRefSchema = z
-  .object({
-    from: z.string(),
-    transform: z
-      .enum([
-        "uppercase",
-        "lowercase",
-        "trim",
-        "length",
-        "number",
-        "boolean",
-        "string",
-        "json",
-        "keys",
-        "values",
-        "first",
-        "last",
-        "count",
-        "sum",
-        "join",
-        "split",
-        "default",
-      ])
-      .optional(),
-    transformArg: z.union([z.string(), z.number()]).optional(),
-  })
-  .strict();
+export { fromRefSchema, stateValueConfigSchema };
 
 /**
  * Accept either a literal string or an environment reference.
@@ -72,11 +50,7 @@ export const stringOrEnvRef = z.union([z.string(), envRefSchema]);
 /**
  * An expression value evaluated safely through the Snapshot AST parser.
  */
-export const exprSchema = z
-  .object({
-    expr: z.string(),
-  })
-  .strict();
+export const exprSchema = exprRefSchema;
 
 const textWithFromRefSchema = z.union([
   stringOrEnvRef,
@@ -1784,39 +1758,6 @@ export const routeConfigSchema: z.ZodType = z.lazy(() =>
       },
     ),
 );
-
-/**
- * Schema for a named manifest state value declaration.
- */
-export const stateValueConfigSchema = z
-  .object({
-    scope: z.enum(["app", "route"]).optional(),
-    data: endpointTargetSchema.optional(),
-    default: z.unknown().optional(),
-    compute: z.string().optional(),
-    persist: z
-      .union([
-        z.literal("none"),
-        z.literal("localStorage"),
-        z.literal("sessionStorage"),
-        z
-          .object({
-            storage: z.enum(["localStorage", "sessionStorage"]),
-            key: z.string().optional(),
-          })
-          .strict(),
-      ])
-      .default("none"),
-  })
-  .strict()
-  .superRefine((value, ctx) => {
-    if (value.compute && value.data) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "State definitions cannot declare both compute and data.",
-      });
-    }
-  });
 
 /**
  * Manifest cache defaults for TanStack Query.

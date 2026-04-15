@@ -2,7 +2,6 @@
 
 import React, {
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -10,10 +9,7 @@ import React, {
   type CSSProperties,
 } from "react";
 import { usePublish, useSubscribe } from "../../../context/hooks";
-import {
-  SnapshotApiContext,
-  useActionExecutor,
-} from "../../../actions/executor";
+import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { useComponentData } from "../../_base/use-component-data";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -23,7 +19,9 @@ import {
   resolveEndpointTarget,
 } from "../../../manifest/resources";
 import { useManifestRuntime } from "../../../manifest/runtime";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { matchesCombo, parseChord } from "../../../shortcuts";
+import { useApiClient } from "../../../state";
 import type { ActionConfig } from "../../../actions/types";
 import type { CommandPaletteConfig } from "./types";
 
@@ -41,10 +39,6 @@ interface CommandItem {
 interface CommandGroup {
   label: string;
   items: CommandItem[];
-}
-
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
 }
 
 function flattenItems(
@@ -92,7 +86,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const visible = useSubscribe(config.visible ?? false);
   const publish = usePublish(config.id);
   const executeAction = useActionExecutor();
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const runtime = useManifestRuntime();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);

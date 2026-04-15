@@ -1,7 +1,7 @@
 'use client';
 
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { SnapshotApiContext, useActionExecutor } from "../../../actions/executor";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useActionExecutor } from "../../../actions/executor";
 import { useResolveFrom, useSubscribe } from "../../../context";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
@@ -9,17 +9,15 @@ import {
   isPasskeySupported,
   startPasskeyAuthentication,
 } from "../../../manifest/passkey";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
+import { useApiClient } from "../../../state";
 import { resolvePrimitiveValue } from "../resolve-value";
 import type { PasskeyButtonConfig } from "./types";
 
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
-
 export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const execute = useActionExecutor();
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();

@@ -15,6 +15,7 @@ import { useSharedDragDrop } from "../../_base/drag-drop-provider";
 import { useLiveData } from "../../_base/use-live-data";
 import { useReorderable } from "../../_base/use-reorderable";
 import { Icon } from "../../../icons/index";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   SortableContext,
   useDroppable,
@@ -28,45 +29,17 @@ import type { ActionConfig, ActionExecuteFn } from "../../../actions/types";
 import { wsManagerAtom } from "../../../../ws/atom";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
-
-/**
- * Badge pill component for list items.
- */
-function ListBadge({ text, color }: { text: string; color?: string }) {
-  const colorToken = color ?? "primary";
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        padding: "0 var(--sn-spacing-xs, 0.25rem)",
-        borderRadius: "var(--sn-radius-full, 9999px)",
-        fontSize: "var(--sn-font-size-xs, 0.75rem)",
-        fontWeight: "var(--sn-font-weight-semibold, 600)" as unknown as number,
-        backgroundColor: `var(--sn-color-${colorToken}, #2563eb)`,
-        color: `var(--sn-color-${colorToken}-foreground, #ffffff)`,
-        lineHeight: "var(--sn-leading-normal, 1.5)",
-      }}
-    >
-      {text}
-    </span>
-  );
-}
-
 function resolveItemSurface(
   rootId: string,
   item: ListItemConfig,
   index: number,
   slotName: "item" | "itemTitle" | "itemDescription" | "itemIcon" | "itemBadge",
-  implementationBase?: React.CSSProperties,
+  implementationBase?: Record<string, unknown>,
   fallbackSlot?: Record<string, unknown>,
 ) {
   return resolveSurfacePresentation({
     surfaceId: `${rootId}-${slotName}-${index}`,
-    implementationBase: implementationBase as Record<string, unknown> | undefined,
+    implementationBase,
     componentSurface: fallbackSlot,
     itemSurface: item.slots?.[slotName],
   });
@@ -125,12 +98,12 @@ function toAutoEmptyStateConfig(
 
   return {
     icon: empty.icon,
-    title: empty.title,
+    title: empty.title ?? "No items",
     description: empty.description,
     ...(empty.action?.action
-      ? {
+        ? {
           action: {
-            label: empty.action.label,
+            label: empty.action.label ?? "Action",
             action: empty.action.action,
             icon: empty.action.icon,
             variant: empty.action.variant,
@@ -182,6 +155,9 @@ function ListItem({
         ? {
             hover: {
               bg: "var(--sn-color-accent, #f3f4f6)",
+            },
+            focus: {
+              ring: true,
             },
           }
         : {}),
@@ -245,7 +221,21 @@ function ListItem({
     item,
     itemIndex,
     "itemBadge",
-    undefined,
+    item.badge
+      ? {
+          display: "inline-flex",
+          alignItems: "center",
+          style: {
+            padding: "0 var(--sn-spacing-xs, 0.25rem)",
+            borderRadius: "var(--sn-radius-full, 9999px)",
+            fontSize: "var(--sn-font-size-xs, 0.75rem)",
+            fontWeight: "var(--sn-font-weight-semibold, 600)",
+            backgroundColor: `var(--sn-color-${item.badgeColor ?? "primary"}, #2563eb)`,
+            color: `var(--sn-color-${item.badgeColor ?? "primary"}-foreground, #ffffff)`,
+            lineHeight: "var(--sn-leading-normal, 1.5)",
+          },
+        }
+      : undefined,
     slots?.itemBadge,
   );
 
@@ -323,7 +313,7 @@ function ListItem({
           className={badgeSurface.className}
           style={badgeSurface.style}
         >
-          <ListBadge text={item.badge} color={item.badgeColor} />
+          {item.badge}
         </span>
       )}
     </div>
@@ -641,10 +631,6 @@ export function ListComponent({ config }: { config: ListConfig }) {
       className={rootSurface.className}
       style={rootSurface.style}
     >
-      <style>{`
-[data-snapshot-component="list"] [data-list-item][role="button"]:focus { outline: none; }
-[data-snapshot-component="list"] [data-list-item][role="button"]:focus-visible { outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb)); outline-offset: var(--sn-ring-offset, 2px); border-radius: var(--sn-radius-md, 0.5rem); }
-      `}</style>
       {hasNewData ? (
         <div
           data-snapshot-id={`${rootId}-loading`}

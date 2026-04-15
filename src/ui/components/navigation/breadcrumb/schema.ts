@@ -4,6 +4,7 @@ import { actionSchema } from "../../../actions/types";
 
 export const breadcrumbSlotNames = [
   "root",
+  "list",
   "item",
   "link",
   "current",

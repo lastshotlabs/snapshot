@@ -1,37 +1,21 @@
 import { z } from "zod";
+import {
+  exprRefSchema,
+  fromRefSchema,
+} from "@lastshotlabs/frontend-contract/refs";
 
 export const componentTokenOverridesSchema = z.record(z.string());
 
-const fromRefSchema = z
-  .object({
-    from: z.string(),
-    transform: z
-      .enum([
-        "uppercase",
-        "lowercase",
-        "trim",
-        "length",
-        "number",
-        "boolean",
-        "string",
-        "json",
-        "keys",
-        "values",
-        "first",
-        "last",
-        "count",
-        "sum",
-        "join",
-        "split",
-        "default",
-      ])
-      .optional(),
-    transformArg: z.union([z.string(), z.number()]).optional(),
-  })
-  .strict();
-
 export const componentZIndexSchema = z.union([
-  z.enum(["base", "dropdown", "sticky", "overlay", "modal", "popover", "toast"]),
+  z.enum([
+    "base",
+    "dropdown",
+    "sticky",
+    "overlay",
+    "modal",
+    "popover",
+    "toast",
+  ]),
   z.number(),
 ]);
 
@@ -51,10 +35,7 @@ export const componentAnimationSchema = z
       .optional(),
     delay: z.number().optional(),
     easing: z
-      .union([
-        z.enum(["default", "in", "out", "in-out", "spring"]),
-        z.string(),
-      ])
+      .union([z.enum(["default", "in", "out", "in-out", "spring"]), z.string()])
       .optional(),
     stagger: z.number().optional(),
   })
@@ -157,9 +138,7 @@ function responsiveValue<T extends z.ZodTypeAny>(valueSchema: T) {
 
 const responsiveSpacing = responsiveValue(z.union([spacingEnum, z.string()]));
 const responsiveString = responsiveValue(z.string());
-const responsiveFontSize = responsiveValue(
-  z.union([fontSizeEnum, z.string()]),
-);
+const responsiveFontSize = responsiveValue(z.union([fontSizeEnum, z.string()]));
 const responsiveDisplay = responsiveValue(
   z.enum([
     "flex",
@@ -279,7 +258,9 @@ export const slotStateNameSchema = z.enum([
 ]);
 
 export const statefulElementSchema = styleableElementSchema.extend({
-  states: z.record(slotStateNameSchema, styleableElementSchema.partial()).optional(),
+  states: z
+    .record(slotStateNameSchema, styleableElementSchema.partial())
+    .optional(),
 });
 
 export function slotsSchema<const T extends readonly [string, ...string[]]>(
@@ -314,13 +295,7 @@ export const extendedBaseComponentSchema = z.object({
   id: z.string().optional(),
   tokens: componentTokenOverridesSchema.optional(),
   visibleWhen: z.string().optional(),
-  visible: z
-    .union([
-      z.boolean(),
-      fromRefSchema,
-      z.object({ expr: z.string() }).strict(),
-    ])
-    .optional(),
+  visible: z.union([z.boolean(), fromRefSchema, exprRefSchema]).optional(),
   sticky: z
     .union([
       z.boolean(),
@@ -338,6 +313,7 @@ export const extendedBaseComponentSchema = z.object({
   background: componentBackgroundSchema.optional(),
   transition: componentTransitionSchema.optional(),
   exitAnimation: exitAnimationSchema.optional(),
+  span: responsiveValue(z.number().int().min(1).max(12)).optional(),
   slots: slotsSchema(["root"]).optional(),
   ...styleableElementFields,
 });

@@ -5,8 +5,7 @@ import type { CSSProperties, ErrorInfo, ReactNode } from "react";
 import { useManifestRuntime, useRouteRuntime } from "../../manifest/runtime";
 import { useSubscribe } from "../../context";
 import { useEvaluateExpression } from "../../expressions/use-expression";
-import { SnapshotApiContext } from "../../actions/executor";
-import { useContext } from "react";
+import { useApiClient } from "../../state";
 import type {
   ComponentAnimationConfig,
   ComponentBackgroundConfig,
@@ -298,7 +297,7 @@ export function ComponentWrapper({
 }: ComponentWrapperProps) {
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
-  const api = useContext(SnapshotApiContext);
+  const api = useApiClient();
   const user = useSubscribe({ from: "global.user" }) as { id?: string } | null;
 
   // Auto-generate a stable id when interactive or responsive CSS is needed

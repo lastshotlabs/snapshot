@@ -6,6 +6,7 @@ import {
   createComputedAtom,
   extractStateDependencies,
 } from "./registry";
+import { apiClientAtom } from "./api";
 import { readPersistedState, writePersistedState } from "./persist";
 import type {
   AtomRegistry,
@@ -171,6 +172,7 @@ export function AppStateProvider({
   const registryRef = useRef<AtomRegistry>(null);
   if (!registryRef.current) {
     registryRef.current = new AtomRegistryImpl();
+    registryRef.current.store.set(apiClientAtom, api ?? null);
   }
 
   const scopedState = useMemo(() => filterStateByScope(state, "app"), [state]);
@@ -182,6 +184,10 @@ export function AppStateProvider({
     // App-scope state is initialized once for the provider lifetime.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    registryRef.current?.store.set(apiClientAtom, api ?? null);
+  }, [api]);
 
   return (
     <AppStateDefinitionsContext.Provider value={scopedState}>

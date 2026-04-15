@@ -11,6 +11,7 @@ export {
   applyResolved,
 } from "./utils";
 export type {
+  ExprRef,
   FromRef,
   AtomRegistry,
   GlobalConfig,

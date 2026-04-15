@@ -5,12 +5,9 @@ import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
 import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
+import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ButtonConfig, ButtonControlProps } from "./types";
-
-function SurfaceStyles({ css }: { css?: string }) {
-  return css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null;
-}
 
 export function ButtonControl({
   children,
@@ -106,7 +103,7 @@ export function ButtonControl({
         {children}
       </button>
       <SurfaceStyles css={rootSurface.scopedCss} />
-      <style>{BUTTON_INTERACTIVE_CSS}</style>
+      <SurfaceStyles css={BUTTON_INTERACTIVE_CSS} />
     </>
   );
 }

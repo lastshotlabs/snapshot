@@ -1,11 +1,8 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { workflowDefinitionSchema } from "../../../workflows/schema";
-import {
-  baseComponentConfigSchema,
-  fromRefSchema,
-} from "../../../manifest/schema";
-import { slotsSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const modalSlotNames = [
   "root",
@@ -24,7 +21,7 @@ export const modalSlotNames = [
  * Modals are overlay dialogs that display child components.
  * They are opened/closed via the modal manager (open-modal/close-modal actions).
  */
-export const modalConfigSchema = baseComponentConfigSchema.extend({
+export const modalConfigSchema = extendComponentSchema({
   type: z.literal("modal"),
   /** Modal title. Can be static or a FromRef. */
   title: z.union([z.string(), fromRefSchema]).optional(),
@@ -46,10 +43,6 @@ export const modalConfigSchema = baseComponentConfigSchema.extend({
   initialFocus: z.string().optional(),
   /** Return focus to the previously focused element on close. */
   returnFocus: z.boolean().default(true),
-  /** Inline style overrides. */
-  style: z.record(z.union([z.string(), z.number()])).optional(),
-  /** Additional CSS class name. */
-  className: z.string().optional(),
   /** Footer with action buttons. */
   footer: z
     .object({
@@ -73,7 +66,7 @@ export const modalConfigSchema = baseComponentConfigSchema.extend({
     })
     .optional(),
   slots: slotsSchema(modalSlotNames).optional(),
-});
+}).strict();
 
 /** Inferred type for modal config. */
-export type ModalConfig = z.infer<typeof modalConfigSchema>;
+export type ModalConfig = z.input<typeof modalConfigSchema>;

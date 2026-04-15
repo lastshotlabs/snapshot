@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import {
-  baseComponentConfigSchema,
   emptyStateConfigSchema,
   errorStateConfigSchema,
   liveConfigSchema,
 } from "../../../manifest/schema";
-import { slotsSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { dataSourceSchema, fromRefSchema, pollConfigSchema } from "../../_base/types";
 
 /** Schema for the trend indicator configuration. */
@@ -39,8 +38,7 @@ export const trendConfigSchema = z
  * }
  * ```
  */
-export const statCardConfigSchema = baseComponentConfigSchema
-  .extend({
+export const statCardConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("stat-card"),
     /** API endpoint to fetch data. Supports FromRef for dependent data. */
@@ -94,5 +92,4 @@ export const statCardConfigSchema = baseComponentConfigSchema
       "trend",
       "empty",
     ]).optional(),
-  })
-  .strict();
+  }).strict();

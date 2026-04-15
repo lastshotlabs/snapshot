@@ -11,6 +11,11 @@ export {
   RouteStateProvider,
   RouteStateRegistryContext,
 } from "./providers";
+export {
+  apiClientAtom,
+  SnapshotApiProvider,
+  useApiClient,
+} from "./api";
 export { useResetStateValue, useSetStateValue, useStateValue } from "./hooks";
 export {
   clearPersistedState,
