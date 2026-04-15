@@ -1,18 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Extension } from "@tiptap/core";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
-import { Extension } from "@tiptap/core";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { useActionExecutor } from "../../../actions/executor";
+import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { RichInputConfig } from "./types";
-
-// ── Toolbar button definitions ────────────────────────────────────────────
 
 interface ToolbarItem {
   name: string;
@@ -24,46 +23,14 @@ interface ToolbarItem {
 const ALL_TOOLBAR_ITEMS: ToolbarItem[] = [
   { name: "bold", icon: "bold", label: "Bold", action: "toggleBold" },
   { name: "italic", icon: "italic", label: "Italic", action: "toggleItalic" },
-  {
-    name: "underline",
-    icon: "underline",
-    label: "Underline",
-    action: "toggleUnderline",
-  },
-  {
-    name: "strike",
-    icon: "strikethrough",
-    label: "Strikethrough",
-    action: "toggleStrike",
-  },
+  { name: "underline", icon: "underline", label: "Underline", action: "toggleUnderline" },
+  { name: "strike", icon: "strikethrough", label: "Strikethrough", action: "toggleStrike" },
   { name: "code", icon: "code", label: "Inline code", action: "toggleCode" },
-  {
-    name: "code-block",
-    icon: "terminal",
-    label: "Code block",
-    action: "toggleCodeBlock",
-  },
-  {
-    name: "bullet-list",
-    icon: "list",
-    label: "Bullet list",
-    action: "toggleBulletList",
-  },
-  {
-    name: "ordered-list",
-    icon: "list-ordered",
-    label: "Numbered list",
-    action: "toggleOrderedList",
-  },
-  {
-    name: "link",
-    icon: "link",
-    label: "Insert link",
-    action: "setLink",
-  },
+  { name: "code-block", icon: "terminal", label: "Code block", action: "toggleCodeBlock" },
+  { name: "bullet-list", icon: "list", label: "Bullet list", action: "toggleBulletList" },
+  { name: "ordered-list", icon: "list-ordered", label: "Numbered list", action: "toggleOrderedList" },
+  { name: "link", icon: "link", label: "Insert link", action: "setLink" },
 ];
-
-// ── Custom Enter-to-send extension ────────────────────────────────────────
 
 function createSendOnEnterExtension(onSend: () => void) {
   return Extension.create({
@@ -71,13 +38,7 @@ function createSendOnEnterExtension(onSend: () => void) {
     addKeyboardShortcuts() {
       return {
         Enter: ({ editor }) => {
-          // Don't intercept Enter inside lists or code blocks —
-          // let TipTap handle list item creation and code newlines
-          if (
-            editor.isActive("bulletList") ||
-            editor.isActive("orderedList") ||
-            editor.isActive("codeBlock")
-          ) {
+          if (editor.isActive("bulletList") || editor.isActive("orderedList") || editor.isActive("codeBlock")) {
             return false;
           }
           onSend();
@@ -88,16 +49,6 @@ function createSendOnEnterExtension(onSend: () => void) {
   });
 }
 
-// ── Component ─────────────────────────────────────────────────────────────
-
-/**
- * RichInput component — TipTap-based WYSIWYG editor for chat messages,
- * comments, and posts. Users see formatted text as they type.
- *
- * Publishes `{ html, text, mentions }` to the page context when content changes.
- *
- * @param props - Component props containing the rich input configuration
- */
 export function RichInput({ config }: { config: RichInputConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const readonly = useSubscribe(config.readonly ?? false) as boolean;
@@ -107,6 +58,8 @@ export function RichInput({ config }: { config: RichInputConfig }) {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const linkInputRef = useRef<HTMLInputElement>(null);
+  const sendRef = useRef<() => void>(() => {});
+  const rootId = config.id ?? "rich-input";
 
   const features = config.features ?? [
     "bold",
@@ -120,10 +73,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
     "ordered-list",
   ];
   const sendOnEnter = config.sendOnEnter ?? true;
-  const featuresSet = new Set<string>(features);
-
-  // Stable ref for the send callback so the extension doesn't re-create
-  const sendRef = useRef<() => void>(() => {});
+  const featuresSet = useMemo(() => new Set<string>(features), [features]);
 
   const extensions = [
     StarterKit.configure({
@@ -134,9 +84,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
       codeBlock: featuresSet.has("code-block") ? {} : false,
       bulletList: featuresSet.has("bullet-list") ? {} : false,
       orderedList: featuresSet.has("ordered-list") ? {} : false,
-      // Disable heading in chat input — use it only in rich-text-editor
       heading: false,
-      // HardBreak for Shift+Enter newlines
       hardBreak: {},
     }),
     ...(featuresSet.has("underline") ? [Underline] : []),
@@ -144,94 +92,64 @@ export function RichInput({ config }: { config: RichInputConfig }) {
       ? [
           Link.configure({
             openOnClick: false,
-            HTMLAttributes: {
-              rel: "noopener noreferrer",
-              target: "_blank",
-            },
+            HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
           }),
         ]
       : []),
-    ...(config.placeholder
-      ? [Placeholder.configure({ placeholder: config.placeholder })]
-      : []),
-    ...(sendOnEnter
-      ? [
-          createSendOnEnterExtension(() => {
-            sendRef.current();
-          }),
-        ]
-      : []),
+    ...(sendOnEnter ? [createSendOnEnterExtension(() => sendRef.current())] : []),
   ] as unknown as NonNullable<Parameters<typeof useEditor>[0]["extensions"]>;
 
   const editor = useEditor({
     extensions,
     editable: !readonly,
-    onUpdate: ({ editor: ed }) => {
-      const html = ed.getHTML();
-      const text = ed.getText();
+    editorProps: {
+      attributes: {
+        style: "outline:none;min-height:100%;",
+      },
+    },
+    onUpdate: ({ editor: instance }) => {
+      const html = instance.getHTML();
+      const text = instance.getText();
       setCharCount(text.length);
-
-      if (publish) {
-        publish({ html, text, mentions: [] });
-      }
+      publish?.({ html, text, mentions: [] });
     },
   });
 
-  // Update editable when readonly changes
   useEffect(() => {
-    if (editor) {
-      editor.setEditable(!readonly);
-    }
+    editor?.setEditable(!readonly);
   }, [editor, readonly]);
 
-  // Send handler
   const handleSend = useCallback(() => {
     if (!editor) return;
     const html = editor.getHTML();
     const text = editor.getText();
-
-    // Don't send empty messages
     if (!text.trim()) return;
-
-    if (config.sendAction) {
-      void execute(config.sendAction, { html, text, mentions: [] });
-    }
-
-    // Clear editor after send
+    if (config.sendAction) void execute(config.sendAction, { html, text, mentions: [] });
     editor.commands.clearContent(true);
     setCharCount(0);
+    publish?.({ html: "", text: "", mentions: [] });
+  }, [config.sendAction, editor, execute, publish]);
 
-    if (publish) {
-      publish({ html: "", text: "", mentions: [] });
-    }
-  }, [editor, config.sendAction, execute, publish]);
-
-  // Keep sendRef updated
   sendRef.current = handleSend;
 
   if (visible === false) return null;
 
-  // Filter toolbar items based on enabled features
-  const toolbarItems = ALL_TOOLBAR_ITEMS.filter((item) =>
-    featuresSet.has(item.name),
-  );
+  const toolbarItems = ALL_TOOLBAR_ITEMS.filter((item) => featuresSet.has(item.name));
+  const isOverLimit = config.maxLength !== undefined && charCount > config.maxLength;
+  const isEmpty = charCount === 0;
 
   const handleToolbarAction = (item: ToolbarItem) => {
     if (!editor) return;
-
     if (item.action === "setLink") {
       if (editor.isActive("link")) {
         editor.chain().focus().unsetLink().run();
       } else {
-        // Show inline URL input
         setLinkUrl("");
         setShowLinkInput(true);
         setTimeout(() => linkInputRef.current?.focus(), 10);
       }
       return;
     }
-
-    // Direct command dispatch — explicit for reliability
     switch (item.action) {
       case "toggleBold":
         editor.chain().focus().toggleBold().run();
@@ -260,365 +178,365 @@ export function RichInput({ config }: { config: RichInputConfig }) {
     }
   };
 
-  const isOverLimit =
-    config.maxLength !== undefined && charCount > config.maxLength;
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      borderRadius: "md",
+      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      bg: "var(--sn-color-card, #ffffff)",
+    },
+    componentSurface: config,
+    itemSurface: config.slots?.root,
+  });
+  const editorAreaSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-editorArea`,
+    implementationBase: {
+      position: "relative",
+      flex: "1",
+      overflow: "auto",
+      style: {
+        minHeight: config.minHeight ?? "2.5rem",
+        maxHeight: config.maxHeight ?? "12rem",
+      },
+    },
+    componentSurface: config.slots?.editorArea,
+  });
+  const editorContentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-editorContent`,
+    implementationBase: {
+      paddingY: "sm",
+      paddingX: "md",
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #111827)",
+      style: {
+        lineHeight: "var(--sn-leading-relaxed, 1.625)",
+      },
+    },
+    componentSurface: config.slots?.editorContent,
+  });
+  const placeholderSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-placeholder`,
+    implementationBase: {
+      fontSize: "sm",
+      color: "var(--sn-color-muted-foreground, #9ca3af)",
+      style: {
+        position: "absolute",
+        top: "var(--sn-spacing-sm, 0.5rem)",
+        left: "var(--sn-spacing-md, 1rem)",
+        pointerEvents: "none",
+      },
+    },
+    componentSurface: config.slots?.placeholder,
+  });
+  const linkBarSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-linkBar`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "xs",
+      paddingY: "xs",
+      paddingX: "sm",
+      bg: "var(--sn-color-secondary, #f9fafb)",
+      style: {
+        borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    componentSurface: config.slots?.linkBar,
+  });
+  const linkIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-linkIcon`,
+    implementationBase: { color: "var(--sn-color-muted-foreground, #6b7280)" },
+    componentSurface: config.slots?.linkIcon,
+  });
+  const linkInputSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-linkInput`,
+    implementationBase: {
+      flex: "1",
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #111827)",
+      focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      style: {
+        border: "none",
+        outline: "none",
+        backgroundColor: "transparent",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+        minWidth: 0,
+      },
+    },
+    componentSurface: config.slots?.linkInput,
+  });
+  const linkCloseSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-linkCloseButton`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      hover: { bg: "var(--sn-color-accent, #f3f4f6)" },
+      focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      style: {
+        border: "none",
+        background: "none",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    },
+    componentSurface: config.slots?.linkCloseButton,
+  });
+  const toolbarSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-toolbar`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "between",
+      gap: "sm",
+      paddingY: "xs",
+      paddingX: "sm",
+      style: {
+        borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    componentSurface: config.slots?.toolbar,
+  });
+  const formattingGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-formattingGroup`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "2xs",
+      flexWrap: "wrap",
+    },
+    componentSurface: config.slots?.formattingGroup,
+  });
+  const statusGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-statusGroup`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "sm",
+    },
+    componentSurface: config.slots?.statusGroup,
+  });
+  const counterSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-counter`,
+    implementationBase: {
+      fontSize: "xs",
+      color: isOverLimit
+        ? "var(--sn-color-destructive, #ef4444)"
+        : "var(--sn-color-muted-foreground, #9ca3af)",
+    },
+    componentSurface: config.slots?.counter,
+    activeStates: isOverLimit ? ["invalid"] : [],
+  });
+  const sendButtonSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-sendButton`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "full",
+      cursor: readonly || !charCount || isOverLimit ? "not-allowed" : "pointer",
+      color:
+        charCount > 0 && !isOverLimit
+          ? "var(--sn-color-primary-foreground, #ffffff)"
+          : "var(--sn-color-muted-foreground, #9ca3af)",
+      bg:
+        charCount > 0 && !isOverLimit
+          ? "var(--sn-color-primary, #2563eb)"
+          : "transparent",
+      hover:
+        readonly || !charCount || isOverLimit
+          ? undefined
+          : { opacity: 0.9 },
+      focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      style: {
+        width: "2rem",
+        height: "2rem",
+        padding: 0,
+        border: "none",
+      },
+    },
+    componentSurface: config.slots?.sendButton,
+  });
 
   return (
-    <div
-      data-snapshot-component="rich-input"
-      data-testid="rich-input"
-      className={config.className}
-      style={{
-        border:
-          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-        borderRadius: "var(--sn-radius-md, 0.5rem)",
-        backgroundColor: "var(--sn-color-card, #ffffff)",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        transition:
-          "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-        ...((config.style as React.CSSProperties) ?? {}),
-      }}
-    >
-      {/* Hover/focus styles */}
-      <style>{`
-        [data-snapshot-component="rich-input"]:focus-within {
-          border-color: var(--sn-color-primary, #2563eb) !important;
-        }
-        [data-snapshot-component="rich-input"] [data-ri-btn]:hover:not(:disabled) {
-          background-color: var(--sn-color-accent, #f3f4f6) !important;
-          color: var(--sn-color-foreground, #111827) !important;
-        }
-        [data-snapshot-component="rich-input"] [data-ri-btn][data-active]:hover:not(:disabled) {
-          background-color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 85%, black) !important;
-          color: var(--sn-color-primary-foreground, #ffffff) !important;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror {
-          outline: none;
-          min-height: inherit;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror p.is-editor-empty:first-child::before {
-          color: var(--sn-color-muted-foreground, #9ca3af);
-          content: attr(data-placeholder);
-          float: left;
-          height: 0;
-          pointer-events: none;
-        }
-        /* ── List styles ── */
-        [data-snapshot-component="rich-input"] .ProseMirror ul {
-          list-style-type: disc;
-          padding-left: var(--sn-spacing-lg, 1.5rem);
-          margin: var(--sn-spacing-xs, 0.25rem) 0;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror ol {
-          list-style-type: decimal;
-          padding-left: var(--sn-spacing-lg, 1.5rem);
-          margin: var(--sn-spacing-xs, 0.25rem) 0;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror li {
-          margin: var(--sn-spacing-2xs, 0.125rem) 0;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror li p {
-          margin: 0;
-        }
-        /* Nested lists */
-        [data-snapshot-component="rich-input"] .ProseMirror ul ul,
-        [data-snapshot-component="rich-input"] .ProseMirror ol ul {
-          list-style-type: circle;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror ul ul ul,
-        [data-snapshot-component="rich-input"] .ProseMirror ol ul ul {
-          list-style-type: square;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror ol ol {
-          list-style-type: lower-alpha;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror ol ol ol {
-          list-style-type: lower-roman;
-        }
-        /* ── Code block styles ── */
-        [data-snapshot-component="rich-input"] .ProseMirror pre {
-          background: var(--sn-color-muted, #f3f4f6);
-          color: var(--sn-color-foreground, #111827);
-          border-radius: var(--sn-radius-sm, 0.25rem);
-          padding: var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem);
-          font-family: var(--sn-font-mono, ui-monospace, monospace);
-          font-size: var(--sn-font-size-sm, 0.875rem);
-          overflow-x: auto;
-          margin: var(--sn-spacing-xs, 0.25rem) 0;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror pre code {
-          background: none;
-          padding: 0;
-          font-size: inherit;
-          color: inherit;
-        }
-        /* ── Inline code ── */
-        [data-snapshot-component="rich-input"] .ProseMirror code {
-          background: var(--sn-color-muted, #f3f4f6);
-          color: var(--sn-color-destructive, #ef4444);
-          border-radius: var(--sn-radius-xs, 0.125rem);
-          padding: 0.1em 0.3em;
-          font-family: var(--sn-font-mono, ui-monospace, monospace);
-          font-size: 0.9em;
-        }
-        /* ── Blockquote ── */
-        [data-snapshot-component="rich-input"] .ProseMirror blockquote {
-          border-left: var(--sn-border-thick, 3px) solid var(--sn-color-border, #e5e7eb);
-          padding-left: var(--sn-spacing-md, 0.75rem);
-          color: var(--sn-color-muted-foreground, #6b7280);
-          margin: var(--sn-spacing-xs, 0.25rem) 0;
-        }
-        /* ── Links ── */
-        [data-snapshot-component="rich-input"] .ProseMirror a {
-          color: var(--sn-color-primary, #2563eb);
-          text-decoration: underline;
-          cursor: pointer;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror a:hover {
-          color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 80%, black);
-        }
-        /* ── Paragraph spacing ── */
-        [data-snapshot-component="rich-input"] .ProseMirror p {
-          margin: 0;
-        }
-        [data-snapshot-component="rich-input"] .ProseMirror > * + * {
-          margin-top: var(--sn-spacing-xs, 0.25rem);
-        }
-      `}</style>
-
-      {/* Editor area */}
-      <div
-        style={{
-          flex: 1,
-          minHeight: config.minHeight ?? "2.5rem",
-          maxHeight: config.maxHeight ?? "12rem",
-          overflowY: "auto",
-        }}
-      >
-        <EditorContent
-          editor={editor}
-          style={{
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            color: "var(--sn-color-foreground, #111827)",
-            lineHeight: "var(--sn-leading-relaxed, 1.625)",
-          }}
-        />
-      </div>
-
-      {/* Inline link URL input */}
-      {showLinkInput && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--sn-spacing-xs, 0.25rem)",
-            padding:
-              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-            borderTop:
-              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-            backgroundColor: "var(--sn-color-secondary, #f9fafb)",
-          }}
-        >
-          <Icon name="link" size={14} />
-          <input
-            ref={linkInputRef}
-            type="url"
-            value={linkUrl}
-            onChange={(e) => setLinkUrl(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && linkUrl.trim()) {
-                e.preventDefault();
-                const url = linkUrl.trim().startsWith("http")
-                  ? linkUrl.trim()
-                  : `https://${linkUrl.trim()}`;
-                editor?.chain().focus().setLink({ href: url }).run();
-                setShowLinkInput(false);
-                setLinkUrl("");
-              }
-              if (e.key === "Escape") {
-                setShowLinkInput(false);
-                setLinkUrl("");
-                editor?.chain().focus().run();
-              }
-            }}
-            placeholder="Paste URL and press Enter..."
-            style={{
-              flex: 1,
-              border: "none",
-              outline: "none",
-              backgroundColor: "transparent",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              color: "var(--sn-color-foreground, #111827)",
-              padding: "var(--sn-spacing-xs, 0.25rem)",
-            }}
+    <>
+      <div data-snapshot-component="rich-input" data-testid="rich-input" data-snapshot-id={rootId} className={rootSurface.className} style={rootSurface.style}>
+        <div data-snapshot-id={`${rootId}-editorArea`} className={editorAreaSurface.className} style={editorAreaSurface.style}>
+          {config.placeholder && isEmpty ? (
+            <div data-snapshot-id={`${rootId}-placeholder`} className={placeholderSurface.className} style={placeholderSurface.style}>
+              {config.placeholder}
+            </div>
+          ) : null}
+          <EditorContent
+            editor={editor}
+            data-snapshot-id={`${rootId}-editorContent`}
+            style={editorContentSurface.style}
+            className={editorContentSurface.className}
+            data-testid="rich-input-editor"
           />
-          <button
-            type="button"
-            aria-label="Close link input"
-            onClick={() => {
-              if (linkUrl.trim()) {
-                const url = linkUrl.trim().startsWith("http")
-                  ? linkUrl.trim()
-                  : `https://${linkUrl.trim()}`;
-                editor?.chain().focus().setLink({ href: url }).run();
-              }
-              setShowLinkInput(false);
-              setLinkUrl("");
-            }}
-            style={{
-              border: "none",
-              background: "none",
-              cursor: "pointer",
-              padding: "var(--sn-spacing-xs, 0.25rem)",
-              color: "var(--sn-color-muted-foreground, #6b7280)",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Icon name="x" size={14} />
-          </button>
         </div>
-      )}
 
-      {/* Bottom toolbar */}
-      {(toolbarItems.length > 0 || config.sendAction) && (
-        <div
-          data-testid="rich-input-toolbar"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding:
-              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
-            borderTop:
-              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-            gap: "var(--sn-spacing-sm, 0.5rem)",
-          }}
-        >
-          {/* Formatting buttons */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--sn-border-thin, 1px)",
-              flexWrap: "wrap",
-            }}
-          >
-            {toolbarItems.map((item) => {
-              const isActive =
-                editor?.isActive(
-                  item.name === "bullet-list"
-                    ? "bulletList"
-                    : item.name === "ordered-list"
-                      ? "orderedList"
-                      : item.name === "code-block"
-                        ? "codeBlock"
-                        : item.name,
-                ) ?? false;
+        {showLinkInput ? (
+          <div data-snapshot-id={`${rootId}-linkBar`} className={linkBarSurface.className} style={linkBarSurface.style}>
+            <span data-snapshot-id={`${rootId}-linkIcon`} className={linkIconSurface.className} style={linkIconSurface.style}>
+              <Icon name="link" size={14} />
+            </span>
+            <input
+              ref={linkInputRef}
+              type="url"
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && linkUrl.trim()) {
+                  e.preventDefault();
+                  const url = linkUrl.trim().startsWith("http") ? linkUrl.trim() : `https://${linkUrl.trim()}`;
+                  editor?.chain().focus().setLink({ href: url }).run();
+                  setShowLinkInput(false);
+                  setLinkUrl("");
+                }
+                if (e.key === "Escape") {
+                  setShowLinkInput(false);
+                  setLinkUrl("");
+                  editor?.chain().focus().run();
+                }
+              }}
+              placeholder="Paste URL and press Enter..."
+              data-snapshot-id={`${rootId}-linkInput`}
+              className={linkInputSurface.className}
+              style={linkInputSurface.style}
+            />
+            <button
+              type="button"
+              aria-label="Close link input"
+              onClick={() => {
+                if (linkUrl.trim()) {
+                  const url = linkUrl.trim().startsWith("http") ? linkUrl.trim() : `https://${linkUrl.trim()}`;
+                  editor?.chain().focus().setLink({ href: url }).run();
+                }
+                setShowLinkInput(false);
+                setLinkUrl("");
+              }}
+              data-snapshot-id={`${rootId}-linkCloseButton`}
+              className={linkCloseSurface.className}
+              style={linkCloseSurface.style}
+            >
+              <Icon name="x" size={14} />
+            </button>
+          </div>
+        ) : null}
 
-              return (
-                <button
-                  type="button"
-                  key={item.name}
-                  data-ri-btn
-                  data-active={isActive ? "" : undefined}
-                  onClick={() => handleToolbarAction(item)}
-                  title={item.label}
-                  aria-label={item.label}
-                  disabled={readonly}
-                  style={{
+        {(toolbarItems.length > 0 || config.sendAction) ? (
+          <div data-testid="rich-input-toolbar" data-snapshot-id={`${rootId}-toolbar`} className={toolbarSurface.className} style={toolbarSurface.style}>
+            <div data-snapshot-id={`${rootId}-formattingGroup`} className={formattingGroupSurface.className} style={formattingGroupSurface.style}>
+              {toolbarItems.map((item, index) => {
+                const active =
+                  editor?.isActive(
+                    item.name === "bullet-list"
+                      ? "bulletList"
+                      : item.name === "ordered-list"
+                        ? "orderedList"
+                        : item.name === "code-block"
+                          ? "codeBlock"
+                          : item.name,
+                  ) ?? false;
+                const buttonSurface = resolveSurfacePresentation({
+                  surfaceId: `${rootId}-toolbarButton-${index}`,
+                  implementationBase: {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "2rem",
-                    height: "2rem",
-                    padding: 0,
-                    border: "none",
-                    borderRadius: "var(--sn-radius-sm, 0.25rem)",
-                    backgroundColor: isActive
+                    borderRadius: "sm",
+                    cursor: readonly ? "not-allowed" : "pointer",
+                    color: active
+                      ? "var(--sn-color-primary, #2563eb)"
+                      : "var(--sn-color-muted-foreground, #9ca3af)",
+                    bg: active
                       ? "var(--sn-color-accent, #eff6ff)"
                       : "transparent",
-                    color: isActive
-                      ? "var(--sn-color-primary, #2563eb)"
-                      : "var(--sn-color-muted-foreground, #9ca3af)",
-                    cursor: readonly ? "not-allowed" : "pointer",
-                    opacity: readonly ? 0.5 : 1,
-                    flexShrink: 0,
-                    transition:
-                      "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-                  }}
+                    hover: readonly
+                      ? undefined
+                      : {
+                          bg: active
+                            ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 10%, transparent)"
+                            : "var(--sn-color-accent, #f3f4f6)",
+                          color: "var(--sn-color-foreground, #111827)",
+                        },
+                    focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+                    style: {
+                      width: "2rem",
+                      height: "2rem",
+                      padding: 0,
+                      border: "none",
+                      opacity: readonly ? 0.5 : 1,
+                    },
+                  },
+                  componentSurface: config.slots?.toolbarButton,
+                  activeStates: active ? ["active"] : [],
+                });
+
+                return (
+                  <div key={item.name}>
+                    <button
+                      type="button"
+                      data-ri-btn
+                      data-active={active ? "" : undefined}
+                      onClick={() => handleToolbarAction(item)}
+                      title={item.label}
+                      aria-label={item.label}
+                      disabled={readonly}
+                      data-snapshot-id={`${rootId}-toolbarButton-${index}`}
+                      className={buttonSurface.className}
+                      style={buttonSurface.style}
+                    >
+                      <Icon name={item.icon} size={16} />
+                    </button>
+                    <SurfaceStyles css={buttonSurface.scopedCss} />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div data-snapshot-id={`${rootId}-statusGroup`} className={statusGroupSurface.className} style={statusGroupSurface.style}>
+              {config.maxLength !== undefined ? (
+                <span data-snapshot-id={`${rootId}-counter`} className={counterSurface.className} style={counterSurface.style}>
+                  {charCount}/{config.maxLength}
+                </span>
+              ) : null}
+              {config.sendAction ? (
+                <button
+                  type="button"
+                  data-testid="rich-input-send"
+                  onClick={handleSend}
+                  disabled={readonly || !charCount || isOverLimit}
+                  aria-label="Send message"
+                  data-snapshot-id={`${rootId}-sendButton`}
+                  className={sendButtonSurface.className}
+                  style={sendButtonSurface.style}
                 >
-                  <Icon name={item.icon} size={16} />
+                  <Icon name="send" size={16} />
                 </button>
-              );
-            })}
+              ) : null}
+            </div>
           </div>
-
-          {/* Right side: char count + send */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--sn-spacing-sm, 0.5rem)",
-            }}
-          >
-            {config.maxLength !== undefined && (
-              <span
-                style={{
-                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                  color: isOverLimit
-                    ? "var(--sn-color-destructive, #ef4444)"
-                    : "var(--sn-color-muted-foreground, #9ca3af)",
-                  transition:
-                    "color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-                }}
-              >
-                {charCount}/{config.maxLength}
-              </span>
-            )}
-
-            {config.sendAction && (
-              <button
-                type="button"
-                data-testid="rich-input-send"
-                onClick={handleSend}
-                disabled={readonly || !charCount || isOverLimit}
-                aria-label="Send message"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "2rem",
-                  height: "2rem",
-                  padding: 0,
-                  border: "none",
-                  borderRadius: "var(--sn-radius-full, 9999px)",
-                  backgroundColor:
-                    charCount > 0 && !isOverLimit
-                      ? "var(--sn-color-primary, #2563eb)"
-                      : "transparent",
-                  color:
-                    charCount > 0 && !isOverLimit
-                      ? "var(--sn-color-primary-foreground, #ffffff)"
-                      : "var(--sn-color-muted-foreground, #9ca3af)",
-                  cursor:
-                    readonly || !charCount || isOverLimit
-                      ? "not-allowed"
-                      : "pointer",
-                  flexShrink: 0,
-                  transition:
-                    "all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-                }}
-              >
-                <Icon name="send" size={16} />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+        ) : null}
+      </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={editorAreaSurface.scopedCss} />
+      <SurfaceStyles css={editorContentSurface.scopedCss} />
+      <SurfaceStyles css={placeholderSurface.scopedCss} />
+      <SurfaceStyles css={linkBarSurface.scopedCss} />
+      <SurfaceStyles css={linkIconSurface.scopedCss} />
+      <SurfaceStyles css={linkInputSurface.scopedCss} />
+      <SurfaceStyles css={linkCloseSurface.scopedCss} />
+      <SurfaceStyles css={toolbarSurface.scopedCss} />
+      <SurfaceStyles css={formattingGroupSurface.scopedCss} />
+      <SurfaceStyles css={statusGroupSurface.scopedCss} />
+      <SurfaceStyles css={counterSurface.scopedCss} />
+      <SurfaceStyles css={sendButtonSurface.scopedCss} />
+    </>
   );
 }

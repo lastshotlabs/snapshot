@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
@@ -26,8 +27,7 @@ import { dataSourceSchema, fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const richInputConfigSchema = z
-  .object({
+export const richInputConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("rich-input"),
     /** Placeholder text shown when the editor is empty. */
@@ -68,14 +68,21 @@ export const richInputConfigSchema = z
     maxHeight: z.string().optional(),
     /** Whether the editor is read-only. */
     readonly: z.union([z.boolean(), fromRefSchema]).optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
+    slots: slotsSchema([
+      "root",
+      "editorArea",
+      "editorContent",
+      "placeholder",
+      "linkBar",
+      "linkIcon",
+      "linkInput",
+      "linkCloseButton",
+      "toolbar",
+      "formattingGroup",
+      "toolbarButton",
+      "statusGroup",
+      "counter",
+      "sendButton",
+    ]).optional(),
   })
   .strict();

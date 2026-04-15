@@ -10,6 +10,10 @@
     "noUncheckedIndexedAccess": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "paths": {
+      "@lastshotlabs/frontend-contract": ["../frontend-contract/src/index.ts"],
+      "@lastshotlabs/frontend-contract/*": ["../frontend-contract/src/*"]
+    },
     "noEmit": true
   },
   "include": ["src"],

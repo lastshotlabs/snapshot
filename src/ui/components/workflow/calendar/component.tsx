@@ -1,707 +1,461 @@
 'use client';
 
-import React, { useState, useMemo, useCallback } from "react";
-import { useComponentData } from "../../_base/use-component-data";
+import { useCallback, useMemo, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
+import { SurfaceStyles } from "../../_base/surface-styles";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { useComponentData } from "../../_base/use-component-data";
 import type { CalendarConfig, ResolvedEvent } from "./types";
-
-// ── Date helpers ───────────────────────────────────────────────────────────
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function isSameDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
+function sameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
-
-function isToday(d: Date): boolean {
-  return isSameDay(d, new Date());
+function today(d: Date) {
+  return sameDay(d, new Date());
 }
-
-function isWeekend(d: Date): boolean {
+function weekend(d: Date) {
   const day = d.getDay();
   return day === 0 || day === 6;
 }
-
-/** Get ISO week number for a date. */
-function getWeekNumber(d: Date): number {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  return Math.ceil(((date.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+function weekNumber(d: Date) {
+  const x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  x.setUTCDate(x.getUTCDate() + 4 - (x.getUTCDay() || 7));
+  const start = new Date(Date.UTC(x.getUTCFullYear(), 0, 1));
+  return Math.ceil(((x.getTime() - start.getTime()) / 86400000 + 1) / 7);
 }
-
-/** Get all dates to display in a month grid (includes prev/next month padding). */
-function getMonthGrid(year: number, month: number): Date[] {
-  const firstDay = new Date(year, month, 1);
-  const startOffset = firstDay.getDay(); // 0=Sun
+function monthGrid(year: number, month: number) {
+  const first = new Date(year, month, 1);
   const dates: Date[] = [];
-
-  // Previous month padding
-  for (let i = startOffset - 1; i >= 0; i--) {
-    dates.push(new Date(year, month, -i));
-  }
-
-  // Current month
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  for (let d = 1; d <= daysInMonth; d++) {
-    dates.push(new Date(year, month, d));
-  }
-
-  // Next month padding to fill 6 rows
+  for (let i = first.getDay() - 1; i >= 0; i -= 1) dates.push(new Date(year, month, -i));
+  const days = new Date(year, month + 1, 0).getDate();
+  for (let d = 1; d <= days; d += 1) dates.push(new Date(year, month, d));
   while (dates.length < 42) {
     const last = dates[dates.length - 1]!;
-    dates.push(
-      new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1),
-    );
+    dates.push(new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1));
   }
-
   return dates;
 }
-
-/** Get start-of-week (Sunday) for a given date. */
-function getWeekStart(d: Date): Date {
-  const result = new Date(d);
-  result.setDate(result.getDate() - result.getDay());
-  return result;
+function weekStart(d: Date) {
+  const x = new Date(d);
+  x.setDate(x.getDate() - x.getDay());
+  return x;
 }
-
-/** Get 7 days of a week starting from a date's week start. */
-function getWeekDates(d: Date): Date[] {
-  const start = getWeekStart(d);
+function weekDates(d: Date) {
+  const start = weekStart(d);
   return Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(start);
-    date.setDate(start.getDate() + i);
-    return date;
+    const x = new Date(start);
+    x.setDate(start.getDate() + i);
+    return x;
   });
 }
-
-/** Format month/year for display. */
-function formatMonthYear(year: number, month: number): string {
-  return new Date(year, month).toLocaleDateString(undefined, {
-    month: "long",
-    year: "numeric",
-  });
+function monthYear(year: number, month: number) {
+  return new Date(year, month).toLocaleDateString(undefined, { month: "long", year: "numeric" });
 }
-
-// ── Event pill ─────────────────────────────────────────────────────────────
 
 function EventPill({
+  id,
   event,
+  clickable,
   onClick,
+  slots,
 }: {
+  id: string;
   event: ResolvedEvent;
+  clickable: boolean;
   onClick?: () => void;
+  slots: CalendarConfig["slots"];
 }) {
-  const bg = `var(--sn-color-${event.color}, var(--sn-color-primary, #2563eb))`;
-  const fg = `var(--sn-color-${event.color}-foreground, #fff)`;
-
-  return (
-    <div
+  const surface = resolveSurfacePresentation({
+    surfaceId: id,
+    implementationBase: {
+      paddingY: "2xs",
+      paddingX: "xs",
+      borderRadius: "sm",
+      fontSize: "xs",
+      cursor: clickable ? "pointer" : "default",
+      hover: clickable ? { opacity: 0.85 } : undefined,
+      focus: clickable ? { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" } : undefined,
+      style: {
+        backgroundColor: `var(--sn-color-${event.color}, var(--sn-color-primary, #2563eb))`,
+        color: `var(--sn-color-${event.color}-foreground, #fff)`,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        lineHeight: "var(--sn-leading-tight, 1.4)",
+        border: "none",
+        width: "100%",
+        textAlign: "left",
+      },
+    },
+    componentSurface: slots?.event,
+  });
+  const body = clickable ? (
+    <button
+      type="button"
       data-calendar-event
+      data-snapshot-id={id}
+      title={event.title}
       onClick={(e) => {
         e.stopPropagation();
         onClick?.();
       }}
-      title={event.title}
-      style={{
-        backgroundColor: bg,
-        color: fg,
-        fontSize: "var(--sn-font-size-xs, 0.75rem)",
-        padding: "1px var(--sn-spacing-xs, 4px)",
-        borderRadius: "var(--sn-radius-sm, 4px)",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        cursor: onClick ? "pointer" : "default",
-        lineHeight: "var(--sn-leading-tight, 1.4)",
-      }}
+      className={surface.className}
+      style={surface.style}
     >
+      {event.title}
+    </button>
+  ) : (
+    <div data-calendar-event data-snapshot-id={id} title={event.title} className={surface.className} style={surface.style}>
       {event.title}
     </div>
   );
+  return (
+    <>
+      {body}
+      <SurfaceStyles css={surface.scopedCss} />
+    </>
+  );
 }
 
-// ── Main component ─────────────────────────────────────────────────────────
-
-/**
- * Config-driven Calendar component.
- *
- * Renders a month or week view calendar with events sourced from an API
- * endpoint or static event definitions. Supports prev/next navigation,
- * event click actions, and date cell click actions.
- *
- * @param props - Component props containing the Calendar configuration
- */
 export function Calendar({ config }: { config: CalendarConfig }) {
-  const { data, isLoading, error } = useComponentData(
-    config.data ?? "",
-    undefined,
-  );
+  const { data, isLoading, error } = useComponentData(config.data ?? "", undefined);
   const execute = useActionExecutor();
   const visible = useSubscribe(config.visible ?? true);
+  const [currentDate, setCurrentDate] = useState(() => new Date());
+  const rootId = config.id ?? "calendar";
   const view = config.view ?? "month";
   const titleField = config.titleField ?? "title";
   const dateField = config.dateField ?? "date";
 
-  const [currentDate, setCurrentDate] = useState(() => new Date());
-
-  // Resolve events from data or static config
-  const events: ResolvedEvent[] = useMemo(() => {
+  const events = useMemo<ResolvedEvent[]>(() => {
     const result: ResolvedEvent[] = [];
-
-    // Static events
-    if (config.events) {
-      for (const ev of config.events) {
-        result.push({
-          title: ev.title,
-          date: new Date(ev.date),
-          endDate: ev.endDate ? new Date(ev.endDate) : undefined,
-          color: ev.color ?? "primary",
-          allDay: ev.allDay ?? false,
-          raw: ev as unknown as Record<string, unknown>,
-        });
-      }
+    for (const ev of config.events ?? []) {
+      result.push({
+        title: ev.title,
+        date: new Date(ev.date),
+        endDate: ev.endDate ? new Date(ev.endDate) : undefined,
+        color: ev.color ?? "primary",
+        allDay: ev.allDay ?? false,
+        raw: ev as unknown as Record<string, unknown>,
+      });
     }
-
-    // Data events
     if (data) {
-      const items: Record<string, unknown>[] = (() => {
-        if (Array.isArray(data)) return data as Record<string, unknown>[];
-        for (const key of ["data", "items", "results", "events"]) {
-          if (Array.isArray(data[key]))
-            return data[key] as Record<string, unknown>[];
-        }
-        return [];
-      })();
-
+      const items: Record<string, unknown>[] = Array.isArray(data)
+        ? (data as Record<string, unknown>[])
+        : ["data", "items", "results", "events"].find((key) => Array.isArray((data as Record<string, unknown>)[key]))
+          ? ((data as Record<string, unknown>)[["data", "items", "results", "events"].find((key) => Array.isArray((data as Record<string, unknown>)[key]))!] as Record<string, unknown>[])
+          : [];
       for (const item of items) {
         const rawDate = item[dateField];
         if (!rawDate) continue;
         result.push({
           title: String(item[titleField] ?? ""),
           date: new Date(String(rawDate)),
-          endDate: item["endDate"]
-            ? new Date(String(item["endDate"]))
-            : undefined,
-          color: config.colorField
-            ? String(item[config.colorField] ?? "primary")
-            : "primary",
-          allDay: Boolean(item["allDay"]),
+          endDate: item.endDate ? new Date(String(item.endDate)) : undefined,
+          color: config.colorField ? String(item[config.colorField] ?? "primary") : "primary",
+          allDay: Boolean(item.allDay),
           raw: item,
         });
       }
     }
-
     return result;
-  }, [data, config.events, titleField, dateField, config.colorField]);
+  }, [config.colorField, config.events, data, dateField, titleField]);
 
-  // Get events for a specific date
-  const eventsForDate = useCallback(
-    (date: Date): ResolvedEvent[] =>
-      events.filter((ev) => isSameDay(ev.date, date)),
-    [events],
-  );
-
-  // Navigation
-  const goNext = useCallback(() => {
-    setCurrentDate((d) => {
-      if (view === "month") {
-        return new Date(d.getFullYear(), d.getMonth() + 1, 1);
-      }
-      const next = new Date(d);
-      next.setDate(next.getDate() + 7);
-      return next;
-    });
-  }, [view]);
-
+  const forDate = useCallback((date: Date) => events.filter((event) => sameDay(event.date, date)), [events]);
+  const eventClick = useCallback((event: ResolvedEvent) => {
+    if (config.eventAction) void execute(config.eventAction, { ...event.raw });
+  }, [config.eventAction, execute]);
+  const dateClick = useCallback((date: Date) => {
+    if (config.dateAction) {
+      void execute(config.dateAction, { date: date.toISOString(), year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+    }
+  }, [config.dateAction, execute]);
   const goPrev = useCallback(() => {
-    setCurrentDate((d) => {
-      if (view === "month") {
-        return new Date(d.getFullYear(), d.getMonth() - 1, 1);
-      }
-      const prev = new Date(d);
-      prev.setDate(prev.getDate() - 7);
-      return prev;
-    });
+    setCurrentDate((d) => view === "month" ? new Date(d.getFullYear(), d.getMonth() - 1, 1) : new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7));
   }, [view]);
-
-  const goToday = useCallback(() => {
-    setCurrentDate(new Date());
-  }, []);
-
-  // Handle event click
-  const handleEventClick = useCallback(
-    (event: ResolvedEvent) => {
-      if (config.eventAction) {
-        void execute(config.eventAction, { ...event.raw });
-      }
-    },
-    [config.eventAction, execute],
-  );
-
-  // Handle date click
-  const handleDateClick = useCallback(
-    (date: Date) => {
-      if (config.dateAction) {
-        void execute(config.dateAction, {
-          date: date.toISOString(),
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate(),
-        });
-      }
-    },
-    [config.dateAction, execute],
-  );
+  const goNext = useCallback(() => {
+    setCurrentDate((d) => view === "month" ? new Date(d.getFullYear(), d.getMonth() + 1, 1) : new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7));
+  }, [view]);
+  const goToday = useCallback(() => setCurrentDate(new Date()), []);
 
   if (visible === false) return null;
 
-  const MAX_VISIBLE_EVENTS = 3;
-
-  // ── Month view ───────────────────────────────────────────────────────────
-
-  const renderMonthView = () => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const grid = getMonthGrid(year, month);
-    const weeks: Date[][] = [];
-    for (let i = 0; i < grid.length; i += 7) {
-      weeks.push(grid.slice(i, i + 7));
+  const title = useMemo(() => {
+    if (view === "month") return monthYear(currentDate.getFullYear(), currentDate.getMonth());
+    const dates = weekDates(currentDate);
+    const first = dates[0]!;
+    const last = dates[6]!;
+    if (first.getMonth() === last.getMonth()) {
+      return `${first.toLocaleDateString(undefined, { month: "long" })} ${first.getDate()}-${last.getDate()}, ${first.getFullYear()}`;
     }
+    return `${first.toLocaleDateString(undefined, { month: "short" })} ${first.getDate()} - ${last.toLocaleDateString(undefined, { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
+  }, [currentDate, view]);
 
+  const rootSurface = resolveSurfacePresentation({ surfaceId: rootId, implementationBase: {}, componentSurface: config, itemSurface: config.slots?.root });
+  const headerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-header`,
+    implementationBase: { display: "flex", alignItems: "center", justifyContent: "between", style: { marginBottom: "var(--sn-spacing-md, 12px)" } },
+    componentSurface: config.slots?.header,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: { fontSize: "lg", fontWeight: "semibold", color: "var(--sn-color-foreground, #0f172a)", style: { margin: 0 } },
+    componentSurface: config.slots?.title,
+  });
+  const navGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-navGroup`,
+    implementationBase: { display: "flex", gap: "xs" },
+    componentSurface: config.slots?.navGroup,
+  });
+  const loadingSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loadingState`,
+    implementationBase: { padding: "lg", textAlign: "center", fontSize: "sm", color: "var(--sn-color-muted-foreground, #64748b)" },
+    componentSurface: config.slots?.loadingState,
+  });
+  const errorSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-errorState`,
+    implementationBase: { padding: "lg", textAlign: "center", fontSize: "sm", color: "var(--sn-color-destructive, #ef4444)" },
+    componentSurface: config.slots?.errorState,
+  });
+  const frameSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-frame`,
+    implementationBase: { overflow: "hidden", borderRadius: "md", border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)" },
+    componentSurface: config.slots?.frame,
+  });
+  const scrollerSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-scroller`,
+    implementationBase: { overflow: "auto", style: { minWidth: "600px" } },
+    componentSurface: config.slots?.scroller,
+  });
+
+  const nav = (id: string, text: string, onClick: () => void, ariaLabel?: string) => {
+    const surface = resolveSurfacePresentation({
+      surfaceId: `${rootId}-nav-${id}`,
+      implementationBase: {
+        paddingY: "xs",
+        paddingX: "sm",
+        borderRadius: "sm",
+        border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+        bg: "var(--sn-color-card, #fff)",
+        cursor: "pointer",
+        fontSize: "sm",
+        hover: { bg: "var(--sn-color-secondary, #f3f4f6)" },
+        focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      },
+      componentSurface: config.slots?.navButton,
+    });
     return (
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        {/* Day headers */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: config.showWeekNumbers
-              ? "40px repeat(7, 1fr)"
-              : "repeat(7, 1fr)",
-            gap: "var(--sn-border-thin, 1px)",
-          }}
-        >
-          {config.showWeekNumbers && <div />}
-          {DAY_NAMES.map((name) => (
-            <div
-              key={name}
-              style={{
-                textAlign: "center",
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                color: "var(--sn-color-muted-foreground, #64748b)",
-                padding: "var(--sn-spacing-xs, 4px)",
-                fontWeight:
-                  "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-              }}
-            >
-              {name}
-            </div>
-          ))}
-        </div>
-
-        {/* Date grid */}
-        {weeks.map((week, weekIdx) => (
-          <div
-            key={weekIdx}
-            style={{
-              display: "grid",
-              gridTemplateColumns: config.showWeekNumbers
-                ? "40px repeat(7, 1fr)"
-                : "repeat(7, 1fr)",
-              gap: "var(--sn-border-thin, 1px)",
-              borderBottom:
-                "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
-            }}
-          >
-            {/* Week number */}
-            {config.showWeekNumbers && (
-              <div
-                style={{
-                  fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                  color: "var(--sn-color-muted-foreground, #94a3b8)",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  justifyContent: "center",
-                  padding: "var(--sn-spacing-xs, 4px)",
-                }}
-              >
-                {getWeekNumber(week[0]!)}
-              </div>
-            )}
-
-            {week.map((date, dayIdx) => {
-              const dayEvents = eventsForDate(date);
-              const isCurrentMonth = date.getMonth() === month;
-              const isTodayDate = isToday(date);
-
-              return (
-                <div
-                  key={dayIdx}
-                  data-calendar-cell
-                  onClick={() => handleDateClick(date)}
-                  style={{
-                    minHeight: "80px",
-                    padding: "var(--sn-spacing-xs, 4px)",
-                    backgroundColor: isWeekend(date)
-                      ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)"
-                      : undefined,
-                    cursor: config.dateAction ? "pointer" : "default",
-                    borderRight:
-                      dayIdx < 6
-                        ? "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)"
-                        : undefined,
-                  }}
-                >
-                  {/* Date number */}
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      marginBottom: "var(--sn-spacing-xs, 2px)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                        color: isCurrentMonth
-                          ? "var(--sn-color-foreground, #0f172a)"
-                          : "var(--sn-color-muted-foreground, #94a3b8)",
-                        ...(isTodayDate
-                          ? {
-                              backgroundColor:
-                                "var(--sn-color-primary, #2563eb)",
-                              color: "var(--sn-color-primary-foreground, #fff)",
-                              borderRadius: "var(--sn-radius-full, 9999px)",
-                              width: "24px",
-                              height: "24px",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }
-                          : {}),
-                      }}
-                    >
-                      {date.getDate()}
-                    </span>
-                  </div>
-
-                  {/* Events */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "var(--sn-border-thin, 1px)",
-                    }}
-                  >
-                    {dayEvents.slice(0, MAX_VISIBLE_EVENTS).map((ev, evIdx) => (
-                      <EventPill
-                        key={evIdx}
-                        event={ev}
-                        onClick={
-                          config.eventAction
-                            ? () => handleEventClick(ev)
-                            : undefined
-                        }
-                      />
-                    ))}
-                    {dayEvents.length > MAX_VISIBLE_EVENTS && (
-                      <div
-                        style={{
-                          fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                          color: "var(--sn-color-muted-foreground, #64748b)",
-                          paddingLeft: "var(--sn-spacing-xs, 4px)",
-                          cursor: "pointer",
-                        }}
-                      >
-                        +{dayEvents.length - MAX_VISIBLE_EVENTS} more
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+      <div key={id}>
+        <button type="button" onClick={onClick} data-testid={`calendar-nav-${id}`} aria-label={ariaLabel} data-snapshot-id={`${rootId}-nav-${id}`} className={surface.className} style={surface.style}>
+          {text}
+        </button>
+        <SurfaceStyles css={surface.scopedCss} />
       </div>
     );
   };
 
-  // ── Week view ────────────────────────────────────────────────────────────
-
-  const renderWeekView = () => {
-    const weekDates = getWeekDates(currentDate);
-
+  const cell = (date: Date, cellId: string, monthIndex?: number) => {
+    const current = monthIndex == null || date.getMonth() === monthIndex;
+    const isCurrent = today(date);
+    const dayEvents = forDate(date);
+    const cellSurface = resolveSurfacePresentation({
+      surfaceId: cellId,
+      implementationBase: {
+        padding: monthIndex == null ? "sm" : "xs",
+        cursor: config.dateAction ? "pointer" : "default",
+        hover: { bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 50%, transparent)" },
+        style: {
+          minHeight: monthIndex == null ? "200px" : "80px",
+          backgroundColor: weekend(date) ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)" : undefined,
+        },
+      },
+      componentSurface: config.slots?.cell,
+    });
+    const numSurface = resolveSurfacePresentation({
+      surfaceId: `${cellId}-num`,
+      implementationBase: { fontSize: monthIndex == null ? "lg" : "sm", color: current ? "var(--sn-color-foreground, #0f172a)" : "var(--sn-color-muted-foreground, #94a3b8)" },
+      componentSurface: isCurrent ? config.slots?.currentDateNumber : config.slots?.dateNumber,
+    });
+    const eventsSurface = resolveSurfacePresentation({
+      surfaceId: `${cellId}-events`,
+      implementationBase: { display: "flex", flexDirection: "column", gap: monthIndex == null ? "xs" : "2xs" },
+      componentSurface: config.slots?.events,
+    });
     return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(7, 1fr)",
-          gap: "var(--sn-border-thin, 1px)",
-        }}
-      >
-        {weekDates.map((date, idx) => {
-          const dayEvents = eventsForDate(date);
-          const isTodayDate = isToday(date);
-
-          return (
-            <div
-              key={idx}
-              data-calendar-cell
-              onClick={() => handleDateClick(date)}
-              style={{
-                minHeight: "200px",
-                padding: "var(--sn-spacing-sm, 8px)",
-                backgroundColor: isWeekend(date)
-                  ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)"
-                  : undefined,
-                borderRight:
-                  idx < 6
-                    ? "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)"
-                    : undefined,
-                cursor: config.dateAction ? "pointer" : "default",
-              }}
+      <div data-calendar-cell data-snapshot-id={cellId} onClick={() => dateClick(date)} className={cellSurface.className} style={cellSurface.style}>
+        <div style={monthIndex == null ? { textAlign: "center", marginBottom: "var(--sn-spacing-sm, 8px)" } : { display: "flex", justifyContent: "flex-end", marginBottom: "var(--sn-spacing-xs, 2px)" }}>
+          {monthIndex == null ? (
+            <>
+              <div
+                data-snapshot-id={`${cellId}-day`}
+                className={resolveSurfacePresentation({
+                  surfaceId: `${cellId}-day`,
+                  implementationBase: { fontSize: "xs", fontWeight: "semibold", color: "var(--sn-color-muted-foreground, #64748b)" },
+                  componentSurface: config.slots?.dayHeader,
+                }).className}
+                style={resolveSurfacePresentation({
+                  surfaceId: `${cellId}-day`,
+                  implementationBase: { fontSize: "xs", fontWeight: "semibold", color: "var(--sn-color-muted-foreground, #64748b)" },
+                  componentSurface: config.slots?.dayHeader,
+                }).style}
+              >
+                {DAY_NAMES[date.getDay()]}
+              </div>
+              <span
+                data-snapshot-id={`${cellId}-num`}
+                className={numSurface.className}
+                style={isCurrent ? { ...(numSurface.style ?? {}), backgroundColor: "var(--sn-color-primary, #2563eb)", color: "var(--sn-color-primary-foreground, #fff)", borderRadius: "var(--sn-radius-full, 9999px)", width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" } : numSurface.style}
+              >
+                {date.getDate()}
+              </span>
+            </>
+          ) : (
+            <span
+              data-snapshot-id={`${cellId}-num`}
+              className={numSurface.className}
+              style={isCurrent ? { ...(numSurface.style ?? {}), backgroundColor: "var(--sn-color-primary, #2563eb)", color: "var(--sn-color-primary-foreground, #fff)", borderRadius: "var(--sn-radius-full, 9999px)", width: "24px", height: "24px", display: "inline-flex", alignItems: "center", justifyContent: "center" } : numSurface.style}
             >
-              {/* Day header */}
-              <div
-                style={{
-                  textAlign: "center",
-                  marginBottom: "var(--sn-spacing-sm, 8px)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                    color: "var(--sn-color-muted-foreground, #64748b)",
-                    fontWeight:
-                      "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-                  }}
-                >
-                  {DAY_NAMES[date.getDay()]}
-                </div>
-                <span
-                  style={{
-                    fontSize: "var(--sn-font-size-lg, 1.125rem)",
-                    ...(isTodayDate
-                      ? {
-                          backgroundColor: "var(--sn-color-primary, #2563eb)",
-                          color: "var(--sn-color-primary-foreground, #fff)",
-                          borderRadius: "var(--sn-radius-full, 9999px)",
-                          width: "32px",
-                          height: "32px",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }
-                      : {
-                          color: "var(--sn-color-foreground, #0f172a)",
-                        }),
-                  }}
-                >
-                  {date.getDate()}
-                </span>
-              </div>
+              {date.getDate()}
+            </span>
+          )}
+        </div>
+        <div data-snapshot-id={`${cellId}-events`} className={eventsSurface.className} style={eventsSurface.style}>
+          {(monthIndex == null ? dayEvents : dayEvents.slice(0, 3)).map((event, i) => (
+            <EventPill key={i} id={`${cellId}-event-${i}`} event={event} clickable={Boolean(config.eventAction)} onClick={config.eventAction ? () => eventClick(event) : undefined} slots={config.slots} />
+          ))}
+          {monthIndex != null && dayEvents.length > 3 ? (
+            <div
+              data-snapshot-id={`${cellId}-more`}
+              className={resolveSurfacePresentation({
+                surfaceId: `${cellId}-more`,
+                implementationBase: { paddingX: "xs", fontSize: "xs", color: "var(--sn-color-muted-foreground, #64748b)", style: { cursor: "pointer" } },
+                componentSurface: config.slots?.overflowMore,
+              }).className}
+              style={resolveSurfacePresentation({
+                surfaceId: `${cellId}-more`,
+                implementationBase: { paddingX: "xs", fontSize: "xs", color: "var(--sn-color-muted-foreground, #64748b)", style: { cursor: "pointer" } },
+                componentSurface: config.slots?.overflowMore,
+              }).style}
+            >
+              +{dayEvents.length - 3} more
+            </div>
+          ) : null}
+        </div>
+        <SurfaceStyles css={cellSurface.scopedCss} />
+        <SurfaceStyles css={numSurface.scopedCss} />
+        <SurfaceStyles css={eventsSurface.scopedCss} />
+      </div>
+    );
+  };
 
-              {/* Events list */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--sn-spacing-xs, 4px)",
-                }}
-              >
-                {dayEvents.map((ev, evIdx) => (
-                  <EventPill
-                    key={evIdx}
-                    event={ev}
-                    onClick={
-                      config.eventAction
-                        ? () => handleEventClick(ev)
-                        : undefined
-                    }
-                  />
-                ))}
-              </div>
+  const renderMonth = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const dates = monthGrid(year, month);
+    const weeks = Array.from({ length: 6 }, (_, i) => dates.slice(i * 7, i * 7 + 7));
+    const rowSurface = resolveSurfacePresentation({
+      surfaceId: `${rootId}-dayHeaderRow`,
+      implementationBase: { display: "grid", gap: "2xs", style: { gridTemplateColumns: config.showWeekNumbers ? "40px repeat(7, 1fr)" : "repeat(7, 1fr)" } },
+      componentSurface: config.slots?.dayHeaderRow,
+    });
+    return (
+      <>
+        <div data-snapshot-id={`${rootId}-dayHeaderRow`} className={rowSurface.className} style={rowSurface.style}>
+          {config.showWeekNumbers ? <div /> : null}
+          {DAY_NAMES.map((name) => {
+            const surface = resolveSurfacePresentation({
+              surfaceId: `${rootId}-dayHeader-${name}`,
+              implementationBase: { padding: "xs", textAlign: "center", fontSize: "xs", fontWeight: "semibold", color: "var(--sn-color-muted-foreground, #64748b)" },
+              componentSurface: config.slots?.dayHeader,
+            });
+            return <div key={name} data-snapshot-id={`${rootId}-dayHeader-${name}`} className={surface.className} style={surface.style}>{name}<SurfaceStyles css={surface.scopedCss} /></div>;
+          })}
+        </div>
+        <SurfaceStyles css={rowSurface.scopedCss} />
+        {weeks.map((week, wi) => {
+          const weekSurface = resolveSurfacePresentation({
+            surfaceId: `${rootId}-weekRow-${wi}`,
+            implementationBase: { display: "grid", gap: "2xs", style: { gridTemplateColumns: config.showWeekNumbers ? "40px repeat(7, 1fr)" : "repeat(7, 1fr)", borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)" } },
+            componentSurface: config.slots?.weekRow,
+          });
+          return (
+            <div key={wi} data-snapshot-id={`${rootId}-weekRow-${wi}`} className={weekSurface.className} style={weekSurface.style}>
+              {config.showWeekNumbers ? (
+                <div
+                  data-snapshot-id={`${rootId}-weekNumber-${wi}`}
+                  className={resolveSurfacePresentation({
+                    surfaceId: `${rootId}-weekNumber-${wi}`,
+                    implementationBase: { padding: "xs", display: "flex", alignItems: "start", justifyContent: "center", fontSize: "xs", color: "var(--sn-color-muted-foreground, #94a3b8)" },
+                    componentSurface: config.slots?.weekNumber,
+                  }).className}
+                  style={resolveSurfacePresentation({
+                    surfaceId: `${rootId}-weekNumber-${wi}`,
+                    implementationBase: { padding: "xs", display: "flex", alignItems: "start", justifyContent: "center", fontSize: "xs", color: "var(--sn-color-muted-foreground, #94a3b8)" },
+                    componentSurface: config.slots?.weekNumber,
+                  }).style}
+                >
+                  {weekNumber(week[0]!)}
+                </div>
+              ) : null}
+              {week.map((date, di) => <div key={di}>{cell(date, `${rootId}-cell-${wi}-${di}`, month)}</div>)}
+              <SurfaceStyles css={weekSurface.scopedCss} />
             </div>
           );
         })}
-      </div>
+      </>
     );
   };
 
-  // ── Header title ─────────────────────────────────────────────────────────
-
-  const headerTitle = useMemo(() => {
-    if (view === "month") {
-      return formatMonthYear(currentDate.getFullYear(), currentDate.getMonth());
-    }
-    const weekDates = getWeekDates(currentDate);
-    const first = weekDates[0]!;
-    const last = weekDates[6]!;
-    if (first.getMonth() === last.getMonth()) {
-      return `${first.toLocaleDateString(undefined, { month: "long" })} ${first.getDate()}\u2013${last.getDate()}, ${first.getFullYear()}`;
-    }
-    return `${first.toLocaleDateString(undefined, { month: "short" })} ${first.getDate()} \u2013 ${last.toLocaleDateString(undefined, { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
-  }, [currentDate, view]);
+  const renderWeek = () => {
+    const dates = weekDates(currentDate);
+    const surface = resolveSurfacePresentation({
+      surfaceId: `${rootId}-weekGrid`,
+      implementationBase: { display: "grid", gap: "2xs", style: { gridTemplateColumns: "repeat(7, 1fr)" } },
+      componentSurface: config.slots?.weekRow,
+    });
+    return (
+      <>
+        <div data-snapshot-id={`${rootId}-weekGrid`} className={surface.className} style={surface.style}>
+          {dates.map((date, i) => <div key={i}>{cell(date, `${rootId}-weekCell-${i}`)}</div>)}
+        </div>
+        <SurfaceStyles css={surface.scopedCss} />
+      </>
+    );
+  };
 
   return (
-    <div
-      data-snapshot-component="calendar"
-      className={config.className}
-      style={{
-        ...((config.style as React.CSSProperties) ?? {}),
-      }}
-    >
-      {/* Hover/focus styles */}
-      <style>{`
-[data-snapshot-component="calendar"] [data-calendar-cell]:hover {
-  background-color: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 50%, transparent);
-}
-[data-snapshot-component="calendar"] [data-testid^="calendar-nav-"]:hover {
-  background-color: var(--sn-color-secondary, #f3f4f6);
-}
-[data-snapshot-component="calendar"] [data-testid^="calendar-nav-"]:focus {
-  outline: none;
-}
-[data-snapshot-component="calendar"] [data-testid^="calendar-nav-"]:focus-visible {
-  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
-  outline-offset: var(--sn-ring-offset, 2px);
-}
-[data-snapshot-component="calendar"] [data-calendar-event]:hover {
-  opacity: var(--sn-opacity-hover, 0.85);
-}
-[data-snapshot-component="calendar"] [data-calendar-event]:focus {
-  outline: none;
-}
-[data-snapshot-component="calendar"] [data-calendar-event]:focus-visible {
-  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
-  outline-offset: var(--sn-ring-offset, 2px);
-}
-`}</style>
-      {/* Header */}
-      <div
-        data-calendar-header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "var(--sn-spacing-md, 12px)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "var(--sn-font-size-lg, 1.125rem)",
-            fontWeight:
-              "var(--sn-font-weight-semibold, 600)" as React.CSSProperties["fontWeight"],
-            color: "var(--sn-color-foreground, #0f172a)",
-            margin: 0,
-          }}
-        >
-          {headerTitle}
-        </h2>
-
-        <div style={{ display: "flex", gap: "var(--sn-spacing-xs, 4px)" }}>
-          <button
-            onClick={goPrev}
-            data-testid="calendar-nav-prev"
-            aria-label={view === "month" ? "Previous month" : "Previous week"}
-            style={{
-              padding: "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px)",
-              borderRadius: "var(--sn-radius-sm, 4px)",
-              border:
-                "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
-              backgroundColor: "var(--sn-color-card, #fff)",
-              cursor: "pointer",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            }}
-          >
-            &#8249;
-          </button>
-          <button
-            onClick={goToday}
-            data-testid="calendar-nav-today"
-            style={{
-              padding: "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px)",
-              borderRadius: "var(--sn-radius-sm, 4px)",
-              border:
-                "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
-              backgroundColor: "var(--sn-color-card, #fff)",
-              cursor: "pointer",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            }}
-          >
-            {config.todayLabel ?? "Today"}
-          </button>
-          <button
-            onClick={goNext}
-            data-testid="calendar-nav-next"
-            aria-label={view === "month" ? "Next month" : "Next week"}
-            style={{
-              padding: "var(--sn-spacing-xs, 4px) var(--sn-spacing-sm, 8px)",
-              borderRadius: "var(--sn-radius-sm, 4px)",
-              border:
-                "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
-              backgroundColor: "var(--sn-color-card, #fff)",
-              cursor: "pointer",
-              fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            }}
-          >
-            &#8250;
-          </button>
-        </div>
-      </div>
-
-      {/* Loading overlay */}
-      {isLoading && (
-        <div
-          data-calendar-loading
-          style={{
-            textAlign: "center",
-            padding: "var(--sn-spacing-lg, 16px)",
-            color: "var(--sn-color-muted-foreground, #64748b)",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-          }}
-        >
-          Loading events...
-        </div>
-      )}
-
-      {/* Error state */}
-      {error && (
-        <div
-          data-calendar-error
-          role="alert"
-          style={{
-            textAlign: "center",
-            padding: "var(--sn-spacing-lg, 16px)",
-            color: "var(--sn-color-destructive, #ef4444)",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-          }}
-        >
-          Error: {error.message}
-        </div>
-      )}
-
-      {/* Calendar grid */}
-      {!isLoading && !error && (
-        <div
-          style={{
-            border:
-              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e2e8f0)",
-            borderRadius: "var(--sn-radius-md, 6px)",
-            overflow: "hidden",
-            overflowX: "auto",
-          }}
-        >
-          <div style={{ minWidth: "600px" }}>
-            {view === "month" ? renderMonthView() : renderWeekView()}
+    <>
+      <div data-snapshot-component="calendar" data-snapshot-id={rootId} className={rootSurface.className} style={rootSurface.style}>
+        <div data-calendar-header data-snapshot-id={`${rootId}-header`} className={headerSurface.className} style={headerSurface.style}>
+          <h2 data-snapshot-id={`${rootId}-title`} className={titleSurface.className} style={titleSurface.style}>{title}</h2>
+          <div data-snapshot-id={`${rootId}-navGroup`} className={navGroupSurface.className} style={navGroupSurface.style}>
+            {nav("prev", "\u2039", goPrev, view === "month" ? "Previous month" : "Previous week")}
+            {nav("today", config.todayLabel ?? "Today", goToday)}
+            {nav("next", "\u203A", goNext, view === "month" ? "Next month" : "Next week")}
           </div>
         </div>
-      )}
-    </div>
+
+        {isLoading ? <div data-calendar-loading data-snapshot-id={`${rootId}-loadingState`} className={loadingSurface.className} style={loadingSurface.style}>Loading events...</div> : null}
+        {error ? <div data-calendar-error role="alert" data-snapshot-id={`${rootId}-errorState`} className={errorSurface.className} style={errorSurface.style}>Error: {error.message}</div> : null}
+        {!isLoading && !error ? (
+          <div data-snapshot-id={`${rootId}-frame`} className={frameSurface.className} style={frameSurface.style}>
+            <div data-snapshot-id={`${rootId}-scroller`} className={scrollerSurface.className} style={scrollerSurface.style}>
+              {view === "month" ? renderMonth() : renderWeek()}
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={headerSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={navGroupSurface.scopedCss} />
+      <SurfaceStyles css={loadingSurface.scopedCss} />
+      <SurfaceStyles css={errorSurface.scopedCss} />
+      <SurfaceStyles css={frameSurface.scopedCss} />
+      <SurfaceStyles css={scrollerSurface.scopedCss} />
+    </>
   );
 }

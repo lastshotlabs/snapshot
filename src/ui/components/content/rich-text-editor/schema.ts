@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
 /**
@@ -18,8 +19,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const richTextEditorConfigSchema = z
-  .object({
+export const richTextEditorConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("rich-text-editor"),
     /** Initial markdown content. Can be a FromRef for dependent data. */
@@ -57,14 +57,18 @@ export const richTextEditorConfigSchema = z
     minHeight: z.string().optional(),
     /** Maximum height of the editor. CSS value. */
     maxHeight: z.string().optional(),
-    // --- BaseComponentConfig fields ---
-    /** Component id for publishing/subscribing. */
-    id: z.string().optional(),
-    /** Visibility toggle. Can be a FromRef for conditional display. */
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Additional CSS class name. */
-    className: z.string().optional(),
-    /** Inline style overrides. */
-    style: z.record(z.union([z.string(), z.number()])).optional(),
+    slots: slotsSchema([
+      "root",
+      "toolbar",
+      "toolbarGroup",
+      "toolbarButton",
+      "separator",
+      "modeGroup",
+      "modeButton",
+      "content",
+      "editorPane",
+      "previewPane",
+      "emptyPreview",
+    ]).optional(),
   })
   .strict();
