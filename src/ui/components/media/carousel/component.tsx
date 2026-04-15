@@ -11,6 +11,7 @@ import {
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
 import type { CarouselConfig } from "./types";
 
 export function Carousel({ config }: { config: CarouselConfig }) {
@@ -301,26 +302,30 @@ export function Carousel({ config }: { config: CarouselConfig }) {
           className={controlsSurface.className}
           style={controlsSurface.style}
         >
-          <button
+          <ButtonControl
             type="button"
             onClick={prev}
-            aria-label="Previous slide"
-            data-snapshot-id={`${rootId}-prev-button`}
+            ariaLabel="Previous slide"
+            surfaceId={`${rootId}-prev-button`}
+            variant="ghost"
+            size="icon"
             className={prevButtonSurface.className}
             style={prevButtonSurface.style}
           >
             &#x2039;
-          </button>
-          <button
+          </ButtonControl>
+          <ButtonControl
             type="button"
             onClick={next}
-            aria-label="Next slide"
-            data-snapshot-id={`${rootId}-next-button`}
+            ariaLabel="Next slide"
+            surfaceId={`${rootId}-next-button`}
+            variant="ghost"
+            size="icon"
             className={nextButtonSurface.className}
             style={nextButtonSurface.style}
           >
             &#x203A;
-          </button>
+          </ButtonControl>
         </div>
       ) : null}
 
@@ -331,12 +336,14 @@ export function Carousel({ config }: { config: CarouselConfig }) {
           style={indicatorSurface.style}
         >
           {children.map((_, index) => (
-            <button
+            <ButtonControl
               key={`indicator-${index}`}
               type="button"
               onClick={() => goTo(index)}
-              aria-label={`Go to slide ${index + 1}`}
-              data-snapshot-id={`${rootId}-indicator-item-${index}`}
+              ariaLabel={`Go to slide ${index + 1}`}
+              surfaceId={`${rootId}-indicator-item-${index}`}
+              variant="ghost"
+              size="icon"
               className={indicatorItemSurfaces[index]?.className}
               style={indicatorItemSurfaces[index]?.style}
             />

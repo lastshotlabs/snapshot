@@ -7,6 +7,8 @@ import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
+import { InputControl } from "../../forms/input";
 import type { FilterBarConfig } from "./types";
 
 type FilterState = Record<string, string | string[]>;
@@ -79,8 +81,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
   );
 
   const handleSearchChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
+    (value: string) => {
       setSearch(value);
       dispatchChange(value, filterState);
     },
@@ -398,12 +399,12 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
             >
               <Icon name="search" size={14} />
             </div>
-            <input
+            <InputControl
               type="text"
               value={search}
-              onChange={handleSearchChange}
+              onChangeText={handleSearchChange}
               placeholder={config.searchPlaceholder ?? "Search..."}
-              data-testid="filter-bar-search"
+              testId="filter-bar-search"
               style={{
                 width: "100%",
                 padding:
@@ -431,9 +432,9 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               ref={isOpen ? dropdownRef : undefined}
               style={{ position: "relative" }}
             >
-              <button
+              <ButtonControl
                 type="button"
-                data-testid={`filter-button-${filter.key}`}
+                testId={`filter-button-${filter.key}`}
                 className={filterButtonSurface.className}
                 style={{
                   ...(filterButtonSurface.style ?? {}),
@@ -447,11 +448,13 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                     ? "var(--sn-color-primary-foreground, #fff)"
                     : "var(--sn-color-foreground, #111)",
                 }}
+                variant="ghost"
+                size="sm"
                 onClick={() => setOpenDropdown(isOpen ? null : filter.key)}
               >
                 <span>{filter.label}</span>
                 <Icon name="chevron-down" size={12} color="currentColor" />
-              </button>
+              </ButtonControl>
 
               {isOpen ? (
                 <div
@@ -465,12 +468,12 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                     const selected = isSelected(filter.key, option.value);
 
                     return (
-                      <button
+                      <ButtonControl
                         key={option.value}
                         type="button"
                         role="option"
-                        aria-selected={selected}
-                        data-snapshot-id={`${rootId}-option`}
+                        ariaSelected={selected}
+                        surfaceId={`${rootId}-option`}
                         className={optionSurface.className}
                         style={{
                           ...(optionSurface.style ?? {}),
@@ -478,6 +481,8 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                             ? "var(--sn-color-accent, #f3f4f6)"
                             : "none",
                         }}
+                        variant="ghost"
+                        size="sm"
                         onClick={() =>
                           handleOptionSelect(
                             filter.key,
@@ -512,7 +517,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                           </span>
                         ) : null}
                         <span>{option.label}</span>
-                      </button>
+                      </ButtonControl>
                     );
                   })}
                 </div>
@@ -522,17 +527,19 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
         })}
 
         {hasActiveFilters ? (
-          <button
+          <ButtonControl
             type="button"
             data-testid="filter-bar-clear"
-            data-snapshot-id={`${rootId}-clear`}
+            surfaceId={`${rootId}-clear`}
             className={clearButtonSurface.className}
             style={clearButtonSurface.style}
+            variant="ghost"
+            size="sm"
             onClick={clearAll}
           >
             <Icon name="x" size={12} />
             <span>Clear all</span>
-          </button>
+          </ButtonControl>
         ) : null}
       </div>
 
@@ -553,10 +560,12 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               style={pillSurface.style}
             >
               <span>{pill.displayLabel}</span>
-              <button
+              <ButtonControl
                 type="button"
-                aria-label={`Remove filter ${pill.displayLabel}`}
+                ariaLabel={`Remove filter ${pill.displayLabel}`}
                 onClick={() => removeFilter(pill.key, pill.value)}
+                variant="ghost"
+                size="icon"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -570,7 +579,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
                 }}
               >
                 <Icon name="x" size={12} />
-              </button>
+              </ButtonControl>
             </span>
           ))}
         </div>

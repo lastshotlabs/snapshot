@@ -8,6 +8,8 @@ import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
+import { ButtonControl } from "../button";
+import { InputControl } from "../input";
 import type { LocationInputConfig } from "./types";
 
 interface LocationResult {
@@ -111,13 +113,15 @@ function LocationResultRow({
 
   return (
     <>
-      <button
+      <ButtonControl
         type="button"
         data-testid="location-result"
-        data-snapshot-id={resultId}
+        surfaceId={resultId}
         className={resultSurface.className}
         style={resultSurface.style}
         onClick={() => onSelect(location)}
+        variant="ghost"
+        size="sm"
       >
         <span
           data-snapshot-id={`${resultId}-icon`}
@@ -148,7 +152,7 @@ function LocationResultRow({
             </div>
           ) : null}
         </div>
-      </button>
+      </ButtonControl>
       <SurfaceStyles css={resultSurface.scopedCss} />
       <SurfaceStyles css={resultIconSurface.scopedCss} />
       <SurfaceStyles css={resultContentSurface.scopedCss} />
@@ -491,19 +495,19 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
           >
             <Icon name="map-pin" size={16} />
           </span>
-          <input
-            data-testid="location-search"
+          <InputControl
+            testId="location-search"
             type="text"
             value={query}
             disabled={disabled}
             placeholder={config.placeholder ?? "Search for a location..."}
-            onChange={(event) => handleInputChange(event.target.value)}
+            onChangeText={handleInputChange}
             onFocus={() => {
               if (results.length > 0) {
                 setIsOpen(true);
               }
             }}
-            data-snapshot-id={`${rootId}-input`}
+            surfaceId={`${rootId}-input`}
             className={inputSurface.className}
             style={inputSurface.style}
           />

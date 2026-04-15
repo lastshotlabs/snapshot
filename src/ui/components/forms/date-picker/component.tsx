@@ -6,6 +6,8 @@ import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../button";
+import { InputControl } from "../input";
 import type { DatePickerConfig } from "./types";
 
 function toOutputValue(
@@ -319,12 +321,14 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
             style={presetsSurface.style}
           >
             {config.presets.map((preset, index) => (
-              <button
+              <ButtonControl
                 key={preset.label}
                 type="button"
-                data-snapshot-id={`${rootId}-presetButton-${index}`}
+                surfaceId={`${rootId}-presetButton-${index}`}
                 className={presetButtonSurface.className}
                 style={presetButtonSurface.style}
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   if (config.mode === "range") {
                     const nextValue = { start: preset.start, end: preset.end };
@@ -343,23 +347,22 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                 }}
               >
                 {preset.label}
-              </button>
+              </ButtonControl>
             ))}
           </div>
         ) : null}
 
         {config.mode === "single" ? (
-          <input
-            type="date"
+          <InputControl
+            type={"date" as Parameters<typeof InputControl>[0]["type"]}
             value={singleValue}
             min={config.min}
             max={config.max}
             placeholder={config.placeholder}
-            data-snapshot-id={`${rootId}-singleInput`}
+            surfaceId={`${rootId}-singleInput`}
             className={singleInputSurface.className}
             style={singleInputSurface.style}
-            onChange={(event) => {
-              const nextValue = event.target.value;
+            onChangeText={(nextValue) => {
               if (isDisabledDate(nextValue, config.disabledDates)) {
                 return;
               }
@@ -375,16 +378,15 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
             className={rangeSurface.className}
             style={rangeSurface.style}
           >
-            <input
-              type="date"
+            <InputControl
+              type={"date" as Parameters<typeof InputControl>[0]["type"]}
               value={rangeValue.start}
               min={config.min}
               max={config.max}
-              data-snapshot-id={`${rootId}-rangeStart`}
+              surfaceId={`${rootId}-rangeStart`}
               className={rangeStartSurface.className}
               style={rangeStartSurface.style}
-              onChange={(event) => {
-                const nextValue = event.target.value;
+              onChangeText={(nextValue) => {
                 if (isDisabledDate(nextValue, config.disabledDates)) {
                   return;
                 }
@@ -393,16 +395,15 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                 triggerChange(toOutputValue(updated, config.valueFormat));
               }}
             />
-            <input
-              type="date"
+            <InputControl
+              type={"date" as Parameters<typeof InputControl>[0]["type"]}
               value={rangeValue.end}
               min={rangeValue.start || config.min}
               max={config.max}
-              data-snapshot-id={`${rootId}-rangeEnd`}
+              surfaceId={`${rootId}-rangeEnd`}
               className={rangeEndSurface.className}
               style={rangeEndSurface.style}
-              onChange={(event) => {
-                const nextValue = event.target.value;
+              onChangeText={(nextValue) => {
                 if (isDisabledDate(nextValue, config.disabledDates)) {
                   return;
                 }
@@ -425,21 +426,23 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
               className={multipleEntrySurface.className}
               style={multipleEntrySurface.style}
             >
-              <input
-                type="date"
+              <InputControl
+                type={"date" as Parameters<typeof InputControl>[0]["type"]}
                 value={multipleInput}
                 min={config.min}
                 max={config.max}
-                data-snapshot-id={`${rootId}-multipleInput`}
+                surfaceId={`${rootId}-multipleInput`}
                 className={multipleInputSurface.className}
                 style={multipleInputSurface.style}
-                onChange={(event) => setMultipleInput(event.target.value)}
+                onChangeText={setMultipleInput}
               />
-              <button
+              <ButtonControl
                 type="button"
-                data-snapshot-id={`${rootId}-multipleAddButton`}
+                surfaceId={`${rootId}-multipleAddButton`}
                 className={multipleAddButtonSurface.className}
                 style={multipleAddButtonSurface.style}
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   if (
                     multipleInput.length === 0 ||
@@ -456,7 +459,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                 }}
               >
                 Add
-              </button>
+              </ButtonControl>
             </div>
             <div
               data-snapshot-id={`${rootId}-multipleValues`}
@@ -464,12 +467,14 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
               style={multipleValuesSurface.style}
             >
               {multipleValue.map((value, index) => (
-                <button
+                <ButtonControl
                   key={value}
                   type="button"
-                  data-snapshot-id={`${rootId}-multipleValue-${index}`}
+                  surfaceId={`${rootId}-multipleValue-${index}`}
                   className={multipleValueSurface.className}
                   style={multipleValueSurface.style}
+                  variant="ghost"
+                  size="sm"
                   onClick={() => {
                     const nextValue = multipleValue.filter((entry) => entry !== value);
                     setMultipleValue(nextValue);
@@ -477,7 +482,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
                   }}
                 >
                   {formatDisplayValue(value, config.format)} x
-                </button>
+                </ButtonControl>
               ))}
             </div>
           </div>

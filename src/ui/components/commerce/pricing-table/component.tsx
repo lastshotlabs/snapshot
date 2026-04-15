@@ -4,6 +4,7 @@ import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
 import type { PricingTableConfig } from "./types";
 
 function TierCard({
@@ -299,17 +300,19 @@ function TierCard({
             );
           })}
         </ul>
-        <button
+        <ButtonControl
           type="button"
           data-testid="pricing-tier-cta"
           onClick={tier.action ? () => void execute(tier.action!) : undefined}
           disabled={!tier.action}
-          data-snapshot-id={`${cardId}-cta`}
+          surfaceId={`${cardId}-cta`}
+          variant="ghost"
+          size="sm"
           className={ctaSurface.className}
           style={ctaSurface.style}
         >
           {ctaLabel}
-        </button>
+        </ButtonControl>
       </div>
       <SurfaceStyles css={cardSurface.scopedCss} />
       <SurfaceStyles css={badgeSurface.scopedCss} />
@@ -621,17 +624,19 @@ function TableVariant({
                     className={ctaCellSurface.className}
                     style={ctaCellSurface.style}
                   >
-                    <button
+                    <ButtonControl
                       type="button"
                       data-testid="pricing-tier-cta"
                       onClick={tier.action ? () => void execute(tier.action!) : undefined}
                       disabled={!tier.action}
-                      data-snapshot-id={`${rootId}-cta-${tierIndex}`}
+                      surfaceId={`${rootId}-cta-${tierIndex}`}
+                      variant="ghost"
+                      size="sm"
                       className={ctaSurface.className}
                       style={ctaSurface.style}
                     >
                       {tier.actionLabel ?? "Get Started"}
-                    </button>
+                    </ButtonControl>
                     <SurfaceStyles css={ctaCellSurface.scopedCss} />
                     <SurfaceStyles css={ctaSurface.scopedCss} />
                   </td>

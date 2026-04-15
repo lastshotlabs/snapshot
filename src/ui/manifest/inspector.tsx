@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from "react";
+import { ButtonControl } from "../components/forms/button";
 
 interface InspectorState {
   type: string;
@@ -119,19 +120,20 @@ export function ComponentInspector() {
           <strong>{inspected.type}</strong>
           {inspected.id ? ` #${inspected.id}` : ""}
         </div>
-        <button
+        <ButtonControl
           type="button"
           onClick={() => setInspected(null)}
+          variant="ghost"
+          size="icon"
           style={{
             border: "none",
             background: "transparent",
             color: "inherit",
-            cursor: "pointer",
             fontSize: "var(--sn-font-size-lg, 1.125rem)",
           }}
         >
           {"\u00D7"}
-        </button>
+        </ButtonControl>
       </div>
       <pre
         style={{

@@ -7,6 +7,8 @@ import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
+import { ButtonControl } from "../button";
+import { InputControl } from "../input";
 import type { TagSelectorConfig } from "./types";
 
 interface ResolvedTag {
@@ -115,19 +117,22 @@ function TagPill({
         >
           {tag.label}
         </span>
-        <button
+        <ButtonControl
+          type="button"
+          variant="ghost"
+          size="icon"
+          ariaLabel={`Remove ${tag.label}`}
+          surfaceId={`${pillId}-remove`}
           data-testid="tag-remove"
-          data-snapshot-id={`${pillId}-remove`}
           onClick={(event) => {
             event.stopPropagation();
             onRemove(tag.value);
           }}
           className={removeButtonSurface.className}
           style={removeButtonSurface.style}
-          aria-label={`Remove ${tag.label}`}
         >
           \u00d7
-        </button>
+        </ButtonControl>
       </span>
       <SurfaceStyles css={pillSurface.scopedCss} />
       <SurfaceStyles css={pillLabelSurface.scopedCss} />
@@ -190,9 +195,12 @@ function TagOption({
 
   return (
     <>
-      <button
+      <ButtonControl
+        type="button"
+        variant="ghost"
+        size="sm"
+        surfaceId={optionId}
         data-testid="tag-option"
-        data-snapshot-id={optionId}
         onClick={() => onSelect(tag.value)}
         className={optionSurface.className}
         style={optionSurface.style}
@@ -205,7 +213,7 @@ function TagOption({
           />
         ) : null}
         {tag.label}
-      </button>
+      </ButtonControl>
       <SurfaceStyles css={optionSurface.scopedCss} />
       <SurfaceStyles css={swatchSurface.scopedCss} />
     </>
@@ -552,14 +560,14 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
             />
           ))}
 
-          <input
-            ref={inputRef}
-            data-testid="tag-input"
-            data-snapshot-id={`${rootId}-input`}
+          <InputControl
+            inputRef={inputRef}
+            testId="tag-input"
+            surfaceId={`${rootId}-input`}
             type="text"
             value={searchText}
-            onChange={(event) => {
-              setSearchText(event.target.value);
+            onChangeText={(value) => {
+              setSearchText(value);
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
@@ -613,17 +621,20 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
                 style={errorSurface.style}
               >
                 <div>Failed to load tags</div>
-                <button
-                  data-snapshot-id={`${rootId}-retryButton`}
+                <ButtonControl
+                  type="button"
+                  surfaceId={`${rootId}-retryButton`}
                   onClick={(event) => {
                     event.stopPropagation();
                     apiRefetch();
                   }}
+                  variant="ghost"
+                  size="sm"
                   className={retryButtonSurface.className}
                   style={retryButtonSurface.style}
                 >
                   Retry
-                </button>
+                </ButtonControl>
               </div>
             ) : null}
 
@@ -643,15 +654,18 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
               : null}
 
             {canCreate ? (
-              <button
+              <ButtonControl
+                type="button"
+                variant="ghost"
+                size="sm"
+                surfaceId={`${rootId}-createOption`}
                 data-testid="tag-create-option"
-                data-snapshot-id={`${rootId}-createOption`}
                 onClick={handleCreate}
                 className={createOptionSurface.className}
                 style={createOptionSurface.style}
               >
                 Create &ldquo;{searchText.trim()}&rdquo;
-              </button>
+              </ButtonControl>
             ) : null}
           </div>
         ) : null}

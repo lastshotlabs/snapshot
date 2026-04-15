@@ -22,6 +22,8 @@ export interface InputControlProps {
   autoFocus?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
+  min?: string;
+  max?: string;
   maxLength?: number;
   pattern?: string;
   required?: boolean;

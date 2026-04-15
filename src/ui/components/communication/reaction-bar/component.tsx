@@ -7,6 +7,7 @@ import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
 import { EmojiPicker } from "../emoji-picker/component";
 import type { EmojiPickerConfig } from "../emoji-picker/types";
 import type { ReactionBarConfig } from "./types";
@@ -214,14 +215,16 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
 
           return (
             <div key={`${reaction.emoji}-${idx}`}>
-              <button
+              <ButtonControl
                 type="button"
-                data-testid="reaction-button"
-                aria-label={`React with ${reaction.emoji}`}
-                data-snapshot-id={reactionId}
+                testId="reaction-button"
+                ariaLabel={`React with ${reaction.emoji}`}
+                surfaceId={reactionId}
                 onClick={() =>
                   handleReactionClick(reaction.emoji, reaction.active ?? false)
                 }
+                variant="ghost"
+                size="sm"
                 className={reactionSurface.className}
                 style={reactionSurface.style}
               >
@@ -239,7 +242,7 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
                 >
                   {reaction.count}
                 </span>
-              </button>
+              </ButtonControl>
               <SurfaceStyles css={reactionSurface.scopedCss} />
               <SurfaceStyles css={emojiSurface.scopedCss} />
               <SurfaceStyles css={countSurface.scopedCss} />
@@ -253,17 +256,19 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
             className={addWrapperSurface.className}
             style={addWrapperSurface.style}
           >
-            <button
+            <ButtonControl
               type="button"
-              data-testid="reaction-add"
-              aria-label="Add reaction"
-              data-snapshot-id={`${rootId}-addButton`}
+              testId="reaction-add"
+              ariaLabel="Add reaction"
+              surfaceId={`${rootId}-addButton`}
               onClick={() => setShowPicker(!showPicker)}
+              variant="ghost"
+              size="icon"
               className={addButtonSurface.className}
               style={addButtonSurface.style}
             >
               <Icon name="plus" size={14} />
-            </button>
+            </ButtonControl>
 
             {showPicker ? (
               <div

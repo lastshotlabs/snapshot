@@ -1,5 +1,7 @@
 'use client';
 
+import { ButtonControl } from "../components/forms/button";
+
 interface ManifestErrorOverlayIssue {
   path: string;
   message: string;
@@ -73,7 +75,7 @@ export function ManifestErrorOverlay({
             </h1>
             <p style={{ opacity: 0.8 }}>{manifestFile}</p>
           </div>
-          <button
+          <ButtonControl
             type="button"
             onClick={() => {
               if (typeof document === "undefined") {
@@ -83,6 +85,8 @@ export function ManifestErrorOverlay({
                 .querySelector("[data-snapshot-error-overlay]")
                 ?.remove();
             }}
+            variant="ghost"
+            size="sm"
             style={{
               border: "var(--sn-border-thin, 1px) solid rgba(255,255,255,0.15)",
               borderRadius: "var(--sn-radius-md, 0.5rem)",
@@ -94,7 +98,7 @@ export function ManifestErrorOverlay({
             }}
           >
             Dismiss
-          </button>
+          </ButtonControl>
         </div>
 
         <div

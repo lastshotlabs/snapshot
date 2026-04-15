@@ -18,6 +18,8 @@ export function InputControl({
   autoFocus,
   disabled,
   readOnly,
+  min,
+  max,
   maxLength,
   pattern,
   required,
@@ -105,6 +107,8 @@ export function InputControl({
         autoFocus={autoFocus}
         disabled={disabled}
         readOnly={readOnly}
+        min={min}
+        max={max}
         maxLength={maxLength}
         pattern={pattern}
         required={required}

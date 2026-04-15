@@ -11,6 +11,7 @@ import {
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { ButtonControl } from "../../forms/button";
 import type { FileUploaderConfig, UploadFileEntry } from "./types";
 
 function formatFileSize(bytes: number): string {
@@ -206,17 +207,19 @@ function FileRow({
         >
           {formatFileSize(entry.file.size)}
         </span>
-        <button
+        <ButtonControl
           type="button"
-          data-testid="file-uploader-remove"
-          data-snapshot-id={`${itemId}-remove`}
+          testId="file-uploader-remove"
+          surfaceId={`${itemId}-remove`}
           onClick={() => onRemove(entry.id)}
-          aria-label={`Remove ${entry.file.name}`}
+          ariaLabel={`Remove ${entry.file.name}`}
+          variant="ghost"
+          size="icon"
           className={removeSurface.className}
           style={removeSurface.style}
         >
           {"\u00D7"}
-        </button>
+        </ButtonControl>
         {entry.status === "uploading" ? (
           <div
             data-testid="file-uploader-progress"
@@ -643,11 +646,13 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           style={rootSurface.style}
         >
           {hiddenInput}
-          <button
+          <ButtonControl
             type="button"
-            data-testid="file-uploader-trigger"
-            data-snapshot-id={`${rootId}-trigger`}
+            testId="file-uploader-trigger"
+            surfaceId={`${rootId}-trigger`}
             onClick={openPicker}
+            variant="ghost"
+            size="sm"
             className={triggerSurface.className}
             style={triggerSurface.style}
           >
@@ -660,7 +665,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
               {"\u2191"}
             </span>
             <span>{label}</span>
-          </button>
+          </ButtonControl>
           {fileList}
         </div>
         <SurfaceStyles css={rootSurface.scopedCss} />
@@ -682,16 +687,18 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           style={rootSurface.style}
         >
           {hiddenInput}
-          <button
+          <ButtonControl
             type="button"
-            data-testid="file-uploader-trigger"
-            data-snapshot-id={`${rootId}-trigger`}
+            testId="file-uploader-trigger"
+            surfaceId={`${rootId}-trigger`}
             onClick={openPicker}
+            variant="ghost"
+            size="sm"
             className={triggerSurface.className}
             style={triggerSurface.style}
           >
             Choose file
-          </button>
+          </ButtonControl>
           {compactSelectedText ? (
             <span
               data-snapshot-id={`${rootId}-selectedText`}
