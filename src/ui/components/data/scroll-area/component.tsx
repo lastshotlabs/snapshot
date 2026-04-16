@@ -6,7 +6,7 @@ import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ScrollAreaConfig } from "./types";
 
 /**
@@ -99,7 +99,7 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
     implementationBase: {
       position: "relative",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight", "maxWidth"] }),
     itemSurface: config.slots?.root,
   });
   const viewportSurface = resolveSurfacePresentation({

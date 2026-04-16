@@ -20,15 +20,20 @@ describe("ScrollArea", () => {
       <ScrollArea
         config={{
           type: "scroll-area",
+          className: "component-root",
           maxHeight: "20rem",
           content: [{ type: "markdown", id: "scroll-copy", content: "Hello" } as never],
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
-    expect(
-      container.querySelector('[data-snapshot-component="scroll-area"]'),
-    ).toBeTruthy();
+    const root = container.querySelector('[data-snapshot-component="scroll-area"]');
+    expect(root).toBeTruthy();
+    expect((root as HTMLElement | null)?.className).toContain("component-root");
+    expect((root as HTMLElement | null)?.className).toContain("slot-root");
     expect(screen.getByTestId("scroll-area-child").textContent).toContain("scroll-copy");
   });
 });

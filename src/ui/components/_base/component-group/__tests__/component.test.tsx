@@ -28,16 +28,23 @@ describe("ComponentGroup", () => {
       <ComponentGroup
         config={{
           type: "component-group",
+          className: "component-root",
           group: "hero",
           overrides: {
             title: {
               text: "New title",
             },
           },
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="component-group"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     expect(screen.getByTestId("component-group-child").textContent).toBe("New title");
   });
 });

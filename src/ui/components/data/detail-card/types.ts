@@ -23,6 +23,8 @@ export interface ResolvedField {
   format: DetailFieldFormat;
   /** Whether to show a copy button. */
   copyable: boolean;
+  /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
+  divisor?: number;
   /** Optional field-level slot overrides. */
   slots?: DetailFieldConfig["slots"];
 }

@@ -69,6 +69,8 @@ export const detailFieldConfigSchema = z.object({
   format: detailFieldFormatSchema.optional(),
   /** Whether to show a copy-to-clipboard button next to the value. */
   copyable: z.boolean().optional(),
+  /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
+  divisor: z.number().positive().optional(),
   /** Field-level slot overrides. */
   slots: slotsSchema(detailCardFieldSlotNames).optional(),
 });

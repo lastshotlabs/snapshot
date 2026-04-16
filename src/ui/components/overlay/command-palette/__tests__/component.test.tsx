@@ -50,9 +50,11 @@ describe("CommandPalette", () => {
         config={{
           type: "command-palette",
           id: "palette-demo",
+          className: "palette-root",
           visible: true,
           autoRegisterShortcuts: false,
           shortcut: "ctrl+k",
+          maxHeight: "420px",
           groups: [
             {
               label: "Actions",
@@ -79,6 +81,25 @@ describe("CommandPalette", () => {
       vi.runAllTimers();
     });
 
+    expect(
+      document
+        .querySelector('[data-snapshot-id="palette-demo-root"]')
+        ?.className.includes("palette-root"),
+    ).toBe(true);
+    expect(
+      (
+        document.querySelector(
+          '[data-snapshot-id="palette-demo-root"]',
+        ) as HTMLElement | null
+      )?.style.maxHeight ?? "",
+    ).toBe("");
+    expect(
+      (
+        document.querySelector(
+          '[data-snapshot-id="palette-demo-list"]',
+        ) as HTMLElement | null
+      )?.style.maxHeight,
+    ).toBe("420px");
     expect(
       document
         .querySelector('[data-snapshot-id="palette-demo-panel"]')

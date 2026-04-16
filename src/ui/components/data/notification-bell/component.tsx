@@ -6,7 +6,7 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { NotificationBellConfig } from "./types";
 
@@ -91,7 +91,7 @@ export function NotificationBell({
     implementationBase: {
       display: "inline-flex",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const buttonSurface = resolveSurfacePresentation({

@@ -28,7 +28,10 @@ import { useVirtualList } from "../../../hooks/use-virtual-list";
 import type { ListConfig, ListItemConfig } from "./types";
 import type { ActionConfig, ActionExecuteFn } from "../../../actions/types";
 import { wsManagerAtom } from "../../../../ws/atom";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 
 function resolveItemSurface(
   rootId: string,
@@ -660,7 +663,7 @@ export function ListComponent({ config }: { config: ListConfig }) {
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
     implementationBase: containerStyle as Record<string, unknown>,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const listSurface = resolveSurfacePresentation({

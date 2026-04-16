@@ -160,6 +160,9 @@ function getInitialRows(resolvedData: unknown): Record<string, unknown>[] {
 
   if (resolvedData != null && typeof resolvedData === "object") {
     const obj = resolvedData as Record<string, unknown>;
+    if (Array.isArray(obj["items"])) {
+      return obj["items"] as Record<string, unknown>[];
+    }
     if (Array.isArray(obj["data"])) {
       return obj["data"] as Record<string, unknown>[];
     }

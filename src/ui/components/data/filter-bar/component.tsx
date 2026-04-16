@@ -1,12 +1,13 @@
 'use client';
-
-import type { CSSProperties } from "react";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
 import type { FilterBarConfig } from "./types";
@@ -206,7 +207,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
       flexDirection: "column",
       gap: "var(--sn-spacing-sm, 0.5rem)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const toolbarSurface = resolveSurfacePresentation({
@@ -361,11 +362,8 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
     <div
       data-snapshot-component="filter-bar"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <div
         data-snapshot-id={`${rootId}-toolbar`}

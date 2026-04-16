@@ -39,6 +39,8 @@ describe("FilterBar", () => {
         <FilterBar
           config={{
             type: "filter-bar",
+            id: "user-filters",
+            className: "filter-bar-root",
             filters: [
               {
                 key: "role",
@@ -57,6 +59,11 @@ describe("FilterBar", () => {
     fireEvent.click(screen.getByTestId("filter-button-role"));
     fireEvent.click(screen.getByRole("option", { name: "Admin" }));
 
+    expect(
+      document
+        .querySelector('[data-snapshot-id="user-filters"]')
+        ?.classList.contains("filter-bar-root"),
+    ).toBe(true);
     expect(screen.getByText("Role: Admin")).toBeTruthy();
   });
 });

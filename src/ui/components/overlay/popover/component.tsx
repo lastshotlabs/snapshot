@@ -8,7 +8,7 @@ import { renderIcon } from "../../../icons/render";
 import { ButtonControl } from "../../forms/button";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { FloatingPanel } from "../../primitives/floating-menu";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { PopoverConfig } from "./types";
 
 /**
@@ -30,7 +30,7 @@ export function Popover({ config }: { config: PopoverConfig }) {
       position: "relative",
       display: "inline-flex",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["width"] }),
     itemSurface: config.slots?.root,
   });
 

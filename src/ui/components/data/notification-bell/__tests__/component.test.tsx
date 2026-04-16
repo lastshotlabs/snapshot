@@ -28,14 +28,21 @@ describe("NotificationBell", () => {
       <NotificationBell
         config={{
           type: "notification-bell",
+          className: "component-root",
           count: 120,
           max: 99,
           ariaLive: "polite",
           clickAction: { type: "open-notifications" } as never,
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="notification-bell"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     expect(screen.getByTestId("notification-badge").textContent).toBe("99+");
     fireEvent.click(screen.getByTestId("notification-bell"));
     expect(executeSpy).toHaveBeenCalledWith({ type: "open-notifications" });

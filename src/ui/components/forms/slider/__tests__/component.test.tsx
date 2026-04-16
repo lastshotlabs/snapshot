@@ -28,6 +28,7 @@ describe("Slider", () => {
       <Slider
         config={{
           type: "slider",
+          className: "component-root",
           min: 0,
           max: 100,
           step: 1,
@@ -37,10 +38,16 @@ describe("Slider", () => {
           showValue: true,
           showLimits: false,
           onChange: { type: "set-opacity" } as never,
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="slider"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     fireEvent.change(screen.getByRole("slider"), { target: { value: "75" } });
 
     expect(screen.getByText("75")).toBeTruthy();

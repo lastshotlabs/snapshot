@@ -42,11 +42,18 @@ describe("Outlet", () => {
       <Outlet
         config={{
           type: "outlet",
+          className: "component-root",
+          slots: {
+            root: { className: "slot-root" },
+          },
           fallback: [{ type: "text", value: "Empty state" }],
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="outlet"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     expect(screen.getByTestId("outlet-fallback").textContent).toBe("text");
   });
 

@@ -10,7 +10,7 @@ import {
 } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { CarouselConfig } from "./types";
 
@@ -78,7 +78,7 @@ export function Carousel({ config }: { config: CarouselConfig }) {
       width: "100%",
       display: "block",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const viewportSurface = resolveSurfacePresentation({

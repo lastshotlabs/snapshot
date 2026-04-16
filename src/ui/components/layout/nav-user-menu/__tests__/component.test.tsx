@@ -108,6 +108,24 @@ describe("NavUserMenu", () => {
     expect((root as HTMLElement | null)?.style.position).toBe("relative");
   });
 
+  it("applies component-level root styling through the canonical root surface", () => {
+    const { container } = renderWithContext(
+      <NavUserMenu
+        config={{
+          type: "nav-user-menu",
+          className: "user-menu-root",
+        }}
+      />,
+      { user: { name: "Alice" } },
+    );
+
+    expect(
+      container
+        .querySelector('[data-snapshot-id="nav-user-menu-root"]')
+        ?.classList.contains("user-menu-root"),
+    ).toBe(true);
+  });
+
   it("executes menu item actions", () => {
     renderWithContext(
       <NavUserMenu

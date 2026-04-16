@@ -95,6 +95,7 @@ function resolveFields(
     value: data[fc.field],
     format: fc.format ?? "text",
     copyable: fc.copyable ?? false,
+    divisor: fc.divisor,
     slots: fc.slots,
   }));
 }

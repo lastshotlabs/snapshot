@@ -3,7 +3,10 @@
 import { useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { RichInput } from "../../content/rich-input/component";
 import type { RichInputConfig } from "../../content/rich-input/types";
 import { MessageThread } from "../message-thread/component";
@@ -75,7 +78,7 @@ export function ChatWindow({ config }: { config: ChatWindowConfig }) {
         height,
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const headerSurface = resolveSurfacePresentation({

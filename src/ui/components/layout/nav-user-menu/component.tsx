@@ -7,7 +7,10 @@ import { isTRef, type I18nConfig, type TRef } from "../../../i18n/schema";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { ButtonControl } from "../../forms/button";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import {
   FloatingMenuStyles,
   FloatingPanel,
@@ -73,7 +76,7 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
       position: "relative",
       display: "inline-flex",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const avatarSurface = resolveSurfacePresentation({

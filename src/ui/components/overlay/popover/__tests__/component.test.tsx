@@ -114,12 +114,14 @@ describe("Popover", () => {
       <Popover
         config={{
           type: "popover",
+          className: "component-root",
           trigger: "More",
         }}
       />,
     );
 
     const root = container.querySelector('[data-snapshot-id="popover-root"]');
+    expect((root as HTMLElement | null)?.className).toContain("component-root");
     expect((root as HTMLElement | null)?.style.position).toBe("relative");
   });
 });

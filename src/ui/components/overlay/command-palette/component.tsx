@@ -12,7 +12,10 @@ import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { useComponentData } from "../../_base/use-component-data";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { InputControl } from "../../forms/input";
 import {
   buildRequestUrl,
@@ -437,7 +440,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       display: "block",
       style: animationStyle,
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const panelSurface = resolveSurfacePresentation({

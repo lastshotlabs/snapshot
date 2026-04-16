@@ -103,6 +103,8 @@ export const columnConfigSchema = z
     width: z.string().optional(),
     /** Text alignment within the column. */
     align: z.enum(["left", "center", "right"]).optional(),
+    /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
+    divisor: z.number().positive().optional(),
   })
   .strict();
 

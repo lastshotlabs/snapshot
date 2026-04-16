@@ -15,6 +15,8 @@ export interface FormatValueOptions {
   prefix?: string;
   /** Suffix text to append to formatted value. */
   suffix?: string;
+  /** Divide the value by this number before formatting (e.g. 100 for cents → dollars). */
+  divisor?: number;
 }
 
 /**
@@ -42,7 +44,8 @@ export function formatValue(
   format?: "number" | "currency" | "percent" | "compact" | "decimal",
   options: FormatValueOptions = {},
 ): string {
-  const { currency = "USD", decimals, prefix = "", suffix = "" } = options;
+  const { currency = "USD", decimals, prefix = "", suffix = "", divisor } = options;
+  const adjustedValue = divisor && divisor !== 1 ? value / divisor : value;
 
   let formatted: string;
 
@@ -56,7 +59,7 @@ export function formatValue(
         opts.minimumFractionDigits = decimals;
         opts.maximumFractionDigits = decimals;
       }
-      formatted = new Intl.NumberFormat("en-US", opts).format(value);
+      formatted = new Intl.NumberFormat("en-US", opts).format(adjustedValue);
       break;
     }
 
@@ -68,7 +71,7 @@ export function formatValue(
         opts.minimumFractionDigits = decimals;
         opts.maximumFractionDigits = decimals;
       }
-      formatted = new Intl.NumberFormat("en-US", opts).format(value);
+      formatted = new Intl.NumberFormat("en-US", opts).format(adjustedValue);
       break;
     }
 
@@ -81,7 +84,7 @@ export function formatValue(
         opts.minimumFractionDigits = decimals;
         opts.maximumFractionDigits = decimals;
       }
-      formatted = new Intl.NumberFormat("en-US", opts).format(value);
+      formatted = new Intl.NumberFormat("en-US", opts).format(adjustedValue);
       break;
     }
 
@@ -93,7 +96,7 @@ export function formatValue(
         opts.minimumFractionDigits = decimals;
         opts.maximumFractionDigits = decimals;
       }
-      formatted = new Intl.NumberFormat("en-US", opts).format(value);
+      formatted = new Intl.NumberFormat("en-US", opts).format(adjustedValue);
       break;
     }
 
@@ -106,7 +109,7 @@ export function formatValue(
         opts.minimumFractionDigits = decimals;
         opts.maximumFractionDigits = decimals;
       }
-      formatted = new Intl.NumberFormat("en-US", opts).format(value);
+      formatted = new Intl.NumberFormat("en-US", opts).format(adjustedValue);
       break;
     }
   }

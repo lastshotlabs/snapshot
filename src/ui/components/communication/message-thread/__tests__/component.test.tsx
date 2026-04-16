@@ -46,13 +46,31 @@ describe("MessageThread", () => {
         config={{
           type: "message-thread",
           id: "thread",
+          className: "thread-root",
           data: "GET /api/messages",
+          maxHeight: "480px",
           messageAction: { type: "event", name: "open-message" } as never,
         }}
       />,
     );
 
     const message = screen.getByTestId("message-item");
+    expect(
+      document
+        .querySelector('[data-snapshot-id="thread"]')
+        ?.classList.contains("thread-root"),
+    ).toBe(true);
+    expect(
+      (document.querySelector('[data-snapshot-id="thread"]') as HTMLElement | null)
+        ?.style.maxHeight ?? "",
+    ).toBe("");
+    expect(
+      (
+        document.querySelector('[data-snapshot-id="thread-scrollArea"]') as
+          | HTMLElement
+          | null
+      )?.style.maxHeight,
+    ).toBe("480px");
     expect(message.textContent).toContain("Lin");
     expect(message.textContent).toContain("Hello thread");
 

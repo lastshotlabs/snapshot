@@ -27,6 +27,8 @@ describe("ChatWindow", () => {
       <ChatWindow
         config={{
           type: "chat-window",
+          id: "team-chat",
+          className: "chat-root",
           data: "GET /api/messages",
           title: "#general",
           subtitle: "Team chat",
@@ -39,6 +41,11 @@ describe("ChatWindow", () => {
     );
 
     expect(screen.getByTestId("chat-window")).toBeTruthy();
+    expect(
+      document
+        .querySelector('[data-snapshot-id="team-chat"]')
+        ?.classList.contains("chat-root"),
+    ).toBe(true);
     expect(screen.getByTestId("chat-header").textContent).toContain("#general");
     expect(screen.getByTestId("chat-header").textContent).toContain("Team chat");
     expect(screen.getByTestId("mock-message-thread").textContent).toBe("Thread");

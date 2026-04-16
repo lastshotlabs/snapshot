@@ -73,12 +73,17 @@ describe("Feed component", () => {
     const { Wrapper } = createWrapper();
     const { container } = render(
       <Wrapper>
-        <Feed config={baseConfig()} />
+        <Feed config={baseConfig({ className: "feed-root-config" })} />
       </Wrapper>,
     );
     expect(
       container.querySelector('[data-snapshot-component="feed"]'),
     ).not.toBeNull();
+    expect(
+      container
+        .querySelector('[data-snapshot-component="feed"]')
+        ?.classList.contains("feed-root-config"),
+    ).toBe(true);
   });
 
   it("renders feed items", () => {

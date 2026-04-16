@@ -4,7 +4,10 @@ import { useMemo, useEffect, useRef, useCallback } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { LinkEmbed } from "../../content/link-embed/component";
 import type { LinkEmbedConfig } from "../../content/link-embed/types";
@@ -304,7 +307,7 @@ export function MessageThread({ config }: { config: MessageThreadConfig }) {
         minHeight: 0,
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const scrollAreaSurface = resolveSurfacePresentation({

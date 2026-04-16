@@ -3,7 +3,7 @@
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../surface-styles";
-import { resolveSurfacePresentation } from "../style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../style-surfaces";
 import type { ComponentGroupConfig } from "./types";
 import type { ComponentConfig } from "../../../manifest/types";
 
@@ -39,7 +39,7 @@ export function ComponentGroup({ config }: { config: ComponentGroupConfig }) {
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
     implementationBase: {},
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
 

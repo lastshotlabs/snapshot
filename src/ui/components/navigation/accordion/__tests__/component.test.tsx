@@ -24,6 +24,7 @@ describe("AccordionComponent", () => {
         config={{
           type: "accordion",
           id: "settings-accordion",
+          className: "accordion-root-config",
           items: [
             {
               title: "Profile",
@@ -47,6 +48,10 @@ describe("AccordionComponent", () => {
       container.querySelector('[data-snapshot-id="settings-accordion-root"]')
         ?.className,
     ).toContain("root-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="settings-accordion-root"]')
+        ?.className,
+    ).toContain("accordion-root-config");
     expect(
       container.querySelector('[data-snapshot-id="settings-accordion-item-0"]')
         ?.className,

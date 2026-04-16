@@ -49,15 +49,18 @@ function formatValue(field: ResolvedField): React.ReactNode {
     case "number":
       return <span>{Number(value).toLocaleString()}</span>;
 
-    case "currency":
+    case "currency": {
+      const divisor = field.divisor;
+      const adjusted = divisor && divisor !== 1 ? Number(value) / divisor : Number(value);
       return (
         <span>
-          {Number(value).toLocaleString(undefined, {
+          {adjusted.toLocaleString(undefined, {
             style: "currency",
             currency: "USD",
           })}
         </span>
       );
+    }
 
     case "badge":
       return (

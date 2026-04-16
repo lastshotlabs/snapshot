@@ -8,7 +8,7 @@ import { createStore } from "jotai/vanilla";
 import { ComponentRenderer, PageRenderer } from "../../../manifest/renderer";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { OutletConfig } from "./types";
 
 const outletDepthAtom = atom(0);
@@ -29,7 +29,7 @@ export function Outlet({ config }: { config: OutletConfig }) {
     implementationBase: {
       display: "contents",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const childStore = useMemo(() => {

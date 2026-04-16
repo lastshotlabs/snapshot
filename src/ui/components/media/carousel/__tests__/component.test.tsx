@@ -17,6 +17,7 @@ describe("Carousel", () => {
         config={{
           type: "carousel",
           id: "carousel-demo",
+          className: "component-root",
           children: [
             { type: "button", label: "Slide 1" } as never,
             { type: "button", label: "Slide 2" } as never,
@@ -48,6 +49,11 @@ describe("Carousel", () => {
       document
         .querySelector('[data-snapshot-id="carousel-demo-root"]')
         ?.className.includes("carousel-root-slot"),
+    ).toBe(true);
+    expect(
+      document
+        .querySelector('[data-snapshot-id="carousel-demo-root"]')
+        ?.className.includes("component-root"),
     ).toBe(true);
     expect(
       document

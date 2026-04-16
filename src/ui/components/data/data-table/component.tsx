@@ -56,10 +56,12 @@ function formatCellValue(
     }
     case "currency": {
       if (typeof value === "number") {
+        const divisor = column.divisor;
+        const adjusted = divisor && divisor !== 1 ? value / divisor : value;
         return new Intl.NumberFormat(undefined, {
           style: "currency",
           currency: "USD",
-        }).format(value);
+        }).format(adjusted);
       }
       return String(value);
     }

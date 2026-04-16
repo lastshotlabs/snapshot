@@ -39,6 +39,7 @@ describe("ListComponent", () => {
           config={{
             type: "list",
             id: "orders",
+            className: "list-config-root",
             items: [
               {
                 id: "1",
@@ -59,6 +60,7 @@ describe("ListComponent", () => {
       </Wrapper>,
     );
 
+    expect(screen.getByTestId("list").className).toContain("list-config-root");
     expect(screen.getByTestId("list").className).toContain("root-slot");
     expect(screen.getByTestId("list-item").className).toContain("item-slot");
     expect(

@@ -112,6 +112,7 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
       decimals: config.decimals,
       prefix: config.prefix,
       suffix: config.suffix,
+      divisor: config.divisor,
     });
 
     // Calculate trend if configured

@@ -12,7 +12,10 @@ import { AutoEmptyState } from "../../_base/auto-empty-state";
 import type { AutoEmptyStateConfig } from "../../_base/auto-empty-state";
 import { AutoSkeleton } from "../../_base/auto-skeleton";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { useLiveData } from "../../_base/use-live-data";
 import { ButtonControl } from "../../forms/button";
@@ -681,7 +684,7 @@ export function Feed({ config }: { config: FeedConfig }) {
       borderRadius: "md",
       border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const liveBannerSurface = resolveSurfacePresentation({

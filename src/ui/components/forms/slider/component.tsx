@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { InputControl } from "../input";
 import type { SliderConfig } from "./types";
 
@@ -79,7 +79,7 @@ export function Slider({ config }: { config: SliderConfig }) {
       flexDirection: "column",
       gap: "sm",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const headerSurface = resolveSurfacePresentation({

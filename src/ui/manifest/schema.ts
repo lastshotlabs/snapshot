@@ -1807,6 +1807,7 @@ export const appConfigSchema = z
       })
       .strict()
       .optional(),
+    currencyDivisor: z.number().positive().default(1),
     a11y: z
       .object({
         respectReducedMotion: z.boolean().default(true),
