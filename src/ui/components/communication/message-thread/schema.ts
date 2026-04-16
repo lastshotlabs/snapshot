@@ -20,7 +20,7 @@ import { dataSourceSchema } from "../../_base/types";
  * }
  * ```
  */
-export const messageThreadConfigSchema = extendComponentSchema({
+export const messageThreadConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("message-thread"),
     /** API endpoint for message data, or static data via FromRef. */

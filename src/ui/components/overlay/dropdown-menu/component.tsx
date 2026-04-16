@@ -15,6 +15,8 @@ import {
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { DropdownMenuConfig } from "./types";
 
+type DropdownMenuItem = DropdownMenuConfig["items"][number];
+
 export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
   const execute = useActionExecutor();
   const [isOpen, setIsOpen] = useState(false);
@@ -54,8 +56,10 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
   });
 
   const actionableIndices = config.items
-    .map((item, index) => (item.type === "item" && !item.disabled ? index : -1))
-    .filter((index) => index !== -1);
+    .map((item: DropdownMenuItem, index: number) =>
+      item.type === "item" && !item.disabled ? index : -1,
+    )
+    .filter((index: number) => index !== -1);
 
   const open = useCallback(() => {
     setIsOpen(true);
@@ -167,7 +171,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
         activeStates={isOpen ? ["open"] : []}
       >
         <div onKeyDown={handleKeyDown} data-testid="dropdown-menu-content">
-          {config.items.map((entry, index) => {
+          {config.items.map((entry: DropdownMenuItem, index: number) => {
             if (entry.type === "separator") {
               return (
                 <MenuSeparator

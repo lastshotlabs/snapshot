@@ -13,7 +13,7 @@
       "require": "./dist/index.cjs"
     },
     "./ui": {
-      "types": "./dist/ui.d.ts",
+      "types": "./dist-types/ui.d.ts",
       "import": "./dist/ui.js",
       "require": "./dist/ui.cjs"
     },
@@ -33,6 +33,7 @@
   },
   "files": [
     "dist",
+    "dist-types",
     ".oclif.manifest.json"
   ],
   "oclif": {
@@ -42,7 +43,7 @@
     "topicSeparator": " "
   },
   "scripts": {
-    "build": "tsup && oclif manifest && bun run scripts/generate-manifest-schema.ts",
+    "build": "tsup && node scripts/build-ui-types.mjs && oclif manifest && bun run scripts/generate-manifest-schema.ts",
     "build:vite-runtime": "node scripts/build-vite-runtime.mjs",
     "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",

@@ -7,7 +7,7 @@ import { useResponsiveValue } from "../../../hooks/use-breakpoint";
 import { resolveComponentBackgroundStyle } from "../../_base/background-style";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { CardConfig } from "./types";
 
 const GAP_MAP: Record<string, string> = {
@@ -46,7 +46,8 @@ export function Card({ config }: { config: CardConfig }) {
         ...(backgroundStyle ?? {}),
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const headerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-header`,

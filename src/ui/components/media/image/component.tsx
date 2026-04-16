@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SnapshotImageConfig } from "./types";
 
 const IMAGE_ROUTE = "/_snapshot/image";
@@ -101,7 +101,8 @@ export function SnapshotImage({ config }: { config: SnapshotImageConfig }) {
           (config.height ? `${config.width} / ${config.height}` : undefined),
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config, { omit: ["width", "height"] }),
+    itemSurface: config.slots?.root,
   });
   const placeholderSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-placeholder`,

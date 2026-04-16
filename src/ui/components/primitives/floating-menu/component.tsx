@@ -79,6 +79,7 @@ export function FloatingPanel({
   const [animating, setAnimating] = useState(false);
   const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isMountedRef = useRef(true);
 
   const stableClose = useCallback(() => onClose(), [onClose]);
 
@@ -91,6 +92,10 @@ export function FloatingPanel({
       setMounted(true);
       if (enableAnimation) {
         openTimerRef.current = setTimeout(() => {
+          if (!isMountedRef.current) {
+            openTimerRef.current = null;
+            return;
+          }
           setAnimating(true);
           openTimerRef.current = null;
         }, 10);
@@ -105,6 +110,10 @@ export function FloatingPanel({
       setAnimating(false);
       if (enableAnimation && mounted) {
         closeTimerRef.current = setTimeout(() => {
+          if (!isMountedRef.current) {
+            closeTimerRef.current = null;
+            return;
+          }
           setMounted(false);
           closeTimerRef.current = null;
         }, ANIMATION_DURATION);
@@ -115,7 +124,9 @@ export function FloatingPanel({
   }, [enableAnimation, mounted, open]);
 
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
+      isMountedRef.current = false;
       if (openTimerRef.current) {
         clearTimeout(openTimerRef.current);
       }

@@ -1,11 +1,11 @@
-import type { PrimitiveAtom, WritableAtom } from "jotai";
+import type { WritableAtom } from "jotai";
 import type { createStore } from "jotai/vanilla";
 import type { ReactNode } from "react";
 import type {
   StateConfigMap as SharedStateConfigMap,
-  StateScope,
   StateValueConfig,
 } from "@lastshotlabs/frontend-contract/state";
+export type { StateScope } from "@lastshotlabs/frontend-contract/state";
 import type { ApiClient } from "../../api/client";
 import type { ResourceMap } from "../manifest/resources";
 
@@ -31,7 +31,6 @@ export interface AtomRegistry {
  * App-scope state persists for the app lifetime.
  * Route-scope state is recreated whenever the active route changes.
  */
-export type { StateScope };
 export type StateConfig = StateValueConfig;
 
 /** Map of named state definitions declared by the manifest runtime. */

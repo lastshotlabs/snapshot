@@ -29,7 +29,7 @@ import type {
 } from "./schema";
 import type { FromRef } from "../context/types";
 import type { Responsive, ThemeConfig } from "../tokens/types";
-import type { EndpointTarget, ResourceConfig, ResourceMap } from "./resources";
+import type { EndpointTarget, ResourceMap } from "./resources";
 import type {
   CustomWorkflowActionDeclarationMap,
   WorkflowDefinition,

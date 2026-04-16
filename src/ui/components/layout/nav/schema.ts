@@ -99,7 +99,7 @@ export type NavItemConfig = z.infer<typeof navItemSchema>;
  * Supports either `items`-driven navigation or template composition, optional logo and user menu
  * configuration, collapsible sidebar behavior, and canonical slot-based surface styling.
  */
-export const navConfigSchema = extendComponentSchema({
+export const navConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   type: z.literal("nav"),
   items: z.array(navItemSchema).optional(),
   template: z.array(templateComponentSchema).optional(),

@@ -1,7 +1,50 @@
 import { evaluateExpression } from "../expressions/parser";
 import { isExprRef } from "@lastshotlabs/frontend-contract/refs";
-import type { ExprRef, FromRef } from "./types";
+import type { FromRef } from "./types";
 import { applyTransform, getNestedValue } from "./utils";
+
+/**
+ * Reserved prefixes for `from` references.
+ *
+ * These prefixes are resolved against built-in sources (manifest config, route
+ * params, overlay state, etc.) and take priority over workflow context keys.
+ * Using one of these as a workflow `capture` / `assign` key prefix will cause
+ * silent mis-resolution — the value will be read from the built-in source
+ * instead of the workflow context.
+ *
+ * @see {@link resolveFromRef} for the resolution order.
+ */
+export const RESERVED_FROM_PREFIXES = [
+  "params.",
+  "route.",
+  "overlay.",
+  "auth.",
+  "app.",
+  "global.",
+  "state.",
+] as const;
+
+const warnedPaths = new Set<string>();
+
+function warnReservedPrefix(
+  contextKey: string,
+  prefix: string,
+  source: string,
+): void {
+  if (
+    typeof process !== "undefined" &&
+    process.env?.["NODE_ENV"] === "production"
+  ) {
+    return;
+  }
+  if (warnedPaths.has(contextKey)) return;
+  warnedPaths.add(contextKey);
+  console.warn(
+    `[snapshot] FromRef "${contextKey}" resolved via ${source} (reserved prefix "${prefix}"), ` +
+      `not workflow context. If you intended to read from workflow context, ` +
+      `use a different key prefix (e.g. "session." instead of "auth.").`,
+  );
+}
 
 export interface ResolveFromRefContext {
   context?: Record<string, unknown>;
@@ -152,6 +195,9 @@ export function resolveFromRef(
   const refPath = ref.from;
 
   if (refPath.startsWith("params.")) {
+    if (context && "params" in context) {
+      warnReservedPrefix(refPath, "params.", "route params");
+    }
     return applyTransform(
       getNestedValue(route?.params, refPath.slice(7)),
       ref.transform,
@@ -160,6 +206,9 @@ export function resolveFromRef(
   }
 
   if (refPath.startsWith("route.")) {
+    if (context && "route" in context) {
+      warnReservedPrefix(refPath, "route.", "route metadata");
+    }
     return applyTransform(
       getNestedValue(
         {
@@ -177,6 +226,9 @@ export function resolveFromRef(
   }
 
   if (refPath.startsWith("overlay.")) {
+    if (context && "overlay" in context) {
+      warnReservedPrefix(refPath, "overlay.", "overlay state");
+    }
     return applyTransform(
       getNestedValue(
         {
@@ -193,6 +245,9 @@ export function resolveFromRef(
   }
 
   if (refPath.startsWith("auth.")) {
+    if (context && "auth" in context) {
+      warnReservedPrefix(refPath, "auth.", "manifest auth config");
+    }
     return applyTransform(
       getNestedValue(manifest?.auth, refPath.slice(5)),
       ref.transform,
@@ -201,6 +256,9 @@ export function resolveFromRef(
   }
 
   if (refPath.startsWith("app.")) {
+    if (context && "app" in context) {
+      warnReservedPrefix(refPath, "app.", "manifest app config");
+    }
     return applyTransform(
       getNestedValue(manifest?.app, refPath.slice(4)),
       ref.transform,

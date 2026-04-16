@@ -112,7 +112,7 @@ export const detailCardActionSchema = z.object({
  * }
  * ```
  */
-export const detailCardConfigSchema = extendComponentSchema({
+export const detailCardConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   /** Component type discriminator. */
   type: z.literal("detail-card"),
   /** Endpoint string (e.g. "GET /api/users/1") or FromRef to get the record data. */

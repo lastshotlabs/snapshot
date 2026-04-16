@@ -2,7 +2,8 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import {
   AppStateProvider,
   RouteStateProvider,
@@ -72,6 +73,11 @@ function StateHarness({
 }
 
 describe("state runtime", () => {
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
+
   it("keeps app scope values across route remounts while resetting route scope", () => {
     const { rerender } = render(<StateHarness routeKey="users" />);
 

@@ -16,7 +16,6 @@ import type {
   WorkflowDefinition,
   WorkflowExecutionRuntime,
   WorkflowMap,
-  WorkflowNode,
 } from "./types";
 
 function evaluateCondition(

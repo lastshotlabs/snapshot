@@ -39,7 +39,7 @@ import { compileManifestWithEnv } from "./ui/manifest/compiler";
 import { getDefaultEnvSource } from "./ui/manifest/env";
 import { registerComponent } from "./ui/manifest/component-registry";
 import { registerComponentSchema } from "./ui/manifest/schema";
-import type { SnapshotPlugin, PluginSetupContext } from "./plugin";
+import type { PluginSetupContext } from "./plugin";
 
 const MANIFEST_AUTH_WORKFLOW_EVENT = "snapshot:manifest-auth-workflow";
 const MANIFEST_REALTIME_WORKFLOW_EVENT = "snapshot:manifest-realtime-workflow";
@@ -420,8 +420,7 @@ export function createSnapshot<
   const webhookHooks = createWebhookHooks({ api, queryClient });
 
   // ── WS hooks ────────────────────────────────────────────────────────────────
-  const { useWebSocketManager, useSocket, useRoom, useRoomEvent } =
-    createWsHooks<TWSEvents>();
+  const { useSocket, useRoom, useRoomEvent } = createWsHooks<TWSEvents>();
 
   // Hook that initializes the atom on first render and returns the manager
   function useWebSocketManagerWithInit(): WebSocketManager<TWSEvents> | null {

@@ -32,7 +32,7 @@ export const notificationFeedSlotNames = [
  * Renders a scrollable list of notifications with read/unread states,
  * type-based icons, relative timestamps, and mark-as-read actions.
  */
-export const notificationFeedConfigSchema = extendComponentSchema({
+export const notificationFeedConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   /** Component type discriminator. */
   type: z.literal("notification-feed"),
   /** API endpoint for notifications. Supports FromRef. */

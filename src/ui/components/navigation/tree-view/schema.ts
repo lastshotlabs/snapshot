@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { errorStateConfigSchema, fromRefSchema } from "../../../manifest/schema";
+import { errorStateConfigSchema } from "../../../manifest/schema";
 import { dataSourceSchema } from "../../_base/types";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";

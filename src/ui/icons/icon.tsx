@@ -44,7 +44,7 @@ function normalizeIconName(name: string): string {
   // Accept both kebab-case ("arrow-left") and PascalCase ("ArrowLeft")
   const kebabCase = name.includes("-")
     ? name
-    : name.replace(/([A-Z])/g, (m, ch, i) =>
+    : name.replace(/([A-Z])/g, (_match, ch, i) =>
         i === 0 ? ch.toLowerCase() : `-${ch.toLowerCase()}`,
       );
   return ICON_ALIASES[kebabCase] ?? kebabCase;

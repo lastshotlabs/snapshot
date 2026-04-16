@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ContainerConfig } from "./types";
 
 const MAX_WIDTH_MAP: Record<string, string> = {
@@ -41,7 +41,8 @@ export function Container({ config }: { config: ContainerConfig }) {
         marginInline: config.center === false ? undefined : "auto",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxWidth", "padding"] }),
+    itemSurface: config.slots?.root,
   });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,

@@ -1,7 +1,7 @@
 "use client";
 
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { OfflineBannerConfig } from "./types";
 
 export function DefaultOffline({ config }: { config: OfflineBannerConfig }) {
@@ -19,7 +19,8 @@ export function DefaultOffline({ config }: { config: OfflineBannerConfig }) {
         color: "var(--sn-color-foreground, #0f172a)",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const titleSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-title`,

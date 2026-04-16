@@ -48,7 +48,7 @@ export const dropdownMenuEntrySchema = z.union([
   dropdownMenuLabelSchema,
 ]);
 
-export const dropdownMenuConfigSchema = extendComponentSchema({
+export const dropdownMenuConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   type: z.literal("dropdown-menu"),
   trigger: z
     .object({

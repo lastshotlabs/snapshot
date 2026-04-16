@@ -6,7 +6,6 @@ import {
   useState,
 } from "react";
 import { usePublish } from "../../../context/hooks";
-import { evaluateExpression } from "../../../expressions/parser";
 import { useEvaluateExpression } from "../../../expressions/use-expression";
 import { useActionExecutor } from "../../../actions/executor";
 import {
@@ -146,7 +145,9 @@ export function useWizard(config: WizardConfig): UseWizardResult {
     }
     return (
       config.allowSkip &&
-      Boolean(currentStepConfig?.fields.every((field) => !field.required))
+      Boolean(
+        currentStepConfig?.fields.every((field: FieldConfig) => !field.required),
+      )
     );
   }, [config.allowSkip, currentStepConfig, isLastStep, skipExpressionResult]);
 
@@ -269,7 +270,7 @@ export function useWizard(config: WizardConfig): UseWizardResult {
     setTouchedByStep((currentTouched) => ({
       ...currentTouched,
       [currentStep]: Object.fromEntries(
-        fields.map((field) => [field.name, true]),
+        fields.map((field: FieldConfig) => [field.name, true]),
       ) as Record<string, boolean>,
     }));
     return errors;

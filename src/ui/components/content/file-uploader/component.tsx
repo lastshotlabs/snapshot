@@ -1,7 +1,7 @@
 'use client';
 
-import type { CSSProperties, DragEvent, ChangeEvent, KeyboardEvent } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { DragEvent, KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import {
@@ -407,16 +407,6 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
   const openPicker = useCallback(() => {
     inputRef.current?.click();
   }, []);
-
-  const handleInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files) {
-        addFiles(event.target.files);
-        event.target.value = "";
-      }
-    },
-    [addFiles],
-  );
 
   const handleDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();

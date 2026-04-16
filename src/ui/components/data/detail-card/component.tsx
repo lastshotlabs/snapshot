@@ -442,7 +442,11 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
                   className={actionsSurface.className}
                   style={actionsSurface.style}
                 >
-                  {config.actions.map((actionDef, index) => (
+                  {config.actions.map(
+                    (
+                      actionDef: NonNullable<DetailCardConfig["actions"]>[number],
+                      index: number,
+                    ) => (
                     <ButtonControl
                       key={`${actionDef.label}-${index}`}
                       surfaceId={`${rootId}-action-button-${index}`}
@@ -455,7 +459,8 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
                       {actionDef.icon ? renderIcon(actionDef.icon, 16) : null}
                       <span>{actionDef.label}</span>
                     </ButtonControl>
-                  ))}
+                    ),
+                  )}
                 </div>
               ) : null}
             </div>

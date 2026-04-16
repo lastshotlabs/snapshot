@@ -688,8 +688,8 @@ function resolveScreenPath(
   screen: DefaultAuthScreen,
 ): string {
   return (
-    manifest.routes.find((route) => route.id === screen)?.path ??
-    defaultAuthRoutes.find((route) => route.id === screen)?.path ??
+    manifest.routes.find((route: RouteConfig) => route.id === screen)?.path ??
+    defaultAuthRoutes.find((route: RouteConfig) => route.id === screen)?.path ??
     `/${screen}`
   );
 }

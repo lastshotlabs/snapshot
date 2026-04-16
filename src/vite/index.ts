@@ -262,16 +262,18 @@ if (import.meta.hot) {
     },
 
     configureServer(server: ViteDevServer) {
+      const serverRoot = server.config?.root ?? process.cwd();
+
       // Watch the manifest file so handleHotUpdate fires when it changes.
-      const manifestAbsPath = path.resolve(server.config.root, manifestFile);
-      server.watcher.add(manifestAbsPath);
+      const manifestAbsPath = path.resolve(serverRoot, manifestFile);
+      server.watcher?.add?.(manifestAbsPath);
 
       // Copy the JSON Schema into the project root so VSCode can resolve
       // "$schema": "./snapshot-schema.json" without cross-directory path issues.
       try {
         const schemaSource = path.resolve(__dirname, "snapshot-schema.json");
         const schemaDest = path.resolve(
-          server.config.root,
+          serverRoot,
           "snapshot-schema.json",
         );
         if (existsSync(schemaSource)) {

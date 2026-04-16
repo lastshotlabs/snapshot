@@ -17,12 +17,21 @@ describe("Box", () => {
         config={{
           type: "box",
           as: "section",
+          className: "component-root",
+          slots: {
+            root: { className: "slot-root" },
+            item: { className: "item-slot" },
+          },
           children: [{ type: "markdown", id: "box-copy", content: "Hello" } as never],
         }}
       />,
     );
 
-    expect(container.querySelector("section")).toBeTruthy();
+    const section = container.querySelector("section");
+    expect(section).toBeTruthy();
+    expect(section?.className).toContain("component-root");
+    expect(section?.className).toContain("slot-root");
+    expect(container.querySelector('[data-snapshot-id="box-item"]')?.className).toContain("item-slot");
     expect(screen.getByTestId("box-child").textContent).toContain("box-copy");
   });
 });

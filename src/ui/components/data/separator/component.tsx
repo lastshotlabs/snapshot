@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SeparatorConfig } from "./types";
 
 export function Separator({ config }: { config: SeparatorConfig }) {
@@ -49,7 +49,8 @@ export function Separator({ config }: { config: SeparatorConfig }) {
               backgroundColor: "var(--sn-color-border, #e5e7eb)",
             },
           },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const lineSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-line`,

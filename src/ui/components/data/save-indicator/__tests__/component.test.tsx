@@ -11,10 +11,16 @@ describe("SaveIndicator - SSR compatibility", () => {
       type: "save-indicator",
       status: "saved",
       savedText: "Saved",
+      className: "component-root",
+      slots: {
+        root: { className: "slot-root" },
+      },
     };
 
-    expect(() =>
-      renderToStaticMarkup(<SaveIndicator config={config} />),
-    ).not.toThrow();
+    expect(() => renderToStaticMarkup(<SaveIndicator config={config} />)).not.toThrow();
+
+    const html = renderToStaticMarkup(<SaveIndicator config={config} />);
+    expect(html).toContain("component-root");
+    expect(html).toContain("slot-root");
   });
 });

@@ -3,7 +3,7 @@
 import { useEffect, useId } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ProgressConfig } from "./types";
 
 const SIZE_MAP = { sm: 4, md: 8, lg: 12 } as const;
@@ -58,7 +58,8 @@ export function Progress({ config }: { config: ProgressConfig }) {
       flexDirection: "column",
       gap: "var(--sn-spacing-xs, 0.25rem)",
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config, { omit: ["color"] }),
+    itemSurface: config.slots?.root,
     activeStates: [...states],
   });
   const labelRowSurface = resolveSurfacePresentation({

@@ -65,19 +65,6 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
     [config.addAction, config.removeAction, execute, publish],
   );
 
-  const handleAddEmoji = useCallback(
-    (emoji: string) => {
-      setShowPicker(false);
-      if (config.addAction) {
-        void execute(config.addAction, { emoji });
-      }
-      if (publish) {
-        publish({ emoji, action: "add" });
-      }
-    },
-    [config.addAction, execute, publish],
-  );
-
   if (visible === false) {
     return null;
   }

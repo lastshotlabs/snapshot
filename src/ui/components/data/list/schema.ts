@@ -90,7 +90,7 @@ export const listItemSchema = z.object({
  * }
  * ```
  */
-export const listConfigSchema = extendComponentSchema({
+export const listConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   /** Component type discriminator. */
   type: z.literal("list"),
   /** API endpoint to fetch list data. Supports FromRef for dependent data. */

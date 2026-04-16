@@ -47,7 +47,7 @@ export const contextMenuItemSchema = z.union([
  * Defines a right-click menu with styleable trigger, panel, item, label, and separator surfaces.
  * Visibility can be driven by a boolean or a binding reference.
  */
-export const contextMenuConfigSchema = extendComponentSchema({
+export const contextMenuConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   type: z.literal("context-menu"),
   items: z.array(contextMenuItemSchema).optional(),
   triggerText: z.string().optional(),

@@ -40,4 +40,32 @@ describe("EmptyState", () => {
     fireEvent.click(screen.getByTestId("empty-state-action"));
     expect(executeSpy).toHaveBeenCalledWith({ type: "reset" });
   });
+
+  it("applies canonical root and action surfaces", () => {
+    const { container } = render(
+      <EmptyState
+        config={{
+          type: "empty-state",
+          id: "search-empty",
+          title: "No results",
+          actionLabel: "Clear filters",
+          action: { type: "reset" } as never,
+          slots: {
+            root: { className: "root-slot" },
+            action: { className: "action-slot" },
+          },
+        }}
+      />,
+    );
+
+    expect(
+      container.querySelector('[data-snapshot-id="search-empty"]')?.className,
+    ).toContain("root-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="search-empty-action"]')
+        ?.className,
+    ).toContain(
+      "action-slot",
+    );
+  });
 });

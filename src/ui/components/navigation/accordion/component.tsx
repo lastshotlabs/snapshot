@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { renderIcon } from "../../../icons/render";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";

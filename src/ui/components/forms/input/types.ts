@@ -3,9 +3,9 @@ import type {
   FocusEventHandler,
   KeyboardEventHandler,
   MouseEventHandler,
-  Ref,
 } from "react";
 import type { z } from "zod";
+import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
 import type { inputConfigSchema } from "./schema";
 
@@ -13,7 +13,7 @@ import type { inputConfigSchema } from "./schema";
 export type InputConfig = z.input<typeof inputConfigSchema>;
 
 export interface InputControlProps {
-  inputRef?: Ref<HTMLInputElement>;
+  inputRef?: DomRef<HTMLInputElement>;
   inputId?: string;
   name?: string;
   type?:

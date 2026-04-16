@@ -111,22 +111,6 @@ function WizardFieldRenderer({
     [],
   );
 
-  const commonProps = {
-    id: fieldId,
-    name: field.name,
-    onBlur,
-    disabled: field.disabled,
-    "aria-invalid": hasError ? true : undefined,
-    "aria-describedby":
-      [
-        field.description ? `${fieldId}-description` : null,
-        field.helperText ? `${fieldId}-helper` : null,
-        hasError && error ? `${fieldId}-error` : null,
-      ]
-        .filter(Boolean)
-        .join(" ") || undefined,
-  };
-
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "var(--sn-spacing-sm, 0.5rem)",
@@ -906,7 +890,7 @@ export function Wizard({ config }: { config: WizardConfig }) {
           </div>
         ) : null}
 
-        {currentStepConfig?.fields.map((field) => (
+        {currentStepConfig?.fields.map((field: FieldConfig) => (
           <WizardFieldRenderer
             key={field.name}
             rootId={rootId}

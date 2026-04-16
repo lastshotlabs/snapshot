@@ -19,7 +19,7 @@ export const navUserMenuSlotNames = [
   "label",
 ] as const;
 
-export const navUserMenuConfigSchema = extendComponentSchema({
+export const navUserMenuConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   type: z.literal("nav-user-menu"),
   showAvatar: z.boolean().optional(),
   showEmail: z.boolean().optional(),

@@ -35,7 +35,7 @@ export const auditLogFilterSchema = z
  * }
  * ```
  */
-export const auditLogConfigSchema = extendComponentSchema({
+export const auditLogConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("audit-log"),
     /** API endpoint returning log entries. Supports FromRef. */

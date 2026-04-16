@@ -1,12 +1,13 @@
-import type { CSSProperties, FocusEventHandler, ReactNode, Ref } from "react";
+import type { CSSProperties, FocusEventHandler, ReactNode } from "react";
 import type { z } from "zod";
+import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
 import type { selectConfigSchema } from "./schema";
 
 export type SelectConfig = z.input<typeof selectConfigSchema>;
 
 export interface SelectControlProps {
-  selectRef?: Ref<HTMLSelectElement>;
+  selectRef?: DomRef<HTMLSelectElement>;
   selectId?: string;
   name?: string;
   value: string;

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useComponentData } from "../../_base/use-component-data";
+import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SelectConfig, SelectControlProps } from "./types";
@@ -115,7 +116,7 @@ export function SelectControl({
   return (
     <>
       <select
-        ref={selectRef}
+        ref={(instance) => setDomRef(selectRef, instance)}
         id={selectId}
         name={name}
         value={value}

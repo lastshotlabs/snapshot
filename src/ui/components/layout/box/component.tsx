@@ -4,7 +4,7 @@ import { createElement } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { BoxConfig } from "./types";
 
 export function Box({ config }: { config: BoxConfig }) {
@@ -14,7 +14,8 @@ export function Box({ config }: { config: BoxConfig }) {
     implementationBase: {
       width: "100%",
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,

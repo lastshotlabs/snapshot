@@ -1,7 +1,7 @@
 "use client";
 
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SpinnerConfig } from "./types";
 
 export function DefaultLoading({ config }: { config: SpinnerConfig }) {
@@ -20,7 +20,8 @@ export function DefaultLoading({ config }: { config: SpinnerConfig }) {
         padding: "var(--sn-spacing-lg, 1.5rem)",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: ["active"],
   });
   const spinnerSurface = resolveSurfacePresentation({

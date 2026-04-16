@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the ScrollArea component.

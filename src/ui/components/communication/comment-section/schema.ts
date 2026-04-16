@@ -23,7 +23,7 @@ import { dataSourceSchema } from "../../_base/types";
  * }
  * ```
  */
-export const commentSectionConfigSchema = extendComponentSchema({
+export const commentSectionConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("comment-section"),
     /** API endpoint for comments data. */

@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { useResponsiveValue } from "../../../hooks/use-breakpoint";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ColumnConfig } from "./types";
 
 const GAP_MAP: Record<string, string> = {
@@ -50,7 +50,8 @@ export function Column({ config }: { config: ColumnConfig }) {
       overflow: config.overflow,
       maxHeight: config.maxHeight,
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,

@@ -75,7 +75,7 @@ export const kanbanColumnSchema = z
  * }
  * ```
  */
-export const kanbanConfigSchema = extendComponentSchema({
+export const kanbanConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   /** Component type discriminator. */
   type: z.literal("kanban"),
   /** API endpoint returning items with a status/column field. Supports FromRef. */

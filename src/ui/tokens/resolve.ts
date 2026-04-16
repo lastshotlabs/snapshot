@@ -14,7 +14,6 @@ import type {
   FontConfig,
   GlobalTokens,
   ComponentTokens,
-  Flavor,
 } from "./types";
 import {
   colorToOklch,
@@ -314,8 +313,6 @@ const FOREGROUND_PAIRS = [
   "popover",
   "sidebar",
 ] as const;
-
-const BACKGROUND_PAIR = "background" as const;
 
 // ── Color normalization ──────────────────────────────────────────────────────
 
@@ -631,6 +628,9 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
     }
     return trimmed;
   }
+
+  void resolveSpacingRef;
+  void resolveColorRef;
 
   if (components.badge) {
     const lines: string[] = [];

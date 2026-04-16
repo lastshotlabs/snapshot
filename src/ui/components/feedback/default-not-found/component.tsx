@@ -1,7 +1,7 @@
 "use client";
 
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { NotFoundConfig } from "./types";
 
 export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
@@ -18,7 +18,8 @@ export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
         color: "var(--sn-color-foreground, #0f172a)",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const eyebrowSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-eyebrow`,

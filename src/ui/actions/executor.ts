@@ -19,7 +19,11 @@ import {
   useOverlayRuntime,
   useRouteRuntime,
 } from "../manifest/runtime";
-import { buildExpressionContext, resolveFromRef } from "../context/from-ref";
+import {
+  buildExpressionContext,
+  resolveFromRef,
+  RESERVED_FROM_PREFIXES,
+} from "../context/from-ref";
 import { evaluateExpression } from "../expressions/parser";
 import { createAnalyticsDispatcher } from "../analytics/dispatch";
 import { resolveTokens } from "../tokens/resolve";
@@ -27,12 +31,40 @@ import { runWorkflow } from "../workflows/engine";
 import { debounceAction, throttleAction } from "./timing";
 import { wsManagerAtom } from "../../ws/atom";
 import type { AtomRegistry } from "../context/types";
-import type { ApiClient } from "../../api/client";
 import type { ActionConfig, ActionExecuteFn } from "./types";
 import type { WorkflowDefinition, WorkflowMap } from "../workflows/types";
 import { SnapshotApiProvider, useApiClient } from "../state";
 
 const WORKFLOW_CANCELLED = Symbol("snapshot.workflow.cancelled");
+
+const _warnedTemplateKeys = new Set<string>();
+
+/**
+ * In dev mode, warn when a workflow context key would be shadowed by the
+ * built-in template context (e.g. `auth`, `app`, `route`).  Template strings
+ * like `"{auth.me}"` resolve against a merged context where manifest config
+ * keys overwrite workflow context keys of the same name.
+ */
+function warnTemplateShadowing(context: Record<string, unknown>): void {
+  if (
+    typeof process !== "undefined" &&
+    process.env?.["NODE_ENV"] === "production"
+  ) {
+    return;
+  }
+  const shadowedKeys = ["auth", "app", "route"];
+  for (const key of shadowedKeys) {
+    if (key in context && !_warnedTemplateKeys.has(key)) {
+      _warnedTemplateKeys.add(key);
+      console.warn(
+        `[snapshot] Workflow context key "${key}" is shadowed by the built-in ` +
+          `template context. Template strings like "{${key}.foo}" will resolve ` +
+          `against the manifest ${key} config, not the workflow context. ` +
+          `Use a FromRef ({ from: "..." }) or rename the context key.`,
+      );
+    }
+  }
+}
 
 function dispatchPopStateEvent(): void {
   if (typeof window === "undefined") {
@@ -185,6 +217,7 @@ function resolveWorkflowValue(
   }
 
   if (typeof value === "string") {
+    warnTemplateShadowing(context);
     const routeContext =
       (context["route"] as Record<string, unknown> | undefined) ?? {};
     return resolveTemplateValue(

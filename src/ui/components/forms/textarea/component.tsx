@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
+import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { TextareaConfig, TextareaControlProps } from "./types";
@@ -93,7 +94,7 @@ export function TextareaControl({
   return (
     <>
       <textarea
-        ref={textareaRef}
+        ref={(instance) => setDomRef(textareaRef, instance)}
         id={textareaId}
         name={name}
         value={value}

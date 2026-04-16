@@ -15,6 +15,7 @@ describe("dataTableConfigSchema phase D", () => {
       onDrop: { type: "toast", message: "Dropped" },
       contextMenu: [
         {
+          type: "item",
           label: "Copy email",
           action: { type: "copy-to-clipboard", text: "{email}" },
         },

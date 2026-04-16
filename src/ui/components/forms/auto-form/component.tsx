@@ -151,7 +151,7 @@ function isFieldRequired(
 
 function resolveFields(config: AutoFormConfig): FieldConfig[] {
   if (config.sections) {
-    return config.sections.flatMap((s) => s.fields);
+    return config.sections.flatMap((s: FieldSectionConfig) => s.fields);
   }
   if (config.fields === "auto") return [];
   return config.fields;
@@ -181,8 +181,6 @@ function FieldRenderer({
   slots?: AutoFormConfig["slots"];
 }) {
   const executeAction = useActionExecutor();
-  const manifest = useManifestRuntime();
-  const routeRuntime = useRouteRuntime();
   const showByExpression = useEvaluateExpression(field.visibleWhen);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const label = field.label ?? field.name;
@@ -327,21 +325,6 @@ function FieldRenderer({
       "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
     boxSizing: "border-box" as const,
     ...(inputSurface.style as React.CSSProperties),
-  };
-
-  const commonProps = {
-    id: fieldId,
-    name: field.name,
-    onBlur,
-    disabled: field.disabled,
-    readOnly: field.readOnly,
-    required,
-    "aria-invalid": hasError,
-    "aria-describedby": hasError
-      ? `${fieldId}-error`
-      : field.helperText
-        ? `${fieldId}-helper`
-        : undefined,
   };
 
   const optionsResult = useComponentData(
@@ -1450,7 +1433,7 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
   );
   const resolvedSections = useMemo(
     () =>
-      config.sections?.map((section) => ({
+      config.sections?.map((section: FieldSectionConfig) => ({
         ...section,
         title: String(
           resolveMaybeTemplate(
@@ -1467,7 +1450,7 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
           routeRuntime,
         ) as string | undefined,
         fields: section.fields.map(
-          (field) => resolvedFieldMap.get(field.name) ?? field,
+          (field: FieldConfig) => resolvedFieldMap.get(field.name) ?? field,
         ),
       })),
     [activeLocale, config.sections, resolvedFieldMap, routeRuntime, runtime],
@@ -1777,7 +1760,7 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
     >
       {/* Sections mode */}
       {resolvedSections ? (
-        resolvedSections.map((section) => (
+        resolvedSections.map((section: FieldSectionConfig) => (
           <SectionRenderer
             key={section.title}
             rootId={rootId}

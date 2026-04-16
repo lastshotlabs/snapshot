@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useRef, useState } from "react";
-import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";

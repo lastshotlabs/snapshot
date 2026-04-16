@@ -7,10 +7,7 @@
  */
 
 import { z } from "zod";
-import {
-  exprRefSchema,
-  fromRefSchema,
-} from "@lastshotlabs/frontend-contract/refs";
+import { exprRefSchema, fromRefSchema } from "@lastshotlabs/frontend-contract/refs";
 import { stateValueConfigSchema } from "@lastshotlabs/frontend-contract/state";
 import { themeConfigSchema } from "../tokens/schema";
 import { workflowConditionSchema } from "../workflows/schema";
@@ -40,7 +37,8 @@ import { confirmDialogConfigSchema } from "../components/overlay/confirm-dialog/
 import { envRefSchema } from "./env";
 import { i18nConfigSchema, tRefSchema } from "../i18n/schema";
 
-export { fromRefSchema, stateValueConfigSchema };
+export { fromRefSchema } from "@lastshotlabs/frontend-contract/refs";
+export { stateValueConfigSchema };
 
 /**
  * Accept either a literal string or an environment reference.
@@ -1325,7 +1323,7 @@ export const navItemSchema: z.ZodType = z.lazy(() =>
 /**
  * Schema for the top-level manifest navigation configuration.
  */
-export const navigationConfigSchema = z
+export const navigationConfigSchema: z.ZodType<Record<string, any>> = z
   .object({
     mode: z.enum(["sidebar", "top-nav"]).optional(),
     items: z.array(navItemSchema).optional(),
@@ -2040,7 +2038,7 @@ export const subAppsSchema = z.record(subAppConfigSchema);
 /**
  * Top-level schema for `snapshot.manifest.json`.
  */
-export const manifestConfigSchema = z
+export const manifestConfigSchema: z.ZodType<Record<string, any>> = z
   .object({
     $schema: z.string().optional(),
     app: appConfigSchema.optional(),

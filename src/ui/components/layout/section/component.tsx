@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SectionConfig } from "./types";
 
 const ALIGN_MAP: Record<string, string> = {
@@ -45,7 +45,8 @@ export function Section({ config }: { config: SectionConfig }) {
           }
         : undefined,
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config, { omit: ["height"] }),
+    itemSurface: config.slots?.root,
   });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,

@@ -25,7 +25,7 @@ import { dataSourceSchema, fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const entityPickerConfigSchema = extendComponentSchema({
+export const entityPickerConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("entity-picker"),
     /** Trigger button label. Default: "Select...". */

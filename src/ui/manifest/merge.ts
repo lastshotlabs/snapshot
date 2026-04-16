@@ -1,4 +1,4 @@
-import type { ManifestConfig } from "./types";
+import type { ManifestConfig, RouteConfig } from "./types";
 
 export type ManifestFragment = Partial<ManifestConfig>;
 
@@ -30,11 +30,13 @@ export function mergeFragment(
 ): ManifestConfig {
   const fragmentRoutes = fragment.routes ?? [];
   const baseRoutes = base.routes ?? [];
-  const baseRouteIds = new Set(baseRoutes.map((route) => route.id));
-  const fragmentRoutesById = new Map(
-    fragmentRoutes.map((route) => [route.id, route] as const),
+  const baseRouteIds = new Set(
+    baseRoutes.map((route: RouteConfig) => route.id),
   );
-  const mergedBaseRoutes = baseRoutes.map((route) => {
+  const fragmentRoutesById = new Map(
+    fragmentRoutes.map((route: RouteConfig) => [route.id, route] as const),
+  );
+  const mergedBaseRoutes = baseRoutes.map((route: RouteConfig) => {
     const fragmentRoute = fragmentRoutesById.get(route.id);
     return fragmentRoute ? (deepMerge(fragmentRoute, route) ?? route) : route;
   });
@@ -46,7 +48,7 @@ export function mergeFragment(
     ...base,
     routes: [
       ...mergedBaseRoutes,
-      ...fragmentRoutes.filter((route) => !baseRouteIds.has(route.id)),
+      ...fragmentRoutes.filter((route: RouteConfig) => !baseRouteIds.has(route.id)),
     ],
     theme: deepMerge(fragment.theme, base.theme),
     resources: { ...(fragment.resources ?? {}), ...(base.resources ?? {}) },

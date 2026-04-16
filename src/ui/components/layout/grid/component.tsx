@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { useResponsiveValue } from "../../../hooks/use-breakpoint";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { GridConfig } from "./types";
 
 const GAP_MAP: Record<string, string> = {
@@ -39,7 +39,8 @@ export function Grid({ config }: { config: GridConfig }) {
         gridTemplateRows: config.rows,
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,

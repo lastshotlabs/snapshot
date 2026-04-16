@@ -52,6 +52,7 @@ const ALL_COMPONENT_FIELDS = new Set([
   ...COMPONENT_ARRAY_FIELDS,
   ...COMPONENT_SINGLE_FIELDS,
 ]);
+const COMPONENT_UNION_DEFINITION = "SnapshotComponentConfig";
 
 const MAX_DEPTH = 80;
 
@@ -64,41 +65,22 @@ interface GenerateOptions {
 // ── Per-component $ref resolution ───────────────────────────────────────────
 
 /**
- * Generate a single component's JSON Schema with zero `$ref` pointers.
+ * Generate a single component's JSON Schema as a named root definition.
  *
- * Uses `$refStrategy: "none"` which inlines everything. Recursive Zod
- * types (action callbacks, nested conditions) degrade to `{}` at the
- * recursion point — same behavior as `$ref` cycle-breaking, but without
- * any surviving `$ref` pointers that would break when the schema is
- * embedded in the main manifest's discriminated union.
- *
- * zodToJsonSchema emits a console.warn per recursion point. These are
- * captured and reported as a single summary at the end of generation.
+ * Emitting components this way keeps recursive action/workflow structures
+ * compact and valid. The manifest schema later hoists these definitions into
+ * its own `definitions` bag and builds the discriminated union from shared
+ * `$ref` pointers instead of duplicating every component schema.
  */
 function generateComponentSchema(
   zodSchema: import("zod").ZodType,
-  recursionCount: { value: number },
+  definitionName: string,
 ): Record<string, unknown> {
-  const originalWarn = console.warn;
-  console.warn = (msg: string) => {
-    if (
-      typeof msg === "string" &&
-      msg.includes("Recursive reference detected")
-    ) {
-      recursionCount.value++;
-    } else {
-      originalWarn(msg);
-    }
-  };
-
-  try {
-    return zodToJsonSchema(zodSchema, {
-      $refStrategy: "none",
-      errorMessages: false,
-    }) as Record<string, unknown>;
-  } finally {
-    console.warn = originalWarn;
-  }
+  return zodToJsonSchema(zodSchema, {
+    $refStrategy: "root",
+    name: definitionName,
+    errorMessages: false,
+  }) as Record<string, unknown>;
 }
 
 // ── Manifest-level targeted $ref resolution ─────────────────────────────────
@@ -208,26 +190,38 @@ function resolveAtRiskRefs(
 
 // ── Component union builder ─────────────────────────────────────────────────
 
+function toDefinitionName(typeName: string): string {
+  return `SnapshotComponent_${typeName.replace(/[^a-zA-Z0-9_]/g, "_")}`;
+}
+
 function buildComponentUnion(
   iconNames: string[],
-): Record<string, unknown> | null {
+): { schema: Record<string, unknown>; definitions: Record<string, unknown> } | null {
   const registeredSchemas = getRegisteredSchemas();
   if (registeredSchemas.size === 0) {
     return null;
   }
 
-  const componentSchemas: Record<string, unknown>[] = [];
-  const recursionCount = { value: 0 };
+  const componentRefs: Record<string, unknown>[] = [];
+  const componentDefinitions: Record<string, unknown> = {};
 
   for (const [typeName, zodSchema] of registeredSchemas) {
     try {
-      const jsonSchema = generateComponentSchema(zodSchema, recursionCount);
+      const definitionName = toDefinitionName(typeName);
+      const jsonSchema = generateComponentSchema(zodSchema, definitionName);
+      const definitions =
+        (jsonSchema["definitions"] as Record<string, unknown> | undefined) ?? {};
+      const rootDefinition = definitions[definitionName];
+      if (!rootDefinition || typeof rootDefinition !== "object") {
+        continue;
+      }
+      const componentSchema = rootDefinition as Record<string, unknown>;
 
       // Ensure type is set to const for discriminator
       const properties =
-        (jsonSchema["properties"] as Record<string, unknown>) ?? {};
+        (componentSchema["properties"] as Record<string, unknown>) ?? {};
       properties["type"] = { type: "string", const: typeName };
-      jsonSchema["properties"] = properties;
+      componentSchema["properties"] = properties;
 
       // Inject icon enum on icon fields
       if (iconNames.length > 0 && properties["icon"]) {
@@ -241,7 +235,10 @@ function buildComponentUnion(
         }
       }
 
-      componentSchemas.push(jsonSchema);
+      componentDefinitions[definitionName] = componentSchema;
+      componentRefs.push({
+        $ref: `#/definitions/${definitionName}`,
+      });
     } catch {
       if (
         typeof process !== "undefined" &&
@@ -254,20 +251,33 @@ function buildComponentUnion(
     }
   }
 
-  if (recursionCount.value > 0) {
-    console.log(
-      `[snapshot] ${componentSchemas.length} component types, ` +
-        `${recursionCount.value} recursive schema points defaulted to any`,
-    );
-  }
-
-  if (componentSchemas.length === 0) {
+  if (componentRefs.length === 0) {
     return null;
   }
 
   return {
-    oneOf: componentSchemas,
-    discriminator: { propertyName: "type" },
+    schema: {
+      oneOf: componentRefs,
+      discriminator: { propertyName: "type" },
+    },
+    definitions: componentDefinitions,
+  };
+}
+
+function installComponentUnionDefinition(
+  rootSchema: Record<string, unknown>,
+  union: Record<string, unknown>,
+  componentDefinitions: Record<string, unknown>,
+): Record<string, unknown> {
+  const definitions =
+    (rootSchema["definitions"] as Record<string, unknown> | undefined) ?? {};
+  for (const [definitionName, definition] of Object.entries(componentDefinitions)) {
+    definitions[definitionName] = definition;
+  }
+  definitions[COMPONENT_UNION_DEFINITION] = union;
+  rootSchema["definitions"] = definitions;
+  return {
+    $ref: `#/definitions/${COMPONENT_UNION_DEFINITION}`,
   };
 }
 
@@ -284,13 +294,15 @@ function buildComponentUnion(
  */
 function replaceComponentConfigs(
   node: unknown,
-  union: Record<string, unknown>,
+  componentConfigRef: Record<string, unknown>,
   depth: number = 0,
 ): void {
   if (depth > MAX_DEPTH) return;
   if (!node || typeof node !== "object") return;
   if (Array.isArray(node)) {
-    node.forEach((item) => replaceComponentConfigs(item, union, depth + 1));
+    node.forEach((item) =>
+      replaceComponentConfigs(item, componentConfigRef, depth + 1),
+    );
     return;
   }
 
@@ -312,7 +324,7 @@ function replaceComponentConfigs(
             items["allOf"] ||
             items["additionalProperties"] !== undefined
           ) {
-            prop["items"] = JSON.parse(JSON.stringify(union));
+            prop["items"] = { ...componentConfigRef };
           }
         }
       }
@@ -325,24 +337,13 @@ function replaceComponentConfigs(
           prop["allOf"] ||
           prop["additionalProperties"] !== undefined
         ) {
-          properties[key] = JSON.parse(JSON.stringify(union));
+          properties[key] = { ...componentConfigRef };
         }
       }
     }
   }
-
-  // Recurse into sub-objects but skip injected unions (detected by
-  // discriminator sentinel) to prevent infinite re-expansion.
   for (const val of Object.values(obj)) {
-    if (
-      val &&
-      typeof val === "object" &&
-      !Array.isArray(val) &&
-      (val as Record<string, unknown>)["discriminator"]
-    ) {
-      continue;
-    }
-    replaceComponentConfigs(val, union, depth + 1);
+    replaceComponentConfigs(val, componentConfigRef, depth + 1);
   }
 }
 
@@ -429,7 +430,12 @@ export function generateManifestSchema(options: GenerateOptions): void {
 
   // Replace generic component config placeholders with discriminated union
   if (componentUnion) {
-    replaceComponentConfigs(rawSchema, componentUnion);
+    const componentConfigRef = installComponentUnionDefinition(
+      rawSchema,
+      componentUnion.schema,
+      componentUnion.definitions,
+    );
+    replaceComponentConfigs(rawSchema, componentConfigRef);
   }
 
   // Inject icon enums on remaining icon fields

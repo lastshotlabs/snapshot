@@ -211,7 +211,7 @@ export function useNav(config: NavConfig, pathname: string): UseNavResult {
   ].slice(0, navItems.length);
 
   const items = useMemo(() => {
-    return navItems.map((item, index) =>
+    return navItems.map((item: NavItemConfig, index: number) =>
       resolveNavItem(
         item,
         pathname,

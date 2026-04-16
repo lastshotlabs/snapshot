@@ -49,7 +49,7 @@ export const calendarEventSchema = z
  * }
  * ```
  */
-export const calendarConfigSchema = extendComponentSchema({
+export const calendarConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("calendar"),
     /** API endpoint for events. Supports FromRef. */

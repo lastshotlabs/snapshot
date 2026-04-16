@@ -110,7 +110,7 @@ function evaluateInlineGuard(context: GuardContext): GuardResult {
     manifest,
     parentPolicies,
     policies,
-    route,
+    route: _route,
     routeContext,
     user,
   } = context;

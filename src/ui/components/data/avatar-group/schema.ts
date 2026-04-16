@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema, fromRefSchema } from "../../_base/types";
+import { dataSourceSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the AvatarGroup component.

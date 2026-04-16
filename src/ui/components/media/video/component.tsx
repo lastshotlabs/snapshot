@@ -1,7 +1,7 @@
 'use client';
 
 import type { CSSProperties } from "react";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import type { VideoSchemaConfig } from "./types";
 
@@ -13,7 +13,8 @@ export function Video({ config }: { config: VideoSchemaConfig }) {
       width: "100%",
       borderRadius: "lg",
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
 
   return (

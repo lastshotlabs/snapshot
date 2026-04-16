@@ -40,6 +40,10 @@ function renderWithContext(ui: React.ReactElement) {
   return render(ui, { wrapper: TestPageWrapper });
 }
 
+function getRowRoot(container: HTMLElement) {
+  return container.querySelector('[data-snapshot-id="row"]');
+}
+
 describe("Row", () => {
   it("is registered as a component", () => {
     expect(getRegisteredComponent("row")).toBeDefined();
@@ -73,7 +77,7 @@ describe("Row", () => {
     const { container } = renderWithContext(
       <RowComponent config={config as unknown as Record<string, unknown>} />,
     );
-    const row = container.firstElementChild;
+    const row = getRowRoot(container);
     expect(row?.getAttribute("style")).toContain("gap");
   });
 
@@ -89,7 +93,7 @@ describe("Row", () => {
     const { container } = renderWithContext(
       <RowComponent config={config as unknown as Record<string, unknown>} />,
     );
-    const row = container.firstElementChild;
+    const row = getRowRoot(container);
     const style = row?.getAttribute("style") ?? "";
     expect(style).toContain("space-between");
     expect(style).toContain("center");
@@ -106,7 +110,7 @@ describe("Row", () => {
     const { container } = renderWithContext(
       <RowComponent config={config as unknown as Record<string, unknown>} />,
     );
-    const row = container.firstElementChild;
+    const row = getRowRoot(container);
     expect(row?.getAttribute("style")).toContain("wrap");
   });
 
@@ -123,7 +127,7 @@ describe("Row", () => {
     const { container } = renderWithContext(
       <RowComponent config={config as unknown as Record<string, unknown>} />,
     );
-    const row = container.firstElementChild;
+    const row = getRowRoot(container);
     expect(row?.getAttribute("style")).toContain("grid");
   });
 });

@@ -7,6 +7,9 @@ import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { PricingTableConfig } from "./types";
 
+type PricingTier = PricingTableConfig["tiers"][number];
+type PricingFeature = PricingTier["features"][number];
+
 function TierCard({
   rootId,
   index,
@@ -233,7 +236,7 @@ function TierCard({
           className={featureListSurface.className}
           style={featureListSurface.style}
         >
-          {tier.features.map((feature, featureIndex) => {
+          {tier.features.map((feature: PricingFeature, featureIndex: number) => {
             const included = feature.included !== false;
             const itemSurface = resolveSurfacePresentation({
               surfaceId: `${cardId}-feature-${featureIndex}`,
@@ -302,7 +305,7 @@ function TierCard({
         </ul>
         <ButtonControl
           type="button"
-          data-testid="pricing-tier-cta"
+          testId="pricing-tier-cta"
           onClick={tier.action ? () => void execute(tier.action!) : undefined}
           disabled={!tier.action}
           surfaceId={`${cardId}-cta`}
@@ -415,7 +418,7 @@ function TableVariant({
               >
                 Features
               </th>
-              {config.tiers.map((tier, tierIndex) => {
+              {config.tiers.map((tier: PricingTier, tierIndex: number) => {
                 const headerSurface = resolveSurfacePresentation({
                   surfaceId: `${rootId}-header-tier-${tierIndex}`,
                   implementationBase: {
@@ -522,8 +525,10 @@ function TableVariant({
                 >
                   {featureText}
                 </td>
-                {config.tiers.map((tier, tierIndex) => {
-                  const feature = tier.features.find((entry) => entry.text === featureText);
+                {config.tiers.map((tier: PricingTier, tierIndex: number) => {
+                  const feature = tier.features.find(
+                    (entry: PricingFeature) => entry.text === featureText,
+                  );
                   const included = feature ? feature.included !== false : false;
                   const valueSurface = resolveSurfacePresentation({
                     surfaceId: `${rootId}-value-cell-${featureIndex}-${tierIndex}`,
@@ -577,7 +582,7 @@ function TableVariant({
                   componentSurface: config.slots?.ctaCell,
                 }).style}
               />
-              {config.tiers.map((tier, tierIndex) => {
+              {config.tiers.map((tier: PricingTier, tierIndex: number) => {
                 const ctaCellSurface = resolveSurfacePresentation({
                   surfaceId: `${rootId}-cta-cell-${tierIndex}`,
                   implementationBase: {
@@ -624,7 +629,7 @@ function TableVariant({
                   >
                     <ButtonControl
                       type="button"
-                      data-testid="pricing-tier-cta"
+                      testId="pricing-tier-cta"
                       onClick={tier.action ? () => void execute(tier.action!) : undefined}
                       disabled={!tier.action}
                       surfaceId={`${rootId}-cta-${tierIndex}`}
@@ -734,7 +739,7 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
           className={gridSurface.className}
           style={gridSurface.style}
         >
-          {config.tiers.map((tier, index) => (
+          {config.tiers.map((tier: PricingTier, index: number) => (
             <TierCard
               key={index}
               rootId={rootId}

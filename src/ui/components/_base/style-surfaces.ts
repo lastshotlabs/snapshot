@@ -93,6 +93,74 @@ function stripStateMap(config: SurfaceConfig | undefined): SurfaceConfig | undef
   return rest;
 }
 
+const SURFACE_CONFIG_KEYS = new Set([
+  "className",
+  "style",
+  "states",
+  "hover",
+  "focus",
+  "active",
+  "background",
+  "backgroundColor",
+  "padding",
+  "paddingX",
+  "paddingY",
+  "margin",
+  "marginX",
+  "marginY",
+  "gap",
+  "width",
+  "minWidth",
+  "maxWidth",
+  "height",
+  "minHeight",
+  "maxHeight",
+  "bg",
+  "color",
+  "borderRadius",
+  "border",
+  "shadow",
+  "opacity",
+  "overflow",
+  "cursor",
+  "position",
+  "inset",
+  "display",
+  "flexDirection",
+  "alignItems",
+  "justifyContent",
+  "flexWrap",
+  "flex",
+  "gridTemplateColumns",
+  "gridTemplateRows",
+  "gridColumn",
+  "gridRow",
+  "textAlign",
+  "fontSize",
+  "fontWeight",
+  "lineHeight",
+  "letterSpacing",
+]);
+
+export function extractSurfaceConfig(
+  value: Record<string, unknown> | undefined,
+  options?: { omit?: string[] },
+): Record<string, unknown> | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const omitted = new Set(options?.omit ?? []);
+
+  const extracted = Object.fromEntries(
+    Object.entries(value).filter(
+      ([key]) => SURFACE_CONFIG_KEYS.has(key) && !omitted.has(key),
+    ),
+  );
+
+  return Object.keys(extracted).length > 0 ? extracted : undefined;
+}
+
 export function mergeClassNames(
   ...classes: Array<string | undefined | null | false>
 ): string | undefined {

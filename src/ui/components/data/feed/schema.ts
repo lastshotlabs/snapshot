@@ -31,7 +31,7 @@ import { dataSourceSchema } from "../../_base/types";
  * }
  * ```
  */
-export const feedSchema = extendComponentSchema({
+export const feedSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("feed"),
     /** Data source: endpoint string (e.g. "GET /api/events") or a FromRef. */

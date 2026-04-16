@@ -11,6 +11,7 @@ import { SelectControl } from "../../forms/select";
 import type { AuditLogConfig } from "./types";
 
 type AuditRecord = Record<string, unknown>;
+type AuditFilterConfig = NonNullable<AuditLogConfig["filters"]>[number];
 
 function SkeletonEntry({
   rootId,
@@ -301,7 +302,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
   );
 
   const loadMore = useCallback(() => {
-    setVisibleCount((count) => count + pageSize);
+    setVisibleCount((count: number) => count + pageSize);
   }, [pageSize]);
 
   if (visible === false) {
@@ -395,7 +396,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
             className={filtersSurface.className}
             style={filtersSurface.style}
           >
-            {config.filters.map((filter) => {
+            {config.filters.map((filter: AuditFilterConfig) => {
               const filterSurface = resolveSurfacePresentation({
                 surfaceId: `${rootId}-filter-${filter.field}`,
                 implementationBase: {
@@ -426,7 +427,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
                     surfaceConfig={filterSurface.resolvedConfigForWrapper}
                   >
                     <option value="">{filter.label}</option>
-                    {filter.options.map((option) => (
+                    {filter.options.map((option: string) => (
                       <option key={option} value={option}>
                         {option}
                       </option>

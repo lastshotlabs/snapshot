@@ -43,7 +43,7 @@ export { fieldConfigSchema };
 /**
  * Schema for a single wizard step.
  */
-export const wizardStepSchema = z.object({
+export const wizardStepSchema: z.ZodType<Record<string, any>> = z.object({
   /** Step heading. */
   title: z.string(),
   /** Optional step description shown below the title. */
@@ -99,7 +99,7 @@ export const wizardStepSchema = z.object({
  * On the final step, all accumulated data is submitted to `submitEndpoint`
  * (if set) and published to the page context via `id`.
  */
-export const wizardSchema = extendComponentSchema({
+export const wizardSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("wizard"),
     /** Ordered list of wizard steps. */

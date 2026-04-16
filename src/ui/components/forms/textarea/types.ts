@@ -1,5 +1,6 @@
-import type { CSSProperties, Ref } from "react";
+import type { CSSProperties } from "react";
 import type { z } from "zod";
+import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
 import type { textareaConfigSchema } from "./schema";
 
@@ -7,7 +8,7 @@ import type { textareaConfigSchema } from "./schema";
 export type TextareaConfig = z.input<typeof textareaConfigSchema>;
 
 export interface TextareaControlProps {
-  textareaRef?: Ref<HTMLTextAreaElement>;
+  textareaRef?: DomRef<HTMLTextAreaElement>;
   textareaId?: string;
   name?: string;
   value: string;

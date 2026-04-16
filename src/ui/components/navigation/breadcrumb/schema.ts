@@ -44,7 +44,7 @@ export const breadcrumbItemSchema = z.object({
  * }
  * ```
  */
-export const breadcrumbConfigSchema = extendComponentSchema({
+export const breadcrumbConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("breadcrumb"),
     /** Source for breadcrumb items. */

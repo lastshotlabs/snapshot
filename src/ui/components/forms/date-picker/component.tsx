@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -86,16 +86,6 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
   const [rangeValue, setRangeValue] = useState({ start: "", end: "" });
   const [multipleValue, setMultipleValue] = useState<string[]>([]);
   const [multipleInput, setMultipleInput] = useState("");
-
-  const publishedValue = useMemo(() => {
-    if (config.mode === "range") {
-      return rangeValue;
-    }
-    if (config.mode === "multiple") {
-      return multipleValue;
-    }
-    return singleValue;
-  }, [config.mode, multipleValue, rangeValue, singleValue]);
 
   useEffect(() => {
     if (!publish) {

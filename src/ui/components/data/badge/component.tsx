@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { BadgeConfig } from "./types";
 
 const SIZE_MAP = {
@@ -115,7 +115,8 @@ export function Badge({ config }: { config: BadgeConfig }) {
         ...variantStyles,
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config, { omit: ["color"] }),
+    itemSurface: config.slots?.root,
   });
   const dotSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-dot`,

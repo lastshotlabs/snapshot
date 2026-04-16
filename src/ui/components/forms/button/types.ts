@@ -5,9 +5,9 @@ import type {
   MouseEventHandler,
   PointerEventHandler,
   ReactNode,
-  Ref,
 } from "react";
 import type { z } from "zod";
+import type { DomRef } from "../../_base/dom-ref";
 import type { buttonConfigSchema } from "./schema";
 
 export type ButtonConfig = z.infer<typeof buttonConfigSchema>;
@@ -27,7 +27,7 @@ export interface ButtonControlProps {
   onPointerLeave?: PointerEventHandler<HTMLButtonElement>;
   className?: string;
   style?: CSSProperties;
-  buttonRef?: Ref<HTMLButtonElement>;
+  buttonRef?: DomRef<HTMLButtonElement>;
   surfaceId?: string;
   surfaceConfig?: Record<string, unknown>;
   itemSurfaceConfig?: Record<string, unknown>;

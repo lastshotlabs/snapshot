@@ -189,7 +189,7 @@ const searchConfigSchema = z
  * }
  * ```
  */
-export const dataTableConfigSchema = extendComponentSchema({
+export const dataTableConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("data-table"),
     /** Grid column span (1-12). */

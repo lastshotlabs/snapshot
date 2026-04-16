@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import { describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
 const EMPTY: string[] = [];
 
@@ -32,6 +32,10 @@ vi.mock("../../../_base/use-component-data", () => ({
 }));
 
 import { TagSelector } from "../component";
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("TagSelector", () => {
   it("selects an available tag from the dropdown", () => {
@@ -72,14 +76,21 @@ describe("TagSelector", () => {
       />,
     );
 
-    const input = screen.getByTestId("tag-input");
-    fireEvent.focus(input);
-    fireEvent.change(input, { target: { value: "Vue" } });
+    const input = container.querySelector(
+      '[data-snapshot-id="tag-selector-input"]',
+    ) as HTMLInputElement | null;
+    expect(input).not.toBeNull();
+    const tagInput = input as HTMLInputElement;
+
+    fireEvent.focus(tagInput);
 
     expect(
       container.querySelector('[data-snapshot-id="tag-selector-option-react-label"]')
         ?.className,
     ).toContain("option-label-slot");
+
+    fireEvent.change(tagInput, { target: { value: "Vue" } });
+
     expect(
       container.querySelector('[data-snapshot-id="tag-selector-createOptionLabel"]')
         ?.className,

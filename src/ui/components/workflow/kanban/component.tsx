@@ -28,7 +28,7 @@ import type {
   DragOverEvent,
 } from "../../../hooks/use-drag-drop";
 import { getInitials } from "../../_base/utils";
-import type { KanbanConfig } from "./types";
+import type { KanbanColumnConfig, KanbanConfig } from "./types";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -478,7 +478,8 @@ export function Kanban({ config }: { config: KanbanConfig }) {
 
   // Find item by DnD id
   const findItem = useCallback(
-    (id: string) => items.find((item) => getCardId(item) === id),
+    (id: string) =>
+      items.find((item: Record<string, unknown>) => getCardId(item) === id),
     [items, getCardId],
   );
 
@@ -498,14 +499,15 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       // Check if dragged over a column droppable (id: "column-{key}") or another card
       const overId = String(over.id);
       const overColumnKey = overId.startsWith("column-")
-        ? config.columns.find((c) => `column-${c.key}` === overId)?.key
-        : config.columns.find((c) => c.key === overId)?.key;
+        ? config.columns.find((c: KanbanColumnConfig) => `column-${c.key}` === overId)
+            ?.key
+        : config.columns.find((c: KanbanColumnConfig) => c.key === overId)?.key;
       if (overColumnKey) {
         // Dropped on column header — move to that column
         const currentCol = String(activeItem[columnField] ?? "");
         if (currentCol !== overColumnKey) {
           setItems((prev) =>
-            prev.map((item) =>
+            prev.map((item: Record<string, unknown>) =>
               getCardId(item) === String(active.id)
                 ? { ...item, [columnField]: overColumnKey }
                 : item,
@@ -530,8 +532,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       const targetColumnKey =
         // Dropped on a column droppable zone (id: "column-{key}")
         (overId.startsWith("column-")
-          ? config.columns.find((c) => `column-${c.key}` === overId)?.key
-          : config.columns.find((c) => c.key === overId)?.key) ??
+          ? config.columns.find((c: KanbanColumnConfig) => `column-${c.key}` === overId)
+              ?.key
+          : config.columns.find((c: KanbanColumnConfig) => c.key === overId)?.key) ??
         // Dropped on another card — find which column that card is in
         (() => {
           const overItem = findItem(overId);
@@ -541,20 +544,20 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       if (!targetColumnKey) return;
 
       // Move item to target column if different
-      const currentCol = String(activeItem[columnField] ?? "");
-      if (currentCol !== targetColumnKey) {
-        setItems((prev) =>
-          prev.map((item) =>
-            getCardId(item) === String(active.id)
-              ? { ...item, [columnField]: targetColumnKey }
-              : item,
+        const currentCol = String(activeItem[columnField] ?? "");
+        if (currentCol !== targetColumnKey) {
+          setItems((prev) =>
+            prev.map((item: Record<string, unknown>) =>
+              getCardId(item) === String(active.id)
+                ? { ...item, [columnField]: targetColumnKey }
+                : item,
           ),
         );
       }
 
       // Get position in target column
       const targetColItems = items.filter(
-        (i) =>
+        (i: Record<string, unknown>) =>
           String(i[columnField] ?? "") === targetColumnKey ||
           getCardId(i) === String(active.id),
       );

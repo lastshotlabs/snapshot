@@ -529,6 +529,11 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
     },
     componentSurface: config.slots?.error,
   });
+  const errorMessageSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-errorMessage`,
+    implementationBase: {} as Record<string, unknown>,
+    componentSurface: config.slots?.errorMessage,
+  });
   const retryButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-retryButton`,
     implementationBase: {
@@ -682,7 +687,13 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
                 className={errorSurface.className}
                 style={errorSurface.style}
               >
-                <div>Failed to load options</div>
+                <div
+                  data-snapshot-id={`${rootId}-errorMessage`}
+                  className={errorMessageSurface.className}
+                  style={errorMessageSurface.style}
+                >
+                  Failed to load options
+                </div>
                 <ButtonControl
                   type="button"
                   surfaceId={`${rootId}-retryButton`}
@@ -743,6 +754,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
       <SurfaceStyles css={searchContainerSurface.scopedCss} />
       <SurfaceStyles css={loadingSurface.scopedCss} />
       <SurfaceStyles css={errorSurface.scopedCss} />
+      <SurfaceStyles css={errorMessageSurface.scopedCss} />
       <SurfaceStyles css={emptySurface.scopedCss} />
     </>
   );

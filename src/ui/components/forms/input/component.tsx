@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { InputConfig, InputControlProps } from "./types";
@@ -106,7 +107,7 @@ export function InputControl({
   return (
     <>
       <input
-        ref={inputRef}
+        ref={(instance) => setDomRef(inputRef, instance)}
         id={inputId}
         name={name}
         type={type}

@@ -34,6 +34,14 @@ type SlotName =
   | "rule"
   | "image";
 
+function sanitizeMarkdownProps<T extends object>(props: T): Omit<T, "node" | "ref"> {
+  const { node: _node, ref: _ref, ...rest } = props as T & {
+    node?: unknown;
+    ref?: unknown;
+  };
+  return rest;
+}
+
 export function Markdown({ config }: { config: MarkdownConfig }) {
   const resolvedContent = useSubscribe(config.content) as string;
   const visible = useSubscribe(config.visible ?? true);
@@ -271,7 +279,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
     () => ({
       h1: ({ children, ...props }) => (
         <h1
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-heading1`}
           className={surfaces.heading1.className}
           style={surfaces.heading1.style}
@@ -281,7 +289,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       h2: ({ children, ...props }) => (
         <h2
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-heading2`}
           className={surfaces.heading2.className}
           style={surfaces.heading2.style}
@@ -291,7 +299,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       h3: ({ children, ...props }) => (
         <h3
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-heading3`}
           className={surfaces.heading3.className}
           style={surfaces.heading3.style}
@@ -301,7 +309,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       h4: ({ children, ...props }) => (
         <h4
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-heading4`}
           className={surfaces.heading4.className}
           style={surfaces.heading4.style}
@@ -311,7 +319,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       h5: ({ children, ...props }) => (
         <h5
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-heading5`}
           className={surfaces.heading5.className}
           style={surfaces.heading5.style}
@@ -321,7 +329,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       h6: ({ children, ...props }) => (
         <h6
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-heading6`}
           className={surfaces.heading6.className}
           style={surfaces.heading6.style}
@@ -331,7 +339,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       p: ({ children, ...props }) => (
         <p
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-paragraph`}
           className={surfaces.paragraph.className}
           style={surfaces.paragraph.style}
@@ -341,7 +349,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       a: ({ children, href, ...props }) => (
         <a
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           href={href}
           target="_blank"
           rel="noopener noreferrer"
@@ -354,7 +362,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       ul: ({ children, ...props }) => (
         <ul
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-unorderedList`}
           className={surfaces.unorderedList.className}
           style={surfaces.unorderedList.style}
@@ -364,7 +372,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       ol: ({ children, ...props }) => (
         <ol
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-orderedList`}
           className={surfaces.orderedList.className}
           style={surfaces.orderedList.style}
@@ -374,7 +382,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       li: ({ children, ...props }) => (
         <li
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-listItem`}
           className={surfaces.listItem.className}
           style={surfaces.listItem.style}
@@ -384,7 +392,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       blockquote: ({ children, ...props }) => (
         <blockquote
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-blockquote`}
           className={surfaces.blockquote.className}
           style={surfaces.blockquote.style}
@@ -394,7 +402,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       pre: ({ children, ...props }) => (
         <pre
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-pre`}
           className={surfaces.pre.className}
           style={surfaces.pre.style}
@@ -406,7 +414,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
         const isInline = !className;
         return (
           <code
-            {...props}
+            {...sanitizeMarkdownProps(props)}
             className={[className, isInline ? surfaces.inlineCode.className : surfaces.blockCode.className]
               .filter(Boolean)
               .join(" ") || undefined}
@@ -425,7 +433,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
           }}
         >
           <table
-            {...props}
+            {...sanitizeMarkdownProps(props)}
             data-snapshot-id={`${rootId}-table`}
             className={surfaces.table.className}
             style={surfaces.table.style}
@@ -436,7 +444,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       thead: ({ children, ...props }) => (
         <thead
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-tableHead`}
           className={surfaces.tableHead.className}
           style={surfaces.tableHead.style}
@@ -446,7 +454,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       th: ({ children, ...props }) => (
         <th
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-tableHeader`}
           className={surfaces.tableHeader.className}
           style={surfaces.tableHeader.style}
@@ -456,7 +464,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       td: ({ children, ...props }) => (
         <td
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-tableCell`}
           className={surfaces.tableCell.className}
           style={surfaces.tableCell.style}
@@ -466,7 +474,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       hr: (props) => (
         <hr
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           data-snapshot-id={`${rootId}-rule`}
           className={surfaces.rule.className}
           style={surfaces.rule.style}
@@ -474,7 +482,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
       ),
       img: ({ alt, src, ...props }) => (
         <img
-          {...props}
+          {...sanitizeMarkdownProps(props)}
           src={src}
           alt={alt ?? ""}
           data-snapshot-id={`${rootId}-image`}

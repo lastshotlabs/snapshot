@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { SnapshotConfig } from "../../../types";
 describe("bootBuiltins", () => {
-  it("keeps registries empty until createSnapshot runs", async () => {
+  it("keeps component registries empty until createSnapshot runs", async () => {
     vi.resetModules();
 
     const { getRegisteredComponent } = await import("../component-registry");
@@ -11,7 +11,7 @@ describe("bootBuiltins", () => {
     const { bootBuiltins } = await import("../boot-builtins");
 
     expect(getRegisteredComponent("row")).toBeUndefined();
-    expect(getAllFlavors()).toEqual({});
+    expect(getAllFlavors()).toHaveProperty("neutral");
 
     const config = {
       apiUrl: "http://localhost",

@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SkeletonConfig } from "./types";
 
 const LINE_WIDTHS = ["100%", "90%", "75%", "60%", "85%", "70%", "95%", "65%"];
@@ -55,7 +55,8 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
               width: toCss(config.width, "100%"),
             }
           : {},
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: animated ? ["active"] : [],
   });
   const shapeSurface = resolveSurfacePresentation({

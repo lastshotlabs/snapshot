@@ -41,7 +41,7 @@ export const floatingMenuEntrySchema = z.union([
     .strict(),
 ]);
 
-export const floatingMenuConfigSchema = extendComponentSchema({
+export const floatingMenuConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   type: z.literal("floating-menu"),
   open: z.boolean().optional(),
   align: z.enum(["start", "center", "end"]).optional(),

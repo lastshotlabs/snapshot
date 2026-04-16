@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ManifestApp } from "../app";
 import type { ManifestConfig } from "../types";
 import "../structural";
@@ -98,6 +98,7 @@ function buildAuthManifest(): ManifestConfig {
 
 describe("Manifest auth fragments", () => {
   afterEach(() => {
+    cleanup();
     global.fetch = originalFetch;
     Object.defineProperty(navigator, "credentials", {
       writable: true,
@@ -311,7 +312,7 @@ describe("Manifest auth fragments", () => {
       expect(screen.getByRole("heading", { name: "Welcome back" })).toBeDefined();
       expect(screen.getByText("Use your workspace account")).toBeDefined();
       expect(screen.getByRole("button", { name: "Continue" })).toBeDefined();
-      expect(screen.getByRole("button", { name: "Make an account" })).toBeDefined();
+      expect(screen.getByRole("link", { name: "Make an account" })).toBeDefined();
       expect(screen.queryByText("Use Google Workspace")).toBeNull();
       expect(screen.queryByRole("button", { name: "Sign in with passkey" })).toBeNull();
       expect(screen.getByLabelText(/Work email/i, { selector: "input" })).toBeDefined();

@@ -8,6 +8,7 @@ import {
   registerBuiltInFlavors,
 } from "../tokens/flavors";
 import { collectPolicyRefs, isPolicyRef } from "../policies/types";
+import type { PolicyExpr } from "../policies/types";
 import { getRegisteredClient } from "../../api/client";
 import { manifestConfigSchema, withManifestCustomComponents } from "./schema";
 import { buildDefaultAuthFragment } from "./defaults/auth";
@@ -306,18 +307,20 @@ function collectWorkflowDefinitions(
     result.push(...definitions);
   }
 
-  for (const [name, overlay] of Object.entries(manifest.overlays ?? {})) {
+  for (const [name, overlay] of Object.entries(
+    (manifest.overlays ?? {}) as Record<string, Record<string, unknown>>,
+  )) {
     if (overlay.onOpen && typeof overlay.onOpen !== "string") {
       result.push({
         location: `overlays.${name}.onOpen`,
-        definition: overlay.onOpen,
+        definition: overlay.onOpen as WorkflowDefinition,
       });
     }
 
     if (overlay.onClose && typeof overlay.onClose !== "string") {
       result.push({
         location: `overlays.${name}.onClose`,
-        definition: overlay.onClose,
+        definition: overlay.onClose as WorkflowDefinition,
       });
     }
   }
@@ -513,7 +516,9 @@ function collectPolicyRefNames(
 function validatePolicyRefs(manifest: EnvResolvedManifest): void {
   const policyNames = new Set(Object.keys(manifest.policies ?? {}));
   const referencedPolicies = new Set<string>();
-  for (const policy of Object.values(manifest.policies ?? {})) {
+  for (const policy of Object.values(
+    (manifest.policies ?? {}) as Record<string, PolicyExpr>,
+  )) {
     for (const ref of collectPolicyRefs(policy)) {
       referencedPolicies.add(ref);
     }
@@ -525,7 +530,9 @@ function validatePolicyRefs(manifest: EnvResolvedManifest): void {
     }
   }
 
-  for (const overlay of Object.values(manifest.overlays ?? {})) {
+  for (const overlay of Object.values(
+    (manifest.overlays ?? {}) as Record<string, Record<string, unknown>>,
+  )) {
     for (const ref of collectPolicyRefNames(overlay)) {
       referencedPolicies.add(ref);
     }
@@ -597,7 +604,7 @@ function validateResourceClients(manifest: EnvResolvedManifest): void {
   const clients = new Set(["main", ...Object.keys(manifest.clients ?? {})]);
 
   for (const [resourceName, resource] of Object.entries(
-    manifest.resources ?? {},
+    (manifest.resources ?? {}) as Record<string, { client?: string }>,
   )) {
     if (!resource.client) {
       continue;
@@ -630,7 +637,9 @@ function validateRegisteredGuards(manifest: EnvResolvedManifest): void {
 }
 
 function validateCustomClients(manifest: EnvResolvedManifest): void {
-  for (const [name, client] of Object.entries(manifest.clients ?? {})) {
+  for (const [name, client] of Object.entries(
+    (manifest.clients ?? {}) as Record<string, { custom?: string }>,
+  )) {
     if (!client.custom) {
       continue;
     }

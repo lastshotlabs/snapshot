@@ -13,4 +13,17 @@ describe("multiSelectConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical multi-select error message slots", () => {
+    const result = multiSelectConfigSchema.safeParse({
+      type: "multi-select",
+      options: [{ label: "Bug", value: "bug" }],
+      slots: {
+        error: { className: "error-slot" },
+        errorMessage: { className: "error-message-slot" },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

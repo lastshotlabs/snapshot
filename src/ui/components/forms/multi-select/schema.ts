@@ -38,7 +38,7 @@ const optionSchema = z.object({
  * }
  * ```
  */
-export const multiSelectConfigSchema = extendComponentSchema({
+export const multiSelectConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("multi-select"),
     /** Label text displayed above the select. */
@@ -77,6 +77,7 @@ export const multiSelectConfigSchema = extendComponentSchema({
       "searchInput",
       "loading",
       "error",
+      "errorMessage",
       "retryButton",
       "empty",
       "option",

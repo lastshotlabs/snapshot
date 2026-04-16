@@ -103,6 +103,40 @@ Many manifest fields accept dynamic values in addition to static strings. These 
 | `EndpointTarget` | `string \| { resource, params? }` | API endpoint — string URL or named resource reference |
 | `PolicyExpr` | `string \| { all } \| { any } \| { not } \| { equals } \| ...` | Boolean logic expression with `all`, `any`, `not`, `equals`, `not-equals`, `exists`, `truthy`, `falsy`, `in` |
 
+### Reserved `from` Prefixes
+
+`FromRef` paths are resolved against built-in sources **before** checking workflow context or state. The following prefixes are reserved and always resolve against their built-in source:
+
+| Prefix | Resolves against | Example |
+|--------|-----------------|---------|
+| `params.` | Route URL parameters | `{ "from": "params.id" }` |
+| `route.` | Route metadata (id, path, pattern, params, query) | `{ "from": "route.query.tab" }` |
+| `overlay.` | Overlay state (id, kind, payload, result) | `{ "from": "overlay.payload.title" }` |
+| `auth.` | Manifest `auth` config (providers, redirects, session settings) | `{ "from": "auth.redirects.afterLogin" }` |
+| `app.` | Manifest `app` config (title, shell, apiUrl, etc.) | `{ "from": "app.title" }` |
+| `global.` | App-scope state atoms | `{ "from": "global.currentUser" }` |
+| `state.` | Named state atoms (page or app scope) | `{ "from": "state.selectedId" }` |
+
+:::caution[Workflow context key collisions]
+If a workflow `capture` or `assign` stores a value under a key that starts with a reserved prefix, the `from` reference will silently resolve against the built-in source instead of the workflow context.
+
+For example, using `"as": "auth.orgs"` in a capture and then referencing `{ "from": "auth.orgs.0.id" }` will look up `orgs.0.id` in the **manifest auth config** — not the captured API response. This produces `undefined` with no error.
+
+Use a non-reserved prefix for workflow context keys:
+
+```json
+// Bad — "auth." is reserved
+{ "type": "capture", "as": "auth.orgs", "action": { ... } }
+
+// Good — "session." is not reserved
+{ "type": "capture", "as": "session.orgs", "action": { ... } }
+```
+
+In development mode, snapshot logs a console warning when a reserved prefix shadows a workflow context key.
+:::
+
+The same reserved-prefix behavior applies to **template strings** (e.g. `"{auth.me}"`). The template context merges workflow context with built-in sources, and built-in keys (`auth`, `app`, `route`) overwrite workflow context keys of the same name. Use `FromRef` objects instead of template strings when referencing workflow context values that share a name with a reserved prefix.
+
 ---
 
 ## `app`
@@ -1513,6 +1547,8 @@ Workflow nodes support these control-flow types:
 | `assign` | `values` (Record) | Set state values |
 | `try` | `step`, `catch?`, `finally?` | Error handling |
 | `capture` | `action`, `as` (string) | Execute action and capture result |
+
+The `capture` node's `as` field sets a dot-path key in the workflow context. **Avoid reserved prefixes** (`auth.`, `app.`, `route.`, `params.`, `overlay.`) — see [Reserved `from` Prefixes](#reserved-from-prefixes).
 
 All nodes support optional `id` and `when` (condition) fields.
 

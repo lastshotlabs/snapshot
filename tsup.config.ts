@@ -31,7 +31,7 @@ export default defineConfig([
   {
     entry: ["src/ui.ts"],
     format: ["esm", "cjs"],
-    dts: true,
+    dts: false,
     sourcemap: true,
     clean: false,
     target: "es2022",

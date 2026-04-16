@@ -1,9 +1,9 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
+import { setDomRef } from "../../_base/dom-ref";
 import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -75,7 +75,7 @@ export function ButtonControl({
   return (
     <>
       <button
-        ref={buttonRef}
+        ref={(instance) => setDomRef(buttonRef, instance)}
         type={type}
         disabled={disabled}
         onClick={onClick}

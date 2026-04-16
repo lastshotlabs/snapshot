@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface CenteredLayoutConfig {
   maxWidth?: "xs" | "sm" | "md" | "lg";

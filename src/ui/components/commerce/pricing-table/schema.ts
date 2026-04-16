@@ -78,7 +78,7 @@ const pricingTierSchema = z
  * }
  * ```
  */
-export const pricingTableConfigSchema = extendComponentSchema({
+export const pricingTableConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("pricing-table"),
     /** Pricing tiers to display. */

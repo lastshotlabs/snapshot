@@ -124,51 +124,6 @@ function TypeIcon({
   }
 }
 
-function SkeletonItem() {
-  return (
-    <div
-      data-notification-skeleton
-      style={{
-        display: "flex",
-        gap: "var(--sn-spacing-sm, 8px)",
-        padding: "var(--sn-spacing-md, 12px)",
-      }}
-    >
-      <div
-        style={{
-          width: "20px",
-          height: "20px",
-          borderRadius: "var(--sn-radius-full, 9999px)",
-          backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-          opacity: "var(--sn-opacity-muted, 0.5)",
-          flexShrink: 0,
-        }}
-      />
-      <div style={{ flex: 1 }}>
-        <div
-          style={{
-            height: "1em",
-            width: "50%",
-            borderRadius: "var(--sn-radius-xs, 2px)",
-            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: "var(--sn-opacity-muted, 0.5)",
-            marginBottom: "var(--sn-spacing-xs, 4px)",
-          }}
-        />
-        <div
-          style={{
-            height: "0.75em",
-            width: "80%",
-            borderRadius: "var(--sn-radius-xs, 2px)",
-            backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            opacity: "var(--sn-opacity-disabled, 0.3)",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function NotificationFeed({
   config,
 }: {

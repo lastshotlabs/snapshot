@@ -168,7 +168,7 @@ export const fieldConfigSchema = z
 /**
  * Schema for a field section/group with a heading.
  */
-export const fieldSectionSchema = z.object({
+export const fieldSectionSchema: z.ZodType<Record<string, any>> = z.object({
   /** Section title. */
   title: z.string(),
   /** Optional description below the title. */
@@ -217,7 +217,7 @@ export const fieldSectionSchema = z.object({
  * }
  * ```
  */
-export const autoFormConfigSchema = extendComponentSchema({
+export const autoFormConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.enum(["form", "auto-form"]),
     /** Endpoint to load initial values from (for edit forms). */

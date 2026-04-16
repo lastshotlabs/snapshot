@@ -3,7 +3,7 @@
 import { useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SaveIndicatorConfig } from "./types";
 
 export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
@@ -61,7 +61,8 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
       fontSize: "sm",
       color,
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: status === "saving" ? ["active"] : status === "error" ? ["invalid"] : [],
   });
   const iconSurface = resolveSurfacePresentation({

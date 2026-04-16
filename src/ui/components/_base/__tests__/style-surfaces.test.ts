@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  extractSurfaceConfig,
   mergeClassNames,
   resolveSurfaceConfig,
   resolveSurfaceStateOrder,
@@ -66,6 +67,23 @@ describe("style-surfaces", () => {
       color: "blue",
       backgroundColor: "white",
       borderColor: "black",
+    });
+  });
+
+  it("extracts only surface-capable fields and can omit semantic collisions", () => {
+    expect(
+      extractSurfaceConfig(
+        {
+          className: "root",
+          hover: { bg: "accent" },
+          width: 320,
+          title: "Ignored",
+        },
+        { omit: ["width"] },
+      ),
+    ).toEqual({
+      className: "root",
+      hover: { bg: "accent" },
     });
   });
 });

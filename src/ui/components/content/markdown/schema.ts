@@ -15,7 +15,7 @@ import { fromRefSchema } from "../../_base/types";
  * }
  * ```
  */
-export const markdownConfigSchema = extendComponentSchema({
+export const markdownConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("markdown"),
     /** Markdown content string. Supports FromRef for dynamic content. */

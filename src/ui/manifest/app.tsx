@@ -131,19 +131,6 @@ function withRedirectParam(path: string, redirectTo: string): string {
   return `${url.pathname}${url.search}`;
 }
 
-function dispatchPopState(): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  if (typeof PopStateEvent === "function") {
-    window.dispatchEvent(new PopStateEvent("popstate"));
-    return;
-  }
-
-  window.dispatchEvent(new Event("popstate"));
-}
-
 function getBrowserLocation(): { pathname: string; search: string } {
   if (typeof window === "undefined") {
     return { pathname: "/", search: "" };
@@ -167,6 +154,21 @@ interface ResolvedSubAppMatch {
   mountPath: string;
   inherit: SubAppInheritConfig;
 }
+
+interface RuntimeSubAppConfig {
+  mountPath: string;
+  manifest: string | Record<string, unknown>;
+  inherit?: Partial<SubAppInheritConfig>;
+}
+
+interface RuntimeClientConfig {
+  apiUrl: string | { default?: string };
+  contract?: unknown;
+  custom?: string;
+}
+
+type NavUserMenuConfig = Exclude<NonNullable<ShellNavConfig["userMenu"]>, boolean>;
+type NavUserMenuItem = NonNullable<NavUserMenuConfig["items"]>[number];
 
 function normalizeSubAppInherit(
   inherit?: Partial<SubAppInheritConfig>,
@@ -231,7 +233,7 @@ function resolveSubAppMatch(
   currentPath: string,
   prefix?: string,
 ): ResolvedSubAppMatch | null {
-  const subApps = manifest.raw.subApps;
+  const subApps = manifest.raw.subApps as Record<string, RuntimeSubAppConfig> | undefined;
   if (!subApps) {
     return null;
   }
@@ -277,8 +279,11 @@ function buildManifestClientMap(
     main: snapshot.api,
   };
   const authMode = manifest.auth?.session?.mode ?? "cookie";
+  const declaredClients = manifest.raw.clients as
+    | Record<string, RuntimeClientConfig>
+    | undefined;
 
-  for (const [name, config] of Object.entries(manifest.raw.clients ?? {})) {
+  for (const [name, config] of Object.entries(declaredClients ?? {})) {
     const apiUrl =
       typeof config.apiUrl === "string" ? config.apiUrl : config.apiUrl.default;
     if (!apiUrl) {
@@ -908,7 +913,7 @@ function AppShell({
         : {
             showAvatar: manifest.navigation.userMenu.showAvatar,
             showEmail: manifest.navigation.userMenu.showEmail,
-            items: manifest.navigation.userMenu.items?.map((item) => ({
+            items: manifest.navigation.userMenu.items?.map((item: NavUserMenuItem) => ({
               label: item.label,
               icon: item.icon,
               action: item.action,

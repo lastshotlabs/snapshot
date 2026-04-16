@@ -7,12 +7,10 @@ import type { ApiError } from "../api/error";
 import type { TokenStorage } from "./storage";
 import type {
   AuthUser,
-  LoginBody,
   LoginVars,
   LoginResult,
   LoginResponse,
   LogoutVars,
-  RegisterBody,
   RegisterVars,
   ForgotPasswordBody,
   MfaChallenge,

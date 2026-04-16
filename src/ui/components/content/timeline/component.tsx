@@ -570,7 +570,7 @@ export function Timeline({ config }: { config: TimelineConfig }) {
                   className={contentSurface.className}
                   style={contentSurface.style}
                 >
-                  {item.content.map((child, childIndex) => (
+                  {item.content.map((child: ComponentConfig, childIndex: number) => (
                     <ComponentRenderer
                       key={
                         (child as ComponentConfig).id ??

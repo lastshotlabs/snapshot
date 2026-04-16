@@ -121,10 +121,18 @@ describe("SnapshotImage component", () => {
 
   it("applies className to wrapper div", () => {
     const { container } = render(
-      <SnapshotImage config={baseConfig({ className: "my-image-wrapper" })} />,
+      <SnapshotImage
+        config={baseConfig({
+          className: "my-image-wrapper",
+          slots: {
+            root: { className: "slot-root" },
+          },
+        })}
+      />,
     );
     const wrapper = container.querySelector('[data-snapshot-component="image"]');
     expect(wrapper?.className).toContain("my-image-wrapper");
+    expect(wrapper?.className).toContain("slot-root");
   });
 
   it("does not render placeholder div when placeholder=empty", () => {

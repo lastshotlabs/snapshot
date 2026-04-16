@@ -15,7 +15,7 @@ export const stepperSlotNames = [
 /**
  * Schema for a single step within the stepper.
  */
-export const stepConfigSchema = z.object({
+export const stepConfigSchema: z.ZodType<Record<string, any>> = z.object({
   /** Display title for this step. */
   title: z.string(),
   /** Optional description text. */
@@ -47,7 +47,7 @@ export const stepConfigSchema = z.object({
  * }
  * ```
  */
-export const stepperConfigSchema = extendComponentSchema({
+export const stepperConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("stepper"),
     /** Array of step definitions. At least one required. */

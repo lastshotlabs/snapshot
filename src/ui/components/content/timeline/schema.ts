@@ -49,7 +49,7 @@ export const timelineItemSlotNames = [
 /**
  * Schema for a single timeline item.
  */
-export const timelineItemSchema = z
+export const timelineItemSchema: z.ZodType<Record<string, any>> = z
   .object({
     /** Title text for this event. */
     title: z.string(),
@@ -94,7 +94,7 @@ export const timelineItemSchema = z
  * }
  * ```
  */
-export const timelineConfigSchema = extendComponentSchema({
+export const timelineConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   /** Component type discriminator. */
   type: z.literal("timeline"),
   /** API endpoint to fetch timeline data. */

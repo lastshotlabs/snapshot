@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { EmbedSchemaConfig } from "./types";
 
 export function Embed({ config }: { config: EmbedSchemaConfig }) {
@@ -19,7 +19,8 @@ export function Embed({ config }: { config: EmbedSchemaConfig }) {
         aspectRatio,
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const frameSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-frame`,

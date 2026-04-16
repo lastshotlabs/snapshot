@@ -11,15 +11,21 @@ vi.mock("../../../../context/hooks", () => ({
 
 describe("Separator", () => {
   it("renders a labeled horizontal separator", () => {
-    render(
+    const { container } = render(
       <Separator
         config={{
           type: "separator",
           label: "Continue",
+          className: "component-root",
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    expect(container.querySelector('[data-snapshot-component="separator"]')?.className).toContain("component-root");
+    expect(container.querySelector('[data-snapshot-component="separator"]')?.className).toContain("slot-root");
     expect(screen.getByText("Continue")).toBeTruthy();
     expect(screen.getByRole("separator").getAttribute("aria-orientation")).toBe("horizontal");
   });

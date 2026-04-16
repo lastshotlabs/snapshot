@@ -1,7 +1,7 @@
 'use client';
 
 import type { CSSProperties } from "react";
-import React, { useId, useMemo } from "react";
+import { useId, useMemo } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";

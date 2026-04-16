@@ -104,7 +104,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
               : "var(--sn-spacing-xs, 0.25rem)",
         }}
       >
-        {config.steps.map((step, index) => {
+        {config.steps.map((step: StepConfig, index: number) => {
           const isCompleted = index < currentStep;
           const isActive = index === currentStep;
           const stepStates = getStepStates(step, isActive, isCompleted);
@@ -379,7 +379,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
           className={contentSurface.className}
           style={contentSurface.style}
         >
-          {activeStepContent.map((child, childIndex) => (
+          {activeStepContent.map((child: ComponentConfig, childIndex: number) => (
             <ComponentRenderer
               key={
                 (child as ComponentConfig).id ??

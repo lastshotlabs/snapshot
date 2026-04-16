@@ -40,7 +40,8 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
         gap: "var(--sn-spacing-md, 1rem)",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: config,
+    itemSurface: config.slots?.root,
   });
 
   const iconSurface = resolveSurfacePresentation({
@@ -79,6 +80,10 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
       },
     },
     componentSurface: config.slots?.description,
+  });
+  const actionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-action`,
+    componentSurface: config.slots?.action,
   });
 
   return (
@@ -130,7 +135,7 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
           size="md"
           onClick={() => void execute(config.action!)}
           surfaceId={`${rootId}-action`}
-          surfaceConfig={config.slots?.action}
+          surfaceConfig={actionSurface.resolvedConfigForWrapper}
           testId="empty-state-action"
         >
           {config.actionLabel}
@@ -141,6 +146,7 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
       <SurfaceStyles css={iconSurface.scopedCss} />
       <SurfaceStyles css={titleSurface.scopedCss} />
       <SurfaceStyles css={descriptionSurface.scopedCss} />
+      <SurfaceStyles css={actionSurface.scopedCss} />
     </div>
   );
 }

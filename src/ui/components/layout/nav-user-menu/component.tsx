@@ -16,6 +16,8 @@ import {
 import { useActionExecutor } from "../../../actions/executor";
 import type { NavUserMenuConfig } from "./types";
 
+type NavUserMenuItem = NonNullable<NavUserMenuConfig["items"]>[number];
+
 function resolveMenuText(
   value: string | TRef,
   locale: string | undefined,
@@ -58,8 +60,10 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
   const mode = config.mode ?? "compact";
 
   const userRoles = [...(user.role ? [user.role] : []), ...(user.roles ?? [])];
-  const menuItems = (config.items ?? []).filter((item) =>
-    item.roles?.length ? item.roles.some((role) => userRoles.includes(role)) : true,
+  const menuItems = (config.items ?? []).filter((item: NavUserMenuItem) =>
+    item.roles?.length
+      ? item.roles.some((role: string) => userRoles.includes(role))
+      : true,
   );
 
   const rootId = config.id ?? "nav-user-menu";
@@ -182,7 +186,7 @@ export function NavUserMenu({ config }: { config: NavUserMenuConfig }) {
             {user.email}
           </div>
         ) : null}
-        {menuItems.map((item, index) => (
+        {menuItems.map((item: NavUserMenuItem, index: number) => (
           <MenuItem
             key={`${rootId}-item-${index}`}
             label={resolveMenuText(item.label, activeLocale, manifest?.raw.i18n)}

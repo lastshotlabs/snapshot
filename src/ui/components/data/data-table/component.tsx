@@ -986,12 +986,17 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                 borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
               }}
             >
-              {config.expandedContent.map((child, ci) => (
-                <ComponentRenderer
-                  key={ci}
-                  config={child as ComponentConfig}
-                />
-              ))}
+              {config.expandedContent.map(
+                (
+                  child: NonNullable<DataTableConfig["expandedContent"]>[number],
+                  ci: number,
+                ) => (
+                  <ComponentRenderer
+                    key={ci}
+                    config={child as ComponentConfig}
+                  />
+                ),
+              )}
             </td>
           </tr>
         )}

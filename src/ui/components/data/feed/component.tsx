@@ -487,7 +487,11 @@ function FeedItemRow({
             className={actionsSurface.className}
             style={actionsSurface.style}
           >
-            {itemActions.map((itemAction, index) => {
+            {itemActions.map(
+              (
+                itemAction: (typeof itemActions)[number],
+                index: number,
+              ) => {
               const itemActionSurface = resolveSurfacePresentation({
                 surfaceId: `${itemId}-action-${index}`,
                 implementationBase: {
@@ -538,8 +542,9 @@ function FeedItemRow({
                     <span>{itemAction.label}</span>
                   </ButtonControl>
                 </div>
-              );
-            })}
+                );
+              },
+            )}
           </div>
         ) : null}
       </div>

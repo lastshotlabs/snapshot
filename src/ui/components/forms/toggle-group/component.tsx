@@ -43,7 +43,7 @@ function ToggleItem({
   variant,
   sizeConfig,
   isLast,
-  role,
+  role: _role,
   onToggle,
   rootSlot,
   indicatorSlot,

@@ -1,7 +1,7 @@
 'use client';
 
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SpacerConfig } from "./types";
 
 const SIZE_MAP: Record<string, string> = {
@@ -39,7 +39,8 @@ export function Spacer({ config }: { config: SpacerConfig }) {
               flexShrink: 0,
             },
           },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
 
   return (

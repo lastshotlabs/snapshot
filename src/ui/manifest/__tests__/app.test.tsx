@@ -309,8 +309,8 @@ describe("ManifestApp", () => {
     expect(
       document.querySelector('[data-snapshot-id="nav-item-0-/-icon"] svg'),
     ).not.toBeNull();
-    expect(document.querySelector('button[aria-current="page"]')).not.toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "About" }));
+    expect(document.querySelector('a[aria-current="page"]')).not.toBeNull();
+    fireEvent.click(screen.getByRole("link", { name: "About" }));
 
     await waitFor(() => {
       expect(screen.getByText("About Page")).toBeDefined();
@@ -345,7 +345,7 @@ describe("ManifestApp", () => {
     expect(
       document.querySelector('[data-layout-variant="top-nav"]'),
     ).not.toBeNull();
-    expect(screen.getByRole("button", { name: "About" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "About" })).toBeDefined();
   });
 
   it("uses manifest.app.shell when explicitly configured", () => {
@@ -375,7 +375,7 @@ describe("ManifestApp", () => {
     };
 
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
-    expect(screen.getByRole("button", { name: "About" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "About" })).toBeDefined();
   });
 
   it("redirects guarded routes to the configured fallback", async () => {
@@ -834,10 +834,10 @@ describe("ManifestApp", () => {
     render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: "About" })).toBeDefined();
+      expect(screen.getByRole("link", { name: "About" })).toBeDefined();
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "About" }));
+    fireEvent.click(screen.getByRole("link", { name: "About" }));
 
     await waitFor(() => {
       expect(screen.getByText("About Page")).toBeDefined();
