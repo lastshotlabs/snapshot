@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context";
 import { resolveTemplate } from "../../../expressions/template";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
@@ -96,11 +95,8 @@ export function Heading({ config }: { config: HeadingConfig }) {
       <Tag
         data-snapshot-component="heading"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {displayText}
       </Tag>

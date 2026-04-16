@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -109,11 +108,8 @@ export function TypingIndicator({ config }: { config: TypingIndicatorConfig }) {
       data-testid="typing-indicator"
       role="status"
       aria-live="polite"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <span
         data-snapshot-id={`${rootId}-dots`}

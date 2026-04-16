@@ -58,11 +58,8 @@ export function DefaultError({ config }: { config: ErrorPageConfig }) {
     <div
       role="alert"
       data-snapshot-feedback="error"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <div>
         <h2

@@ -26,4 +26,14 @@ describe("quickAddConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed placeholder and button text", () => {
+    const result = quickAddConfigSchema.safeParse({
+      type: "quick-add",
+      placeholder: { from: "copy.quickAddPlaceholder" },
+      buttonText: { from: "copy.quickAddButton" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

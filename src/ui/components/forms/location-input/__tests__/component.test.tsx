@@ -3,8 +3,17 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { LocationInput } from "../component";
 
+const subscribedValues: Record<string, unknown> = {
+  "copy.locationLabel": "Office",
+  "copy.locationPlaceholder": "Search for an office",
+  "copy.locationHelper": "Search for an address",
+};
+
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => vi.fn(),
 }));
 
@@ -28,8 +37,9 @@ describe("LocationInput", () => {
           type: "location-input",
           id: "office",
           searchEndpoint: { resource: "locations" },
-          label: "Office",
-          helperText: "Search for an address",
+          label: { from: "copy.locationLabel" },
+          placeholder: { from: "copy.locationPlaceholder" },
+          helperText: { from: "copy.locationHelper" },
         }}
       />,
     );

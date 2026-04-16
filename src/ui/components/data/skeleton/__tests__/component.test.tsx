@@ -14,13 +14,19 @@ describe("Skeleton", () => {
       <Skeleton
         config={{
           type: "skeleton",
+          className: "skeleton-root-class",
           variant: "text",
           lines: 4,
+          slots: {
+            root: { className: "skeleton-root-slot" },
+          },
         }}
       />,
     );
 
     expect(screen.getByTestId("skeleton")).toBeTruthy();
+    expect(screen.getByTestId("skeleton").className).toContain("skeleton-root-class");
+    expect(screen.getByTestId("skeleton").className).toContain("skeleton-root-slot");
     expect(container.querySelectorAll('[data-testid="skeleton"] > div').length).toBe(4);
   });
 });

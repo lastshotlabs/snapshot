@@ -19,12 +19,16 @@ describe("Markdown", () => {
           className: "markdown-root",
           maxHeight: "320px",
           content: "# Welcome\n\nVisit [Snapshot](https://example.com).",
+          slots: {
+            root: { className: "markdown-root-slot" },
+          },
         }}
       />,
     );
 
     const root = container.querySelector('[data-snapshot-id="docs"]') as HTMLElement | null;
     expect(root?.className).toContain("markdown-root");
+    expect(root?.className).toContain("markdown-root-slot");
     expect(root?.style.maxHeight).toBe("320px");
     expect(root?.style.overflowY).toBe("auto");
     expect(screen.getByRole("heading", { name: "Welcome" })).toBeTruthy();

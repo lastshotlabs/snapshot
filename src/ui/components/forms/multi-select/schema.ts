@@ -42,9 +42,9 @@ export const multiSelectConfigSchema: z.ZodType<Record<string, any>> = extendCom
     /** Component type discriminator. */
     type: z.literal("multi-select"),
     /** Label text displayed above the select. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Placeholder text when nothing is selected. Default: "Select...". */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Static list of options. */
     options: z.array(optionSchema).optional(),
     /** API endpoint string or FromRef for loading options dynamically. */

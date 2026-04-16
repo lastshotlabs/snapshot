@@ -6,6 +6,10 @@ import { MultiSelect } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.multiSelectLabel": "Tags",
+  "copy.multiSelectPlaceholder": "Select tags...",
+};
 const dataState = {
   data: null as unknown,
   isLoading: false,
@@ -14,7 +18,10 @@ const dataState = {
 };
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -46,6 +53,8 @@ describe("MultiSelect", () => {
       <MultiSelect
         config={{
           type: "multi-select",
+          label: { from: "copy.multiSelectLabel" },
+          placeholder: { from: "copy.multiSelectPlaceholder" },
           options: [
             { label: "Bug", value: "bug" },
             { label: "Docs", value: "docs" },
@@ -55,6 +64,7 @@ describe("MultiSelect", () => {
       />,
     );
 
+    expect(screen.getByText("Tags")).toBeDefined();
     fireEvent.click(screen.getByRole("combobox"));
     fireEvent.click(screen.getByRole("option", { name: /Bug/ }));
 

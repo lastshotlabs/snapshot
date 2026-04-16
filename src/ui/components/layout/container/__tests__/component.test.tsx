@@ -21,9 +21,14 @@ describe("Container", () => {
       <Container
         config={{
           type: "container",
+          id: "prose-container",
           maxWidth: "prose",
           padding: "lg",
           center: true,
+          className: "container-root-class",
+          slots: {
+            root: { className: "container-root-slot" },
+          },
           children: [{ type: "text", text: "Body" }] as never,
         }}
       />,
@@ -33,5 +38,7 @@ describe("Container", () => {
     expect(element.style.maxWidth).toContain("var(--sn-container-prose");
     expect(element.style.paddingInline).toContain("var(--sn-spacing-lg");
     expect(element.style.marginInline).toBe("auto");
+    expect(element.className).toContain("container-root-class");
+    expect(element.className).toContain("container-root-slot");
   });
 });

@@ -507,7 +507,7 @@ export function Markdown({ config }: { config: MarkdownConfig }) {
         data-snapshot-component="markdown"
         data-testid="markdown"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        className={rootSurface.className}
         style={rootSurface.style}
       >
         <div data-snapshot-component="code-block">

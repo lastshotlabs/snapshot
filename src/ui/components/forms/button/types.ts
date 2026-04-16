@@ -10,7 +10,7 @@ import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { buttonConfigSchema } from "./schema";
 
-export type ButtonConfig = z.infer<typeof buttonConfigSchema>;
+export type ButtonConfig = z.input<typeof buttonConfigSchema>;
 
 export interface ButtonControlProps {
   children: ReactNode;

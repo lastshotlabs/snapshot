@@ -6,10 +6,16 @@ import { InlineEdit } from "../component";
 
 const mockExecute = vi.fn();
 const mockPublish = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.inlineEditPlaceholder": "Rename this item",
+};
 
 vi.mock("../../../../context/hooks", () => ({
   usePublish: () => mockPublish,
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -60,5 +66,20 @@ describe("InlineEdit", () => {
     expect(screen.getByTestId("inline-edit-input").className).toContain(
       "inline-edit-input-slot",
     );
+  });
+
+  it("renders a ref-backed placeholder when there is no value", () => {
+    render(
+      <InlineEdit
+        config={{
+          type: "inline-edit",
+          id: "inline-edit-empty",
+          value: "",
+          placeholder: { from: "copy.inlineEditPlaceholder" },
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Rename this item")).toBeDefined();
   });
 });

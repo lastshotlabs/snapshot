@@ -26,7 +26,7 @@ export const switchConfigSchema = extendComponentSchema({
     /** Label text. Can be a FromRef. */
     label: z.union([z.string(), fromRefSchema]).optional(),
     /** Helper text below the label. */
-    description: z.string().optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** Initial checked state. Default: false. */
     defaultChecked: z.boolean().optional(),
     /** Disabled state. Can be a FromRef. */

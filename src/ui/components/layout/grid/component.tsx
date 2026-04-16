@@ -122,11 +122,8 @@ export function Grid({ config }: { config: GridConfig }) {
     <div
       data-snapshot-component="grid"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
       >
         {config.children.map((child, index) => {
           return (

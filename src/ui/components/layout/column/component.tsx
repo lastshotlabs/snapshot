@@ -63,11 +63,8 @@ export function Column({ config }: { config: ColumnConfig }) {
     <div
       data-snapshot-component="column"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {config.children.map((child, index) => (
         <div

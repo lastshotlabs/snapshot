@@ -248,6 +248,13 @@ export function FloatingPanel({
       },
     },
     componentSurface: slot,
+    itemSurface:
+      className || style
+        ? {
+            className,
+            style,
+          }
+        : undefined,
     activeStates: open ? ["open", ...(activeStates ?? [])] : activeStates,
   });
 
@@ -255,7 +262,7 @@ export function FloatingPanel({
     <>
       <div
         role={role}
-        className={[className, panelSurface.className].filter(Boolean).join(" ")}
+        className={panelSurface.className}
         data-floating-panel=""
         data-snapshot-id={surfaceId}
         data-testid={testId}
@@ -265,7 +272,6 @@ export function FloatingPanel({
           ...sideStyle,
           ...animationStyle,
           ...(panelSurface.style ?? {}),
-          ...(style ?? {}),
         }}
       >
         {children}

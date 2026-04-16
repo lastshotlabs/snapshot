@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useMemo } from "react";
 import { atom } from "jotai";
 import { Provider as JotaiProvider, useAtomValue } from "jotai/react";
@@ -47,11 +46,8 @@ export function Outlet({ config }: { config: OutletConfig }) {
       <div
         data-snapshot-component="outlet"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {config.fallback?.map((child, index) => (
           <ComponentRenderer
@@ -68,11 +64,8 @@ export function Outlet({ config }: { config: OutletConfig }) {
     <div
       data-snapshot-component="outlet"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <JotaiProvider store={childStore}>
         <PageRenderer

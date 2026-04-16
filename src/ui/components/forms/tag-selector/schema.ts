@@ -28,7 +28,7 @@ export const tagSelectorConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("tag-selector"),
     /** Label displayed above the input. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Predefined available tags. */
     tags: z
       .array(

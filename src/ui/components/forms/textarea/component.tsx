@@ -5,7 +5,10 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { TextareaConfig, TextareaControlProps } from "./types";
 
 export function TextareaControl({
@@ -38,6 +41,24 @@ export function TextareaControl({
     ...(disabled ? (["disabled"] as const) : []),
     ...(ariaInvalid ? (["invalid"] as const) : []),
   ]);
+  const resolvedItemSurfaceConfig =
+    className || style
+      ? {
+          ...(itemSurfaceConfig ?? {}),
+          className: [
+            typeof itemSurfaceConfig?.className === "string"
+              ? itemSurfaceConfig.className
+              : undefined,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ") || undefined,
+          style: {
+            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
+            ...(style ?? {}),
+          },
+        }
+      : itemSurfaceConfig;
   const controlSurface = resolveSurfacePresentation({
     surfaceId,
     implementationBase: {
@@ -87,7 +108,7 @@ export function TextareaControl({
       },
     },
     componentSurface: surfaceConfig,
-    itemSurface: itemSurfaceConfig,
+    itemSurface: resolvedItemSurfaceConfig,
     activeStates: Array.from(resolvedStates),
   });
 
@@ -109,11 +130,8 @@ export function TextareaControl({
         aria-label={ariaLabel}
         data-testid={testId}
         data-snapshot-id={surfaceId}
-        className={[className, controlSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(controlSurface.style ?? {}),
-          ...(style ?? {}),
-        }}
+        className={controlSurface.className}
+        style={controlSurface.style}
         onChange={(event) => onChangeText?.(event.target.value)}
         onBlur={onBlur}
       />
@@ -127,9 +145,16 @@ export function Textarea({ config }: { config: TextareaConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
   const resolvedValue = useSubscribe(config.value) as string | undefined;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
   const resolvedReadonly = useSubscribe(config.readonly ?? false) as boolean;
+  const resolvedHelperText = useSubscribe(config.helperText) as
+    | string
+    | undefined;
   const resolvedErrorText = useSubscribe(config.errorText) as
     | string
     | undefined;
@@ -201,7 +226,7 @@ export function Textarea({ config }: { config: TextareaConfig }) {
   const helperId = fieldId
     ? errorMessage
       ? `${fieldId}-error`
-      : config.helperText
+      : resolvedHelperText
         ? `${fieldId}-helper`
         : undefined
     : undefined;
@@ -217,7 +242,8 @@ export function Textarea({ config }: { config: TextareaConfig }) {
       flexDirection: "column",
       gap: "var(--sn-spacing-xs, 0.25rem)",
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: resolvedStates,
   });
   const labelSurface = resolveSurfacePresentation({
@@ -287,20 +313,17 @@ export function Textarea({ config }: { config: TextareaConfig }) {
       data-snapshot-component="textarea"
       data-testid="textarea"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
-      {config.label ? (
+      {resolvedLabel ? (
         <label
           htmlFor={fieldId}
           data-snapshot-id={`${rootId}-label`}
           className={labelSurface.className}
           style={labelSurface.style}
         >
-          {config.label}
+          {resolvedLabel}
           {config.required ? (
             <span
               data-snapshot-id={`${rootId}-required-indicator`}
@@ -317,7 +340,7 @@ export function Textarea({ config }: { config: TextareaConfig }) {
         textareaId={fieldId}
         value={value}
         rows={config.rows ?? 3}
-        placeholder={config.placeholder}
+        placeholder={resolvedPlaceholder}
         disabled={resolvedDisabled}
         readOnly={resolvedReadonly}
         maxLength={config.maxLength}
@@ -325,7 +348,7 @@ export function Textarea({ config }: { config: TextareaConfig }) {
         resize={config.resize ?? "vertical"}
         ariaInvalid={Boolean(errorMessage)}
         ariaDescribedBy={helperId}
-        ariaLabel={config.label ?? config.placeholder}
+        ariaLabel={resolvedLabel ?? resolvedPlaceholder}
         onChangeText={handleChange}
         onBlur={handleBlur}
         surfaceId={`${rootId}-control`}
@@ -333,13 +356,13 @@ export function Textarea({ config }: { config: TextareaConfig }) {
         activeStates={resolvedStates}
       />
 
-      {(config.helperText || errorMessage || config.maxLength !== undefined) ? (
+      {(resolvedHelperText || errorMessage || config.maxLength !== undefined) ? (
         <div
           data-snapshot-id={`${rootId}-meta`}
           className={metaSurface.className}
           style={metaSurface.style}
         >
-          {config.helperText || errorMessage ? (
+          {resolvedHelperText || errorMessage ? (
             <span
               id={helperId}
               role={errorMessage ? "alert" : undefined}
@@ -347,7 +370,7 @@ export function Textarea({ config }: { config: TextareaConfig }) {
               className={helperSurface.className}
               style={helperSurface.style}
             >
-              {errorMessage ?? config.helperText}
+              {errorMessage ?? resolvedHelperText}
             </span>
           ) : null}
           {config.maxLength !== undefined ? (

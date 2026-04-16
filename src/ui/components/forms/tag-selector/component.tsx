@@ -225,6 +225,7 @@ function TagOption({
 
 export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const resolvedValue = useSubscribe(config.value ?? []);
   const executeAction = useActionExecutor();
   const publish = usePublish(config.id);
@@ -540,14 +541,14 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        {config.label ? (
+        {resolvedLabel ? (
           <label
             data-testid="tag-selector-label"
             data-snapshot-id={`${rootId}-label`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
           </label>
         ) : null}
 

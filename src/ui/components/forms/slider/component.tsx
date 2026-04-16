@@ -25,6 +25,8 @@ export function Slider({ config }: { config: SliderConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedSuffix = useSubscribe(config.suffix) as string | undefined;
   const disabled = Boolean(useSubscribe(config.disabled ?? false));
   const rootId = config.id ?? "slider";
   const min = config.min ?? 0;
@@ -203,13 +205,10 @@ export function Slider({ config }: { config: SliderConfig }) {
       <div
         data-snapshot-component="slider"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...(config.style as React.CSSProperties),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
-      {config.label ? (
+      {resolvedLabel ? (
         <div
           data-snapshot-id={`${rootId}-header`}
           className={headerSurface.className}
@@ -220,15 +219,15 @@ export function Slider({ config }: { config: SliderConfig }) {
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
           </label>
           {config.showValue ? (
             <span
               data-snapshot-id={`${rootId}-value`}
-              className={valueSurface.className}
-              style={valueSurface.style}
-            >
-              {formatSliderValue(currentValue, config.suffix)}
+            className={valueSurface.className}
+            style={valueSurface.style}
+          >
+              {formatSliderValue(currentValue, resolvedSuffix)}
             </span>
           ) : null}
         </div>
@@ -326,7 +325,7 @@ export function Slider({ config }: { config: SliderConfig }) {
             style={minLabelSurface.style}
           >
             {config.min}
-            {config.suffix ?? ""}
+            {resolvedSuffix ?? ""}
           </span>
           <span
             data-snapshot-id={`${rootId}-maxLabel`}
@@ -334,7 +333,7 @@ export function Slider({ config }: { config: SliderConfig }) {
             style={maxLabelSurface.style}
           >
             {config.max}
-            {config.suffix ?? ""}
+            {resolvedSuffix ?? ""}
           </span>
         </div>
       ) : null}

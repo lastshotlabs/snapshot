@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useResolveFrom } from "../../../context/hooks";
 import { useWizard } from "./hook";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
@@ -654,9 +655,20 @@ function WizardProgress({
 export function Wizard({ config }: { config: WizardConfig }) {
   const wizard = useWizard(config);
   const currentStepConfig = config.steps[wizard.currentStep];
+  const resolvedConfig = useResolveFrom({
+    submitLabel: config.submitLabel,
+    steps: config.steps,
+  });
+  const resolvedSteps =
+    (resolvedConfig.steps as WizardStepConfig[] | undefined) ?? config.steps;
+  const currentResolvedStep = resolvedSteps[wizard.currentStep];
+  const resolvedSubmitLabel =
+    typeof resolvedConfig.submitLabel === "string"
+      ? resolvedConfig.submitLabel
+      : "Submit";
   const submitLabel =
-    currentStepConfig?.submitLabel ??
-    (wizard.isLastStep ? config.submitLabel : "Next");
+    currentResolvedStep?.submitLabel ??
+    (wizard.isLastStep ? resolvedSubmitLabel : "Next");
   const isSkippable = wizard.canSkip;
   const rootId = config.id ?? "wizard";
   const rootSurface = resolveSurfacePresentation({
@@ -855,7 +867,7 @@ export function Wizard({ config }: { config: WizardConfig }) {
           rootId={rootId}
           currentStep={wizard.currentStep}
           totalSteps={wizard.totalSteps}
-          steps={config.steps}
+          steps={resolvedSteps}
           slots={config.slots}
         />
       </div>
@@ -878,16 +890,16 @@ export function Wizard({ config }: { config: WizardConfig }) {
               className={titleSurface.className}
               style={titleSurface.style}
             >
-              {currentStepConfig.title}
+              {currentResolvedStep?.title ?? ""}
             </h3>
-            {currentStepConfig.description ? (
+            {currentResolvedStep?.description ? (
               <p
                 data-wizard-step-description=""
                 data-snapshot-id={`${rootId}-description`}
                 className={descriptionSurface.className}
                 style={descriptionSurface.style}
               >
-                {currentStepConfig.description}
+                {currentResolvedStep.description}
               </p>
             ) : null}
           </div>

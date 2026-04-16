@@ -15,14 +15,20 @@ describe("Progress", () => {
       <Progress
         config={{
           type: "progress",
+          id: "upload-progress",
+          className: "progress-root-class",
           value: 65,
           label: "Upload",
           showValue: true,
+          slots: {
+            root: { className: "progress-root-slot" },
+          },
         }}
       />,
     );
 
-    expect(screen.getByTestId("progress")).toBeTruthy();
+    expect(screen.getByTestId("progress").className).toContain("progress-root-class");
+    expect(screen.getByTestId("progress").className).toContain("progress-root-slot");
     expect(screen.getByText("Upload")).toBeTruthy();
     expect(screen.getByText("65%")).toBeTruthy();
     expect(screen.getByRole("progressbar").getAttribute("aria-valuenow")).toBe("65");

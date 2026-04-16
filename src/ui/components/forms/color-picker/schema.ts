@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 /** Schema for color picker components with optional swatches, alpha, and change actions. */
 export const colorPickerConfigSchema = extendComponentSchema({
@@ -10,7 +11,7 @@ export const colorPickerConfigSchema = extendComponentSchema({
   swatches: z.array(z.string()).optional(),
   allowCustom: z.boolean().default(true),
   showAlpha: z.boolean().default(false),
-  label: z.string().optional(),
+  label: z.union([z.string(), fromRefSchema]).optional(),
   onChange: z.union([actionSchema, z.array(actionSchema)]).optional(),
   slots: slotsSchema([
     "root",

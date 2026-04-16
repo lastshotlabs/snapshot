@@ -1,6 +1,4 @@
 'use client';
-
-import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -170,17 +168,12 @@ export function SnapshotImage({ config }: { config: SnapshotImageConfig }) {
     };
   }, [config.priority, config.sizes, imgSrc, srcSet]);
 
-  const rootStyle: CSSProperties = {
-    ...(rootSurface.style ?? {}),
-    ...((config.style as CSSProperties | undefined) ?? {}),
-  };
-
   return (
     <div
       data-snapshot-component="image"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={rootStyle}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {config.placeholder !== "empty" ? (
         <div

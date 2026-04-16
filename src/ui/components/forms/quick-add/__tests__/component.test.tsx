@@ -6,9 +6,16 @@ import { QuickAdd } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.quickAddPlaceholder": "Add a task",
+  "copy.quickAddButton": "Create",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -53,6 +60,8 @@ describe("QuickAdd", () => {
           type: "quick-add",
           id: "task-add",
           className: "quick-add-root",
+          placeholder: { from: "copy.quickAddPlaceholder" },
+          buttonText: { from: "copy.quickAddButton" },
           slots: {
             root: { className: "root-slot" },
             icon: { className: "icon-slot" },
@@ -78,5 +87,9 @@ describe("QuickAdd", () => {
     expect(container.querySelector('[data-snapshot-id="task-add-button"]')?.className).toContain(
       "button-slot",
     );
+    expect(screen.getByTestId("quick-add-input").getAttribute("placeholder")).toBe(
+      "Add a task",
+    );
+    expect(screen.getByText("Create")).toBeDefined();
   });
 });

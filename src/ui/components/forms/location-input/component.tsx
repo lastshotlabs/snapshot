@@ -166,6 +166,13 @@ function LocationResultRow({
 export function LocationInput({ config }: { config: LocationInputConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const disabled = Boolean(useSubscribe(config.disabled ?? false));
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
+  const resolvedHelperText = useSubscribe(config.helperText) as
+    | string
+    | undefined;
   const errorText = useSubscribe(config.errorText ?? "") as string;
   const initialValue = useSubscribe(config.value ?? "") as string;
   const execute = useActionExecutor();
@@ -475,13 +482,13 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
           ...((config.style as CSSProperties | undefined) ?? {}),
         }}
       >
-        {config.label ? (
+        {resolvedLabel ? (
           <label
             data-snapshot-id={`${rootId}-label`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
             {config.required ? (
               <span
                 data-snapshot-id={`${rootId}-required`}
@@ -511,7 +518,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
             type="text"
             value={query}
             disabled={disabled}
-            placeholder={config.placeholder ?? "Search for a location..."}
+            placeholder={resolvedPlaceholder ?? "Search for a location..."}
             onChangeText={handleInputChange}
             onFocus={() => {
               if (results.length > 0) {
@@ -567,13 +574,13 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
           </a>
         ) : null}
 
-        {config.helperText && !hasError ? (
+        {resolvedHelperText && !hasError ? (
           <div
             data-snapshot-id={`${rootId}-helper`}
             className={helperSurface.className}
             style={helperSurface.style}
           >
-            {config.helperText}
+            {resolvedHelperText}
           </div>
         ) : null}
         {hasError ? (

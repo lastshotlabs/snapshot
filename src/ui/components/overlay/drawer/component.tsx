@@ -227,6 +227,7 @@ function DrawerSurface({
       display: "flex",
       flexDirection: "column",
       overflow: "hidden",
+      minHeight: 0,
       outline: "none",
       style: {
         [side === "left" ? "left" : "right"]: 0,
@@ -266,6 +267,7 @@ function DrawerSurface({
       padding: "var(--sn-spacing-lg, 1.5rem)",
       overflow: "auto",
       flex: 1,
+      minHeight: 0,
     },
     componentSurface: config.slots?.body,
   });

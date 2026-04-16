@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { EmbedSchemaConfig } from "./types";
@@ -39,11 +38,8 @@ export function Embed({ config }: { config: EmbedSchemaConfig }) {
   return (
     <div
       data-snapshot-component="embed"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <iframe
         src={config.url}

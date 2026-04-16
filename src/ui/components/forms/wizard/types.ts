@@ -4,12 +4,12 @@ import type { wizardSchema, wizardStepSchema } from "./schema";
 /**
  * Inferred type for the Wizard component configuration.
  */
-export type WizardConfig = z.infer<typeof wizardSchema>;
+export type WizardConfig = z.input<typeof wizardSchema>;
 
 /**
  * Inferred type for a single wizard step configuration.
  */
-export type WizardStepConfig = z.infer<typeof wizardStepSchema>;
+export type WizardStepConfig = z.input<typeof wizardStepSchema>;
 
 /**
  * Return type of the useWizard headless hook.

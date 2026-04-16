@@ -6,9 +6,16 @@ import { Switch } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.switchLabel": "Enable notifications",
+  "copy.switchDescription": "Receive email alerts for new activity",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -20,15 +27,30 @@ describe("Switch", () => {
   it("toggles checked state and dispatches the action", () => {
     executeSpy.mockReset();
 
-    render(
+    const { container } = render(
       <Switch
         config={{
           type: "switch",
-          label: "Enable notifications",
+          id: "notifications-switch",
+          className: "switch-root-class",
+          label: { from: "copy.switchLabel" },
+          description: { from: "copy.switchDescription" },
           action: { type: "toggle-notifications" } as never,
+          slots: {
+            root: { className: "switch-root-slot" },
+          },
         }}
       />,
     );
+
+    expect(
+      container.querySelector('[data-snapshot-id="notifications-switch"]')?.className,
+    ).toContain("switch-root-class");
+    expect(
+      container.querySelector('[data-snapshot-id="notifications-switch"]')?.className,
+    ).toContain("switch-root-slot");
+    expect(screen.getByText("Enable notifications")).toBeDefined();
+    expect(screen.getByText("Receive email alerts for new activity")).toBeDefined();
 
     fireEvent.click(screen.getByTestId("switch"));
 

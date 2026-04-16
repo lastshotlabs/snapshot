@@ -61,11 +61,8 @@ export function DefaultLoading({ config }: { config: SpinnerConfig }) {
       aria-live="polite"
       aria-busy="true"
       data-snapshot-feedback="loading"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <span
         aria-hidden="true"

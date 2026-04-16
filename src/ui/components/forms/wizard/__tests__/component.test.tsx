@@ -444,4 +444,39 @@ describe("Wizard component", () => {
     ).toContain("wizard-completion-description-slot");
     expect(screen.getByText("Reset").className).toContain("wizard-submit-slot");
   });
+
+  it("renders ref-backed step copy and submit labels", () => {
+    const { Wrapper, registry } = createWrapper();
+    const wizardCopyAtom = registry.register("wizard");
+
+    registry.store.set(wizardCopyAtom, {
+      copy: {
+        stepTitle: "Account Details",
+        stepDescription: "Set up your account",
+        stepSubmitLabel: "Continue",
+      },
+    });
+
+    render(
+      <Wrapper>
+        <Wizard
+          config={{
+            type: "wizard",
+            steps: [
+              {
+                title: { from: "wizard.copy.stepTitle" },
+                description: { from: "wizard.copy.stepDescription" },
+                submitLabel: { from: "wizard.copy.stepSubmitLabel" },
+                fields: [],
+              },
+            ],
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getAllByText("Account Details").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Set up your account").length).toBeGreaterThan(0);
+    expect(screen.getByText("Continue")).toBeDefined();
+  });
 });

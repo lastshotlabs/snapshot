@@ -26,4 +26,18 @@ describe("toggleGroupConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed item label", () => {
+    const result = toggleGroupConfigSchema.safeParse({
+      type: "toggle-group",
+      items: [
+        {
+          value: "grid",
+          label: { from: "copy.viewLabel" },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

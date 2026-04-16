@@ -26,14 +26,22 @@ describe("IconButton", () => {
       <IconButton
         config={{
           type: "icon-button",
+          id: "search-button",
+          className: "icon-button-root-class",
           icon: "search",
           ariaLabel: "Search",
           action: { type: "open-search" } as never,
+          slots: {
+            root: { className: "icon-button-root-slot" },
+          },
         }}
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+    const button = screen.getByRole("button", { name: "Search" });
+    expect(button.className).toContain("icon-button-root-class");
+    expect(button.className).toContain("icon-button-root-slot");
+    fireEvent.click(button);
 
     expect(screen.getByTestId("icon-button-icon").textContent).toBe("search");
     expect(executeSpy).toHaveBeenCalledWith({ type: "open-search" });

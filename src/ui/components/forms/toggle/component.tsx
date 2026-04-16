@@ -5,7 +5,10 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../button";
 import type { ToggleConfig } from "./types";
 
@@ -29,6 +32,7 @@ export function Toggle({ config }: { config: ToggleConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const resolvedPressed = useSubscribe(config.pressed ?? false) as boolean;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
 
@@ -78,7 +82,8 @@ export function Toggle({ config }: { config: ToggleConfig }) {
         },
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: states,
   });
 
@@ -129,13 +134,13 @@ export function Toggle({ config }: { config: ToggleConfig }) {
             <Icon name={config.icon} size={size.iconSize} />
           </span>
         ) : null}
-        {config.label ? (
+        {resolvedLabel ? (
           <span
             data-snapshot-id={`${rootId}-label`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
           </span>
         ) : null}
       </ButtonControl>

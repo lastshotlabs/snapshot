@@ -6,7 +6,10 @@ import { renderIcon } from "../../../icons/render";
 import { setDomRef } from "../../_base/dom-ref";
 import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { ButtonConfig, ButtonControlProps } from "./types";
 
 export function ButtonControl({
@@ -53,6 +56,24 @@ export function ButtonControl({
     ...(activeStates ?? []),
     ...(disabled ? (["disabled"] as const) : []),
   ]);
+  const resolvedItemSurfaceConfig =
+    className || style
+      ? {
+          ...(itemSurfaceConfig ?? {}),
+          className: [
+            typeof itemSurfaceConfig?.className === "string"
+              ? itemSurfaceConfig.className
+              : undefined,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ") || undefined,
+          style: {
+            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
+            ...(style ?? {}),
+          },
+        }
+      : itemSurfaceConfig;
   const rootSurface = resolveSurfacePresentation({
     surfaceId,
     implementationBase: {
@@ -68,7 +89,7 @@ export function ButtonControl({
       whiteSpace: "nowrap",
     },
     componentSurface: surfaceConfig,
-    itemSurface: itemSurfaceConfig,
+    itemSurface: resolvedItemSurfaceConfig,
     activeStates: Array.from(resolvedStates),
   });
 
@@ -106,11 +127,8 @@ export function ButtonControl({
         role={role}
         tabIndex={tabIndex}
         title={title}
-        className={[className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...(style ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {children}
       </button>
@@ -181,7 +199,8 @@ export function Button({ config }: { config: ButtonConfig }) {
           void execute(action as Parameters<typeof execute>[0]);
         }}
         surfaceId={rootId}
-        surfaceConfig={config.slots?.root}
+        surfaceConfig={extractSurfaceConfig(config)}
+        itemSurfaceConfig={config.slots?.root}
       >
         {config.icon ? (
           <span

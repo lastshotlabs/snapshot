@@ -13,4 +13,13 @@ describe("toggleConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed label", () => {
+    const result = toggleConfigSchema.safeParse({
+      type: "toggle",
+      label: { from: "toolbar.boldLabel" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

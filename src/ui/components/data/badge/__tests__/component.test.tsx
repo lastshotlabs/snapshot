@@ -15,13 +15,19 @@ describe("Badge", () => {
       <Badge
         config={{
           type: "badge",
+          className: "component-root",
           text: "Active",
           variant: "dot",
           icon: "check",
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    expect(screen.getByTestId("badge").className).toContain("component-root");
+    expect(screen.getByTestId("badge").className).toContain("slot-root");
     expect(screen.getByTestId("badge").textContent).toContain("Active");
     expect(screen.getByTestId("badge-dot")).toBeTruthy();
     expect(screen.getByTestId("badge-icon")).toBeTruthy();

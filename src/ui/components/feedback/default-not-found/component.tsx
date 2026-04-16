@@ -56,11 +56,8 @@ export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
     <main
       aria-labelledby="snapshot-not-found-title"
       data-snapshot-feedback="not-found"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <section
         style={{

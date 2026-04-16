@@ -26,9 +26,9 @@ export const inputConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("input"),
     /** Label text displayed above the input. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Placeholder text inside the input. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Initial or bound value. Can be a FromRef. */
     value: z.union([z.string(), fromRefSchema]).optional(),
     /** HTML input type. Default: "text". */
@@ -46,7 +46,7 @@ export const inputConfigSchema = extendComponentSchema({
     /** Regex validation pattern. */
     pattern: z.string().optional(),
     /** Helper text displayed below the input. */
-    helperText: z.string().optional(),
+    helperText: z.union([z.string(), fromRefSchema]).optional(),
     /** Error message displayed below the input. Can be a FromRef. */
     errorText: z.union([z.string(), fromRefSchema]).optional(),
     /** Left icon name. */

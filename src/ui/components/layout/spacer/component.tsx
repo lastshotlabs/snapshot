@@ -48,11 +48,8 @@ export function Spacer({ config }: { config: SpacerConfig }) {
       <div
         aria-hidden="true"
         data-snapshot-id={config.id}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...(config.style ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       />
       <SurfaceStyles css={rootSurface.scopedCss} />
     </>

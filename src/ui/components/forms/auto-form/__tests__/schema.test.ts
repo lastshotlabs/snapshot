@@ -41,6 +41,19 @@ describe("fieldConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts multi-select field with divisor metadata", () => {
+    const result = fieldConfigSchema.safeParse({
+      name: "categoryIds",
+      type: "multi-select",
+      options: [
+        { label: "Food", value: "food" },
+        { label: "Bills", value: "bills" },
+      ],
+      divisor: 100,
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("accepts select field with string options (endpoint)", () => {
     const result = fieldConfigSchema.safeParse({
       name: "role",
@@ -82,6 +95,7 @@ describe("fieldConfigSchema", () => {
       "number",
       "textarea",
       "select",
+      "multi-select",
       "checkbox",
       "date",
       "file",

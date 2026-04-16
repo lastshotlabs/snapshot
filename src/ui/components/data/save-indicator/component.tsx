@@ -87,11 +87,8 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
       data-status={status}
       role="status"
       aria-live="polite"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {spinning ? <SurfaceStyles css={spinCss} /> : null}
       {showIcon && icon ? (

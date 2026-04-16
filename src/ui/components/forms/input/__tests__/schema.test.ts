@@ -14,4 +14,15 @@ describe("inputConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed label, placeholder, and helper text", () => {
+    const result = inputConfigSchema.safeParse({
+      type: "input",
+      label: { from: "form.copy.label" },
+      placeholder: { from: "form.copy.placeholder" },
+      helperText: { from: "form.copy.helper" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

@@ -6,7 +6,10 @@ import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { InputConfig, InputControlProps } from "./types";
 
 export function InputControl({
@@ -53,6 +56,24 @@ export function InputControl({
     ...(disabled ? (["disabled"] as const) : []),
     ...(ariaInvalid ? (["invalid"] as const) : []),
   ]);
+  const resolvedItemSurfaceConfig =
+    className || style
+      ? {
+          ...(itemSurfaceConfig ?? {}),
+          className: [
+            typeof itemSurfaceConfig?.className === "string"
+              ? itemSurfaceConfig.className
+              : undefined,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ") || undefined,
+          style: {
+            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
+            ...(style ?? {}),
+          },
+        }
+      : itemSurfaceConfig;
   const controlSurface = resolveSurfacePresentation({
     surfaceId,
     implementationBase: {
@@ -100,7 +121,7 @@ export function InputControl({
       },
     },
     componentSurface: surfaceConfig,
-    itemSurface: itemSurfaceConfig,
+    itemSurface: resolvedItemSurfaceConfig,
     activeStates: Array.from(resolvedStates),
   });
 
@@ -132,11 +153,8 @@ export function InputControl({
         aria-label={ariaLabel}
         data-testid={testId}
         data-snapshot-id={surfaceId}
-        className={[className, controlSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(controlSurface.style ?? {}),
-          ...(style ?? {}),
-        }}
+        className={controlSurface.className}
+        style={controlSurface.style}
         onChange={(event) => {
           if (type === "checkbox" || type === "radio") {
             onChangeChecked?.(event.target.checked);
@@ -163,9 +181,16 @@ export function Input({ config }: { config: InputConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
   const resolvedValue = useSubscribe(config.value) as string | undefined;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
   const resolvedReadonly = useSubscribe(config.readonly ?? false) as boolean;
+  const resolvedHelperText = useSubscribe(config.helperText) as
+    | string
+    | undefined;
   const resolvedErrorText = useSubscribe(config.errorText) as
     | string
     | undefined;
@@ -244,7 +269,7 @@ export function Input({ config }: { config: InputConfig }) {
   const helperId = fieldId
     ? errorMessage
       ? `${fieldId}-error`
-      : config.helperText
+      : resolvedHelperText
         ? `${fieldId}-helper`
         : undefined
     : undefined;
@@ -260,7 +285,8 @@ export function Input({ config }: { config: InputConfig }) {
       flexDirection: "column",
       gap: "var(--sn-spacing-xs, 0.25rem)",
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: resolvedStates,
   });
   const labelSurface = resolveSurfacePresentation({
@@ -326,20 +352,17 @@ export function Input({ config }: { config: InputConfig }) {
       data-snapshot-component="input"
       data-testid="input"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
-      {config.label ? (
+      {resolvedLabel ? (
         <label
           htmlFor={fieldId}
           data-snapshot-id={`${rootId}-label`}
           className={labelSurface.className}
           style={labelSurface.style}
         >
-          {config.label}
+          {resolvedLabel}
           {config.required ? (
             <span
               data-snapshot-id={`${rootId}-required-indicator`}
@@ -370,7 +393,7 @@ export function Input({ config }: { config: InputConfig }) {
           inputId={fieldId}
           type={inputType}
           value={value}
-          placeholder={config.placeholder}
+          placeholder={resolvedPlaceholder}
           disabled={resolvedDisabled}
           readOnly={resolvedReadonly}
           maxLength={config.maxLength}
@@ -378,7 +401,7 @@ export function Input({ config }: { config: InputConfig }) {
           required={config.required}
           ariaInvalid={Boolean(errorMessage)}
           ariaDescribedBy={helperId}
-          ariaLabel={config.label ?? config.placeholder}
+          ariaLabel={resolvedLabel ?? resolvedPlaceholder}
           onChangeText={handleChange}
           onBlur={handleBlur}
           surfaceId={`${rootId}-control`}
@@ -393,7 +416,7 @@ export function Input({ config }: { config: InputConfig }) {
         />
       </div>
 
-      {config.helperText || errorMessage ? (
+      {resolvedHelperText || errorMessage ? (
         <span
           id={helperId}
           role={errorMessage ? "alert" : undefined}
@@ -401,7 +424,7 @@ export function Input({ config }: { config: InputConfig }) {
           className={helperSurface.className}
           style={helperSurface.style}
         >
-          {errorMessage ?? config.helperText}
+          {errorMessage ?? resolvedHelperText}
         </span>
       ) : null}
 

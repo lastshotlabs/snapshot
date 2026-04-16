@@ -18,7 +18,7 @@ export const toggleGroupConfigSchema = extendComponentSchema({
     z
       .object({
         value: z.string(),
-        label: z.string().optional(),
+        label: z.union([z.string(), fromRefSchema]).optional(),
         icon: z.string().optional(),
         disabled: z.union([z.boolean(), fromRefSchema]).optional(),
         slots: slotsSchema(["item", "itemLabel", "itemIcon"]).optional(),

@@ -116,10 +116,9 @@ export function Progress({ config }: { config: ProgressConfig }) {
         data-snapshot-component="progress"
         data-testid="progress"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        className={rootSurface.className}
         style={{
           ...(rootSurface.style ?? {}),
-          ...(config.style ?? {}),
           alignItems: "center",
           display: "inline-flex",
         }}
@@ -244,11 +243,8 @@ export function Progress({ config }: { config: ProgressConfig }) {
       data-snapshot-component="progress"
       data-testid="progress"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {isIndeterminate ? <SurfaceStyles css={indeterminateBarCss} /> : null}
 

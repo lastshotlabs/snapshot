@@ -26,4 +26,15 @@ describe("multiSelectConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed label and placeholder values", () => {
+    const result = multiSelectConfigSchema.safeParse({
+      type: "multi-select",
+      label: { from: "copy.multiSelectLabel" },
+      placeholder: { from: "copy.multiSelectPlaceholder" },
+      options: [{ label: "Bug", value: "bug" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

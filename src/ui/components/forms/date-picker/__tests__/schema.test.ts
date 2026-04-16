@@ -13,4 +13,15 @@ describe("datePickerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed label and placeholder values", () => {
+    const result = datePickerConfigSchema.safeParse({
+      type: "date-picker",
+      mode: "single",
+      label: { from: "form.copy.dateLabel" },
+      placeholder: { from: "form.copy.datePlaceholder" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useId, useMemo } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
@@ -119,11 +118,8 @@ export function ScrollArea({ config }: { config: ScrollAreaConfig }) {
     <div
       data-snapshot-component="scroll-area"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <div
         data-snapshot-id={`${rootId}-viewport`}

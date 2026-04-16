@@ -85,11 +85,8 @@ export function Separator({ config }: { config: SeparatorConfig }) {
           data-snapshot-component="separator"
           role="separator"
           aria-orientation="vertical"
-          className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-          style={{
-            ...(rootSurface.style ?? {}),
-            ...(config.style ?? {}),
-          }}
+          className={rootSurface.className}
+          style={rootSurface.style}
         />
         <SurfaceStyles css={rootSurface.scopedCss} />
       </>
@@ -102,11 +99,8 @@ export function Separator({ config }: { config: SeparatorConfig }) {
         data-snapshot-component="separator"
         role="separator"
         aria-orientation="horizontal"
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...(config.style ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         <div
           data-snapshot-id={`${rootId}-line`}
@@ -139,11 +133,8 @@ export function Separator({ config }: { config: SeparatorConfig }) {
         data-snapshot-component="separator"
         role="separator"
         aria-orientation="horizontal"
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...(config.style ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       />
       <SurfaceStyles css={rootSurface.scopedCss} />
     </>

@@ -248,6 +248,10 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
   const publish = usePublish(config.id);
 
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
   const resolvedValue = useSubscribe(config.value) as string[] | undefined;
   const resolvedDisabled = Boolean(useSubscribe(config.disabled ?? false));
   const dataResult = useComponentData(config.data ?? "");
@@ -257,7 +261,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
   const labelField = config.labelField ?? "label";
   const valueField = config.valueField ?? "value";
   const searchable = config.searchable !== false;
-  const placeholder = config.placeholder ?? "Select...";
+  const placeholder = resolvedPlaceholder ?? "Select...";
 
   const options = useMemo<MultiSelectOption[]>(() => {
     if (config.options) {
@@ -567,14 +571,14 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        {config.label ? (
+        {resolvedLabel ? (
           <label
             htmlFor={fieldId}
             data-snapshot-id={`${rootId}-label`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
           </label>
         ) : null}
 

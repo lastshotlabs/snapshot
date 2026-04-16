@@ -26,9 +26,9 @@ export const textareaConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("textarea"),
     /** Label text displayed above the textarea. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Placeholder text inside the textarea. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Initial or bound value. Can be a FromRef. */
     value: z.union([z.string(), fromRefSchema]).optional(),
     /** Number of visible rows. Default: 3. */
@@ -42,7 +42,7 @@ export const textareaConfigSchema = extendComponentSchema({
     /** Read-only state. Can be a FromRef. */
     readonly: z.union([z.boolean(), fromRefSchema]).optional(),
     /** Helper text displayed below the textarea. */
-    helperText: z.string().optional(),
+    helperText: z.union([z.string(), fromRefSchema]).optional(),
     /** Error message displayed below the textarea. Can be a FromRef. */
     errorText: z.union([z.string(), fromRefSchema]).optional(),
     /** Resize behavior. Default: "vertical". */

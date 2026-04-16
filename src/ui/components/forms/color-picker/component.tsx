@@ -87,6 +87,7 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const rootId = config.id ?? "color-picker";
   const [color, setColor] = useState(config.defaultValue ?? "#2563eb");
   const [alpha, setAlpha] = useState(1);
@@ -229,13 +230,13 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        {config.label ? (
+        {resolvedLabel ? (
           <label
             data-snapshot-id={`${rootId}-label`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
           </label>
         ) : null}
 

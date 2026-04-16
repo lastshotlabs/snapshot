@@ -150,11 +150,8 @@ export function Badge({ config }: { config: BadgeConfig }) {
     <span
       data-snapshot-component="badge"
       data-testid="badge"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {variant === "dot" ? (
         <span

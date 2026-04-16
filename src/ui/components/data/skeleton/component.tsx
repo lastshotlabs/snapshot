@@ -1,6 +1,4 @@
 'use client';
-
-import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -102,11 +100,8 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
       <div
         data-snapshot-component="skeleton"
         data-testid="skeleton"
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...(config.style ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {Array.from({ length: lines }).map((_, index) => (
           <div
@@ -134,8 +129,8 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
       <div
         data-snapshot-component="skeleton"
         data-testid="skeleton"
-        className={config.className}
-        style={config.style as CSSProperties}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         <div
           data-snapshot-id={`${rootId}-shape`}
@@ -159,8 +154,8 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
       <div
         data-snapshot-component="skeleton"
         data-testid="skeleton"
-        className={config.className}
-        style={config.style as CSSProperties}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         <div
           data-snapshot-id={`${rootId}-shape`}
@@ -182,11 +177,8 @@ export function Skeleton({ config }: { config: SkeletonConfig }) {
     <div
       data-snapshot-component="skeleton"
       data-testid="skeleton"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <div
         data-snapshot-id={`${rootId}-title`}

@@ -55,7 +55,10 @@ describe("floating-menu primitives", () => {
           open
           onClose={onClose}
           containerRef={containerRef}
+          className="panel-direct-class"
+          style={{ borderWidth: "2px" }}
           surfaceId="menu-panel"
+          slot={{ className: "panel-slot-class" }}
           testId="menu-panel"
         >
           <div>Panel body</div>
@@ -66,6 +69,9 @@ describe("floating-menu primitives", () => {
     vi.runAllTimers();
     const panel = screen.getByTestId("menu-panel");
     expect(panel).toBeTruthy();
+    expect(panel.className).toContain("panel-direct-class");
+    expect(panel.className).toContain("panel-slot-class");
+    expect(panel.style.borderWidth).toBe("2px");
     expect(panel.getAttribute("style")).toContain("var(--sn-color-popover");
 
     fireEvent.keyDown(document, { key: "Escape" });

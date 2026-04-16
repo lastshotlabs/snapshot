@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 /** Schema for single-value and ranged slider controls with optional value display/actions. */
 export const sliderConfigSchema = extendComponentSchema({
@@ -12,12 +13,12 @@ export const sliderConfigSchema = extendComponentSchema({
     .union([z.number(), z.tuple([z.number(), z.number()])])
     .optional(),
   range: z.boolean().default(false),
-  label: z.string().optional(),
+  label: z.union([z.string(), fromRefSchema]).optional(),
   showValue: z.boolean().default(false),
   showLimits: z.boolean().default(false),
-  suffix: z.string().optional(),
+  suffix: z.union([z.string(), fromRefSchema]).optional(),
   onChange: z.union([actionSchema, z.array(actionSchema)]).optional(),
-  disabled: z.boolean().optional(),
+  disabled: z.union([z.boolean(), fromRefSchema]).optional(),
   slots: slotsSchema([
     "root",
     "header",

@@ -141,11 +141,8 @@ export function Alert({ config }: { config: AlertConfig }) {
       data-testid="alert"
       data-variant={variant}
       role="alert"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {icon ? (
         <span

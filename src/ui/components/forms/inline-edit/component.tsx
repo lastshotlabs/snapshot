@@ -23,6 +23,9 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const resolvedValue = useSubscribe(config.value);
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
   const displayValue =
     typeof resolvedValue === "string" || typeof resolvedValue === "number"
       ? String(resolvedValue)
@@ -35,7 +38,7 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const rootId = config.id ?? "inline-edit";
 
-  const placeholder = config.placeholder ?? "Click to edit";
+  const placeholder = resolvedPlaceholder ?? "Click to edit";
   const inputType = config.inputType ?? "text";
   const cancelOnEscape = config.cancelOnEscape !== false;
   const fontSize = config.fontSize ?? "var(--sn-font-size-md, 1rem)";

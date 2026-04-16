@@ -47,6 +47,180 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function toNormalizedString(value: unknown): string {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  if (isRecord(value)) {
+    const nested =
+      value["value"] ?? value["id"] ?? value["key"] ?? value["name"] ?? "";
+    return nested === undefined || nested === null ? "" : String(nested);
+  }
+
+  return String(value);
+}
+
+function toDateInputValue(value: unknown): string {
+  if (typeof value === "string") {
+    const directMatch = value.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (directMatch?.[1]) {
+      return directMatch[1];
+    }
+
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toISOString().slice(0, 10);
+    }
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+
+  return toNormalizedString(value);
+}
+
+function toDateTimeInputValue(value: unknown): string {
+  if (typeof value === "string") {
+    const directMatch = value.match(/^(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2})/);
+    if (directMatch?.[1] && directMatch[2]) {
+      return `${directMatch[1]}T${directMatch[2]}`;
+    }
+
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toISOString().slice(0, 16);
+    }
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 16);
+  }
+
+  return toNormalizedString(value);
+}
+
+function toNumericValue(value: unknown, divisor?: number): number | "" {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  const numericValue =
+    typeof value === "number"
+      ? value
+      : typeof value === "string"
+        ? Number(value)
+        : NaN;
+
+  if (!Number.isFinite(numericValue)) {
+    return "";
+  }
+
+  if (divisor && divisor !== 1) {
+    return numericValue / divisor;
+  }
+
+  return numericValue;
+}
+
+function normalizeFieldValue(field: FieldConfig, value: unknown): unknown {
+  switch (field.type) {
+    case "date":
+      return toDateInputValue(value);
+    case "datetime":
+      return toDateTimeInputValue(value);
+    case "number":
+      return toNumericValue(value, field.divisor);
+    case "select":
+    case "radio-group":
+    case "combobox":
+      return toNormalizedString(value);
+    case "multi-select":
+      if (Array.isArray(value)) {
+        return value.map((item) => toNormalizedString(item)).filter(Boolean);
+      }
+      return value === undefined || value === null || value === ""
+        ? []
+        : [toNormalizedString(value)];
+    case "tag-input":
+      if (Array.isArray(value)) {
+        return value.map((item) => toNormalizedString(item)).filter(Boolean);
+      }
+      return typeof value === "string"
+        ? value
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean)
+        : [];
+    default:
+      return value;
+  }
+}
+
+function normalizeFormValues(
+  fields: FieldConfig[],
+  data: Record<string, unknown>,
+): Record<string, unknown> {
+  const normalized: Record<string, unknown> = {};
+
+  for (const field of fields) {
+    if (!(field.name in data)) {
+      continue;
+    }
+    normalized[field.name] = normalizeFieldValue(field, data[field.name]);
+  }
+
+  return normalized;
+}
+
+function serializeFieldValue(field: FieldConfig, value: unknown): unknown {
+  switch (field.type) {
+    case "number": {
+      if (value === undefined || value === null || value === "") {
+        return value;
+      }
+
+      const numericValue = typeof value === "number" ? value : Number(value);
+      if (!Number.isFinite(numericValue)) {
+        return value;
+      }
+
+      if (field.divisor && field.divisor !== 1) {
+        return Math.round(numericValue * field.divisor);
+      }
+
+      return numericValue;
+    }
+    case "multi-select":
+      return Array.isArray(value)
+        ? value.map((item) => toNormalizedString(item)).filter(Boolean)
+        : [];
+    case "select":
+    case "radio-group":
+    case "combobox":
+      return toNormalizedString(value);
+    default:
+      return value;
+  }
+}
+
+function serializeFormValues(
+  fields: FieldConfig[],
+  values: Record<string, unknown>,
+): Record<string, unknown> {
+  const serialized: Record<string, unknown> = {};
+
+  for (const field of fields) {
+    if (!(field.name in values)) {
+      continue;
+    }
+    serialized[field.name] = serializeFieldValue(field, values[field.name]);
+  }
+
+  return serialized;
+}
+
 function isHaltSignal(value: unknown): boolean {
   if (!isRecord(value)) {
     return false;
@@ -380,7 +554,7 @@ function FieldRenderer({
         <SelectControl
           selectId={fieldId}
           name={field.name}
-          value={(value as string) ?? ""}
+          value={toNormalizedString(value)}
           disabled={field.disabled}
           required={required}
           ariaInvalid={hasError}
@@ -403,6 +577,59 @@ function FieldRenderer({
             </option>
           ))}
         </SelectControl>
+      );
+      break;
+    }
+
+    case "multi-select": {
+      const fieldOptions = Array.isArray(field.options)
+        ? field.options
+        : toFieldOptions(
+            optionsResult.data,
+            field.labelField,
+            field.valueField,
+          );
+      const selectedValues = Array.isArray(value)
+        ? value.map((item) => toNormalizedString(item)).filter(Boolean)
+        : [];
+
+      input = (
+        <select
+          id={fieldId}
+          name={field.name}
+          multiple
+          disabled={field.disabled}
+          required={required}
+          aria-invalid={hasError}
+          aria-describedby={hasError
+            ? `${fieldId}-error`
+            : field.helperText
+              ? `${fieldId}-helper`
+              : undefined}
+          aria-label={label}
+          value={selectedValues}
+          onChange={(event) =>
+            onChange(
+              Array.from(event.currentTarget.selectedOptions).map(
+                (option) => option.value,
+              ),
+            )
+          }
+          onBlur={onBlur}
+          data-snapshot-id={`${rootId}-input-${field.name}`}
+          className={inputSurface.className}
+          style={{
+            ...inputStyle,
+            minHeight: "8rem",
+            paddingRight: "var(--sn-spacing-sm, 0.5rem)",
+          }}
+        >
+          {fieldOptions.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
       );
       break;
     }
@@ -1516,6 +1743,8 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
         )({ type: "run-workflow", workflow }, context);
 
       try {
+        const serializedValues = serializeFormValues(resolvedFields, values);
+
         if (config.on?.beforeSubmit) {
           const beforeSubmitResult = await runWorkflow(config.on.beforeSubmit, {
             form: {
@@ -1532,15 +1761,15 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
           resourceCache && isResourceRef(resolvedSubmitTarget)
             ? await resourceCache.mutateTarget(resolvedSubmitTarget, {
                 method,
-                payload: values,
-                pathParams: values,
+                payload: serializedValues,
+                pathParams: serializedValues,
               })
             : await submitToApi(
                 api,
                 resolvedSubmitTarget,
                 runtime?.resources,
                 method,
-                values,
+                serializedValues,
               );
 
         if (config.onSuccess) {
@@ -1624,13 +1853,16 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       return;
     }
 
-    form.setValues(initialData.data as Record<string, unknown>, {
+    form.setValues(normalizeFormValues(
+      resolvedFields,
+      initialData.data as Record<string, unknown>,
+    ), {
       markPristine: true,
     });
     lastInitialDataRef.current = serializedInitialData;
     lastAutoSubmitRef.current = null;
     setSaveStatus("idle");
-  }, [form.setValues, initialData.data]);
+  }, [form.setValues, initialData.data, resolvedFields]);
 
   // Publish form state when id is set
   useEffect(() => {

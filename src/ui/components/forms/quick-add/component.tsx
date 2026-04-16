@@ -16,17 +16,23 @@ import type { QuickAddConfig } from "./types";
 
 export function QuickAdd({ config }: { config: QuickAddConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
+  const resolvedButtonText = useSubscribe(config.buttonText) as
+    | string
+    | undefined;
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const rootId = config.id ?? "quick-add";
 
   const [value, setValue] = useState("");
 
-  const placeholder = config.placeholder ?? "Add new item...";
+  const placeholder = resolvedPlaceholder ?? "Add new item...";
   const icon = config.icon ?? "plus";
   const submitOnEnter = config.submitOnEnter ?? true;
   const showButton = config.showButton ?? true;
-  const buttonText = config.buttonText ?? "Add";
+  const buttonText = resolvedButtonText ?? "Add";
   const clearOnSubmit = config.clearOnSubmit ?? true;
   const canSubmit = value.trim().length > 0;
 

@@ -83,6 +83,10 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as
+    | string
+    | undefined;
   const rootId = config.id ?? "date-picker";
   const [singleValue, setSingleValue] = useState("");
   const [rangeValue, setRangeValue] = useState({ start: "", end: "" });
@@ -293,13 +297,13 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        {config.label ? (
+        {resolvedLabel ? (
           <label
             data-snapshot-id={`${rootId}-label`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {config.label}
+            {resolvedLabel}
           </label>
         ) : null}
 
@@ -346,7 +350,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
             value={singleValue}
             min={config.min}
             max={config.max}
-            placeholder={config.placeholder}
+            placeholder={resolvedPlaceholder}
             surfaceId={`${rootId}-singleInput`}
             surfaceConfig={singleInputSurface.resolvedConfigForWrapper}
             onChangeText={(nextValue) => {

@@ -26,6 +26,7 @@ describe("Heading", () => {
       <Heading
         config={{
           type: "heading",
+          id: "hero-heading",
           text: "Snapshot",
           level: 1,
           className: "hero-title",

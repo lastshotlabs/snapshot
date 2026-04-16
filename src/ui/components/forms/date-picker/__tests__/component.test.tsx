@@ -6,9 +6,16 @@ import { DatePicker } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "form.copy.dateLabel": "Due date",
+  "form.copy.datePlaceholder": "Choose a date",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -27,6 +34,8 @@ describe("DatePicker", () => {
           id: "publish-date",
           className: "date-root-class",
           mode: "single",
+          label: { from: "form.copy.dateLabel" },
+          placeholder: { from: "form.copy.datePlaceholder" },
           valueFormat: "iso",
           onChange: { type: "set-date" } as never,
           slots: {
@@ -42,8 +51,10 @@ describe("DatePicker", () => {
     expect(
       container.querySelector('[data-snapshot-id="publish-date"]')?.className,
     ).toContain("date-root-slot");
+    expect(screen.getByText("Due date")).toBeDefined();
 
     const input = document.querySelector('input[type="date"]') as HTMLInputElement;
+    expect(input.placeholder).toBe("Choose a date");
     fireEvent.change(input, { target: { value: "2026-04-13" } });
 
     expect(executeSpy).toHaveBeenCalledWith(

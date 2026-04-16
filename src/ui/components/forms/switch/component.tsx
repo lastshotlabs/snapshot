@@ -4,7 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../button";
 import type { SwitchConfig } from "./types";
 
@@ -20,6 +23,9 @@ export function Switch({ config }: { config: SwitchConfig }) {
 
   const visible = useSubscribe(config.visible ?? true);
   const resolvedLabel = useSubscribe(config.label) as string | undefined;
+  const resolvedDescription = useSubscribe(config.description) as
+    | string
+    | undefined;
   const resolvedDisabled = useSubscribe(config.disabled ?? false) as boolean;
 
   const size = config.size ?? "md";
@@ -67,7 +73,8 @@ export function Switch({ config }: { config: SwitchConfig }) {
         justifyContent: "flex-start",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
     activeStates: states,
   });
 
@@ -156,7 +163,7 @@ export function Switch({ config }: { config: SwitchConfig }) {
         surfaceId={rootId}
         surfaceConfig={rootSurface.resolvedConfigForWrapper}
         activeStates={states}
-        ariaLabel={resolvedLabel ?? config.description ?? "Toggle"}
+        ariaLabel={resolvedLabel ?? resolvedDescription ?? "Toggle"}
         ariaChecked={checked}
         role="switch"
         testId="switch"
@@ -172,7 +179,7 @@ export function Switch({ config }: { config: SwitchConfig }) {
             style={thumbSurface.style}
           />
         </span>
-        {resolvedLabel || config.description ? (
+        {resolvedLabel || resolvedDescription ? (
           <span
             data-snapshot-id={`${rootId}-label-group`}
             className={labelGroupSurface.className}
@@ -187,13 +194,13 @@ export function Switch({ config }: { config: SwitchConfig }) {
                 {resolvedLabel}
               </span>
             ) : null}
-            {config.description ? (
+            {resolvedDescription ? (
               <span
                 data-snapshot-id={`${rootId}-description`}
                 className={descriptionSurface.className}
                 style={descriptionSurface.style}
               >
-                {config.description}
+                {resolvedDescription}
               </span>
             ) : null}
           </span>

@@ -671,6 +671,7 @@ describe("AutoForm", () => {
       selected: {
         id: "txn-123",
         amount: 25,
+        payeeName: "Ignore me",
       },
     });
 
@@ -696,6 +697,46 @@ describe("AutoForm", () => {
     expect(mockApi.put).toHaveBeenCalledWith("/api/transactions/txn-123", {
       id: "txn-123",
       amount: 25,
+    });
+  });
+
+  it("submits only declared fields from prefetched edit data", async () => {
+    const selectedAtom = pageRegistry.register("accounts-table");
+    pageRegistry.store.set(selectedAtom, {
+      selected: {
+        id: "acct-123",
+        name: "Checking",
+        balance: 1050,
+        currency: "USD",
+        lookupLabel: "Display only",
+      },
+    });
+
+    const wrapper = createWrapper({ api: mockApi, pageRegistry });
+    const config: AutoFormConfig = {
+      type: "form",
+      data: { from: "accounts-table.selected" },
+      submit: "/api/accounts/{id}",
+      method: "PUT",
+      fields: [
+        { name: "id", type: "text" },
+        { name: "name", type: "text", label: "Name" },
+        { name: "balance", type: "number", label: "Balance" },
+      ],
+    };
+
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    expect(await screen.findByDisplayValue("Checking")).toBeDefined();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Submit"));
+    });
+
+    expect(mockApi.put).toHaveBeenCalledWith("/api/accounts/acct-123", {
+      id: "acct-123",
+      name: "Checking",
+      balance: 1050,
     });
   });
 
@@ -726,6 +767,67 @@ describe("AutoForm", () => {
     expect((screen.getByLabelText("Email") as HTMLInputElement).value).toBe(
       "prefill@example.com",
     );
+  });
+
+  it("normalizes edit-form values for date, money, selects, and multi-selects", async () => {
+    const selectedAtom = pageRegistry.register("transactions-table");
+    pageRegistry.store.set(selectedAtom, {
+      selected: {
+        id: "txn-123",
+        date: "2026-04-16T15:42:10.000Z",
+        amount: 430768,
+        accountId: 42,
+        categoryIds: [7, "9"],
+      },
+    });
+
+    const wrapper = createWrapper({ api: mockApi, pageRegistry });
+    const config: AutoFormConfig = {
+      type: "form",
+      data: { from: "transactions-table.selected" },
+      submit: "/api/transactions/{id}",
+      method: "PUT",
+      fields: [
+        { name: "date", type: "date", label: "Date" },
+        { name: "amount", type: "number", label: "Amount", divisor: 100 },
+        {
+          name: "accountId",
+          type: "select",
+          label: "Account",
+          options: [{ label: "Checking", value: "42" }],
+        },
+        {
+          name: "categoryIds",
+          type: "multi-select",
+          label: "Categories",
+          options: [
+            { label: "Food", value: "7" },
+            { label: "Bills", value: "9" },
+          ],
+        },
+      ],
+    };
+
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    await waitFor(() => {
+      expect((screen.getByLabelText("Date") as HTMLInputElement).value).toBe(
+        "2026-04-16",
+      );
+    });
+
+    expect((screen.getByLabelText("Amount") as HTMLInputElement).value).toBe(
+      "4307.68",
+    );
+    expect((screen.getByLabelText("Account") as HTMLSelectElement).value).toBe(
+      "42",
+    );
+    expect(
+      Array.from(
+        (screen.getByLabelText("Categories") as HTMLSelectElement)
+          .selectedOptions,
+      ).map((option) => option.value),
+    ).toEqual(["7", "9"]);
   });
 
   it("loads select options from a named resource", async () => {
@@ -839,6 +941,31 @@ describe("AutoForm", () => {
     });
 
     expect(mockApi.post).toHaveBeenCalledTimes(1);
+  });
+
+  it("serializes divisor-backed numbers on submit", async () => {
+    const wrapper = createWrapper({ api: mockApi, pageRegistry });
+    const config: AutoFormConfig = {
+      type: "form",
+      submit: "/api/transactions",
+      method: "POST",
+      fields: [
+        { name: "amount", type: "number", label: "Amount", divisor: 100 },
+      ],
+    };
+
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText("Amount"), {
+        target: { value: "43.07" },
+      });
+      fireEvent.click(screen.getByText("Submit"));
+    });
+
+    expect(mockApi.post).toHaveBeenCalledWith("/api/transactions", {
+      amount: 4307,
+    });
   });
 
   it("applies canonical section and field group slots", () => {

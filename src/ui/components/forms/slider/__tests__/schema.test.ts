@@ -28,4 +28,15 @@ describe("sliderConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed label and suffix values", () => {
+    const result = sliderConfigSchema.safeParse({
+      type: "slider",
+      label: { from: "copy.sliderLabel" },
+      suffix: { from: "copy.sliderSuffix" },
+      disabled: { from: "copy.sliderDisabled" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

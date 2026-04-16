@@ -131,7 +131,7 @@ function buildInitialValues(fields: FieldConfig[]): Record<string, unknown> {
       values[field.name] = false;
     } else if (field.type === "number") {
       values[field.name] = "";
-    } else if (field.type === "tag-input") {
+    } else if (field.type === "tag-input" || field.type === "multi-select") {
       values[field.name] = [];
     } else {
       values[field.name] = "";

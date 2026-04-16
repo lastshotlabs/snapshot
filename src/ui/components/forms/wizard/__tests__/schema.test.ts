@@ -164,4 +164,21 @@ describe("wizardSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed step copy and top-level submitLabel", () => {
+    const result = wizardSchema.safeParse({
+      type: "wizard",
+      submitLabel: { from: "wizard.copy.submitLabel" },
+      steps: [
+        {
+          title: { from: "wizard.copy.stepTitle" },
+          description: { from: "wizard.copy.stepDescription" },
+          submitLabel: { from: "wizard.copy.stepSubmitLabel" },
+          fields: [{ name: "email", type: "email" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

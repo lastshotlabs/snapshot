@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useMemo, useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -134,11 +133,8 @@ export function HighlightedText({ config }: { config: HighlightedTextConfig }) {
       data-snapshot-component="highlighted-text"
       data-snapshot-id={rootId}
       data-testid="highlighted-text"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {segments.map((segment, i) =>
         segment.isMatch ? (

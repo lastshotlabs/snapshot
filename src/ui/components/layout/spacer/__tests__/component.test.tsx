@@ -19,10 +19,23 @@ describe("Spacer", () => {
 
   it("renders horizontal spacing when requested", () => {
     const { container } = render(
-      <Spacer config={{ type: "spacer", axis: "horizontal", size: "lg" }} />,
+      <Spacer
+        config={{
+          type: "spacer",
+          id: "inline-gap",
+          axis: "horizontal",
+          size: "lg",
+          className: "spacer-root-class",
+          slots: {
+            root: { className: "spacer-root-slot" },
+          },
+        }}
+      />,
     );
     const element = container.firstElementChild as HTMLElement;
 
     expect(element.getAttribute("style")).toContain("var(--sn-spacing-lg");
+    expect(element.className).toContain("spacer-root-class");
+    expect(element.className).toContain("spacer-root-slot");
   });
 });

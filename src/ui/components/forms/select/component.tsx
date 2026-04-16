@@ -5,7 +5,10 @@ import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useComponentData } from "../../_base/use-component-data";
 import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { SelectConfig, SelectControlProps } from "./types";
 
 type SelectOption = {
@@ -75,6 +78,24 @@ export function SelectControl({
     ...(activeStates ?? []),
     ...(disabled ? (["disabled"] as const) : []),
   ]);
+  const resolvedItemSurfaceConfig =
+    className || style
+      ? {
+          ...(itemSurfaceConfig ?? {}),
+          className: [
+            typeof itemSurfaceConfig?.className === "string"
+              ? itemSurfaceConfig.className
+              : undefined,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ") || undefined,
+          style: {
+            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
+            ...(style ?? {}),
+          },
+        }
+      : itemSurfaceConfig;
   const controlSurface = resolveSurfacePresentation({
     surfaceId,
     implementationBase: {
@@ -109,7 +130,7 @@ export function SelectControl({
       },
     },
     componentSurface: surfaceConfig,
-    itemSurface: itemSurfaceConfig,
+    itemSurface: resolvedItemSurfaceConfig,
     activeStates: Array.from(resolvedStates),
   });
 
@@ -129,11 +150,8 @@ export function SelectControl({
         aria-label={ariaLabel}
         data-snapshot-id={surfaceId}
         data-testid={testId}
-        className={[className, controlSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(controlSurface.style ?? {}),
-          ...(style ?? {}),
-        }}
+        className={controlSurface.className}
+        style={controlSurface.style}
       >
         {children}
       </select>
@@ -191,30 +209,29 @@ export function Select({ config }: { config: SelectConfig }) {
     Boolean(config.options) &&
     dataResult.isLoading &&
     options.length === 0;
+  const rootId = config.id ?? "select";
   const rootSurface = resolveSurfacePresentation({
-    surfaceId: config.id,
+    surfaceId: rootId,
     implementationBase: {
       width: "100%",
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
 
   return (
     <div
       data-snapshot-component="select"
-      data-snapshot-id={config.id}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      data-snapshot-id={rootId}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <SelectControl
         selectId={config.id}
         value={value}
         ariaLabel={placeholder || config.id || "Select"}
         onChangeValue={setValue}
-        surfaceId={`${config.id ?? "select"}-control`}
+        surfaceId={`${rootId}-control`}
         surfaceConfig={config.slots?.control}
       >
         {placeholder ? (

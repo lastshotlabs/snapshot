@@ -1,6 +1,5 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import type { VideoSchemaConfig } from "./types";
@@ -22,7 +21,7 @@ export function Video({ config }: { config: VideoSchemaConfig }) {
       <video
         data-snapshot-component="video"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        className={rootSurface.className}
         src={config.src}
         poster={config.poster}
         controls={config.controls !== false}
@@ -30,10 +29,7 @@ export function Video({ config }: { config: VideoSchemaConfig }) {
         loop={config.loop}
         muted={config.muted ?? config.autoPlay}
         playsInline
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        style={rootSurface.style}
       />
       <SurfaceStyles css={rootSurface.scopedCss} />
     </>

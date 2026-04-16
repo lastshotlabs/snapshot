@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 const disabledDateSchema = z.union([
   z.string(),
@@ -23,8 +24,8 @@ const presetSchema = z
 export const datePickerConfigSchema = extendComponentSchema({
   type: z.literal("date-picker"),
   mode: z.enum(["single", "range", "multiple"]).default("single"),
-  label: z.string().optional(),
-  placeholder: z.string().optional(),
+  label: z.union([z.string(), fromRefSchema]).optional(),
+  placeholder: z.union([z.string(), fromRefSchema]).optional(),
   min: z.string().optional(),
   max: z.string().optional(),
   disabledDates: z.array(disabledDateSchema).optional(),

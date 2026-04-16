@@ -19,8 +19,12 @@ describe("Column", () => {
       <Column
         config={{
           type: "column",
+          id: "main-column",
           gap: "md",
-          className: "stack",
+          className: "column-root-class",
+          slots: {
+            root: { className: "column-root-slot" },
+          },
           children: [{ type: "text", id: "first-child" }],
         }}
       />,
@@ -29,6 +33,7 @@ describe("Column", () => {
     expect(screen.getByTestId("column-child").textContent).toContain("first-child");
     const column = container.firstElementChild as HTMLElement | null;
     expect(column?.style.flexDirection).toBe("column");
-    expect(column?.classList.contains("stack")).toBe(true);
+    expect(column?.className).toContain("column-root-class");
+    expect(column?.className).toContain("column-root-slot");
   });
 });

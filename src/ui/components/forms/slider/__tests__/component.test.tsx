@@ -6,9 +6,17 @@ import { Slider } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.sliderLabel": "Opacity",
+  "copy.sliderSuffix": "%",
+  "copy.sliderDisabled": false,
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -34,7 +42,8 @@ describe("Slider", () => {
           step: 1,
           range: false,
           defaultValue: 50,
-          label: "Opacity",
+          label: { from: "copy.sliderLabel" },
+          suffix: { from: "copy.sliderSuffix" },
           showValue: true,
           showLimits: false,
           onChange: { type: "set-opacity" } as never,
@@ -48,9 +57,10 @@ describe("Slider", () => {
     const root = document.querySelector('[data-snapshot-component="slider"]');
     expect(root?.className).toContain("component-root");
     expect(root?.className).toContain("slot-root");
+    expect(screen.getByText("Opacity")).toBeDefined();
     fireEvent.change(screen.getByRole("slider"), { target: { value: "75" } });
 
-    expect(screen.getByText("75")).toBeTruthy();
+    expect(screen.getByText("75%")).toBeTruthy();
     expect(executeSpy).toHaveBeenCalledWith({ type: "set-opacity" }, { value: 75 });
   });
 

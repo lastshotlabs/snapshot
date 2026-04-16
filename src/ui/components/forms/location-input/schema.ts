@@ -43,9 +43,9 @@ export const locationInputConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("location-input"),
     /** Label text above the input. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Placeholder text for the search input. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Initial value (location name). Can be a FromRef. */
     value: z.union([z.string(), fromRefSchema]).optional(),
     /**
@@ -74,7 +74,7 @@ export const locationInputConfigSchema = extendComponentSchema({
     /** Whether the input is required. */
     required: z.boolean().optional(),
     /** Helper text below the input. */
-    helperText: z.string().optional(),
+    helperText: z.union([z.string(), fromRefSchema]).optional(),
     /** Error text. Can be a FromRef. */
     errorText: z.union([z.string(), fromRefSchema]).optional(),
     slots: slotsSchema([

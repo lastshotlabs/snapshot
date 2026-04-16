@@ -44,11 +44,8 @@ export function DefaultOffline({ config }: { config: OfflineBannerConfig }) {
       role="status"
       aria-live="polite"
       data-snapshot-feedback="offline"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <strong
         data-snapshot-id={`${rootId}-title`}

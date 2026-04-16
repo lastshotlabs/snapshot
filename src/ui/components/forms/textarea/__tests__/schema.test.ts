@@ -14,4 +14,15 @@ describe("textareaConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed label, placeholder, and helper text", () => {
+    const result = textareaConfigSchema.safeParse({
+      type: "textarea",
+      label: { from: "editor.copy.label" },
+      placeholder: { from: "editor.copy.placeholder" },
+      helperText: { from: "editor.copy.helper" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

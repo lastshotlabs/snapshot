@@ -24,12 +24,14 @@ function createWrapper() {
     );
   }
 
-  return Wrapper;
+  return { Wrapper, registry };
 }
 
 describe("ToggleGroup", () => {
   it("applies canonical root and item slots", () => {
-    const Wrapper = createWrapper();
+    const { Wrapper, registry } = createWrapper();
+    const copyAtom = registry.register("copy");
+    registry.store.set(copyAtom, { viewLabel: "Grid" });
     const { container } = render(
       <Wrapper>
         <ToggleGroup
@@ -40,7 +42,7 @@ describe("ToggleGroup", () => {
             items: [
               {
                 value: "grid",
-                label: "Grid",
+                label: { from: "copy.viewLabel" },
                 slots: {
                   itemLabel: { className: "label-slot" },
                 },
@@ -68,7 +70,7 @@ describe("ToggleGroup", () => {
   });
 
   it("applies selected item surface states through the shared button wrapper", () => {
-    const Wrapper = createWrapper();
+    const { Wrapper } = createWrapper();
     const { container } = render(
       <Wrapper>
         <ToggleGroup

@@ -21,10 +21,15 @@ describe("Section", () => {
       <Section
         config={{
           type: "section",
+          id: "hero-section",
           height: "screen",
           align: "center",
           justify: "between",
           bleed: true,
+          className: "section-root-class",
+          slots: {
+            root: { className: "section-root-slot" },
+          },
           children: [{ type: "text", text: "Hero" }] as never,
         }}
       />,
@@ -35,5 +40,7 @@ describe("Section", () => {
     expect(element.style.alignItems).toBe("center");
     expect(element.style.justifyContent).toBe("space-between");
     expect(element.style.marginInline).toContain("var(--sn-spacing-lg");
+    expect(element.className).toContain("section-root-class");
+    expect(element.className).toContain("section-root-slot");
   });
 });

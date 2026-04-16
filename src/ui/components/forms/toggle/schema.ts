@@ -24,8 +24,8 @@ import { fromRefSchema } from "../../_base/types";
 export const toggleConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("toggle"),
-    /** Button text label. */
-    label: z.string().optional(),
+    /** Button text label. Can be a FromRef. */
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Icon name displayed in the button. */
     icon: z.string().optional(),
     /** Initial pressed state. Can be a FromRef. Default: false. */

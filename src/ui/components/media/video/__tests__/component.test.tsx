@@ -10,13 +10,20 @@ describe("Video", () => {
       <Video
         config={{
           type: "video",
+          id: "promo-video",
           src: "https://example.com/demo.mp4",
           controls: true,
+          className: "video-root-class",
+          slots: {
+            root: { className: "video-root-slot" },
+          },
         }}
       />,
     );
 
     const video = container.querySelector("video");
+    expect(video?.className).toContain("video-root-class");
+    expect(video?.className).toContain("video-root-slot");
     expect(video?.getAttribute("src")).toBe("https://example.com/demo.mp4");
     expect(video?.hasAttribute("controls")).toBe(true);
   });

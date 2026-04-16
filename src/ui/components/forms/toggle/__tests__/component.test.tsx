@@ -6,9 +6,15 @@ import { Toggle } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "toolbar.boldLabel": "Bold",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -24,16 +30,29 @@ describe("Toggle", () => {
   it("toggles pressed state and dispatches the change action", () => {
     executeSpy.mockReset();
 
-    render(
+    const { container } = render(
       <Toggle
         config={{
           type: "toggle",
-          label: "Bold",
+          id: "bold-toggle",
+          className: "toggle-root-class",
+          label: { from: "toolbar.boldLabel" },
           icon: "bold",
           changeAction: { type: "toggle-bold" } as never,
+          slots: {
+            root: { className: "toggle-root-slot" },
+          },
         }}
       />,
     );
+
+    expect(
+      container.querySelector('[data-snapshot-id="bold-toggle"]')?.className,
+    ).toContain("toggle-root-class");
+    expect(
+      container.querySelector('[data-snapshot-id="bold-toggle"]')?.className,
+    ).toContain("toggle-root-slot");
+    expect(screen.getByText("Bold")).toBeDefined();
 
     fireEvent.click(screen.getByTestId("toggle"));
 

@@ -34,7 +34,7 @@ export const inlineEditConfigSchema = extendComponentSchema({
   /** Current value. Supports FromRef for dynamic binding. */
   value: z.union([z.string(), fromRefSchema]).optional(),
   /** Placeholder text when value is empty. Default: "Click to edit". */
-  placeholder: z.string().optional(),
+  placeholder: z.union([z.string(), fromRefSchema]).optional(),
   /** Input type for the edit field. Default: "text". */
   inputType: z.enum(["text", "number"]).optional(),
   /** Action dispatched on save (Enter or blur). Receives `{ value }` in context. */

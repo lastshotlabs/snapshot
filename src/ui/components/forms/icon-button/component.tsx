@@ -4,7 +4,10 @@ import { useSubscribe } from "../../../context/index";
 import { useActionExecutor } from "../../../actions/executor";
 import { renderIcon } from "../../../icons/render";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../button";
 import type { IconButtonConfig } from "./types";
 
@@ -57,7 +60,8 @@ export function IconButton({ config }: { config: IconButtonConfig }) {
           }
         }}
         surfaceId={rootId}
-        surfaceConfig={config.slots?.root}
+        surfaceConfig={extractSurfaceConfig(config)}
+        itemSurfaceConfig={config.slots?.root}
         activeStates={[...states]}
         ariaLabel={config.ariaLabel}
         style={{

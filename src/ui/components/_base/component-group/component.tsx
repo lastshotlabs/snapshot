@@ -48,7 +48,7 @@ export function ComponentGroup({ config }: { config: ComponentGroupConfig }) {
       <div
         data-snapshot-component="component-group"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        className={rootSurface.className}
         style={rootSurface.style}
       >
         {groupDef.components.map((componentConfig, index) => {

@@ -97,13 +97,21 @@ describe("Button", () => {
       <Button
         config={{
           type: "button",
+          id: "save-button",
+          className: "button-root-class",
           label: "Save",
           action: { type: "navigate", to: "/save" },
+          slots: {
+            root: { className: "button-root-slot" },
+          },
         }}
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    const button = screen.getByRole("button", { name: "Save" });
+    expect(button.className).toContain("button-root-class");
+    expect(button.className).toContain("button-root-slot");
+    fireEvent.click(button);
     expect(execute).toHaveBeenCalledWith({ type: "navigate", to: "/save" });
   });
 
@@ -153,5 +161,23 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: "Compact Action" });
     expect(button.getAttribute("style")).toContain("min-height: 2.25rem");
     expect(button.getAttribute("style")).toContain("gap: var(--sn-spacing-xs, 0.5rem)");
+  });
+
+  it("routes direct className and style overrides through the shared surface merge", () => {
+    render(
+      <ButtonControl
+        surfaceId="direct-overrides"
+        className="button-direct-class"
+        style={{ paddingInline: "2rem" }}
+        itemSurfaceConfig={{ className: "button-item-class" }}
+      >
+        Override Button
+      </ButtonControl>,
+    );
+
+    const button = screen.getByRole("button", { name: "Override Button" });
+    expect(button.className).toContain("button-direct-class");
+    expect(button.className).toContain("button-item-class");
+    expect(button.style.paddingInline).toBe("2rem");
   });
 });

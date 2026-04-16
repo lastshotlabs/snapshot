@@ -12,4 +12,14 @@ describe("switchConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed label and description values", () => {
+    const result = switchConfigSchema.safeParse({
+      type: "switch",
+      label: { from: "copy.switchLabel" },
+      description: { from: "copy.switchDescription" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

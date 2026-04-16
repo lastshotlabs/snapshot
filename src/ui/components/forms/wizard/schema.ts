@@ -2,6 +2,7 @@ import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import {
   endpointTargetSchema,
+  fromRefSchema,
 } from "../../_base/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import {
@@ -45,13 +46,13 @@ export { fieldConfigSchema };
  */
 export const wizardStepSchema: z.ZodType<Record<string, any>> = z.object({
   /** Step heading. */
-  title: z.string(),
+  title: z.union([z.string(), fromRefSchema]),
   /** Optional step description shown below the title. */
-  description: z.string().optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   /** Fields to render in this step (reuses AutoForm field schema). */
   fields: z.array(fieldConfigSchema),
   /** Override label for the "Next" or submit button on this step. */
-  submitLabel: z.string().optional(),
+  submitLabel: z.union([z.string(), fromRefSchema]).optional(),
   /** Additional per-field validation gates for this step. */
   validate: z
     .array(
@@ -107,7 +108,7 @@ export const wizardSchema: z.ZodType<Record<string, any>> = extendComponentSchem
     /** Endpoint to POST all accumulated data to on final step submission. */
     submitEndpoint: endpointTargetSchema.optional(),
     /** Label for the final submit button (when no per-step override is set). */
-    submitLabel: z.string().default("Submit"),
+    submitLabel: z.union([z.string(), fromRefSchema]).default("Submit"),
     /** Action to execute after successful completion. */
     onComplete: actionSchema.optional(),
     /** Allow users to skip optional steps (steps with no required fields). */

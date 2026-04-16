@@ -63,6 +63,7 @@ function ToggleItem({
   rootSlot?: ToggleGroupConfig["slots"];
   indicatorSlot?: ToggleGroupConfig["slots"];
 }) {
+  const resolvedLabel = useSubscribe(item.label) as string | undefined;
   const subscribedDisabled = useSubscribe(
     item.disabled != null &&
       typeof item.disabled === "object" &&
@@ -145,7 +146,7 @@ function ToggleItem({
             ...(itemDisabled ? ["disabled"] : []),
           ] as Array<"selected" | "disabled">
         }
-        ariaLabel={item.label ?? item.value}
+        ariaLabel={resolvedLabel ?? item.value}
       >
         <span
           data-snapshot-id={`${rootId}-indicator-${index}`}
@@ -161,13 +162,13 @@ function ToggleItem({
             {renderIcon(item.icon, sizeConfig.iconSize)}
           </span>
         ) : null}
-        {item.label ? (
+        {resolvedLabel ? (
           <span
             data-snapshot-id={`${rootId}-item-label-${index}`}
             className={labelSurface.className}
             style={labelSurface.style}
           >
-            {item.label}
+            {resolvedLabel}
           </span>
         ) : null}
       </ButtonControl>

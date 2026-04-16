@@ -110,6 +110,7 @@ export const fieldConfigSchema = z
       "number",
       "textarea",
       "select",
+      "multi-select",
       "checkbox",
       "date",
       "file",
@@ -140,6 +141,8 @@ export const fieldConfigSchema = z
     valueField: z.string().optional(),
     /** Default value for the field. */
     default: z.unknown().optional(),
+    /** Divide incoming/submitted numeric values by this factor for display/editing. */
+    divisor: z.number().positive().optional(),
     /** Whether the field is disabled. */
     disabled: z.boolean().optional(),
     /** Helper text shown below the field. */

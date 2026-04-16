@@ -15,4 +15,13 @@ describe("colorPickerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed label", () => {
+    const result = colorPickerConfigSchema.safeParse({
+      type: "color-picker",
+      label: { from: "copy.colorLabel" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });
