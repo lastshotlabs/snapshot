@@ -197,6 +197,31 @@ describe("compiler", () => {
     expect(compiled.routeMap["/login"]?.id).toBe("login");
   });
 
+  it("preserves manifest runtime resource loaders outside schema validation", () => {
+    const loader = async () => ({ items: [], hasMore: false });
+    const compiled = compileManifest(
+      defineManifest({
+        __runtime: {
+          resources: {
+            transactions: {
+              load: loader,
+            },
+          },
+        },
+        routes: [
+          {
+            id: "dashboard",
+            path: "/",
+            content: [{ type: "heading", text: "Dashboard" }],
+          },
+        ],
+      }),
+    );
+
+    expect(compiled.__runtime?.resources?.transactions?.load).toBe(loader);
+    expect(compiled.routeMap["/"]?.id).toBe("dashboard");
+  });
+
   it("preserves auth contract overrides and workflow handlers", () => {
     const compiled = compileManifest({
       auth: {

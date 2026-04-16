@@ -14,6 +14,7 @@ import {
   useManifestResourcePolling,
 } from "../runtime";
 import type { ApiClient } from "../../../api/client";
+import type { ManifestRuntimeExtensions } from "../types";
 
 function createMockApi(responses: Record<string, unknown>): ApiClient {
   return {
@@ -27,6 +28,29 @@ function createMockApi(responses: Record<string, unknown>): ApiClient {
 
 function createWrapper(options?: { api?: ApiClient }) {
   const api = options?.api;
+  const runtimeExtensions: ManifestRuntimeExtensions = {
+    resources: {
+      mergedTransactions: {
+        load: async ({ loadTarget }) => {
+          const accounts = (await loadTarget({ resource: "accounts" })) as {
+            items?: Array<{ id?: string }>;
+          };
+          const merged: Array<{ id: string; accountId: string }> = [];
+          for (const account of accounts.items ?? []) {
+            if (!account.id) {
+              continue;
+            }
+            const transactions = (await loadTarget({
+              resource: "accountTransactions",
+              params: { accountId: account.id },
+            })) as { items?: Array<{ id: string; accountId: string }> };
+            merged.push(...(transactions.items ?? []));
+          }
+          return { items: merged, hasMore: false };
+        },
+      },
+    },
+  };
   return function Wrapper({ children }: { children: ReactNode }) {
     return createElement(
       Provider,
@@ -35,6 +59,7 @@ function createWrapper(options?: { api?: ApiClient }) {
         api,
         manifest: {
           raw: { routes: [] },
+          __runtime: runtimeExtensions,
           app: {},
           resources: {
             users: {
@@ -62,6 +87,18 @@ function createWrapper(options?: { api?: ApiClient }) {
               method: "GET",
               endpoint: "/api/mount-users",
               refetchOnMount: true,
+            },
+            accounts: {
+              method: "GET",
+              endpoint: "/api/accounts",
+            },
+            accountTransactions: {
+              method: "GET",
+              endpoint: "/api/transactions/by-account",
+            },
+            mergedTransactions: {
+              method: "GET",
+              endpoint: "/api/transactions",
             },
           },
           routes: [],
@@ -268,6 +305,71 @@ describe("ManifestRuntimeProvider", () => {
     });
     expect(result.current?.getData({ resource: "cursorUsers" })).toEqual({
       items: [{ id: 1 }, { id: 2 }],
+      hasMore: false,
+    });
+    unmount();
+  });
+
+  it("supports runtime resource loaders that compose other resources", async () => {
+    const get = vi.fn().mockImplementation(async (endpoint: string) => {
+      if (endpoint === "/api/accounts") {
+        return {
+          items: [{ id: "checking" }, { id: "savings" }],
+          hasMore: false,
+        };
+      }
+      if (endpoint === "/api/transactions/by-account?accountId=checking") {
+        return {
+          items: [{ id: "tx-1", accountId: "checking" }],
+          hasMore: false,
+        };
+      }
+      if (endpoint === "/api/transactions/by-account?accountId=savings") {
+        return {
+          items: [{ id: "tx-2", accountId: "savings" }],
+          hasMore: false,
+        };
+      }
+      throw new Error(`Unexpected endpoint ${endpoint}`);
+    });
+    const api = {
+      get,
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    } as unknown as ApiClient;
+    const { result, unmount } = renderHook(() => useManifestResourceCache(), {
+      wrapper: createWrapper({ api }),
+    });
+
+    let data: unknown;
+    await act(async () => {
+      data = await result.current?.loadTarget({ resource: "mergedTransactions" });
+    });
+
+    expect(get).toHaveBeenCalledTimes(3);
+    expect(get).toHaveBeenNthCalledWith(1, "/api/accounts");
+    expect(get).toHaveBeenNthCalledWith(
+      2,
+      "/api/transactions/by-account?accountId=checking",
+    );
+    expect(get).toHaveBeenNthCalledWith(
+      3,
+      "/api/transactions/by-account?accountId=savings",
+    );
+    expect(data).toEqual({
+      items: [
+        { id: "tx-1", accountId: "checking" },
+        { id: "tx-2", accountId: "savings" },
+      ],
+      hasMore: false,
+    });
+    expect(result.current?.getData({ resource: "mergedTransactions" })).toEqual({
+      items: [
+        { id: "tx-1", accountId: "checking" },
+        { id: "tx-2", accountId: "savings" },
+      ],
       hasMore: false,
     });
     unmount();

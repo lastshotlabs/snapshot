@@ -846,6 +846,7 @@ describe("AutoForm", () => {
     const config: AutoFormConfig = {
       ...baseConfig,
       id: "user-form",
+      className: "form-root-class",
       fields: [],
       sections: [
         {
@@ -899,6 +900,9 @@ describe("AutoForm", () => {
 
     const { container } = render(createElement(AutoForm, { config }), { wrapper });
 
+    expect(container.querySelector('[data-snapshot-id="user-form-root"]')?.className).toContain(
+      "form-root-class",
+    );
     expect(container.querySelector('[data-snapshot-id="user-form-root"]')?.className).toContain(
       "form-root-slot",
     );

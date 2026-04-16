@@ -1,11 +1,13 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
 import type { DatePickerConfig } from "./types";
@@ -127,7 +129,7 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
       flexDirection: "column",
       gap: "sm",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const labelSurface = resolveSurfacePresentation({
@@ -288,11 +290,8 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
       <div
         data-snapshot-component="date-picker"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {config.label ? (
           <label

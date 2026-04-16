@@ -20,7 +20,10 @@ import { useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { SelectControl } from "../select";
 import { TextareaControl } from "../textarea";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
@@ -1484,7 +1487,7 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       gap,
       alignItems: config.layout === "horizontal" ? "stretch" : undefined,
     } as Record<string, unknown>,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const actionsSurface = resolveSurfacePresentation({

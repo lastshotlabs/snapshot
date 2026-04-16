@@ -115,10 +115,12 @@ describe("floating-menu primitives", () => {
   });
 
   it("renders the manifest floating-menu and executes item actions", () => {
-    render(
+    const { container } = render(
       <FloatingMenu
         config={{
           type: "floating-menu",
+          id: "actions-menu",
+          className: "menu-root-class",
           triggerLabel: "Actions",
           items: [
             { type: "label", text: "Project" },
@@ -128,9 +130,19 @@ describe("floating-menu primitives", () => {
               action: { type: "navigate", to: "/rename" },
             },
           ],
+          slots: {
+            root: { className: "menu-root-slot" },
+          },
         }}
       />,
     );
+
+    expect(
+      container.querySelector('[data-snapshot-id="actions-menu-root"]')?.className,
+    ).toContain("menu-root-class");
+    expect(
+      container.querySelector('[data-snapshot-id="actions-menu-root"]')?.className,
+    ).toContain("menu-root-slot");
 
     fireEvent.click(screen.getByRole("button", { name: "Actions" }));
     fireEvent.click(screen.getByRole("menuitem", { name: "Rename" }));

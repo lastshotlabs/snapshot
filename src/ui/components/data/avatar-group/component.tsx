@@ -1,10 +1,12 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useMemo } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { getInitials } from "../../_base/utils";
 import type { AvatarGroupConfig } from "./types";
@@ -113,7 +115,7 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
       display: "inline-flex",
       alignItems: "center",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const itemSurface = resolveSurfacePresentation({
@@ -187,11 +189,8 @@ export function AvatarGroup({ config }: { config: AvatarGroupConfig }) {
       data-snapshot-component="avatar-group"
       data-snapshot-id={rootId}
       data-testid="avatar-group"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {displayed.map((avatar, i) => (
         <div

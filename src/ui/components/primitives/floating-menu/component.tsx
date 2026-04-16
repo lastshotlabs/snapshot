@@ -18,6 +18,7 @@ import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import {
+  extractSurfaceConfig,
   resolveSurfacePresentation,
   type RuntimeSurfaceState,
 } from "../../_base/style-surfaces";
@@ -327,7 +328,7 @@ export function FloatingMenu({ config }: { config: FloatingMenuConfig }) {
       position: "relative",
       display: "inline-block",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
 

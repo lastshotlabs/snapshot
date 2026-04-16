@@ -22,12 +22,14 @@ vi.mock("../../../_base/use-component-data", () => ({
 
 describe("EmojiPicker", () => {
   it("renders custom emojis and publishes selection", () => {
-    render(
+    const { container } = render(
       <EmojiPicker
         config={{
           type: "emoji-picker",
           id: "emoji-picker",
+          className: "emoji-root-class",
           categories: [],
+          maxHeight: "240px",
           customEmojis: [
             {
               id: "emoji-1",
@@ -37,9 +39,27 @@ describe("EmojiPicker", () => {
             },
           ],
           selectAction: { type: "event", name: "select-emoji" } as never,
+          slots: {
+            root: { className: "emoji-root-slot" },
+          },
         }}
       />,
     );
+
+    expect(
+      container.querySelector('[data-snapshot-id="emoji-picker"]')?.className,
+    ).toContain("emoji-root-class");
+    expect(
+      container.querySelector('[data-snapshot-id="emoji-picker"]')?.className,
+    ).toContain("emoji-root-slot");
+    expect(
+      (container.querySelector('[data-snapshot-id="emoji-picker"]') as HTMLElement | null)
+        ?.style.maxHeight,
+    ).toBe("");
+    expect(
+      (container.querySelector('[data-snapshot-id="emoji-picker-gridScroll"]') as HTMLElement | null)
+        ?.style.maxHeight,
+    ).toBe("240px");
 
     fireEvent.click(screen.getByTitle(":party_blob:"));
 

@@ -29,7 +29,10 @@ import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import {
   getFieldValue,
   resolveLookupValue,
@@ -722,7 +725,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
       display: "flex",
       flexDirection: "column",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const toolbarSurface = resolveSurfacePresentation({

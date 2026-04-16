@@ -29,12 +29,13 @@ import type {
 } from "./schema";
 import type { FromRef } from "../context/types";
 import type { Responsive, ThemeConfig } from "../tokens/types";
-import type { EndpointTarget, ResourceMap } from "./resources";
+import type { EndpointTarget, ResourceMap, ResolvedRequest } from "./resources";
 import type {
   CustomWorkflowActionDeclarationMap,
   WorkflowDefinition,
   WorkflowMap,
 } from "../workflows/types";
+import type { ApiClientLike } from "../../api/client";
 
 /**
  * Raw manifest input shape accepted by `parseManifest()` before defaults are
@@ -44,6 +45,7 @@ export type ManifestConfig = Omit<
   z.input<typeof manifestConfigSchema>,
   "workflows"
 > & {
+  __runtime?: ManifestRuntimeExtensions;
   workflows?: {
     actions?: {
       custom?: CustomWorkflowActionDeclarationMap;
@@ -103,6 +105,31 @@ export type StateValueConfig = z.infer<typeof stateValueConfigSchema>;
 export type StateConfig = StateConfigMap;
 /** Named manifest resource map keyed by resource id. */
 export type ResourceConfigMap = ResourceMap;
+export interface ManifestResourceLoaderContext {
+  manifest: CompiledManifest;
+  resourceName: string;
+  params: Record<string, unknown>;
+  request: ResolvedRequest & { url: string };
+  signal?: AbortSignal;
+  client: ApiClientLike;
+  clients: Record<string, ApiClientLike>;
+  loadTarget: (
+    target: EndpointTarget,
+    params?: Record<string, unknown>,
+    options?: { signal?: AbortSignal },
+  ) => Promise<unknown>;
+}
+export type ManifestResourceLoader = (
+  context: ManifestResourceLoaderContext,
+) => Promise<unknown>;
+export interface ManifestRuntimeExtensions {
+  resources?: Record<
+    string,
+    {
+      load?: ManifestResourceLoader;
+    }
+  >;
+}
 /** Resolved runtime view of `overlayConfigSchema`. */
 export type OverlayConfig = Resolved<z.infer<typeof overlayConfigSchema>>;
 /** Resolved runtime view of `baseComponentConfigSchema`. */
@@ -225,6 +252,7 @@ export interface RouteMatch {
  */
 export interface CompiledManifest {
   raw: ParsedManifestConfig;
+  __runtime?: ManifestRuntimeExtensions;
   app: AppConfig;
   toast?: ToastConfig;
   analytics?: AnalyticsConfig;

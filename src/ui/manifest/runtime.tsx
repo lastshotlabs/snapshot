@@ -435,6 +435,7 @@ export function ManifestRuntimeProvider({
     [manifest.resources],
   );
 
+  let loadTargetSelf: ManifestResourceCacheValue["loadTarget"];
   const loadTarget = useCallback(
     async (
       target: EndpointTarget,
@@ -457,8 +458,12 @@ export function ManifestRuntimeProvider({
       const url = buildRequestUrl(request.endpoint, request.params);
       const queryKey = toQueryKey(request.client, request.method, url);
       const key = toCacheKey(queryKey);
+      const resourceName = isResourceRef(target) ? target.resource : undefined;
       const resourceConfig = isResourceRef(target)
         ? manifest.resources?.[target.resource]
+        : undefined;
+      const runtimeResourceLoader = resourceName
+        ? manifest.__runtime?.resources?.[resourceName]?.load
         : undefined;
       const existing = entriesRef.current[key];
       if (isEntryFresh(existing)) {
@@ -470,9 +475,7 @@ export function ManifestRuntimeProvider({
         [key]: {
           status: "loading",
           data: current[key]?.data,
-          resourceName: isResourceRef(target)
-            ? target.resource
-            : current[key]?.resourceName,
+          resourceName: resourceName ?? current[key]?.resourceName,
           queryKey,
         },
       }));
@@ -603,10 +606,37 @@ export function ManifestRuntimeProvider({
           return normalized;
         };
 
+        const resolveResourceData = async (): Promise<unknown> => {
+          if (!runtimeResourceLoader || !resourceName) {
+            const initialData = await requestData(url);
+            return loadAllCursorPages(url, initialData);
+          }
+
+          return runtimeResourceLoader({
+            manifest,
+            resourceName,
+            params: request.params,
+            request: {
+              ...request,
+              url,
+            },
+            signal: options?.signal,
+            client: selectedClient,
+            clients: resolvedClients,
+            loadTarget: (
+              nextTarget,
+              nextParams = {},
+              nextOptions = {},
+            ) =>
+              loadTargetSelf(nextTarget, nextParams, {
+                signal: nextOptions.signal ?? options?.signal,
+              }),
+          });
+        };
+
         for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
           try {
-            data = await requestData(url);
-            data = await loadAllCursorPages(url, data);
+            data = await resolveResourceData();
             lastError = undefined;
             break;
           } catch (error) {
@@ -633,7 +663,7 @@ export function ManifestRuntimeProvider({
             status: "ready",
             data,
             updatedAt: Date.now(),
-            resourceName: isResourceRef(target) ? target.resource : undefined,
+            resourceName,
             queryKey,
           },
         }));
@@ -650,17 +680,16 @@ export function ManifestRuntimeProvider({
           [key]: {
             status: "error",
             error: resolvedError,
-            resourceName: isResourceRef(target)
-              ? target.resource
-              : current[key]?.resourceName,
+            resourceName: resourceName ?? current[key]?.resourceName,
             queryKey: current[key]?.queryKey ?? queryKey,
           },
         }));
         throw resolvedError;
       }
     },
-    [isEntryFresh, manifest.resources, resolvedClients],
+    [isEntryFresh, manifest, resolvedClients],
   );
+  loadTargetSelf = loadTarget;
 
   const invalidateQueryKey = useCallback((queryKey: string[]) => {
     setEntries((current) =>

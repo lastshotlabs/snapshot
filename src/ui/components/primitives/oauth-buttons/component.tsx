@@ -7,7 +7,10 @@ import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { renderIcon } from "../../../icons/render";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { resolveOptionalPrimitiveValue } from "../resolve-value";
 import type { OAuthButtonsConfig } from "./types";
@@ -191,7 +194,7 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
       flexDirection: "column",
       gap: "sm",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const headingSurface = resolveSurfacePresentation({

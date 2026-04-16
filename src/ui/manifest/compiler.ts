@@ -24,6 +24,7 @@ import type {
   AuthScreenConfig,
   CompiledManifest,
   CompiledRoute,
+  ManifestRuntimeExtensions,
   ManifestConfig,
   ParsedManifestConfig,
   PageConfig,
@@ -655,6 +656,7 @@ function validateCustomClients(manifest: EnvResolvedManifest): void {
 function buildCompiledManifest(
   manifest: ParsedManifestConfig,
   env: Record<string, string | undefined>,
+  runtimeExtensions?: ManifestRuntimeExtensions,
 ): CompiledManifest {
   bootBuiltins();
   const resolvedManifest = resolveManifestEnvRefs(
@@ -770,6 +772,7 @@ function buildCompiledManifest(
 
   return {
     raw: runtimeManifest,
+    __runtime: runtimeExtensions,
     app: {
       apiUrl: runtimeManifest.app?.apiUrl,
       shell: runtimeManifest.app?.shell ?? "full-width",
@@ -807,6 +810,35 @@ function buildCompiledManifest(
   };
 }
 
+function extractRuntimeExtensions(
+  manifest: unknown,
+): ManifestRuntimeExtensions | undefined {
+  if (
+    !manifest ||
+    typeof manifest !== "object" ||
+    Array.isArray(manifest) ||
+    !("__runtime" in manifest)
+  ) {
+    return undefined;
+  }
+
+  return (manifest as { __runtime?: ManifestRuntimeExtensions }).__runtime;
+}
+
+function stripRuntimeExtensions(manifest: unknown): unknown {
+  if (
+    !manifest ||
+    typeof manifest !== "object" ||
+    Array.isArray(manifest) ||
+    !("__runtime" in manifest)
+  ) {
+    return manifest;
+  }
+
+  const { __runtime: _runtime, ...rest } = manifest as Record<string, unknown>;
+  return rest;
+}
+
 /**
  * Define a manifest without compiling it.
  *
@@ -828,7 +860,7 @@ export function defineManifest<TManifest extends ManifestConfig>(
 export function parseManifest(manifest: unknown): ParsedManifestConfig {
   bootBuiltins();
   return withManifestCustomComponents(manifest, () =>
-    manifestConfigSchema.parse(manifest),
+    manifestConfigSchema.parse(stripRuntimeExtensions(manifest)),
   );
 }
 
@@ -843,7 +875,7 @@ export function safeParseManifest(
 ): SafeParseReturnType<unknown, ParsedManifestConfig> {
   bootBuiltins();
   return withManifestCustomComponents(manifest, () =>
-    manifestConfigSchema.safeParse(manifest),
+    manifestConfigSchema.safeParse(stripRuntimeExtensions(manifest)),
   );
 }
 
@@ -855,7 +887,11 @@ export function safeParseManifest(
  * @returns The compiled manifest runtime model
  */
 export function compileManifest(manifest: unknown): CompiledManifest {
-  return buildCompiledManifest(parseManifest(manifest), getDefaultEnvSource());
+  return buildCompiledManifest(
+    parseManifest(manifest),
+    getDefaultEnvSource(),
+    extractRuntimeExtensions(manifest),
+  );
 }
 
 /**
@@ -869,7 +905,11 @@ export function compileManifestWithEnv(
   manifest: unknown,
   env: Record<string, string | undefined>,
 ): CompiledManifest {
-  return buildCompiledManifest(parseManifest(manifest), env);
+  return buildCompiledManifest(
+    parseManifest(manifest),
+    env,
+    extractRuntimeExtensions(manifest),
+  );
 }
 
 /**
@@ -901,7 +941,11 @@ export function safeCompileManifest(manifest: unknown):
     return {
       success: true,
       manifest: parsed.data,
-      compiled: buildCompiledManifest(parsed.data, getDefaultEnvSource()),
+      compiled: buildCompiledManifest(
+        parsed.data,
+        getDefaultEnvSource(),
+        extractRuntimeExtensions(manifest),
+      ),
     };
   } catch (error) {
     if (error instanceof ZodError) {

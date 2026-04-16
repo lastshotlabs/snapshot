@@ -100,18 +100,27 @@ describe("OAuthButtons", () => {
       },
     };
 
-    render(
+    const { container } = render(
       <OAuthButtons
         config={{
           type: "oauth-buttons",
+          id: "signin-oauth",
+          className: "oauth-root-class",
           heading: "Continue with",
           slots: {
+            root: { className: "oauth-root-slot" },
             providerLabel: { className: "provider-label-slot" },
           },
         }}
       />,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="signin-oauth-root"]')?.className,
+    ).toContain("oauth-root-class");
+    expect(
+      container.querySelector('[data-snapshot-id="signin-oauth-root"]')?.className,
+    ).toContain("oauth-root-slot");
     expect(screen.getByText("Continue with")).toBeTruthy();
     const button = screen.getByRole("button", {
       name: "Continue with Google",

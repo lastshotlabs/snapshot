@@ -5,7 +5,10 @@ import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
@@ -124,7 +127,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
       border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       bg: "var(--sn-color-card, #ffffff)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const searchSectionSurface = resolveSurfacePresentation({

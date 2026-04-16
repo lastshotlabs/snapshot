@@ -504,6 +504,7 @@ describe("DataTable component", () => {
         <DataTable
           config={baseConfig({
             id: "users-table",
+            className: "table-root-class",
             slots: {
               root: { className: "table-root-slot" },
               headerCell: { className: "table-header-cell-slot" },
@@ -514,6 +515,9 @@ describe("DataTable component", () => {
       </Wrapper>,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="users-table-root"]')?.className,
+    ).toContain("table-root-class");
     expect(
       container.querySelector('[data-snapshot-id="users-table-root"]')?.className,
     ).toContain("table-root-slot");
