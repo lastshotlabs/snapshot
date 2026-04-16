@@ -117,6 +117,7 @@ describe("PasskeyButton", () => {
         <PasskeyButton
           config={{
             type: "passkey-button",
+            className: "passkey-root",
             label: "Sign in with passkey",
             slots: {
               label: { className: "passkey-label-slot" },
@@ -129,6 +130,7 @@ describe("PasskeyButton", () => {
     expect(screen.getByText("Sign in with passkey").className).toContain(
       "passkey-label-slot",
     );
+    expect(screen.getByRole("button").className).toContain("passkey-root");
 
     fireEvent.click(screen.getByRole("button", { name: "Sign in with passkey" }));
 

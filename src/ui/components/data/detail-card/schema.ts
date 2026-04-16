@@ -71,6 +71,15 @@ export const detailFieldConfigSchema = z.object({
   copyable: z.boolean().optional(),
   /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
   divisor: z.number().positive().optional(),
+  /** Resolve foreign-key values against another resource for display. */
+  lookup: z
+    .object({
+      resource: z.string(),
+      valueField: z.string().optional(),
+      labelField: z.string().optional(),
+    })
+    .strict()
+    .optional(),
   /** Field-level slot overrides. */
   slots: slotsSchema(detailCardFieldSlotNames).optional(),
 });

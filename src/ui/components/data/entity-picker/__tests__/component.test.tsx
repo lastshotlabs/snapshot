@@ -42,6 +42,7 @@ describe("EntityPicker", () => {
         config={{
           type: "entity-picker",
           id: "assignee",
+          className: "entity-picker-root",
           data: "/api/users" as never,
           descriptionField: "email",
           changeAction: { type: "assign" } as never,
@@ -49,6 +50,9 @@ describe("EntityPicker", () => {
       />,
     );
 
+    expect(screen.getByTestId("entity-picker").classList.contains("entity-picker-root")).toBe(
+      true,
+    );
     fireEvent.click(screen.getByTestId("entity-picker-trigger"));
     fireEvent.click(screen.getAllByTestId("entity-picker-item")[0]!);
 

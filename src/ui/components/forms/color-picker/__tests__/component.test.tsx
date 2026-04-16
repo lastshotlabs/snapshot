@@ -20,10 +20,12 @@ describe("ColorPicker", () => {
   it("dispatches change actions when the value changes", () => {
     executeSpy.mockReset();
 
-    render(
+    const { container } = render(
       <ColorPicker
         config={{
           type: "color-picker",
+          id: "brand-color",
+          className: "color-picker-root",
           label: "Brand color",
           format: "hex",
           allowCustom: true,
@@ -32,6 +34,10 @@ describe("ColorPicker", () => {
         }}
       />,
     );
+
+    expect(
+      container.querySelector('[data-snapshot-id="brand-color"]')?.className,
+    ).toContain("color-picker-root");
 
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "#ff0000" },

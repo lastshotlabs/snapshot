@@ -52,6 +52,7 @@ describe("QuickAdd", () => {
         config={{
           type: "quick-add",
           id: "task-add",
+          className: "quick-add-root",
           slots: {
             root: { className: "root-slot" },
             icon: { className: "icon-slot" },
@@ -62,6 +63,9 @@ describe("QuickAdd", () => {
       />,
     );
 
+    expect(container.querySelector('[data-snapshot-id="task-add"]')?.className).toContain(
+      "quick-add-root",
+    );
     expect(container.querySelector('[data-snapshot-id="task-add"]')?.className).toContain(
       "root-slot",
     );

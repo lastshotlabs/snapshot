@@ -25,16 +25,31 @@ vi.mock("../../../../context/hooks", () => ({
 
 describe("AuditLog", () => {
   it("renders entries and expands details", () => {
-    render(
+    const { container } = render(
       <AuditLog
         config={{
           type: "audit-log",
+          id: "settings-audit",
+          className: "audit-root-class",
           data: "/api/audit-log",
           detailsField: "details",
+          slots: {
+            root: { className: "audit-root-slot" },
+          },
         }}
       />,
     );
 
+    expect(
+      container
+        .querySelector('[data-snapshot-id="settings-audit"]')
+        ?.classList.contains("audit-root-class"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-snapshot-id="settings-audit"]')
+        ?.classList.contains("audit-root-slot"),
+    ).toBe(true);
     expect(screen.getByText("Ada Lovelace")).toBeTruthy();
     expect(screen.getByText("updated settings")).toBeTruthy();
 

@@ -4,7 +4,10 @@ import { useCallback, useMemo, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { useComponentData } from "../../_base/use-component-data";
 import type { CalendarConfig, ResolvedEvent } from "./types";
@@ -197,7 +200,12 @@ export function Calendar({ config }: { config: CalendarConfig }) {
     return `${first.toLocaleDateString(undefined, { month: "short" })} ${first.getDate()} - ${last.toLocaleDateString(undefined, { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
   }, [currentDate, view]);
 
-  const rootSurface = resolveSurfacePresentation({ surfaceId: rootId, implementationBase: {}, componentSurface: config, itemSurface: config.slots?.root });
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {},
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
+  });
   const headerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-header`,
     implementationBase: { display: "flex", alignItems: "center", justifyContent: "between", style: { marginBottom: "var(--sn-spacing-md, 12px)" } },

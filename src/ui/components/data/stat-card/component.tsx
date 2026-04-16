@@ -1,12 +1,14 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useEffect, useMemo } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { Icon } from "../../../icons/index";
 import {
@@ -282,7 +284,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
         backgroundColor: "var(--sn-color-card, #ffffff)",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const loadingSurface = resolveSurfacePresentation({
@@ -372,7 +374,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
       data-snapshot-component="stat-card"
       data-snapshot-id={rootId}
       data-testid="stat-card"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+      className={rootSurface.className}
       onClick={handleClick}
       onKeyDown={
         handleClick
@@ -383,10 +385,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
       }
       role={handleClick ? "button" : undefined}
       tabIndex={handleClick ? 0 : undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      style={rootSurface.style}
     >
       {/* Loading state */}
       {isLoading && (

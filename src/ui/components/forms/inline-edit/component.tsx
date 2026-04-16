@@ -5,7 +5,10 @@ import { usePublish, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
 import type { InlineEditConfig } from "./types";
@@ -100,7 +103,7 @@ export function InlineEdit({ config }: { config: InlineEditConfig }) {
       alignItems: "center",
       minWidth: "0",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["fontSize"] }),
     itemSurface: config.slots?.root,
   });
   const displaySurface = resolveSurfacePresentation({

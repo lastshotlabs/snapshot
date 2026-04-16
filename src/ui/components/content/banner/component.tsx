@@ -1,10 +1,12 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { BannerConfig } from "./types";
 
 export function Banner({ config }: { config: BannerConfig }) {
@@ -45,7 +47,7 @@ export function Banner({ config }: { config: BannerConfig }) {
         ...(background?.color ? { backgroundColor: background.color } : {}),
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["height"] }),
     itemSurface: config.slots?.root,
   });
   const overlaySurface = resolveSurfacePresentation({
@@ -81,11 +83,8 @@ export function Banner({ config }: { config: BannerConfig }) {
     <div
       data-snapshot-component="banner"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {background?.overlay ? (
         <div

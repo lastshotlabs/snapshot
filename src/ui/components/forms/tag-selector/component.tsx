@@ -1,11 +1,13 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
@@ -27,13 +29,6 @@ function contrastText(color: string): string {
   const b = parseInt(color.slice(5, 7), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.5 ? "#000000" : "#ffffff";
-}
-
-function joinClassNames(
-  ...values: Array<string | undefined | null | false>
-): string | undefined {
-  const className = values.filter(Boolean).join(" ");
-  return className || undefined;
 }
 
 function TagPill({
@@ -384,7 +379,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
         fontFamily: "var(--sn-font-sans, system-ui, sans-serif)",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const labelSurface = resolveSurfacePresentation({
@@ -542,11 +537,8 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
         data-snapshot-id={rootId}
         data-testid="tag-selector"
         ref={containerRef}
-        className={joinClassNames(config.className, rootSurface.className)}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {config.label ? (
           <label

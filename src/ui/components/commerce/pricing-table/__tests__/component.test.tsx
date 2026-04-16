@@ -61,13 +61,21 @@ describe("PricingTable", () => {
 
   it("renders with data-snapshot-component attribute", () => {
     const wrapper = createTestWrapper();
-    render(<PricingTable config={baseConfig} />, { wrapper });
+    render(
+      <PricingTable
+        config={{ ...baseConfig, id: "plans", className: "pricing-root" }}
+      />,
+      { wrapper },
+    );
 
     expect(
       screen
         .getByTestId("pricing-table")
         .getAttribute("data-snapshot-component"),
     ).toBe("pricing-table");
+    expect(screen.getByTestId("pricing-table").classList.contains("pricing-root")).toBe(
+      true,
+    );
   });
 
   it("renders tier cards in cards variant", () => {

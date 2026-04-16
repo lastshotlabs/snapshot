@@ -11,6 +11,7 @@ import {
   AppRegistryContext,
 } from "../../../../context/providers";
 import { SnapshotApiContext } from "../../../../actions/executor";
+import { ManifestRuntimeContext } from "../../../../manifest/runtime";
 import { DetailCard } from "../component";
 import type { DetailCardConfig } from "../schema";
 
@@ -33,13 +34,24 @@ function createTestWrapper(
   return function TestWrapper({ children }: { children: ReactNode }) {
     return (
       <QueryClientProvider client={queryClient}>
-        <AppRegistryContext.Provider value={null}>
-          <PageRegistryContext.Provider value={pageRegistry}>
-            <SnapshotApiContext.Provider value={apiClient as never}>
-              {children}
-            </SnapshotApiContext.Provider>
-          </PageRegistryContext.Provider>
-        </AppRegistryContext.Provider>
+        <ManifestRuntimeContext.Provider
+          value={
+            {
+              raw: {},
+              resources: {
+                accounts: { endpoint: "/api/accounts" },
+              },
+            } as never
+          }
+        >
+          <AppRegistryContext.Provider value={null}>
+            <PageRegistryContext.Provider value={pageRegistry}>
+              <SnapshotApiContext.Provider value={apiClient as never}>
+                {children}
+              </SnapshotApiContext.Provider>
+            </PageRegistryContext.Provider>
+          </AppRegistryContext.Provider>
+        </ManifestRuntimeContext.Provider>
       </QueryClientProvider>
     );
   };
@@ -382,6 +394,45 @@ describe("DetailCard", () => {
     );
 
     expect(screen.getByText("react, typescript, node")).toBeTruthy();
+  });
+
+  it("renders lookup labels for foreign-key fields", async () => {
+    const mockApi = {
+      get: vi.fn().mockImplementation(async (url: string) => {
+        if (url === "/api/accounts") {
+          return { items: [{ id: "acc-1", name: "Checking" }] };
+        }
+        return null;
+      }),
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    };
+    const Wrapper = createTestWrapper(registry, mockApi);
+    const atom = registry.register("source");
+    registry.store.set(atom, { accountId: "acc-1" });
+
+    render(
+      <Wrapper>
+        <DetailCard
+          config={{
+            ...baseConfig,
+            fields: [
+              {
+                field: "accountId",
+                label: "Account",
+                lookup: { resource: "accounts", labelField: "name" },
+              },
+            ],
+          }}
+        />
+      </Wrapper>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("Checking")).toBeTruthy();
+    });
   });
 
   it("publishes data when id is set", () => {

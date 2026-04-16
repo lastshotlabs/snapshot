@@ -773,6 +773,7 @@ function buildCompiledManifest(
     app: {
       apiUrl: runtimeManifest.app?.apiUrl,
       shell: runtimeManifest.app?.shell ?? "full-width",
+      currencyDivisor: runtimeManifest.app?.currencyDivisor ?? 100,
       title: runtimeManifest.app?.title,
       headers: runtimeManifest.app?.headers,
       cache: {

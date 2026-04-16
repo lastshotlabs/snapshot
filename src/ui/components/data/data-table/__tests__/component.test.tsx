@@ -11,8 +11,10 @@ import {
   AppRegistryContext,
 } from "../../../../context/providers";
 import { SnapshotApiContext } from "../../../../actions/executor";
+import { ManifestRuntimeContext } from "../../../../manifest/runtime";
 import { DataTable } from "../component";
 import type { DataTableConfig } from "../types";
+import type { ApiClient } from "../../../../../api/client";
 
 afterEach(() => {
   cleanup();
@@ -42,6 +44,33 @@ function createWrapper(data: unknown[] = testData) {
   }
 
   return { Wrapper, registry };
+}
+
+function createApiWrapper(api: Pick<ApiClient, "get" | "post" | "put" | "patch" | "delete">) {
+  function Wrapper({ children }: { children: React.ReactNode }) {
+    return (
+      <ManifestRuntimeContext.Provider
+        value={
+          {
+            raw: {},
+            resources: {
+              accounts: { endpoint: "/api/accounts" },
+            },
+          } as never
+        }
+      >
+        <AppRegistryContext.Provider value={null}>
+          <PageRegistryContext.Provider value={new AtomRegistryImpl()}>
+            <SnapshotApiContext.Provider value={api as unknown as ApiClient}>
+              {children}
+            </SnapshotApiContext.Provider>
+          </PageRegistryContext.Provider>
+        </AppRegistryContext.Provider>
+      </ManifestRuntimeContext.Provider>
+    );
+  }
+
+  return { Wrapper };
 }
 
 function baseConfig(overrides: Partial<DataTableConfig> = {}): DataTableConfig {
@@ -112,6 +141,91 @@ describe("DataTable component", () => {
     expect(screen.getByText("Alice")).toBeDefined();
     expect(screen.getByText("Bob")).toBeDefined();
     expect(screen.getByText("Charlie")).toBeDefined();
+  });
+
+  it("renders rows from an endpoint items envelope", async () => {
+    const api = {
+      get: vi.fn().mockResolvedValue({ items: testData, hasMore: true }),
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    };
+    const { Wrapper } = createApiWrapper(api as Pick<ApiClient, "get" | "post" | "put" | "patch" | "delete">);
+
+    render(
+      <Wrapper>
+        <DataTable
+          config={{
+            ...baseConfig(),
+            data: "GET /api/users",
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(await screen.findByText("Alice")).toBeDefined();
+    expect(screen.getByText("Bob")).toBeDefined();
+  });
+
+  it("renders lookup labels instead of raw foreign keys", async () => {
+    const registry = new AtomRegistryImpl();
+    const sourceAtom = registry.register("test-source");
+    registry.store.set(sourceAtom, [{ id: 1, accountId: "acc-1" }]);
+    const api = {
+      get: vi.fn().mockImplementation(async (url: string) => {
+        if (url === "/api/accounts") {
+          return { items: [{ id: "acc-1", name: "Checking" }] };
+        }
+        return [];
+      }),
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    };
+
+    function Wrapper({ children }: { children: React.ReactNode }) {
+      return (
+        <ManifestRuntimeContext.Provider
+          value={
+            {
+              raw: {},
+              resources: {
+                accounts: { endpoint: "/api/accounts" },
+              },
+            } as never
+          }
+        >
+          <AppRegistryContext.Provider value={null}>
+            <PageRegistryContext.Provider value={registry}>
+              <SnapshotApiContext.Provider value={api as unknown as ApiClient}>
+                {children}
+              </SnapshotApiContext.Provider>
+            </PageRegistryContext.Provider>
+          </AppRegistryContext.Provider>
+        </ManifestRuntimeContext.Provider>
+      );
+    }
+
+    render(
+      <Wrapper>
+        <DataTable
+          config={baseConfig({
+            columns: [
+              {
+                field: "accountId",
+                label: "Account",
+                lookup: { resource: "accounts", labelField: "name" },
+              },
+            ],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(await screen.findByText("Checking")).toBeDefined();
+    expect(screen.queryByText("acc-1")).toBeNull();
   });
 
   it("renders empty message when no data", () => {

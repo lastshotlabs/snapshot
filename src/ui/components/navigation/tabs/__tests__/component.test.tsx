@@ -141,13 +141,27 @@ describe("TabsComponent", () => {
   });
 
   it("renders with pills variant", () => {
-    const config: TabsConfig = { ...baseConfig, variant: "pills" };
+    const config: TabsConfig = {
+      ...baseConfig,
+      id: "settings-tabs",
+      className: "tabs-root",
+      variant: "pills",
+      slots: {
+        root: { className: "tabs-root-slot" },
+      },
+    };
     const { container } = render(createElement(TabsComponent, { config }), {
       wrapper: createWrapper(store),
     });
     expect(
       container.querySelector('[data-snapshot-component="tabs"]'),
     ).not.toBeNull();
+    expect(
+      container.querySelector('[data-snapshot-id="settings-tabs-root"]')?.className,
+    ).toContain("tabs-root");
+    expect(
+      container.querySelector('[data-snapshot-id="settings-tabs-root"]')?.className,
+    ).toContain("tabs-root-slot");
   });
 
   it("renders with underline variant", () => {

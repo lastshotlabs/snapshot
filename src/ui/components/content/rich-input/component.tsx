@@ -10,7 +10,10 @@ import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
 import type { RichInputConfig } from "./types";
@@ -190,7 +193,9 @@ export function RichInput({ config }: { config: RichInputConfig }) {
       border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       bg: "var(--sn-color-card, #ffffff)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, {
+      omit: ["minHeight", "maxHeight"],
+    }),
     itemSurface: config.slots?.root,
   });
   const editorAreaSurface = resolveSurfacePresentation({

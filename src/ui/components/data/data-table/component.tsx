@@ -30,6 +30,11 @@ import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  getFieldValue,
+  resolveLookupValue,
+  useLookupMaps,
+} from "../_shared/lookups";
 
 // ── Formatting helpers ──────────────────────────────────────────────────────
 
@@ -55,9 +60,12 @@ function formatCellValue(
       return String(value);
     }
     case "currency": {
-      if (typeof value === "number") {
+      const numericValue =
+        typeof value === "number" ? value : Number(value);
+      if (!Number.isNaN(numericValue)) {
         const divisor = column.divisor;
-        const adjusted = divisor && divisor !== 1 ? value / divisor : value;
+        const adjusted =
+          divisor && divisor !== 1 ? numericValue / divisor : numericValue;
         return new Intl.NumberFormat(undefined, {
           style: "currency",
           currency: "USD",
@@ -144,7 +152,11 @@ function formatCellValue(
     }
     case "avatar": {
       const src = column.avatarField
-        ? String(row?.[column.avatarField] ?? "")
+        ? String(
+            row && column.avatarField
+              ? getFieldValue(row, column.avatarField) ?? ""
+              : "",
+          )
         : "";
       const name = String(value);
       const initials = name
@@ -245,7 +257,11 @@ function formatCellValue(
     case "link": {
       const url = String(value);
       const text = column.linkTextField
-        ? String(row?.[column.linkTextField] ?? url)
+        ? String(
+            row && column.linkTextField
+              ? getFieldValue(row, column.linkTextField) ?? url
+              : url,
+          )
         : url;
       return (
         <a
@@ -278,6 +294,9 @@ function formatCellValue(
       );
     }
     default: {
+      if (Array.isArray(value)) {
+        return value.map((entry) => String(entry)).join(", ");
+      }
       const s = String(value);
       if (column.prefix || column.suffix) {
         return `${column.prefix ?? ""}${s}${column.suffix ?? ""}`;
@@ -567,6 +586,14 @@ export function DataTable({ config }: { config: DataTableConfig }) {
   const generatedId = useId();
   const density = config.density ?? "default";
   const cellPadding = getDensityPadding(density);
+  const lookupMaps = useLookupMaps(
+    table.columns
+      .filter((column) => column.lookup)
+      .map((column) => ({
+        key: column.field,
+        lookup: column.lookup!,
+      })),
+  );
   const draggable = config.draggable ?? false;
   const dropEnabled =
     draggable ||
@@ -882,7 +909,15 @@ export function DataTable({ config }: { config: DataTableConfig }) {
             className={cellSurfaces[table.columns.indexOf(col)]?.className}
             style={cellSurfaces[table.columns.indexOf(col)]?.style}
           >
-            {formatCellValue(row[col.field], col, row)}
+            {formatCellValue(
+              resolveLookupValue(
+                getFieldValue(row, col.field),
+                col.lookup,
+                lookupMaps,
+              ),
+              col,
+              row,
+            )}
           </td>
         ))}
         {hasActions && (

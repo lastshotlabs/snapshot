@@ -14,6 +14,8 @@ export interface FormatValueOptions {
     prefix?: string;
     /** Suffix text to append to formatted value. */
     suffix?: string;
+    /** Divide the value by this number before formatting (e.g. 100 for cents → dollars). */
+    divisor?: number;
 }
 /**
  * Format a numeric value according to the specified format type.

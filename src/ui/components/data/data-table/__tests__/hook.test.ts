@@ -9,6 +9,7 @@ import {
   PageRegistryContext,
   AppRegistryContext,
 } from "../../../../context/providers";
+import { SnapshotApiContext } from "../../../../actions/executor";
 import { useDataTable } from "../hook";
 import type { DataTableConfig } from "../types";
 import React from "react";
@@ -32,10 +33,12 @@ function createTestWrapper(pageRegistry: AtomRegistryImpl) {
     return React.createElement(
       AppRegistryContext.Provider,
       { value: null },
-      React.createElement(
-        PageRegistryContext.Provider,
-        { value: pageRegistry },
-        children,
+      React.createElement(SnapshotApiContext.Provider, { value: null },
+        React.createElement(
+          PageRegistryContext.Provider,
+          { value: pageRegistry },
+          children,
+        ),
       ),
     );
   };
@@ -73,6 +76,22 @@ function renderTableHook(
 }
 
 describe("useDataTable", () => {
+  describe("list envelopes", () => {
+    it("reads rows from a FromRef items envelope", () => {
+      const registry = new AtomRegistryImpl();
+      const sourceAtom = registry.register("test-source");
+      registry.store.set(sourceAtom, { items: testData, hasMore: true });
+
+      const wrapper = createTestWrapper(registry);
+      const { result } = renderHook(() => useDataTable(configWithData()), {
+        wrapper,
+      });
+
+      expect(result.current.rows.length).toBe(5);
+      expect(result.current.rows[0]!["name"]).toBe("Alice");
+    });
+  });
+
   describe("column auto-detection", () => {
     it("derives columns from data keys when columns is 'auto'", () => {
       const { result } = renderTableHook(configWithData());

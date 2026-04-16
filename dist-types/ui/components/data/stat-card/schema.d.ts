@@ -753,6 +753,7 @@ export declare const statCardConfigSchema: z.ZodObject<{
     decimals: z.ZodOptional<z.ZodNumber>;
     prefix: z.ZodOptional<z.ZodString>;
     suffix: z.ZodOptional<z.ZodString>;
+    divisor: z.ZodOptional<z.ZodNumber>;
     icon: z.ZodOptional<z.ZodString>;
     iconColor: z.ZodOptional<z.ZodString>;
     trend: z.ZodOptional<z.ZodObject<{
@@ -13620,6 +13621,7 @@ export declare const statCardConfigSchema: z.ZodObject<{
     decimals?: number | undefined;
     prefix?: string | undefined;
     suffix?: string | undefined;
+    divisor?: number | undefined;
     iconColor?: string | undefined;
     trend?: {
         field: string;
@@ -17364,6 +17366,7 @@ export declare const statCardConfigSchema: z.ZodObject<{
     decimals?: number | undefined;
     prefix?: string | undefined;
     suffix?: string | undefined;
+    divisor?: number | undefined;
     iconColor?: string | undefined;
     trend?: {
         field: string;

@@ -41,12 +41,19 @@ import { useComponentData } from "../../_base/use-component-data";
 import { useLiveData } from "../../_base/use-live-data";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { ChartConfig } from "./types";
 import {
   normalizeMetricRows,
   projectMetricRows,
 } from "../_shared/metric-fields";
+import {
+  resolveLookupValue,
+  useLookupMaps,
+} from "../_shared/lookups";
 
 const DEFAULT_COLORS = [
   "var(--sn-chart-1, #2563eb)",
@@ -557,11 +564,48 @@ export function Chart({ config }: { config: ChartConfig }) {
     return normalizeMetricRows(fetchedData);
   }, [fetchedData, isRef, resolvedRef]);
   const chartRows = useMemo<Record<string, unknown>[]>(() => {
-    return projectMetricRows(
+    const projectedRows = projectMetricRows(
       rows,
       config.series.map((series) => series.key),
     );
+    return projectedRows.map((row) => {
+      const nextRow: Record<string, unknown> = { ...row };
+
+      for (const series of config.series) {
+        const rawValue = nextRow[series.key];
+        const numericValue =
+          typeof rawValue === "number" ? rawValue : Number(rawValue);
+        if (
+          series.divisor &&
+          series.divisor !== 1 &&
+          !Number.isNaN(numericValue)
+        ) {
+          nextRow[series.key] = numericValue / series.divisor;
+        }
+      }
+
+      return nextRow;
+    });
   }, [config.series, rows]);
+  const lookupMaps = useLookupMaps(
+    config.xLookup
+      ? [{ key: config.xKey, lookup: config.xLookup }]
+      : [],
+  );
+  const displayRows = useMemo<Record<string, unknown>[]>(() => {
+    if (!config.xLookup) {
+      return chartRows;
+    }
+
+    return chartRows.map((row) => ({
+      ...row,
+      [config.xKey]: resolveLookupValue(
+        row[config.xKey],
+        config.xLookup,
+        lookupMaps,
+      ),
+    }));
+  }, [chartRows, config.xKey, config.xLookup, lookupMaps]);
 
   const liveConfig = useMemo(
     () =>
@@ -598,14 +642,14 @@ export function Chart({ config }: { config: ChartConfig }) {
         "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       padding: "var(--sn-spacing-md, 12px)",
     } as Record<string, unknown>,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["height"] }),
     itemSurface: config.slots?.root,
   });
 
   const loading = !isRef && isLoading;
   const fetchError = !isRef ? error : null;
 
-  if (!loading && !fetchError && chartRows.length === 0 && config.hideWhenEmpty) {
+  if (!loading && !fetchError && displayRows.length === 0 && config.hideWhenEmpty) {
     return null;
   }
 
@@ -679,7 +723,7 @@ export function Chart({ config }: { config: ChartConfig }) {
           </div>
         ) : null}
 
-        {!loading && !fetchError && chartRows.length === 0 ? (
+        {!loading && !fetchError && displayRows.length === 0 ? (
           emptyStateConfig ? (
             <AutoEmptyState config={emptyStateConfig} />
           ) : (
@@ -699,9 +743,9 @@ export function Chart({ config }: { config: ChartConfig }) {
           )
         ) : null}
 
-        {!loading && !fetchError && chartRows.length > 0 ? (
+        {!loading && !fetchError && displayRows.length > 0 ? (
           <div data-chart-content="" style={{ width: "100%", height: "100%" }}>
-            <ChartSurface config={config} rows={chartRows} rootId={rootId} />
+            <ChartSurface config={config} rows={displayRows} rootId={rootId} />
           </div>
         ) : null}
       </div>

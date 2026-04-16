@@ -38,6 +38,7 @@ describe("TreeView", () => {
           config={{
             type: "tree-view",
             id: "file-tree",
+            className: "tree-root-class",
             items: [
               {
                 label: "Docs",
@@ -64,6 +65,9 @@ describe("TreeView", () => {
       </Wrapper>,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="file-tree-root"]')?.className,
+    ).toContain("tree-root-class");
     expect(
       container.querySelector('[data-snapshot-id="file-tree-root"]')?.className,
     ).toContain("tree-root");

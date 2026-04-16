@@ -30,12 +30,19 @@ describe("Calendar", () => {
       <Calendar
         config={{
           type: "calendar",
+          id: "team-calendar",
+          className: "calendar-root",
           events: [{ title: "Launch", date: "2026-04-13", color: "success" }],
           eventAction: { type: "open-event" } as never,
         }}
       />,
     );
 
+    expect(
+      document
+        .querySelector('[data-snapshot-id="team-calendar"]')
+        ?.classList.contains("calendar-root"),
+    ).toBe(true);
     fireEvent.click(screen.getByText("Launch"));
 
     expect(executeSpy).toHaveBeenCalledWith(

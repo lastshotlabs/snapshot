@@ -12,6 +12,7 @@ import { ButtonControl } from "../../forms/button";
 import { useDetailCard } from "./hook";
 import type { DetailCardConfig } from "./schema";
 import type { ResolvedField } from "./types";
+import { resolveLookupValue, useLookupMaps } from "../_shared/lookups";
 
 function formatValue(field: ResolvedField): React.ReactNode {
   const { value, format } = field;
@@ -126,6 +127,9 @@ function formatValue(field: ResolvedField): React.ReactNode {
 
     case "text":
     default:
+      if (Array.isArray(value)) {
+        return <span>{value.map((entry) => String(entry)).join(", ")}</span>;
+      }
       return <span>{String(value)}</span>;
   }
 }
@@ -307,6 +311,18 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
   const { data, fields, title, isLoading, error } = useDetailCard(config);
   const execute = useActionExecutor();
   const rootId = config.id ?? "detail-card";
+  const lookupMaps = useLookupMaps(
+    fields
+      .filter((field) => field.lookup)
+      .map((field) => ({
+        key: field.field,
+        lookup: field.lookup!,
+      })),
+  );
+  const displayFields = fields.map((field) => ({
+    ...field,
+    value: resolveLookupValue(field.value, field.lookup, lookupMaps),
+  }));
 
   const panelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-panel`,
@@ -474,7 +490,7 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
             className={fieldsSurface.className}
             style={fieldsSurface.style}
           >
-            {fields.map((field, index) => (
+            {displayFields.map((field, index) => (
               <FieldRow
                 key={field.field}
                 rootId={rootId}

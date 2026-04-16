@@ -172,6 +172,7 @@ describe("ManifestApp", () => {
       configurable: true,
       value: true,
     });
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -844,6 +845,46 @@ describe("ManifestApp", () => {
       expect(screen.getByText("entered about")).toBeDefined();
       expect(screen.getByText("left home")).toBeDefined();
     });
+  });
+
+  it("waits for route enter workflows before rendering route content", async () => {
+    window.history.replaceState({}, "", "/blocking");
+
+    const manifest: ManifestConfig = {
+      state: {
+        enterStatus: {
+          scope: "app",
+          default: "",
+        },
+      },
+      routes: [
+        {
+          id: "blocking",
+          path: "/blocking",
+          enter: [
+            { type: "wait", duration: 50 },
+            {
+              type: "set-value",
+              target: "global.enterStatus",
+              value: "ready",
+            },
+          ],
+          content: [
+            { type: "heading", text: "Blocking Route" },
+            { type: "app-state-probe", key: "enterStatus" },
+          ],
+        },
+      ],
+    };
+
+    render(<ManifestApp manifest={manifest} apiUrl="http://localhost" />);
+
+    expect(screen.queryByText("Blocking Route")).toBeNull();
+
+    await waitFor(() => {
+      expect(screen.getByText("Blocking Route")).toBeDefined();
+      expect(screen.getByText("ready")).toBeDefined();
+    }, { timeout: 1000 });
   });
 
   it("matches dynamic routes and exposes params to bindings", async () => {

@@ -17,6 +17,7 @@ import {
 import { useApiClient } from "../../../state";
 import type { DetailCardConfig, DetailFieldConfig } from "./schema";
 import type { ResolvedField, UseDetailCardResult } from "./types";
+import { getFieldValue } from "../_shared/lookups";
 
 /**
  * Humanize a camelCase or snake_case field name into a display label.
@@ -92,10 +93,11 @@ function resolveFields(
   return fieldsConfig.map((fc) => ({
     field: fc.field,
     label: fc.label ?? humanizeFieldName(fc.field),
-    value: data[fc.field],
+    value: getFieldValue(data, fc.field),
     format: fc.format ?? "text",
     copyable: fc.copyable ?? false,
     divisor: fc.divisor,
+    lookup: fc.lookup,
     slots: fc.slots,
   }));
 }

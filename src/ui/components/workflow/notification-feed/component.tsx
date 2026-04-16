@@ -5,7 +5,10 @@ import { useComponentData } from "../../_base/use-component-data";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { formatRelativeTime } from "../../_base/utils";
 import type { NotificationFeedConfig } from "./types";
@@ -183,7 +186,7 @@ export function NotificationFeed({
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const headerSurface = resolveSurfacePresentation({

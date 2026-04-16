@@ -66,13 +66,19 @@ describe("StatCard", () => {
     const api = createMockApi({ total: 12345 });
     const wrapper = createTestWrapper(api);
 
-    render(<StatCard config={baseConfig} />, { wrapper });
+    render(
+      <StatCard config={{ ...baseConfig, id: "revenue-card", className: "stat-root" }} />,
+      { wrapper },
+    );
 
     // Wait for data fetch
     await screen.findByTestId("stat-card-value");
     expect(
       screen.getByTestId("stat-card").getAttribute("data-snapshot-component"),
     ).toBe("stat-card");
+    expect(
+      screen.getByTestId("stat-card").classList.contains("stat-root"),
+    ).toBe(true);
   });
 
   it("displays formatted value after loading", async () => {

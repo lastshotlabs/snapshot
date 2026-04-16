@@ -66,13 +66,22 @@ describe("ModalComponent", () => {
 
   it("renders when modal is open", () => {
     store.set(modalStackAtom, ["test-modal"]);
+    const config: ModalConfig = {
+      ...baseConfig,
+      className: "modal-root",
+    };
     const { container } = render(
-      createElement(ModalComponent, { config: baseConfig }),
+      createElement(ModalComponent, { config }),
       { wrapper: createWrapper(store) },
     );
     expect(
       container.querySelector('[data-snapshot-component="modal"]'),
     ).not.toBeNull();
+    expect(
+      container
+        .querySelector('[data-snapshot-id="test-modal-root"]')
+        ?.classList.contains("modal-root"),
+    ).toBe(true);
   });
 
   it("renders title", () => {

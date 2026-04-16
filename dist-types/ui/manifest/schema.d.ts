@@ -33498,6 +33498,7 @@ export declare const appConfigSchema: z.ZodObject<{
         } | undefined;
         labels?: Record<string, string> | undefined;
     }>>;
+    currencyDivisor: z.ZodDefault<z.ZodNumber>;
     a11y: z.ZodOptional<z.ZodObject<{
         respectReducedMotion: z.ZodDefault<z.ZodBoolean>;
         skipLinks: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -33525,6 +33526,7 @@ export declare const appConfigSchema: z.ZodObject<{
     }>>;
 }, "strict", z.ZodTypeAny, {
     shell: string;
+    currencyDivisor: number;
     loading?: any;
     error?: any;
     apiUrl?: string | {
@@ -33618,6 +33620,7 @@ export declare const appConfigSchema: z.ZodObject<{
         } | undefined;
         labels?: Record<string, string> | undefined;
     } | undefined;
+    currencyDivisor?: number | undefined;
     a11y?: {
         respectReducedMotion?: boolean | undefined;
         skipLinks?: {

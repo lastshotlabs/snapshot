@@ -1,10 +1,13 @@
 'use client';
 
-import type { CSSProperties, RefObject } from "react";
+import type { RefObject } from "react";
 import { useCallback, useMemo, useRef } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { CompareViewConfig, DiffLine } from "./types";
 
 function computeDiff(leftText: string, rightText: string): DiffLine[] {
@@ -299,7 +302,7 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
         fontSize: "var(--sn-font-size-sm, 0.875rem)",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const headerSurface = resolveSurfacePresentation({
@@ -363,11 +366,8 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
         data-snapshot-component="compare-view"
         data-testid="compare-view"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         <div
           data-snapshot-id={`${rootId}-header`}

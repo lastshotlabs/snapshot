@@ -6,7 +6,10 @@ import { useActionExecutor } from "../../../actions/executor";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { useComponentData } from "../../_base/use-component-data";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { Icon } from "../../../icons/icon";
 import type { ComponentConfig } from "../../../manifest/types";
@@ -83,7 +86,7 @@ export function Timeline({ config }: { config: TimelineConfig }) {
     implementationBase: {
       position: "relative",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const loadingStateSurface = resolveSurfacePresentation({

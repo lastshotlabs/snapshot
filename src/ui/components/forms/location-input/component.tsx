@@ -6,7 +6,10 @@ import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
@@ -314,7 +317,7 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
     implementationBase: {
       position: "relative",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const labelSurface = resolveSurfacePresentation({

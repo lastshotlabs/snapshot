@@ -56,8 +56,12 @@ describe("NotificationFeed", () => {
       <NotificationFeed
         config={{
           type: "notification-feed",
+          id: "alerts-feed",
+          className: "feed-root-class",
           data: "/api/notifications",
+          maxHeight: "260px",
           slots: {
+            root: { className: "feed-root-slot" },
             header: { className: "feed-header-slot" },
             headerContent: { className: "feed-header-content-slot" },
             item: { className: "feed-item-slot" },
@@ -69,12 +73,30 @@ describe("NotificationFeed", () => {
 
     expect(
       container
+        .querySelector('[data-snapshot-id="alerts-feed-root"]')
+        ?.classList.contains("feed-root-class"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-snapshot-id="alerts-feed-root"]')
+        ?.classList.contains("feed-root-slot"),
+    ).toBe(true);
+    expect(
+      (container.querySelector('[data-snapshot-id="alerts-feed-root"]') as HTMLElement | null)
+        ?.style.maxHeight,
+    ).toBe("");
+    expect(
+      (container.querySelector('[data-snapshot-id="alerts-feed-list"]') as HTMLElement | null)
+        ?.style.maxHeight,
+    ).toBe("260px");
+    expect(
+      container
         .querySelector("[data-notification-header]")
         ?.classList.contains("feed-header-slot"),
     ).toBe(true);
     expect(
       container
-        .querySelector('[data-snapshot-id="notification-feed-header-content"]')
+        .querySelector('[data-snapshot-id="alerts-feed-header-content"]')
         ?.classList.contains("feed-header-content-slot"),
     ).toBe(true);
     expect(
@@ -84,7 +106,7 @@ describe("NotificationFeed", () => {
     ).toBe(true);
     expect(
       container
-        .querySelector('[data-snapshot-id="notification-feed-item-n1-body"]')
+        .querySelector('[data-snapshot-id="alerts-feed-item-n1-body"]')
         ?.classList.contains("feed-item-body-slot"),
     ).toBe(true);
   });

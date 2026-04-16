@@ -7,7 +7,10 @@ import { useActionExecutor } from "../../../actions/executor";
 import { renderIcon } from "../../../icons/render";
 import { ButtonControl } from "../button";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { ToggleGroupConfig } from "./types";
 
 
@@ -237,7 +240,7 @@ export function ToggleGroup({ config }: { config: ToggleGroupConfig }) {
         variant === "outline" ? "1px solid var(--sn-color-border)" : undefined,
       overflow: "hidden",
     } as Record<string, unknown>,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
 

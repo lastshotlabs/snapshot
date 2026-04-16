@@ -43,6 +43,8 @@ describe("TagSelector", () => {
       <TagSelector
         config={{
           type: "tag-selector",
+          id: "skill-tags",
+          className: "tag-selector-root",
           tags: [
             { label: "React", value: "react" },
             { label: "TypeScript", value: "ts" },
@@ -51,6 +53,9 @@ describe("TagSelector", () => {
       />,
     );
 
+    expect(screen.getByTestId("tag-selector").classList.contains("tag-selector-root")).toBe(
+      true,
+    );
     const input = screen.getByTestId("tag-input");
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "React" } });

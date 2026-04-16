@@ -44,6 +44,8 @@ describe("CommentSection", () => {
       <CommentSection
         config={{
           type: "comment-section",
+          id: "comments",
+          className: "comment-root",
           data: "GET /api/comments",
           submitAction: { type: "event", name: "submit-comment" } as never,
           deleteAction: { type: "event", name: "delete-comment" } as never,
@@ -52,6 +54,9 @@ describe("CommentSection", () => {
     );
 
     expect(screen.getByTestId("comment-section")).toBeTruthy();
+    expect(screen.getByTestId("comment-section").classList.contains("comment-root")).toBe(
+      true,
+    );
     expect(screen.getByText("Comments")).toBeTruthy();
     expect(screen.getByText("(1)")).toBeTruthy();
     expect(screen.getByTestId("mock-comment-input").textContent).toBe(

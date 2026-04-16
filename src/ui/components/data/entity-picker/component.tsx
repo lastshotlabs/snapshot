@@ -1,13 +1,15 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
@@ -22,13 +24,6 @@ interface ResolvedEntity {
 }
 
 const EMPTY_ARRAY: string[] = [];
-
-function joinClassNames(
-  ...values: Array<string | undefined | null | false>
-): string | undefined {
-  const className = values.filter(Boolean).join(" ");
-  return className || undefined;
-}
 
 function EntityPickerItem({
   config,
@@ -431,7 +426,7 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
         fontFamily: "var(--sn-font-sans, system-ui, sans-serif)",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const triggerSurface = resolveSurfacePresentation({
@@ -587,11 +582,8 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
         data-snapshot-id={rootId}
         data-testid="entity-picker"
         ref={containerRef}
-        className={joinClassNames(config.className, rootSurface.className)}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         <ButtonControl
           type="button"

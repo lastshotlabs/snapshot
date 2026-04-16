@@ -30,6 +30,16 @@ export const seriesConfigSchema = z
     label: z.string(),
     /** CSS color value or CSS variable (e.g. "var(--sn-chart-1)"). */
     color: z.string().optional(),
+    /** Divide numeric series values before display (e.g. cents to dollars). */
+    divisor: z.number().positive().optional(),
+  })
+  .strict();
+
+const lookupConfigSchema = z
+  .object({
+    resource: z.string(),
+    valueField: z.string().optional(),
+    labelField: z.string().optional(),
   })
   .strict();
 
@@ -62,6 +72,8 @@ export const chartSchema = extendComponentSchema({
       .default("bar"),
     /** Field name for the X axis (categories); not used for pie/donut. */
     xKey: z.string(),
+    /** Optional lookup for display labels on the X axis. */
+    xLookup: lookupConfigSchema.optional(),
     /** Data series configuration. */
     series: z.array(seriesConfigSchema),
     /** Chart height in pixels. */

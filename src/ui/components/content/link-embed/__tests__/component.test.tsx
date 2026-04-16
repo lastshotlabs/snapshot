@@ -14,12 +14,15 @@ vi.mock("../../../../icons/index", () => ({
 
 describe("LinkEmbed", () => {
   it("renders a generic card when no platform embed applies", () => {
-    render(
+    const { container } = render(
       <LinkEmbed
         config={{
           type: "link-embed",
+          id: "post-preview",
+          className: "link-embed-root",
           url: "https://example.com/post",
           allowIframe: false,
+          maxWidth: "420px",
           meta: {
             title: "Example Post",
             description: "Preview description",
@@ -29,7 +32,13 @@ describe("LinkEmbed", () => {
       />,
     );
 
+    const root = container.querySelector(
+      '[data-snapshot-id="post-preview"]',
+    ) as HTMLElement | null;
+
     expect(screen.getByTestId("link-embed").getAttribute("data-platform")).toBe("generic");
+    expect(root?.className).toContain("link-embed-root");
+    expect(root?.style.maxWidth).toBe("420px");
     expect(screen.getByText("Example Post")).toBeTruthy();
     expect(screen.getByRole("link").getAttribute("href")).toBe("https://example.com/post");
   });

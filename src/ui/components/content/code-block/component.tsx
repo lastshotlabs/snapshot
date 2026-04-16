@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from "react";
-import type { CSSProperties } from "react";
 import hljs from "highlight.js/lib/core";
 import typescript from "highlight.js/lib/languages/typescript";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -16,7 +15,10 @@ import rust from "highlight.js/lib/languages/rust";
 import java from "highlight.js/lib/languages/java";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import "./hljs-theme.css";
 import type { CodeBlockConfig } from "./types";
@@ -107,7 +109,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
       bg: "var(--sn-color-card, #ffffff)",
       overflow: "hidden",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxHeight"] }),
     itemSurface: config.slots?.root,
   });
   const titleBarSurface = resolveSurfacePresentation({
@@ -250,11 +252,8 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
         data-snapshot-component="code-block"
         data-snapshot-id={rootId}
         data-testid="code-block"
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
       {/* Title bar */}
       {hasTitleBar && (

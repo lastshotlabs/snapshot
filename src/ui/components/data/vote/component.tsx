@@ -1,11 +1,13 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { VoteConfig } from "./types";
 
@@ -24,7 +26,7 @@ export function Vote({ config }: { config: VoteConfig }) {
       alignItems: "center",
       gap: "var(--sn-spacing-2xs, 0.125rem)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const upvoteSurface = resolveSurfacePresentation({
@@ -93,11 +95,8 @@ export function Vote({ config }: { config: VoteConfig }) {
     <div
       data-snapshot-component="vote"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       <ButtonControl
         type="button"

@@ -48,6 +48,14 @@ const filterOptionSchema = z.object({
   value: z.union([z.string(), z.number(), z.boolean()]),
 });
 
+const lookupConfigSchema = z
+  .object({
+    resource: z.string(),
+    valueField: z.string().optional(),
+    labelField: z.string().optional(),
+  })
+  .strict();
+
 /**
  * Schema for column filter configuration.
  */
@@ -105,6 +113,8 @@ export const columnConfigSchema = z
     align: z.enum(["left", "center", "right"]).optional(),
     /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
     divisor: z.number().positive().optional(),
+    /** Resolve foreign-key values against another resource for display. */
+    lookup: lookupConfigSchema.optional(),
   })
   .strict();
 

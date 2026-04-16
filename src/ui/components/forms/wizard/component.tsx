@@ -7,7 +7,10 @@ import { InputControl } from "../input";
 import { SelectControl } from "../select";
 import { TextareaControl } from "../textarea";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { WizardConfig, WizardStepConfig } from "./types";
 import type { FieldConfig } from "../auto-form/types";
 
@@ -665,7 +668,7 @@ export function Wizard({ config }: { config: WizardConfig }) {
       backgroundColor: "var(--sn-color-card, #fff)",
       overflow: "hidden",
     } as Record<string, unknown>,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const panelSurface = resolveSurfacePresentation({

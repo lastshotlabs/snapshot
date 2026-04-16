@@ -10,7 +10,10 @@ import {
 } from "../../../manifest/resources";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
 import type { FileUploaderConfig, UploadFileEntry } from "./types";
@@ -440,7 +443,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
       gap: variant === "compact" ? "sm" : undefined,
       style: variant === "compact" ? { flexWrap: "wrap" } : undefined,
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const triggerSurface = resolveSurfacePresentation({
@@ -641,7 +644,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           data-testid="file-uploader"
           data-variant="button"
           data-snapshot-id={rootId}
-          className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+          className={rootSurface.className}
           style={rootSurface.style}
         >
           {hiddenInput}
@@ -680,7 +683,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           data-testid="file-uploader"
           data-variant="compact"
           data-snapshot-id={rootId}
-          className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+          className={rootSurface.className}
           style={rootSurface.style}
         >
           {hiddenInput}
@@ -719,7 +722,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
         data-testid="file-uploader"
         data-variant="dropzone"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
+        className={rootSurface.className}
         style={rootSurface.style}
       >
         {hiddenInput}

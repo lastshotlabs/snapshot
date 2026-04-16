@@ -3,6 +3,7 @@ import { useSubscribe } from "../../../context/hooks";
 import { useResolveFrom } from "../../../context/hooks";
 import { usePublish } from "../../../context/hooks";
 import { isFromRef } from "../../../context/utils";
+import { getFieldValue } from "../_shared/lookups";
 import { applyClientFilters, applyClientSort } from "../../_base/client-data-ops";
 import {
   buildRequestUrl,
@@ -86,6 +87,8 @@ function resolveColumns(
     badgeColors: col.badgeColors,
     avatarField: col.avatarField,
     linkTextField: col.linkTextField,
+    divisor: col.divisor,
+    lookup: col.lookup,
     prefix: col.prefix,
     suffix: col.suffix,
     width: col.width,
@@ -132,7 +135,7 @@ function rowMatchesSearch(
   const lowerQuery = query.toLowerCase();
   const fields = searchFields ?? Object.keys(row);
   return fields.some((field) => {
-    const value = row[field];
+    const value = getFieldValue(row, field);
     if (value == null) return false;
     return String(value).toLowerCase().includes(lowerQuery);
   });
@@ -147,7 +150,7 @@ function rowMatchesFilters(
 ): boolean {
   for (const [field, filterValue] of Object.entries(filters)) {
     if (filterValue == null || filterValue === "") continue;
-    const cellValue = row[field];
+    const cellValue = getFieldValue(row, field);
     if (String(cellValue) !== String(filterValue)) return false;
   }
   return true;
@@ -267,9 +270,11 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
         setIsLoading(false);
         setError(null);
       } else if (resolvedData != null && typeof resolvedData === "object") {
-        // Object with a data array (e.g., { data: [...], total: 100 })
+        // Object with a list envelope (e.g., { items: [...] } or { data: [...] })
         const obj = resolvedData as Record<string, unknown>;
-        if (Array.isArray(obj["data"])) {
+        if (Array.isArray(obj["items"])) {
+          setAllRows(obj["items"] as Record<string, unknown>[]);
+        } else if (Array.isArray(obj["data"])) {
           setAllRows(obj["data"] as Record<string, unknown>[]);
         } else {
           setAllRows([]);
@@ -329,12 +334,14 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
 
         if (cancelled) return;
 
-        // Handle response: array directly, or object with data array
+        // Handle response: array directly, or object with list envelope
         if (Array.isArray(result)) {
           setAllRows(result as Record<string, unknown>[]);
         } else if (result != null && typeof result === "object") {
           const obj = result as Record<string, unknown>;
-          if (Array.isArray(obj["data"])) {
+          if (Array.isArray(obj["items"])) {
+            setAllRows(obj["items"] as Record<string, unknown>[]);
+          } else if (Array.isArray(obj["data"])) {
             setAllRows(obj["data"] as Record<string, unknown>[]);
           } else {
             setAllRows([obj] as Record<string, unknown>[]);
@@ -420,7 +427,11 @@ export function useDataTable(config: DataTableConfig): UseDataTableResult {
     // Apply sort
     if (sort) {
       rows.sort((a, b) =>
-        compareValues(a[sort.column], b[sort.column], sort.direction),
+        compareValues(
+          getFieldValue(a, sort.column),
+          getFieldValue(b, sort.column),
+          sort.direction,
+        ),
       );
     }
 

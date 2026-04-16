@@ -1,9 +1,11 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import type { CodeConfig } from "./types";
 
 /**
@@ -29,7 +31,7 @@ export function Code({ config }: { config: CodeConfig }) {
         wordBreak: "break-word",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
 
@@ -38,11 +40,8 @@ export function Code({ config }: { config: CodeConfig }) {
       <code
         data-snapshot-component="code"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {displayValue}
       </code>

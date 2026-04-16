@@ -1,12 +1,15 @@
 'use client';
 
-import type { CSSProperties, KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
 import type { QuickAddConfig } from "./types";
@@ -74,7 +77,7 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       borderRadius: "lg",
       bg: "var(--sn-color-card, #ffffff)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const iconSurface = resolveSurfacePresentation({
@@ -154,11 +157,8 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
         data-snapshot-component="quick-add"
         data-snapshot-id={rootId}
         data-testid="quick-add"
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         <span
           aria-hidden="true"

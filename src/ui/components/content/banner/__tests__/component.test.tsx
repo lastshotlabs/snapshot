@@ -16,6 +16,9 @@ describe("Banner", () => {
       <Banner
         config={{
           type: "banner",
+          id: "hero-banner",
+          className: "banner-root",
+          height: "480px",
           align: "left",
           background: {
             color: "#111827",
@@ -29,6 +32,17 @@ describe("Banner", () => {
     expect(
       container.querySelector('[data-snapshot-component="banner"]'),
     ).toBeTruthy();
+    expect(
+      container.querySelector('[data-snapshot-id="hero-banner"]')?.className,
+    ).toContain("banner-root");
+    expect(
+      (container.querySelector('[data-snapshot-id="hero-banner"]') as HTMLElement | null)
+        ?.style.height ?? "",
+    ).toBe("");
+    expect(
+      (container.querySelector('[data-snapshot-id="hero-banner"]') as HTMLElement | null)
+        ?.style.minHeight,
+    ).toBe("480px");
     expect(screen.getByTestId("banner-child").textContent).toContain("hero-copy");
   });
 });

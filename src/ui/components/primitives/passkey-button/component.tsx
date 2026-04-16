@@ -10,7 +10,10 @@ import {
   startPasskeyAuthentication,
 } from "../../../manifest/passkey";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { useApiClient } from "../../../state";
 import { resolvePrimitiveValue } from "../resolve-value";
@@ -159,7 +162,7 @@ export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
     <>
       <ButtonControl
         surfaceId={`${rootId}-root`}
-        surfaceConfig={config}
+        surfaceConfig={extractSurfaceConfig(config)}
         itemSurfaceConfig={config.slots?.root}
         variant="outline"
         size="sm"

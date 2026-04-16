@@ -46,7 +46,7 @@ function createWrapper(options: {
             manifest ??
             ({
               raw: { routes: [] },
-              app: { shell: "full-width" },
+              app: { shell: "full-width", currencyDivisor: 100 },
               routes: [],
               routeMap: {},
               firstRoute: null,
@@ -271,7 +271,7 @@ describe("useActionExecutor", () => {
           },
         },
       },
-      app: { shell: "full-width" },
+      app: { shell: "full-width", currencyDivisor: 100 },
       resources: {
         users: {
           method: "GET" as const,
@@ -318,7 +318,7 @@ describe("useActionExecutor", () => {
           },
         },
       },
-      app: { shell: "full-width" },
+      app: { shell: "full-width", currencyDivisor: 100 },
       resources: {
         users: {
           method: "GET" as const,
@@ -376,7 +376,7 @@ describe("useActionExecutor", () => {
           },
         },
       },
-      app: { shell: "full-width" },
+      app: { shell: "full-width", currencyDivisor: 100 },
       resources: {
         "users.create": {
           method: "POST" as const,
@@ -570,7 +570,7 @@ describe("useActionExecutor", () => {
             ],
           },
         },
-        app: { shell: "full-width" },
+        app: { shell: "full-width", currencyDivisor: 100 },
         routes: [],
         routeMap: {},
         firstRoute: null,

@@ -45,10 +45,12 @@ describe("LocationInput", () => {
         config={{
           type: "location-input",
           id: "office",
+          className: "location-root-class",
           searchEndpoint: { resource: "locations" },
           helperText: "Search for an address",
           errorText: "Location is required",
           slots: {
+            root: { className: "location-root-slot" },
             helper: { className: "helper-slot" },
             error: { className: "error-slot" },
           },
@@ -57,6 +59,12 @@ describe("LocationInput", () => {
     );
 
     expect(screen.getByText("Location is required")).toBeDefined();
+    expect(
+      container.querySelector('[data-snapshot-id="office"]')?.className,
+    ).toContain("location-root-class");
+    expect(
+      container.querySelector('[data-snapshot-id="office"]')?.className,
+    ).toContain("location-root-slot");
     expect(container.querySelector('[data-snapshot-id="office-helper"]')).toBeNull();
     expect(
       container.querySelector('[data-snapshot-id="office-error"]')?.className,

@@ -19,6 +19,22 @@ export declare const detailFieldConfigSchema: z.ZodObject<{
     format: z.ZodOptional<z.ZodEnum<["text", "date", "datetime", "number", "currency", "badge", "boolean", "email", "url", "image", "link", "list"]>>;
     /** Whether to show a copy-to-clipboard button next to the value. */
     copyable: z.ZodOptional<z.ZodBoolean>;
+    /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
+    divisor: z.ZodOptional<z.ZodNumber>;
+    /** Resolve foreign-key values against another resource for display. */
+    lookup: z.ZodOptional<z.ZodObject<{
+        resource: z.ZodString;
+        valueField: z.ZodOptional<z.ZodString>;
+        labelField: z.ZodOptional<z.ZodString>;
+    }, "strict", z.ZodTypeAny, {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    }, {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    }>>;
     /** Field-level slot overrides. */
     slots: z.ZodOptional<z.ZodObject<Record<"field" | "fieldLabel" | "fieldValue" | "copyButton", z.ZodOptional<z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
@@ -6761,6 +6777,12 @@ export declare const detailFieldConfigSchema: z.ZodObject<{
     } | undefined;
     label?: string | undefined;
     format?: "number" | "boolean" | "date" | "link" | "image" | "text" | "list" | "email" | "url" | "datetime" | "currency" | "badge" | undefined;
+    divisor?: number | undefined;
+    lookup?: {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    } | undefined;
     copyable?: boolean | undefined;
 }, {
     field: string;
@@ -8296,6 +8318,12 @@ export declare const detailFieldConfigSchema: z.ZodObject<{
     } | undefined;
     label?: string | undefined;
     format?: "number" | "boolean" | "date" | "link" | "image" | "text" | "list" | "email" | "url" | "datetime" | "currency" | "badge" | undefined;
+    divisor?: number | undefined;
+    lookup?: {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    } | undefined;
     copyable?: boolean | undefined;
 }>;
 /**

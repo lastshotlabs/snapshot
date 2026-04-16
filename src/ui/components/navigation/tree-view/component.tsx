@@ -7,7 +7,10 @@ import { AutoErrorState } from "../../_base/auto-error-state";
 import { renderIcon } from "../../../icons/render";
 import { useComponentData } from "../../_base/use-component-data";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { TreeViewConfig, TreeItemInput } from "./types";
 
@@ -372,7 +375,7 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
   const rootId = config.id ?? "tree-view";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const loadingStateSurface = resolveSurfacePresentation({

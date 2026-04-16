@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, it, expect, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
 import React from "react";
 import { AtomRegistryImpl } from "../../../../context/registry";
 import {
@@ -8,6 +8,7 @@ import {
   AppRegistryContext,
 } from "../../../../context/providers";
 import { SnapshotApiContext } from "../../../../actions/executor";
+import { ManifestRuntimeContext } from "../../../../manifest/runtime";
 import { Chart } from "../component";
 import type { ChartConfig } from "../types";
 
@@ -70,6 +71,10 @@ vi.mock("recharts", () => ({
   ),
 }));
 
+afterEach(() => {
+  cleanup();
+});
+
 const testData = [
   { month: "Jan", revenue: 4000, expenses: 2400 },
   { month: "Feb", revenue: 3000, expenses: 1398 },
@@ -90,6 +95,46 @@ function createWrapper(data: unknown[] = testData) {
           </SnapshotApiContext.Provider>
         </PageRegistryContext.Provider>
       </AppRegistryContext.Provider>
+    );
+  }
+
+  return { Wrapper, registry };
+}
+
+function createApiWrapper(
+  data: unknown[] = testData,
+  api?: {
+    get: ReturnType<typeof vi.fn>;
+    post: ReturnType<typeof vi.fn>;
+    put: ReturnType<typeof vi.fn>;
+    patch: ReturnType<typeof vi.fn>;
+    delete: ReturnType<typeof vi.fn>;
+  },
+) {
+  const registry = new AtomRegistryImpl();
+  const sourceAtom = registry.register("chart-source");
+  registry.store.set(sourceAtom, data);
+
+  function Wrapper({ children }: { children: React.ReactNode }) {
+    return (
+      <ManifestRuntimeContext.Provider
+        value={
+          {
+            raw: {},
+            resources: {
+              categories: { endpoint: "/api/categories" },
+            },
+          } as never
+        }
+      >
+        <AppRegistryContext.Provider value={null}>
+          <PageRegistryContext.Provider value={registry}>
+            <SnapshotApiContext.Provider value={(api ?? null) as unknown as never}>
+              {children}
+            </SnapshotApiContext.Provider>
+          </PageRegistryContext.Provider>
+        </AppRegistryContext.Provider>
+      </ManifestRuntimeContext.Provider>
     );
   }
 
@@ -225,6 +270,8 @@ describe("Chart component", () => {
         <Chart
           config={baseConfig({
             id: "revenue-chart",
+            className: "chart-root-class",
+            height: 240,
             slots: {
               root: { className: "chart-root-slot" },
               legend: { className: "chart-legend-slot" },
@@ -233,13 +280,24 @@ describe("Chart component", () => {
         />
       </Wrapper>,
     );
+    const root = container.querySelector(
+      '[data-snapshot-id="revenue-chart-root"]',
+    ) as HTMLElement | null;
+    const chartFrame = container.querySelector(
+      "[data-chart-content]",
+    )?.parentElement as HTMLElement | null;
 
     expect(
-      container.querySelector('[data-snapshot-id="revenue-chart-root"]')?.className,
+      root?.className,
+    ).toContain("chart-root-class");
+    expect(
+      root?.className,
     ).toContain("chart-root-slot");
     expect(
       container.querySelector('[data-snapshot-id="revenue-chart-legend"]')?.className,
     ).toContain("chart-legend-slot");
+    expect(root?.style.height).toBe("");
+    expect(chartFrame?.style.height).toBe("240px");
   });
 
   it("projects aggregate alias values onto configured series keys", () => {
@@ -263,5 +321,42 @@ describe("Chart component", () => {
       ?.getAttribute("data-chart-data");
     expect(chartData).toContain('"amount_sum":4000');
     expect(chartData).toContain('"amount_sum":3000');
+  });
+
+  it("applies series divisors and x-axis lookups", async () => {
+    const api = {
+      get: vi.fn().mockImplementation(async (url: string) => {
+        if (url === "/api/categories") {
+          return { items: [{ id: "cat-1", name: "Groceries" }] };
+        }
+        return [];
+      }),
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    };
+    const { Wrapper } = createApiWrapper(
+      [{ categoryId: "cat-1", amount: 12345 }],
+      api,
+    );
+    const { container } = render(
+      <Wrapper>
+        <Chart
+          config={baseConfig({
+            xKey: "categoryId",
+            xLookup: { resource: "categories", labelField: "name" },
+            series: [{ key: "amount", label: "Spending", divisor: 100 }],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    await screen.findByTestId("bar-chart");
+    const chartData = container
+      .querySelector('[data-testid="bar-chart"]')
+      ?.getAttribute("data-chart-data");
+    expect(chartData).toContain('"categoryId":"Groceries"');
+    expect(chartData).toContain('"amount":123.45');
   });
 });

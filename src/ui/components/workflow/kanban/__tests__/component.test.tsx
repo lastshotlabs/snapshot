@@ -56,12 +56,17 @@ describe("Kanban", () => {
       <Kanban
         config={{
           type: "kanban",
+          id: "board",
+          className: "kanban-root",
           columns: [{ key: "todo", title: "To Do" }],
           cardAction: { type: "open-task" } as never,
         }}
       />,
     );
 
+    expect(screen.getByTestId("kanban").classList.contains("kanban-root")).toBe(
+      true,
+    );
     fireEvent.click(screen.getByText("Write tests"));
 
     expect(executeSpy).toHaveBeenCalledWith(

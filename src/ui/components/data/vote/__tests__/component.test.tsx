@@ -16,15 +16,21 @@ vi.mock("../../../../context/hooks", () => ({
 
 describe("Vote", () => {
   it("updates the displayed score when upvoted", () => {
-    render(
+    const { container } = render(
       <Vote
         config={{
           type: "vote",
+          id: "vote-demo",
+          className: "vote-root",
           value: 10,
           upAction: { type: "upvote" } as never,
         }}
       />,
     );
+
+    expect(
+      container.querySelector('[data-snapshot-id="vote-demo"]')?.className,
+    ).toContain("vote-root");
 
     fireEvent.click(screen.getByRole("button", { name: "Upvote" }));
 

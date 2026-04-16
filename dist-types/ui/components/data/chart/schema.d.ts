@@ -10,14 +10,18 @@ export declare const seriesConfigSchema: z.ZodObject<{
     label: z.ZodString;
     /** CSS color value or CSS variable (e.g. "var(--sn-chart-1)"). */
     color: z.ZodOptional<z.ZodString>;
+    /** Divide numeric series values before display (e.g. cents to dollars). */
+    divisor: z.ZodOptional<z.ZodNumber>;
 }, "strict", z.ZodTypeAny, {
     key: string;
     label: string;
     color?: string | undefined;
+    divisor?: number | undefined;
 }, {
     key: string;
     label: string;
     color?: string | undefined;
+    divisor?: number | undefined;
 }>;
 /**
  * Zod schema for the Chart component configuration.
@@ -693,6 +697,19 @@ export declare const chartSchema: z.ZodObject<{
     }>]>;
     chartType: z.ZodDefault<z.ZodEnum<["bar", "line", "area", "pie", "donut", "sparkline", "funnel", "radar", "treemap", "scatter"]>>;
     xKey: z.ZodString;
+    xLookup: z.ZodOptional<z.ZodObject<{
+        resource: z.ZodString;
+        valueField: z.ZodOptional<z.ZodString>;
+        labelField: z.ZodOptional<z.ZodString>;
+    }, "strict", z.ZodTypeAny, {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    }, {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    }>>;
     series: z.ZodArray<z.ZodObject<{
         /** Data key in each data record. */
         key: z.ZodString;
@@ -700,14 +717,18 @@ export declare const chartSchema: z.ZodObject<{
         label: z.ZodString;
         /** CSS color value or CSS variable (e.g. "var(--sn-chart-1)"). */
         color: z.ZodOptional<z.ZodString>;
+        /** Divide numeric series values before display (e.g. cents to dollars). */
+        divisor: z.ZodOptional<z.ZodNumber>;
     }, "strict", z.ZodTypeAny, {
         key: string;
         label: string;
         color?: string | undefined;
+        divisor?: number | undefined;
     }, {
         key: string;
         label: string;
         color?: string | undefined;
+        divisor?: number | undefined;
     }>, "many">;
     height: z.ZodDefault<z.ZodNumber>;
     aspectRatio: z.ZodOptional<z.ZodString>;
@@ -8316,6 +8337,7 @@ export declare const chartSchema: z.ZodObject<{
         key: string;
         label: string;
         color?: string | undefined;
+        divisor?: number | undefined;
     }[];
     chartType: "bar" | "area" | "line" | "donut" | "pie" | "sparkline" | "funnel" | "radar" | "treemap" | "scatter";
     xKey: string;
@@ -11261,6 +11283,11 @@ export declare const chartSchema: z.ZodObject<{
         indicator: boolean;
         debounce?: number | undefined;
     } | undefined;
+    xLookup?: {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    } | undefined;
 }, {
     type: "chart";
     data: string | {
@@ -11275,6 +11302,7 @@ export declare const chartSchema: z.ZodObject<{
         key: string;
         label: string;
         color?: string | undefined;
+        divisor?: number | undefined;
     }[];
     xKey: string;
     background?: string | {
@@ -14223,5 +14251,10 @@ export declare const chartSchema: z.ZodObject<{
     } | undefined;
     emptyMessage?: string | undefined;
     chartType?: "bar" | "area" | "line" | "donut" | "pie" | "sparkline" | "funnel" | "radar" | "treemap" | "scatter" | undefined;
+    xLookup?: {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    } | undefined;
     hideWhenEmpty?: boolean | undefined;
 }>;

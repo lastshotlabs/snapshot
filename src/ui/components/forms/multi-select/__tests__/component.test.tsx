@@ -72,6 +72,7 @@ describe("MultiSelect", () => {
         config={{
           type: "multi-select",
           id: "tag-select",
+          className: "multi-select-root",
           options: [{ label: "Bug", value: "bug" }],
           slots: {
             errorMessage: { className: "error-message-slot" },
@@ -84,6 +85,9 @@ describe("MultiSelect", () => {
       '[data-snapshot-id="tag-select-trigger"]',
     ) as HTMLDivElement | null;
     expect(combobox).not.toBeNull();
+    expect(screen.getByTestId("multi-select").classList.contains("multi-select-root")).toBe(
+      true,
+    );
     fireEvent.click(combobox as HTMLDivElement);
 
     expect(

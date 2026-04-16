@@ -21,18 +21,32 @@ describe("CodeBlock", () => {
   });
 
   it("renders title metadata and copies code", () => {
-    render(
+    const { container } = render(
       <CodeBlock
         config={{
           type: "code-block",
+          id: "answer-code",
+          className: "code-block-root",
           code: "const answer = 42;",
           language: "typescript",
           title: "answer.ts",
           showLineNumbers: true,
+          maxHeight: "240px",
         }}
       />,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="answer-code"]')?.className,
+    ).toContain("code-block-root");
+    expect(
+      (container.querySelector('[data-snapshot-id="answer-code"]') as HTMLElement | null)
+        ?.style.maxHeight,
+    ).toBe("");
+    expect(
+      (container.querySelector('[data-snapshot-id="answer-code-body"]') as HTMLElement | null)
+        ?.style.maxHeight,
+    ).toBe("240px");
     expect(screen.getByTestId("code-block-title").textContent).toBe("answer.ts");
     expect(screen.getByTestId("code-block-language").textContent).toBe("typescript");
     expect(screen.getByTestId("code-block-line-numbers").textContent).toContain("1");

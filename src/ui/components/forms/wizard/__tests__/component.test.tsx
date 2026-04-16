@@ -334,6 +334,7 @@ describe("Wizard component", () => {
         <Wizard
           config={baseConfig({
             id: "profile-wizard",
+            className: "wizard-root-class",
             steps: [
               {
                 title: "Account Details",
@@ -375,6 +376,10 @@ describe("Wizard component", () => {
       </Wrapper>,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="profile-wizard-root"]')
+        ?.className,
+    ).toContain("wizard-root-class");
     expect(
       container.querySelector('[data-snapshot-id="profile-wizard-root"]')
         ?.className,

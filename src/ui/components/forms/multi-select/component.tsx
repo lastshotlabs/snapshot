@@ -1,23 +1,19 @@
 'use client';
 
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
 import type { MultiSelectConfig, MultiSelectOption } from "./types";
-
-function joinClassNames(
-  ...values: Array<string | undefined | null | false>
-): string | undefined {
-  const className = values.filter(Boolean).join(" ");
-  return className || undefined;
-}
 
 function SelectedPill({
   config,
@@ -388,7 +384,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
       flexDirection: "column",
       gap: "xs",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const labelSurface = resolveSurfacePresentation({
@@ -568,11 +564,8 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
         data-snapshot-id={rootId}
         data-testid="multi-select"
         ref={containerRef}
-        className={joinClassNames(config.className, rootSurface.className)}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {config.label ? (
           <label

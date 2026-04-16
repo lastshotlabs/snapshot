@@ -29,7 +29,7 @@ function createTestWrapper(options?: {
         api={undefined}
         manifest={{
           raw: { routes: [] },
-          app: { shell: "full-width" },
+          app: { shell: "full-width", currencyDivisor: 100 },
           resources: options?.resources,
           routes: [],
           routeMap: {},
@@ -65,13 +65,16 @@ describe("FileUploader", () => {
 
   it("renders with data-snapshot-component attribute", () => {
     const wrapper = createTestWrapper();
-    render(<FileUploader config={baseConfig} />, { wrapper });
+    render(<FileUploader config={{ ...baseConfig, className: "uploader-root" }} />, { wrapper });
 
     expect(
       screen
         .getByTestId("file-uploader")
         .getAttribute("data-snapshot-component"),
     ).toBe("file-uploader");
+    expect(screen.getByTestId("file-uploader").classList.contains("uploader-root")).toBe(
+      true,
+    );
   });
 
   it("renders dropzone variant by default", () => {

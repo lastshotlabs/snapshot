@@ -3,7 +3,10 @@
 import { useState, useMemo, useCallback } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useComponentData } from "../../_base/use-component-data";
 import { formatRelativeTime, getInitials } from "../../_base/utils";
 import { ButtonControl } from "../../forms/button";
@@ -312,7 +315,7 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
     implementationBase: {},
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const filtersSurface = resolveSurfacePresentation({

@@ -55,6 +55,22 @@ export declare const columnConfigSchema: z.ZodObject<{
     width: z.ZodOptional<z.ZodString>;
     /** Text alignment within the column. */
     align: z.ZodOptional<z.ZodEnum<["left", "center", "right"]>>;
+    /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
+    divisor: z.ZodOptional<z.ZodNumber>;
+    /** Resolve foreign-key values against another resource for display. */
+    lookup: z.ZodOptional<z.ZodObject<{
+        resource: z.ZodString;
+        valueField: z.ZodOptional<z.ZodString>;
+        labelField: z.ZodOptional<z.ZodString>;
+    }, "strict", z.ZodTypeAny, {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    }, {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    }>>;
 }, "strict", z.ZodTypeAny, {
     field: string;
     filter?: {
@@ -70,10 +86,16 @@ export declare const columnConfigSchema: z.ZodObject<{
     format?: "number" | "boolean" | "code" | "date" | "link" | "progress" | "currency" | "badge" | "avatar" | undefined;
     prefix?: string | undefined;
     suffix?: string | undefined;
+    divisor?: number | undefined;
     sortable?: boolean | undefined;
     badgeColors?: Record<string, string> | undefined;
     avatarField?: string | undefined;
     linkTextField?: string | undefined;
+    lookup?: {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    } | undefined;
 }, {
     field: string;
     filter?: {
@@ -89,10 +111,16 @@ export declare const columnConfigSchema: z.ZodObject<{
     format?: "number" | "boolean" | "code" | "date" | "link" | "progress" | "currency" | "badge" | "avatar" | undefined;
     prefix?: string | undefined;
     suffix?: string | undefined;
+    divisor?: number | undefined;
     sortable?: boolean | undefined;
     badgeColors?: Record<string, string> | undefined;
     avatarField?: string | undefined;
     linkTextField?: string | undefined;
+    lookup?: {
+        resource: string;
+        valueField?: string | undefined;
+        labelField?: string | undefined;
+    } | undefined;
 }>;
 /**
  * Schema for a per-row action button.

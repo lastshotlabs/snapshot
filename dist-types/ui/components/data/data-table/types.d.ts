@@ -42,6 +42,14 @@ export interface ResolvedColumn {
     avatarField?: string;
     /** Field for link display text. */
     linkTextField?: string;
+    /** Divide numeric value by this before formatting (e.g. cents to dollars). */
+    divisor?: number;
+    /** Resolve foreign-key values against another resource for display. */
+    lookup?: {
+        resource: string;
+        valueField?: string;
+        labelField?: string;
+    };
     /** Cell value prefix. */
     prefix?: string;
     /** Cell value suffix. */

@@ -17,13 +17,15 @@ vi.mock("../../../../actions/executor", () => ({
 }));
 
 describe("InlineEdit", () => {
-  it("applies canonical hover state and input slot styling", () => {
-    render(
+  it("applies canonical root, hover, and input slot styling", () => {
+    const { container } = render(
       <InlineEdit
         config={{
           type: "inline-edit",
           id: "inline-edit-demo",
           value: "Snapshot",
+          className: "inline-edit-root",
+          fontSize: "2rem",
           slots: {
             display: {
               states: {
@@ -39,6 +41,15 @@ describe("InlineEdit", () => {
         }}
       />,
     );
+
+    const root = container.querySelector('[data-snapshot-id="inline-edit-demo-root"]');
+    const displayText = container.querySelector(
+      '[data-snapshot-id="inline-edit-demo-display-text"]',
+    );
+
+    expect(root?.className).toContain("inline-edit-root");
+    expect((root as HTMLElement | null)?.style.fontSize).toBe("");
+    expect((displayText as HTMLElement | null)?.style.fontSize).toBe("2rem");
 
     const display = screen.getByTestId("inline-edit-display");
     fireEvent.pointerEnter(display);

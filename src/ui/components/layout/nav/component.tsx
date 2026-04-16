@@ -11,7 +11,7 @@ import type { ComponentConfig } from "../../../manifest/types";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
-  resolveSurfaceConfig,
+  extractSurfaceConfig,
   resolveSurfacePresentation,
 } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
@@ -333,11 +333,18 @@ export function Nav({
 
   const isTopNav = variant === "top-nav";
   const hasTemplate = Array.isArray((config as Record<string, unknown>).template);
-  const rootConfig =
-    resolveSurfaceConfig({
-      componentSurface: config,
-      itemSurface: config.slots?.root,
-    }).resolvedConfigForWrapper ?? config;
+  const extractedRootConfig = extractSurfaceConfig(config);
+  const rootConfig = {
+    ...(config.visible !== undefined ? { visible: config.visible } : {}),
+    ...(extractedRootConfig ?? {}),
+    ...(config.slots?.root
+      ? {
+          slots: {
+            root: config.slots.root,
+          },
+        }
+      : {}),
+  };
   const listSurface = resolveSurfacePresentation({
     surfaceId: `${config.id ?? "nav"}-list`,
     implementationBase: {

@@ -93,14 +93,36 @@ describe("RichInput", () => {
         config={{
           type: "rich-input",
           id: "composer",
+          className: "rich-input-root",
           features: ["bold", "link"],
           maxLength: 10,
+          minHeight: "120px",
+          maxHeight: "240px",
           sendAction: { type: "custom" } as never,
         }}
       />,
     );
 
     expect(screen.getByTestId("rich-input")).toBeTruthy();
+    expect(screen.getByTestId("rich-input").classList.contains("rich-input-root")).toBe(
+      true,
+    );
+    expect((screen.getByTestId("rich-input") as HTMLElement).style.minHeight).toBe("");
+    expect((screen.getByTestId("rich-input") as HTMLElement).style.maxHeight).toBe("");
+    expect(
+      (
+        document.querySelector('[data-snapshot-id="composer-editorArea"]') as
+          | HTMLElement
+          | null
+      )?.style.minHeight,
+    ).toBe("120px");
+    expect(
+      (
+        document.querySelector('[data-snapshot-id="composer-editorArea"]') as
+          | HTMLElement
+          | null
+      )?.style.maxHeight,
+    ).toBe("240px");
     expect(screen.getByTestId("rich-input-editor")).toBeTruthy();
     expect(screen.getByTestId("rich-input-toolbar")).toBeTruthy();
     expect(screen.getByText("5/10")).toBeTruthy();

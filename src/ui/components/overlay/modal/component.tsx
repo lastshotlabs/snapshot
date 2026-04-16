@@ -7,7 +7,10 @@ import { ComponentRenderer } from "../../../manifest/renderer";
 import { OverlayRuntimeProvider } from "../../../manifest/runtime";
 import type { ComponentConfig } from "../../../manifest/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { useFocusTrap } from "../../_base/use-focus-trap";
 import { ButtonControl } from "../../forms/button";
 import { useModal } from "./hook";
@@ -180,7 +183,7 @@ function ModalSurface({
       alignItems: size === "full" ? "stretch" : "center",
       justifyContent: "center",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
     activeStates: isOpen ? ["open"] : [],
   });

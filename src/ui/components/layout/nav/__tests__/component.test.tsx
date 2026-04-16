@@ -556,10 +556,21 @@ describe("Nav component", () => {
 
   it("sets data-snapshot-component=nav", () => {
     const { container } = renderWithContext(
-      <Nav config={baseConfig} pathname="/" />,
+      <Nav
+        config={{
+          ...baseConfig,
+          className: "nav-root-class",
+          slots: {
+            root: { className: "nav-root-slot" },
+          },
+        }}
+        pathname="/"
+      />,
     );
     const nav = container.querySelector('[data-snapshot-component="nav"]');
     expect(nav).not.toBeNull();
+    expect(nav?.className).toContain("nav-root-class");
+    expect(nav?.className).toContain("nav-root-slot");
   });
 
   it("renders to static markup without throwing", () => {

@@ -1,13 +1,15 @@
 'use client';
 
-import type { CSSProperties } from "react";
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { useSubscribe } from "../../../context/hooks";
 import { detectPlatform } from "./platform";
 import type { PlatformInfo } from "./platform";
 import type { LinkEmbedConfig } from "./types";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 
 function MediaFrame({
   config,
@@ -422,7 +424,7 @@ export function LinkEmbed({ config }: { config: LinkEmbedConfig }) {
         maxWidth: config.maxWidth ?? "100%",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["maxWidth"] }),
     itemSurface: config.slots?.root,
   });
 
@@ -433,11 +435,8 @@ export function LinkEmbed({ config }: { config: LinkEmbedConfig }) {
         data-testid="link-embed"
         data-platform={platform}
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {allowIframe && platformInfo?.platform === "youtube" ? (
           <YouTubeEmbed config={config} rootId={rootId} info={platformInfo} aspectRatio={aspectRatio} />

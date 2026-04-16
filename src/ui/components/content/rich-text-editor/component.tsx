@@ -8,7 +8,10 @@ import { EditorView, keymap, placeholder as cmPlaceholder } from "@codemirror/vi
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/icon";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { Markdown } from "../markdown/component";
 import { snEditorTheme, snSyntaxHighlight } from "./cm-theme";
@@ -133,7 +136,9 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
       border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       bg: "var(--sn-color-card, #ffffff)",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, {
+      omit: ["minHeight", "maxHeight"],
+    }),
     itemSurface: config.slots?.root,
   });
   const toolbarSurface = resolveSurfacePresentation({

@@ -11,15 +11,22 @@ vi.mock("../../../../context/hooks", () => ({
 
 describe("Markdown", () => {
   it("renders markdown headings and links", () => {
-    render(
+    const { container } = render(
       <Markdown
         config={{
           type: "markdown",
+          id: "docs",
+          className: "markdown-root",
+          maxHeight: "320px",
           content: "# Welcome\n\nVisit [Snapshot](https://example.com).",
         }}
       />,
     );
 
+    const root = container.querySelector('[data-snapshot-id="docs"]') as HTMLElement | null;
+    expect(root?.className).toContain("markdown-root");
+    expect(root?.style.maxHeight).toBe("320px");
+    expect(root?.style.overflowY).toBe("auto");
     expect(screen.getByRole("heading", { name: "Welcome" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Snapshot" }).getAttribute("href")).toBe(
       "https://example.com",

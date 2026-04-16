@@ -34,6 +34,7 @@ describe("Stepper", () => {
           config={{
             type: "stepper",
             id: "checkout-stepper",
+            className: "stepper-root-class",
             clickable: true,
             steps: [
               {
@@ -59,6 +60,10 @@ describe("Stepper", () => {
       </Wrapper>,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="checkout-stepper-root"]')
+        ?.className,
+    ).toContain("stepper-root-class");
     expect(
       container.querySelector('[data-snapshot-id="checkout-stepper-root"]')
         ?.className,

@@ -36,6 +36,7 @@ describe("ToggleGroup", () => {
           config={{
             type: "toggle-group",
             id: "view-toggle",
+            className: "root-class",
             items: [
               {
                 value: "grid",
@@ -54,6 +55,9 @@ describe("ToggleGroup", () => {
       </Wrapper>,
     );
 
+    expect(
+      container.querySelector('[data-snapshot-id="view-toggle-root"]')?.className,
+    ).toContain("root-class");
     expect(
       container.querySelector('[data-snapshot-id="view-toggle-root"]')?.className,
     ).toContain("root-slot");

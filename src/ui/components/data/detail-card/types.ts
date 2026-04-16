@@ -25,6 +25,12 @@ export interface ResolvedField {
   copyable: boolean;
   /** Divide numeric value by this before formatting (e.g. 100 for cents → dollars). */
   divisor?: number;
+  /** Resolve foreign-key values against another resource for display. */
+  lookup?: {
+    resource: string;
+    valueField?: string;
+    labelField?: string;
+  };
   /** Optional field-level slot overrides. */
   slots?: DetailFieldConfig["slots"];
 }

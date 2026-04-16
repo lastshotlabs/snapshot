@@ -74,6 +74,8 @@ describe("Timeline", () => {
       <Timeline
         config={{
           type: "timeline",
+          id: "activity-timeline",
+          className: "timeline-root-class",
           items: [
             {
               title: "Created",
@@ -83,6 +85,7 @@ describe("Timeline", () => {
             },
           ],
           slots: {
+            root: { className: "timeline-root-slot" },
             header: { className: "timeline-header-slot" },
             title: { className: "timeline-title-slot" },
           },
@@ -92,12 +95,22 @@ describe("Timeline", () => {
 
     expect(
       container
+        .querySelector('[data-snapshot-id="activity-timeline-root"]')
+        ?.classList.contains("timeline-root-class"),
+    ).toBe(true);
+    expect(
+      container
+        .querySelector('[data-snapshot-id="activity-timeline-root"]')
+        ?.classList.contains("timeline-root-slot"),
+    ).toBe(true);
+    expect(
+      container
         .querySelector('[data-testid="timeline-item"]')
         ?.classList.contains("timeline-item-slot"),
     ).toBe(true);
     expect(
       container
-        .querySelector('[data-snapshot-id="timeline-item-0-header"]')
+        .querySelector('[data-snapshot-id="activity-timeline-item-0-header"]')
         ?.classList.contains("timeline-header-slot"),
     ).toBe(true);
     expect(

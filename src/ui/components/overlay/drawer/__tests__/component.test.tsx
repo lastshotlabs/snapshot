@@ -58,13 +58,22 @@ describe("DrawerComponent", () => {
 
   it("renders when drawer is open", () => {
     store.set(modalStackAtom, ["test-drawer"]);
+    const config: DrawerConfig = {
+      ...baseConfig,
+      className: "drawer-root",
+    };
     const { container } = render(
-      createElement(DrawerComponent, { config: baseConfig }),
+      createElement(DrawerComponent, { config }),
       { wrapper: createWrapper(store) },
     );
     expect(
       container.querySelector('[data-snapshot-component="drawer"]'),
     ).not.toBeNull();
+    expect(
+      container
+        .querySelector('[data-snapshot-id="test-drawer-root"]')
+        ?.classList.contains("drawer-root"),
+    ).toBe(true);
   });
 
   it("renders title", () => {
