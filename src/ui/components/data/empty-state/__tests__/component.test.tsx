@@ -47,6 +47,7 @@ describe("EmptyState", () => {
         config={{
           type: "empty-state",
           id: "search-empty",
+          className: "empty-root",
           title: "No results",
           actionLabel: "Clear filters",
           action: { type: "reset" } as never,
@@ -61,6 +62,9 @@ describe("EmptyState", () => {
     expect(
       container.querySelector('[data-snapshot-id="search-empty"]')?.className,
     ).toContain("root-slot");
+    expect(
+      container.querySelector('[data-snapshot-id="search-empty"]')?.className,
+    ).toContain("empty-root");
     expect(
       container.querySelector('[data-snapshot-id="search-empty-action"]')
         ?.className,

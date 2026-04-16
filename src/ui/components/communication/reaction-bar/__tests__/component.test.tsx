@@ -27,12 +27,17 @@ describe("ReactionBar", () => {
         config={{
           type: "reaction-bar",
           id: "reactions",
+          className: "reaction-root",
           reactions: [{ emoji: "👍", count: 2, active: true }],
           addAction: { type: "event", name: "add-reaction" } as never,
           removeAction: { type: "event", name: "remove-reaction" } as never,
         }}
       />,
     );
+
+    expect(
+      screen.getByTestId("reaction-bar").classList.contains("reaction-root"),
+    ).toBe(true);
 
     fireEvent.click(screen.getByTestId("reaction-button"));
     expect(mockExecute).toHaveBeenCalledTimes(1);

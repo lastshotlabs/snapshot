@@ -1,11 +1,13 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useState, useEffect } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { getInitials } from "../../_base/utils";
 import type { AvatarConfig } from "./types";
 
@@ -114,7 +116,7 @@ export function Avatar({ config }: { config: AvatarConfig }) {
         flexShrink: 0,
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["color"] }),
     itemSurface: config.slots?.root,
   });
   const imageSurface = resolveSurfacePresentation({
@@ -163,11 +165,8 @@ export function Avatar({ config }: { config: AvatarConfig }) {
       data-snapshot-component="avatar"
       data-snapshot-id={rootId}
       data-testid="avatar"
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...((config.style as CSSProperties | undefined) ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {showImage && (
         <img

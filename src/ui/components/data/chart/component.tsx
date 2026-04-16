@@ -43,6 +43,10 @@ import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ChartConfig } from "./types";
+import {
+  normalizeMetricRows,
+  projectMetricRows,
+} from "../_shared/metric-fields";
 
 const DEFAULT_COLORS = [
   "var(--sn-chart-1, #2563eb)",
@@ -54,22 +58,6 @@ const DEFAULT_COLORS = [
 
 function getSeriesColor(color: string | undefined, index: number): string {
   return color ?? DEFAULT_COLORS[index % DEFAULT_COLORS.length]!;
-}
-
-function normalizeRows(raw: unknown): Record<string, unknown>[] {
-  if (Array.isArray(raw)) {
-    return raw as Record<string, unknown>[];
-  }
-  if (raw != null && typeof raw === "object") {
-    const value = raw as Record<string, unknown>;
-    if (Array.isArray(value.data)) {
-      return value.data as Record<string, unknown>[];
-    }
-    if (Array.isArray(value.items)) {
-      return value.items as Record<string, unknown>[];
-    }
-  }
-  return [];
 }
 
 function formatChartValue(value: unknown): string | number {
@@ -564,10 +552,16 @@ export function Chart({ config }: { config: ChartConfig }) {
 
   const rows = useMemo<Record<string, unknown>[]>(() => {
     if (isRef) {
-      return normalizeRows(resolvedRef);
+      return normalizeMetricRows(resolvedRef);
     }
-    return normalizeRows(fetchedData);
+    return normalizeMetricRows(fetchedData);
   }, [fetchedData, isRef, resolvedRef]);
+  const chartRows = useMemo<Record<string, unknown>[]>(() => {
+    return projectMetricRows(
+      rows,
+      config.series.map((series) => series.key),
+    );
+  }, [config.series, rows]);
 
   const liveConfig = useMemo(
     () =>
@@ -611,7 +605,7 @@ export function Chart({ config }: { config: ChartConfig }) {
   const loading = !isRef && isLoading;
   const fetchError = !isRef ? error : null;
 
-  if (!loading && !fetchError && rows.length === 0 && config.hideWhenEmpty) {
+  if (!loading && !fetchError && chartRows.length === 0 && config.hideWhenEmpty) {
     return null;
   }
 
@@ -685,7 +679,7 @@ export function Chart({ config }: { config: ChartConfig }) {
           </div>
         ) : null}
 
-        {!loading && !fetchError && rows.length === 0 ? (
+        {!loading && !fetchError && chartRows.length === 0 ? (
           emptyStateConfig ? (
             <AutoEmptyState config={emptyStateConfig} />
           ) : (
@@ -705,9 +699,9 @@ export function Chart({ config }: { config: ChartConfig }) {
           )
         ) : null}
 
-        {!loading && !fetchError && rows.length > 0 ? (
+        {!loading && !fetchError && chartRows.length > 0 ? (
           <div data-chart-content="" style={{ width: "100%", height: "100%" }}>
-            <ChartSurface config={config} rows={rows} rootId={rootId} />
+            <ChartSurface config={config} rows={chartRows} rootId={rootId} />
           </div>
         ) : null}
       </div>

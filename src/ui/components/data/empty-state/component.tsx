@@ -4,7 +4,10 @@ import { useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { EmptyStateConfig } from "./types";
 
@@ -40,7 +43,7 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
         gap: "var(--sn-spacing-md, 1rem)",
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
 
@@ -91,11 +94,8 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
       data-snapshot-component="empty-state"
       data-testid="empty-state"
       data-snapshot-id={rootId}
-      className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-      style={{
-        ...(rootSurface.style ?? {}),
-        ...(config.style ?? {}),
-      }}
+      className={rootSurface.className}
+      style={rootSurface.style}
     >
       {config.icon ? (
         <span

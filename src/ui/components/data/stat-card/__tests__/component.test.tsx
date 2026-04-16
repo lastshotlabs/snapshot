@@ -14,7 +14,7 @@ import type { ApiClient } from "../../../../../api/client";
 
 /** Create a mock API client that returns specified data. */
 function createMockApi(
-  data: Record<string, unknown>,
+  data: unknown,
 ): Pick<ApiClient, "get" | "post" | "put" | "patch" | "delete"> {
   return {
     get: vi.fn().mockResolvedValue(data),
@@ -295,6 +295,38 @@ describe("StatCard", () => {
 
     const label = await screen.findByTestId("stat-card-label");
     expect(label.textContent).toBe("Total Revenue");
+  });
+
+  it("resolves aggregate field aliases when the response uses a base field name", async () => {
+    const config: StatCardConfig = {
+      ...baseConfig,
+      field: "plannedAmount_sum",
+    };
+    const api = createMockApi({ plannedAmount: 2276367 });
+    const wrapper = createTestWrapper(api);
+
+    render(<StatCard config={config} />, { wrapper });
+
+    const valueEl = await screen.findByTestId("stat-card-value");
+    expect(valueEl.textContent).toBe("2,276,367");
+  });
+
+  it("summarizes array-backed metric responses for stat cards", async () => {
+    const config: StatCardConfig = {
+      ...baseConfig,
+      field: "amount",
+    };
+    const api = createMockApi([
+      { categoryId: "a", amount: 100 },
+      { categoryId: "b", amount: 250 },
+      { categoryId: "c", amount: -50 },
+    ]);
+    const wrapper = createTestWrapper(api);
+
+    render(<StatCard config={config} />, { wrapper });
+
+    const valueEl = await screen.findByTestId("stat-card-value");
+    expect(valueEl.textContent).toBe("300");
   });
 
   it("hides when visible is false", async () => {

@@ -1537,6 +1537,33 @@ function ManifestRouter({
         })
       : { allow: true as const };
   const routeAllowed = routeGuardResult.allow;
+  const routeLifecycleKey = route
+    ? `${route.id}:${scopedCurrentPath}${currentLocation.search}`
+    : null;
+  const routeRequiresLifecycleBlock = Boolean(
+    route &&
+      routeAllowed &&
+      (route.enter || (route.preload?.length ?? 0) > 0),
+  );
+  const [completedRouteLifecycleKey, setCompletedRouteLifecycleKey] = useState<
+    string | null
+  >(null);
+  const isRouteLifecyclePending = Boolean(
+    routeLifecycleKey &&
+      routeRequiresLifecycleBlock &&
+      completedRouteLifecycleKey !== routeLifecycleKey,
+  );
+
+  useEffect(() => {
+    if (!routeLifecycleKey) {
+      setCompletedRouteLifecycleKey(null);
+      return;
+    }
+
+    if (!routeRequiresLifecycleBlock) {
+      setCompletedRouteLifecycleKey(routeLifecycleKey);
+    }
+  }, [routeLifecycleKey, routeRequiresLifecycleBlock]);
 
   useEffect(() => {
     if (!route || routeAllowed || routeGuardResult.render) {
@@ -1732,6 +1759,10 @@ function ManifestRouter({
           });
         }
       }
+
+      if (!cancelled) {
+        setCompletedRouteLifecycleKey(routeEnterReplayKey);
+      }
     };
 
     void runLifecycle().catch((error: unknown) => {
@@ -1839,6 +1870,14 @@ function ManifestRouter({
   if (guardUsesAuthState(route.guard) && authLoading) {
     return (
       <div data-snapshot-auth-loading="" style={{ padding: "1rem" }}>
+        <AppFallback manifest={localizedManifest} name="loading" api={api} />
+      </div>
+    );
+  }
+
+  if (isRouteLifecyclePending) {
+    return (
+      <div data-snapshot-route-loading="" style={{ padding: "1rem" }}>
         <AppFallback manifest={localizedManifest} name="loading" api={api} />
       </div>
     );

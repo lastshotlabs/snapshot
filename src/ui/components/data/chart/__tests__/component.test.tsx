@@ -13,14 +13,38 @@ import type { ChartConfig } from "../types";
 
 // Mock recharts for jsdom (no canvas available)
 vi.mock("recharts", () => ({
-  BarChart: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="bar-chart">{children}</div>
+  BarChart: ({
+    children,
+    data,
+  }: {
+    children: React.ReactNode;
+    data?: unknown;
+  }) => (
+    <div data-testid="bar-chart" data-chart-data={JSON.stringify(data ?? null)}>
+      {children}
+    </div>
   ),
-  LineChart: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="line-chart">{children}</div>
+  LineChart: ({
+    children,
+    data,
+  }: {
+    children: React.ReactNode;
+    data?: unknown;
+  }) => (
+    <div data-testid="line-chart" data-chart-data={JSON.stringify(data ?? null)}>
+      {children}
+    </div>
   ),
-  AreaChart: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="area-chart">{children}</div>
+  AreaChart: ({
+    children,
+    data,
+  }: {
+    children: React.ReactNode;
+    data?: unknown;
+  }) => (
+    <div data-testid="area-chart" data-chart-data={JSON.stringify(data ?? null)}>
+      {children}
+    </div>
   ),
   PieChart: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="pie-chart">{children}</div>
@@ -216,5 +240,28 @@ describe("Chart component", () => {
     expect(
       container.querySelector('[data-snapshot-id="revenue-chart-legend"]')?.className,
     ).toContain("chart-legend-slot");
+  });
+
+  it("projects aggregate alias values onto configured series keys", () => {
+    const aliasRows = [
+      { month: "Jan", amount: 4000 },
+      { month: "Feb", amount: 3000 },
+    ];
+    const { Wrapper } = createWrapper(aliasRows);
+    const { container } = render(
+      <Wrapper>
+        <Chart
+          config={baseConfig({
+            series: [{ key: "amount_sum", label: "Revenue" }],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    const chartData = container
+      .querySelector('[data-testid="bar-chart"]')
+      ?.getAttribute("data-chart-data");
+    expect(chartData).toContain('"amount_sum":4000');
+    expect(chartData).toContain('"amount_sum":3000');
   });
 });

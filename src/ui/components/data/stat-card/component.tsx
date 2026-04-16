@@ -17,6 +17,11 @@ import {
 } from "./format";
 import type { StatCardConfig, UseStatCardResult } from "./types";
 import type { FromRef } from "../../../context/types";
+import {
+  normalizeMetricRows,
+  resolveMetricFieldName,
+  summarizeMetricRows,
+} from "../_shared/metric-fields";
 
 /**
  * Derive the sentiment label from direction and sentiment config.
@@ -44,6 +49,28 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
     config.params as Record<string, unknown | FromRef> | undefined,
     { poll: config.poll },
   );
+  const normalizedData = useMemo(() => {
+    if (!data) {
+      return null;
+    }
+
+    const rawData = data as unknown;
+    const usesRowPayload =
+      Array.isArray(rawData) ||
+      (rawData != null &&
+        typeof rawData === "object" &&
+        (Array.isArray((rawData as Record<string, unknown>).data) ||
+          Array.isArray((rawData as Record<string, unknown>).items)));
+
+    if (!usesRowPayload) {
+      return data;
+    }
+
+    return summarizeMetricRows(normalizeMetricRows(rawData), [
+      config.field,
+      config.trend?.field,
+    ]);
+  }, [config.field, config.trend?.field, data]);
 
   const result = useMemo((): Omit<UseStatCardResult, "refetch" | "data"> => {
     if (isLoading) {
@@ -68,7 +95,7 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
       };
     }
 
-    if (!data) {
+    if (!normalizedData) {
       return {
         value: null,
         rawValue: null,
@@ -80,7 +107,9 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
     }
 
     // Determine which field to display
-    const fieldName = config.field ?? detectNumericField(data);
+    const fieldName =
+      resolveMetricFieldName(normalizedData, config.field) ??
+      detectNumericField(normalizedData);
     if (!fieldName) {
       return {
         value: null,
@@ -92,7 +121,7 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
       };
     }
 
-    const rawValue = data[fieldName];
+    const rawValue = normalizedData[fieldName];
     const numericValue =
       typeof rawValue === "number" ? rawValue : Number(rawValue);
     if (Number.isNaN(numericValue)) {
@@ -118,7 +147,13 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
     // Calculate trend if configured
     let trendResult: UseStatCardResult["trend"] = null;
     if (config.trend) {
-      const comparisonValue = data[config.trend.field];
+      const comparisonField = resolveMetricFieldName(
+        normalizedData,
+        config.trend.field,
+      );
+      const comparisonValue = comparisonField
+        ? normalizedData[comparisonField]
+        : undefined;
       if (
         typeof comparisonValue === "number" &&
         !Number.isNaN(comparisonValue)
@@ -152,9 +187,9 @@ function useStatCardLogic(config: StatCardConfig): UseStatCardResult {
       error: null,
       trend: trendResult,
     };
-  }, [data, isLoading, error, config, resolvedLabel]);
+  }, [normalizedData, isLoading, error, config, resolvedLabel]);
 
-  return { ...result, refetch, data };
+  return { ...result, refetch, data: normalizedData };
 }
 
 /**

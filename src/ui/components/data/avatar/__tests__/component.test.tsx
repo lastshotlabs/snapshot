@@ -15,12 +15,19 @@ describe("Avatar", () => {
       <Avatar
         config={{
           type: "avatar",
+          id: "user-avatar",
+          className: "avatar-root",
           name: "Jane Doe",
           status: "online",
         }}
       />,
     );
 
+    expect(
+      document
+        .querySelector('[data-snapshot-id="user-avatar"]')
+        ?.classList.contains("avatar-root"),
+    ).toBe(true);
     expect(screen.getByTestId("avatar-initials").textContent).toBe("JD");
     expect(screen.getByTestId("avatar-status").getAttribute("data-status")).toBe(
       "online",

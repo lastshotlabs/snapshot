@@ -1,12 +1,14 @@
 'use client';
 
-import type { CSSProperties } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { EmojiPicker } from "../emoji-picker/component";
 import type { EmojiPickerConfig } from "../emoji-picker/types";
@@ -85,7 +87,7 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
       position: "relative",
       overflow: "visible",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const addWrapperSurface = resolveSurfacePresentation({
@@ -141,11 +143,8 @@ export function ReactionBar({ config }: { config: ReactionBarConfig }) {
         data-snapshot-component="reaction-bar"
         data-testid="reaction-bar"
         data-snapshot-id={rootId}
-        className={[config.className, rootSurface.className].filter(Boolean).join(" ") || undefined}
-        style={{
-          ...(rootSurface.style ?? {}),
-          ...((config.style as CSSProperties | undefined) ?? {}),
-        }}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
         {reactions.map((reaction, idx) => {
           const reactionId = `${rootId}-reaction-${idx}`;
