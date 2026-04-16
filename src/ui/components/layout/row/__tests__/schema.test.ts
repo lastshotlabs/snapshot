@@ -15,4 +15,23 @@ describe("rowConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical slot surfaces", () => {
+    bootBuiltins();
+
+    const result = rowConfigSchema.safeParse({
+      type: "row",
+      children: [{ type: "markdown", content: "Hello" }],
+      slots: {
+        root: {
+          className: "row-root-slot",
+        },
+        item: {
+          className: "row-item-slot",
+        },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

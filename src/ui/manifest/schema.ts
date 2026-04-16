@@ -469,6 +469,7 @@ export const rowConfigSchema: z.ZodType = z.lazy(() =>
     maxHeight: z.string().optional(),
     suspense: suspenseFallbackSchema.optional(),
     children: z.array(componentConfigSchema).min(1),
+    slots: slotsSchema(["root", "item"]).optional(),
   }),
 );
 
@@ -525,6 +526,14 @@ export const buttonConfigSchema = baseComponentConfigSchema.extend({
   disabled: z.union([z.boolean(), fromRefSchema]).optional(),
   /** Stretch button to fill its container. Default false (content width). */
   fullWidth: z.boolean().optional(),
+  slots: slotsSchema([
+    "root",
+    "label",
+    "icon",
+    "leadingIcon",
+    "trailingIcon",
+    "spinner",
+  ]).optional(),
 });
 
 const selectOptionSchema = z.object({
@@ -542,6 +551,7 @@ export const selectConfigSchema = baseComponentConfigSchema.extend({
   labelField: z.string().optional(),
   default: textOrTRefSchema.optional(),
   placeholder: textOrTRefSchema.optional(),
+  slots: slotsSchema(["root", "control"]).optional(),
 });
 
 /** Zod config schema for the Card component. Defines a card container with optional title, subtitle, children, gap, and suspense fallback. */
@@ -553,6 +563,14 @@ export const cardConfigSchema = baseComponentConfigSchema
     children: z.array(z.lazy(() => componentConfigSchema)).default([]),
     gap: responsiveSchema(z.string()).optional(),
     suspense: suspenseFallbackSchema.optional(),
+    slots: slotsSchema([
+      "root",
+      "header",
+      "title",
+      "subtitle",
+      "content",
+      "item",
+    ]).optional(),
   })
   .strict();
 
@@ -1314,6 +1332,7 @@ export const navItemSchema: z.ZodType = z.lazy(() =>
         "dropdownItem",
         "dropdownItemLabel",
         "dropdownItemIcon",
+        "dropdownItemBadge",
       ]).optional(),
       children: z.array(navItemSchema).optional(),
     })
@@ -1372,6 +1391,7 @@ export const navigationConfigSchema: z.ZodType<Record<string, any>> = z
       "brand",
       "brandIcon",
       "brandLabel",
+      "toggle",
       "list",
       "item",
       "itemLabel",
@@ -1381,6 +1401,7 @@ export const navigationConfigSchema: z.ZodType<Record<string, any>> = z
       "dropdownItem",
       "dropdownItemLabel",
       "dropdownItemIcon",
+      "dropdownItemBadge",
       "userMenu",
       "userMenuTrigger",
       "userMenuItem",

@@ -105,7 +105,8 @@ describe("NavLink", () => {
     );
 
     const wrapper = document.querySelector('[data-snapshot-component="nav-link"]');
-    expect(wrapper?.className).toContain("component-root");
+    expect(wrapper).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Inbox 4" }).className).toContain("component-root");
     expect(screen.getByRole("link", { name: "Inbox 4" }).className).toContain("link-root-slot");
     expect(screen.getByText("Inbox")).toBeTruthy();
     expect(screen.getByText("4")).toBeTruthy();

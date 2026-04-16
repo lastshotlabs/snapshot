@@ -18,4 +18,23 @@ describe("cardConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical slot surfaces", () => {
+    bootBuiltins();
+
+    const result = cardConfigSchema.safeParse({
+      type: "card",
+      children: [{ type: "text", value: "Hello" }],
+      slots: {
+        root: {
+          className: "card-root-slot",
+        },
+        header: {
+          className: "card-header-slot",
+        },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

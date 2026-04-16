@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { extendComponentSchema } from "../../_base/schema";
+import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 export const spacerConfigSchema = extendComponentSchema({
   type: z.literal("spacer"),
@@ -11,4 +11,5 @@ export const spacerConfigSchema = extendComponentSchema({
     .default("md"),
   axis: z.enum(["horizontal", "vertical"]).default("vertical"),
   flex: z.boolean().optional(),
+  slots: slotsSchema(["root"]).optional(),
 }).strict();

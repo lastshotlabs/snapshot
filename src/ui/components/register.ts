@@ -5,16 +5,13 @@
  * stays side-effect free.
  */
 import { registerComponent } from "../manifest/component-registry";
-import {
-  buttonConfigSchema,
-  registerComponentSchema,
-} from "../manifest/schema";
+import { registerComponentSchema } from "../manifest/schema";
 import { StatCard, statCardConfigSchema } from "./data/stat-card/index";
 import { DataTable } from "./data/data-table/index";
 import { dataTableConfigSchema } from "./data/data-table/schema";
 import { AutoForm } from "./forms/auto-form/index";
 import { autoFormConfigSchema } from "./forms/auto-form/schema";
-import { Button } from "./forms/button/index";
+import { Button, buttonConfigSchema } from "./forms/button/index";
 import { ModalComponent, modalConfigSchema } from "./overlay/modal";
 import { DrawerComponent, drawerConfigSchema } from "./overlay/drawer";
 import { DetailCard } from "./data/detail-card/index";

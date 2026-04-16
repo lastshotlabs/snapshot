@@ -582,6 +582,23 @@ describe("buttonConfigSchema", () => {
     });
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical slot surfaces", () => {
+    const result = buttonConfigSchema.safeParse({
+      type: "button",
+      label: "Click me",
+      action: { type: "navigate", path: "/dashboard" },
+      slots: {
+        root: {
+          className: "button-root-slot",
+        },
+        label: {
+          className: "button-label-slot",
+        },
+      },
+    });
+    expect(result.success).toBe(true);
+  });
 });
 
 describe("selectConfigSchema", () => {
@@ -594,6 +611,22 @@ describe("selectConfigSchema", () => {
       ],
       default: "a",
       placeholder: "Choose...",
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts canonical slot surfaces", () => {
+    const result = selectConfigSchema.safeParse({
+      type: "select",
+      options: [{ label: "Option A", value: "a" }],
+      slots: {
+        root: {
+          className: "select-root-slot",
+        },
+        control: {
+          className: "select-control-slot",
+        },
+      },
     });
     expect(result.success).toBe(true);
   });
@@ -658,6 +691,28 @@ describe("nav schemas", () => {
           authenticated: true,
         },
       ],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts canonical nav slot surfaces", () => {
+    const result = navigationConfigSchema.safeParse({
+      mode: "sidebar",
+      items: [
+        {
+          label: "Inbox",
+          path: "/inbox",
+          slots: {
+            item: { className: "nav-item-slot" },
+            dropdownItemBadge: { className: "nav-dropdown-badge-slot" },
+          },
+        },
+      ],
+      slots: {
+        root: { className: "nav-root-slot" },
+        toggle: { className: "nav-toggle-slot" },
+        dropdownItemBadge: { className: "nav-dropdown-item-badge-slot" },
+      },
     });
     expect(result.success).toBe(true);
   });

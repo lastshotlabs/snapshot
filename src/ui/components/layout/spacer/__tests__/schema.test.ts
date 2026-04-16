@@ -12,4 +12,17 @@ describe("spacerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical root slot overrides", () => {
+    const result = spacerConfigSchema.safeParse({
+      type: "spacer",
+      slots: {
+        root: {
+          className: "spacer-root-slot",
+        },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

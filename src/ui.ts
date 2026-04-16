@@ -230,8 +230,6 @@ export {
   baseComponentConfigSchema,
   rowConfigSchema,
   headingConfigSchema,
-  buttonConfigSchema,
-  selectConfigSchema,
   cardConfigSchema,
   componentsConfigSchema,
   customComponentDeclarationSchema,
@@ -478,10 +476,13 @@ export {
 } from "./ui/components/overlay/command-palette/index";
 export type { CommandPaletteConfig } from "./ui/components/overlay/command-palette/index";
 
+// Components — Button
+export { Button, buttonConfigSchema } from "./ui/components/forms/button/index";
+
 // Components — Input
 export { Input, inputConfigSchema } from "./ui/components/forms/input/index";
 export type { InputConfig } from "./ui/components/forms/input/index";
-export { Select } from "./ui/components/forms/select/index";
+export { Select, selectConfigSchema } from "./ui/components/forms/select/index";
 export {
   DatePicker,
   datePickerConfigSchema,

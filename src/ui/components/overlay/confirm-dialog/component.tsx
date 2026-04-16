@@ -1,10 +1,7 @@
 'use client';
 
 import { useSubscribe } from "../../../context/hooks";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
+import { extractSurfaceConfig } from "../../_base/style-surfaces";
 import { ModalComponent } from "../modal";
 import type { ModalConfig } from "../modal";
 import type { ConfirmDialogConfig } from "./types";
@@ -18,14 +15,12 @@ export function ConfirmDialogComponent({
   config: ConfirmDialogConfig;
 }) {
   const description = useSubscribe(config.description ?? "") as string;
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: config.id ?? "confirm-dialog",
-    componentSurface: extractSurfaceConfig(config),
-  });
+  const modalSurfaceConfig = extractSurfaceConfig(config);
 
   const modalConfig: ModalConfig = {
     type: "modal",
     id: config.id,
+    ...modalSurfaceConfig,
     title: config.title,
     size: config.size ?? "sm",
     onOpen: config.onOpen,
@@ -34,8 +29,6 @@ export function ConfirmDialogComponent({
     trapFocus: config.trapFocus ?? true,
     initialFocus: config.initialFocus,
     returnFocus: config.returnFocus ?? true,
-    className: rootSurface.className,
-    style: rootSurface.style,
     content: description
       ? [
           {

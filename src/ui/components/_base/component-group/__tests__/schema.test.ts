@@ -16,4 +16,18 @@ describe("componentGroupConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts canonical root slot overrides", () => {
+    const result = componentGroupConfigSchema.safeParse({
+      type: "component-group",
+      group: "hero",
+      slots: {
+        root: {
+          className: "component-group-root-slot",
+        },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });
