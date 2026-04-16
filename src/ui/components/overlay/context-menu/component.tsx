@@ -7,7 +7,7 @@ import {
   type ContextMenuPortalItem,
 } from "../../_base/context-menu-portal";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ContextMenuConfig } from "./types";
 
 /**
@@ -41,7 +41,7 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
       position: "relative",
       display: "inline-block",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const triggerSurface = resolveSurfacePresentation({

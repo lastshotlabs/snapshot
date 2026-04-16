@@ -6,7 +6,7 @@ import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { renderIcon } from "../../../icons/render";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import {
   resolveOptionalPrimitiveValue,
   resolvePrimitiveValue,
@@ -156,7 +156,7 @@ export function Link({
         },
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
     activeStates: [isCurrent ? "current" : undefined, isDisabled ? "disabled" : undefined].filter(
       Boolean,

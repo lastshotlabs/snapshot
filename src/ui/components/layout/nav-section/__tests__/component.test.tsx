@@ -21,12 +21,19 @@ describe("NavSection", () => {
       <NavSection
         config={{
           type: "nav-section",
+          className: "component-root",
           label: "Resources",
           items: [{ type: "text", id: "item-a" } as never],
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="nav-section"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     expect(screen.getByTestId("nav-section-item-item-a")).toBeTruthy();
   });
 

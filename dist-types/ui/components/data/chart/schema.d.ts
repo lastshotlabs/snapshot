@@ -11,12 +11,12 @@ export declare const seriesConfigSchema: z.ZodObject<{
     /** CSS color value or CSS variable (e.g. "var(--sn-chart-1)"). */
     color: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
-    label: string;
     key: string;
+    label: string;
     color?: string | undefined;
 }, {
-    label: string;
     key: string;
+    label: string;
     color?: string | undefined;
 }>;
 /**
@@ -701,12 +701,12 @@ export declare const chartSchema: z.ZodObject<{
         /** CSS color value or CSS variable (e.g. "var(--sn-chart-1)"). */
         color: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
-        label: string;
         key: string;
+        label: string;
         color?: string | undefined;
     }, {
-        label: string;
         key: string;
+        label: string;
         color?: string | undefined;
     }>, "many">;
     height: z.ZodDefault<z.ZodNumber>;
@@ -8313,8 +8313,8 @@ export declare const chartSchema: z.ZodObject<{
     legend: boolean;
     emptyMessage: string;
     series: {
-        label: string;
         key: string;
+        label: string;
         color?: string | undefined;
     }[];
     chartType: "bar" | "area" | "line" | "donut" | "pie" | "sparkline" | "funnel" | "radar" | "treemap" | "scatter";
@@ -11272,8 +11272,8 @@ export declare const chartSchema: z.ZodObject<{
         params?: Record<string, unknown> | undefined;
     };
     series: {
-        label: string;
         key: string;
+        label: string;
         color?: string | undefined;
     }[];
     xKey: string;

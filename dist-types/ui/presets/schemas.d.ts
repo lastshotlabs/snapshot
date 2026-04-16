@@ -12,13 +12,13 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
         badge: z.ZodOptional<z.ZodBoolean>;
         format: z.ZodOptional<z.ZodEnum<["date", "currency", "number", "boolean"]>>;
     }, "strict", z.ZodTypeAny, {
-        label: string;
         key: string;
+        label: string;
         format?: "number" | "boolean" | "date" | "currency" | undefined;
         badge?: boolean | undefined;
     }, {
-        label: string;
         key: string;
+        label: string;
         format?: "number" | "boolean" | "date" | "currency" | undefined;
         badge?: boolean | undefined;
     }>, "many">;
@@ -41,8 +41,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
             placeholder: z.ZodOptional<z.ZodString>;
         }, "strict", z.ZodTypeAny, {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -51,8 +51,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
             placeholder?: string | undefined;
         }, {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -63,8 +63,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     }, "strict", z.ZodTypeAny, {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -75,8 +75,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     }, {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -104,8 +104,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
             placeholder: z.ZodOptional<z.ZodString>;
         }, "strict", z.ZodTypeAny, {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -114,8 +114,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
             placeholder?: string | undefined;
         }, {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -126,8 +126,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     }, "strict", z.ZodTypeAny, {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -138,8 +138,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     }, {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -164,16 +164,16 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
         }>, "many">>;
     }, "strict", z.ZodTypeAny, {
         type: "text" | "select";
-        label: string;
         key: string;
+        label: string;
         options?: {
             value: string;
             label: string;
         }[] | undefined;
     }, {
         type: "text" | "select";
-        label: string;
         key: string;
+        label: string;
         options?: {
             value: string;
             label: string;
@@ -206,8 +206,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
 }, "strict", z.ZodTypeAny, {
     title: string;
     columns: {
-        label: string;
         key: string;
+        label: string;
         format?: "number" | "boolean" | "date" | "currency" | undefined;
         badge?: boolean | undefined;
     }[];
@@ -224,8 +224,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     } | undefined;
     filters?: {
         type: "text" | "select";
-        label: string;
         key: string;
+        label: string;
         options?: {
             value: string;
             label: string;
@@ -237,8 +237,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     createForm?: {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -250,8 +250,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     updateForm?: {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -263,8 +263,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
 }, {
     title: string;
     columns: {
-        label: string;
         key: string;
+        label: string;
         format?: "number" | "boolean" | "date" | "currency" | undefined;
         badge?: boolean | undefined;
     }[];
@@ -281,8 +281,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     } | undefined;
     filters?: {
         type: "text" | "select";
-        label: string;
         key: string;
+        label: string;
         options?: {
             value: string;
             label: string;
@@ -294,8 +294,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     createForm?: {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -307,8 +307,8 @@ export declare const crudPresetConfigSchema: z.ZodObject<{
     updateForm?: {
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -501,8 +501,8 @@ export declare const settingsPresetConfigSchema: z.ZodObject<{
             placeholder: z.ZodOptional<z.ZodString>;
         }, "strict", z.ZodTypeAny, {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -511,8 +511,8 @@ export declare const settingsPresetConfigSchema: z.ZodObject<{
             placeholder?: string | undefined;
         }, {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -528,8 +528,8 @@ export declare const settingsPresetConfigSchema: z.ZodObject<{
         label: string;
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -548,8 +548,8 @@ export declare const settingsPresetConfigSchema: z.ZodObject<{
         label: string;
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -572,8 +572,8 @@ export declare const settingsPresetConfigSchema: z.ZodObject<{
         label: string;
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;
@@ -596,8 +596,8 @@ export declare const settingsPresetConfigSchema: z.ZodObject<{
         label: string;
         fields: {
             type: "number" | "text" | "textarea" | "select" | "toggle" | "email" | "password";
-            label: string;
             key: string;
+            label: string;
             options?: {
                 value: string;
                 label: string;

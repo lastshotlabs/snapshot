@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { SplitPaneConfig } from "./types";
 
 export function SplitPane({ config }: { config: SplitPaneConfig }) {
@@ -63,7 +63,7 @@ export function SplitPane({ config }: { config: SplitPaneConfig }) {
         minHeight: isHorizontal ? "400px" : undefined,
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const paneSurface = resolveSurfacePresentation({

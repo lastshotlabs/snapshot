@@ -6,7 +6,7 @@ import { ComponentRenderer } from "../../../manifest/renderer";
 import { useSubscribe } from "../../../context/hooks";
 import type { ComponentConfig } from "../../../manifest/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { TooltipConfig } from "./types";
 
 /**
@@ -149,7 +149,7 @@ export function TooltipComponent({ config }: { config: TooltipConfig }) {
       position: "relative",
       display: "inline-block",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const contentSurface = resolveSurfacePresentation({

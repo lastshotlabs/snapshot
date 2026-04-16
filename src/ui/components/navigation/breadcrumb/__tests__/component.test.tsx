@@ -133,12 +133,14 @@ describe("BreadcrumbComponent", () => {
             <BreadcrumbComponent
               config={{
                 type: "breadcrumb",
+                className: "component-root",
                 source: "manual",
                 items: [
                   { label: "Home", path: "/" },
                   { label: "Users" },
                 ],
                 slots: {
+                  root: { className: "slot-root" },
                   link: { className: "breadcrumb-link-slot" },
                 },
               }}
@@ -148,6 +150,9 @@ describe("BreadcrumbComponent", () => {
       </Provider>,
     );
 
+    const root = screen.getByTestId("breadcrumb");
+    expect(root.className).toContain("component-root");
+    expect(root.className).toContain("slot-root");
     const homeLink = screen.getByRole("link", { name: "Home" });
     expect(homeLink.className).toContain("breadcrumb-link-slot");
   });

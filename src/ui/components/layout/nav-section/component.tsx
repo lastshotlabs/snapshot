@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { ButtonControl } from "../../forms/button";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { NavSectionConfig } from "./types";
 
 export function NavSection({ config }: { config: NavSectionConfig }) {
@@ -13,7 +13,7 @@ export function NavSection({ config }: { config: NavSectionConfig }) {
   const rootId = config.id ?? "nav-section";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const headerLabelSurface = resolveSurfacePresentation({

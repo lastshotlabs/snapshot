@@ -57,13 +57,23 @@ describe("DropdownMenu", () => {
 
   it("renders with data-snapshot-component attribute", () => {
     const wrapper = createTestWrapper();
-    render(<DropdownMenu config={baseConfig} />, { wrapper });
+    render(
+      <DropdownMenu
+        config={{
+          ...baseConfig,
+          className: "component-root",
+          slots: {
+            root: { className: "slot-root" },
+          },
+        }}
+      />,
+      { wrapper },
+    );
 
-    expect(
-      screen
-        .getByTestId("dropdown-menu")
-        .getAttribute("data-snapshot-component"),
-    ).toBe("dropdown-menu");
+    const menu = screen.getByTestId("dropdown-menu");
+    expect(menu.getAttribute("data-snapshot-component")).toBe("dropdown-menu");
+    expect(menu.className).toContain("component-root");
+    expect(menu.className).toContain("slot-root");
   });
 
   it("renders trigger button with label", () => {

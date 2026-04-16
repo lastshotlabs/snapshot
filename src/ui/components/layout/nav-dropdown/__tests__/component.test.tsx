@@ -65,15 +65,22 @@ describe("NavDropdown", () => {
       <NavDropdown
         config={{
           type: "nav-dropdown",
+          className: "component-root",
           label: "Products",
           width: "18rem",
           items: [{ type: "text", id: "item-a" } as never],
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
     const root = container.querySelector('[data-snapshot-id="nav-dropdown-root"]');
+    expect((root as HTMLElement | null)?.className).toContain("component-root");
+    expect((root as HTMLElement | null)?.className).toContain("slot-root");
     expect((root as HTMLElement | null)?.style.position).toBe("relative");
+    expect((root as HTMLElement | null)?.style.width).toBe("");
 
     fireEvent.click(screen.getByRole("button", { name: "Products" }));
     vi.runAllTimers();

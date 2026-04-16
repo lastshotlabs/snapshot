@@ -5,7 +5,7 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { FavoriteButtonConfig } from "./types";
 
@@ -53,11 +53,7 @@ export function FavoriteButton({ config }: { config: FavoriteButtonConfig }) {
   });
 
   return (
-    <div
-      data-snapshot-component="favorite-button"
-      className={config.className}
-      style={config.style as React.CSSProperties}
-    >
+    <div data-snapshot-component="favorite-button">
       <ButtonControl
         variant="ghost"
         size={size.button}
@@ -69,7 +65,8 @@ export function FavoriteButton({ config }: { config: FavoriteButtonConfig }) {
           }
         }}
         surfaceId={rootId}
-        surfaceConfig={config.slots?.root}
+        surfaceConfig={extractSurfaceConfig(config)}
+        itemSurfaceConfig={config.slots?.root}
         activeStates={[...states]}
         ariaLabel={active ? "Remove from favorites" : "Add to favorites"}
         ariaPressed={active}

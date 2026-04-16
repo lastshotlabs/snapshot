@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePublish } from "../../../context/index";
 import { useActionExecutor } from "../../../actions/executor";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { InputControl } from "../../forms/input";
 import type { NavSearchConfig } from "./types";
 
@@ -53,7 +53,7 @@ export function NavSearch({ config }: { config: NavSearchConfig }) {
       alignItems: "center",
       position: "relative",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const inputSurface = resolveSurfacePresentation({

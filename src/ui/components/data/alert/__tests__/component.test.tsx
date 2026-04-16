@@ -21,15 +21,22 @@ describe("Alert", () => {
       <Alert
         config={{
           type: "alert",
+          className: "component-root",
           title: "Success",
           description: "Saved successfully",
           action: { type: "event", name: "alert-action" } as never,
           actionLabel: "Retry",
           dismissible: true,
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const alert = screen.getByTestId("alert");
+    expect(alert.className).toContain("component-root");
+    expect(alert.className).toContain("slot-root");
     expect(screen.getByTestId("alert-title").textContent).toBe("Success");
     expect(screen.getByTestId("alert-description").textContent).toBe(
       "Saved successfully",

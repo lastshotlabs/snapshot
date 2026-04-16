@@ -5,7 +5,7 @@ import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { AlertConfig } from "./types";
 
@@ -66,7 +66,8 @@ export function Alert({ config }: { config: AlertConfig }) {
         position: "relative",
       },
     },
-    componentSurface: config.slots?.root,
+    componentSurface: extractSurfaceConfig(config),
+    itemSurface: config.slots?.root,
   });
   const iconSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-icon`,

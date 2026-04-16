@@ -5986,8 +5986,8 @@ export declare const kanbanColumnSchema: z.ZodObject<{
         } | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
-    title: string;
     key: string;
+    title: string;
     color?: "destructive" | "success" | "warning" | "info" | "primary" | "secondary" | "muted" | undefined;
     slots?: {
         column?: {
@@ -7903,8 +7903,8 @@ export declare const kanbanColumnSchema: z.ZodObject<{
     } | undefined;
     limit?: number | undefined;
 }, {
-    title: string;
     key: string;
+    title: string;
     color?: "destructive" | "success" | "warning" | "info" | "primary" | "secondary" | "muted" | undefined;
     slots?: {
         column?: {

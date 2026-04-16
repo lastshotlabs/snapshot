@@ -1,5 +1,8 @@
 import type { CSSProperties } from "react";
 export type RuntimeSurfaceState = "hover" | "focus" | "open" | "selected" | "current" | "active" | "completed" | "invalid" | "disabled";
+export declare function extractSurfaceConfig(value: Record<string, unknown> | undefined, options?: {
+    omit?: string[];
+}): Record<string, unknown> | undefined;
 export declare function mergeClassNames(...classes: Array<string | undefined | null | false>): string | undefined;
 export declare function mergeStyles(...styles: Array<Record<string, string | number> | CSSProperties | undefined | null>): Record<string, string | number> | undefined;
 export declare function resolveSurfaceStateOrder(states: RuntimeSurfaceState[]): RuntimeSurfaceState[];

@@ -1,4 +1,16 @@
 import type { FromRef } from "./types";
+/**
+ * Reserved prefixes for `from` references.
+ *
+ * These prefixes are resolved against built-in sources (manifest config, route
+ * params, overlay state, etc.) and take priority over workflow context keys.
+ * Using one of these as a workflow `capture` / `assign` key prefix will cause
+ * silent mis-resolution — the value will be read from the built-in source
+ * instead of the workflow context.
+ *
+ * @see {@link resolveFromRef} for the resolution order.
+ */
+export declare const RESERVED_FROM_PREFIXES: readonly ["params.", "route.", "overlay.", "auth.", "app.", "global.", "state."];
 export interface ResolveFromRefContext {
     context?: Record<string, unknown>;
     pageRegistry?: {

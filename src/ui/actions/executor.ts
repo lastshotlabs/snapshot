@@ -22,7 +22,6 @@ import {
 import {
   buildExpressionContext,
   resolveFromRef,
-  RESERVED_FROM_PREFIXES,
 } from "../context/from-ref";
 import { evaluateExpression } from "../expressions/parser";
 import { createAnalyticsDispatcher } from "../analytics/dispatch";

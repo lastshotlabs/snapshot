@@ -6,7 +6,7 @@ import { renderIcon } from "../../../icons/render";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import { FloatingMenuStyles, FloatingPanel } from "../../primitives/floating-menu";
 import { NavLink } from "../nav-link";
@@ -123,7 +123,7 @@ export function NavDropdown({
         },
       },
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config, { omit: ["width"] }),
     itemSurface: config.slots?.root,
     activeStates: [
       ...(isOpen ? (["open"] as const) : []),

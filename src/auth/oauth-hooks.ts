@@ -126,10 +126,12 @@ export function createOAuthHooks({
   }
 
   /**
-   * @deprecated Legacy OAuth code exchange. In the default Bunshot + snapshot browser
-   * OAuth flow, Bunshot establishes the session cookie server-side during the provider
-   * callback and redirects back with only success/error status. No client-side exchange
-   * is needed. This hook will be removed in the next major version.
+   * Execute the Bunshot one-time OAuth code exchange.
+   *
+   * The provider callback redirects the browser back to the app with a short-lived
+   * authorization `code`. Snapshot exchanges that code via
+   * `POST /auth/oauth/exchange`, then hydrates the auth cache and navigates to the
+   * configured home path.
    */
   function useOAuthExchange() {
     const queryClient = useQueryClient();

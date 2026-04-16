@@ -24,16 +24,23 @@ describe("NavSearch", () => {
       <NavSearch
         config={{
           type: "nav-search",
+          className: "component-root",
           placeholder: "Search docs",
           publishTo: "nav.search",
           onSearch: { type: "search" } as never,
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
     const input = screen.getByPlaceholderText("Search docs");
+    const form = input.closest("form");
+    expect(form?.className).toContain("component-root");
+    expect(form?.className).toContain("slot-root");
     fireEvent.change(input, { target: { value: "icons" } });
-    fireEvent.submit(input.closest("form")!);
+    fireEvent.submit(form!);
 
     expect(publishSpy).toHaveBeenCalledWith("icons");
     expect(executeSpy).toHaveBeenCalledWith({ type: "search" });

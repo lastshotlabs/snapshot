@@ -25,12 +25,19 @@ describe("Collapsible", () => {
       <Collapsible
         config={{
           type: "collapsible",
+          className: "component-root",
           trigger: { type: "markdown", id: "trigger-copy", content: "Toggle" } as never,
           children: [{ type: "markdown", id: "body-copy", content: "Body" } as never],
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = container.querySelector('[data-snapshot-component="collapsible"]');
+    expect((root as HTMLElement | null)?.className).toContain("component-root");
+    expect((root as HTMLElement | null)?.className).toContain("slot-root");
     fireEvent.click(screen.getByText("trigger-copy"));
 
     expect(container.querySelector('[data-collapsible-content][data-open="true"]')).toBeTruthy();
@@ -41,12 +48,19 @@ describe("Collapsible", () => {
       <Collapsible
         config={{
           type: "collapsible",
+          className: "component-root",
           trigger: { type: "markdown", id: "trigger-copy", content: "Toggle" } as never,
           children: [{ type: "markdown", id: "body-copy", content: "Body" } as never],
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="collapsible"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     expect(
       screen.getAllByRole("button")[0]?.getAttribute("data-sn-button"),
     ).not.toBeNull();

@@ -20,6 +20,7 @@ describe("SplitPane", () => {
         config={{
           type: "split-pane",
           id: "workspace-split",
+          className: "component-root",
           direction: "horizontal",
           children: [
             { type: "text", id: "left-pane", value: "Left" },
@@ -35,6 +36,7 @@ describe("SplitPane", () => {
 
     const root = document.querySelector('[data-snapshot-id="workspace-split-root"]');
     const divider = document.querySelector('[data-snapshot-id="workspace-split-divider"]');
+    expect(root?.className).toContain("component-root");
     expect(root?.className).toContain("split-root-slot");
     expect(divider?.className).toContain("split-divider-slot");
     expect(screen.getByText("left-pane")).toBeTruthy();

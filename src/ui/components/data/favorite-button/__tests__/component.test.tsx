@@ -29,13 +29,20 @@ describe("FavoriteButton", () => {
       <FavoriteButton
         config={{
           type: "favorite-button",
+          className: "component-root",
           active: false,
           toggleAction: { type: "favorite" } as never,
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
-    fireEvent.click(screen.getByTestId("favorite-button"));
+    const button = screen.getByTestId("favorite-button");
+    expect(button.className).toContain("component-root");
+    expect(button.className).toContain("slot-root");
+    fireEvent.click(button);
 
     expect(executeSpy).toHaveBeenCalledWith({ type: "favorite" });
     expect(screen.getByTestId("favorite-button").getAttribute("data-active")).toBe("true");

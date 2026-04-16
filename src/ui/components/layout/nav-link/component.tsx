@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { useSubscribe } from "../../../context/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { Link } from "../../primitives/link";
 import type { LinkConfig } from "../../primitives/link/types";
 import type { NavLinkConfig } from "./types";
@@ -65,7 +65,7 @@ export function NavLink({
     implementationBase: {
       display: "contents",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
   });
 
   return (

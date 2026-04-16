@@ -5,7 +5,7 @@ import { useSubscribe, usePublish } from "../../../context/index";
 import { useEvaluateExpression } from "../../../expressions/use-expression";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { CollapsibleConfig } from "./types";
 
@@ -77,7 +77,7 @@ export function Collapsible({ config }: { config: CollapsibleConfig }) {
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const contentSurface = resolveSurfacePresentation({

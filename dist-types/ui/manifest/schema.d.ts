@@ -15725,13 +15725,13 @@ export declare const authSessionSchema: z.ZodObject<{
     storage: z.ZodDefault<z.ZodEnum<["localStorage", "sessionStorage", "memory"]>>;
     key: z.ZodDefault<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
+    key: string;
     mode: "cookie" | "token";
     storage: "localStorage" | "sessionStorage" | "memory";
-    key: string;
 }, {
+    key?: string | undefined;
     mode?: "cookie" | "token" | undefined;
     storage?: "localStorage" | "sessionStorage" | "memory" | undefined;
-    key?: string | undefined;
 }>;
 /**
  * Schema for the manifest auth screen and auth workflow configuration.
@@ -15743,13 +15743,13 @@ export declare const authScreenConfigSchema: z.ZodObject<{
         storage: z.ZodDefault<z.ZodEnum<["localStorage", "sessionStorage", "memory"]>>;
         key: z.ZodDefault<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
+        key: string;
         mode: "cookie" | "token";
         storage: "localStorage" | "sessionStorage" | "memory";
-        key: string;
     }, {
+        key?: string | undefined;
         mode?: "cookie" | "token" | undefined;
         storage?: "localStorage" | "sessionStorage" | "memory" | undefined;
-        key?: string | undefined;
     }>>;
     contract: z.ZodOptional<z.ZodObject<{
         endpoints: z.ZodOptional<z.ZodObject<{
@@ -25846,9 +25846,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
     } | undefined;
     screens?: ("login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "mfa" | "sso-callback")[] | Partial<Record<"login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "mfa" | "sso-callback", false | "default">> | undefined;
     session?: {
+        key: string;
         mode: "cookie" | "token";
         storage: "localStorage" | "sessionStorage" | "memory";
-        key: string;
     } | undefined;
     contract?: {
         userIdField: string;
@@ -27066,9 +27066,9 @@ export declare const authScreenConfigSchema: z.ZodObject<{
     } | undefined;
     screens?: ("login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "mfa" | "sso-callback")[] | Partial<Record<"login" | "register" | "forgot-password" | "reset-password" | "verify-email" | "mfa" | "sso-callback", false | "default">> | undefined;
     session?: {
+        key?: string | undefined;
         mode?: "cookie" | "token" | undefined;
         storage?: "localStorage" | "sessionStorage" | "memory" | undefined;
-        key?: string | undefined;
     } | undefined;
     contract?: {
         headers?: {

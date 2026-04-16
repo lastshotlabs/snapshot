@@ -12,7 +12,7 @@ import {
   MenuLabel,
   MenuSeparator,
 } from "../../primitives/floating-menu";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { DropdownMenuConfig } from "./types";
 
 type DropdownMenuItem = DropdownMenuConfig["items"][number];
@@ -34,7 +34,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
       position: "relative",
       display: "inline-block",
     },
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const triggerLabelSurface = resolveSurfacePresentation({

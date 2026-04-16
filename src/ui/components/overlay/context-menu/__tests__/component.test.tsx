@@ -82,6 +82,7 @@ describe("ContextMenu", () => {
       <ContextMenu
         config={{
           type: "context-menu",
+          className: "component-root",
           triggerText: "Open",
           items: [
             {
@@ -90,10 +91,16 @@ describe("ContextMenu", () => {
               action: { type: "navigate", to: "/edit" },
             },
           ],
+          slots: {
+            root: { className: "slot-root" },
+          },
         }}
       />,
     );
 
+    const root = document.querySelector('[data-snapshot-component="context-menu"]');
+    expect(root?.className).toContain("component-root");
+    expect(root?.className).toContain("slot-root");
     fireEvent.contextMenu(screen.getByTestId("context-menu-area"), {
       clientX: 12,
       clientY: 18,

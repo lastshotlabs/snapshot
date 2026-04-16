@@ -31,10 +31,14 @@ describe("TooltipComponent", () => {
         config={{
           type: "tooltip",
           id: "tooltip-demo",
+          className: "component-root",
           text: "Helpful context",
           delay: 0,
           content: [{ type: "spacer", size: "sm" } as never],
           slots: {
+            root: {
+              className: "slot-root",
+            },
             content: {
               className: "tooltip-content-slot",
             },
@@ -51,6 +55,8 @@ describe("TooltipComponent", () => {
       vi.runAllTimers();
     });
 
+    expect(screen.getByTestId("tooltip").className).toContain("component-root");
+    expect(screen.getByTestId("tooltip").className).toContain("slot-root");
     expect(screen.getByTestId("tooltip-popup").className).toContain(
       "tooltip-content-slot",
     );

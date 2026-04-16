@@ -685,16 +685,16 @@ export declare const filterBarConfigSchema: z.ZodObject<{
             value: string;
             label: string;
         }[];
-        label: string;
         key: string;
+        label: string;
         multiple?: boolean | undefined;
     }, {
         options: {
             value: string;
             label: string;
         }[];
-        label: string;
         key: string;
+        label: string;
         multiple?: boolean | undefined;
     }>, "many">>;
     changeAction: z.ZodOptional<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>>;
@@ -19147,8 +19147,8 @@ export declare const filterBarConfigSchema: z.ZodObject<{
             value: string;
             label: string;
         }[];
-        label: string;
         key: string;
+        label: string;
         multiple?: boolean | undefined;
     }[] | undefined;
     searchPlaceholder?: string | undefined;
@@ -24755,8 +24755,8 @@ export declare const filterBarConfigSchema: z.ZodObject<{
             value: string;
             label: string;
         }[];
-        label: string;
         key: string;
+        label: string;
         multiple?: boolean | undefined;
     }[] | undefined;
     searchPlaceholder?: string | undefined;

@@ -33,6 +33,7 @@ describe("Link", () => {
       <Link
         config={{
           type: "link",
+          className: "component-root",
           text: "Dashboard",
           to: "/dashboard",
           badge: "Beta",
@@ -48,6 +49,7 @@ describe("Link", () => {
     );
 
     const link = screen.getByRole("link", { name: "Dashboard Beta" });
+    expect(link.className).toContain("component-root");
     expect(link.className).toContain("link-root-slot");
     expect(link.getAttribute("href")).toBe("/dashboard");
     expect(screen.getByText("Dashboard").className).toContain("link-label-slot");

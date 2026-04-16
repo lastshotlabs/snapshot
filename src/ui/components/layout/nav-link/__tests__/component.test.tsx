@@ -92,14 +92,21 @@ describe("NavLink", () => {
       <NavLink
         config={{
           type: "nav-link",
+          className: "component-root",
           label: { from: "global.nav.label" },
           path: "/inbox",
           badge: { from: "global.nav.badge" },
+          slots: {
+            root: { className: "link-root-slot" },
+          },
         }}
       />,
       { nav: { label: "Inbox", badge: 4 } },
     );
 
+    const wrapper = document.querySelector('[data-snapshot-component="nav-link"]');
+    expect(wrapper?.className).toContain("component-root");
+    expect(screen.getByRole("link", { name: "Inbox 4" }).className).toContain("link-root-slot");
     expect(screen.getByText("Inbox")).toBeTruthy();
     expect(screen.getByText("4")).toBeTruthy();
   });

@@ -7,7 +7,7 @@ import { useAutoBreadcrumbs } from "../../../hooks/use-auto-breadcrumbs";
 import { renderIcon } from "../../../icons/render";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { BreadcrumbConfig, BreadcrumbItemConfig } from "./types";
 
 const SEPARATORS: Record<string, string> = {
@@ -78,7 +78,7 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
   const rootId = config.id ?? "breadcrumb";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
-    componentSurface: config,
+    componentSurface: extractSurfaceConfig(config),
     itemSurface: config.slots?.root,
   });
   const listSurface = resolveSurfacePresentation({
