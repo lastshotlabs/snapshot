@@ -1,14 +1,28 @@
 // @vitest-environment jsdom
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { CompareView } from "../component";
 
+const refValues: Record<string, unknown> = {
+  "compare.leftLabel": "Resolved Before",
+  "compare.rightLabel": "Resolved After",
+};
+
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
 }));
 
 describe("CompareView", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders both panes and diff labels", () => {
     render(
       <CompareView
@@ -41,5 +55,26 @@ describe("CompareView", () => {
     expect(screen.getByTestId("compare-left-label").textContent).toBe("Before");
     expect(screen.getByTestId("compare-right-label").textContent).toBe("After");
     expect(screen.getByTestId("compare-right").textContent).toContain("three");
+  });
+
+  it("renders ref-backed pane labels", () => {
+    render(
+      <CompareView
+        config={{
+          type: "compare-view",
+          left: "one",
+          right: "two",
+          leftLabel: { from: "compare.leftLabel" } as never,
+          rightLabel: { from: "compare.rightLabel" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("compare-left-label").textContent).toBe(
+      "Resolved Before",
+    );
+    expect(screen.getByTestId("compare-right-label").textContent).toBe(
+      "Resolved After",
+    );
   });
 });

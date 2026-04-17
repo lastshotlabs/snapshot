@@ -41,13 +41,21 @@ function resolveRefs<T>(value: T): T {
 }
 
 vi.mock("../../../../context/hooks", async () => {
-  const actual = await vi.importActual("../../../../context/hooks");
-
   return {
-    ...actual,
+    usePublish: () => vi.fn(),
+    useSubscribe: (value: unknown) => value,
     useResolveFrom: <T,>(value: T) => resolveRefs(value),
   };
 });
+
+vi.mock("../../../_base/use-component-data", () => ({
+  useComponentData: () => ({
+    data: null,
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  }),
+}));
 
 function createWrapper() {
   const registry = new AtomRegistryImpl();

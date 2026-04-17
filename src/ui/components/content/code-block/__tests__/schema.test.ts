@@ -15,4 +15,14 @@ describe("codeBlockConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed titles", () => {
+    const result = codeBlockConfigSchema.safeParse({
+      type: "code-block",
+      code: "const answer = 42;",
+      title: { from: "codeBlock.title" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

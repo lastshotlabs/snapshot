@@ -248,6 +248,8 @@ function ComparePane({
 export function CompareView({ config }: { config: CompareViewConfig }) {
   const leftText = useSubscribe(config.left) as string;
   const rightText = useSubscribe(config.right) as string;
+  const leftLabel = (useSubscribe(config.leftLabel) as string | undefined) ?? "Original";
+  const rightLabel = (useSubscribe(config.rightLabel) as string | undefined) ?? "Modified";
   const visible = useSubscribe(config.visible ?? true);
   const rootId = config.id ?? "compare-view";
 
@@ -255,8 +257,6 @@ export function CompareView({ config }: { config: CompareViewConfig }) {
   const rightPaneRef = useRef<HTMLDivElement>(null);
   const scrollingRef = useRef(false);
 
-  const leftLabel = config.leftLabel ?? "Original";
-  const rightLabel = config.rightLabel ?? "Modified";
   const maxHeight = config.maxHeight ?? "400px";
   const showLineNumbers = config.showLineNumbers ?? true;
 

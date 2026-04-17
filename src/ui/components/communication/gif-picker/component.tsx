@@ -43,6 +43,8 @@ function toGifEntries(
 
 export function GifPicker({ config }: { config: GifPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const placeholder = useSubscribe(config.placeholder) as string | undefined;
+  const attribution = useSubscribe(config.attribution) as string | undefined;
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const [search, setSearch] = useState("");
@@ -287,7 +289,7 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
               testId="gif-search"
               surfaceId={`${rootId}-searchInput`}
               type="text"
-              placeholder={config.placeholder ?? "Search GIFs..."}
+              placeholder={placeholder ?? "Search GIFs..."}
               value={search}
               onChangeText={setSearch}
               surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
@@ -406,13 +408,13 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
           ) : null}
         </div>
 
-        {config.attribution ? (
+        {attribution ? (
           <div
             data-snapshot-id={`${rootId}-attribution`}
             className={attributionSurface.className}
             style={attributionSurface.style}
           >
-            {config.attribution}
+            {attribution}
           </div>
         ) : null}
       </div>

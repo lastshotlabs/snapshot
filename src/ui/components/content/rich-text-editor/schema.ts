@@ -25,7 +25,7 @@ export const richTextEditorConfigSchema = extendComponentSchema({
     /** Initial markdown content. Can be a FromRef for dependent data. */
     content: z.union([z.string(), fromRefSchema]).optional(),
     /** Placeholder text shown when the editor is empty. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Editor display mode. Default: 'edit'. */
     mode: z.enum(["edit", "preview", "split"]).optional(),
     /** Whether the editor is read-only. Can be a FromRef. */

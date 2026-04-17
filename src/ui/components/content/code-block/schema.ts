@@ -35,7 +35,7 @@ export const codeBlockConfigSchema = extendComponentSchema({
     /** Max height with scroll overflow. e.g. "400px". */
     maxHeight: z.string().optional(),
     /** Filename or title shown in the title bar. */
-    title: z.string().optional(),
+    title: z.union([z.string(), fromRefSchema]).optional(),
     /** Wrap long lines instead of horizontal scroll. Default: false. */
     wrap: z.boolean().optional(),
     slots: slotsSchema([

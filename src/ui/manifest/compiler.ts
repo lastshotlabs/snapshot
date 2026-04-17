@@ -19,20 +19,24 @@ import { mergeFragment } from "./merge";
 import { setDeclaredCustomActionSchemas } from "../workflows/registry";
 import { mergeContract } from "../../auth/contract";
 import type {
-  AppConfig,
-  AnalyticsConfig,
-  AuthScreenConfig,
   CompiledManifest,
   CompiledRoute,
   ManifestRuntimeExtensions,
   ManifestConfig,
   ParsedManifestConfig,
-  PageConfig,
-  PushConfig,
-  RealtimeConfig,
-  ToastConfig,
-  RouteConfig,
+  ParsedAppConfig,
+  ParsedAnalyticsConfig,
+  ParsedAuthScreenConfig,
+  ParsedPageConfig,
+  ParsedPushConfig,
+  ParsedRealtimeConfig,
+  ParsedRouteConfig,
+  ParsedToastConfig,
 } from "./types";
+
+// Internal aliases — compiler works with post-parse shapes
+type RouteConfig = ParsedRouteConfig;
+type PageConfig = ParsedPageConfig;
 import type {
   CustomWorkflowActionDeclarationMap,
   WorkflowDefinition,
@@ -45,13 +49,13 @@ type EnvResolvedManifest = Omit<
   ParsedManifestConfig,
   "app" | "auth" | "routes" | "analytics" | "push" | "realtime" | "toast"
 > & {
-  app?: AppConfig;
-  analytics?: AnalyticsConfig;
-  auth?: AuthScreenConfig;
-  push?: PushConfig;
-  realtime?: RealtimeConfig;
-  toast?: ToastConfig;
-  routes: RouteConfig[];
+  app?: ParsedAppConfig;
+  analytics?: ParsedAnalyticsConfig;
+  auth?: ParsedAuthScreenConfig;
+  push?: ParsedPushConfig;
+  realtime?: ParsedRealtimeConfig;
+  toast?: ParsedToastConfig;
+  routes: ParsedRouteConfig[];
 };
 
 const BUILTIN_WORKFLOW_NODE_TYPES = new Set<string>([

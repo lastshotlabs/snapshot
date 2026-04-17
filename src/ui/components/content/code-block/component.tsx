@@ -63,6 +63,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
 
   const visible = useSubscribe(config.visible ?? true);
   const resolvedCode = useSubscribe(config.code);
+  const resolvedTitle = useSubscribe(config.title) as string | undefined;
   const codeText = typeof resolvedCode === "string" ? resolvedCode : "";
   const rootId = config.id ?? "code-block";
 
@@ -98,7 +99,7 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
     }
   }
 
-  const hasTitleBar = config.title || config.language || showCopy;
+  const hasTitleBar = resolvedTitle || config.language || showCopy;
   const copyLabel = copied ? "Copied!" : "Copy";
 
   const rootSurface = resolveSurfacePresentation({
@@ -268,14 +269,14 @@ export function CodeBlock({ config }: { config: CodeBlockConfig }) {
             className={titleMetaSurface.className}
             style={titleMetaSurface.style}
           >
-            {config.title && (
+            {resolvedTitle && (
               <span
                 data-snapshot-id={`${rootId}-title`}
                 data-testid="code-block-title"
                 className={titleSurface.className}
                 style={titleSurface.style}
               >
-                {config.title}
+                {resolvedTitle}
               </span>
             )}
             {config.language && (

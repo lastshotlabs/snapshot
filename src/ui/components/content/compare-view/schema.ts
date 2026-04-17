@@ -27,9 +27,9 @@ export const compareViewConfigSchema = extendComponentSchema({
     /** Right (modified) content text. Supports FromRef. */
     right: z.union([z.string(), fromRefSchema]),
     /** Label for the left pane. Default: "Original". */
-    leftLabel: z.string().optional(),
+    leftLabel: z.union([z.string(), fromRefSchema]).optional(),
     /** Label for the right pane. Default: "Modified". */
-    rightLabel: z.string().optional(),
+    rightLabel: z.union([z.string(), fromRefSchema]).optional(),
     /** Maximum height of the diff area. Default: "400px". */
     maxHeight: z.string().optional(),
     /** Whether to show line numbers. Default: true. */

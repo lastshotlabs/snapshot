@@ -18,4 +18,14 @@ describe("gifPickerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed placeholder and attribution", () => {
+    const result = gifPickerConfigSchema.safeParse({
+      type: "gif-picker",
+      placeholder: { from: "gif.placeholder" },
+      attribution: { from: "gif.attribution" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

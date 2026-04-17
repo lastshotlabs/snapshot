@@ -27,6 +27,7 @@ function resolveToolbar(toolbar: RichTextEditorConfig["toolbar"]): ToolbarItem[]
 
 export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
   const resolvedContent = useSubscribe(config.content ?? "") as string;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as string | undefined;
   const resolvedReadonly = useSubscribe(config.readonly ?? false) as boolean;
   const visible = useSubscribe(config.visible ?? true);
   const publish = usePublish(config.id);
@@ -84,7 +85,9 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
       EditorView.editable.of(!resolvedReadonly),
       keymap.of(toolbarKeymap),
     ];
-    if (config.placeholder) extensions.push(cmPlaceholder(config.placeholder));
+    if (resolvedPlaceholder) {
+      extensions.push(cmPlaceholder(resolvedPlaceholder));
+    }
     const state = EditorState.create({ doc: markdownContent, extensions });
     const view = new EditorView({ state, parent: editorRef.current });
     viewRef.current = view;
@@ -92,7 +95,7 @@ export function RichTextEditor({ config }: { config: RichTextEditorConfig }) {
       view.destroy();
       viewRef.current = null;
     };
-  }, [currentMode, resolvedReadonly, config.placeholder, toolbarKeymap]); // intentional
+  }, [currentMode, resolvedPlaceholder, resolvedReadonly, toolbarKeymap]); // intentional
 
   useEffect(() => {
     if (!initializedRef.current) {

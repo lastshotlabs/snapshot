@@ -377,6 +377,16 @@ function collectExpandedKeys(
   return keys;
 }
 
+function buildExpansionSignature(items: TreeItemInput[]): string {
+  return JSON.stringify(
+    items.map((item) => ({
+      value: item.value,
+      expanded: item.expanded === true,
+      children: item.children ? buildExpansionSignature(item.children) : null,
+    })),
+  );
+}
+
 export function TreeView({ config }: { config: TreeViewConfig }) {
   const hasEndpoint = config.data !== undefined;
   const { data, isLoading, error, refetch } = useComponentData(
@@ -490,6 +500,10 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
 
     return rawItems as TreeItemInput[];
   }, [config.items, data, hasEndpoint, resolvedConfig.items]);
+  const expansionSignature = useMemo(
+    () => buildExpansionSignature(items),
+    [items],
+  );
 
   const [expanded, setExpanded] = useState<Set<string>>(() =>
     collectExpandedKeys(items, "root"),
@@ -508,7 +522,7 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
       }
       return next;
     });
-  }, [items]);
+  }, [expansionSignature]);
 
   useEffect(() => {
     if (!publish) {

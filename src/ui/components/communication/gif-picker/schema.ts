@@ -2,6 +2,7 @@ import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { endpointTargetSchema } from "../../../manifest/resources";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the GifPicker component.
@@ -75,9 +76,9 @@ export const gifPickerConfigSchema = extendComponentSchema({
     /** Max height of the scrollable area. Default: "300px". */
     maxHeight: z.string().optional(),
     /** Placeholder text for search. Default: "Search GIFs...". */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Attribution text (e.g., "Powered by Giphy"). */
-    attribution: z.string().optional(),
+    attribution: z.union([z.string(), fromRefSchema]).optional(),
     slots: slotsSchema([
       "root",
       "searchSection",

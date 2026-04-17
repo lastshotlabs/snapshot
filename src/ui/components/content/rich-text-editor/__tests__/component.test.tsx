@@ -1,11 +1,20 @@
 // @vitest-environment jsdom
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { RichTextEditor } from "../component";
 
+const refValues: Record<string, unknown> = {
+  "editor.placeholder": "Resolved placeholder",
+};
+
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
   usePublish: () => null,
 }));
 
@@ -14,6 +23,10 @@ vi.mock("../../../../icons/icon", () => ({
 }));
 
 describe("RichTextEditor", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders preview mode without creating an editor instance", () => {
     render(
       <RichTextEditor
@@ -51,5 +64,19 @@ describe("RichTextEditor", () => {
     ).toBe("360px");
     expect(screen.getByText("Hello")).toBeDefined();
     expect(screen.getByText("Preview mode")).toBeDefined();
+  });
+
+  it("accepts ref-backed placeholders in edit mode", () => {
+    render(
+      <RichTextEditor
+        config={{
+          type: "rich-text-editor",
+          content: "",
+          placeholder: { from: "editor.placeholder" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("rich-text-editor")).toBeTruthy();
   });
 });

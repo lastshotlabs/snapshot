@@ -1,16 +1,29 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CodeBlock } from "../component";
 
+const refValues: Record<string, unknown> = {
+  "codeBlock.title": "resolved.ts",
+};
+
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
   usePublish: () => vi.fn(),
 }));
 
 describe("CodeBlock", () => {
   const writeText = vi.fn();
+
+  afterEach(() => {
+    cleanup();
+  });
 
   beforeEach(() => {
     writeText.mockReset();
@@ -54,5 +67,21 @@ describe("CodeBlock", () => {
     fireEvent.click(screen.getByTestId("code-block-copy"));
 
     expect(writeText).toHaveBeenCalledWith("const answer = 42;");
+  });
+
+  it("renders ref-backed titles", () => {
+    render(
+      <CodeBlock
+        config={{
+          type: "code-block",
+          code: "const answer = 42;",
+          title: { from: "codeBlock.title" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("code-block-title").textContent).toBe(
+      "resolved.ts",
+    );
   });
 });

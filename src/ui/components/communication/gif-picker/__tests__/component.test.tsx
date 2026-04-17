@@ -1,12 +1,21 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { GifPicker } from "../component";
 
 const publishSpy = vi.hoisted(() => vi.fn());
+const refValues: Record<string, unknown> = {
+  "gif.placeholder": "Resolved GIF search",
+  "gif.attribution": "Resolved attribution",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -23,6 +32,10 @@ vi.mock("../../../../icons/index", () => ({
 }));
 
 describe("GifPicker", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders static GIFs and publishes the selected item", () => {
     const { container } = render(
       <GifPicker
@@ -67,5 +80,23 @@ describe("GifPicker", () => {
       title: "Party parrot",
       url: "https://example.com/parrot.gif",
     });
+  });
+
+  it("renders ref-backed placeholder and attribution", () => {
+    render(
+      <GifPicker
+        config={{
+          type: "gif-picker",
+          placeholder: { from: "gif.placeholder" } as never,
+          attribution: { from: "gif.attribution" } as never,
+          gifs: [],
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("gif-search").getAttribute("placeholder")).toBe(
+      "Resolved GIF search",
+    );
+    expect(screen.getByText("Resolved attribution")).toBeTruthy();
   });
 });
