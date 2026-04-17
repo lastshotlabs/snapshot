@@ -11,4 +11,14 @@ describe("messageThreadConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed empty message", () => {
+    const result = messageThreadConfigSchema.safeParse({
+      type: "message-thread",
+      data: "GET /api/messages",
+      emptyMessage: { from: "state.thread.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

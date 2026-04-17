@@ -4,9 +4,16 @@ import { describe, expect, it, vi } from "vitest";
 import { ConfirmDialogComponent } from "../component";
 
 const modalCapture = vi.hoisted(() => ({ config: null as Record<string, unknown> | null }));
+const refValues: Record<string, unknown> = {
+  "state.dialog.confirm": "Delete forever",
+  "state.dialog.cancel": "Keep it",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value && typeof value === "object" && "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
 }));
 
 vi.mock("../../modal", () => ({
@@ -45,5 +52,24 @@ describe("ConfirmDialogComponent", () => {
     expect(content?.[0]?.value).toBe("This action cannot be undone.");
     expect(footer?.actions[0]?.label).toBe("Keep");
     expect(footer?.actions[1]?.label).toBe("Delete");
+  });
+
+  it("resolves ref-backed footer labels before adapting to modal config", () => {
+    render(
+      <ConfirmDialogComponent
+        config={{
+          type: "confirm-dialog",
+          title: "Delete item",
+          confirmLabel: { from: "state.dialog.confirm" } as never,
+          cancelLabel: { from: "state.dialog.cancel" } as never,
+        }}
+      />,
+    );
+
+    const footer = modalCapture.config?.footer as
+      | { actions: Array<{ label: string }> }
+      | undefined;
+    expect(footer?.actions[0]?.label).toBe("Keep it");
+    expect(footer?.actions[1]?.label).toBe("Delete forever");
   });
 });

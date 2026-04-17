@@ -5,6 +5,16 @@ import { describe, expect, it, vi } from "vitest";
 import { NavLogo } from "../component";
 
 const executeSpy = vi.fn();
+const refValues: Record<string, unknown> = {
+  "state.brand.name": "Pocketshot",
+};
+
+vi.mock("../../../../context/hooks", () => ({
+  useSubscribe: (value: unknown) =>
+    value && typeof value === "object" && "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
+}));
 
 vi.mock("../../../../manifest/runtime", () => ({
   useManifestRuntime: () => ({ app: { title: "Snapshot", home: "/" } }),
@@ -38,5 +48,18 @@ describe("NavLogo", () => {
     fireEvent.click(logo);
 
     expect(executeSpy).toHaveBeenCalledWith({ type: "navigate", to: "/home" });
+  });
+
+  it("renders ref-backed text", () => {
+    render(
+      <NavLogo
+        config={{
+          type: "nav-logo",
+          text: { from: "state.brand.name" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Pocketshot")).toBeTruthy();
   });
 });

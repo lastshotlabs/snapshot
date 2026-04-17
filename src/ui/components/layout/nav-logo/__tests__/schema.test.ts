@@ -17,4 +17,13 @@ describe("navLogoConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed text", () => {
+    const result = navLogoConfigSchema.safeParse({
+      type: "nav-logo",
+      text: { from: "state.brand.name" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

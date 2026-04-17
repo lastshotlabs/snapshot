@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import { useSubscribe } from "../../../context/hooks";
 import { useManifestRuntime } from "../../../manifest/runtime";
 import { useActionExecutor } from "../../../actions/executor";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -17,10 +18,11 @@ export function NavLogo({
   const manifest = useManifestRuntime();
   const execute = useActionExecutor();
 
-  const text = config.text ?? manifest?.app?.title;
+  const text = useSubscribe(config.text) as string | undefined;
   const src = config.src;
   const path = config.path ?? manifest?.app?.home ?? "/";
   const logoHeight = config.logoHeight ?? "var(--sn-spacing-lg, 1.5rem)";
+  const resolvedText = text ?? manifest?.app?.title;
 
   const handleClick = () => {
     if (path) {
@@ -90,19 +92,19 @@ export function NavLogo({
       {src && (
         <img
           src={src}
-          alt={text ?? "Logo"}
+          alt={resolvedText ?? "Logo"}
           data-snapshot-id={`${rootId}-icon`}
           className={iconSurface.className}
           style={iconSurface.style}
         />
       )}
-      {text && (
+      {resolvedText && (
         <span
           data-snapshot-id={`${rootId}-label`}
           className={labelSurface.className}
           style={labelSurface.style}
         >
-          {text}
+          {resolvedText}
         </span>
       )}
       <SurfaceStyles css={rootSurface.scopedCss} />

@@ -3,7 +3,7 @@
 import React, { useEffect, useId, useMemo, useState } from "react";
 import { useAtomValue } from "jotai/react";
 import { useActionExecutor } from "../../../actions/executor";
-import { useResolveFrom } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { AutoEmptyState } from "../../_base/auto-empty-state";
 import type { AutoEmptyStateConfig } from "../../_base/auto-empty-state";
 import { AutoErrorState } from "../../_base/auto-error-state";
@@ -186,6 +186,9 @@ function ListItem({
   onContextMenu?: (event: React.MouseEvent) => void;
   slots?: ListConfig["slots"];
 }) {
+  const title = useSubscribe(item.title) as string | undefined;
+  const description = useSubscribe(item.description) as string | undefined;
+  const badge = useSubscribe(item.badge) as string | undefined;
   const isClickable = selectable && (item.action != null || item.href != null);
   const itemSurface = resolveItemSurface(
     rootId,
@@ -281,7 +284,7 @@ function ListItem({
     item,
     itemIndex,
     "itemBadge",
-    item.badge
+    badge
       ? {
           display: "inline-flex",
           alignItems: "center",
@@ -383,29 +386,29 @@ function ListItem({
           className={titleSurface.className}
           style={titleSurface.style}
         >
-          {item.title}
+          {title ?? ""}
         </div>
-        {item.description && (
+        {description ? (
           <div
             data-snapshot-id={`${rootId}-item-description-${itemIndex}`}
             className={descriptionSurface.className}
             style={descriptionSurface.style}
           >
-            {item.description}
+            {description}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Badge */}
-      {item.badge && (
+      {badge ? (
         <span
           data-snapshot-id={`${rootId}-item-badge-${itemIndex}`}
           className={badgeSurface.className}
           style={badgeSurface.style}
         >
-          {item.badge}
+          {badge}
         </span>
-      )}
+      ) : null}
     </div>
   );
 
@@ -522,6 +525,7 @@ function DroppableListBody({
  */
 export function ListComponent({ config }: { config: ListConfig }) {
   const execute = useActionExecutor();
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
   const wsManager = useAtomValue(wsManagerAtom);
   const generatedId = useId();
   const variant = config.variant ?? "default";
@@ -532,7 +536,6 @@ export function ListComponent({ config }: { config: ListConfig }) {
     sortable ||
     Boolean(config.dropTargets?.length) ||
     config.onDrop !== undefined;
-  const emptyMessage = config.emptyMessage ?? "No items";
   const containerId = useMemo(
     () => config.id ?? `list-${generatedId.replace(/[:]/g, "")}`,
     [config.id, generatedId],
@@ -550,11 +553,24 @@ export function ListComponent({ config }: { config: ListConfig }) {
     { poll: config.poll },
   );
 
+  const resolvedStaticConfig = useResolveFrom({
+    items: config.items,
+    empty: config.empty,
+  });
+
   // Resolve items: static config or mapped from data
   const hasEndpoint = config.data != null;
   let resolvedItems: ListItemConfig[] = [];
-  if (!hasEndpoint && config.items) {
-    resolvedItems = config.items;
+  if (!hasEndpoint && Array.isArray(resolvedStaticConfig.items)) {
+    resolvedItems = (resolvedStaticConfig.items as ListItemConfig[]).map(
+      (item) => ({
+        ...item,
+        title: typeof item.title === "string" ? item.title : "",
+        description:
+          typeof item.description === "string" ? item.description : undefined,
+        badge: typeof item.badge === "string" ? item.badge : undefined,
+      }),
+    );
   } else if (hasEndpoint && data) {
     const dataArray = Array.isArray(data)
       ? data
@@ -669,8 +685,8 @@ export function ListComponent({ config }: { config: ListConfig }) {
     overscan: virtualConfig?.overscan ?? 5,
   });
   const emptyStateConfig = useMemo(
-    () => toAutoEmptyStateConfig(config.empty),
-    [config.empty],
+    () => toAutoEmptyStateConfig((resolvedStaticConfig.empty ?? config.empty) as ListConfig["empty"]),
+    [config.empty, resolvedStaticConfig.empty],
   );
   const containerStyle: React.CSSProperties =
     variant === "bordered"
@@ -1030,7 +1046,10 @@ function ManagedListItems({
   const { orderedItems, itemIds, insertItem, moveItem, removeItem } =
     useReorderable({
     items: initialItems,
-    getKey: (item) => item.id ?? item.href ?? item.title,
+    getKey: (item) =>
+      item.id ??
+      item.href ??
+      (typeof item.title === "string" ? item.title : undefined),
     onReorder: reorderAction
       ? ({ oldIndex, newIndex, item, items }) =>
           execute(reorderAction, {

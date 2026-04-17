@@ -1,9 +1,9 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import React from "react";
+import { afterEach, describe, expect, it } from "vitest";
 import { AtomRegistryImpl } from "../../../../context/registry";
 import {
   AppRegistryContext,
@@ -27,12 +27,16 @@ function createWrapper() {
     );
   }
 
-  return Wrapper;
+  return { Wrapper, registry };
 }
 
 describe("ListComponent", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("applies canonical root and item slots", () => {
-    const Wrapper = createWrapper();
+    const { Wrapper } = createWrapper();
     render(
       <Wrapper>
         <ListComponent
@@ -67,5 +71,61 @@ describe("ListComponent", () => {
       document.querySelector('[data-snapshot-id="orders-item-body-0"]')?.className,
     ).toContain("body-slot");
     expect(screen.getByText("Order A").className).toContain("title-slot");
+  });
+
+  it("resolves ref-backed static items", () => {
+    const { Wrapper, registry } = createWrapper();
+    const titleAtom = registry.register("list-copy");
+    registry.store.set(titleAtom, {
+      title: "Ref Order",
+      description: "Queued",
+      badge: "New",
+    });
+
+    render(
+      <Wrapper>
+        <ListComponent
+          config={{
+            type: "list",
+            id: "ref-orders",
+            items: [
+              {
+                id: "1",
+                title: { from: "state.list-copy.title" } as never,
+                description: { from: "state.list-copy.description" } as never,
+                badge: { from: "state.list-copy.badge" } as never,
+              },
+            ],
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Ref Order")).toBeTruthy();
+    expect(screen.getByText("Queued")).toBeTruthy();
+    expect(screen.getByText("New")).toBeTruthy();
+  });
+
+  it("renders a ref-backed empty message", () => {
+    const { Wrapper, registry } = createWrapper();
+    const titleAtom = registry.register("list-copy");
+    registry.store.set(titleAtom, {
+      empty: "Nothing here",
+    });
+
+    render(
+      <Wrapper>
+        <ListComponent
+          config={{
+            type: "list",
+            id: "ref-orders",
+            items: [],
+            emptyMessage: { from: "state.list-copy.empty" } as never,
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Nothing here")).toBeTruthy();
   });
 });

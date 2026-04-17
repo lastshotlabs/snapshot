@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the CommentSection component.
@@ -37,7 +37,7 @@ export const commentSectionConfigSchema: z.ZodType<Record<string, any>> = extend
     /** Field name for timestamp. Default: "timestamp". */
     timestampField: z.string().optional(),
     /** Placeholder for the comment input. Default: "Write a comment...". */
-    inputPlaceholder: z.string().optional(),
+    inputPlaceholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Features enabled in the comment input. */
     inputFeatures: z.array(z.string()).optional(),
     /** Action dispatched when posting a new comment. */
@@ -47,7 +47,7 @@ export const commentSectionConfigSchema: z.ZodType<Record<string, any>> = extend
     /** Sort order for comments. Default: "newest". */
     sortOrder: z.enum(["newest", "oldest"]).optional(),
     /** Empty state message. Default: "No comments yet". */
-    emptyMessage: z.string().optional(),
+    emptyMessage: z.union([z.string(), fromRefSchema]).optional(),
     slots: slotsSchema([
       "root",
       "header",

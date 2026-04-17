@@ -197,6 +197,7 @@ function MessageSkeleton({
 
 export function MessageThread({ config }: { config: MessageThreadConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
@@ -384,7 +385,7 @@ export function MessageThread({ config }: { config: MessageThreadConfig }) {
               className={emptyStateSurface.className}
               style={emptyStateSurface.style}
             >
-              {config.emptyMessage ?? "No messages yet"}
+              {emptyMessage ?? "No messages yet"}
             </div>
           ) : null}
 

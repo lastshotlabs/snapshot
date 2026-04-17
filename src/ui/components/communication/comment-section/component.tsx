@@ -362,6 +362,7 @@ function CommentItem({
 
 export function CommentSection({ config }: { config: CommentSectionConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
   const rootId = config.id ?? "comment-section";
@@ -575,7 +576,7 @@ export function CommentSection({ config }: { config: CommentSectionConfig }) {
               className={emptyStateSurface.className}
               style={emptyStateSurface.style}
             >
-              {config.emptyMessage ?? "No comments yet"}
+              {emptyMessage ?? "No comments yet"}
             </div>
           ) : null}
 

@@ -50,4 +50,21 @@ describe("listConfigSchema phase D", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed item and empty-state copy", () => {
+    const result = listConfigSchema.safeParse({
+      type: "list",
+      items: [
+        {
+          id: "1",
+          title: { from: "state.list.title" },
+          description: { from: "state.list.description" },
+          badge: { from: "state.list.badge" },
+        },
+      ],
+      emptyMessage: { from: "state.list.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

@@ -11,4 +11,15 @@ describe("commentSectionConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed input and empty-state copy", () => {
+    const result = commentSectionConfigSchema.safeParse({
+      type: "comment-section",
+      data: "GET /api/comments",
+      inputPlaceholder: { from: "state.comments.placeholder" },
+      emptyMessage: { from: "state.comments.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

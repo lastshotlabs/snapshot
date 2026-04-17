@@ -11,4 +11,14 @@ describe("chatWindowConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed input placeholder", () => {
+    const result = chatWindowConfigSchema.safeParse({
+      type: "chat-window",
+      data: "GET /api/messages",
+      inputPlaceholder: { from: "state.chat.placeholder" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

@@ -44,7 +44,7 @@ export const chatWindowConfigSchema = extendComponentSchema({
     /** Show the header bar. Default: true. */
     showHeader: z.boolean().optional(),
     /** Placeholder for the message input. */
-    inputPlaceholder: z.string().optional(),
+    inputPlaceholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Features enabled in the message input. */
     inputFeatures: z.array(z.string()).optional(),
     /** API endpoint for @mention user data. */

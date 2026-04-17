@@ -243,6 +243,16 @@ export const autoFormConfigSchema: z.ZodType<Record<string, any>> = extendCompon
     /** Label for the submit button. Defaults to "Submit". */
     submitLabel: z.union([z.string(), fromRefSchema]).optional(),
     submitLoadingLabel: z.union([z.string(), fromRefSchema]).optional(),
+    /** Visual variant for the submit button. Defaults to "default". */
+    submitVariant: z
+      .enum(["default", "secondary", "outline", "ghost", "destructive", "link"])
+      .optional(),
+    /** Size for the submit button. Defaults to "sm". */
+    submitSize: z.enum(["sm", "md", "lg"]).optional(),
+    /** Whether the submit button spans full width. */
+    submitFullWidth: z.boolean().optional(),
+    /** Icon for the submit button (Lucide icon name). */
+    submitIcon: z.string().optional(),
     /** Whether to reset the form after successful submission. */
     resetOnSubmit: z.boolean().optional(),
     /** Actions to execute after a successful submission. */

@@ -2073,11 +2073,16 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
         <ButtonControl
           type="submit"
           disabled={form.isSubmitting}
-          variant="default"
+          variant={config.submitVariant ?? "default"}
+          size={config.submitSize ?? "sm"}
+          fullWidth={config.submitFullWidth}
           surfaceId={`${rootId}-submit`}
           surfaceConfig={config.slots?.submitButton}
           activeStates={form.isSubmitting ? ["disabled"] : []}
         >
+          {config.submitIcon ? (
+            <Icon name={config.submitIcon} size={16} />
+          ) : null}
           {form.isSubmitting ? submitLoadingLabel : submitLabel}
         </ButtonControl>
       </div>

@@ -353,4 +353,24 @@ describe("autoFormConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts submit button customisation props", () => {
+    const result = autoFormConfigSchema.safeParse({
+      ...baseConfig,
+      fields: [],
+      submitLabel: "Create",
+      submitVariant: "outline",
+      submitSize: "lg",
+      submitFullWidth: true,
+      submitIcon: "plus",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.submitVariant).toBe("outline");
+      expect(result.data.submitSize).toBe("lg");
+      expect(result.data.submitFullWidth).toBe(true);
+      expect(result.data.submitIcon).toBe("plus");
+    }
+  });
 });

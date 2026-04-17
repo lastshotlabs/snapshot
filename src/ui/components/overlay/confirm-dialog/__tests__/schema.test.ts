@@ -14,4 +14,15 @@ describe("confirmDialogConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed footer labels", () => {
+    const result = confirmDialogConfigSchema.safeParse({
+      type: "confirm-dialog",
+      title: "Archive item",
+      confirmLabel: { from: "state.dialog.confirm" },
+      cancelLabel: { from: "state.dialog.cancel" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

@@ -15,6 +15,8 @@ export function ConfirmDialogComponent({
   config: ConfirmDialogConfig;
 }) {
   const description = useSubscribe(config.description ?? "") as string;
+  const confirmLabel = useSubscribe(config.confirmLabel) as string | undefined;
+  const cancelLabel = useSubscribe(config.cancelLabel) as string | undefined;
   const modalSurfaceConfig = extractSurfaceConfig(config);
 
   const modalConfig: ModalConfig = {
@@ -42,13 +44,13 @@ export function ConfirmDialogComponent({
       align: "right",
       actions: [
         {
-          label: config.cancelLabel ?? "Cancel",
+          label: cancelLabel ?? "Cancel",
           variant: config.cancelVariant ?? "secondary",
           action: config.cancelAction,
           dismiss: config.dismissOnCancel ?? true,
         },
         {
-          label: config.confirmLabel ?? "Confirm",
+          label: confirmLabel ?? "Confirm",
           variant: config.confirmVariant ?? "default",
           action: config.confirmAction,
           dismiss: config.dismissOnConfirm ?? true,

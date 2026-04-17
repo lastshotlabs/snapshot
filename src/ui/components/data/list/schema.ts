@@ -12,6 +12,7 @@ import { pollConfigSchema } from "../../_base/types";
 import { actionSchema } from "../../../actions/types";
 import { contextMenuItemSchema } from "../../overlay/context-menu/schema";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const listSlotNames = [
   "root",
@@ -54,13 +55,13 @@ export const listItemSchema = z.object({
   /** Stable item identity for reordering and cross-component drag-and-drop. */
   id: z.string().optional(),
   /** Primary text for the item. */
-  title: z.string(),
+  title: z.union([z.string(), fromRefSchema]),
   /** Secondary description text. */
-  description: z.string().optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   /** Icon name displayed at the start. */
   icon: z.string().optional(),
   /** Badge text displayed inline. */
-  badge: z.string().optional(),
+  badge: z.union([z.string(), fromRefSchema]).optional(),
   /** Semantic color for the badge. */
   badgeColor: z
     .enum(["primary", "secondary", "success", "warning", "destructive", "info"])
@@ -152,7 +153,7 @@ export const listConfigSchema: z.ZodType<Record<string, any>> = extendComponentS
     ])
     .optional(),
   /** Message shown when no items are available. */
-  emptyMessage: z.string().optional(),
+  emptyMessage: z.union([z.string(), fromRefSchema]).optional(),
   /** Error state config. */
   error: errorStateConfigSchema.optional(),
   slots: slotsSchema(listSlotNames).optional(),

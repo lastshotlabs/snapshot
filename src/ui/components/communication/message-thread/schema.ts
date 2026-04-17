@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the MessageThread component.
@@ -52,7 +52,7 @@ export const messageThreadConfigSchema: z.ZodType<Record<string, any>> = extendC
     /** Max height for the scrollable container. */
     maxHeight: z.string().optional(),
     /** Message to show when there are no messages. */
-    emptyMessage: z.string().optional(),
+    emptyMessage: z.union([z.string(), fromRefSchema]).optional(),
     slots: slotsSchema([
       "root",
       "scrollArea",
