@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -79,6 +79,10 @@ function formatDisplayValue(value: string, format?: string): string {
   return new Intl.DateTimeFormat().format(date);
 }
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 export function DatePicker({ config }: { config: DatePickerConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
@@ -87,6 +91,17 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
   const resolvedPlaceholder = useSubscribe(config.placeholder) as
     | string
     | undefined;
+  const resolvedConfig = useResolveFrom({ presets: config.presets });
+  const presets =
+    (resolvedConfig.presets as DatePickerConfig["presets"] | undefined)?.map(
+      (preset) => ({
+        ...preset,
+        label: resolveText(preset.label) ?? preset.start,
+      }),
+    ) ?? config.presets?.map((preset) => ({
+      ...preset,
+      label: resolveText(preset.label) ?? preset.start,
+    }));
   const rootId = config.id ?? "date-picker";
   const [singleValue, setSingleValue] = useState("");
   const [rangeValue, setRangeValue] = useState({ start: "", end: "" });
@@ -307,13 +322,13 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
           </label>
         ) : null}
 
-        {config.presets && config.presets.length > 0 ? (
+        {presets && presets.length > 0 ? (
           <div
             data-snapshot-id={`${rootId}-presets`}
             className={presetsSurface.className}
             style={presetsSurface.style}
           >
-            {config.presets.map((preset, index) => (
+            {presets.map((preset, index) => (
               <ButtonControl
                 key={preset.label}
                 type="button"

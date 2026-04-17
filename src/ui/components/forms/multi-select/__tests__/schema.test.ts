@@ -37,4 +37,13 @@ describe("multiSelectConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed static option labels", () => {
+    const result = multiSelectConfigSchema.safeParse({
+      type: "multi-select",
+      options: [{ label: { from: "copy.bugLabel" }, value: "bug" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

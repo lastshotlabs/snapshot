@@ -1,10 +1,13 @@
 "use client";
 
+import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { NotFoundConfig } from "./types";
 
 export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
+  const resolvedTitle = useSubscribe(config.title) as string | undefined;
+  const resolvedDescription = useSubscribe(config.description) as string | undefined;
   const rootId = config.id ?? "not-found";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
@@ -80,14 +83,14 @@ export function DefaultNotFound({ config }: { config: NotFoundConfig }) {
           className={titleSurface.className}
           style={titleSurface.style}
         >
-          {config.title ?? "Page not found"}
+          {resolvedTitle ?? "Page not found"}
         </h1>
         <p
           data-snapshot-id={`${rootId}-description`}
           className={descriptionSurface.className}
           style={descriptionSurface.style}
         >
-          {config.description ?? "The page you are looking for does not exist."}
+          {resolvedDescription ?? "The page you are looking for does not exist."}
         </p>
       </section>
       <SurfaceStyles css={rootSurface.scopedCss} />

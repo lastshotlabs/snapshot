@@ -18,6 +18,21 @@ import type { FieldConfig } from "../auto-form/types";
 const ANIMATION_DURATION_VAR = "var(--sn-duration-normal, 200ms)";
 const ANIMATION_EASE_VAR = "var(--sn-ease-default, ease)";
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function resolveStaticFieldOptions(field: FieldConfig) {
+  if (!Array.isArray(field.options)) {
+    return field.options;
+  }
+
+  return field.options.map((option) => ({
+    ...option,
+    label: resolveText(option.label) ?? option.value,
+  }));
+}
+
 function resolveFieldSurface(
   rootId: string,
   stepIndex: number,
@@ -58,9 +73,20 @@ function WizardFieldRenderer({
   onChange: (value: unknown) => void;
   onBlur: () => void;
 }) {
-  const label = field.label ?? field.name;
+  const label = resolveText(field.label) ?? field.name;
+  const description = resolveText(field.description);
+  const helperText = resolveText(field.helperText);
+  const placeholder = resolveText(field.placeholder);
+  const staticFieldOptions = resolveStaticFieldOptions(field);
   const fieldId = `sn-wizard-field-${stepIndex}-${field.name}`;
   const hasError = showError && Boolean(error);
+  const describedBy = [
+    description ? `${fieldId}-description` : null,
+    helperText ? `${fieldId}-helper` : null,
+    hasError && error ? `${fieldId}-error` : null,
+  ]
+    .filter(Boolean)
+    .join(" ") || undefined;
   const activeStates = [
     ...(hasError ? (["invalid"] as const) : []),
     ...(field.disabled ? (["disabled"] as const) : []),
@@ -139,15 +165,9 @@ function WizardFieldRenderer({
           value={(value as string) ?? ""}
           disabled={field.disabled}
           ariaInvalid={hasError}
-          ariaDescribedBy={[
-            field.description ? `${fieldId}-description` : null,
-            field.helperText ? `${fieldId}-helper` : null,
-            hasError && error ? `${fieldId}-error` : null,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           onChangeText={onChange}
           onBlur={onBlur}
           surfaceId={`${rootId}-input-${stepIndex}-${field.name}`}
@@ -164,13 +184,7 @@ function WizardFieldRenderer({
           value={(value as string) ?? ""}
           disabled={field.disabled}
           ariaInvalid={hasError}
-          ariaDescribedBy={[
-            field.description ? `${fieldId}-description` : null,
-            field.helperText ? `${fieldId}-helper` : null,
-            hasError && error ? `${fieldId}-error` : null,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeValue={onChange}
           onBlur={onBlur}
@@ -178,9 +192,9 @@ function WizardFieldRenderer({
           className={inputSurface.className}
           style={inputStyle}
         >
-          <option value="">{field.placeholder ?? "Select..."}</option>
-          {Array.isArray(field.options)
-            ? field.options.map((option) => (
+          <option value="">{placeholder ?? "Select..."}</option>
+          {Array.isArray(staticFieldOptions)
+            ? staticFieldOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -199,13 +213,7 @@ function WizardFieldRenderer({
           checked={Boolean(value)}
           disabled={field.disabled}
           ariaInvalid={hasError}
-          ariaDescribedBy={[
-            field.description ? `${fieldId}-description` : null,
-            field.helperText ? `${fieldId}-helper` : null,
-            hasError && error ? `${fieldId}-error` : null,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeChecked={onChange}
           onBlur={onBlur}
@@ -233,15 +241,9 @@ function WizardFieldRenderer({
           }
           disabled={field.disabled}
           ariaInvalid={hasError}
-          ariaDescribedBy={[
-            field.description ? `${fieldId}-description` : null,
-            field.helperText ? `${fieldId}-helper` : null,
-            hasError && error ? `${fieldId}-error` : null,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           onChangeText={(nextValue) => {
             onChange(nextValue === "" ? "" : Number(nextValue));
           }}
@@ -261,15 +263,9 @@ function WizardFieldRenderer({
           value={(value as string) ?? ""}
           disabled={field.disabled}
           ariaInvalid={hasError}
-          ariaDescribedBy={[
-            field.description ? `${fieldId}-description` : null,
-            field.helperText ? `${fieldId}-helper` : null,
-            hasError && error ? `${fieldId}-error` : null,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           onChangeText={onChange}
           onBlur={onBlur}
           surfaceId={`${rootId}-input-${stepIndex}-${field.name}`}
@@ -308,7 +304,7 @@ function WizardFieldRenderer({
           {input}
           <span>{label}</span>
         </label>
-        {field.description ? (
+        {description ? (
           <div
             id={`${fieldId}-description`}
             data-snapshot-id={`${rootId}-description-${stepIndex}-${field.name}`}
@@ -320,10 +316,10 @@ function WizardFieldRenderer({
               ...(descriptionSurface.style as React.CSSProperties),
             }}
           >
-            {field.description}
+            {description}
           </div>
         ) : null}
-        {field.helperText ? (
+        {helperText ? (
           <div
             id={`${fieldId}-helper`}
             data-snapshot-id={`${rootId}-helper-${stepIndex}-${field.name}`}
@@ -335,7 +331,7 @@ function WizardFieldRenderer({
               ...(helperSurface.style as React.CSSProperties),
             }}
           >
-            {field.helperText}
+            {helperText}
           </div>
         ) : null}
         {hasError && error ? (
@@ -403,7 +399,7 @@ function WizardFieldRenderer({
           </span>
         ) : null}
       </label>
-      {field.description ? (
+      {description ? (
         <div
           id={`${fieldId}-description`}
           data-snapshot-id={`${rootId}-description-${stepIndex}-${field.name}`}
@@ -415,11 +411,11 @@ function WizardFieldRenderer({
             ...(descriptionSurface.style as React.CSSProperties),
           }}
         >
-          {field.description}
+          {description}
         </div>
       ) : null}
       {input}
-      {field.helperText ? (
+      {helperText ? (
         <div
           id={`${fieldId}-helper`}
           data-snapshot-id={`${rootId}-helper-${stepIndex}-${field.name}`}
@@ -431,7 +427,7 @@ function WizardFieldRenderer({
             ...(helperSurface.style as React.CSSProperties),
           }}
         >
-          {field.helperText}
+          {helperText}
         </div>
       ) : null}
       {hasError && error ? (
@@ -492,6 +488,8 @@ function WizardProgress({
       style={stepsSurface.style}
     >
       {steps.map((step, index) => {
+        const stepTitle = resolveText(step.title) ?? `Step ${index + 1}`;
+        const stepDescription = resolveText(step.description);
         const isCurrent = index === currentStep;
         const isCompleted = index < currentStep;
         const stepStates = [
@@ -612,9 +610,9 @@ function WizardProgress({
                   className={labelSurface.className}
                   style={labelSurface.style}
                 >
-                  {step.title}
+                  {stepTitle}
                 </span>
-                {step.description && totalSteps <= 4 ? (
+                {stepDescription && totalSteps <= 4 ? (
                   <span
                     data-snapshot-id={`${rootId}-stepDescription-${index}`}
                     className={descriptionSurface.className}
@@ -623,7 +621,7 @@ function WizardProgress({
                       ...(descriptionSurface.style as React.CSSProperties),
                     }}
                   >
-                    {step.description}
+                    {stepDescription}
                   </span>
                 ) : null}
               </span>
@@ -666,8 +664,10 @@ export function Wizard({ config }: { config: WizardConfig }) {
     typeof resolvedConfig.submitLabel === "string"
       ? resolvedConfig.submitLabel
       : "Submit";
+  const currentStepTitle = resolveText(currentResolvedStep?.title) ?? "";
+  const currentStepDescription = resolveText(currentResolvedStep?.description);
   const submitLabel =
-    currentResolvedStep?.submitLabel ??
+    resolveText(currentResolvedStep?.submitLabel) ??
     (wizard.isLastStep ? resolvedSubmitLabel : "Next");
   const isSkippable = wizard.canSkip;
   const rootId = config.id ?? "wizard";
@@ -890,22 +890,22 @@ export function Wizard({ config }: { config: WizardConfig }) {
               className={titleSurface.className}
               style={titleSurface.style}
             >
-              {currentResolvedStep?.title ?? ""}
+              {currentStepTitle}
             </h3>
-            {currentResolvedStep?.description ? (
+            {currentStepDescription ? (
               <p
                 data-wizard-step-description=""
                 data-snapshot-id={`${rootId}-description`}
                 className={descriptionSurface.className}
                 style={descriptionSurface.style}
               >
-                {currentResolvedStep.description}
+                {currentStepDescription}
               </p>
             ) : null}
           </div>
         ) : null}
 
-        {currentStepConfig?.fields.map((field: FieldConfig) => (
+        {currentResolvedStep?.fields.map((field: FieldConfig) => (
           <WizardFieldRenderer
             key={field.name}
             rootId={rootId}

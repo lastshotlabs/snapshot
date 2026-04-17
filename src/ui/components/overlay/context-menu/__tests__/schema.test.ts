@@ -24,6 +24,19 @@ describe("contextMenuConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts ref-backed trigger and item labels", () => {
+    const result = contextMenuConfigSchema.safeParse({
+      type: "context-menu",
+      triggerText: { from: "copy.context.trigger" },
+      items: [
+        { type: "label", text: { from: "copy.context.section" } },
+        { type: "item", label: { from: "copy.context.edit" } },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("rejects extra properties", () => {
     const result = contextMenuConfigSchema.safeParse({
       type: "context-menu",

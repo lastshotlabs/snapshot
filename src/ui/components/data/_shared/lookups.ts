@@ -21,6 +21,29 @@ export interface LookupDefinition {
   lookup: LookupConfig;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function getLookupKey(value: unknown): string | null {
+  if (typeof value === "string" || typeof value === "number") {
+    return String(value);
+  }
+
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  for (const candidate of ["id", "_id", "value", "key"]) {
+    const nested = value[candidate];
+    if (typeof nested === "string" || typeof nested === "number") {
+      return String(nested);
+    }
+  }
+
+  return null;
+}
+
 function normalizeLookupRows(
   value: unknown,
 ): Record<string, unknown>[] {
@@ -95,10 +118,14 @@ export function resolveLookupValue(
   }
 
   if (Array.isArray(value)) {
-    return value.map((entry) => map.get(String(entry)) ?? entry);
+    return value.map((entry) => {
+      const key = getLookupKey(entry);
+      return key ? map.get(key) ?? entry : entry;
+    });
   }
 
-  return map.get(String(value)) ?? value;
+  const key = getLookupKey(value);
+  return key ? map.get(key) ?? value : value;
 }
 
 export function useLookupMaps(
@@ -203,11 +230,15 @@ export function useLookupMaps(
       const rows = resourceRows[definition.lookup.resource] ?? [];
       const map = new Map<string, unknown>();
       for (const row of rows) {
-        const value = getFieldValue(row, definition.lookup.valueField ?? "id");
-        if (value == null) {
+        const explicitValue = getFieldValue(
+          row,
+          definition.lookup.valueField ?? "id",
+        );
+        const key = getLookupKey(explicitValue) ?? getLookupKey(row);
+        if (!key) {
           continue;
         }
-        map.set(String(value), getLookupLabel(row, definition.lookup));
+        map.set(key, getLookupLabel(row, definition.lookup));
       }
       lookupMaps[signature] = map;
     }

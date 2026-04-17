@@ -9,6 +9,8 @@ const publishSpy = vi.fn();
 const subscribedValues: Record<string, unknown> = {
   "copy.multiSelectLabel": "Tags",
   "copy.multiSelectPlaceholder": "Select tags...",
+  "copy.bugLabel": "Bug",
+  "copy.docsLabel": "Docs",
 };
 const dataState = {
   data: null as unknown,
@@ -17,12 +19,34 @@ const dataState = {
   refetch: vi.fn(),
 };
 
+function resolveRefs<T>(value: T): T {
+  if (typeof value === "object" && value !== null && "from" in value) {
+    return subscribedValues[(value as { from: string }).from] as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => resolveRefs(item)) as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
+        key,
+        resolveRefs(nested),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
 vi.mock("../../../../context/hooks", () => ({
   useSubscribe: (value: unknown) =>
     typeof value === "object" && value !== null && "from" in value
       ? subscribedValues[(value as { from: string }).from]
       : value,
   usePublish: () => publishSpy,
+  useResolveFrom: <T,>(value: T) => resolveRefs(value),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -56,8 +80,8 @@ describe("MultiSelect", () => {
           label: { from: "copy.multiSelectLabel" },
           placeholder: { from: "copy.multiSelectPlaceholder" },
           options: [
-            { label: "Bug", value: "bug" },
-            { label: "Docs", value: "docs" },
+            { label: { from: "copy.bugLabel" }, value: "bug" },
+            { label: { from: "copy.docsLabel" }, value: "docs" },
           ],
           changeAction: { type: "set-tags" } as never,
         }}
@@ -66,6 +90,7 @@ describe("MultiSelect", () => {
 
     expect(screen.getByText("Tags")).toBeDefined();
     fireEvent.click(screen.getByRole("combobox"));
+    expect(screen.getByText("Bug")).toBeDefined();
     fireEvent.click(screen.getByRole("option", { name: /Bug/ }));
 
     expect(executeSpy).toHaveBeenCalledWith({ type: "set-tags" }, { value: ["bug"] });

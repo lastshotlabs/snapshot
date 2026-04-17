@@ -24,4 +24,20 @@ describe("datePickerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed preset labels", () => {
+    const result = datePickerConfigSchema.safeParse({
+      type: "date-picker",
+      mode: "single",
+      presets: [
+        {
+          label: { from: "form.copy.thisWeek" },
+          start: "2026-04-13",
+          end: "2026-04-19",
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

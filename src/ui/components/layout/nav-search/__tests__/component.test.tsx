@@ -6,9 +6,16 @@ import { NavSearch } from "../component";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.navSearch.placeholder": "Search docs",
+};
 
 vi.mock("../../../../context/index", () => ({
   usePublish: () => publishSpy,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -25,7 +32,7 @@ describe("NavSearch", () => {
         config={{
           type: "nav-search",
           className: "component-root",
-          placeholder: "Search docs",
+          placeholder: { from: "copy.navSearch.placeholder" },
           publishTo: "nav.search",
           onSearch: { type: "search" } as never,
           slots: {

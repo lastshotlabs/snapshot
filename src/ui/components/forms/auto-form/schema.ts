@@ -51,7 +51,7 @@ export const autoFormFieldSlotNames = [
  * Schema for select/radio option entries.
  */
 const fieldOptionSchema = z.object({
-  label: z.string(),
+  label: z.union([z.string(), fromRefSchema]),
   value: z.string(),
 });
 
@@ -124,9 +124,9 @@ export const fieldConfigSchema = z
       "tag-input",
     ]),
     /** Human-readable label. Defaults to the field name. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Placeholder text for text-like inputs. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Whether the field is required. */
     required: z.union([z.boolean(), fromRefSchema]).optional(),
     /** Client-side validation rules. */
@@ -146,8 +146,8 @@ export const fieldConfigSchema = z
     /** Whether the field is disabled. */
     disabled: z.boolean().optional(),
     /** Helper text shown below the field. */
-    helperText: z.string().optional(),
-    description: z.string().optional(),
+    helperText: z.union([z.string(), fromRefSchema]).optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** Column span in a multi-column layout (1-12). Default: full width. */
     span: z.number().int().min(1).max(12).optional(),
     /** Conditional visibility — show this field only when condition is met. */
@@ -158,7 +158,7 @@ export const fieldConfigSchema = z
     visibleWhen: z.string().optional(),
     inlineAction: z
       .object({
-        label: z.string(),
+        label: z.union([z.string(), fromRefSchema]),
         to: z.string(),
       })
       .strict()
@@ -173,9 +173,9 @@ export const fieldConfigSchema = z
  */
 export const fieldSectionSchema: z.ZodType<Record<string, any>> = z.object({
   /** Section title. */
-  title: z.string(),
+  title: z.union([z.string(), fromRefSchema]),
   /** Optional description below the title. */
-  description: z.string().optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   /** Fields in this section. */
   fields: z.array(fieldConfigSchema),
   /** Whether the section is collapsible. */
@@ -241,8 +241,8 @@ export const autoFormConfigSchema: z.ZodType<Record<string, any>> = extendCompon
     /** Gap between fields. Default: "md". */
     gap: z.enum(["xs", "sm", "md", "lg"]).optional(),
     /** Label for the submit button. Defaults to "Submit". */
-    submitLabel: z.string().optional(),
-    submitLoadingLabel: z.string().optional(),
+    submitLabel: z.union([z.string(), fromRefSchema]).optional(),
+    submitLoadingLabel: z.union([z.string(), fromRefSchema]).optional(),
     /** Whether to reset the form after successful submission. */
     resetOnSubmit: z.boolean().optional(),
     /** Actions to execute after a successful submission. */

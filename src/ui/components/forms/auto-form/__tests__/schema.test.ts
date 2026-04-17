@@ -316,4 +316,41 @@ describe("autoFormConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed field, section, and submit copy", () => {
+    const result = autoFormConfigSchema.safeParse({
+      ...baseConfig,
+      fields: [],
+      submitLabel: { from: "copy.form.submitLabel" },
+      submitLoadingLabel: { from: "copy.form.submitLoadingLabel" },
+      sections: [
+        {
+          title: { from: "copy.form.sectionTitle" },
+          description: { from: "copy.form.sectionDescription" },
+          fields: [
+            {
+              name: "email",
+              type: "email",
+              label: { from: "copy.form.fieldLabel" },
+              placeholder: { from: "copy.form.placeholder" },
+              helperText: { from: "copy.form.helperText" },
+              description: { from: "copy.form.description" },
+              options: [
+                {
+                  label: { from: "copy.form.optionLabel" },
+                  value: "work",
+                },
+              ],
+              inlineAction: {
+                label: { from: "copy.form.inlineActionLabel" },
+                to: "/support",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

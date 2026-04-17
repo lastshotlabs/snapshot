@@ -23,6 +23,17 @@ describe("popoverConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts ref-backed title and description", () => {
+    const result = popoverConfigSchema.safeParse({
+      type: "popover",
+      trigger: "More",
+      title: { from: "copy.popover.title" },
+      description: { from: "copy.popover.description" },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("rejects extra properties", () => {
     const result = popoverConfigSchema.safeParse({
       type: "popover",

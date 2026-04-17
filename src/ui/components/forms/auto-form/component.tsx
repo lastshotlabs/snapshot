@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { useComponentData } from "../../_base/use-component-data";
 import { Icon } from "../../../icons/index";
@@ -334,6 +334,21 @@ function resolveFields(config: AutoFormConfig): FieldConfig[] {
   return config.fields;
 }
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function resolveStaticFieldOptions(field: FieldConfig) {
+  if (!Array.isArray(field.options)) {
+    return field.options;
+  }
+
+  return field.options.map((option) => ({
+    ...option,
+    label: resolveText(option.label) ?? option.value,
+  }));
+}
+
 // ── Field renderer ────────────────────────────────────────────────────────
 
 function FieldRenderer({
@@ -360,9 +375,20 @@ function FieldRenderer({
   const executeAction = useActionExecutor();
   const showByExpression = useEvaluateExpression(field.visibleWhen);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const label = field.label ?? field.name;
+  const label = resolveText(field.label) ?? field.name;
+  const placeholder = resolveText(field.placeholder);
+  const helperText = resolveText(field.helperText);
+  const description = resolveText(field.description);
+  const inlineActionLabel = resolveText(field.inlineAction?.label);
+  const inlineActionTarget = resolveText(field.inlineAction?.to);
+  const staticFieldOptions = resolveStaticFieldOptions(field);
   const fieldId = `sn-field-${field.name}`;
   const hasError = showError && !!error;
+  const describedBy = hasError
+    ? `${fieldId}-error`
+    : helperText
+      ? `${fieldId}-helper`
+      : undefined;
   const activeStates = [
     ...(hasError ? ["invalid"] : []),
     ...(field.disabled ? ["disabled"] : []),
@@ -505,7 +531,9 @@ function FieldRenderer({
   };
 
   const optionsResult = useComponentData(
-    !Array.isArray(field.options) && field.options ? field.options : "",
+    !Array.isArray(staticFieldOptions) && staticFieldOptions
+      ? staticFieldOptions
+      : "",
   );
   let input: React.ReactNode;
 
@@ -524,13 +552,9 @@ function FieldRenderer({
           readOnly={field.readOnly}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           onChangeText={onChange}
           onBlur={onBlur}
           rows={3}
@@ -542,8 +566,8 @@ function FieldRenderer({
       break;
 
     case "select": {
-      const fieldOptions = Array.isArray(field.options)
-        ? field.options
+      const fieldOptions = Array.isArray(staticFieldOptions)
+        ? staticFieldOptions
         : toFieldOptions(
             optionsResult.data,
             field.labelField,
@@ -558,11 +582,7 @@ function FieldRenderer({
           disabled={field.disabled}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeValue={onChange}
           onBlur={onBlur}
@@ -570,7 +590,7 @@ function FieldRenderer({
           className={inputSurface.className}
           style={inputStyle}
         >
-          <option value="">{field.placeholder ?? "Select..."}</option>
+          <option value="">{placeholder ?? "Select..."}</option>
           {fieldOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
@@ -582,8 +602,8 @@ function FieldRenderer({
     }
 
     case "multi-select": {
-      const fieldOptions = Array.isArray(field.options)
-        ? field.options
+      const fieldOptions = Array.isArray(staticFieldOptions)
+        ? staticFieldOptions
         : toFieldOptions(
             optionsResult.data,
             field.labelField,
@@ -601,11 +621,7 @@ function FieldRenderer({
           disabled={field.disabled}
           required={required}
           aria-invalid={hasError}
-          aria-describedby={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          aria-describedby={describedBy}
           aria-label={label}
           value={selectedValues}
           onChange={(event) =>
@@ -645,11 +661,7 @@ function FieldRenderer({
           readOnly={field.readOnly}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeChecked={onChange}
           onBlur={onBlur}
@@ -684,11 +696,7 @@ function FieldRenderer({
             readOnly={field.readOnly}
             required={required}
             ariaInvalid={hasError}
-            ariaDescribedBy={hasError
-              ? `${fieldId}-error`
-              : field.helperText
-                ? `${fieldId}-helper`
-                : undefined}
+            ariaDescribedBy={describedBy}
             ariaLabel={label}
             onChangeChecked={onChange}
             onBlur={onBlur}
@@ -723,13 +731,9 @@ function FieldRenderer({
           readOnly={field.readOnly}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           onChangeText={(v) => {
             onChange(v === "" ? "" : Number(v));
           }}
@@ -750,11 +754,7 @@ function FieldRenderer({
           disabled={field.disabled}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeFiles={(files) => {
             onChange(files && files.length > 0 ? files[0] : null);
@@ -768,8 +768,8 @@ function FieldRenderer({
       break;
 
     case "radio-group": {
-      const fieldOptions = Array.isArray(field.options)
-        ? field.options
+      const fieldOptions = Array.isArray(staticFieldOptions)
+        ? staticFieldOptions
         : toFieldOptions(
             optionsResult.data,
             field.labelField,
@@ -824,11 +824,7 @@ function FieldRenderer({
                   disabled={field.disabled}
                   required={required}
                   ariaInvalid={hasError}
-                  ariaDescribedBy={hasError
-                    ? `${fieldId}-error`
-                    : field.helperText
-                      ? `${fieldId}-helper`
-                      : undefined}
+                  ariaDescribedBy={describedBy}
                   ariaLabel={opt.label}
                   onChangeChecked={(checked) => {
                     if (checked) {
@@ -879,11 +875,7 @@ function FieldRenderer({
           min={field.validation?.min != null ? String(field.validation.min) : undefined}
           max={field.validation?.max != null ? String(field.validation.max) : undefined}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeText={(nextValue) => onChange(Number(nextValue))}
           onBlur={onBlur}
@@ -904,11 +896,7 @@ function FieldRenderer({
           disabled={field.disabled}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
           onChangeText={onChange}
           onBlur={onBlur}
@@ -924,8 +912,8 @@ function FieldRenderer({
       break;
 
     case "combobox": {
-      const fieldOptions = Array.isArray(field.options)
-        ? field.options
+      const fieldOptions = Array.isArray(staticFieldOptions)
+        ? staticFieldOptions
         : toFieldOptions(
             optionsResult.data,
             field.labelField,
@@ -944,13 +932,9 @@ function FieldRenderer({
             readOnly={field.readOnly}
             required={required}
             ariaInvalid={hasError}
-            ariaDescribedBy={hasError
-              ? `${fieldId}-error`
-              : field.helperText
-                ? `${fieldId}-helper`
-                : undefined}
+            ariaDescribedBy={describedBy}
             ariaLabel={label}
-            placeholder={field.placeholder}
+            placeholder={placeholder}
             onChangeText={onChange}
             onBlur={onBlur}
             surfaceId={`${rootId}-input-${field.name}`}
@@ -980,13 +964,9 @@ function FieldRenderer({
           readOnly={field.readOnly}
           required={required}
           ariaInvalid={hasError}
-          ariaDescribedBy={hasError
-            ? `${fieldId}-error`
-            : field.helperText
-              ? `${fieldId}-helper`
-              : undefined}
+          ariaDescribedBy={describedBy}
           ariaLabel={label}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           onChangeText={(nextValue) =>
             onChange(
               nextValue
@@ -1021,13 +1001,9 @@ function FieldRenderer({
             readOnly={field.readOnly}
             required={required}
             ariaInvalid={hasError}
-            ariaDescribedBy={hasError
-              ? `${fieldId}-error`
-              : field.helperText
-                ? `${fieldId}-helper`
-                : undefined}
+            ariaDescribedBy={describedBy}
             ariaLabel={label}
-            placeholder={field.placeholder}
+            placeholder={placeholder}
             autoComplete={field.autoComplete}
             onChangeText={onChange}
             onBlur={onBlur}
@@ -1085,7 +1061,7 @@ function FieldRenderer({
           {input}
           <span>{label}</span>
         </label>
-        {field.helperText && !hasError && (
+        {helperText && !hasError && (
           <div
             id={`${fieldId}-helper`}
             data-snapshot-id={`${rootId}-helper-${field.name}`}
@@ -1097,7 +1073,7 @@ function FieldRenderer({
               ...(helperSurface.style as React.CSSProperties),
             }}
           >
-            {field.helperText}
+            {helperText}
           </div>
         )}
         {hasError && (
@@ -1138,9 +1114,11 @@ function FieldRenderer({
         data-snapshot-id={`${rootId}-label-${field.name}`}
         className={labelSurface.className}
         style={{
-          display: field.inlineAction ? "flex" : "block",
-          justifyContent: field.inlineAction ? "space-between" : undefined,
-          alignItems: field.inlineAction ? "baseline" : undefined,
+          display: inlineActionLabel && inlineActionTarget ? "flex" : "block",
+          justifyContent:
+            inlineActionLabel && inlineActionTarget ? "space-between" : undefined,
+          alignItems:
+            inlineActionLabel && inlineActionTarget ? "baseline" : undefined,
           fontSize: "var(--sn-font-size-sm, 0.875rem)",
           fontWeight:
             "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
@@ -1165,18 +1143,18 @@ function FieldRenderer({
             </span>
           )}
         </span>
-        {field.inlineAction ? (
+        {inlineActionLabel && inlineActionTarget ? (
           <ButtonControl
             type="button"
             onClick={() => {
-              void executeAction({ type: "navigate", to: field.inlineAction!.to } as never);
+              void executeAction({ type: "navigate", to: inlineActionTarget } as never);
             }}
             variant="ghost"
             size="sm"
             surfaceId={`${rootId}-inline-action-${field.name}`}
             surfaceConfig={inlineActionSurface.resolvedConfigForWrapper}
           >
-            {field.inlineAction.label}
+            {inlineActionLabel}
           </ButtonControl>
         ) : null}
       </label>
@@ -1187,7 +1165,7 @@ function FieldRenderer({
       >
         {input}
       </div>
-      {field.description && (
+      {description && (
         <div
           data-snapshot-id={`${rootId}-description-${field.name}`}
           className={descriptionSurface.className}
@@ -1198,10 +1176,10 @@ function FieldRenderer({
             ...(descriptionSurface.style as React.CSSProperties),
           }}
         >
-          {field.description}
+          {description}
         </div>
       )}
-      {field.helperText && !hasError && (
+      {helperText && !hasError && (
         <div
           id={`${fieldId}-helper`}
           data-snapshot-id={`${rootId}-helper-${field.name}`}
@@ -1213,7 +1191,7 @@ function FieldRenderer({
             ...(helperSurface.style as React.CSSProperties),
           }}
         >
-          {field.helperText}
+          {helperText}
         </div>
       )}
       {hasError && (
@@ -1327,8 +1305,10 @@ function SectionRenderer({
   slots?: AutoFormConfig["slots"];
 }) {
   const [collapsed, setCollapsed] = useState(section.defaultCollapsed ?? false);
+  const sectionTitle = resolveText(section.title) ?? "section";
+  const sectionDescription = resolveText(section.description);
   const sectionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-${section.title}`,
+    surfaceId: `${rootId}-section-${sectionTitle}`,
     implementationBase: {
       border: "none",
       padding: 0,
@@ -1339,7 +1319,7 @@ function SectionRenderer({
     itemSurface: section.slots?.section,
   });
   const sectionHeaderSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-header-${section.title}`,
+    surfaceId: `${rootId}-section-header-${sectionTitle}`,
     implementationBase: {
       display: "flex",
       alignItems: "center",
@@ -1352,7 +1332,7 @@ function SectionRenderer({
     activeStates: section.collapsible && !collapsed ? ["open"] : undefined,
   });
   const sectionToggleSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-toggle-${section.title}`,
+    surfaceId: `${rootId}-section-toggle-${sectionTitle}`,
     implementationBase: {
       display: "inline-flex",
       transform: collapsed ? "rotate(0deg)" : "rotate(90deg)",
@@ -1364,7 +1344,7 @@ function SectionRenderer({
     activeStates: section.collapsible && !collapsed ? ["open"] : undefined,
   });
   const sectionTitleSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-title-${section.title}`,
+    surfaceId: `${rootId}-section-title-${sectionTitle}`,
     implementationBase: {
       fontSize: "var(--sn-font-size-md, 1rem)",
       fontWeight: "var(--sn-font-weight-semibold, 600)",
@@ -1374,7 +1354,7 @@ function SectionRenderer({
     itemSurface: section.slots?.sectionTitle,
   });
   const sectionDescriptionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-description-${section.title}`,
+    surfaceId: `${rootId}-section-description-${sectionTitle}`,
     implementationBase: {
       fontSize: "var(--sn-font-size-sm, 0.875rem)",
       color: "var(--sn-color-muted-foreground, #6b7280)",
@@ -1385,14 +1365,14 @@ function SectionRenderer({
 
   return (
     <fieldset
-      data-sn-section={section.title}
-      data-snapshot-id={`${rootId}-section-${section.title}`}
+      data-sn-section={sectionTitle}
+      data-snapshot-id={`${rootId}-section-${sectionTitle}`}
       className={sectionSurface.className}
       style={sectionSurface.style}
     >
       {/* Section header */}
       <div
-        data-snapshot-id={`${rootId}-section-header-${section.title}`}
+        data-snapshot-id={`${rootId}-section-header-${sectionTitle}`}
         className={sectionHeaderSurface.className}
         style={sectionHeaderSurface.style}
         onClick={
@@ -1401,7 +1381,7 @@ function SectionRenderer({
       >
         {section.collapsible && (
           <span
-            data-snapshot-id={`${rootId}-section-toggle-${section.title}`}
+            data-snapshot-id={`${rootId}-section-toggle-${sectionTitle}`}
             className={sectionToggleSurface.className}
             style={sectionToggleSurface.style}
           >
@@ -1410,19 +1390,19 @@ function SectionRenderer({
         )}
         <div>
           <div
-            data-snapshot-id={`${rootId}-section-title-${section.title}`}
+            data-snapshot-id={`${rootId}-section-title-${sectionTitle}`}
             className={sectionTitleSurface.className}
             style={sectionTitleSurface.style}
           >
-            {section.title}
+            {sectionTitle}
           </div>
-          {section.description && (
+          {sectionDescription && (
             <div
-              data-snapshot-id={`${rootId}-section-description-${section.title}`}
+              data-snapshot-id={`${rootId}-section-description-${sectionTitle}`}
               className={sectionDescriptionSurface.className}
               style={sectionDescriptionSurface.style}
             >
-              {section.description}
+              {sectionDescription}
             </div>
           )}
         </div>
@@ -1588,69 +1568,126 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
   const initialData = useComponentData(resolvedDataTarget);
 
   const allFields = useMemo(() => resolveFields(config), [config]);
+  const fieldRefValues = useResolveFrom({ fields: allFields });
+  const sectionRefValues = useResolveFrom({ sections: config.sections });
+  const formCopyRefValues = useResolveFrom({
+    submitLabel: config.submitLabel,
+    submitLoadingLabel: config.submitLoadingLabel,
+  });
+  const fieldRefSignature = JSON.stringify(fieldRefValues.fields ?? allFields);
+  const sectionRefSignature = JSON.stringify(
+    sectionRefValues.sections ?? config.sections ?? null,
+  );
+  const fieldsWithRefs = useMemo(
+    () => (fieldRefValues.fields as FieldConfig[] | undefined) ?? allFields,
+    [allFields, fieldRefSignature],
+  );
+  const sectionsWithRefs = useMemo(
+    () =>
+      (sectionRefValues.sections as FieldSectionConfig[] | undefined) ??
+      config.sections,
+    [config.sections, sectionRefSignature],
+  );
   const resolvedFields = useMemo(
     () =>
-      allFields.map((field) => ({
+      fieldsWithRefs.map((field) => ({
         ...field,
-        label: resolveMaybeTemplate(
-          field.label,
-          activeLocale,
-          runtime,
-          routeRuntime,
-        ) as
-          | string
-          | undefined,
-        placeholder: resolveMaybeTemplate(
-          field.placeholder,
-          activeLocale,
-          runtime,
-          routeRuntime,
-        ) as string | undefined,
-        helperText: resolveMaybeTemplate(
-          field.helperText,
-          activeLocale,
-          runtime,
-          routeRuntime,
-        ) as
-          | string
-          | undefined,
-        description: resolveMaybeTemplate(
-          field.description,
-          activeLocale,
-          runtime,
-          routeRuntime,
-        ) as string | undefined,
+        label:
+          resolveText(
+            resolveMaybeTemplate(
+              field.label,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
+          ) ??
+          resolveText(field.label) ??
+          field.name,
+        placeholder:
+          resolveText(
+            resolveMaybeTemplate(
+              field.placeholder,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
+          ) ?? resolveText(field.placeholder),
+        helperText:
+          resolveText(
+            resolveMaybeTemplate(
+              field.helperText,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
+          ) ?? resolveText(field.helperText),
+        description:
+          resolveText(
+            resolveMaybeTemplate(
+              field.description,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
+          ) ?? resolveText(field.description),
         default: resolveMaybeTemplate(
           field.default,
           activeLocale,
           runtime,
           routeRuntime,
         ),
+        options: Array.isArray(field.options)
+          ? field.options.map((option) => ({
+              ...option,
+              label:
+                resolveText(
+                  resolveMaybeTemplate(
+                    option.label,
+                    activeLocale,
+                    runtime,
+                    routeRuntime,
+                  ),
+                ) ??
+                resolveText(option.label) ??
+                option.value,
+            }))
+          : resolveEndpointTemplates(
+              field.options,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
         inlineAction: field.inlineAction
           ? {
               ...field.inlineAction,
-              label: String(
-                resolveMaybeTemplate(
-                  field.inlineAction.label,
-                  activeLocale,
-                  runtime,
-                  routeRuntime,
-                ) ?? field.inlineAction.label,
-              ),
-              to: String(
-                resolveMaybeTemplate(
-                  field.inlineAction.to,
-                  activeLocale,
-                  runtime,
-                  routeRuntime,
-                ) ?? field.inlineAction.to,
-              ),
+              label:
+                resolveText(
+                  resolveMaybeTemplate(
+                    field.inlineAction.label,
+                    activeLocale,
+                    runtime,
+                    routeRuntime,
+                  ),
+                ) ??
+                resolveText(field.inlineAction.label) ??
+                "",
+              to:
+                resolveText(
+                  resolveMaybeTemplate(
+                    field.inlineAction.to,
+                    activeLocale,
+                    runtime,
+                    routeRuntime,
+                  ),
+                ) ??
+                resolveText(field.inlineAction.to) ??
+                "",
             }
           : undefined,
       })),
     [
       activeLocale,
-      allFields,
+      fieldsWithRefs,
       routeRuntime,
       runtime?.app,
       runtime?.auth,
@@ -1663,46 +1700,55 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
   );
   const resolvedSections = useMemo(
     () =>
-      config.sections?.map((section: FieldSectionConfig) => ({
+      sectionsWithRefs?.map((section: FieldSectionConfig) => ({
         ...section,
-        title: String(
-          resolveMaybeTemplate(
-            section.title,
-            activeLocale,
-            runtime,
-            routeRuntime,
-          ) ?? section.title,
-        ),
-        description: resolveMaybeTemplate(
-          section.description,
-          activeLocale,
-          runtime,
-          routeRuntime,
-        ) as string | undefined,
+        title:
+          resolveText(
+            resolveMaybeTemplate(
+              section.title,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
+          ) ??
+          resolveText(section.title) ??
+          "section",
+        description:
+          resolveText(
+            resolveMaybeTemplate(
+              section.description,
+              activeLocale,
+              runtime,
+              routeRuntime,
+            ),
+          ) ?? resolveText(section.description),
         fields: section.fields.map(
           (field: FieldConfig) => resolvedFieldMap.get(field.name) ?? field,
         ),
       })),
-    [activeLocale, config.sections, resolvedFieldMap, routeRuntime, runtime],
+    [activeLocale, resolvedFieldMap, routeRuntime, runtime, sectionsWithRefs],
   );
   const method = config.method ?? "POST";
-  const submitLabel = String(
-    resolveMaybeTemplate(
-      config.submitLabel ?? "Submit",
-      activeLocale,
-      runtime,
-      routeRuntime,
-    ) ??
-      "Submit",
-  );
-  const submitLoadingLabel = String(
-    resolveMaybeTemplate(
-      config.submitLoadingLabel ?? "Submitting...",
-      activeLocale,
-      runtime,
-      routeRuntime,
-    ) ?? "Submitting...",
-  );
+  const submitLabel =
+    resolveText(
+      resolveMaybeTemplate(
+        formCopyRefValues.submitLabel ?? config.submitLabel ?? "Submit",
+        activeLocale,
+        runtime,
+        routeRuntime,
+      ),
+    ) ?? "Submit";
+  const submitLoadingLabel =
+    resolveText(
+      resolveMaybeTemplate(
+        formCopyRefValues.submitLoadingLabel ??
+          config.submitLoadingLabel ??
+          "Submitting...",
+        activeLocale,
+        runtime,
+        routeRuntime,
+      ),
+    ) ?? "Submitting...";
   const columns = config.columns ?? 1;
   const gap = GAP_MAP[config.gap ?? "md"] ?? GAP_MAP.md!;
   const rootId = config.id ?? "auto-form";
@@ -1995,9 +2041,9 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
     >
       {/* Sections mode */}
       {resolvedSections ? (
-        resolvedSections.map((section: FieldSectionConfig) => (
+        resolvedSections.map((section: FieldSectionConfig, index: number) => (
           <SectionRenderer
-            key={section.title}
+            key={`${resolveText(section.title) ?? "section"}-${index}`}
             rootId={rootId}
             section={section}
             form={form}

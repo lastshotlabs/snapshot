@@ -10,6 +10,10 @@ import {
   headingConfigSchema,
   buttonConfigSchema,
   selectConfigSchema,
+  sectionConfigSchema,
+  containerConfigSchema,
+  gridConfigSchema,
+  spacerConfigSchema,
   componentsConfigSchema,
   customComponentDeclarationSchema,
   customComponentPropSchema,
@@ -632,6 +636,53 @@ describe("selectConfigSchema", () => {
   });
 });
 
+describe("layout primitive schemas", () => {
+  it("accepts section slot surfaces", () => {
+    const result = sectionConfigSchema.safeParse({
+      type: "section",
+      slots: {
+        root: { className: "section-root-slot" },
+        item: { className: "section-item-slot" },
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts container slot surfaces", () => {
+    const result = containerConfigSchema.safeParse({
+      type: "container",
+      children: [{ type: "heading", text: "Hello" }],
+      slots: {
+        root: { className: "container-root-slot" },
+        item: { className: "container-item-slot" },
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts grid slot surfaces", () => {
+    const result = gridConfigSchema.safeParse({
+      type: "grid",
+      children: [{ type: "heading", text: "Hello" }],
+      slots: {
+        root: { className: "grid-root-slot" },
+        item: { className: "grid-item-slot" },
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts spacer root slot surfaces", () => {
+    const result = spacerConfigSchema.safeParse({
+      type: "spacer",
+      slots: {
+        root: { className: "spacer-root-slot" },
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+});
+
 describe("componentsConfigSchema", () => {
   it("validates declared custom component schemas", () => {
     const result = componentsConfigSchema.safeParse({
@@ -713,6 +764,29 @@ describe("nav schemas", () => {
         toggle: { className: "nav-toggle-slot" },
         dropdownItemBadge: { className: "nav-dropdown-item-badge-slot" },
       },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts overlay slot surfaces through manifest overlays", () => {
+    const result = manifestConfigSchema.safeParse({
+      overlays: {
+        help: {
+          type: "modal",
+          content: [{ type: "heading", text: "Overlay" }],
+          slots: {
+            panel: { className: "modal-panel-slot" },
+            footerAction: { className: "modal-footer-action-slot" },
+          },
+        },
+      },
+      routes: [
+        {
+          id: "home",
+          path: "/",
+          content: [{ type: "heading", text: "Home" }],
+        },
+      ],
     });
     expect(result.success).toBe(true);
   });

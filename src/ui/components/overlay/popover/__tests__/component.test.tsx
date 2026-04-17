@@ -95,6 +95,29 @@ describe("Popover", () => {
     expect(screen.getByTestId("popover-child-footer")).toBeTruthy();
   });
 
+  it("resolves ref-backed title and description", () => {
+    renderWithContext(
+      <Popover
+        config={{
+          type: "popover",
+          trigger: "More",
+          title: { from: "global.copy.popoverTitle" },
+          description: { from: "global.copy.popoverDescription" },
+        }}
+      />,
+      {
+        copy: {
+          popoverTitle: "Resolved title",
+          popoverDescription: "Resolved description",
+        },
+      },
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "More" }));
+    expect(screen.getByText("Resolved title")).toBeTruthy();
+    expect(screen.getByText("Resolved description")).toBeTruthy();
+  });
+
   it("respects visible=false", () => {
     renderWithContext(
       <Popover

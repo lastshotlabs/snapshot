@@ -19,6 +19,7 @@ export function validateField(
   values: Record<string, unknown> = {},
 ): string | undefined {
   const validation = field.validate ?? field.validation;
+  const fieldLabel = typeof field.label === "string" ? field.label : undefined;
   const strValue = typeof value === "string" ? value : "";
   const isEmptyArray = Array.isArray(value) && value.length === 0;
   const isRequired =
@@ -37,7 +38,7 @@ export function validateField(
       isEmptyArray
     ) {
       return (
-        validation?.message ?? `${field.label ?? field.name} is required`
+        validation?.message ?? `${fieldLabel ?? field.name} is required`
       );
     }
   }

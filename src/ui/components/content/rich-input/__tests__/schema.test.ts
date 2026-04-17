@@ -15,4 +15,13 @@ describe("richInputConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed placeholder", () => {
+    const result = richInputConfigSchema.safeParse({
+      type: "rich-input",
+      placeholder: { from: "copy.richInput.placeholder" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

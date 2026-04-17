@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 import { feedbackBaseConfigSchema } from "../shared";
 
 /**
@@ -8,9 +9,6 @@ import { feedbackBaseConfigSchema } from "../shared";
 export const spinnerConfigSchema = feedbackBaseConfigSchema.extend({
   type: z.literal("spinner"),
   size: z.enum(["sm", "md", "lg"]).optional(),
-  label: z.string().optional(),
+  label: z.union([z.string(), fromRefSchema]).optional(),
   slots: slotsSchema(["root", "spinner", "label"]).optional(),
 });
-
-/** Config for the default loading feedback component. */
-export type SpinnerConfig = z.infer<typeof spinnerConfigSchema>;

@@ -110,6 +110,36 @@ describe("ContextMenu", () => {
     expect(execute).toHaveBeenCalledWith({ type: "navigate", to: "/edit" }, undefined);
   });
 
+  it("resolves ref-backed trigger and item copy", () => {
+    renderWithContext(
+      <ContextMenu
+        config={{
+          type: "context-menu",
+          triggerText: { from: "global.copy.trigger" },
+          items: [
+            { type: "label", text: { from: "global.copy.section" } },
+            { type: "item", label: { from: "global.copy.edit" } },
+          ],
+        }}
+      />,
+      {
+        copy: {
+          trigger: "Open",
+          section: "Actions",
+          edit: "Edit",
+        },
+      },
+    );
+
+    fireEvent.contextMenu(screen.getByTestId("context-menu-area"), {
+      clientX: 12,
+      clientY: 18,
+    });
+
+    expect(screen.getByText("Actions")).toBeTruthy();
+    expect(screen.getByRole("menuitem", { name: "Edit" })).toBeTruthy();
+  });
+
   it("respects visible=false", () => {
     renderWithContext(
       <ContextMenu

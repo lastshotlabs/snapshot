@@ -31,7 +31,7 @@ export const richInputConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("rich-input"),
     /** Placeholder text shown when the editor is empty. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Enabled formatting features. Default: all enabled. */
     features: z
       .array(

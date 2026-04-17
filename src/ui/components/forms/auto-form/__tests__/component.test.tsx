@@ -396,6 +396,55 @@ describe("AutoForm", () => {
     expect(screen.getByText("Create User")).toBeDefined();
   });
 
+  it("resolves ref-backed section, field, and submit copy", () => {
+    const copyAtom = pageRegistry.register("copy");
+    pageRegistry.store.set(copyAtom, {
+      form: {
+        sectionTitle: "Contact Details",
+        sectionDescription: "Tell us where to reach you.",
+        fieldLabel: "Email Address",
+        placeholder: "Enter your email",
+        helperText: "We will only use this for receipts.",
+        description: "Used for account notifications.",
+        submitLabel: "Save Contact",
+      },
+    });
+
+    const wrapper = createWrapper({ api: mockApi, pageRegistry });
+    const config: AutoFormConfig = {
+      type: "form",
+      submit: "/api/users",
+      fields: [],
+      sections: [
+        {
+          title: { from: "copy.form.sectionTitle" },
+          description: { from: "copy.form.sectionDescription" },
+          fields: [
+            {
+              name: "email",
+              type: "email",
+              label: { from: "copy.form.fieldLabel" },
+              placeholder: { from: "copy.form.placeholder" },
+              helperText: { from: "copy.form.helperText" },
+              description: { from: "copy.form.description" },
+            },
+          ],
+        },
+      ],
+      submitLabel: { from: "copy.form.submitLabel" },
+    };
+
+    render(createElement(AutoForm, { config }), { wrapper });
+
+    expect(screen.getByText("Contact Details")).toBeDefined();
+    expect(screen.getByText("Tell us where to reach you.")).toBeDefined();
+    expect(screen.getByLabelText("Email Address")).toBeDefined();
+    expect(screen.getByPlaceholderText("Enter your email")).toBeDefined();
+    expect(screen.getByText("Used for account notifications.")).toBeDefined();
+    expect(screen.getByText("We will only use this for receipts.")).toBeDefined();
+    expect(screen.getByText("Save Contact")).toBeDefined();
+  });
+
   it("renders select field with options", () => {
     const wrapper = createWrapper({ api: mockApi, pageRegistry });
     const config: AutoFormConfig = {

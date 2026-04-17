@@ -1,10 +1,13 @@
 "use client";
 
+import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { OfflineBannerConfig } from "./types";
 
 export function DefaultOffline({ config }: { config: OfflineBannerConfig }) {
+  const resolvedTitle = useSubscribe(config.title) as string | undefined;
+  const resolvedDescription = useSubscribe(config.description) as string | undefined;
   const rootId = config.id ?? "offline-banner";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
@@ -52,14 +55,14 @@ export function DefaultOffline({ config }: { config: OfflineBannerConfig }) {
         className={titleSurface.className}
         style={titleSurface.style}
       >
-        {config.title ?? "You're offline"}
+        {resolvedTitle ?? "You're offline"}
       </strong>
       <span
         data-snapshot-id={`${rootId}-description`}
         className={descriptionSurface.className}
         style={descriptionSurface.style}
       >
-        {config.description ?? "Reconnect to continue working."}
+        {resolvedDescription ?? "Reconnect to continue working."}
       </span>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={titleSurface.scopedCss} />

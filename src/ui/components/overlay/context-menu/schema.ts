@@ -18,7 +18,7 @@ export const contextMenuItemSchema = z.union([
   z
     .object({
       type: z.literal("item"),
-      label: z.string(),
+      label: z.union([z.string(), fromRefSchema]),
       icon: z.string().optional(),
       action: actionSchema.optional(),
       variant: z.enum(["default", "destructive"]).optional(),
@@ -35,7 +35,7 @@ export const contextMenuItemSchema = z.union([
   z
     .object({
       type: z.literal("label"),
-      text: z.string(),
+      text: z.union([z.string(), fromRefSchema]),
       slots: slotsSchema(["label"]).optional(),
     })
     .strict(),
@@ -50,7 +50,7 @@ export const contextMenuItemSchema = z.union([
 export const contextMenuConfigSchema: z.ZodType<Record<string, any>> = extendComponentSchema({
   type: z.literal("context-menu"),
   items: z.array(contextMenuItemSchema).optional(),
-  triggerText: z.string().optional(),
+  triggerText: z.union([z.string(), fromRefSchema]).optional(),
   visible: z.union([z.boolean(), fromRefSchema]).optional(),
   slots: slotsSchema(contextMenuSlotNames).optional(),
 }).strict();

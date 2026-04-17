@@ -8,7 +8,30 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 const EMPTY: string[] = [];
 const subscribedValues: Record<string, unknown> = {
   "copy.tagSelectorLabel": "Skills",
+  "copy.reactLabel": "React",
+  "copy.typescriptLabel": "TypeScript",
 };
+
+function resolveRefs<T>(value: T): T {
+  if (typeof value === "object" && value !== null && "from" in value) {
+    return subscribedValues[(value as { from: string }).from] as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => resolveRefs(item)) as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
+        key,
+        resolveRefs(nested),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
 
 vi.mock("../../../../context/hooks", () => ({
   useSubscribe: (value: unknown) => {
@@ -23,6 +46,7 @@ vi.mock("../../../../context/hooks", () => ({
     return value;
   },
   usePublish: () => vi.fn(),
+  useResolveFrom: <T,>(value: T) => resolveRefs(value),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -54,8 +78,8 @@ describe("TagSelector", () => {
           className: "tag-selector-root",
           label: { from: "copy.tagSelectorLabel" },
           tags: [
-            { label: "React", value: "react" },
-            { label: "TypeScript", value: "ts" },
+            { label: { from: "copy.reactLabel" }, value: "react" },
+            { label: { from: "copy.typescriptLabel" }, value: "ts" },
           ],
         }}
       />,

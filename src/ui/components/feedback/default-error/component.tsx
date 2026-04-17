@@ -1,11 +1,15 @@
 "use client";
 
+import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { ErrorPageConfig } from "./types";
 
 export function DefaultError({ config }: { config: ErrorPageConfig }) {
+  const resolvedTitle = useSubscribe(config.title) as string | undefined;
+  const resolvedDescription = useSubscribe(config.description) as string | undefined;
+  const resolvedRetryLabel = useSubscribe(config.retryLabel) as string | undefined;
   const rootId = config.id ?? "error-page";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
@@ -67,14 +71,14 @@ export function DefaultError({ config }: { config: ErrorPageConfig }) {
           className={titleSurface.className}
           style={titleSurface.style}
         >
-          {config.title ?? "Something went wrong"}
+          {resolvedTitle ?? "Something went wrong"}
         </h2>
         <p
           data-snapshot-id={`${rootId}-description`}
           className={descriptionSurface.className}
           style={descriptionSurface.style}
         >
-          {config.description ?? "Please try again."}
+          {resolvedDescription ?? "Please try again."}
         </p>
       </div>
       {config.showRetry ? (
@@ -86,7 +90,7 @@ export function DefaultError({ config }: { config: ErrorPageConfig }) {
           surfaceId={`${rootId}-action`}
           surfaceConfig={actionSurface.resolvedConfigForWrapper}
         >
-          {config.retryLabel ?? "Try again"}
+          {resolvedRetryLabel ?? "Try again"}
         </ButtonControl>
       ) : null}
       <SurfaceStyles css={rootSurface.scopedCss} />

@@ -24,4 +24,25 @@ describe("commandPaletteConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed placeholder, empty message, group labels, and item copy", () => {
+    const result = commandPaletteConfigSchema.safeParse({
+      type: "command-palette",
+      placeholder: { from: "copy.palette.placeholder" },
+      emptyMessage: { from: "copy.palette.empty" },
+      groups: [
+        {
+          label: { from: "copy.palette.group" },
+          items: [
+            {
+              label: { from: "copy.palette.item" },
+              description: { from: "copy.palette.itemDescription" },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

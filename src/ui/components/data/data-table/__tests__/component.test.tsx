@@ -228,6 +228,66 @@ describe("DataTable component", () => {
     expect(screen.queryByText("acc-1")).toBeNull();
   });
 
+  it("renders lookup labels for object-backed foreign keys", async () => {
+    const registry = new AtomRegistryImpl();
+    const sourceAtom = registry.register("test-source");
+    registry.store.set(sourceAtom, [{ id: 1, category: { _id: "cat-1" } }]);
+    const api = {
+      get: vi.fn().mockImplementation(async (url: string) => {
+        if (url === "/api/categories") {
+          return { items: [{ id: "cat-1", name: "Utilities" }] };
+        }
+        return [];
+      }),
+      post: vi.fn(),
+      put: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    };
+
+    function Wrapper({ children }: { children: React.ReactNode }) {
+      return (
+        <ManifestRuntimeContext.Provider
+          value={
+            {
+              raw: {},
+              resources: {
+                categories: { endpoint: "/api/categories" },
+              },
+            } as never
+          }
+        >
+          <AppRegistryContext.Provider value={null}>
+            <PageRegistryContext.Provider value={registry}>
+              <SnapshotApiContext.Provider value={api as unknown as ApiClient}>
+                {children}
+              </SnapshotApiContext.Provider>
+            </PageRegistryContext.Provider>
+          </AppRegistryContext.Provider>
+        </ManifestRuntimeContext.Provider>
+      );
+    }
+
+    render(
+      <Wrapper>
+        <DataTable
+          config={baseConfig({
+            columns: [
+              {
+                field: "category",
+                label: "Category",
+                lookup: { resource: "categories", labelField: "name" },
+              },
+            ],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(await screen.findByText("Utilities")).toBeDefined();
+    expect(screen.queryByText("cat-1")).toBeNull();
+  });
+
   it("renders empty message when no data", () => {
     const { Wrapper } = createWrapper([]);
     render(

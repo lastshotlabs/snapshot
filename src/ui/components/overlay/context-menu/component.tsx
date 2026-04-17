@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe, usePublish } from "../../../context/hooks";
 import {
   ContextMenuPortal,
   type ContextMenuPortalItem,
@@ -10,11 +10,19 @@ import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ContextMenuConfig } from "./types";
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 /**
  * Render a right-click context menu backed by the shared context-menu portal runtime.
  */
 export function ContextMenu({ config }: { config: ContextMenuConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedConfig = useResolveFrom({
+    triggerText: config.triggerText,
+    items: config.items,
+  });
   const publish = usePublish(config.id);
   const [menuState, setMenuState] = useState<{
     x: number;
@@ -53,6 +61,22 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
     componentSurface: config.slots?.trigger,
   });
 
+  const triggerText = resolveText(resolvedConfig.triggerText);
+  const resolvedItems =
+    (resolvedConfig.items as ContextMenuConfig["items"] | undefined)?.map((item: NonNullable<ContextMenuConfig["items"]>[number]) =>
+      item.type === "item"
+        ? {
+            ...item,
+            label: resolveText(item.label) ?? "",
+          }
+        : item.type === "label"
+          ? {
+              ...item,
+              text: resolveText(item.text) ?? "",
+            }
+          : item,
+    ) ?? config.items;
+
   if (visible === false) {
     return null;
   }
@@ -71,10 +95,10 @@ export function ContextMenu({ config }: { config: ContextMenuConfig }) {
         className={triggerSurface.className}
         style={triggerSurface.style}
       >
-        {config.triggerText ?? null}
+        {triggerText ?? null}
       </div>
       <ContextMenuPortal
-        items={(config.items ?? []) as ContextMenuPortalItem[]}
+        items={(resolvedItems ?? []) as ContextMenuPortalItem[]}
         state={menuState}
         onClose={() => setMenuState(null)}
         slots={config.slots}

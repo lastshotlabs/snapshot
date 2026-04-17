@@ -19,6 +19,8 @@ import type { PopoverConfig } from "./types";
  */
 export function Popover({ config }: { config: PopoverConfig }) {
   const triggerText = useSubscribe(config.trigger) as string;
+  const resolvedTitle = useSubscribe(config.title) as string | undefined;
+  const resolvedDescription = useSubscribe(config.description) as string | undefined;
   const visible = useSubscribe(config.visible ?? true);
   const publish = usePublish(config.id);
   const [isOpen, setIsOpen] = useState(false);
@@ -157,29 +159,29 @@ export function Popover({ config }: { config: PopoverConfig }) {
           className={contentSurface.className}
           style={contentSurface.style}
         >
-          {config.title || config.description ? (
+          {resolvedTitle || resolvedDescription ? (
             <div
               data-snapshot-id={`${rootId}-header`}
               className={headerSurface.className}
               style={headerSurface.style}
             >
               <div style={{ display: "grid", gap: "0.5rem", flex: 1 }}>
-                {config.title ? (
+                {resolvedTitle ? (
                   <div
                     data-snapshot-id={`${rootId}-title`}
                     className={titleSurface.className}
                     style={titleSurface.style}
                   >
-                    {config.title}
+                    {resolvedTitle}
                   </div>
                 ) : null}
-                {config.description ? (
+                {resolvedDescription ? (
                   <div
                     data-snapshot-id={`${rootId}-description`}
                     className={descriptionSurface.className}
                     style={descriptionSurface.style}
                   >
-                    {config.description}
+                    {resolvedDescription}
                   </div>
                 ) : null}
               </div>

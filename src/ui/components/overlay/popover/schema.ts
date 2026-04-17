@@ -29,8 +29,8 @@ export const popoverConfigSchema = extendComponentSchema({
   triggerVariant: z
     .enum(["default", "secondary", "outline", "ghost", "destructive", "link"])
     .optional(),
-  title: z.string().optional(),
-  description: z.string().optional(),
+  title: z.union([z.string(), fromRefSchema]).optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   content: z.array(z.any()).optional(),
   footer: z.array(z.any()).optional(),
   placement: z.enum(["top", "bottom"]).optional(),

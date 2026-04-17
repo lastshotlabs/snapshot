@@ -34,6 +34,8 @@ import { errorPageConfigSchema } from "../components/feedback/default-error";
 import { notFoundConfigSchema } from "../components/feedback/default-not-found";
 import { offlineBannerConfigSchema } from "../components/feedback/default-offline";
 import { confirmDialogConfigSchema } from "../components/overlay/confirm-dialog/schema";
+import { drawerConfigSchema } from "../components/overlay/drawer/schema";
+import { modalConfigSchema } from "../components/overlay/modal/schema";
 import { envRefSchema } from "./env";
 import { i18nConfigSchema, tRefSchema } from "../i18n/schema";
 
@@ -58,8 +60,6 @@ const textWithFromRefSchema = z.union([
 ]);
 const textOrTRefSchema = z.union([stringOrEnvRef, tRefSchema]);
 const plainTextOrTRefSchema = z.union([z.string(), tRefSchema]);
-const overlayTitleSchema = z.union([z.string(), fromRefSchema, tRefSchema]);
-
 const policyRefOrLiteralSchema = z.union([
   z.string(),
   z.number(),
@@ -574,32 +574,37 @@ export const cardConfigSchema = baseComponentConfigSchema
   })
   .strict();
 
-export const sectionConfigSchema = z
-  .object({
+export const sectionConfigSchema = baseComponentConfigSchema
+  .extend({
     type: z.literal("section"),
-    id: z.string().optional(),
     heading: z.string().optional(),
     description: z.string().optional(),
+    height: z.union([z.string(), z.enum(["screen", "auto"])]).optional(),
+    align: z.enum(["start", "center", "end", "stretch"]).optional(),
+    justify: z.enum(["start", "center", "end", "between", "around"]).optional(),
+    bleed: z.boolean().optional(),
     children: z.array(z.lazy(() => componentConfigSchema)).default([]),
     gap: z.union([z.string(), responsiveSchema(z.string())]).optional(),
     divider: z.boolean().optional(),
     suspense: suspenseFallbackSchema.optional(),
-    className: z.string().optional(),
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
+    slots: slotsSchema(["root", "item"]).optional(),
   })
   .strict();
 
-export const containerConfigSchema = z
-  .object({
+export const containerConfigSchema = baseComponentConfigSchema
+  .extend({
     type: z.literal("container"),
-    id: z.string().optional(),
-    maxWidth: z.string().optional(),
+    maxWidth: z
+      .union([
+        z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "full", "prose"]),
+        z.number(),
+      ])
+      .optional(),
+    padding: z.enum(["none", "xs", "sm", "md", "lg", "xl"]).optional(),
+    center: z.boolean().optional(),
     children: z.array(z.lazy(() => componentConfigSchema)).default([]),
     suspense: suspenseFallbackSchema.optional(),
-    className: z.string().optional(),
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
+    slots: slotsSchema(["root", "item"]).optional(),
   })
   .strict();
 
@@ -612,10 +617,9 @@ export const backgroundConfigSchema = z
   })
   .strict();
 
-export const gridConfigSchema = z
-  .object({
+export const gridConfigSchema = baseComponentConfigSchema
+  .extend({
     type: z.literal("grid"),
-    id: z.string().optional(),
     columns: z
       .union([
         z.number(),
@@ -625,24 +629,27 @@ export const gridConfigSchema = z
       .optional(),
     template: z.string().optional(),
     rows: z.string().optional(),
-    areas: z.array(z.string()).optional(),
+    areas: z.union([z.array(z.string()), responsiveSchema(z.array(z.string()))]).optional(),
     gap: z.union([z.string(), responsiveSchema(z.string())]).optional(),
     children: z.array(z.lazy(() => componentConfigSchema)).default([]),
     background: backgroundConfigSchema.optional(),
     suspense: suspenseFallbackSchema.optional(),
-    className: z.string().optional(),
-    style: z.record(z.union([z.string(), z.number()])).optional(),
-    visible: z.union([z.boolean(), fromRefSchema]).optional(),
+    slots: slotsSchema(["root", "item"]).optional(),
   })
   .strict();
 
-export const spacerConfigSchema = z
-  .object({
+export const spacerConfigSchema = baseComponentConfigSchema
+  .extend({
     type: z.literal("spacer"),
-    size: z.string().optional(),
+    size: z
+      .union([
+        z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "3xl"]),
+        z.string(),
+      ])
+      .optional(),
+    axis: z.enum(["horizontal", "vertical"]).optional(),
     flex: z.boolean().optional(),
-    className: z.string().optional(),
-    style: z.record(z.union([z.string(), z.number()])).optional(),
+    slots: slotsSchema(["root"]).optional(),
   })
   .strict();
 
@@ -1874,76 +1881,12 @@ export const manifestSsrConfigSchema = z
   })
   .strict();
 
-const overlayFooterActionSchema = z
-  .object({
-    label: textOrTRefSchema,
-    variant: z
-      .enum(["default", "secondary", "destructive", "ghost"])
-      .optional(),
-    action: z
-      .union([actionConfigSchema, z.array(actionConfigSchema)])
-      .optional(),
-    dismiss: z.boolean().optional(),
-  })
-  .strict();
-
 /**
  * Schema for named modal, drawer, and confirm-dialog overlay declarations.
  */
 export const overlayConfigSchema: z.ZodType = z.union([
-  z
-    .object({
-      type: z.literal("modal"),
-      title: overlayTitleSchema.optional(),
-      size: z.enum(["sm", "md", "lg", "xl", "full"]).optional(),
-      content: z.array(componentConfigSchema).min(1),
-      onOpen: z
-        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
-        .optional(),
-      onClose: z
-        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
-        .optional(),
-      urlParam: z.string().optional(),
-      trapFocus: z.boolean().default(true),
-      initialFocus: z.string().optional(),
-      returnFocus: z.boolean().default(true),
-      className: z.string().optional(),
-      style: z.record(z.union([z.string(), z.number()])).optional(),
-      footer: z
-        .object({
-          actions: z.array(overlayFooterActionSchema).optional(),
-          align: z.enum(["left", "center", "right"]).optional(),
-        })
-        .optional(),
-    })
-    .strict(),
-  z
-    .object({
-      type: z.literal("drawer"),
-      title: overlayTitleSchema.optional(),
-      size: z.enum(["sm", "md", "lg", "xl", "full"]).optional(),
-      side: z.enum(["left", "right"]).optional(),
-      content: z.array(componentConfigSchema).min(1),
-      onOpen: z
-        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
-        .optional(),
-      onClose: z
-        .union([z.string().min(1), manifestWorkflowDefinitionSchema])
-        .optional(),
-      urlParam: z.string().optional(),
-      trapFocus: z.boolean().default(true),
-      initialFocus: z.string().optional(),
-      returnFocus: z.boolean().default(true),
-      className: z.string().optional(),
-      style: z.record(z.union([z.string(), z.number()])).optional(),
-      footer: z
-        .object({
-          actions: z.array(overlayFooterActionSchema).optional(),
-          align: z.enum(["left", "center", "right"]).optional(),
-        })
-        .optional(),
-    })
-    .strict(),
+  modalConfigSchema,
+  drawerConfigSchema,
   confirmDialogConfigSchema,
 ]);
 

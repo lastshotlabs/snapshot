@@ -57,6 +57,7 @@ function createSendOnEnterExtension(onSend: () => void) {
 export function RichInput({ config }: { config: RichInputConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const readonly = useSubscribe(config.readonly ?? false) as boolean;
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as string | undefined;
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const [charCount, setCharCount] = useState(0);
@@ -373,9 +374,9 @@ export function RichInput({ config }: { config: RichInputConfig }) {
     <>
       <div data-snapshot-component="rich-input" data-testid="rich-input" data-snapshot-id={rootId} className={rootSurface.className} style={rootSurface.style}>
         <div data-snapshot-id={`${rootId}-editorArea`} className={editorAreaSurface.className} style={editorAreaSurface.style}>
-          {config.placeholder && isEmpty ? (
+          {resolvedPlaceholder && isEmpty ? (
             <div data-snapshot-id={`${rootId}-placeholder`} className={placeholderSurface.className} style={placeholderSurface.style}>
-              {config.placeholder}
+              {resolvedPlaceholder}
             </div>
           ) : null}
           <EditorContent

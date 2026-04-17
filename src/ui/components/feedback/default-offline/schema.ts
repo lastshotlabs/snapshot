@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 import { feedbackBaseConfigSchema } from "../shared";
 
 /**
@@ -7,8 +8,8 @@ import { feedbackBaseConfigSchema } from "../shared";
  */
 export const offlineBannerConfigSchema = feedbackBaseConfigSchema.extend({
   type: z.literal("offline-banner"),
-  title: z.string().optional(),
-  description: z.string().optional(),
+  title: z.union([z.string(), fromRefSchema]).optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   slots: slotsSchema(["root", "title", "description"]).optional(),
 });
 

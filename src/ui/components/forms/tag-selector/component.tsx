@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -17,6 +17,10 @@ interface ResolvedTag {
   label: string;
   value: string;
   color?: string;
+}
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
 }
 
 function contrastText(color: string): string {
@@ -227,6 +231,7 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const resolvedLabel = useSubscribe(config.label) as string | undefined;
   const resolvedValue = useSubscribe(config.value ?? []);
+  const resolvedConfig = useResolveFrom({ tags: config.tags });
   const executeAction = useActionExecutor();
   const publish = usePublish(config.id);
   const rootId = config.id ?? "tag-selector";
@@ -253,8 +258,19 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
   const availableTags = useMemo<ResolvedTag[]>(() => {
     const tags: ResolvedTag[] = [];
 
-    if (config.tags) {
-      tags.push(...config.tags);
+    const staticTags =
+      (resolvedConfig.tags as TagSelectorConfig["tags"] | undefined)?.map(
+        (tag) => ({
+          ...tag,
+          label: resolveText(tag.label) ?? tag.value,
+        }),
+      ) ?? config.tags?.map((tag) => ({
+        ...tag,
+        label: resolveText(tag.label) ?? tag.value,
+      }));
+
+    if (staticTags) {
+      tags.push(...staticTags);
     }
 
     if (apiData) {
@@ -281,8 +297,9 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
     apiData,
     config.colorField,
     config.labelField,
-    config.tags,
     config.valueField,
+    config.tags,
+    resolvedConfig.tags,
   ]);
 
   const filteredTags = useMemo(() => {

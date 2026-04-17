@@ -6,7 +6,7 @@ import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 /** Schema for a single option in the multi-select dropdown. */
 const optionSchema = z.object({
   /** Display label for the option. */
-  label: z.string(),
+  label: z.union([z.string(), fromRefSchema]),
   /** Value submitted when the option is selected. */
   value: z.string(),
   /** Optional icon name displayed before the label. */

@@ -8,7 +8,7 @@ import React, {
   useState,
   type CSSProperties,
 } from "react";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { useComponentData } from "../../_base/use-component-data";
@@ -42,6 +42,10 @@ interface CommandItem {
 interface CommandGroup {
   label: string;
   items: CommandItem[];
+}
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
 }
 
 function flattenItems(
@@ -87,6 +91,11 @@ function normalizeSearchGroups(data: unknown): CommandGroup[] {
 /** CommandPalette — search-driven command palette that renders static groups or fetches remote results, then dispatches manifest actions for the selected command. */
 export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const visible = useSubscribe(config.visible ?? false);
+  const resolvedConfig = useResolveFrom({
+    groups: config.groups,
+    placeholder: config.placeholder,
+    emptyMessage: config.emptyMessage,
+  });
   const publish = usePublish(config.id);
   const executeAction = useActionExecutor();
   const api = useApiClient();
@@ -102,9 +111,26 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   const listRef = useRef<HTMLDivElement>(null);
   const rootId = config.id ?? "command-palette";
   const storageKey = `${RECENT_STORAGE_PREFIX}:${config.id ?? "default"}`;
-  const placeholder = config.placeholder ?? "Type a command...";
-  const emptyMessage = config.emptyMessage ?? "No results found";
+  const shortcut = config.shortcut ?? "ctrl+k";
+  const placeholder =
+    resolveText(resolvedConfig.placeholder) ?? "Type a command...";
+  const emptyMessage =
+    resolveText(resolvedConfig.emptyMessage) ?? "No results found";
   const maxHeight = config.maxHeight ?? "300px";
+  const staticGroups = useMemo<CommandGroup[]>(
+    () =>
+      ((resolvedConfig.groups as CommandPaletteConfig["groups"] | undefined) ??
+        config.groups ??
+        []).map((group) => ({
+        label: resolveText(group.label) ?? "",
+        items: group.items.map((item) => ({
+          ...item,
+          label: resolveText(item.label) ?? "",
+          description: resolveText(item.description),
+        })),
+      })),
+    [config.groups, resolvedConfig.groups],
+  );
 
   const dataResult = useComponentData(config.data ?? "");
   const shortcutCommands = useMemo(() => {
@@ -167,7 +193,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
   }, [config.recentItems, recentItems, storageKey]);
 
   useEffect(() => {
-    const combos = parseChord(config.shortcut);
+    const combos = parseChord(shortcut);
     if (typeof window === "undefined" || combos.length === 0) {
       return;
     }
@@ -219,7 +245,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       clearChord();
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [config.shortcut]);
+  }, [shortcut]);
 
   useEffect(() => {
     if (!config.searchEndpoint || typeof window === "undefined") {
@@ -227,7 +253,8 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       return;
     }
 
-    if (query.trim().length < config.searchEndpoint.minLength) {
+    const minLength = config.searchEndpoint.minLength ?? 2;
+    if (query.trim().length < minLength) {
       setSearchGroups([]);
       return;
     }
@@ -286,17 +313,17 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
       groups.push({ label: "Shortcuts", items: shortcutCommands });
     }
 
-    groups.push(...((config.groups ?? []) as CommandGroup[]));
+    groups.push(...staticGroups);
     groups.push(...normalizeSearchGroups(dataResult.data));
     groups.push(...searchGroups);
     return groups;
   }, [
-    config.groups,
     config.recentItems,
     dataResult.data,
     query,
     recentItems,
     searchGroups,
+    staticGroups,
     shortcutCommands,
   ]);
 
@@ -586,7 +613,7 @@ export function CommandPalette({ config }: { config: CommandPaletteConfig }) {
                 "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
             }}
           >
-            {config.shortcut}
+            {shortcut}
           </kbd>
         </div>
 

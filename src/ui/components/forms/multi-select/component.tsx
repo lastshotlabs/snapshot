@@ -3,7 +3,7 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
@@ -14,6 +14,10 @@ import { useComponentData } from "../../_base/use-component-data";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
 import type { MultiSelectConfig, MultiSelectOption } from "./types";
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
 
 function SelectedPill({
   config,
@@ -254,6 +258,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
     | undefined;
   const resolvedValue = useSubscribe(config.value) as string[] | undefined;
   const resolvedDisabled = Boolean(useSubscribe(config.disabled ?? false));
+  const resolvedConfig = useResolveFrom({ options: config.options });
   const dataResult = useComponentData(config.data ?? "");
   const { error: dataError, refetch: dataRefetch } = dataResult;
   const rootId = config.id ?? "multi-select";
@@ -262,10 +267,20 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
   const valueField = config.valueField ?? "value";
   const searchable = config.searchable !== false;
   const placeholder = resolvedPlaceholder ?? "Select...";
+  const staticOptions =
+    (resolvedConfig.options as MultiSelectOption[] | undefined)?.map(
+      (option) => ({
+        ...option,
+        label: resolveText(option.label) ?? option.value,
+      }),
+    ) ?? config.options?.map((option: MultiSelectOption) => ({
+      ...option,
+      label: resolveText(option.label) ?? option.value,
+    }));
 
   const options = useMemo<MultiSelectOption[]>(() => {
-    if (config.options) {
-      return config.options;
+    if (staticOptions) {
+      return staticOptions;
     }
 
     if (Array.isArray(dataResult.data)) {
@@ -278,7 +293,7 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
     }
 
     return [];
-  }, [config.options, dataResult.data, labelField, valueField]);
+  }, [dataResult.data, labelField, staticOptions, valueField]);
 
   const [selected, setSelected] = useState<string[]>(resolvedValue ?? []);
   const [isOpen, setIsOpen] = useState(false);

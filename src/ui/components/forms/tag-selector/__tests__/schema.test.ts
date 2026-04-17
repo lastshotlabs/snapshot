@@ -43,4 +43,13 @@ describe("tagSelectorConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed static tag labels", () => {
+    const result = tagSelectorConfigSchema.safeParse({
+      type: "tag-selector",
+      tags: [{ label: { from: "copy.reactLabel" }, value: "react" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

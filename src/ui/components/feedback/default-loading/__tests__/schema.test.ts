@@ -11,4 +11,13 @@ describe("spinnerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed label", () => {
+    const result = spinnerConfigSchema.safeParse({
+      type: "spinner",
+      label: { from: "copy.loading.label" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

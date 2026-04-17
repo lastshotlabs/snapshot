@@ -14,7 +14,7 @@ const disabledDateSchema = z.union([
 
 const presetSchema = z
   .object({
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     start: z.string(),
     end: z.string(),
   })

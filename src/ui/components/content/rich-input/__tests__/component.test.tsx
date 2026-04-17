@@ -7,6 +7,8 @@ import { RichInput } from "../component";
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
 const clearContentSpy = vi.fn();
+let editorHtml = "<p>Hello</p>";
+let editorText = "Hello";
 
 const editorChain = {
   focus: () => editorChain,
@@ -24,8 +26,8 @@ const editorChain = {
 };
 
 const editor = {
-  getHTML: () => "<p>Hello</p>",
-  getText: () => "Hello",
+  getHTML: () => editorHtml,
+  getText: () => editorText,
   setEditable: vi.fn(),
   isActive: () => false,
   chain: () => editorChain,
@@ -34,8 +36,15 @@ const editor = {
   },
 };
 
+const subscribedValues: Record<string, unknown> = {
+  "copy.richInput.placeholder": "Type a message",
+};
+
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    typeof value === "object" && value !== null && "from" in value
+      ? subscribedValues[(value as { from: string }).from]
+      : value,
   usePublish: () => publishSpy,
 }));
 
@@ -87,6 +96,8 @@ describe("RichInput", () => {
     clearContentSpy.mockReset();
     executeSpy.mockReset();
     publishSpy.mockReset();
+    editorHtml = "<p>Hello</p>";
+    editorText = "Hello";
 
     render(
       <RichInput
@@ -135,5 +146,25 @@ describe("RichInput", () => {
     );
     expect(clearContentSpy).toHaveBeenCalledWith(true);
     expect(publishSpy).toHaveBeenCalledWith({ html: "", text: "", mentions: [] });
+  });
+
+  it("renders a ref-backed placeholder when empty", () => {
+    clearContentSpy.mockReset();
+    executeSpy.mockReset();
+    publishSpy.mockReset();
+    editorHtml = "<p></p>";
+    editorText = "";
+
+    render(
+      <RichInput
+        config={{
+          type: "rich-input",
+          id: "composer-placeholder",
+          placeholder: { from: "copy.richInput.placeholder" },
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Type a message")).toBeTruthy();
   });
 });

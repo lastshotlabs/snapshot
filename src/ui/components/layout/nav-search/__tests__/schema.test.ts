@@ -17,4 +17,13 @@ describe("navSearchConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed placeholder", () => {
+    const result = navSearchConfigSchema.safeParse({
+      type: "nav-search",
+      placeholder: { from: "copy.navSearch.placeholder" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

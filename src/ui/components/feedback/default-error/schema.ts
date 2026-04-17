@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 import { feedbackBaseConfigSchema } from "../shared";
 
 /**
@@ -7,12 +8,9 @@ import { feedbackBaseConfigSchema } from "../shared";
  */
 export const errorPageConfigSchema = feedbackBaseConfigSchema.extend({
   type: z.literal("error-page"),
-  title: z.string().optional(),
-  description: z.string().optional(),
+  title: z.union([z.string(), fromRefSchema]).optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   showRetry: z.boolean().optional(),
-  retryLabel: z.string().optional(),
+  retryLabel: z.union([z.string(), fromRefSchema]).optional(),
   slots: slotsSchema(["root", "title", "description", "action"]).optional(),
 });
-
-/** Config for the default error feedback component. */
-export type ErrorPageConfig = z.infer<typeof errorPageConfigSchema>;

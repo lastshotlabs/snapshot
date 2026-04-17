@@ -9,7 +9,29 @@ const publishSpy = vi.fn();
 const subscribedValues: Record<string, unknown> = {
   "form.copy.dateLabel": "Due date",
   "form.copy.datePlaceholder": "Choose a date",
+  "form.copy.thisWeek": "This Week",
 };
+
+function resolveRefs<T>(value: T): T {
+  if (typeof value === "object" && value !== null && "from" in value) {
+    return subscribedValues[(value as { from: string }).from] as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => resolveRefs(item)) as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
+        key,
+        resolveRefs(nested),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
 
 vi.mock("../../../../context/hooks", () => ({
   useSubscribe: (value: unknown) =>
@@ -17,6 +39,7 @@ vi.mock("../../../../context/hooks", () => ({
       ? subscribedValues[(value as { from: string }).from]
       : value,
   usePublish: () => publishSpy,
+  useResolveFrom: <T,>(value: T) => resolveRefs(value),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -36,6 +59,13 @@ describe("DatePicker", () => {
           mode: "single",
           label: { from: "form.copy.dateLabel" },
           placeholder: { from: "form.copy.datePlaceholder" },
+          presets: [
+            {
+              label: { from: "form.copy.thisWeek" },
+              start: "2026-04-13",
+              end: "2026-04-19",
+            },
+          ],
           valueFormat: "iso",
           onChange: { type: "set-date" } as never,
           slots: {
@@ -52,6 +82,7 @@ describe("DatePicker", () => {
       container.querySelector('[data-snapshot-id="publish-date"]')?.className,
     ).toContain("date-root-slot");
     expect(screen.getByText("Due date")).toBeDefined();
+    expect(screen.getByText("This Week")).toBeDefined();
 
     const input = document.querySelector('input[type="date"]') as HTMLInputElement;
     expect(input.placeholder).toBe("Choose a date");

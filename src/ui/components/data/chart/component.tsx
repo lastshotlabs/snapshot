@@ -63,18 +63,57 @@ const DEFAULT_COLORS = [
   "var(--sn-chart-5, #ef4444)",
 ];
 
+const USD_FORMATTER = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 2,
+});
+
 function getSeriesColor(color: string | undefined, index: number): string {
   return color ?? DEFAULT_COLORS[index % DEFAULT_COLORS.length]!;
 }
 
-function formatChartValue(value: unknown): string | number {
-  if (typeof value === "number") {
-    return value;
+function shouldFormatAsCurrency(divisor: number | undefined): boolean {
+  return divisor === 100;
+}
+
+function formatNumericValue(
+  value: number,
+  options?: { divisor?: number },
+): string | number {
+  if (shouldFormatAsCurrency(options?.divisor)) {
+    return USD_FORMATTER.format(value);
+  }
+
+  return Number.isInteger(value) ? value : Number(value.toFixed(2));
+}
+
+function formatChartValue(
+  value: unknown,
+  options?: { divisor?: number },
+): string | number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return formatNumericValue(value, options);
   }
   if (typeof value === "string") {
+    const numericValue = Number(value);
+    if (Number.isFinite(numericValue) && value.trim() !== "") {
+      return formatNumericValue(numericValue, options);
+    }
     return value;
   }
   return "";
+}
+
+function buildSeriesConfigMap(config: ChartConfig): Map<string, ChartConfig["series"][number]> {
+  return new Map(config.series.map((series) => [series.key, series] as const));
+}
+
+function resolveYAxisDivisor(config: ChartConfig): number | undefined {
+  const divisors = [...new Set(config.series.map((series) => series.divisor).filter(
+    (divisor): divisor is number => typeof divisor === "number" && divisor > 0,
+  ))];
+  return divisors.length === 1 ? divisors[0] : undefined;
 }
 
 function toAutoEmptyStateConfig(
@@ -182,7 +221,12 @@ function ChartSurface({
     label,
   }: {
     active?: boolean;
-    payload?: ReadonlyArray<{ name?: string; value?: unknown; color?: string }>;
+    payload?: ReadonlyArray<{
+      name?: string;
+      value?: unknown;
+      color?: string;
+      dataKey?: string | number;
+    }>;
     label?: string | number;
   }) => {
     if (!active || !payload?.length) {
@@ -201,7 +245,19 @@ function ChartSurface({
             <span style={{ color: entry.color }}>
               {entry.name ?? "Series"}:
             </span>{" "}
-            <span>{String(entry.value ?? "")}</span>
+            <span>
+              {String(
+                formatChartValue(
+                  entry.value,
+                  typeof entry.dataKey === "string"
+                    ? {
+                        divisor: buildSeriesConfigMap(config).get(entry.dataKey)
+                          ?.divisor,
+                      }
+                    : undefined,
+                ),
+              )}
+            </span>
           </div>
         ))}
       </div>
@@ -261,6 +317,8 @@ function ChartSurface({
   );
   const tooltipContent = tooltipRenderer as never;
   const legendContent = legendRenderer as never;
+  const seriesConfigByKey = buildSeriesConfigMap(config);
+  const yAxisDivisor = resolveYAxisDivisor(config);
 
   if (config.chartType === "pie" || config.chartType === "donut") {
     const pieData = rows.map((row, index) => ({
@@ -356,6 +414,9 @@ function ChartSurface({
               axisLine={false}
               tickLine={false}
               width={40}
+              tickFormatter={(value) =>
+                String(formatChartValue(value, { divisor: yAxisDivisor }))
+              }
             />
             {config.series[1]?.key ? (
               <ZAxis dataKey={config.series[1].key} range={[50, 400]} />
@@ -470,10 +531,23 @@ function ChartSurface({
                 axisLine={false}
                 tickLine={false}
                 width={40}
+                tickFormatter={(value) =>
+                  String(formatChartValue(value, { divisor: yAxisDivisor }))
+                }
               />
             </>
           ) : null}
-          <Tooltip content={tooltipContent} formatter={formatChartValue} />
+          <Tooltip
+            content={tooltipContent}
+            formatter={(value, _name, item) =>
+              formatChartValue(value, {
+                divisor:
+                  typeof item?.dataKey === "string"
+                    ? seriesConfigByKey.get(item.dataKey)?.divisor
+                    : undefined,
+              })
+            }
+          />
           {config.legend && !isSparkline ? (
             <Legend content={legendContent} />
           ) : null}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePublish } from "../../../context/index";
+import { usePublish, useSubscribe } from "../../../context/index";
 import { useActionExecutor } from "../../../actions/executor";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -12,6 +12,7 @@ export function NavSearch({ config }: { config: NavSearchConfig }) {
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const publish = usePublish(config.publishTo);
+  const resolvedPlaceholder = useSubscribe(config.placeholder) as string | undefined;
   const execute = useActionExecutor();
 
   // Publish search value to state
@@ -102,12 +103,12 @@ export function NavSearch({ config }: { config: NavSearchConfig }) {
       <InputControl
         inputRef={inputRef}
         type="search"
-        placeholder={config.placeholder ?? "Search..."}
+        placeholder={resolvedPlaceholder ?? "Search..."}
         value={value}
         onChangeText={setValue}
         surfaceId={`${rootId}-input`}
         surfaceConfig={inputSurface.resolvedConfigForWrapper}
-        ariaLabel={config.placeholder ?? "Search"}
+        ariaLabel={resolvedPlaceholder ?? "Search"}
       />
       {config.shortcut && (
         <kbd

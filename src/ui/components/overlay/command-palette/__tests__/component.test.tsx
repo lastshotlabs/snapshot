@@ -6,10 +6,39 @@ import { CommandPalette } from "../component";
 
 const mockExecute = vi.fn();
 const mockPublish = vi.fn();
+const subscribedValues: Record<string, unknown> = {
+  "copy.palette.placeholder": "Search commands",
+  "copy.palette.empty": "Nothing found",
+  "copy.palette.group": "Ref Actions",
+  "copy.palette.item": "Ref First",
+  "copy.palette.itemDescription": "Open the ref command",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (typeof value === "object" && value !== null && "from" in value) {
+    return subscribedValues[(value as { from: string }).from] as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => resolveRefs(item)) as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
+        key,
+        resolveRefs(nested),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
 
 vi.mock("../../../../context/hooks", () => ({
   usePublish: () => mockPublish,
   useSubscribe: (value: unknown) => value,
+  useResolveFrom: <T,>(value: T) => resolveRefs(value),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -122,5 +151,41 @@ describe("CommandPalette", () => {
         ?.className.includes("palette-current-item"),
     ).toBe(true);
     expect(screen.getByText("Second")).toBeTruthy();
+  });
+
+  it("resolves ref-backed placeholder and group/item copy", () => {
+    render(
+      <CommandPalette
+        config={{
+          type: "command-palette",
+          id: "palette-copy",
+          visible: true,
+          autoRegisterShortcuts: false,
+          shortcut: "ctrl+k",
+          placeholder: { from: "copy.palette.placeholder" },
+          emptyMessage: { from: "copy.palette.empty" },
+          groups: [
+            {
+              label: { from: "copy.palette.group" },
+              items: [
+                {
+                  label: { from: "copy.palette.item" },
+                  description: { from: "copy.palette.itemDescription" },
+                },
+              ],
+            },
+          ],
+        }}
+      />,
+    );
+
+    act(() => {
+      vi.runAllTimers();
+    });
+
+    expect(screen.getByPlaceholderText("Search commands")).toBeTruthy();
+    expect(screen.getByText("Ref Actions")).toBeTruthy();
+    expect(screen.getByText("Ref First")).toBeTruthy();
+    expect(screen.getByText("Open the ref command")).toBeTruthy();
   });
 });

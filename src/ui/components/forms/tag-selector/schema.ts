@@ -34,7 +34,7 @@ export const tagSelectorConfigSchema = extendComponentSchema({
       .array(
         z.object({
           /** Display label for the tag. */
-          label: z.string(),
+          label: z.union([z.string(), fromRefSchema]),
           /** Value identifier for the tag. */
           value: z.string(),
           /** CSS color for the tag pill. */
