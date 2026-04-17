@@ -12,6 +12,47 @@ import { DropdownMenu } from "../component";
 import type { DropdownMenuConfig } from "../types";
 import type { ApiClient } from "../../../../../api/client";
 
+const refValues: Record<string, unknown> = {
+  "menuState.trigger": "Resolved actions",
+  "menuState.section": "Resolved section",
+  "menuState.option": "Resolved edit",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((entry) => resolveRefs(entry)) as T;
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>) &&
+    typeof (value as unknown as { from: unknown }).from === "string"
+  ) {
+    return refValues[(value as unknown as { from: string }).from] as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        resolveRefs(entry),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
+vi.mock("../../../../context/hooks", async () => {
+  const actual = await vi.importActual("../../../../context/hooks");
+
+  return {
+    ...actual,
+    useResolveFrom: <T,>(value: T) => resolveRefs(value),
+  };
+});
+
 function createTestWrapper() {
   const registry = new AtomRegistryImpl();
   return function TestWrapper({ children }: { children: ReactNode }) {
@@ -174,5 +215,32 @@ describe("DropdownMenu", () => {
 
     const item = screen.getByRole("menuitem");
     expect(item.getAttribute("aria-disabled")).toBe("true");
+  });
+
+  it("renders ref-backed trigger and menu copy", () => {
+    const wrapper = createTestWrapper();
+    const config: DropdownMenuConfig = {
+      type: "dropdown-menu",
+      trigger: { label: { from: "menuState.trigger" } as never },
+      items: [
+        { type: "label", text: { from: "menuState.section" } as never },
+        {
+          type: "item",
+          label: { from: "menuState.option" } as never,
+          action: { type: "navigate", to: "/edit" },
+        },
+      ],
+    };
+
+    render(<DropdownMenu config={config} />, { wrapper });
+
+    expect(screen.getByTestId("dropdown-menu-trigger").textContent).toContain(
+      "Resolved actions",
+    );
+
+    fireEvent.click(screen.getByTestId("dropdown-menu-trigger"));
+
+    expect(screen.getByText("Resolved section")).toBeTruthy();
+    expect(screen.getByRole("menuitem", { name: "Resolved edit" })).toBeTruthy();
   });
 });

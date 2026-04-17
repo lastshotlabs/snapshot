@@ -5,9 +5,17 @@ import { describe, expect, it, vi } from "vitest";
 import { Alert } from "../component";
 
 const mockExecute = vi.fn();
+const refValues: Record<string, unknown> = {
+  "alert.actionLabel": "Resolved Retry",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
   usePublish: () => vi.fn(),
 }));
 
@@ -47,5 +55,22 @@ describe("Alert", () => {
 
     fireEvent.click(screen.getByTestId("alert-dismiss"));
     expect(screen.queryByTestId("alert")).toBeNull();
+  });
+
+  it("renders ref-backed action labels", () => {
+    render(
+      <Alert
+        config={{
+          type: "alert",
+          description: "Saved successfully",
+          action: { type: "event", name: "alert-action" } as never,
+          actionLabel: { from: "alert.actionLabel" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("alert-action").textContent).toContain(
+      "Resolved Retry",
+    );
   });
 });

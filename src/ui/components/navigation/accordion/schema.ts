@@ -3,6 +3,7 @@ import {
   componentConfigSchema,
 } from "../../../manifest/schema";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const accordionSlotNames = [
   "root",
@@ -18,7 +19,7 @@ export const accordionSlotNames = [
  */
 export const accordionItemSchema = z.object({
   /** Display title for the accordion header. */
-  title: z.string(),
+  title: z.union([z.string(), fromRefSchema]),
   /** Child components rendered inside the collapsible panel. */
   content: z.array(componentConfigSchema),
   /** Optional icon name displayed before the title. */

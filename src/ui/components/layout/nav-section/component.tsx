@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { ButtonControl } from "../../forms/button";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -9,6 +10,7 @@ import type { NavSectionConfig } from "./types";
 
 export function NavSection({ config }: { config: NavSectionConfig }) {
   const [isCollapsed, setIsCollapsed] = useState(config.defaultCollapsed ?? false);
+  const label = useSubscribe(config.label);
   const showItems = !config.collapsible || !isCollapsed;
   const rootId = config.id ?? "nav-section";
   const rootSurface = resolveSurfacePresentation({
@@ -43,7 +45,7 @@ export function NavSection({ config }: { config: NavSectionConfig }) {
       className={rootSurface.className}
       style={rootSurface.style}
     >
-      {config.label ? (
+      {typeof label === "string" ? (
         <ButtonControl
           variant="ghost"
           onClick={config.collapsible ? () => setIsCollapsed((value) => !value) : undefined}
@@ -56,7 +58,7 @@ export function NavSection({ config }: { config: NavSectionConfig }) {
             className={headerLabelSurface.className}
             style={headerLabelSurface.style}
           >
-            {config.label}
+            {label}
           </span>
         </ButtonControl>
       ) : null}

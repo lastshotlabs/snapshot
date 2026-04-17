@@ -265,7 +265,7 @@ export function TabsComponent({ config }: { config: TabsConfig }) {
                   className={labelSurface.className}
                   style={labelSurface.style}
                 >
-                  {tab.label}
+                  {String(tab.label)}
                 </span>
               </ButtonControl>
               <SurfaceStyles css={labelSurface.scopedCss} />

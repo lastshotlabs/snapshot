@@ -12,6 +12,25 @@ import { ManifestRuntimeProvider } from "../../../../manifest/runtime";
 import { FileUploader } from "../component";
 import type { FileUploaderConfig } from "../types";
 
+const refValues: Record<string, unknown> = {
+  "uploader.label": "Resolved upload",
+  "uploader.description": "Resolved description",
+};
+
+vi.mock("../../../../context/hooks", async () => {
+  const actual = await vi.importActual("../../../../context/hooks");
+
+  return {
+    ...actual,
+    useSubscribe: (value: unknown) =>
+      value &&
+      typeof value === "object" &&
+      "from" in (value as Record<string, unknown>)
+        ? refValues[(value as { from: string }).from]
+        : value,
+  };
+});
+
 function createTestWrapper(options?: {
   resources?: Record<
     string,
@@ -310,5 +329,22 @@ describe("FileUploader", () => {
       "/api/uploads/docs?scope=contracts",
     );
     expect(send).toHaveBeenCalled();
+  });
+  it("renders ref-backed label and description", () => {
+    const wrapper = createTestWrapper();
+    render(
+      <FileUploader
+        config={{
+          ...baseConfig,
+          label: { from: "uploader.label" } as never,
+          description: { from: "uploader.description" } as never,
+        }}
+      />,
+      { wrapper },
+    );
+
+    const dropzone = screen.getByTestId("file-uploader-dropzone");
+    expect(dropzone.textContent).toContain("Resolved upload");
+    expect(dropzone.textContent).toContain("Resolved description");
   });
 });

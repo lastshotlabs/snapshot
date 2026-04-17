@@ -115,4 +115,13 @@ describe("fileUploaderConfigSchema", () => {
       expect(result.data.onUpload).toBeUndefined();
     }
   });
+  it("accepts ref-backed label and description", () => {
+    const result = fileUploaderConfigSchema.safeParse({
+      type: "file-uploader",
+      label: { from: "uploader.label" },
+      description: { from: "uploader.description" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

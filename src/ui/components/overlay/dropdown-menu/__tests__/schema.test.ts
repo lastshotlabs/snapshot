@@ -106,6 +106,23 @@ describe("dropdownMenuConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts ref-backed trigger and item copy", () => {
+    const result = dropdownMenuConfigSchema.safeParse({
+      type: "dropdown-menu",
+      trigger: { label: { from: "menuState.trigger" } },
+      items: [
+        { type: "label", text: { from: "menuState.section" } },
+        {
+          type: "item",
+          label: { from: "menuState.option" },
+          action: { type: "navigate", to: "/" },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("rejects missing type", () => {
     const { type: _, ...noType } = baseConfig;
     const result = dropdownMenuConfigSchema.safeParse(noType);

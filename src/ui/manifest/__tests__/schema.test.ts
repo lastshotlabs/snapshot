@@ -14,6 +14,8 @@ import {
   containerConfigSchema,
   gridConfigSchema,
   spacerConfigSchema,
+  emptyStateConfigSchema,
+  errorStateConfigSchema,
   componentsConfigSchema,
   customComponentDeclarationSchema,
   customComponentPropSchema,
@@ -766,6 +768,32 @@ describe("nav schemas", () => {
       },
     });
     expect(result.success).toBe(true);
+  });
+
+  it("accepts canonical helper empty/error state surfaces", () => {
+    const emptyResult = emptyStateConfigSchema.safeParse({
+      title: "No rows",
+      className: "empty-root",
+      slots: {
+        root: { className: "empty-root-slot" },
+        action: { className: "empty-action-slot" },
+      },
+      action: {
+        action: { type: "refresh" },
+      },
+    });
+    const errorResult = errorStateConfigSchema.safeParse({
+      title: "Failed to load",
+      className: "error-root",
+      slots: {
+        root: { className: "error-root-slot" },
+        retry: { className: "error-retry-slot" },
+      },
+      retry: { label: "Retry now" },
+    });
+
+    expect(emptyResult.success).toBe(true);
+    expect(errorResult.success).toBe(true);
   });
 
   it("accepts overlay slot surfaces through manifest overlays", () => {

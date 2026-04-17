@@ -29,6 +29,14 @@ describe("tabConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts a ref-backed label", () => {
+    const result = tabConfigSchema.safeParse({
+      label: { from: "tabsState.profile" },
+      content: [],
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("rejects tab without label", () => {
     const result = tabConfigSchema.safeParse({
       content: [],
@@ -132,6 +140,16 @@ describe("tabsConfigSchema", () => {
       id: "settings-tabs",
       visible: true,
       className: "my-tabs",
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts ref-backed child labels", () => {
+    const result = tabsConfigSchema.safeParse({
+      type: "tabs",
+      children: [
+        { label: { from: "tabsState.first" }, content: [] },
+      ],
     });
     expect(result.success).toBe(true);
   });

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { errorStateConfigSchema } from "../../../manifest/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
@@ -31,11 +31,11 @@ export const treeItemSchema: z.ZodType<TreeItemInput[]> = z.lazy(() =>
   z.array(
     z.object({
       /** Display label for the node. */
-      label: z.string(),
+      label: z.union([z.string(), fromRefSchema]),
       /** Lucide icon name. */
       icon: z.string().optional(),
       /** Optional badge displayed at the end of the row. */
-      badge: z.string().optional(),
+      badge: z.union([z.string(), fromRefSchema]).optional(),
       /** Value associated with this node (published on selection). */
       value: z.string().optional(),
       /** Child nodes. */
@@ -54,9 +54,21 @@ export const treeItemSchema: z.ZodType<TreeItemInput[]> = z.lazy(() =>
  * Defined manually because z.lazy() prevents z.infer from resolving recursion.
  */
 export interface TreeItemInput {
-  label: string;
+  label:
+    | string
+    | {
+        from: string;
+        transform?: string;
+        transformArg?: string | number;
+      };
   icon?: string;
-  badge?: string;
+  badge?:
+    | string
+    | {
+        from: string;
+        transform?: string;
+        transformArg?: string | number;
+      };
   value?: string;
   children?: TreeItemInput[];
   disabled?: boolean;

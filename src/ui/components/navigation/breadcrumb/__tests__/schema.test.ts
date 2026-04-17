@@ -19,4 +19,13 @@ describe("breadcrumbConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed manual labels", () => {
+    const result = breadcrumbConfigSchema.safeParse({
+      type: "breadcrumb",
+      items: [{ label: { from: "breadcrumbState.home" }, path: "/" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

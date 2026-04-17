@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { interpolate } from "../../../actions/interpolate";
+import { useResolveFrom } from "../../../context/hooks";
 import { useAutoBreadcrumbs } from "../../../hooks/use-auto-breadcrumbs";
 import { renderIcon } from "../../../icons/render";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
@@ -17,6 +18,10 @@ const SEPARATORS: Record<string, string> = {
   arrow: "\u2192",
 };
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 function collapseItems(
   items: BreadcrumbItemConfig[],
   maxItems: number,
@@ -28,6 +33,7 @@ function collapseItems(
 
 export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
   const execute = useActionExecutor();
+  const resolvedConfig = useResolveFrom({ items: config.items });
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
   const separator = SEPARATORS[config.separator ?? "chevron"] ?? "\u203A";
@@ -63,13 +69,17 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
   );
 
   const resolvedItems = useMemo(() => {
-    const baseItems = config.items?.length ? config.items : autoItems;
+    const baseItems = (config.items?.length
+      ? ((resolvedConfig.items as BreadcrumbConfig["items"] | undefined) ??
+        config.items)
+      : autoItems) as BreadcrumbItemConfig[];
+
     return baseItems.map((item: BreadcrumbItemConfig) => ({
       ...item,
-      label: interpolate(item.label, context),
+      label: interpolate(resolveText(item.label) ?? "", context),
       path: item.path ? interpolate(item.path, context) : undefined,
     }));
-  }, [autoItems, config.items, context]);
+  }, [autoItems, config.items, context, resolvedConfig.items]);
 
   const visibleItems =
     config.maxItems != null
@@ -236,7 +246,7 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
                         {renderIcon(item.icon, 14)}
                       </span>
                     ) : null}
-                    {item.label}
+                    {String(item.label)}
                   </span>
                 ) : (
                   <a
@@ -258,7 +268,7 @@ export function BreadcrumbComponent({ config }: { config: BreadcrumbConfig }) {
                         {renderIcon((item as BreadcrumbItemConfig).icon, 14)}
                       </span>
                     ) : null}
-                    {item.label}
+                    {String(item.label)}
                   </a>
                 )}
                 <SurfaceStyles css={itemSurface.scopedCss} />

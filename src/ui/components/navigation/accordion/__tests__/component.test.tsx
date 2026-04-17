@@ -1,10 +1,49 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { AccordionComponent } from "../component";
 import { Provider } from "jotai/react";
 import { createStore } from "jotai/vanilla";
+
+const refValues: Record<string, unknown> = {
+  "accordionState.title": "Resolved profile",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((entry) => resolveRefs(entry)) as T;
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>) &&
+    typeof (value as unknown as { from: unknown }).from === "string"
+  ) {
+    return refValues[(value as unknown as { from: string }).from] as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        resolveRefs(entry),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
+vi.mock("../../../../context/hooks", async () => {
+  const actual = await vi.importActual("../../../../context/hooks");
+
+  return {
+    ...actual,
+    useResolveFrom: <T,>(value: T) => resolveRefs(value),
+  };
+});
 
 function createWrapper(store: ReturnType<typeof createStore>) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
@@ -82,5 +121,26 @@ describe("AccordionComponent", () => {
     expect(
       container.querySelector('[data-snapshot-id="accordion-content-0"]'),
     ).not.toBeNull();
+  });
+
+  it("renders ref-backed item titles", () => {
+    const store = createStore();
+
+    render(
+      <AccordionComponent
+        config={{
+          type: "accordion",
+          items: [
+            {
+              title: { from: "accordionState.title" } as never,
+              content: [],
+            },
+          ],
+        }}
+      />,
+      { wrapper: createWrapper(store) },
+    );
+
+    expect(screen.getByText("Resolved profile")).toBeTruthy();
   });
 });

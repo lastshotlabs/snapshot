@@ -38,7 +38,7 @@ export const alertConfigSchema = extendComponentSchema({
     /** Optional action to execute when the action button is clicked. */
     action: actionSchema.optional(),
     /** Label for the action button. */
-    actionLabel: z.string().optional(),
+    actionLabel: z.union([z.string(), fromRefSchema]).optional(),
     slots: slotsSchema([
       "root",
       "icon",

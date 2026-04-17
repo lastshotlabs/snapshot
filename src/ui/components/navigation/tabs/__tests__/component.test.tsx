@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { cleanup, render, screen, fireEvent } from "@testing-library/react";
 import { createElement } from "react";
 import { Provider } from "jotai/react";
@@ -9,6 +9,45 @@ import { createStore } from "jotai/vanilla";
 import type { TabsConfig } from "../schema";
 import { PageRegistryContext } from "../../../../context/providers";
 import { AtomRegistryImpl } from "../../../../context/registry";
+
+const refValues: Record<string, unknown> = {
+  "tabsState.first": "Resolved Tab 1",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((entry) => resolveRefs(entry)) as T;
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>) &&
+    typeof (value as unknown as { from: unknown }).from === "string"
+  ) {
+    return refValues[(value as unknown as { from: string }).from] as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        resolveRefs(entry),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
+vi.mock("../../../../context/hooks", async () => {
+  const actual = await vi.importActual("../../../../context/hooks");
+
+  return {
+    ...actual,
+    useResolveFrom: <T,>(value: T) => resolveRefs(value),
+  };
+});
 
 function TestChild({ config }: { config: Record<string, unknown> }) {
   return createElement(
@@ -237,5 +276,25 @@ describe("TabsComponent", () => {
     expect(screen.getByTestId("child-Content 1")).toBeDefined();
     // Tab 2 content should be visible
     expect(screen.getByTestId("child-Content 2")).toBeDefined();
+  });
+
+  it("renders ref-backed tab labels", () => {
+    const config: TabsConfig = {
+      type: "tabs",
+      children: [
+        {
+          label: { from: "tabsState.first" } as never,
+          content: [],
+        },
+      ],
+      defaultTab: 0,
+      variant: "default",
+    };
+
+    render(createElement(TabsComponent, { config }), {
+      wrapper: createWrapper(store),
+    });
+
+    expect(screen.getByText("Resolved Tab 1")).toBeDefined();
   });
 });

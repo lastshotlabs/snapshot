@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { renderIcon } from "../../../icons/render";
@@ -13,6 +13,23 @@ import {
 } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { TreeViewConfig, TreeItemInput } from "./types";
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function normalizeTreeItems(items: TreeItemInput[] | undefined): TreeItemInput[] {
+  if (!items) {
+    return [];
+  }
+
+  return items.map((item) => ({
+    ...item,
+    label: resolveText(item.label) ?? "",
+    badge: resolveText(item.badge),
+    children: normalizeTreeItems(item.children),
+  }));
+}
 
 interface TreeNodeProps {
   rootId: string;
@@ -284,7 +301,7 @@ function TreeNode({
           className={labelSurface.className}
           style={labelSurface.style}
         >
-          {item.label}
+          {String(item.label)}
         </span>
         {item.badge ? (
           <span
@@ -293,7 +310,7 @@ function TreeNode({
             className={badgeSurface.className}
             style={badgeSurface.style}
           >
-            {item.badge}
+            {String(item.badge)}
           </span>
         ) : null}
       </ButtonControl>
@@ -368,6 +385,7 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedConfig = useResolveFrom({ items: config.items });
   const selectable = config.selectable ?? true;
   const multiSelect = config.multiSelect ?? false;
   const showIcon = config.showIcon ?? true;
@@ -453,7 +471,10 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
 
   const items = useMemo((): TreeItemInput[] => {
     if (!hasEndpoint) {
-      return config.items ?? [];
+      return normalizeTreeItems(
+        ((resolvedConfig.items as TreeViewConfig["items"] | undefined) ??
+          config.items) as TreeItemInput[] | undefined,
+      );
     }
     if (!data) {
       return [];
@@ -468,7 +489,7 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
           : [];
 
     return rawItems as TreeItemInput[];
-  }, [config.items, data, hasEndpoint]);
+  }, [config.items, data, hasEndpoint, resolvedConfig.items]);
 
   const [expanded, setExpanded] = useState<Set<string>>(() =>
     collectExpandedKeys(items, "root"),
@@ -617,7 +638,7 @@ export function TreeView({ config }: { config: TreeViewConfig }) {
           style={errorStateSurface.style}
         >
           <AutoErrorState
-            config={config.error ?? {}}
+            config={(config.error ?? {}) as import("../../_base/auto-error-state").AutoErrorStateConfig}
             onRetry={config.error?.retry !== undefined ? refetch : undefined}
           />
         </div>

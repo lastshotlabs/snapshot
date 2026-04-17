@@ -25,4 +25,18 @@ describe("treeViewConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed labels and badges", () => {
+    const result = treeViewConfigSchema.safeParse({
+      type: "tree-view",
+      items: [
+        {
+          label: { from: "tree.docs" },
+          badge: { from: "tree.count" },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

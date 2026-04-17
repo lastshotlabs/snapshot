@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import type { ActionConfig } from "../../../actions/types";
 import { renderIcon } from "../../../icons/render";
+import { AutoEmptyState } from "../../_base/auto-empty-state";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -178,25 +179,6 @@ function DetailCardSkeleton() {
           />
         </div>
       ))}
-    </div>
-  );
-}
-
-function DetailCardEmpty({ message }: { message: string }) {
-  return (
-    <div
-      data-testid="detail-card-empty"
-      style={{
-        padding: "var(--sn-spacing-lg, 1.5rem)",
-        textAlign: "center",
-        color: "var(--sn-color-muted-foreground, #64748b)",
-        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        border:
-          "var(--sn-border-default, 1px) dashed var(--sn-color-border, #e2e8f0)",
-        borderRadius: "var(--sn-radius-lg, 0.5rem)",
-      }}
-    >
-      {message}
     </div>
   );
 }
@@ -426,12 +408,19 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
         </div>
       ) : !data ? (
         <div
+          data-testid="detail-card-empty"
           data-snapshot-id={`${rootId}-empty`}
           className={emptySurface.className}
           style={emptySurface.style}
         >
-          <DetailCardEmpty
-            message={config.emptyState ?? "Select an item to view details"}
+          <AutoEmptyState
+            config={{
+              ...(config.empty ?? {}),
+              title:
+                config.empty?.title ??
+                config.emptyState ??
+                "Select an item to view details",
+            }}
           />
         </div>
       ) : (

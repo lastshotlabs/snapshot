@@ -30,4 +30,14 @@ describe("navDropdownConfigSchema", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it("accepts ref-backed labels", () => {
+    const result = navDropdownConfigSchema.safeParse({
+      type: "nav-dropdown",
+      label: { from: "navDropdown.label" },
+      items: [{ type: "heading", text: "Item" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

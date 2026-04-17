@@ -23,4 +23,18 @@ describe("accordionConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed item titles", () => {
+    const result = accordionConfigSchema.safeParse({
+      type: "accordion",
+      items: [
+        {
+          title: { from: "accordionState.title" },
+          content: [],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

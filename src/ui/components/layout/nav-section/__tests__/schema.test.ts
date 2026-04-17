@@ -29,4 +29,14 @@ describe("navSectionConfigSchema", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it("accepts ref-backed labels", () => {
+    const result = navSectionConfigSchema.safeParse({
+      type: "nav-section",
+      label: { from: "navSection.label" },
+      items: [{ type: "heading", text: "Item" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

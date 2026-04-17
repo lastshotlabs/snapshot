@@ -256,8 +256,9 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
 
   const variant = config.variant ?? "dropzone";
   const maxFiles = config.maxFiles ?? 1;
-  const label = config.label ?? "Drop files here or click to browse";
-  const description = config.description;
+  const label = useSubscribe(config.label) as string | undefined;
+  const description = useSubscribe(config.description) as string | undefined;
+  const resolvedLabel = label ?? "Drop files here or click to browse";
 
   useEffect(() => {
     if (publish) {
@@ -665,7 +666,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             >
               {"\u2191"}
             </span>
-            <span>{label}</span>
+            <span>{resolvedLabel}</span>
           </ButtonControl>
           {fileList}
         </div>
@@ -743,7 +744,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
           onDrop={handleDrop}
           role="button"
           tabIndex={0}
-          aria-label={label}
+          aria-label={resolvedLabel}
           className={dropzoneSurface.className}
           style={dropzoneSurface.style}
         >
@@ -760,7 +761,7 @@ export function FileUploader({ config }: { config: FileUploaderConfig }) {
             className={dropzoneLabelSurface.className}
             style={dropzoneLabelSurface.style}
           >
-            {label}
+            {resolvedLabel}
           </span>
           {description ? (
             <span

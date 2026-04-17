@@ -3,6 +3,7 @@ import {
   urlSyncConfigSchema,
 } from "../../../manifest/schema";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const tabsSlotNames = [
   "root",
@@ -18,7 +19,7 @@ export const tabsSlotNames = [
  */
 export const tabConfigSchema = z.object({
   /** Display label for the tab. */
-  label: z.string(),
+  label: z.union([z.string(), fromRefSchema]),
   /** Optional icon name (e.g. Lucide icon). */
   icon: z.string().optional(),
   /** Child components rendered when this tab is active. */
@@ -29,7 +30,7 @@ export const tabConfigSchema = z.object({
 });
 
 /** Inferred type for a single tab config. */
-export type TabConfig = z.infer<typeof tabConfigSchema>;
+export type TabConfig = z.input<typeof tabConfigSchema>;
 
 /**
  * Zod schema for tabs component config.
@@ -50,4 +51,4 @@ export const tabsConfigSchema = extendComponentSchema({
 });
 
 /** Inferred type for tabs config. */
-export type TabsConfig = z.infer<typeof tabsConfigSchema>;
+export type TabsConfig = z.input<typeof tabsConfigSchema>;

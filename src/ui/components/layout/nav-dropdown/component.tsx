@@ -56,6 +56,7 @@ export function NavDropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const label = useSubscribe(config.label) as string;
   const triggerMode = config.trigger ?? "click";
   const routeRuntime = useRouteRuntime();
 
@@ -190,7 +191,7 @@ export function NavDropdown({
           className={labelSurface.className}
           style={labelSurface.style}
         >
-          {config.label}
+          {label}
         </span>
       </ButtonControl>
 

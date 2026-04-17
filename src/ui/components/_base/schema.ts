@@ -42,6 +42,7 @@ export const styleableElementFields = {
   className: z.string().optional(),
   style: z.record(z.union([z.string(), z.number()])).optional(),
   cursor: z.string().optional(),
+  backgroundColor: z.string().optional(),
   gridTemplateColumns: z.string().optional(),
   gridTemplateRows: z.string().optional(),
   gridColumn: z.string().optional(),

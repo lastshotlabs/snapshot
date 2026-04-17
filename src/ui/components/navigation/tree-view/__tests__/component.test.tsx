@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { AtomRegistryImpl } from "../../../../context/registry";
@@ -8,6 +8,46 @@ import {
   PageRegistryContext,
 } from "../../../../context/providers";
 import { TreeView } from "../component";
+
+const refValues: Record<string, unknown> = {
+  "tree.docs": "Resolved Docs",
+  "tree.count": "7",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((entry) => resolveRefs(entry)) as T;
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>) &&
+    typeof (value as unknown as { from: unknown }).from === "string"
+  ) {
+    return refValues[(value as unknown as { from: string }).from] as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        resolveRefs(entry),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
+vi.mock("../../../../context/hooks", async () => {
+  const actual = await vi.importActual("../../../../context/hooks");
+
+  return {
+    ...actual,
+    useResolveFrom: <T,>(value: T) => resolveRefs(value),
+  };
+});
 
 function createWrapper() {
   const registry = new AtomRegistryImpl();
@@ -109,5 +149,28 @@ describe("TreeView", () => {
     expect(screen.getByText("Report.pdf")).toBeDefined();
     fireEvent.click(row);
     expect(screen.queryByText("Report.pdf")).toBeNull();
+  });
+
+  it("renders ref-backed labels and badges", () => {
+    const Wrapper = createWrapper();
+
+    render(
+      <Wrapper>
+        <TreeView
+          config={{
+            type: "tree-view",
+            items: [
+              {
+                label: { from: "tree.docs" } as never,
+                badge: { from: "tree.count" } as never,
+              },
+            ],
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Resolved Docs")).toBeTruthy();
+    expect(screen.getByText("7")).toBeTruthy();
   });
 });

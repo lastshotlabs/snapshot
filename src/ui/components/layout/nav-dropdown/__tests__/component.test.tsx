@@ -9,6 +9,24 @@ import {
   PageRegistryContext,
 } from "../../../../context/providers";
 
+const refValues: Record<string, unknown> = {
+  "navDropdown.label": "Resolved Products",
+};
+
+vi.mock("../../../../context/index", async () => {
+  const actual = await vi.importActual("../../../../context/index");
+
+  return {
+    ...actual,
+    useSubscribe: (value: unknown) =>
+      value &&
+      typeof value === "object" &&
+      "from" in (value as Record<string, unknown>)
+        ? refValues[(value as { from: string }).from]
+        : value,
+  };
+});
+
 vi.mock("../../../../manifest/renderer", () => ({
   ComponentRenderer: ({ config }: { config: { id?: string; type: string } }) => (
     <div data-testid={`nav-dropdown-item-${config.id ?? config.type}`}>{config.type}</div>
@@ -179,5 +197,21 @@ describe("NavDropdown", () => {
     expect(wrapper?.className).not.toContain("dropdown-item-slot");
     expect(link.className).toContain("dropdown-item-slot");
     expect((link as HTMLElement).style.width).toBe("100%");
+  });
+
+  it("renders ref-backed labels", () => {
+    renderWithContext(
+      <NavDropdown
+        config={{
+          type: "nav-dropdown",
+          label: { from: "navDropdown.label" } as never,
+          items: [{ type: "text", id: "item-a" } as never],
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Resolved Products" }),
+    ).toBeTruthy();
   });
 });

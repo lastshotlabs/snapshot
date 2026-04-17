@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useResolveFrom } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
@@ -11,6 +12,10 @@ import {
 } from "../../_base/style-surfaces";
 import { ButtonControl } from "../../forms/button";
 import type { AccordionConfig } from "./types";
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
 
 function resolveDefaultOpen(
   defaultOpen: number | number[] | undefined,
@@ -40,8 +45,18 @@ function Chevron({ open }: { open: boolean }) {
 }
 
 export function AccordionComponent({ config }: { config: AccordionConfig }) {
+  const resolvedConfig = useResolveFrom({ items: config.items });
   const [openIndices, setOpenIndices] = useState<Set<number>>(() =>
     resolveDefaultOpen(config.defaultOpen),
+  );
+  const items = useMemo(
+    () =>
+      (((resolvedConfig.items as AccordionConfig["items"] | undefined) ??
+        config.items) as AccordionConfig["items"]).map((item) => ({
+        ...item,
+        title: resolveText(item.title) ?? "",
+      })),
+    [config.items, resolvedConfig.items],
   );
 
   const mode = config.mode ?? "single";
@@ -94,7 +109,7 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
       className={rootSurface.className}
       style={rootSurface.style}
     >
-      {config.items.map((item, index) => {
+      {items.map((item, index) => {
         const isOpen = openIndices.has(index);
         const isDisabled = item.disabled === true;
 
@@ -267,7 +282,7 @@ export function AccordionComponent({ config }: { config: AccordionConfig }) {
               </div>
             </div>
 
-            {variant !== "separated" && index < config.items.length - 1 ? (
+            {variant !== "separated" && index < items.length - 1 ? (
               <div
                 style={{
                   height: "1px",

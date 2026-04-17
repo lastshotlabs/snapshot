@@ -2,13 +2,28 @@
 
 import type { ReactNode } from "react";
 import { renderIcon } from "../../icons/render";
+import { SurfaceStyles } from "./surface-styles";
+import {
+  extractSurfaceConfig,
+  resolveSurfacePresentation,
+} from "./style-surfaces";
 import { ButtonControl } from "../forms/button";
 
-export interface AutoErrorStateConfig {
+export interface AutoErrorStateConfig extends Record<string, unknown> {
+  id?: string;
+  className?: string;
+  style?: Record<string, string | number>;
   title?: string;
   description?: string;
   retry?: boolean | { label: string };
   icon?: string;
+  slots?: {
+    root?: Record<string, unknown>;
+    icon?: Record<string, unknown>;
+    title?: Record<string, unknown>;
+    description?: Record<string, unknown>;
+    retry?: Record<string, unknown>;
+  };
 }
 
 export function AutoErrorState({
@@ -21,63 +36,108 @@ export function AutoErrorState({
   const retryLabel =
     typeof config.retry === "object" ? config.retry.label : "Retry";
   const showRetry = Boolean(config.retry) && Boolean(onRetry);
+  const rootId = config.id ?? "auto-error-state";
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      style: {
+        padding: "var(--sn-spacing-2xl, 3rem) var(--sn-spacing-xl, 2rem)",
+        gap: "var(--sn-spacing-md, 1rem)",
+      },
+    },
+    componentSurface: extractSurfaceConfig(config as Record<string, unknown>),
+    itemSurface: config.slots?.root,
+  });
+  const iconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-icon`,
+    implementationBase: {
+      color: "var(--sn-color-destructive, #dc2626)",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    componentSurface: config.slots?.icon,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: {
+      color: "var(--sn-color-foreground, #111827)",
+      fontSize: "lg",
+      fontWeight: "semibold",
+    },
+    componentSurface: config.slots?.title,
+  });
+  const descriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-description`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      fontSize: "sm",
+      lineHeight: "normal",
+      maxWidth: "32rem",
+    },
+    componentSurface: config.slots?.description,
+  });
+  const retrySurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-retry`,
+    componentSurface: config.slots?.retry,
+  });
 
   return (
-    <div
-      role="alert"
-      data-snapshot-error-state=""
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "var(--sn-spacing-2xl, 3rem) var(--sn-spacing-xl, 2rem)",
-        textAlign: "center",
-        gap: "var(--sn-spacing-md, 1rem)",
-      }}
-    >
+    <>
       <div
-        aria-hidden="true"
-        style={{
-          color: "var(--sn-color-destructive, #dc2626)",
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        role="alert"
+        data-snapshot-error-state=""
+        data-snapshot-id={rootId}
+        className={rootSurface.className}
+        style={rootSurface.style}
       >
-        {renderIcon(config.icon ?? "alert-circle", 28)}
-      </div>
-      <div
-        style={{
-          fontSize: "var(--sn-font-size-lg, 1.125rem)",
-          fontWeight: "var(--sn-font-weight-semibold, 600)",
-          color: "var(--sn-color-foreground, #111827)",
-        }}
-      >
-        {config.title ?? "Something went wrong"}
-      </div>
-      {config.description ? (
         <div
-          style={{
-            maxWidth: "32rem",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            lineHeight: "var(--sn-leading-normal, 1.5)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-          }}
+          aria-hidden="true"
+          data-snapshot-id={`${rootId}-icon`}
+          className={iconSurface.className}
+          style={iconSurface.style}
         >
-          {config.description}
+          {renderIcon(config.icon ?? "alert-circle", 28)}
         </div>
-      ) : null}
-      {showRetry ? (
-        <ButtonControl
-          type="button"
-          onClick={onRetry}
-          variant="outline"
-          size="sm"
+        <div
+          data-snapshot-id={`${rootId}-title`}
+          className={titleSurface.className}
+          style={titleSurface.style}
         >
-          {retryLabel}
-        </ButtonControl>
-      ) : null}
-    </div>
+          {config.title ?? "Something went wrong"}
+        </div>
+        {config.description ? (
+          <div
+            data-snapshot-id={`${rootId}-description`}
+            className={descriptionSurface.className}
+            style={descriptionSurface.style}
+          >
+            {config.description}
+          </div>
+        ) : null}
+        {showRetry ? (
+          <ButtonControl
+            type="button"
+            surfaceId={`${rootId}-retry`}
+            surfaceConfig={retrySurface.resolvedConfigForWrapper}
+            onClick={onRetry}
+            variant="outline"
+            size="sm"
+          >
+            {retryLabel}
+          </ButtonControl>
+        ) : null}
+      </div>
+      <SurfaceStyles css={rootSurface.scopedCss} />
+      <SurfaceStyles css={iconSurface.scopedCss} />
+      <SurfaceStyles css={titleSurface.scopedCss} />
+      <SurfaceStyles css={descriptionSurface.scopedCss} />
+      <SurfaceStyles css={retrySurface.scopedCss} />
+    </>
   );
 }

@@ -1,8 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { usePublish } from "../../../context/hooks";
+import { usePublish, useResolveFrom } from "../../../context/hooks";
 import { useUrlSync } from "../../../hooks/use-url-sync";
 import type { TabsConfig } from "./schema";
-import type { UseTabsReturn } from "./types";
+import type { ResolvedTabConfig, UseTabsReturn } from "./types";
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
 
 /**
  * Hook that manages tab state for a given tabs config.
@@ -15,6 +19,16 @@ import type { UseTabsReturn } from "./types";
 export function useTabs(config: TabsConfig): UseTabsReturn {
   const [activeTab, setActiveTabRaw] = useState(config.defaultTab ?? 0);
   const publish = usePublish(config.id ?? "");
+  const resolvedConfig = useResolveFrom({ children: config.children });
+  const tabs = useMemo<ResolvedTabConfig[]>(
+    () =>
+      (((resolvedConfig.children as TabsConfig["children"] | undefined) ??
+        config.children) as TabsConfig["children"]).map((tab) => ({
+        ...tab,
+        label: resolveText(tab.label) ?? "",
+      })),
+    [config.children, resolvedConfig.children],
+  );
   const urlSyncConfig = useMemo(() => {
     if (!config.urlSync) {
       return null;
@@ -35,7 +49,7 @@ export function useTabs(config: TabsConfig): UseTabsReturn {
 
   const setActiveTab = useCallback(
     (index: number) => {
-      const tab = config.children[index];
+      const tab = tabs[index];
       if (!tab || tab.disabled) return;
 
       setActiveTabRaw(index);
@@ -47,7 +61,7 @@ export function useTabs(config: TabsConfig): UseTabsReturn {
         });
       }
     },
-    [config.children, config.id, publish],
+    [config.id, publish, tabs],
   );
 
   useUrlSync({
@@ -66,7 +80,7 @@ export function useTabs(config: TabsConfig): UseTabsReturn {
         return;
       }
 
-      const nextTab = config.children[nextIndex];
+      const nextTab = tabs[nextIndex];
       if (!nextTab || nextTab.disabled) {
         return;
       }
@@ -84,6 +98,6 @@ export function useTabs(config: TabsConfig): UseTabsReturn {
   return {
     activeTab,
     setActiveTab,
-    tabs: config.children,
+    tabs,
   };
 }

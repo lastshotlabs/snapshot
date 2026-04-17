@@ -2,6 +2,7 @@
 
 import React, { useCallback, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
+import { useResolveFrom } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
@@ -17,13 +18,45 @@ import type { DropdownMenuConfig } from "./types";
 
 type DropdownMenuItem = DropdownMenuConfig["items"][number];
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
   const execute = useActionExecutor();
+  const resolvedConfig = useResolveFrom({
+    trigger: config.trigger,
+    items: config.items,
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const variant = config.trigger.variant ?? "default";
+  const trigger =
+    (resolvedConfig.trigger as DropdownMenuConfig["trigger"] | undefined) ??
+    config.trigger;
+  const items = (
+    ((resolvedConfig.items as DropdownMenuConfig["items"] | undefined) ??
+      config.items) as DropdownMenuConfig["items"]
+  ).map((entry: DropdownMenuItem) => {
+    if (entry.type === "item") {
+      return {
+        ...entry,
+        label: resolveText(entry.label) ?? "",
+      };
+    }
+
+    if (entry.type === "label") {
+      return {
+        ...entry,
+        text: resolveText(entry.text) ?? "",
+      };
+    }
+
+    return entry;
+  });
+
+  const variant = trigger.variant ?? "default";
   const align = config.align ?? "start";
   const side = config.side ?? "bottom";
   const rootId = config.id ?? "dropdown-menu";
@@ -55,7 +88,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
     componentSurface: config.slots?.triggerIcon,
   });
 
-  const actionableIndices = config.items
+  const actionableIndices = items
     .map((item: DropdownMenuItem, index: number) =>
       item.type === "item" && !item.disabled ? index : -1,
     )
@@ -73,7 +106,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
 
   const handleItemClick = useCallback(
     (index: number) => {
-      const item = config.items[index];
+      const item = items[index];
       if (!item || item.type !== "item" || item.disabled) {
         return;
       }
@@ -81,7 +114,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
       void execute(item.action);
       close();
     },
-    [close, config.items, execute],
+    [close, execute, items],
   );
 
   const handleKeyDown = useCallback(
@@ -140,22 +173,22 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
         ariaHasPopup="menu"
         activeStates={isOpen ? ["open"] : []}
       >
-        {config.trigger.icon ? (
+        {trigger.icon ? (
           <span
             data-snapshot-id={`${rootId}-trigger-icon`}
             className={triggerIconSurface.className}
             style={triggerIconSurface.style}
           >
-            {renderIcon(config.trigger.icon, 16)}
+            {renderIcon(trigger.icon, 16)}
           </span>
         ) : null}
-        {config.trigger.label ? (
+        {trigger.label ? (
           <span
             data-snapshot-id={`${rootId}-trigger-label`}
             className={triggerLabelSurface.className}
             style={triggerLabelSurface.style}
           >
-            {config.trigger.label}
+            {trigger.label}
           </span>
         ) : null}
       </ButtonControl>
@@ -171,7 +204,7 @@ export function DropdownMenu({ config }: { config: DropdownMenuConfig }) {
         activeStates={isOpen ? ["open"] : []}
       >
         <div onKeyDown={handleKeyDown} data-testid="dropdown-menu-content">
-          {config.items.map((entry: DropdownMenuItem, index: number) => {
+          {items.map((entry: DropdownMenuItem, index: number) => {
             if (entry.type === "separator") {
               return (
                 <MenuSeparator

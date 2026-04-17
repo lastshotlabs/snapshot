@@ -34,6 +34,7 @@ function variantColor(variant: string): string {
 export function Alert({ config }: { config: AlertConfig }) {
   const resolvedTitle = useSubscribe(config.title ?? "") as string;
   const resolvedDescription = useSubscribe(config.description) as string;
+  const resolvedActionLabel = useSubscribe(config.actionLabel) as string | undefined;
   const visible = useSubscribe(config.visible ?? true);
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
@@ -180,7 +181,7 @@ export function Alert({ config }: { config: AlertConfig }) {
           {resolvedDescription}
         </div>
 
-        {config.action && config.actionLabel ? (
+        {config.action && resolvedActionLabel ? (
           <ButtonControl
             type="button"
             variant="outline"
@@ -193,7 +194,7 @@ export function Alert({ config }: { config: AlertConfig }) {
             surfaceConfig={actionSurface.resolvedConfigForWrapper}
             testId="alert-action"
           >
-            {config.actionLabel}
+            {resolvedActionLabel}
           </ButtonControl>
         ) : null}
       </div>

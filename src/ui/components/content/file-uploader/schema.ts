@@ -2,6 +2,7 @@ import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { endpointTargetSchema } from "../../../manifest/resources";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod config schema for the FileUploader component.
@@ -32,9 +33,9 @@ export const fileUploaderConfigSchema = extendComponentSchema({
     /** Maximum number of files. Default: 1. */
     maxFiles: z.number().optional(),
     /** Label displayed in the dropzone. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Helper text displayed below the label. */
-    description: z.string().optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** Visual layout variant. Default: "dropzone". */
     variant: z.enum(["dropzone", "button", "compact"]).optional(),
     /** Endpoint to POST files to (as FormData). */

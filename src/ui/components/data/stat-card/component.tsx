@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
+import { AutoEmptyState } from "../../_base/auto-empty-state";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
@@ -433,7 +434,7 @@ export function StatCard({ config }: { config: StatCardConfig }) {
           style={errorSurface.style}
         >
           <AutoErrorState
-            config={config.error ?? {}}
+            config={(config.error ?? {}) as import("../../_base/auto-error-state").AutoErrorStateConfig}
             onRetry={config.error?.retry !== undefined ? refetch : undefined}
           />
         </div>
@@ -510,7 +511,17 @@ export function StatCard({ config }: { config: StatCardConfig }) {
           className={emptySurface.className}
           style={emptySurface.style}
         >
-          No data available
+          <AutoEmptyState
+            config={
+              {
+                ...(config.empty ?? {}),
+                title:
+                  typeof config.empty?.title === "string"
+                    ? config.empty.title
+                    : "No data available",
+              } as import("../../_base/auto-empty-state").AutoEmptyStateConfig
+            }
+          />
         </div>
       )}
       <SurfaceStyles css={rootSurface.scopedCss} />

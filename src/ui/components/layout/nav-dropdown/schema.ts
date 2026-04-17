@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { componentConfigSchema } from "../../../manifest/schema";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const navDropdownSlotNames = [
   "root",
@@ -17,7 +18,7 @@ export const navDropdownSlotNames = [
 
 export const navDropdownConfigSchema = extendComponentSchema({
   type: z.literal("nav-dropdown"),
-  label: z.string(),
+  label: z.union([z.string(), fromRefSchema]),
   icon: z.string().optional(),
   trigger: z.enum(["click", "hover"]).optional(),
   current: z.boolean().optional(),

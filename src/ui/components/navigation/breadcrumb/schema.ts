@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { actionSchema } from "../../../actions/types";
+import { fromRefSchema } from "../../_base/types";
 
 export const breadcrumbSlotNames = [
   "root",
@@ -17,7 +18,7 @@ export const breadcrumbSlotNames = [
  */
 export const breadcrumbItemSchema = z.object({
   /** Display label for the breadcrumb segment. */
-  label: z.string(),
+  label: z.union([z.string(), fromRefSchema]),
   /** Route path for navigation. Omit for the current (last) item. */
   path: z.string().optional(),
   /** Optional icon name displayed before the label. */

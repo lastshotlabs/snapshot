@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 export const dropdownMenuSlotNames = [
   "root",
@@ -18,7 +19,7 @@ export const dropdownMenuSlotNames = [
 const dropdownMenuItemSchema = z
   .object({
     type: z.literal("item"),
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     icon: z.string().optional(),
     action: actionSchema,
     disabled: z.boolean().optional(),
@@ -37,7 +38,7 @@ const dropdownMenuSeparatorSchema = z
 const dropdownMenuLabelSchema = z
   .object({
     type: z.literal("label"),
-    text: z.string(),
+    text: z.union([z.string(), fromRefSchema]),
     slots: slotsSchema(["label"]).optional(),
   })
   .strict();
@@ -52,7 +53,7 @@ export const dropdownMenuConfigSchema: z.ZodType<Record<string, any>> = extendCo
   type: z.literal("dropdown-menu"),
   trigger: z
     .object({
-      label: z.string().optional(),
+      label: z.union([z.string(), fromRefSchema]).optional(),
       icon: z.string().optional(),
       variant: z
         .enum(["default", "secondary", "outline", "ghost", "destructive", "link"])

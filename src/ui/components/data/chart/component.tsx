@@ -124,17 +124,45 @@ function toAutoEmptyStateConfig(
   }
 
   return {
-    icon: empty.icon,
-    title: empty.title,
-    description: empty.description,
+    id: typeof empty.id === "string" ? empty.id : undefined,
+    className: typeof empty.className === "string" ? empty.className : undefined,
+    style:
+      empty.style && typeof empty.style === "object"
+        ? (empty.style as Record<string, string | number>)
+        : undefined,
+    size:
+      empty.size === "sm" || empty.size === "md" || empty.size === "lg"
+        ? empty.size
+        : undefined,
+    icon: typeof empty.icon === "string" ? empty.icon : undefined,
+    iconColor:
+      typeof empty.iconColor === "string" ? empty.iconColor : undefined,
+    title: typeof empty.title === "string" ? empty.title : "No data",
+    description:
+      typeof empty.description === "string" ? empty.description : undefined,
+    slots:
+      empty.slots && typeof empty.slots === "object"
+        ? (empty.slots as AutoEmptyStateConfig["slots"])
+        : undefined,
     ...(empty.action?.action
       ? {
           action: {
-            label: empty.action.label,
+            label:
+              typeof empty.action.label === "string"
+                ? empty.action.label
+                : "Action",
             action: empty.action.action,
-            icon: empty.action.icon,
-            variant: empty.action.variant,
-          },
+            icon:
+              typeof empty.action.icon === "string"
+                ? empty.action.icon
+                : undefined,
+            variant:
+              empty.action.variant === "default" ||
+              empty.action.variant === "primary" ||
+              empty.action.variant === "outline"
+                ? empty.action.variant
+                : undefined,
+          } satisfies AutoEmptyStateConfig["action"],
         }
       : {}),
   };
