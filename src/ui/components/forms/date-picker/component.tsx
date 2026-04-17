@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -136,9 +137,8 @@ export function DatePicker({ config }: { config: DatePickerConfig }) {
   }
 
   const triggerChange = (value: unknown) => {
-    if (config.onChange) {
-      void execute(config.onChange, { value });
-    }
+    void executeEventAction(execute, config.on?.change, { id: config.id, value });
+    void executeEventAction(execute, config.on?.input, { id: config.id, value });
   };
 
   const rootSurface = resolveSurfacePresentation({

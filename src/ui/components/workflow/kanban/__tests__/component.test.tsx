@@ -1,20 +1,38 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Kanban } from "../component";
+import { afterEach } from "vitest";
 
 const executeSpy = vi.fn();
 const publishSpy = vi.fn();
+const useComponentDataMock = vi.fn();
+const refValues: Record<string, unknown> = {
+  "state.board.todo": "Backlog",
+  "state.board.empty": "Nothing queued",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((entry) => resolveRefs(entry)) as T;
+  }
+  if (value && typeof value === "object") {
+    if ("from" in (value as Record<string, unknown>)) {
+      return refValues[((value as unknown) as { from: string }).from] as T;
+    }
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        resolveRefs(entry),
+      ]),
+    ) as T;
+  }
+  return value;
+}
 
 vi.mock("../../../_base/use-component-data", () => ({
-  useComponentData: () => ({
-    data: [
-      { id: "task-1", status: "todo", title: "Write tests", description: "Cover kanban" },
-    ],
-    isLoading: false,
-    error: null,
-  }),
+  useComponentData: (...args: unknown[]) => useComponentDataMock(...args),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -22,7 +40,11 @@ vi.mock("../../../../actions/executor", () => ({
 }));
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value && typeof value === "object" && "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
+  useResolveFrom: (value: unknown) => resolveRefs(value),
   usePublish: () => publishSpy,
 }));
 
@@ -48,9 +70,23 @@ vi.mock("../../../../hooks/use-drag-drop", () => ({
   getSortableStyle: () => ({}),
 }));
 
+afterEach(() => {
+  cleanup();
+  executeSpy.mockReset();
+  publishSpy.mockReset();
+  useComponentDataMock.mockReset();
+});
+
 describe("Kanban", () => {
   it("renders cards and dispatches card actions", () => {
     executeSpy.mockReset();
+    useComponentDataMock.mockReturnValue({
+      data: [
+        { id: "task-1", status: "todo", title: "Write tests", description: "Cover kanban" },
+      ],
+      isLoading: false,
+      error: null,
+    });
 
     render(
       <Kanban
@@ -76,6 +112,14 @@ describe("Kanban", () => {
   });
 
   it("applies canonical slot styling to column and card surfaces", () => {
+    useComponentDataMock.mockReturnValue({
+      data: [
+        { id: "task-1", status: "todo", title: "Write tests", description: "Cover kanban" },
+      ],
+      isLoading: false,
+      error: null,
+    });
+
     const { container } = render(
       <Kanban
         config={{
@@ -99,5 +143,26 @@ describe("Kanban", () => {
         .querySelector("[data-kanban-card]")
         ?.classList.contains("board-card"),
     ).toBe(true);
+  });
+
+  it("renders ref-backed column titles and empty copy", () => {
+    useComponentDataMock.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+
+    render(
+      <Kanban
+        config={{
+          type: "kanban",
+          columns: [{ key: "todo", title: { from: "state.board.todo" } as never }],
+          emptyMessage: { from: "state.board.empty" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Backlog")).toBeTruthy();
+    expect(screen.getByText("Nothing queued")).toBeTruthy();
   });
 });

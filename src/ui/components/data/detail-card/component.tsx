@@ -1,11 +1,13 @@
 'use client';
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import type { ActionConfig } from "../../../actions/types";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { renderIcon } from "../../../icons/render";
 import { AutoEmptyState } from "../../_base/auto-empty-state";
 import { AutoErrorState } from "../../_base/auto-error-state";
+import { AutoSkeleton } from "../../_base/auto-skeleton";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -292,7 +294,25 @@ function FieldRow({
 export function DetailCard({ config }: { config: DetailCardConfig }) {
   const { data, fields, title, isLoading, error } = useDetailCard(config);
   const execute = useActionExecutor();
+  const emptyStateMessage = useSubscribe(config.emptyState) as string | undefined;
+  const resolvedStaticConfig = useResolveFrom({
+    actions: config.actions,
+    empty: config.empty,
+  });
   const rootId = config.id ?? "detail-card";
+  const actions = useMemo(
+    () =>
+      ((resolvedStaticConfig.actions as DetailCardConfig["actions"] | undefined) ??
+          config.actions ??
+          []
+      ).map((actionDef: NonNullable<DetailCardConfig["actions"]>[number]) => ({
+        ...actionDef,
+        label: typeof actionDef.label === "string" ? actionDef.label : "",
+      })),
+    [config.actions, resolvedStaticConfig.actions],
+  );
+  const resolvedEmptyConfig = (resolvedStaticConfig.empty ??
+    config.empty) as DetailCardConfig["empty"];
   const lookupMaps = useLookupMaps(
     fields
       .filter((field) => field.lookup)
@@ -392,10 +412,15 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
       {isLoading ? (
         <div
           data-snapshot-id={`${rootId}-loading`}
+          data-testid="detail-card-loading"
           className={loadingSurface.className}
           style={loadingSurface.style}
         >
-          <DetailCardSkeleton />
+          {config.loading && !config.loading.disabled ? (
+            <AutoSkeleton componentType="card" config={config.loading} />
+          ) : (
+            <DetailCardSkeleton />
+          )}
         </div>
       ) : error ? (
         <div
@@ -415,10 +440,12 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
         >
           <AutoEmptyState
             config={{
-              ...(config.empty ?? {}),
+              ...(resolvedEmptyConfig ?? {}),
               title:
-                config.empty?.title ??
-                config.emptyState ??
+                (typeof resolvedEmptyConfig?.title === "string"
+                  ? resolvedEmptyConfig.title
+                  : undefined) ??
+                emptyStateMessage ??
                 "Select an item to view details",
             }}
           />
@@ -429,7 +456,7 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
           className={panelSurface.className}
           style={panelSurface.style}
         >
-          {title || (config.actions && config.actions.length > 0) ? (
+          {title || actions.length > 0 ? (
             <div
               data-snapshot-id={`${rootId}-header`}
               className={headerSurface.className}
@@ -444,19 +471,19 @@ export function DetailCard({ config }: { config: DetailCardConfig }) {
                   {title}
                 </h3>
               ) : <span />}
-              {config.actions && config.actions.length > 0 ? (
+              {actions.length > 0 ? (
                 <div
                   data-snapshot-id={`${rootId}-actions`}
                   className={actionsSurface.className}
                   style={actionsSurface.style}
                 >
-                  {config.actions.map(
+                  {actions.map(
                     (
-                      actionDef: NonNullable<DetailCardConfig["actions"]>[number],
+                      actionDef: NonNullable<typeof actions>[number],
                       index: number,
                     ) => (
                     <ButtonControl
-                      key={`${actionDef.label}-${index}`}
+                      key={`${actionDef.label || "action"}-${index}`}
                       surfaceId={`${rootId}-action-button-${index}`}
                       surfaceConfig={config.slots?.actionButton}
                       itemSurfaceConfig={actionDef.slots?.actionButton}

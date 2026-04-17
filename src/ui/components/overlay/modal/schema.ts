@@ -50,7 +50,7 @@ export const modalConfigSchema = extendComponentSchema({
       actions: z.array(
         z.object({
           /** Button label text. */
-          label: z.string(),
+          label: z.union([z.string(), fromRefSchema]),
           /** Button visual variant. */
           variant: z
             .enum(["default", "secondary", "destructive", "ghost"])

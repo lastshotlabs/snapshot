@@ -17,4 +17,18 @@ describe("linkEmbedConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts FromRef metadata copy", () => {
+    const result = linkEmbedConfigSchema.safeParse({
+      type: "link-embed",
+      url: "https://example.com/post",
+      meta: {
+        title: { from: "link.title" },
+        description: { from: "link.description" },
+        siteName: { from: "link.siteName" },
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

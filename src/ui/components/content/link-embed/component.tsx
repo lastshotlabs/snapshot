@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, type CSSProperties } from "react";
-import { useSubscribe } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { detectPlatform } from "./platform";
 import type { PlatformInfo } from "./platform";
 import type { LinkEmbedConfig } from "./types";
@@ -196,6 +196,10 @@ function GenericCard({
   url: string;
   meta?: LinkEmbedConfig["meta"];
 }) {
+  const siteName = typeof meta?.siteName === "string" ? meta.siteName : undefined;
+  const title = typeof meta?.title === "string" ? meta.title : undefined;
+  const description =
+    typeof meta?.description === "string" ? meta.description : undefined;
   const cardSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-card`,
     implementationBase: {
@@ -331,7 +335,7 @@ function GenericCard({
           className={contentSurface.className}
           style={contentSurface.style}
         >
-          {meta?.siteName || meta?.favicon ? (
+          {siteName || meta?.favicon ? (
             <div
               data-snapshot-id={`${rootId}-siteMeta`}
               className={siteMetaSurface.className}
@@ -348,7 +352,7 @@ function GenericCard({
                   }}
                 />
               ) : null}
-              {meta?.siteName ? (
+              {siteName ? (
                 <span
                   style={{
                     fontSize: "var(--sn-font-size-xs, 0.75rem)",
@@ -357,30 +361,30 @@ function GenericCard({
                     letterSpacing: "var(--sn-tracking-wide, 0.05em)",
                   }}
                 >
-                  {meta.siteName}
+                  {siteName}
                 </span>
               ) : null}
             </div>
           ) : null}
-          {meta?.title ? (
+          {title ? (
             <div
               data-snapshot-id={`${rootId}-title`}
               className={titleSurface.className}
               style={titleSurface.style}
             >
-              {meta.title}
+              {title}
             </div>
           ) : null}
-          {meta?.description ? (
+          {description ? (
             <div
               data-snapshot-id={`${rootId}-description`}
               className={descriptionSurface.className}
               style={descriptionSurface.style}
             >
-              {meta.description}
+              {description}
             </div>
           ) : null}
-          {!meta?.title ? (
+          {!title ? (
             <div
               data-snapshot-id={`${rootId}-url`}
               className={urlSurface.className}
@@ -405,8 +409,10 @@ function GenericCard({
 export function LinkEmbed({ config }: { config: LinkEmbedConfig }) {
   const visible = useSubscribe(config.visible ?? true);
   const rawUrl = useSubscribe(config.url) as string;
+  const resolvedConfig = useResolveFrom({ meta: config.meta });
   const url = typeof rawUrl === "string" ? rawUrl : "";
   const rootId = config.id ?? "link-embed";
+  const meta = (resolvedConfig.meta ?? config.meta) as LinkEmbedConfig["meta"];
 
   const allowIframe = config.allowIframe ?? true;
   const aspectRatio = config.aspectRatio ?? "16/9";
@@ -454,7 +460,7 @@ export function LinkEmbed({ config }: { config: LinkEmbedConfig }) {
           <GifEmbed config={config} rootId={rootId} url={platformInfo.embedUrl} />
         ) : null}
         {!platformInfo || (!allowIframe && platformInfo.platform !== "gif") ? (
-          <GenericCard config={config} rootId={rootId} url={url} meta={config.meta} />
+          <GenericCard config={config} rootId={rootId} url={url} meta={meta} />
         ) : null}
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />

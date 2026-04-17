@@ -20,6 +20,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -650,7 +651,19 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
         transformArg?: string | number | undefined;
     }>]>>;
-    placeholder: z.ZodOptional<z.ZodString>;
+    placeholder: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>>;
     mode: z.ZodOptional<z.ZodEnum<["edit", "preview", "split"]>>;
     readonly: z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodObject<{
         from: z.ZodString;
@@ -668,10 +681,11 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
     toolbar: z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodArray<z.ZodEnum<["bold", "italic", "strikethrough", "h1", "h2", "h3", "bullet-list", "ordered-list", "code", "code-block", "link", "quote", "separator"]>, "many">]>>;
     minHeight: z.ZodOptional<z.ZodString>;
     maxHeight: z.ZodOptional<z.ZodString>;
-    slots: z.ZodOptional<z.ZodObject<Record<"root" | "content" | "separator" | "toolbar" | "toolbarGroup" | "toolbarButton" | "modeGroup" | "modeButton" | "editorPane" | "previewPane" | "emptyPreview", z.ZodOptional<z.ZodObject<{
+    slots: z.ZodOptional<z.ZodObject<Record<"root" | "separator" | "content" | "toolbar" | "toolbarGroup" | "toolbarButton" | "modeGroup" | "modeButton" | "editorPane" | "previewPane" | "emptyPreview", z.ZodOptional<z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -1175,6 +1189,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -1679,6 +1694,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1869,6 +1885,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2060,6 +2077,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2250,6 +2268,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2441,6 +2460,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2631,6 +2651,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2823,6 +2844,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3013,388 +3035,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
-                gridTemplateColumns?: string | undefined;
-                gridTemplateRows?: string | undefined;
-                gridColumn?: string | undefined;
-                gridRow?: string | undefined;
-                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                } | undefined;
-                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                    default: "row" | "column" | "row-reverse" | "column-reverse";
-                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                } | undefined;
-                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-                inset?: string | number | undefined;
-                padding?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                margin?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                gap?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                width?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                height?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                bg?: string | {
-                    size?: "auto" | "cover" | "contain" | undefined;
-                    overlay?: string | undefined;
-                    position?: string | undefined;
-                    image?: string | undefined;
-                    gradient?: {
-                        type: "linear" | "radial" | "conic";
-                        stops: {
-                            color: string;
-                            position?: string | undefined;
-                        }[];
-                        direction?: string | undefined;
-                    } | undefined;
-                    fixed?: boolean | undefined;
-                } | undefined;
-                color?: string | undefined;
-                borderRadius?: string | number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-                textAlign?: "center" | "left" | "right" | "justify" | undefined;
-                fontSize?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                fontWeight?: string | number | undefined;
-                lineHeight?: string | number | undefined;
-                letterSpacing?: string | number | undefined;
-                hover?: {
-                    transform?: string | undefined;
-                    border?: string | undefined;
-                    scale?: number | undefined;
-                    shadow?: string | undefined;
-                    opacity?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                    borderRadius?: string | number | undefined;
-                } | undefined;
-                focus?: {
-                    ring?: string | boolean | undefined;
-                    shadow?: string | undefined;
-                    outline?: string | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-                active?: {
-                    transform?: string | undefined;
-                    scale?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-            }>> | undefined;
-        } | undefined;
-        content?: {
-            border?: string | undefined;
-            flex?: string | number | undefined;
-            className?: string | undefined;
-            style?: Record<string, string | number> | undefined;
-            cursor?: string | undefined;
-            gridTemplateColumns?: string | undefined;
-            gridTemplateRows?: string | undefined;
-            gridColumn?: string | undefined;
-            gridRow?: string | undefined;
-            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-            } | undefined;
-            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                default: "row" | "column" | "row-reverse" | "column-reverse";
-                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-            } | undefined;
-            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-            inset?: string | number | undefined;
-            padding?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            margin?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            gap?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            width?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            height?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            bg?: string | {
-                size?: "auto" | "cover" | "contain" | undefined;
-                overlay?: string | undefined;
-                position?: string | undefined;
-                image?: string | undefined;
-                gradient?: {
-                    type: "linear" | "radial" | "conic";
-                    stops: {
-                        color: string;
-                        position?: string | undefined;
-                    }[];
-                    direction?: string | undefined;
-                } | undefined;
-                fixed?: boolean | undefined;
-            } | undefined;
-            color?: string | undefined;
-            borderRadius?: string | number | undefined;
-            shadow?: string | undefined;
-            opacity?: number | undefined;
-            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-            textAlign?: "center" | "left" | "right" | "justify" | undefined;
-            fontSize?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            fontWeight?: string | number | undefined;
-            lineHeight?: string | number | undefined;
-            letterSpacing?: string | number | undefined;
-            hover?: {
-                transform?: string | undefined;
-                border?: string | undefined;
-                scale?: number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-                borderRadius?: string | number | undefined;
-            } | undefined;
-            focus?: {
-                ring?: string | boolean | undefined;
-                shadow?: string | undefined;
-                outline?: string | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            active?: {
-                transform?: string | undefined;
-                scale?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
-                border?: string | undefined;
-                flex?: string | number | undefined;
-                className?: string | undefined;
-                style?: Record<string, string | number> | undefined;
-                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3587,6 +3228,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3777,6 +3419,391 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
+                gridTemplateColumns?: string | undefined;
+                gridTemplateRows?: string | undefined;
+                gridColumn?: string | undefined;
+                gridRow?: string | undefined;
+                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                } | undefined;
+                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                    default: "row" | "column" | "row-reverse" | "column-reverse";
+                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                } | undefined;
+                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+                inset?: string | number | undefined;
+                padding?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                margin?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                gap?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                width?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                height?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                bg?: string | {
+                    size?: "auto" | "cover" | "contain" | undefined;
+                    overlay?: string | undefined;
+                    position?: string | undefined;
+                    image?: string | undefined;
+                    gradient?: {
+                        type: "linear" | "radial" | "conic";
+                        stops: {
+                            color: string;
+                            position?: string | undefined;
+                        }[];
+                        direction?: string | undefined;
+                    } | undefined;
+                    fixed?: boolean | undefined;
+                } | undefined;
+                color?: string | undefined;
+                borderRadius?: string | number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+                textAlign?: "center" | "left" | "right" | "justify" | undefined;
+                fontSize?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                fontWeight?: string | number | undefined;
+                lineHeight?: string | number | undefined;
+                letterSpacing?: string | number | undefined;
+                hover?: {
+                    transform?: string | undefined;
+                    border?: string | undefined;
+                    scale?: number | undefined;
+                    shadow?: string | undefined;
+                    opacity?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                    borderRadius?: string | number | undefined;
+                } | undefined;
+                focus?: {
+                    ring?: string | boolean | undefined;
+                    shadow?: string | undefined;
+                    outline?: string | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+                active?: {
+                    transform?: string | undefined;
+                    scale?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+            }>> | undefined;
+        } | undefined;
+        content?: {
+            border?: string | undefined;
+            flex?: string | number | undefined;
+            className?: string | undefined;
+            style?: Record<string, string | number> | undefined;
+            cursor?: string | undefined;
+            backgroundColor?: string | undefined;
+            gridTemplateColumns?: string | undefined;
+            gridTemplateRows?: string | undefined;
+            gridColumn?: string | undefined;
+            gridRow?: string | undefined;
+            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+            } | undefined;
+            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                default: "row" | "column" | "row-reverse" | "column-reverse";
+                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+            } | undefined;
+            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+            inset?: string | number | undefined;
+            padding?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            margin?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            gap?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            width?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            height?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            bg?: string | {
+                size?: "auto" | "cover" | "contain" | undefined;
+                overlay?: string | undefined;
+                position?: string | undefined;
+                image?: string | undefined;
+                gradient?: {
+                    type: "linear" | "radial" | "conic";
+                    stops: {
+                        color: string;
+                        position?: string | undefined;
+                    }[];
+                    direction?: string | undefined;
+                } | undefined;
+                fixed?: boolean | undefined;
+            } | undefined;
+            color?: string | undefined;
+            borderRadius?: string | number | undefined;
+            shadow?: string | undefined;
+            opacity?: number | undefined;
+            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+            textAlign?: "center" | "left" | "right" | "justify" | undefined;
+            fontSize?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            fontWeight?: string | number | undefined;
+            lineHeight?: string | number | undefined;
+            letterSpacing?: string | number | undefined;
+            hover?: {
+                transform?: string | undefined;
+                border?: string | undefined;
+                scale?: number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+                borderRadius?: string | number | undefined;
+            } | undefined;
+            focus?: {
+                ring?: string | boolean | undefined;
+                shadow?: string | undefined;
+                outline?: string | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            active?: {
+                transform?: string | undefined;
+                scale?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
+                border?: string | undefined;
+                flex?: string | number | undefined;
+                className?: string | undefined;
+                style?: Record<string, string | number> | undefined;
+                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3969,6 +3996,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4159,6 +4187,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4351,6 +4380,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4541,6 +4571,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4733,6 +4764,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4923,6 +4955,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5115,6 +5148,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5305,6 +5339,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5497,6 +5532,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5687,6 +5723,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5879,6 +5916,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6069,6 +6107,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6261,6 +6300,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6451,6 +6491,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6643,6 +6684,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6833,6 +6875,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7026,6 +7069,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -7216,388 +7260,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
-                gridTemplateColumns?: string | undefined;
-                gridTemplateRows?: string | undefined;
-                gridColumn?: string | undefined;
-                gridRow?: string | undefined;
-                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                } | undefined;
-                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                    default: "row" | "column" | "row-reverse" | "column-reverse";
-                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                } | undefined;
-                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-                inset?: string | number | undefined;
-                padding?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                margin?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                gap?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                width?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                height?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                bg?: string | {
-                    size?: "auto" | "cover" | "contain" | undefined;
-                    overlay?: string | undefined;
-                    position?: string | undefined;
-                    image?: string | undefined;
-                    gradient?: {
-                        stops: {
-                            color: string;
-                            position?: string | undefined;
-                        }[];
-                        type?: "linear" | "radial" | "conic" | undefined;
-                        direction?: string | undefined;
-                    } | undefined;
-                    fixed?: boolean | undefined;
-                } | undefined;
-                color?: string | undefined;
-                borderRadius?: string | number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-                textAlign?: "center" | "left" | "right" | "justify" | undefined;
-                fontSize?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                fontWeight?: string | number | undefined;
-                lineHeight?: string | number | undefined;
-                letterSpacing?: string | number | undefined;
-                hover?: {
-                    transform?: string | undefined;
-                    border?: string | undefined;
-                    scale?: number | undefined;
-                    shadow?: string | undefined;
-                    opacity?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                    borderRadius?: string | number | undefined;
-                } | undefined;
-                focus?: {
-                    ring?: string | boolean | undefined;
-                    shadow?: string | undefined;
-                    outline?: string | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-                active?: {
-                    transform?: string | undefined;
-                    scale?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-            }>> | undefined;
-        } | undefined;
-        content?: {
-            border?: string | undefined;
-            flex?: string | number | undefined;
-            className?: string | undefined;
-            style?: Record<string, string | number> | undefined;
-            cursor?: string | undefined;
-            gridTemplateColumns?: string | undefined;
-            gridTemplateRows?: string | undefined;
-            gridColumn?: string | undefined;
-            gridRow?: string | undefined;
-            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-            } | undefined;
-            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                default: "row" | "column" | "row-reverse" | "column-reverse";
-                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-            } | undefined;
-            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-            inset?: string | number | undefined;
-            padding?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            margin?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            gap?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            width?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            height?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            bg?: string | {
-                size?: "auto" | "cover" | "contain" | undefined;
-                overlay?: string | undefined;
-                position?: string | undefined;
-                image?: string | undefined;
-                gradient?: {
-                    stops: {
-                        color: string;
-                        position?: string | undefined;
-                    }[];
-                    type?: "linear" | "radial" | "conic" | undefined;
-                    direction?: string | undefined;
-                } | undefined;
-                fixed?: boolean | undefined;
-            } | undefined;
-            color?: string | undefined;
-            borderRadius?: string | number | undefined;
-            shadow?: string | undefined;
-            opacity?: number | undefined;
-            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-            textAlign?: "center" | "left" | "right" | "justify" | undefined;
-            fontSize?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            fontWeight?: string | number | undefined;
-            lineHeight?: string | number | undefined;
-            letterSpacing?: string | number | undefined;
-            hover?: {
-                transform?: string | undefined;
-                border?: string | undefined;
-                scale?: number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-                borderRadius?: string | number | undefined;
-            } | undefined;
-            focus?: {
-                ring?: string | boolean | undefined;
-                shadow?: string | undefined;
-                outline?: string | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            active?: {
-                transform?: string | undefined;
-                scale?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
-                border?: string | undefined;
-                flex?: string | number | undefined;
-                className?: string | undefined;
-                style?: Record<string, string | number> | undefined;
-                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7790,6 +7453,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -7980,6 +7644,391 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
+                gridTemplateColumns?: string | undefined;
+                gridTemplateRows?: string | undefined;
+                gridColumn?: string | undefined;
+                gridRow?: string | undefined;
+                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                } | undefined;
+                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                    default: "row" | "column" | "row-reverse" | "column-reverse";
+                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                } | undefined;
+                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+                inset?: string | number | undefined;
+                padding?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                margin?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                gap?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                width?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                height?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                bg?: string | {
+                    size?: "auto" | "cover" | "contain" | undefined;
+                    overlay?: string | undefined;
+                    position?: string | undefined;
+                    image?: string | undefined;
+                    gradient?: {
+                        stops: {
+                            color: string;
+                            position?: string | undefined;
+                        }[];
+                        type?: "linear" | "radial" | "conic" | undefined;
+                        direction?: string | undefined;
+                    } | undefined;
+                    fixed?: boolean | undefined;
+                } | undefined;
+                color?: string | undefined;
+                borderRadius?: string | number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+                textAlign?: "center" | "left" | "right" | "justify" | undefined;
+                fontSize?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                fontWeight?: string | number | undefined;
+                lineHeight?: string | number | undefined;
+                letterSpacing?: string | number | undefined;
+                hover?: {
+                    transform?: string | undefined;
+                    border?: string | undefined;
+                    scale?: number | undefined;
+                    shadow?: string | undefined;
+                    opacity?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                    borderRadius?: string | number | undefined;
+                } | undefined;
+                focus?: {
+                    ring?: string | boolean | undefined;
+                    shadow?: string | undefined;
+                    outline?: string | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+                active?: {
+                    transform?: string | undefined;
+                    scale?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+            }>> | undefined;
+        } | undefined;
+        content?: {
+            border?: string | undefined;
+            flex?: string | number | undefined;
+            className?: string | undefined;
+            style?: Record<string, string | number> | undefined;
+            cursor?: string | undefined;
+            backgroundColor?: string | undefined;
+            gridTemplateColumns?: string | undefined;
+            gridTemplateRows?: string | undefined;
+            gridColumn?: string | undefined;
+            gridRow?: string | undefined;
+            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+            } | undefined;
+            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                default: "row" | "column" | "row-reverse" | "column-reverse";
+                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+            } | undefined;
+            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+            inset?: string | number | undefined;
+            padding?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            margin?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            gap?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            width?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            height?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            bg?: string | {
+                size?: "auto" | "cover" | "contain" | undefined;
+                overlay?: string | undefined;
+                position?: string | undefined;
+                image?: string | undefined;
+                gradient?: {
+                    stops: {
+                        color: string;
+                        position?: string | undefined;
+                    }[];
+                    type?: "linear" | "radial" | "conic" | undefined;
+                    direction?: string | undefined;
+                } | undefined;
+                fixed?: boolean | undefined;
+            } | undefined;
+            color?: string | undefined;
+            borderRadius?: string | number | undefined;
+            shadow?: string | undefined;
+            opacity?: number | undefined;
+            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+            textAlign?: "center" | "left" | "right" | "justify" | undefined;
+            fontSize?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            fontWeight?: string | number | undefined;
+            lineHeight?: string | number | undefined;
+            letterSpacing?: string | number | undefined;
+            hover?: {
+                transform?: string | undefined;
+                border?: string | undefined;
+                scale?: number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+                borderRadius?: string | number | undefined;
+            } | undefined;
+            focus?: {
+                ring?: string | boolean | undefined;
+                shadow?: string | undefined;
+                outline?: string | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            active?: {
+                transform?: string | undefined;
+                scale?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
+                border?: string | undefined;
+                flex?: string | number | undefined;
+                className?: string | undefined;
+                style?: Record<string, string | number> | undefined;
+                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8172,6 +8221,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8362,6 +8412,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8554,6 +8605,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8744,6 +8796,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8936,6 +8989,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9126,6 +9180,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9318,6 +9373,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9508,6 +9564,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9700,6 +9757,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9890,6 +9948,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10082,6 +10141,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -10272,6 +10332,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10464,6 +10525,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -10654,6 +10716,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10846,6 +10909,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11036,6 +11100,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -11256,6 +11321,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -11462,6 +11528,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11652,388 +11719,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
-                gridTemplateColumns?: string | undefined;
-                gridTemplateRows?: string | undefined;
-                gridColumn?: string | undefined;
-                gridRow?: string | undefined;
-                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                } | undefined;
-                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                    default: "row" | "column" | "row-reverse" | "column-reverse";
-                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                } | undefined;
-                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-                inset?: string | number | undefined;
-                padding?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                margin?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                gap?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                width?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                height?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                bg?: string | {
-                    size?: "auto" | "cover" | "contain" | undefined;
-                    overlay?: string | undefined;
-                    position?: string | undefined;
-                    image?: string | undefined;
-                    gradient?: {
-                        type: "linear" | "radial" | "conic";
-                        stops: {
-                            color: string;
-                            position?: string | undefined;
-                        }[];
-                        direction?: string | undefined;
-                    } | undefined;
-                    fixed?: boolean | undefined;
-                } | undefined;
-                color?: string | undefined;
-                borderRadius?: string | number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-                textAlign?: "center" | "left" | "right" | "justify" | undefined;
-                fontSize?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                fontWeight?: string | number | undefined;
-                lineHeight?: string | number | undefined;
-                letterSpacing?: string | number | undefined;
-                hover?: {
-                    transform?: string | undefined;
-                    border?: string | undefined;
-                    scale?: number | undefined;
-                    shadow?: string | undefined;
-                    opacity?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                    borderRadius?: string | number | undefined;
-                } | undefined;
-                focus?: {
-                    ring?: string | boolean | undefined;
-                    shadow?: string | undefined;
-                    outline?: string | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-                active?: {
-                    transform?: string | undefined;
-                    scale?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-            }>> | undefined;
-        } | undefined;
-        content?: {
-            border?: string | undefined;
-            flex?: string | number | undefined;
-            className?: string | undefined;
-            style?: Record<string, string | number> | undefined;
-            cursor?: string | undefined;
-            gridTemplateColumns?: string | undefined;
-            gridTemplateRows?: string | undefined;
-            gridColumn?: string | undefined;
-            gridRow?: string | undefined;
-            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-            } | undefined;
-            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                default: "row" | "column" | "row-reverse" | "column-reverse";
-                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-            } | undefined;
-            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-            inset?: string | number | undefined;
-            padding?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            margin?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            gap?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            width?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            height?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            bg?: string | {
-                size?: "auto" | "cover" | "contain" | undefined;
-                overlay?: string | undefined;
-                position?: string | undefined;
-                image?: string | undefined;
-                gradient?: {
-                    type: "linear" | "radial" | "conic";
-                    stops: {
-                        color: string;
-                        position?: string | undefined;
-                    }[];
-                    direction?: string | undefined;
-                } | undefined;
-                fixed?: boolean | undefined;
-            } | undefined;
-            color?: string | undefined;
-            borderRadius?: string | number | undefined;
-            shadow?: string | undefined;
-            opacity?: number | undefined;
-            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-            textAlign?: "center" | "left" | "right" | "justify" | undefined;
-            fontSize?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            fontWeight?: string | number | undefined;
-            lineHeight?: string | number | undefined;
-            letterSpacing?: string | number | undefined;
-            hover?: {
-                transform?: string | undefined;
-                border?: string | undefined;
-                scale?: number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-                borderRadius?: string | number | undefined;
-            } | undefined;
-            focus?: {
-                ring?: string | boolean | undefined;
-                shadow?: string | undefined;
-                outline?: string | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            active?: {
-                transform?: string | undefined;
-                scale?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
-                border?: string | undefined;
-                flex?: string | number | undefined;
-                className?: string | undefined;
-                style?: Record<string, string | number> | undefined;
-                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12226,6 +11912,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12416,6 +12103,391 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
+                gridTemplateColumns?: string | undefined;
+                gridTemplateRows?: string | undefined;
+                gridColumn?: string | undefined;
+                gridRow?: string | undefined;
+                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                } | undefined;
+                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                    default: "row" | "column" | "row-reverse" | "column-reverse";
+                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                } | undefined;
+                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+                inset?: string | number | undefined;
+                padding?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                margin?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                gap?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                width?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                height?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                bg?: string | {
+                    size?: "auto" | "cover" | "contain" | undefined;
+                    overlay?: string | undefined;
+                    position?: string | undefined;
+                    image?: string | undefined;
+                    gradient?: {
+                        type: "linear" | "radial" | "conic";
+                        stops: {
+                            color: string;
+                            position?: string | undefined;
+                        }[];
+                        direction?: string | undefined;
+                    } | undefined;
+                    fixed?: boolean | undefined;
+                } | undefined;
+                color?: string | undefined;
+                borderRadius?: string | number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+                textAlign?: "center" | "left" | "right" | "justify" | undefined;
+                fontSize?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                fontWeight?: string | number | undefined;
+                lineHeight?: string | number | undefined;
+                letterSpacing?: string | number | undefined;
+                hover?: {
+                    transform?: string | undefined;
+                    border?: string | undefined;
+                    scale?: number | undefined;
+                    shadow?: string | undefined;
+                    opacity?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                    borderRadius?: string | number | undefined;
+                } | undefined;
+                focus?: {
+                    ring?: string | boolean | undefined;
+                    shadow?: string | undefined;
+                    outline?: string | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+                active?: {
+                    transform?: string | undefined;
+                    scale?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+            }>> | undefined;
+        } | undefined;
+        content?: {
+            border?: string | undefined;
+            flex?: string | number | undefined;
+            className?: string | undefined;
+            style?: Record<string, string | number> | undefined;
+            cursor?: string | undefined;
+            backgroundColor?: string | undefined;
+            gridTemplateColumns?: string | undefined;
+            gridTemplateRows?: string | undefined;
+            gridColumn?: string | undefined;
+            gridRow?: string | undefined;
+            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+            } | undefined;
+            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                default: "row" | "column" | "row-reverse" | "column-reverse";
+                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+            } | undefined;
+            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+            inset?: string | number | undefined;
+            padding?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            margin?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            gap?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            width?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            height?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            bg?: string | {
+                size?: "auto" | "cover" | "contain" | undefined;
+                overlay?: string | undefined;
+                position?: string | undefined;
+                image?: string | undefined;
+                gradient?: {
+                    type: "linear" | "radial" | "conic";
+                    stops: {
+                        color: string;
+                        position?: string | undefined;
+                    }[];
+                    direction?: string | undefined;
+                } | undefined;
+                fixed?: boolean | undefined;
+            } | undefined;
+            color?: string | undefined;
+            borderRadius?: string | number | undefined;
+            shadow?: string | undefined;
+            opacity?: number | undefined;
+            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+            textAlign?: "center" | "left" | "right" | "justify" | undefined;
+            fontSize?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            fontWeight?: string | number | undefined;
+            lineHeight?: string | number | undefined;
+            letterSpacing?: string | number | undefined;
+            hover?: {
+                transform?: string | undefined;
+                border?: string | undefined;
+                scale?: number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+                borderRadius?: string | number | undefined;
+            } | undefined;
+            focus?: {
+                ring?: string | boolean | undefined;
+                shadow?: string | undefined;
+                outline?: string | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            active?: {
+                transform?: string | undefined;
+                scale?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
+                border?: string | undefined;
+                flex?: string | number | undefined;
+                className?: string | undefined;
+                style?: Record<string, string | number> | undefined;
+                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12608,6 +12680,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12798,6 +12871,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12990,6 +13064,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13180,6 +13255,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13372,6 +13448,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13562,6 +13639,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13754,6 +13832,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13944,6 +14023,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14136,6 +14216,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -14326,6 +14407,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14518,6 +14600,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -14708,6 +14791,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14900,6 +14984,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -15090,6 +15175,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15282,6 +15368,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -15472,6 +15559,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15659,14 +15747,18 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
+    mode?: "split" | "edit" | "preview" | undefined;
+    placeholder?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
     content?: string | {
         from: string;
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
-    toolbar?: boolean | ("code" | "bold" | "link" | "italic" | "separator" | "h1" | "h2" | "h3" | "strikethrough" | "quote" | "code-block" | "bullet-list" | "ordered-list")[] | undefined;
-    mode?: "split" | "edit" | "preview" | undefined;
-    placeholder?: string | undefined;
+    toolbar?: boolean | ("code" | "bold" | "link" | "separator" | "h1" | "h2" | "h3" | "italic" | "strikethrough" | "quote" | "code-block" | "bullet-list" | "ordered-list")[] | undefined;
     readonly?: boolean | {
         from: string;
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
@@ -15705,6 +15797,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -15911,6 +16004,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -16101,388 +16195,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
-                gridTemplateColumns?: string | undefined;
-                gridTemplateRows?: string | undefined;
-                gridColumn?: string | undefined;
-                gridRow?: string | undefined;
-                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                } | undefined;
-                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                    default: "row" | "column" | "row-reverse" | "column-reverse";
-                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                } | undefined;
-                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-                inset?: string | number | undefined;
-                padding?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                paddingY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                margin?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginX?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                marginY?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                gap?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                width?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxWidth?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                height?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                minHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                maxHeight?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                bg?: string | {
-                    size?: "auto" | "cover" | "contain" | undefined;
-                    overlay?: string | undefined;
-                    position?: string | undefined;
-                    image?: string | undefined;
-                    gradient?: {
-                        stops: {
-                            color: string;
-                            position?: string | undefined;
-                        }[];
-                        type?: "linear" | "radial" | "conic" | undefined;
-                        direction?: string | undefined;
-                    } | undefined;
-                    fixed?: boolean | undefined;
-                } | undefined;
-                color?: string | undefined;
-                borderRadius?: string | number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-                textAlign?: "center" | "left" | "right" | "justify" | undefined;
-                fontSize?: string | number | {
-                    default: string | number;
-                    sm?: string | number | undefined;
-                    md?: string | number | undefined;
-                    lg?: string | number | undefined;
-                    xl?: string | number | undefined;
-                    "2xl"?: string | number | undefined;
-                } | undefined;
-                fontWeight?: string | number | undefined;
-                lineHeight?: string | number | undefined;
-                letterSpacing?: string | number | undefined;
-                hover?: {
-                    transform?: string | undefined;
-                    border?: string | undefined;
-                    scale?: number | undefined;
-                    shadow?: string | undefined;
-                    opacity?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                    borderRadius?: string | number | undefined;
-                } | undefined;
-                focus?: {
-                    ring?: string | boolean | undefined;
-                    shadow?: string | undefined;
-                    outline?: string | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-                active?: {
-                    transform?: string | undefined;
-                    scale?: number | undefined;
-                    color?: string | undefined;
-                    bg?: string | undefined;
-                } | undefined;
-            }>> | undefined;
-        } | undefined;
-        content?: {
-            border?: string | undefined;
-            flex?: string | number | undefined;
-            className?: string | undefined;
-            style?: Record<string, string | number> | undefined;
-            cursor?: string | undefined;
-            gridTemplateColumns?: string | undefined;
-            gridTemplateRows?: string | undefined;
-            gridColumn?: string | undefined;
-            gridRow?: string | undefined;
-            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
-                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
-                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
-            } | undefined;
-            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
-                default: "row" | "column" | "row-reverse" | "column-reverse";
-                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
-            } | undefined;
-            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
-            inset?: string | number | undefined;
-            padding?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            paddingY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            margin?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginX?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            marginY?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            gap?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            width?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxWidth?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            height?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            minHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            maxHeight?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            bg?: string | {
-                size?: "auto" | "cover" | "contain" | undefined;
-                overlay?: string | undefined;
-                position?: string | undefined;
-                image?: string | undefined;
-                gradient?: {
-                    stops: {
-                        color: string;
-                        position?: string | undefined;
-                    }[];
-                    type?: "linear" | "radial" | "conic" | undefined;
-                    direction?: string | undefined;
-                } | undefined;
-                fixed?: boolean | undefined;
-            } | undefined;
-            color?: string | undefined;
-            borderRadius?: string | number | undefined;
-            shadow?: string | undefined;
-            opacity?: number | undefined;
-            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
-            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
-            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
-            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
-            textAlign?: "center" | "left" | "right" | "justify" | undefined;
-            fontSize?: string | number | {
-                default: string | number;
-                sm?: string | number | undefined;
-                md?: string | number | undefined;
-                lg?: string | number | undefined;
-                xl?: string | number | undefined;
-                "2xl"?: string | number | undefined;
-            } | undefined;
-            fontWeight?: string | number | undefined;
-            lineHeight?: string | number | undefined;
-            letterSpacing?: string | number | undefined;
-            hover?: {
-                transform?: string | undefined;
-                border?: string | undefined;
-                scale?: number | undefined;
-                shadow?: string | undefined;
-                opacity?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-                borderRadius?: string | number | undefined;
-            } | undefined;
-            focus?: {
-                ring?: string | boolean | undefined;
-                shadow?: string | undefined;
-                outline?: string | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            active?: {
-                transform?: string | undefined;
-                scale?: number | undefined;
-                color?: string | undefined;
-                bg?: string | undefined;
-            } | undefined;
-            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
-                border?: string | undefined;
-                flex?: string | number | undefined;
-                className?: string | undefined;
-                style?: Record<string, string | number> | undefined;
-                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -16675,6 +16388,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -16865,6 +16579,391 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
+                gridTemplateColumns?: string | undefined;
+                gridTemplateRows?: string | undefined;
+                gridColumn?: string | undefined;
+                gridRow?: string | undefined;
+                display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                    default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                    lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                    "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                } | undefined;
+                flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                    default: "row" | "column" | "row-reverse" | "column-reverse";
+                    lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                    "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                } | undefined;
+                position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+                inset?: string | number | undefined;
+                padding?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                paddingY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                margin?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginX?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                marginY?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                gap?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                width?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxWidth?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                height?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                minHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                maxHeight?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                bg?: string | {
+                    size?: "auto" | "cover" | "contain" | undefined;
+                    overlay?: string | undefined;
+                    position?: string | undefined;
+                    image?: string | undefined;
+                    gradient?: {
+                        stops: {
+                            color: string;
+                            position?: string | undefined;
+                        }[];
+                        type?: "linear" | "radial" | "conic" | undefined;
+                        direction?: string | undefined;
+                    } | undefined;
+                    fixed?: boolean | undefined;
+                } | undefined;
+                color?: string | undefined;
+                borderRadius?: string | number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+                alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+                justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+                flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+                textAlign?: "center" | "left" | "right" | "justify" | undefined;
+                fontSize?: string | number | {
+                    default: string | number;
+                    sm?: string | number | undefined;
+                    md?: string | number | undefined;
+                    lg?: string | number | undefined;
+                    xl?: string | number | undefined;
+                    "2xl"?: string | number | undefined;
+                } | undefined;
+                fontWeight?: string | number | undefined;
+                lineHeight?: string | number | undefined;
+                letterSpacing?: string | number | undefined;
+                hover?: {
+                    transform?: string | undefined;
+                    border?: string | undefined;
+                    scale?: number | undefined;
+                    shadow?: string | undefined;
+                    opacity?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                    borderRadius?: string | number | undefined;
+                } | undefined;
+                focus?: {
+                    ring?: string | boolean | undefined;
+                    shadow?: string | undefined;
+                    outline?: string | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+                active?: {
+                    transform?: string | undefined;
+                    scale?: number | undefined;
+                    color?: string | undefined;
+                    bg?: string | undefined;
+                } | undefined;
+            }>> | undefined;
+        } | undefined;
+        content?: {
+            border?: string | undefined;
+            flex?: string | number | undefined;
+            className?: string | undefined;
+            style?: Record<string, string | number> | undefined;
+            cursor?: string | undefined;
+            backgroundColor?: string | undefined;
+            gridTemplateColumns?: string | undefined;
+            gridTemplateRows?: string | undefined;
+            gridColumn?: string | undefined;
+            gridRow?: string | undefined;
+            display?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | {
+                default: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid";
+                lg?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                sm?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                md?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                xl?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+                "2xl"?: "none" | "flex" | "grid" | "block" | "inline" | "inline-flex" | "inline-grid" | undefined;
+            } | undefined;
+            flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | {
+                default: "row" | "column" | "row-reverse" | "column-reverse";
+                lg?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                sm?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                md?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                xl?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+                "2xl"?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+            } | undefined;
+            position?: "relative" | "absolute" | "fixed" | "sticky" | undefined;
+            inset?: string | number | undefined;
+            padding?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            paddingY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            margin?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginX?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            marginY?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            gap?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            width?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxWidth?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            height?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            minHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            maxHeight?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            bg?: string | {
+                size?: "auto" | "cover" | "contain" | undefined;
+                overlay?: string | undefined;
+                position?: string | undefined;
+                image?: string | undefined;
+                gradient?: {
+                    stops: {
+                        color: string;
+                        position?: string | undefined;
+                    }[];
+                    type?: "linear" | "radial" | "conic" | undefined;
+                    direction?: string | undefined;
+                } | undefined;
+                fixed?: boolean | undefined;
+            } | undefined;
+            color?: string | undefined;
+            borderRadius?: string | number | undefined;
+            shadow?: string | undefined;
+            opacity?: number | undefined;
+            overflow?: "auto" | "hidden" | "scroll" | "visible" | undefined;
+            alignItems?: "start" | "center" | "end" | "stretch" | "baseline" | undefined;
+            justifyContent?: "start" | "center" | "end" | "between" | "around" | "evenly" | undefined;
+            flexWrap?: "wrap" | "nowrap" | "wrap-reverse" | undefined;
+            textAlign?: "center" | "left" | "right" | "justify" | undefined;
+            fontSize?: string | number | {
+                default: string | number;
+                sm?: string | number | undefined;
+                md?: string | number | undefined;
+                lg?: string | number | undefined;
+                xl?: string | number | undefined;
+                "2xl"?: string | number | undefined;
+            } | undefined;
+            fontWeight?: string | number | undefined;
+            lineHeight?: string | number | undefined;
+            letterSpacing?: string | number | undefined;
+            hover?: {
+                transform?: string | undefined;
+                border?: string | undefined;
+                scale?: number | undefined;
+                shadow?: string | undefined;
+                opacity?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+                borderRadius?: string | number | undefined;
+            } | undefined;
+            focus?: {
+                ring?: string | boolean | undefined;
+                shadow?: string | undefined;
+                outline?: string | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            active?: {
+                transform?: string | undefined;
+                scale?: number | undefined;
+                color?: string | undefined;
+                bg?: string | undefined;
+            } | undefined;
+            states?: Partial<Record<"hover" | "focus" | "active" | "open" | "selected" | "current" | "completed" | "invalid" | "disabled", {
+                border?: string | undefined;
+                flex?: string | number | undefined;
+                className?: string | undefined;
+                style?: Record<string, string | number> | undefined;
+                cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17057,6 +17156,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -17247,6 +17347,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17439,6 +17540,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -17629,6 +17731,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17821,6 +17924,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -18011,6 +18115,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18203,6 +18308,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -18393,6 +18499,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18585,6 +18692,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -18775,6 +18883,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18967,6 +19076,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -19157,6 +19267,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -19349,6 +19460,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -19539,6 +19651,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -19731,6 +19844,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -19921,6 +20035,7 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -20108,14 +20223,18 @@ export declare const richTextEditorConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
+    mode?: "split" | "edit" | "preview" | undefined;
+    placeholder?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
     content?: string | {
         from: string;
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
-    toolbar?: boolean | ("code" | "bold" | "link" | "italic" | "separator" | "h1" | "h2" | "h3" | "strikethrough" | "quote" | "code-block" | "bullet-list" | "ordered-list")[] | undefined;
-    mode?: "split" | "edit" | "preview" | undefined;
-    placeholder?: string | undefined;
+    toolbar?: boolean | ("code" | "bold" | "link" | "separator" | "h1" | "h2" | "h3" | "italic" | "strikethrough" | "quote" | "code-block" | "bullet-list" | "ordered-list")[] | undefined;
     readonly?: boolean | {
         from: string;
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;

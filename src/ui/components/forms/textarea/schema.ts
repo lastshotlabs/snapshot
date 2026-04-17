@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -47,8 +47,8 @@ export const textareaConfigSchema = extendComponentSchema({
     errorText: z.union([z.string(), fromRefSchema]).optional(),
     /** Resize behavior. Default: "vertical". */
     resize: z.enum(["none", "vertical", "horizontal", "both"]).optional(),
-    /** Action to execute on value change (debounced). */
-    changeAction: actionSchema.optional(),
+    /** Tiered event action hooks for textarea interactions. */
+    on: controlEventActionsSchema.optional(),
     slots: slotsSchema([
       "root",
       "label",

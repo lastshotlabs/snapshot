@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -32,7 +32,7 @@ export const datePickerConfigSchema = extendComponentSchema({
   presets: z.array(presetSchema).optional(),
   format: z.string().optional(),
   valueFormat: z.enum(["iso", "unix", "locale"]).default("iso"),
-  onChange: z.union([actionSchema, z.array(actionSchema)]).optional(),
+  on: controlEventActionsSchema.optional(),
   slots: slotsSchema([
     "root",
     "label",

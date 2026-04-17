@@ -216,6 +216,35 @@ describe("dataTableConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts ref-backed labels and placeholder copy", () => {
+    const result = dataTableConfigSchema.safeParse({
+      ...baseConfig,
+      columns: [{ field: "name", label: { from: "state.table.header" } }],
+      searchable: { placeholder: { from: "state.table.search" } },
+      actions: [
+        {
+          label: { from: "state.table.action" },
+          action: { type: "navigate", to: "/users/{id}" },
+        },
+      ],
+      bulkActions: [
+        {
+          label: { from: "state.table.bulk" },
+          action: { type: "api", method: "POST", endpoint: "/api/users/bulk" },
+        },
+      ],
+      toolbar: [
+        {
+          label: { from: "state.table.toolbar" },
+          action: { type: "navigate", to: "/users" },
+        },
+      ],
+      emptyMessage: { from: "state.table.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   // ── Invalid config tests ──────────────────────────────────────────────────
 
   it("rejects missing type", () => {

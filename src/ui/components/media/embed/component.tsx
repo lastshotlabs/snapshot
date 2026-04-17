@@ -1,11 +1,18 @@
 'use client';
 
+import { useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { EmbedSchemaConfig } from "./types";
 
 export function Embed({ config }: { config: EmbedSchemaConfig }) {
-  const aspectRatio = config.aspectRatio ?? "16/9";
+  const rawUrl = useSubscribe(config.url);
+  const rawAspectRatio = useSubscribe(config.aspectRatio);
+  const rawTitle = useSubscribe(config.title);
+  const url = typeof rawUrl === "string" ? rawUrl : "";
+  const aspectRatio =
+    typeof rawAspectRatio === "string" ? rawAspectRatio : "16/9";
+  const title = typeof rawTitle === "string" ? rawTitle : undefined;
   const rootId = config.id ?? "embed";
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
@@ -42,8 +49,8 @@ export function Embed({ config }: { config: EmbedSchemaConfig }) {
       style={rootSurface.style}
     >
       <iframe
-        src={config.url}
-        title={config.title ?? "Embedded content"}
+        src={url}
+        title={title ?? "Embedded content"}
         data-snapshot-id={`${rootId}-frame`}
         className={frameSurface.className}
         style={frameSurface.style}

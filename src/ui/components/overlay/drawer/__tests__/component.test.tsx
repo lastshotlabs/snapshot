@@ -7,6 +7,11 @@ import { DrawerComponent } from "../component";
 import { registerComponent } from "../../../../manifest/component-registry";
 import { modalStackAtom } from "../../../../actions/modal-manager";
 import { createStore } from "jotai/vanilla";
+import {
+  AppRegistryContext,
+  PageRegistryContext,
+} from "../../../../context/providers";
+import { AtomRegistryImpl } from "../../../../state/registry";
 import type { DrawerConfig } from "../schema";
 
 function TestChild({ config }: { config: Record<string, unknown> }) {
@@ -164,6 +169,39 @@ describe("DrawerComponent", () => {
     expect(
       screen.getByRole("button", { name: "Save" }).getAttribute("data-sn-button"),
     ).not.toBeNull();
+  });
+
+  it("renders ref-backed footer action labels", () => {
+    const appRegistry = new AtomRegistryImpl();
+    const pageRegistry = new AtomRegistryImpl();
+    pageRegistry.store.set(pageRegistry.register("copy"), { save: "Save draft" });
+    store.set(modalStackAtom, ["test-drawer"]);
+
+    const config: DrawerConfig = {
+      ...baseConfig,
+      footer: {
+        actions: [{ label: { from: "copy.save" }, dismiss: true }],
+      },
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) =>
+      createElement(
+        Provider,
+        { store },
+        createElement(
+          AppRegistryContext.Provider,
+          { value: appRegistry },
+          createElement(
+            PageRegistryContext.Provider,
+            { value: pageRegistry },
+            children,
+          ),
+        ),
+      );
+
+    render(createElement(DrawerComponent, { config }), { wrapper });
+
+    expect(screen.getByRole("button", { name: "Save draft" })).toBeTruthy();
   });
 
   it("has correct ARIA attributes", () => {

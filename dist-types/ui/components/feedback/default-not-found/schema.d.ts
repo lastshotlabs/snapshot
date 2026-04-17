@@ -6,6 +6,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -667,13 +668,50 @@ export declare const notFoundConfigSchema: z.ZodObject<{
     }>]>>;
 } & {
     type: z.ZodLiteral<"not-found">;
-    title: z.ZodOptional<z.ZodString>;
-    description: z.ZodOptional<z.ZodString>;
-    homeLabel: z.ZodOptional<z.ZodString>;
+    title: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>>;
+    description: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>>;
+    homeLabel: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>>;
     slots: z.ZodOptional<z.ZodObject<Record<"root" | "title" | "description" | "eyebrow", z.ZodOptional<z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -1177,6 +1215,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -1681,6 +1720,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1871,6 +1911,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2062,6 +2103,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2252,6 +2294,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2443,6 +2486,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2633,6 +2677,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2825,6 +2870,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3015,6 +3061,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3207,6 +3254,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3397,6 +3445,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3589,6 +3638,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3779,6 +3829,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3971,6 +4022,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4161,6 +4213,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4354,6 +4407,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4544,6 +4598,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4736,6 +4791,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4926,6 +4982,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5118,6 +5175,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5308,6 +5366,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5500,6 +5559,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5690,6 +5750,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5910,6 +5971,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -6130,6 +6192,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6320,6 +6383,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6512,6 +6576,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6702,6 +6767,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6894,6 +6960,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -7084,6 +7151,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7276,6 +7344,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -7466,6 +7535,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7653,9 +7723,21 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    title?: string | undefined;
-    description?: string | undefined;
-    homeLabel?: string | undefined;
+    title?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
+    description?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
+    homeLabel?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
 }, {
     type: "not-found";
     background?: string | {
@@ -7689,6 +7771,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -7909,6 +7992,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8099,6 +8183,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8291,6 +8376,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8481,6 +8567,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8673,6 +8760,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8863,6 +8951,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9055,6 +9144,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9245,6 +9335,7 @@ export declare const notFoundConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9432,9 +9523,21 @@ export declare const notFoundConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    title?: string | undefined;
-    description?: string | undefined;
-    homeLabel?: string | undefined;
+    title?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
+    description?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
+    homeLabel?: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    } | undefined;
 }>;
 /** Config for the default not-found feedback component. */
 export type NotFoundConfig = z.input<typeof notFoundConfigSchema>;

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -53,10 +54,12 @@ export function Toggle({ config }: { config: ToggleConfig }) {
 
     const nextPressed = !pressed;
     setPressed(nextPressed);
-    if (config.changeAction) {
-      void execute(config.changeAction, { pressed: nextPressed });
-    }
-  }, [config.changeAction, execute, pressed, resolvedDisabled]);
+    void executeEventAction(execute, config.on?.change, {
+      id: config.id,
+      pressed: nextPressed,
+      value: nextPressed,
+    });
+  }, [config.id, config.on?.change, execute, pressed, resolvedDisabled]);
 
   if (visible === false) {
     return null;

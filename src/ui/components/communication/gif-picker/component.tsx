@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
@@ -56,21 +56,23 @@ export function GifPicker({ config }: { config: GifPickerConfig }) {
   const urlField = config.urlField ?? "url";
   const previewField = config.previewField ?? "preview";
   const titleField = config.titleField ?? "title";
+  const resolvedConfig = useResolveFrom({ gifs: config.gifs });
 
   const staticGifs = useMemo(() => {
-    if (!config.gifs) {
+    const gifs = (resolvedConfig.gifs ?? config.gifs) as GifPickerConfig["gifs"];
+    if (!gifs) {
       return [];
     }
 
-    return config.gifs.map((gif) => ({
+    return gifs.map((gif) => ({
       id: gif.id,
       url: gif.url,
       preview: gif.preview ?? gif.url,
       width: gif.width,
       height: gif.height,
-      title: gif.title,
+      title: typeof gif.title === "string" ? gif.title : undefined,
     }));
-  }, [config.gifs]);
+  }, [config.gifs, resolvedConfig.gifs]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

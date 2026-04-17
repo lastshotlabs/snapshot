@@ -1,9 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { setDomRef } from "../../_base/dom-ref";
+import {
+  executeEventAction,
+  focusEventPayload,
+  keyEventPayload,
+  mouseEventPayload,
+  pointerEventPayload,
+  touchEventPayload,
+} from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -28,6 +36,15 @@ export function TextareaControl({
   ariaLabel,
   onChangeText,
   onBlur,
+  onFocus,
+  onClick,
+  onKeyDown,
+  onMouseEnter,
+  onMouseLeave,
+  onPointerDown,
+  onPointerUp,
+  onTouchStart,
+  onTouchEnd,
   className,
   style,
   surfaceId,
@@ -134,6 +151,15 @@ export function TextareaControl({
         style={controlSurface.style}
         onChange={(event) => onChangeText?.(event.target.value)}
         onBlur={onBlur}
+        onFocus={onFocus}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
       />
       <SurfaceStyles css={controlSurface.scopedCss} />
     </>
@@ -162,7 +188,6 @@ export function Textarea({ config }: { config: TextareaConfig }) {
   const [value, setValue] = useState(resolvedValue ?? "");
   const [validationError, setValidationError] = useState<string | undefined>();
   const [touched, setTouched] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     if (resolvedValue !== undefined) {
@@ -187,6 +212,14 @@ export function Textarea({ config }: { config: TextareaConfig }) {
     [config.maxLength, config.required],
   );
 
+  const buildPayload = useCallback(
+    (nextValue = value) => ({
+      id: config.id,
+      value: nextValue,
+    }),
+    [config.id, value],
+  );
+
   const handleChange = useCallback(
     (nextValue: string) => {
       if (config.maxLength && nextValue.length > config.maxLength) {
@@ -198,22 +231,94 @@ export function Textarea({ config }: { config: TextareaConfig }) {
         setValidationError(validate(nextValue));
       }
 
-      if (config.changeAction) {
-        if (debounceRef.current) {
-          clearTimeout(debounceRef.current);
-        }
-        debounceRef.current = setTimeout(() => {
-          void execute(config.changeAction!, { value: nextValue });
-        }, 300);
-      }
+      const payload = buildPayload(nextValue);
+      void executeEventAction(execute, config.on?.input, payload);
+      void executeEventAction(execute, config.on?.change, payload);
     },
-    [config.changeAction, config.maxLength, execute, touched, validate],
+    [buildPayload, config.maxLength, config.on?.change, config.on?.input, execute, touched, validate],
   );
 
-  const handleBlur = useCallback(() => {
+  const handleBlur = useCallback<NonNullable<TextareaControlProps["onBlur"]>>((event) => {
     setTouched(true);
     setValidationError(validate(value));
-  }, [validate, value]);
+    void executeEventAction(
+      execute,
+      config.on?.blur,
+      focusEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.blur, execute, validate, value]);
+
+  const handleFocus = useCallback<NonNullable<TextareaControlProps["onFocus"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.focus,
+      focusEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.focus, execute]);
+
+  const handleClick = useCallback<NonNullable<TextareaControlProps["onClick"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.click,
+      mouseEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.click, execute]);
+
+  const handleKeyDown = useCallback<NonNullable<TextareaControlProps["onKeyDown"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.keyDown,
+      keyEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.keyDown, execute]);
+
+  const handleMouseEnter = useCallback<NonNullable<TextareaControlProps["onMouseEnter"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.mouseEnter,
+      mouseEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.mouseEnter, execute]);
+
+  const handleMouseLeave = useCallback<NonNullable<TextareaControlProps["onMouseLeave"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.mouseLeave,
+      mouseEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.mouseLeave, execute]);
+
+  const handlePointerDown = useCallback<NonNullable<TextareaControlProps["onPointerDown"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.pointerDown,
+      pointerEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.pointerDown, execute]);
+
+  const handlePointerUp = useCallback<NonNullable<TextareaControlProps["onPointerUp"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.pointerUp,
+      pointerEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.pointerUp, execute]);
+
+  const handleTouchStart = useCallback<NonNullable<TextareaControlProps["onTouchStart"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.touchStart,
+      touchEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.touchStart, execute]);
+
+  const handleTouchEnd = useCallback<NonNullable<TextareaControlProps["onTouchEnd"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.touchEnd,
+      touchEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.touchEnd, execute]);
 
   if (visible === false) {
     return null;
@@ -351,6 +456,15 @@ export function Textarea({ config }: { config: TextareaConfig }) {
         ariaLabel={resolvedLabel ?? resolvedPlaceholder}
         onChangeText={handleChange}
         onBlur={handleBlur}
+        onFocus={handleFocus}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         surfaceId={`${rootId}-control`}
         surfaceConfig={config.slots?.control}
         activeStates={resolvedStates}

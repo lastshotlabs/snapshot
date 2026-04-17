@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { useSubscribe } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -130,17 +130,22 @@ export function Calendar({ config }: { config: CalendarConfig }) {
   const { data, isLoading, error } = useComponentData(config.data ?? "", undefined);
   const execute = useActionExecutor();
   const visible = useSubscribe(config.visible ?? true);
+  const todayLabel = useSubscribe(config.todayLabel) as string | undefined;
+  const resolvedConfig = useResolveFrom({ events: config.events });
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const rootId = config.id ?? "calendar";
   const view = config.view ?? "month";
   const titleField = config.titleField ?? "title";
   const dateField = config.dateField ?? "date";
+  const staticEvents =
+    ((resolvedConfig.events as CalendarConfig["events"] | undefined) ??
+      config.events) as CalendarConfig["events"];
 
   const events = useMemo<ResolvedEvent[]>(() => {
     const result: ResolvedEvent[] = [];
-    for (const ev of config.events ?? []) {
+    for (const ev of staticEvents ?? []) {
       result.push({
-        title: ev.title,
+        title: typeof ev.title === "string" ? ev.title : "",
         date: new Date(ev.date),
         endDate: ev.endDate ? new Date(ev.endDate) : undefined,
         color: ev.color ?? "primary",
@@ -168,7 +173,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
       }
     }
     return result;
-  }, [config.colorField, config.events, data, dateField, titleField]);
+  }, [config.colorField, data, dateField, staticEvents, titleField]);
 
   const forDate = useCallback((date: Date) => events.filter((event) => sameDay(event.date, date)), [events]);
   const eventClick = useCallback((event: ResolvedEvent) => {
@@ -453,7 +458,7 @@ export function Calendar({ config }: { config: CalendarConfig }) {
           <h2 data-snapshot-id={`${rootId}-title`} className={titleSurface.className} style={titleSurface.style}>{title}</h2>
           <div data-snapshot-id={`${rootId}-navGroup`} className={navGroupSurface.className} style={navGroupSurface.style}>
             {nav("prev", "\u2039", goPrev, view === "month" ? "Previous month" : "Previous week")}
-            {nav("today", config.todayLabel ?? "Today", goToday)}
+            {nav("today", todayLabel ?? "Today", goToday)}
             {nav("next", "\u203A", goNext, view === "month" ? "Next month" : "Next week")}
           </div>
         </div>

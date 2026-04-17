@@ -5,6 +5,7 @@ export declare const styleableElementFields: {
     readonly className: z.ZodOptional<z.ZodString>;
     readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     readonly cursor: z.ZodOptional<z.ZodString>;
+    readonly backgroundColor: z.ZodOptional<z.ZodString>;
     readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
     readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
     readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -508,6 +509,7 @@ export declare const styleableElementSchema: z.ZodObject<{
     readonly className: z.ZodOptional<z.ZodString>;
     readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     readonly cursor: z.ZodOptional<z.ZodString>;
+    readonly backgroundColor: z.ZodOptional<z.ZodString>;
     readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
     readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
     readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -1012,6 +1014,7 @@ export declare const styleableElementSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -1202,6 +1205,7 @@ export declare const styleableElementSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -1391,6 +1395,7 @@ export declare const statefulElementSchema: z.ZodObject<{
     readonly className: z.ZodOptional<z.ZodString>;
     readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     readonly cursor: z.ZodOptional<z.ZodString>;
+    readonly backgroundColor: z.ZodOptional<z.ZodString>;
     readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
     readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
     readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -1894,6 +1899,7 @@ export declare const statefulElementSchema: z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
         readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+        readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -2398,6 +2404,7 @@ export declare const statefulElementSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2588,6 +2595,7 @@ export declare const statefulElementSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2779,6 +2787,7 @@ export declare const statefulElementSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -2969,6 +2978,7 @@ export declare const statefulElementSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -3160,6 +3170,7 @@ export declare const statefulElementSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -3350,6 +3361,7 @@ export declare const statefulElementSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -3540,6 +3552,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     readonly className: z.ZodOptional<z.ZodString>;
     readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     readonly cursor: z.ZodOptional<z.ZodString>;
+    readonly backgroundColor: z.ZodOptional<z.ZodString>;
     readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
     readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
     readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -4043,6 +4056,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
         readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+        readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -4547,6 +4561,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -4737,6 +4752,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -4928,6 +4944,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -5118,6 +5135,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -5309,6 +5327,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -5499,6 +5518,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -5688,6 +5708,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     readonly className: z.ZodOptional<z.ZodString>;
     readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     readonly cursor: z.ZodOptional<z.ZodString>;
+    readonly backgroundColor: z.ZodOptional<z.ZodString>;
     readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
     readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
     readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -6191,6 +6212,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
         readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+        readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -6695,6 +6717,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -6885,6 +6908,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -7076,6 +7100,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -7266,6 +7291,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -7457,6 +7483,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -7647,6 +7674,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -7836,6 +7864,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     readonly className: z.ZodOptional<z.ZodString>;
     readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     readonly cursor: z.ZodOptional<z.ZodString>;
+    readonly backgroundColor: z.ZodOptional<z.ZodString>;
     readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
     readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
     readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -8339,6 +8368,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
         readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+        readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -8843,6 +8873,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -9033,6 +9064,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -9224,6 +9256,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -9414,6 +9447,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -9605,6 +9639,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -9795,6 +9830,7 @@ export declare function slotsSchema<const T extends readonly [string, ...string[
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -9985,6 +10021,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -10648,6 +10685,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -11151,6 +11189,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -11655,6 +11694,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11845,6 +11885,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12036,6 +12077,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -12226,6 +12268,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12417,6 +12460,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -12607,6 +12651,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12799,6 +12844,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12989,6 +13035,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13182,6 +13229,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13372,6 +13420,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13591,6 +13640,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -13811,6 +13861,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -14001,6 +14052,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14220,6 +14272,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -14440,6 +14493,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -14630,6 +14684,7 @@ export declare const extendedBaseComponentSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14822,6 +14877,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -15485,6 +15541,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -15988,6 +16045,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -16492,6 +16550,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -16682,6 +16741,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -16873,6 +16933,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -17063,6 +17124,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -17254,6 +17316,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -17444,6 +17507,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -17636,6 +17700,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -17826,6 +17891,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18019,6 +18085,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -18209,6 +18276,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18400,6 +18468,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -19063,6 +19132,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -19566,6 +19636,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -20070,6 +20141,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -20260,6 +20332,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -20451,6 +20524,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -20641,6 +20715,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -20832,6 +20907,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -21022,6 +21098,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -21214,6 +21291,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -21404,6 +21482,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -21597,6 +21676,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -21787,6 +21867,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -21978,6 +22059,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -22641,6 +22723,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -23144,6 +23227,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -23648,6 +23732,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -23838,6 +23923,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24029,6 +24115,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -24219,6 +24306,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24410,6 +24498,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -24600,6 +24689,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24792,6 +24882,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24982,6 +25073,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -25175,6 +25267,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -25365,6 +25458,7 @@ export declare function extendComponentSchema<T extends z.ZodRawShape>(shape: T)
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;

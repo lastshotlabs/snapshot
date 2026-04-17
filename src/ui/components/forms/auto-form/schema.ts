@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { formEventActionsSchema } from "../../_base/events";
 import {
   dataSourceSchema,
   endpointTargetSchema,
@@ -255,23 +256,13 @@ export const autoFormConfigSchema: z.ZodType<Record<string, any>> = extendCompon
     submitIcon: z.string().optional(),
     /** Whether to reset the form after successful submission. */
     resetOnSubmit: z.boolean().optional(),
-    /** Actions to execute after a successful submission. */
-    onSuccess: z.union([actionSchema, z.array(actionSchema)]).optional(),
-    /** Actions to execute when submission fails. */
-    onError: z.union([actionSchema, z.array(actionSchema)]).optional(),
-    /** Workflow lifecycle hooks for submit execution. */
-    on: z
-      .object({
+    /** Workflow lifecycle hooks and form event actions for submit execution. */
+    on: formEventActionsSchema
+      .extend({
         /** Runs before submit; may return a halt signal to cancel submission. */
         beforeSubmit: z.string().optional(),
         /** Runs after a successful submit. */
         afterSubmit: z.string().optional(),
-        /** Runs when submit fails. */
-        error: z.string().optional(),
-        /** Inline action chain for a successful submit. */
-        success: z.array(actionSchema).optional(),
-        /** Inline action chain for a failed submit. */
-        failure: z.array(actionSchema).optional(),
       })
       .strict()
       .optional(),

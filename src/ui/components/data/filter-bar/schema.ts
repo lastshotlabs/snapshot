@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 const filterOptionSchema = z
   .object({
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     value: z.string(),
   })
   .strict();
@@ -12,7 +13,7 @@ const filterOptionSchema = z
 const filterDefinitionSchema = z
   .object({
     key: z.string(),
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     options: z.array(filterOptionSchema),
     multiple: z.boolean().optional(),
   })
@@ -20,7 +21,7 @@ const filterDefinitionSchema = z
 
 export const filterBarConfigSchema = extendComponentSchema({
   type: z.literal("filter-bar"),
-  searchPlaceholder: z.string().optional(),
+  searchPlaceholder: z.union([z.string(), fromRefSchema]).optional(),
   showSearch: z.boolean().optional(),
   filters: z.array(filterDefinitionSchema).optional(),
   changeAction: actionSchema.optional(),

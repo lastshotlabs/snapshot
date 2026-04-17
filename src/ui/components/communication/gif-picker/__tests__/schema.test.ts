@@ -28,4 +28,19 @@ describe("gifPickerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed static GIF titles", () => {
+    const result = gifPickerConfigSchema.safeParse({
+      type: "gif-picker",
+      gifs: [
+        {
+          id: "party-parrot",
+          url: "https://example.com/parrot.gif",
+          title: { from: "gif.title" },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

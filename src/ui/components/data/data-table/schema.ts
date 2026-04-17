@@ -44,7 +44,7 @@ const badgeColorsSchema = z.record(z.string());
  * Schema for filter option (label + value pair).
  */
 const filterOptionSchema = z.object({
-  label: z.string(),
+  label: z.union([z.string(), fromRefSchema]),
   value: z.union([z.string(), z.number(), z.boolean()]),
 });
 
@@ -78,7 +78,7 @@ export const columnConfigSchema = z
     /** Field name from the data object. */
     field: z.string(),
     /** Display label. Defaults to humanized field name. */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** Whether the column is sortable. */
     sortable: z.boolean().optional(),
     /** Display format. */
@@ -124,7 +124,7 @@ export const columnConfigSchema = z
 export const rowActionSchema = z
   .object({
     /** Button label text. */
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     /** Icon identifier. */
     icon: z.string().optional(),
     /** Action(s) to execute when clicked. Row data is available in action context. */
@@ -141,7 +141,7 @@ export const rowActionSchema = z
 export const bulkActionSchema = z
   .object({
     /** Button label text. `{count}` interpolates to selected row count. */
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     /** Icon identifier. */
     icon: z.string().optional(),
     /** Action(s) to execute. Selected rows available in action context. */
@@ -172,7 +172,7 @@ const paginationConfigSchema = z
 const searchConfigSchema = z
   .object({
     /** Placeholder text for the search input. */
-    placeholder: z.string().optional(),
+    placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Fields to search across. Defaults to all string fields. */
     fields: z.array(z.string()).optional(),
   })
@@ -251,7 +251,7 @@ export const dataTableConfigSchema: z.ZodType<Record<string, any>> = extendCompo
     /** Rich empty state config. */
     empty: emptyStateConfigSchema.optional(),
     /** Message shown when there is no data. */
-    emptyMessage: z.string().optional(),
+    emptyMessage: z.union([z.string(), fromRefSchema]).optional(),
     /** Virtualized rendering for large datasets. */
     virtualize: z
       .union([
@@ -276,7 +276,7 @@ export const dataTableConfigSchema: z.ZodType<Record<string, any>> = extendCompo
     toolbar: z
       .array(
         z.object({
-          label: z.string(),
+          label: z.union([z.string(), fromRefSchema]),
           icon: z.string().optional(),
           variant: z
             .enum(["default", "secondary", "outline", "ghost", "destructive", "link"])

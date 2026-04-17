@@ -17,6 +17,7 @@ import {
   useManifestRuntime,
 } from "../../../manifest/runtime";
 import { useRouteRuntime } from "../../../manifest/runtime";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../button";
 import { InputControl } from "../input";
@@ -382,6 +383,7 @@ function FieldRenderer({
   const inlineActionLabel = resolveText(field.inlineAction?.label);
   const inlineActionTarget = resolveText(field.inlineAction?.to);
   const staticFieldOptions = resolveStaticFieldOptions(field);
+  const validation = field.validate ?? field.validation;
   const fieldId = `sn-field-${field.name}`;
   const hasError = showError && !!error;
   const describedBy = hasError
@@ -395,27 +397,43 @@ function FieldRenderer({
   ] as Array<"invalid" | "disabled">;
   const fieldSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-field-${field.name}`,
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--sn-spacing-xs, 0.25rem)",
+    } as Record<string, unknown>,
     componentSurface: slots?.field,
     itemSurface: field.slots?.field,
     activeStates,
   });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label-${field.name}`,
+    implementationBase: {
+      display: "block",
+      fontSize: "var(--sn-font-size-sm, 0.875rem)",
+      fontWeight: "var(--sn-font-weight-medium, 500)",
+      color: "var(--sn-color-foreground, #111827)",
+    } as Record<string, unknown>,
     componentSurface: slots?.label,
     itemSurface: field.slots?.label,
     activeStates,
   });
   const descriptionSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-description-${field.name}`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-xs, 0.75rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    } as Record<string, unknown>,
     componentSurface: slots?.description,
     itemSurface: field.slots?.description,
   });
   const inputWrapperSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-inputWrapper-${field.name}`,
     implementationBase:
-      field.type === "password"
-        ? ({ position: "relative" } as Record<string, unknown>)
-        : undefined,
+      ({
+        width: "100%",
+        ...(field.type === "password" ? { position: "relative" } : {}),
+      } as Record<string, unknown>),
     componentSurface: slots?.inputWrapper,
     itemSurface: field.slots?.inputWrapper,
     activeStates,
@@ -452,17 +470,31 @@ function FieldRenderer({
   });
   const helperSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-helper-${field.name}`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-xs, 0.75rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    } as Record<string, unknown>,
     componentSurface: slots?.helper,
     itemSurface: field.slots?.helper,
   });
   const errorSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-error-${field.name}`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-xs, 0.75rem)",
+      color: "var(--sn-color-destructive, #ef4444)",
+    } as Record<string, unknown>,
     componentSurface: slots?.error,
     itemSurface: field.slots?.error,
     activeStates: hasError ? ["invalid"] : [],
   });
   const requiredIndicatorSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-required-${field.name}`,
+    implementationBase: {
+      color: "var(--sn-color-destructive, #ef4444)",
+      style: {
+        marginLeft: "var(--sn-spacing-2xs, 2px)",
+      },
+    } as Record<string, unknown>,
     componentSurface: slots?.requiredIndicator,
     itemSurface: field.slots?.requiredIndicator,
   });
@@ -513,22 +545,7 @@ function FieldRenderer({
     itemSurface: field.slots?.passwordToggle,
   });
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "var(--sn-spacing-sm, 0.5rem)",
-    fontSize: "var(--sn-font-size-sm, 0.875rem)",
-    color: "var(--sn-color-foreground, #111827)",
-    backgroundColor: field.disabled
-      ? "var(--sn-color-secondary, #f3f4f6)"
-      : "var(--sn-color-card, #ffffff)",
-    border: `var(--sn-border-default, 1px) solid ${hasError ? "var(--sn-color-destructive, #ef4444)" : "var(--sn-color-border, #e5e7eb)"}`,
-    borderRadius: "var(--sn-radius-md, 0.375rem)",
-    outline: "none",
-    transition:
-      "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-    boxSizing: "border-box" as const,
-    ...(inputSurface.style as React.CSSProperties),
-  };
+  const inputStyle = inputSurface.style as React.CSSProperties | undefined;
 
   const optionsResult = useComponentData(
     !Array.isArray(staticFieldOptions) && staticFieldOptions
@@ -560,7 +577,7 @@ function FieldRenderer({
           rows={3}
           surfaceId={`${rootId}-input-${field.name}`}
           className={inputSurface.className}
-          style={{ ...inputStyle, resize: "vertical" }}
+          style={inputStyle}
         />
       );
       break;
@@ -590,7 +607,9 @@ function FieldRenderer({
           className={inputSurface.className}
           style={inputStyle}
         >
-          <option value="">{placeholder ?? "Select..."}</option>
+          {!value && !field.default ? (
+            <option value="">{placeholder ?? "Select..."}</option>
+          ) : null}
           {fieldOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
@@ -635,8 +654,22 @@ function FieldRenderer({
           data-snapshot-id={`${rootId}-input-${field.name}`}
           className={inputSurface.className}
           style={{
-            ...inputStyle,
-            minHeight: "8rem",
+            width: "100%",
+            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            fontSize: "var(--sn-font-size-sm, 0.875rem)",
+            lineHeight: "var(--sn-leading-normal, 1.5)",
+            color: "var(--sn-color-foreground, #111827)",
+            backgroundColor: "var(--sn-color-background, #ffffff)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+            borderRadius: "var(--sn-radius-md, 0.375rem)",
+            outline: "none",
+            boxSizing: "border-box",
+            fontFamily: "inherit",
+            transition:
+              "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out), box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)",
+            ...(inputStyle ?? {}),
+            minHeight: `${Math.min(fieldOptions.length + 0.5, 8) * 1.75}rem`,
             paddingRight: "var(--sn-spacing-sm, 0.5rem)",
           }}
         >
@@ -671,50 +704,85 @@ function FieldRenderer({
             width: "16px",
             height: "16px",
             accentColor: "var(--sn-color-primary, #2563eb)",
-            ...(inputSurface.style as React.CSSProperties),
+            ...(inputStyle ?? {}),
           }}
         />
       );
       break;
 
-    case "switch":
+    case "switch": {
+      const switchChecked = !!value;
+      const switchTrackW = 44;
+      const switchTrackH = 24;
+      const switchThumb = 20;
+      const switchThumbOffset = 2;
+      const switchThumbTranslate = switchChecked
+        ? switchTrackW - switchThumb - switchThumbOffset * 2
+        : 0;
+
       input = (
-        <label
+        <button
+          type="button"
+          id={fieldId}
+          role="switch"
+          aria-checked={switchChecked}
+          aria-invalid={hasError}
+          aria-describedby={describedBy}
+          aria-label={label}
+          disabled={field.disabled}
+          onClick={() => onChange(!switchChecked)}
+          onBlur={onBlur}
+          data-snapshot-id={`${rootId}-input-${field.name}`}
+          className={inputSurface.className}
           style={{
             display: "inline-flex",
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
+            padding: 0,
+            border: "none",
+            background: "none",
             cursor: field.disabled ? "not-allowed" : "pointer",
+            opacity: field.disabled ? 0.5 : undefined,
+            ...(inputSurface.style as React.CSSProperties),
           }}
         >
-          <InputControl
-            inputId={fieldId}
-            name={field.name}
-            type="checkbox"
-            checked={!!value}
-            disabled={field.disabled}
-            readOnly={field.readOnly}
-            required={required}
-            ariaInvalid={hasError}
-            ariaDescribedBy={describedBy}
-            ariaLabel={label}
-            onChangeChecked={onChange}
-            onBlur={onBlur}
-            surfaceId={`${rootId}-input-${field.name}`}
-            className={inputSurface.className}
+          <span
             style={{
-              width: "2.5rem",
-              height: "1.25rem",
-              accentColor: "var(--sn-color-primary, #2563eb)",
-              ...(inputSurface.style as React.CSSProperties),
+              position: "relative",
+              display: "inline-flex",
+              alignItems: "center",
+              width: switchTrackW,
+              height: switchTrackH,
+              flexShrink: 0,
+              borderRadius: "9999px",
+              backgroundColor: switchChecked
+                ? "var(--sn-color-primary, #2563eb)"
+                : "var(--sn-color-secondary, #e5e7eb)",
+              transition:
+                "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)",
             }}
-          />
-          <span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}>
-            {label}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: switchThumbOffset,
+                left: switchThumbOffset,
+                width: switchThumb,
+                height: switchThumb,
+                borderRadius: "9999px",
+                backgroundColor: "var(--sn-color-card, #ffffff)",
+                boxShadow:
+                  "var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.2))",
+                transform: `translateX(${switchThumbTranslate}px)`,
+                transition:
+                  "transform var(--sn-duration-fast, 150ms) cubic-bezier(0.34, 1.56, 0.64, 1)",
+              }}
+            />
           </span>
-        </label>
+        </button>
       );
       break;
+    }
 
     case "number":
       input = (
@@ -730,6 +798,8 @@ function FieldRenderer({
           disabled={field.disabled}
           readOnly={field.readOnly}
           required={required}
+          min={validation?.min != null ? String(validation.min) : undefined}
+          max={validation?.max != null ? String(validation.max) : undefined}
           ariaInvalid={hasError}
           ariaDescribedBy={describedBy}
           ariaLabel={label}
@@ -838,7 +908,7 @@ function FieldRenderer({
                     width: "16px",
                     height: "16px",
                     accentColor: "var(--sn-color-primary, #2563eb)",
-                    ...(inputSurface.style as React.CSSProperties),
+                    ...(inputStyle ?? {}),
                   }}
                 />
                 <span
@@ -903,7 +973,7 @@ function FieldRenderer({
           surfaceId={`${rootId}-input-${field.name}`}
           className={inputSurface.className}
           style={{
-            ...inputStyle,
+            ...(inputStyle ?? {}),
             minHeight: "2.75rem",
             padding: "var(--sn-spacing-xs, 0.25rem)",
           }}
@@ -1010,11 +1080,11 @@ function FieldRenderer({
             surfaceId={`${rootId}-input-${field.name}`}
             className={inputSurface.className}
             style={{
-              ...inputStyle,
+              ...(inputStyle ?? {}),
               paddingRight:
                 field.type === "password"
                   ? "var(--sn-spacing-2xl, 2.5rem)"
-                  : inputStyle.paddingRight,
+                  : inputStyle?.paddingRight,
             }}
           />
           {field.type === "password" ? (
@@ -1049,12 +1119,10 @@ function FieldRenderer({
           data-snapshot-id={`${rootId}-label-${field.name}`}
           className={labelSurface.className}
           style={{
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
             cursor: field.disabled ? "not-allowed" : "pointer",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            color: "var(--sn-color-foreground, #111827)",
             ...(labelSurface.style as React.CSSProperties),
           }}
         >
@@ -1066,12 +1134,7 @@ function FieldRenderer({
             id={`${fieldId}-helper`}
             data-snapshot-id={`${rootId}-helper-${field.name}`}
             className={helperSurface.className}
-            style={{
-              fontSize: "var(--sn-font-size-xs, 0.75rem)",
-              color: "var(--sn-color-muted-foreground, #6b7280)",
-              marginTop: "var(--sn-spacing-xs, 0.25rem)",
-              ...(helperSurface.style as React.CSSProperties),
-            }}
+            style={helperSurface.style}
           >
             {helperText}
           </div>
@@ -1083,12 +1146,7 @@ function FieldRenderer({
             data-sn-field-error
             data-snapshot-id={`${rootId}-error-${field.name}`}
             className={errorSurface.className}
-            style={{
-              fontSize: "var(--sn-font-size-xs, 0.75rem)",
-              color: "var(--sn-color-destructive, #ef4444)",
-              marginTop: "var(--sn-spacing-xs, 0.25rem)",
-              ...(errorSurface.style as React.CSSProperties),
-            }}
+            style={errorSurface.style}
           >
             {error}
           </div>
@@ -1119,11 +1177,6 @@ function FieldRenderer({
             inlineActionLabel && inlineActionTarget ? "space-between" : undefined,
           alignItems:
             inlineActionLabel && inlineActionTarget ? "baseline" : undefined,
-          fontSize: "var(--sn-font-size-sm, 0.875rem)",
-          fontWeight:
-            "var(--sn-font-weight-medium, 500)" as React.CSSProperties["fontWeight"],
-          color: "var(--sn-color-foreground, #111827)",
-          marginBottom: "var(--sn-spacing-xs, 0.25rem)",
           ...(labelSurface.style as React.CSSProperties),
         }}
       >
@@ -1133,11 +1186,7 @@ function FieldRenderer({
             <span
               data-snapshot-id={`${rootId}-required-${field.name}`}
               className={requiredIndicatorSurface.className}
-              style={{
-                color: "var(--sn-color-destructive, #ef4444)",
-                marginLeft: "var(--sn-spacing-2xs, 2px)",
-                ...(requiredIndicatorSurface.style as React.CSSProperties),
-              }}
+              style={requiredIndicatorSurface.style}
             >
               *
             </span>
@@ -1169,12 +1218,7 @@ function FieldRenderer({
         <div
           data-snapshot-id={`${rootId}-description-${field.name}`}
           className={descriptionSurface.className}
-          style={{
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            marginTop: "var(--sn-spacing-xs, 0.25rem)",
-            ...(descriptionSurface.style as React.CSSProperties),
-          }}
+          style={descriptionSurface.style}
         >
           {description}
         </div>
@@ -1184,12 +1228,7 @@ function FieldRenderer({
           id={`${fieldId}-helper`}
           data-snapshot-id={`${rootId}-helper-${field.name}`}
           className={helperSurface.className}
-          style={{
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            marginTop: "var(--sn-spacing-xs, 0.25rem)",
-            ...(helperSurface.style as React.CSSProperties),
-          }}
+          style={helperSurface.style}
         >
           {helperText}
         </div>
@@ -1201,12 +1240,7 @@ function FieldRenderer({
           data-sn-field-error
           data-snapshot-id={`${rootId}-error-${field.name}`}
           className={errorSurface.className}
-          style={{
-            fontSize: "var(--sn-font-size-xs, 0.75rem)",
-            color: "var(--sn-color-destructive, #ef4444)",
-            marginTop: "var(--sn-spacing-xs, 0.25rem)",
-            ...(errorSurface.style as React.CSSProperties),
-          }}
+          style={errorSurface.style}
         >
           {error}
         </div>
@@ -1313,7 +1347,9 @@ function SectionRenderer({
       border: "none",
       padding: 0,
       margin: 0,
-      marginBottom: gap,
+      style: {
+        marginBottom: "var(--sn-spacing-sm, 0.5rem)",
+      },
     } as Record<string, unknown>,
     componentSurface: slots?.section,
     itemSurface: section.slots?.section,
@@ -1324,8 +1360,10 @@ function SectionRenderer({
       display: "flex",
       alignItems: "center",
       gap: "var(--sn-spacing-sm, 0.5rem)",
-      marginBottom: collapsed ? 0 : gap,
       cursor: section.collapsible ? "pointer" : undefined,
+      style: {
+        marginBottom: collapsed ? 0 : gap,
+      },
     } as Record<string, unknown>,
     componentSurface: slots?.sectionHeader,
     itemSurface: section.slots?.sectionHeader,
@@ -1802,6 +1840,12 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
           }
         }
 
+        await executeEventAction(executeAction, config.on?.submit, {
+          id: config.id,
+          values,
+          serializedValues,
+        });
+
         setSaveStatus("saving");
         const result =
           resourceCache && isResourceRef(resolvedSubmitTarget)
@@ -1818,14 +1862,11 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
                 serializedValues,
               );
 
-        if (config.onSuccess) {
-          await executeAction(config.onSuccess, { result });
-        }
-        if (config.on?.success) {
-          await executeAction(config.on.success as Parameters<typeof executeAction>[0], {
-            result,
-          });
-        }
+        await executeEventAction(executeAction, config.on?.success, {
+          id: config.id,
+          values,
+          result,
+        });
         if (config.on?.afterSubmit) {
           await runWorkflow(config.on.afterSubmit, {
             form: {
@@ -1842,21 +1883,10 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       } catch (error) {
         setSaveStatus("error");
         let handled = false;
-        if (config.onError) {
-          await executeAction(config.onError, { error });
-          handled = true;
-        }
-        if (config.on?.failure) {
-          await executeAction(config.on.failure as Parameters<typeof executeAction>[0], {
-            error,
-          });
-          handled = true;
-        }
         if (config.on?.error) {
-          await runWorkflow(config.on.error, {
-            form: {
-              values,
-            },
+          await executeEventAction(executeAction, config.on.error, {
+            id: config.id,
+            values,
             error,
           });
           handled = true;
@@ -1868,11 +1898,12 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
     },
     [
       api,
-      config.onSuccess,
-      config.onError,
       config.on?.afterSubmit,
       config.on?.beforeSubmit,
       config.on?.error,
+      config.on?.submit,
+      config.on?.success,
+      config.id,
       method,
       executeAction,
       config.resetOnSubmit,
@@ -2072,13 +2103,13 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       >
         <ButtonControl
           type="submit"
-          disabled={form.isSubmitting}
+          disabled={form.isSubmitting || !form.isValid}
           variant={config.submitVariant ?? "default"}
           size={config.submitSize ?? "sm"}
           fullWidth={config.submitFullWidth}
           surfaceId={`${rootId}-submit`}
           surfaceConfig={config.slots?.submitButton}
-          activeStates={form.isSubmitting ? ["disabled"] : []}
+          activeStates={form.isSubmitting || !form.isValid ? ["disabled"] : []}
         >
           {config.submitIcon ? (
             <Icon name={config.submitIcon} size={16} />

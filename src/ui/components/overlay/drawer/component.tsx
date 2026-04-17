@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { useSubscribe } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { OverlayRuntimeProvider } from "../../../manifest/runtime";
 import type { ComponentConfig } from "../../../manifest/types";
@@ -147,10 +147,12 @@ function DrawerSurface({
 }) {
   const execute = useActionExecutor();
   const title = useSubscribe(config.title) as string | undefined;
+  const resolvedConfig = useResolveFrom({ footer: config.footer });
   const payload = useSubscribe({ from: "overlay.payload" });
   const result = useSubscribe({ from: "overlay.result" });
   const previousOpenRef = useRef<boolean | undefined>(undefined);
   const rootId = config.id ?? "drawer";
+  const footer = (resolvedConfig.footer ?? config.footer) as DrawerConfig["footer"];
 
   useEffect(() => {
     const previousOpen = previousOpenRef.current;
@@ -277,7 +279,7 @@ function DrawerSurface({
       display: "flex",
       gap: "var(--sn-spacing-sm, 0.5rem)",
       justifyContent:
-        ALIGN_MAP[config.footer?.align ?? "right"] ?? "flex-end",
+        ALIGN_MAP[footer?.align ?? "right"] ?? "flex-end",
       borderTop:
         "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       padding: "var(--sn-spacing-md, 1rem) var(--sn-spacing-lg, 1.5rem)",
@@ -355,14 +357,14 @@ function DrawerSurface({
           ))}
         </div>
 
-        {config.footer?.actions && config.footer.actions.length > 0 ? (
+        {footer?.actions && footer.actions.length > 0 ? (
           <div
             data-drawer-footer=""
             data-snapshot-id={`${rootId}-footer`}
             className={footerSurface.className}
             style={footerSurface.style}
           >
-            {config.footer.actions.map((button, index) => (
+            {footer.actions.map((button, index) => (
               <ButtonControl
                 key={`${rootId}-footer-action-${index}`}
                 variant={button.variant ?? "default"}
@@ -378,7 +380,7 @@ function DrawerSurface({
                 surfaceId={`${rootId}-footer-action-${index}`}
                 surfaceConfig={config.slots?.footerAction}
               >
-                {button.label}
+                {typeof button.label === "string" ? button.label : ""}
               </ButtonControl>
             ))}
           </div>

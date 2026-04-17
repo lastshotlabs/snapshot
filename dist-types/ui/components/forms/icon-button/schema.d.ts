@@ -3,6 +3,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -688,6 +689,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -1191,6 +1193,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -1695,6 +1698,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1885,6 +1889,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2076,6 +2081,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2266,6 +2272,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2457,6 +2464,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2647,6 +2655,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2839,6 +2848,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3029,6 +3039,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3221,6 +3232,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3411,6 +3423,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3604,6 +3617,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3794,6 +3808,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3986,6 +4001,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4176,6 +4192,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4398,6 +4415,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -4587,7 +4605,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
-    shape?: "square" | "circle" | undefined;
+    shape?: "circle" | "square" | undefined;
     id?: string | undefined;
     tokens?: Record<string, string> | undefined;
     visibleWhen?: string | undefined;
@@ -4624,6 +4642,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4814,6 +4833,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5006,6 +5026,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5196,6 +5217,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5383,10 +5405,10 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    size?: "lg" | "xs" | "sm" | "md" | undefined;
-    tooltip?: string | undefined;
     action?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | undefined;
     variant?: "destructive" | "secondary" | "default" | "outline" | "ghost" | undefined;
+    size?: "lg" | "xs" | "sm" | "md" | undefined;
+    tooltip?: string | undefined;
 }, {
     type: "icon-button";
     icon: string;
@@ -5422,6 +5444,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -5611,7 +5634,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
         transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
         transformArg?: string | number | undefined;
     } | undefined;
-    shape?: "square" | "circle" | undefined;
+    shape?: "circle" | "square" | undefined;
     id?: string | undefined;
     tokens?: Record<string, string> | undefined;
     visibleWhen?: string | undefined;
@@ -5648,6 +5671,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5838,6 +5862,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6030,6 +6055,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6220,6 +6246,7 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6407,8 +6434,8 @@ export declare const iconButtonConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    size?: "lg" | "xs" | "sm" | "md" | undefined;
-    tooltip?: string | undefined;
     action?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | undefined;
     variant?: "destructive" | "secondary" | "default" | "outline" | "ghost" | undefined;
+    size?: "lg" | "xs" | "sm" | "md" | undefined;
+    tooltip?: string | undefined;
 }>;

@@ -47,6 +47,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -550,6 +551,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -1054,6 +1056,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1244,6 +1247,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1435,6 +1439,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -1625,6 +1630,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1816,6 +1822,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -2006,6 +2013,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2198,6 +2206,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2388,6 +2397,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2580,6 +2590,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2770,6 +2781,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2962,6 +2974,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3152,6 +3165,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3345,6 +3359,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3535,6 +3550,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3727,6 +3743,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3917,6 +3934,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4109,6 +4127,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4299,6 +4318,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4510,6 +4530,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4700,6 +4721,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4892,6 +4914,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5082,6 +5105,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5274,6 +5298,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5464,6 +5489,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5651,8 +5677,8 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    icon?: string | undefined;
     action?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | undefined;
+    icon?: string | undefined;
 }, {
     type: "item";
     label: string | {
@@ -5677,6 +5703,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5867,6 +5894,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6059,6 +6087,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6249,6 +6278,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6441,6 +6471,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6631,6 +6662,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6818,14 +6850,15 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    icon?: string | undefined;
     action?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | undefined;
+    icon?: string | undefined;
 }>, z.ZodObject<{
     type: z.ZodLiteral<"separator">;
     slots: z.ZodOptional<z.ZodObject<Record<"separator", z.ZodOptional<z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -7329,6 +7362,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -7833,6 +7867,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8023,6 +8058,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8214,6 +8250,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -8404,6 +8441,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8595,6 +8633,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -8785,6 +8824,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8977,6 +9017,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9167,6 +9208,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9360,6 +9402,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9550,6 +9593,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9746,6 +9790,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9936,6 +9981,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10132,6 +10178,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -10322,6 +10369,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10552,6 +10600,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -11055,6 +11104,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -11559,6 +11609,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11749,6 +11800,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11940,6 +11992,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -12130,6 +12183,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12321,6 +12375,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -12511,6 +12566,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12703,6 +12759,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12893,6 +12950,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13086,6 +13144,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13276,6 +13335,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13485,6 +13545,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13675,6 +13736,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13884,6 +13946,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -14074,6 +14137,7 @@ export declare const floatingMenuEntrySchema: z.ZodUnion<[z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;

@@ -5,6 +5,7 @@ import type {
   MouseEventHandler,
   PointerEventHandler,
   ReactNode,
+  TouchEventHandler,
 } from "react";
 import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
@@ -23,8 +24,12 @@ export interface ButtonControlProps {
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
   onFocus?: FocusEventHandler<HTMLButtonElement>;
   onBlur?: FocusEventHandler<HTMLButtonElement>;
+  onPointerDown?: PointerEventHandler<HTMLButtonElement>;
+  onPointerUp?: PointerEventHandler<HTMLButtonElement>;
   onPointerEnter?: PointerEventHandler<HTMLButtonElement>;
   onPointerLeave?: PointerEventHandler<HTMLButtonElement>;
+  onTouchStart?: TouchEventHandler<HTMLButtonElement>;
+  onTouchEnd?: TouchEventHandler<HTMLButtonElement>;
   className?: string;
   style?: CSSProperties;
   buttonRef?: DomRef<HTMLButtonElement>;

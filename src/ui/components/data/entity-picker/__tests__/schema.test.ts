@@ -14,4 +14,14 @@ describe("entityPickerConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a FromRef trigger label", () => {
+    const result = entityPickerConfigSchema.safeParse({
+      type: "entity-picker",
+      data: "/api/users",
+      label: { from: "picker.label" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

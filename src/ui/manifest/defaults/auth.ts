@@ -111,14 +111,14 @@ const defaultAuthRoutes: RouteConfig[] = [
             submitLoadingLabel: "{i18n:auth.action.sign_in.loading}",
             on: {
               afterSubmit: "__default_auth_after_login",
+              error: [
+                {
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
+                },
+              ],
             },
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
           }),
           {
             type: "passkey-button",
@@ -221,16 +221,18 @@ const defaultAuthRoutes: RouteConfig[] = [
             ],
             submitLabel: "{i18n:auth.action.create_account}",
             submitLoadingLabel: "{i18n:auth.action.create_account.loading}",
-            onSuccess: buildFetchCurrentUserActions(
-              "{auth.redirects.afterRegister}",
-            ),
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
+            on: {
+              success: buildFetchCurrentUserActions(
+                "{auth.redirects.afterRegister}",
+              ),
+              error: [
+                {
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
+                },
+              ],
+            },
           }),
           {
             type: "link",
@@ -285,20 +287,22 @@ const defaultAuthRoutes: RouteConfig[] = [
             ],
             submitLabel: "{i18n:auth.action.send_reset_link}",
             submitLoadingLabel: "{i18n:auth.action.send_reset_link.loading}",
-            onSuccess: [
-              {
-                type: "toast",
-                variant: "success",
-                message: "{i18n:auth.message.forgot_password_sent}",
-              },
-            ],
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
+            on: {
+              success: [
+                {
+                  type: "toast",
+                  variant: "success",
+                  message: "{i18n:auth.message.forgot_password_sent}",
+                },
+              ],
+              error: [
+                {
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
+                },
+              ],
+            },
           }),
           {
             type: "link",
@@ -365,20 +369,22 @@ const defaultAuthRoutes: RouteConfig[] = [
             ],
             submitLabel: "{i18n:auth.action.reset_password}",
             submitLoadingLabel: "{i18n:auth.action.reset_password.loading}",
-            onSuccess: [
-              {
-                type: "toast",
-                variant: "success",
-                message: "{i18n:auth.message.password_reset}",
-              },
-            ],
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
+            on: {
+              success: [
+                {
+                  type: "toast",
+                  variant: "success",
+                  message: "{i18n:auth.message.password_reset}",
+                },
+              ],
+              error: [
+                {
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
+                },
+              ],
+            },
           }),
           {
             type: "link",
@@ -430,20 +436,22 @@ const defaultAuthRoutes: RouteConfig[] = [
                 visible: false,
               },
             ],
-            onSuccess: [
-              {
-                type: "toast",
-                variant: "success",
-                message: "{i18n:auth.message.email_verified}",
-              },
-            ],
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
+            on: {
+              success: [
+                {
+                  type: "toast",
+                  variant: "success",
+                  message: "{i18n:auth.message.email_verified}",
+                },
+              ],
+              error: [
+                {
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
+                },
+              ],
+            },
           },
           withDefaultAuthFormSlots({
             type: "auto-form",
@@ -464,20 +472,22 @@ const defaultAuthRoutes: RouteConfig[] = [
             submitLabel: "{i18n:auth.action.resend_verification}",
             submitLoadingLabel:
               "{i18n:auth.action.resend_verification.loading}",
-            onSuccess: [
-              {
-                type: "toast",
-                variant: "success",
-                message: "{i18n:auth.message.verification_sent}",
-              },
-            ],
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
+            on: {
+              success: [
+                {
+                  type: "toast",
+                  variant: "success",
+                  message: "{i18n:auth.message.verification_sent}",
+                },
+              ],
+              error: [
+                {
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
+                },
+              ],
+            },
           }),
           {
             type: "link",
@@ -553,23 +563,25 @@ const defaultAuthRoutes: RouteConfig[] = [
             ],
             submitLabel: "{i18n:auth.action.verify}",
             submitLoadingLabel: "{i18n:auth.action.verify.loading}",
-            onSuccess: buildFetchCurrentUserActions(
-              "{auth.redirects.afterMfa}",
-              [
+            on: {
+              success: buildFetchCurrentUserActions(
+                "{auth.redirects.afterMfa}",
+                [
+                  {
+                    type: "set-value",
+                    target: "global.pendingMfaChallenge",
+                    value: null,
+                  },
+                ],
+              ),
+              error: [
                 {
-                  type: "set-value",
-                  target: "global.pendingMfaChallenge",
-                  value: null,
+                  type: "toast",
+                  variant: "error",
+                  message: "{error.message}",
                 },
               ],
-            ),
-            onError: [
-              {
-                type: "toast",
-                variant: "error",
-                message: "{error.message}",
-              },
-            ],
+            },
           }),
           {
             type: "link",
@@ -772,14 +784,21 @@ function patchAutoForm(
     }),
   };
 
-  if (successMessage && Array.isArray(component.onSuccess)) {
-    next.onSuccess = component.onSuccess.map((action) =>
-      isRecord(action) &&
-      action.type === "toast" &&
-      action.variant === "success"
-        ? { ...action, message: successMessage }
-        : action,
-    );
+  if (
+    successMessage &&
+    isRecord(component.on) &&
+    Array.isArray(component.on.success)
+  ) {
+    next.on = {
+      ...(isRecord(next.on) ? next.on : {}),
+      success: component.on.success.map((action) =>
+        isRecord(action) &&
+        action.type === "toast" &&
+        action.variant === "success"
+          ? { ...action, message: successMessage }
+          : action,
+      ),
+    };
   }
 
   return next;
@@ -1032,7 +1051,7 @@ export function buildDefaultAuthFragment(
         else: [
           {
             type: "capture" as const,
-            as: "auth.me",
+            as: "session.currentUser",
             action: {
               type: "api" as const,
               method: "GET" as const,
@@ -1042,7 +1061,7 @@ export function buildDefaultAuthFragment(
           {
             type: "set-value" as const,
             target: "global.user",
-            value: "{auth.me}",
+            value: "{session.currentUser}",
           },
           {
             type: "if" as const,

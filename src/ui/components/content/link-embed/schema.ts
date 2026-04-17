@@ -45,13 +45,13 @@ export const linkEmbedConfigSchema = extendComponentSchema({
     meta: z
       .object({
         /** Page title. */
-        title: z.string().optional(),
+        title: z.union([z.string(), fromRefSchema]).optional(),
         /** Page description. */
-        description: z.string().optional(),
+        description: z.union([z.string(), fromRefSchema]).optional(),
         /** Preview image URL. */
         image: z.string().optional(),
         /** Site name (e.g., "YouTube", "Twitter"). */
-        siteName: z.string().optional(),
+        siteName: z.union([z.string(), fromRefSchema]).optional(),
         /** Site favicon URL. */
         favicon: z.string().optional(),
         /** Content type hint. */

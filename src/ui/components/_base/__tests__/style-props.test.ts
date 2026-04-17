@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveInteractiveCSS } from "../style-props";
+import { resolveInteractiveCSS, resolveStyleProps } from "../style-props";
 
 describe("style-props interactive css", () => {
   it("marks interactive declarations important so they can override inline base styles", () => {
@@ -15,5 +15,28 @@ describe("style-props interactive css", () => {
     expect(css).toContain("border: 1px solid red !important");
     expect(css).toContain("outline: 2px solid var(--sn-ring-color, var(--sn-color-primary)) !important");
     expect(css).toContain("background: blue !important");
+  });
+});
+
+describe("style-props base resolution", () => {
+  it("normalizes simple background colors onto backgroundColor to avoid shorthand conflicts", () => {
+    expect(
+      resolveStyleProps({
+        background: "primary",
+        backgroundColor: "secondary",
+      }),
+    ).toMatchObject({
+      backgroundColor: "var(--sn-color-secondary)",
+    });
+  });
+
+  it("preserves complex background shorthands", () => {
+    expect(
+      resolveStyleProps({
+        background: "linear-gradient(red, blue)",
+      }),
+    ).toMatchObject({
+      background: "linear-gradient(red, blue)",
+    });
   });
 });

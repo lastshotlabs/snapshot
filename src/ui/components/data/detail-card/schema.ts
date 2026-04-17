@@ -64,7 +64,7 @@ export const detailFieldConfigSchema = z.object({
   /** The field key to read from the data object. */
   field: z.string(),
   /** Display label. Defaults to a humanized version of the field name. */
-  label: z.string().optional(),
+  label: orFromRef(z.string()).optional(),
   /** How to format/render the value. Defaults to 'text'. */
   format: detailFieldFormatSchema.optional(),
   /** Whether to show a copy-to-clipboard button next to the value. */
@@ -89,7 +89,7 @@ export const detailFieldConfigSchema = z.object({
  */
 export const detailCardActionSchema = z.object({
   /** Button label text. */
-  label: z.string(),
+  label: orFromRef(z.string()),
   /** Optional icon identifier. */
   icon: z.string().optional(),
   /** Action(s) to execute when clicked. */
@@ -140,7 +140,7 @@ export const detailCardConfigSchema: z.ZodType<Record<string, any>> = extendComp
   /** Action buttons rendered in the card header. */
   actions: z.array(detailCardActionSchema).optional(),
   /** Message shown when data is null/undefined (e.g. no row selected). */
-  emptyState: z.string().optional(),
+  emptyState: orFromRef(z.string()).optional(),
   /** Rich empty state config. */
   empty: emptyStateConfigSchema.optional(),
   /** Error state config. */

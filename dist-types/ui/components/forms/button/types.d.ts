@@ -1,8 +1,8 @@
-import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactNode } from "react";
+import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactNode, TouchEventHandler } from "react";
 import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { buttonConfigSchema } from "./schema";
-export type ButtonConfig = z.infer<typeof buttonConfigSchema>;
+export type ButtonConfig = z.input<typeof buttonConfigSchema>;
 export interface ButtonControlProps {
     children: ReactNode;
     type?: "button" | "submit";
@@ -14,8 +14,12 @@ export interface ButtonControlProps {
     onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
     onFocus?: FocusEventHandler<HTMLButtonElement>;
     onBlur?: FocusEventHandler<HTMLButtonElement>;
+    onPointerDown?: PointerEventHandler<HTMLButtonElement>;
+    onPointerUp?: PointerEventHandler<HTMLButtonElement>;
     onPointerEnter?: PointerEventHandler<HTMLButtonElement>;
     onPointerLeave?: PointerEventHandler<HTMLButtonElement>;
+    onTouchStart?: TouchEventHandler<HTMLButtonElement>;
+    onTouchEnd?: TouchEventHandler<HTMLButtonElement>;
     className?: string;
     style?: CSSProperties;
     buttonRef?: DomRef<HTMLButtonElement>;

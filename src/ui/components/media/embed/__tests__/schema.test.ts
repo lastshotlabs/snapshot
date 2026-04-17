@@ -12,4 +12,15 @@ describe("embedConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts FromRef url, aspect ratio, and title", () => {
+    const result = embedConfigSchema.safeParse({
+      type: "embed",
+      url: { from: "embed.url" },
+      aspectRatio: { from: "embed.aspectRatio" },
+      title: { from: "embed.title" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

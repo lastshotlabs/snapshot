@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -273,11 +274,18 @@ export function LocationInput({ config }: { config: LocationInputConfig }) {
 
       publish(payload);
 
-      if (config.changeAction) {
-        void execute(config.changeAction, payload);
-      }
+      void executeEventAction(execute, config.on?.change, {
+        id: config.id,
+        ...payload,
+        value: payload,
+      });
+      void executeEventAction(execute, config.on?.input, {
+        id: config.id,
+        ...payload,
+        value: payload,
+      });
     },
-    [config.changeAction, execute, publish],
+    [config.id, config.on?.change, config.on?.input, execute, publish],
   );
 
   useEffect(() => {

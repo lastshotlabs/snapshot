@@ -72,6 +72,26 @@ describe("pricingTableConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts FromRef-backed tier copy and currency", () => {
+    const result = pricingTableConfigSchema.safeParse({
+      ...baseConfig,
+      currency: { from: "pricing.currency" },
+      tiers: [
+        {
+          name: { from: "pricing.name" },
+          price: { from: "pricing.price" },
+          period: { from: "pricing.period" },
+          description: { from: "pricing.description" },
+          badge: { from: "pricing.badge" },
+          actionLabel: { from: "pricing.cta" },
+          features: [{ text: { from: "pricing.feature" } }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("accepts features without included field (defaults semantically)", () => {
     const result = pricingTableConfigSchema.safeParse({
       ...baseConfig,

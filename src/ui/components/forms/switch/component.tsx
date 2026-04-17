@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -43,10 +44,12 @@ export function Switch({ config }: { config: SwitchConfig }) {
 
     const nextChecked = !checked;
     setChecked(nextChecked);
-    if (config.action) {
-      void execute(config.action);
-    }
-  }, [checked, config.action, execute, resolvedDisabled]);
+    void executeEventAction(execute, config.on?.change, {
+      id: config.id,
+      checked: nextChecked,
+      value: nextChecked,
+    });
+  }, [checked, config.id, config.on?.change, execute, resolvedDisabled]);
 
   if (visible === false) {
     return null;

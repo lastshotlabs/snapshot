@@ -13,4 +13,20 @@ describe("auditLogConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts FromRef filter labels and options", () => {
+    const result = auditLogConfigSchema.safeParse({
+      type: "audit-log",
+      data: "/api/audit-log",
+      filters: [
+        {
+          field: "action",
+          label: { from: "audit.filterLabel" },
+          options: [{ from: "audit.filterOption" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

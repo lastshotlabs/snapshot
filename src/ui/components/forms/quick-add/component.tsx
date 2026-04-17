@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -48,14 +49,15 @@ export function QuickAdd({ config }: { config: QuickAddConfig }) {
       return;
     }
 
-    if (config.submitAction) {
-      void execute(config.submitAction);
-    }
+    void executeEventAction(execute, config.on?.submit, {
+      id: config.id,
+      value: trimmed,
+    });
 
     if (clearOnSubmit) {
       setValue("");
     }
-  }, [clearOnSubmit, config.submitAction, execute, value]);
+  }, [clearOnSubmit, config.id, config.on?.submit, execute, value]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {

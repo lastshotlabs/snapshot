@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -51,8 +51,8 @@ export const inputConfigSchema = extendComponentSchema({
     errorText: z.union([z.string(), fromRefSchema]).optional(),
     /** Left icon name. */
     icon: z.string().optional(),
-    /** Action to execute on value change (debounced). */
-    changeAction: actionSchema.optional(),
+    /** Tiered event action hooks for input interactions. */
+    on: controlEventActionsSchema.optional(),
     slots: slotsSchema([
       "root",
       "label",

@@ -46,7 +46,9 @@ describe("Slider", () => {
           suffix: { from: "copy.sliderSuffix" },
           showValue: true,
           showLimits: false,
-          onChange: { type: "set-opacity" } as never,
+          on: {
+            change: { type: "set-opacity" } as never,
+          },
           slots: {
             root: { className: "slot-root" },
           },
@@ -61,7 +63,10 @@ describe("Slider", () => {
     fireEvent.change(screen.getByRole("slider"), { target: { value: "75" } });
 
     expect(screen.getByText("75%")).toBeTruthy();
-    expect(executeSpy).toHaveBeenCalledWith({ type: "set-opacity" }, { value: 75 });
+    expect(executeSpy).toHaveBeenCalledWith(
+      { type: "set-opacity" },
+      { id: undefined, value: 75 },
+    );
   });
 
   it("applies distinct start and end input slots in range mode", () => {

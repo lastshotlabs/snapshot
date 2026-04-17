@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, TouchEventHandler } from "react";
 import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
@@ -21,7 +21,16 @@ export interface TextareaControlProps {
     ariaDescribedBy?: string;
     ariaLabel?: string;
     onChangeText?: (value: string) => void;
-    onBlur?: () => void;
+    onBlur?: FocusEventHandler<HTMLTextAreaElement>;
+    onFocus?: FocusEventHandler<HTMLTextAreaElement>;
+    onClick?: MouseEventHandler<HTMLTextAreaElement>;
+    onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>;
+    onMouseEnter?: MouseEventHandler<HTMLTextAreaElement>;
+    onMouseLeave?: MouseEventHandler<HTMLTextAreaElement>;
+    onPointerDown?: PointerEventHandler<HTMLTextAreaElement>;
+    onPointerUp?: PointerEventHandler<HTMLTextAreaElement>;
+    onTouchStart?: TouchEventHandler<HTMLTextAreaElement>;
+    onTouchEnd?: TouchEventHandler<HTMLTextAreaElement>;
     className?: string;
     style?: CSSProperties;
     surfaceId?: string;

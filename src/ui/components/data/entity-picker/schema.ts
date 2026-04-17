@@ -29,7 +29,7 @@ export const entityPickerConfigSchema: z.ZodType<Record<string, any>> = extendCo
     /** Component type discriminator. */
     type: z.literal("entity-picker"),
     /** Trigger button label. Default: "Select...". */
-    label: z.string().optional(),
+    label: z.union([z.string(), fromRefSchema]).optional(),
     /** API endpoint to fetch entities. Example: "GET /api/users". */
     data: dataSourceSchema,
     /** Field name for display label. Default: "name". */

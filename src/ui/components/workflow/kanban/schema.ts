@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 export const kanbanSlotNames = [
   "root",
@@ -33,7 +33,7 @@ export const kanbanColumnSchema = z
     /** Unique key matching the value in the column field. */
     key: z.string(),
     /** Display title for the column header. */
-    title: z.string(),
+    title: z.union([z.string(), fromRefSchema]),
     /** Semantic color for the column header accent. */
     color: z
       .enum([
@@ -99,7 +99,7 @@ export const kanbanConfigSchema: z.ZodType<Record<string, any>> = extendComponen
   /** Action dispatched when a card is moved via drag-and-drop. */
   reorderAction: actionSchema.optional(),
   /** Message shown when a column has no cards. */
-  emptyMessage: z.string().optional(),
+  emptyMessage: z.union([z.string(), fromRefSchema]).optional(),
   /** Canonical slot contract for visible board surfaces. */
   slots: slotsSchema(kanbanSlotNames).optional(),
 }).strict();

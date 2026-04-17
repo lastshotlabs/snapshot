@@ -1,4 +1,4 @@
-import type { CSSProperties, FocusEventHandler, ReactNode } from "react";
+import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactNode, TouchEventHandler } from "react";
 import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
@@ -16,6 +16,15 @@ export interface SelectControlProps {
     ariaLabel?: string;
     onChangeValue?: (value: string) => void;
     onBlur?: FocusEventHandler<HTMLSelectElement>;
+    onFocus?: FocusEventHandler<HTMLSelectElement>;
+    onClick?: MouseEventHandler<HTMLSelectElement>;
+    onKeyDown?: KeyboardEventHandler<HTMLSelectElement>;
+    onMouseEnter?: MouseEventHandler<HTMLSelectElement>;
+    onMouseLeave?: MouseEventHandler<HTMLSelectElement>;
+    onPointerDown?: PointerEventHandler<HTMLSelectElement>;
+    onPointerUp?: PointerEventHandler<HTMLSelectElement>;
+    onTouchStart?: TouchEventHandler<HTMLSelectElement>;
+    onTouchEnd?: TouchEventHandler<HTMLSelectElement>;
     className?: string;
     style?: CSSProperties;
     surfaceId?: string;

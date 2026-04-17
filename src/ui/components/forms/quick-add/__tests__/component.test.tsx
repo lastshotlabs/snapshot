@@ -40,7 +40,9 @@ describe("QuickAdd", () => {
       <QuickAdd
         config={{
           type: "quick-add",
-          submitAction: { type: "create-task" } as never,
+          on: {
+            submit: { type: "create-task" } as never,
+          },
         }}
       />,
     );
@@ -49,7 +51,10 @@ describe("QuickAdd", () => {
     fireEvent.change(input, { target: { value: "Write docs" } });
     fireEvent.click(screen.getByTestId("quick-add-button"));
 
-    expect(executeSpy).toHaveBeenCalledWith({ type: "create-task" });
+    expect(executeSpy).toHaveBeenCalledWith(
+      { type: "create-task" },
+      { id: undefined, value: "Write docs" },
+    );
     expect(input.value).toBe("");
   });
 

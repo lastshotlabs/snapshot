@@ -7,6 +7,7 @@ const publishSpy = vi.hoisted(() => vi.fn());
 const refValues: Record<string, unknown> = {
   "gif.placeholder": "Resolved GIF search",
   "gif.attribution": "Resolved attribution",
+  "gif.title": "Resolved party parrot",
 };
 
 vi.mock("../../../../context/hooks", () => ({
@@ -17,6 +18,31 @@ vi.mock("../../../../context/hooks", () => ({
       ? refValues[(value as { from: string }).from]
       : value,
   usePublish: () => publishSpy,
+  useResolveFrom: <T,>(value: T) => {
+    const resolveRefs = (input: unknown): unknown => {
+      if (
+        input &&
+        typeof input === "object" &&
+        "from" in (input as Record<string, unknown>)
+      ) {
+        return refValues[(input as { from: string }).from];
+      }
+      if (Array.isArray(input)) {
+        return input.map((entry) => resolveRefs(entry));
+      }
+      if (input && typeof input === "object") {
+        return Object.fromEntries(
+          Object.entries(input as Record<string, unknown>).map(([key, nested]) => [
+            key,
+            resolveRefs(nested),
+          ]),
+        );
+      }
+      return input;
+    };
+
+    return resolveRefs(value);
+  },
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -98,5 +124,24 @@ describe("GifPicker", () => {
       "Resolved GIF search",
     );
     expect(screen.getByText("Resolved attribution")).toBeTruthy();
+  });
+
+  it("renders ref-backed static GIF titles", () => {
+    render(
+      <GifPicker
+        config={{
+          type: "gif-picker",
+          gifs: [
+            {
+              id: "party-parrot",
+              url: "https://example.com/parrot.gif",
+              title: { from: "gif.title" } as never,
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Resolved party parrot" })).toBeTruthy();
   });
 });

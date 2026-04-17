@@ -256,6 +256,7 @@ function EntityPickerItem({
 
 export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const triggerBaseLabel = useSubscribe(config.label) as string | undefined;
   const externalDefault = config.multiple ? EMPTY_ARRAY : "";
   const resolvedValue = useSubscribe(config.value ?? externalDefault);
   const executeAction = useActionExecutor();
@@ -412,7 +413,7 @@ export function EntityPicker({ config }: { config: EntityPickerConfig }) {
   const selectedEntities = entities.filter((entity) => selected.includes(entity.value));
   const triggerLabel =
     selectedEntities.length === 0
-      ? (config.label ?? "Select...")
+      ? (triggerBaseLabel ?? "Select...")
       : isMultiple
         ? `${selectedEntities.length} selected`
         : (selectedEntities[0]?.label ?? "");

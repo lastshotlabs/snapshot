@@ -23,8 +23,12 @@ export function ButtonControl({
   onKeyDown,
   onFocus,
   onBlur,
+  onPointerDown,
+  onPointerUp,
   onPointerEnter,
   onPointerLeave,
+  onTouchStart,
+  onTouchEnd,
   className,
   style,
   buttonRef,
@@ -103,8 +107,12 @@ export function ButtonControl({
         onKeyDown={onKeyDown}
         onFocus={onFocus}
         onBlur={onBlur}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
         data-sn-button=""
         data-variant={variant}
         data-snapshot-id={surfaceId}

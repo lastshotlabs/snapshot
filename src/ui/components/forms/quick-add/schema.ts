@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { formEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -26,8 +26,12 @@ export const quickAddConfigSchema = extendComponentSchema({
     placeholder: z.union([z.string(), fromRefSchema]).optional(),
     /** Left icon name. Default: "plus". */
     icon: z.string().optional(),
-    /** Action dispatched on submit with `{ value: string }` payload. */
-    submitAction: z.union([actionSchema, z.array(actionSchema)]).optional(),
+    /** Tiered event action hooks for submit lifecycle. */
+    on: formEventActionsSchema
+      .pick({
+        submit: true,
+      })
+      .optional(),
     /** Whether Enter key submits. Default: true. */
     submitOnEnter: z.boolean().optional(),
     /** Whether to show the submit button. Default: true. */

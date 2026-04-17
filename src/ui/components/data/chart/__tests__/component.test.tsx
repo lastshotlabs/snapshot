@@ -12,6 +12,10 @@ import { ManifestRuntimeContext } from "../../../../manifest/runtime";
 import { Chart } from "../component";
 import type { ChartConfig } from "../types";
 
+const chartCapture = vi.hoisted(() => ({
+  seriesNames: [] as string[],
+}));
+
 // Mock recharts for jsdom (no canvas available)
 vi.mock("recharts", () => ({
   BarChart: ({
@@ -50,9 +54,18 @@ vi.mock("recharts", () => ({
   PieChart: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="pie-chart">{children}</div>
   ),
-  Bar: () => null,
-  Line: () => null,
-  Area: () => null,
+  Bar: ({ name }: { name?: string }) => {
+    if (name) chartCapture.seriesNames.push(name);
+    return null;
+  },
+  Line: ({ name }: { name?: string }) => {
+    if (name) chartCapture.seriesNames.push(name);
+    return null;
+  },
+  Area: ({ name }: { name?: string }) => {
+    if (name) chartCapture.seriesNames.push(name);
+    return null;
+  },
   Pie: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="pie">{children}</div>
   ),
@@ -61,10 +74,33 @@ vi.mock("recharts", () => ({
   YAxis: () => null,
   CartesianGrid: () => null,
   Tooltip: ({ content }: { content?: (props: unknown) => React.ReactNode }) => (
-    <div data-testid="tooltip">{content?.({ active: true, label: "Jan", payload: [{ name: "Revenue", value: 4000, color: "#2563eb" }] })}</div>
+    <div
+      data-testid="tooltip"
+    >
+      {content?.({
+        active: true,
+        label: "Jan",
+        payload: [
+          {
+            name: chartCapture.seriesNames[0] ?? "Revenue",
+            value: 4000,
+            color: "#2563eb",
+          },
+        ],
+      })}
+    </div>
   ),
   Legend: ({ content }: { content?: (props: unknown) => React.ReactNode }) => (
-    <div data-testid="legend">{content?.({ payload: [{ value: "Revenue", color: "#2563eb" }] })}</div>
+    <div data-testid="legend">
+      {content?.({
+        payload: [
+          {
+            value: chartCapture.seriesNames[0] ?? "Revenue",
+            color: "#2563eb",
+          },
+        ],
+      })}
+    </div>
   ),
   ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="responsive-container">{children}</div>
@@ -73,6 +109,7 @@ vi.mock("recharts", () => ({
 
 afterEach(() => {
   cleanup();
+  chartCapture.seriesNames = [];
 });
 
 const testData = [
@@ -298,6 +335,48 @@ describe("Chart component", () => {
     ).toContain("chart-legend-slot");
     expect(root?.style.height).toBe("");
     expect(chartFrame?.style.height).toBe("240px");
+  });
+
+  it("renders ref-backed empty copy", () => {
+    const { Wrapper, registry } = createWrapper([]);
+    const copyAtom = registry.register("chart-copy");
+    registry.store.set(copyAtom, {
+      legend: "Gross revenue",
+      empty: "Nothing to chart",
+    });
+
+    render(
+      <Wrapper>
+        <Chart
+          config={baseConfig({
+            emptyMessage: { from: "state.chart-copy.empty" } as never,
+            series: [{ key: "revenue", label: { from: "state.chart-copy.legend" } as never }],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Nothing to chart")).toBeDefined();
+  });
+
+  it("renders ref-backed series labels", () => {
+    const { Wrapper, registry } = createWrapper(testData);
+    const copyAtom = registry.register("chart-copy");
+    registry.store.set(copyAtom, {
+      legend: "Gross revenue",
+    });
+
+    render(
+      <Wrapper>
+        <Chart
+          config={baseConfig({
+            series: [{ key: "revenue", label: { from: "state.chart-copy.legend" } as never }],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Gross revenue")).toBeDefined();
   });
 
   it("projects aggregate alias values onto configured series keys", () => {

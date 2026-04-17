@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { cloneElement, useMemo, type ReactElement } from "react";
 import { useAtomValue } from "jotai/react";
 import {
   Area,
@@ -54,6 +54,7 @@ import {
   resolveLookupValue,
   useLookupMaps,
 } from "../_shared/lookups";
+import { useResolveFrom } from "../../../context/hooks";
 
 const DEFAULT_COLORS = [
   "var(--sn-chart-1, #2563eb)",
@@ -114,6 +115,48 @@ function resolveYAxisDivisor(config: ChartConfig): number | undefined {
     (divisor): divisor is number => typeof divisor === "number" && divisor > 0,
   ))];
   return divisors.length === 1 ? divisors[0] : undefined;
+}
+
+function getSeriesLabel(
+  label: ChartConfig["series"][number]["label"] | undefined,
+): string {
+  return typeof label === "string" ? label : "Series";
+}
+
+function getResponsiveContainerProps(config: ChartConfig) {
+  return {
+    width: "100%" as const,
+    height: "100%" as const,
+    minWidth: 0,
+    minHeight:
+      typeof config.height === "number" && Number.isFinite(config.height)
+        ? config.height
+        : 1,
+  };
+}
+
+function ChartFrame({
+  config,
+  children,
+}: {
+  config: ChartConfig;
+  children: ReactElement;
+}) {
+  if (typeof window === "undefined") {
+    return cloneElement(children as ReactElement<Record<string, unknown>>, {
+      width: 800,
+      height:
+        typeof config.height === "number" && Number.isFinite(config.height)
+          ? config.height
+          : 300,
+    });
+  }
+
+  return (
+    <ResponsiveContainer {...getResponsiveContainerProps(config)}>
+      {children}
+    </ResponsiveContainer>
+  );
 }
 
 function toAutoEmptyStateConfig(
@@ -358,7 +401,7 @@ function ChartSurface({
 
     return (
       <>
-        <ResponsiveContainer width="100%" height="100%">
+        <ChartFrame config={config}>
           <PieChart margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
             <Pie
               data={pieData}
@@ -380,7 +423,7 @@ function ChartSurface({
             <Tooltip content={tooltipContent} />
             {config.legend ? <Legend content={legendContent} /> : null}
           </PieChart>
-        </ResponsiveContainer>
+        </ChartFrame>
         {slotStyles}
       </>
     );
@@ -389,7 +432,7 @@ function ChartSurface({
   if (config.chartType === "radar") {
     return (
       <>
-        <ResponsiveContainer width="100%" height="100%">
+        <ChartFrame config={config}>
           <RadarChart data={rows}>
             <PolarGrid />
             <PolarAngleAxis dataKey={config.xKey} />
@@ -400,7 +443,7 @@ function ChartSurface({
               (series: ChartConfig["series"][number], index: number) => (
                 <Radar
                   key={series.key}
-                  name={series.label}
+                  name={getSeriesLabel(series.label)}
                   dataKey={series.key}
                   stroke={getSeriesColor(series.color, index)}
                   fill={getSeriesColor(series.color, index)}
@@ -415,7 +458,7 @@ function ChartSurface({
               ),
             )}
           </RadarChart>
-        </ResponsiveContainer>
+        </ChartFrame>
         {slotStyles}
       </>
     );
@@ -424,7 +467,7 @@ function ChartSurface({
   if (config.chartType === "scatter") {
     return (
       <>
-        <ResponsiveContainer width="100%" height="100%">
+        <ChartFrame config={config}>
           <ScatterChart margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             {config.grid ? <CartesianGrid {...gridStyle} /> : null}
             <XAxis
@@ -455,7 +498,7 @@ function ChartSurface({
             />
             {config.legend ? <Legend content={legendContent} /> : null}
             <Scatter
-              name={config.series[0]?.label ?? "Series"}
+              name={getSeriesLabel(config.series[0]?.label)}
               data={rows.map((row) => ({
                 ...row,
                 [config.xKey]: Number(row[config.xKey] ?? 0),
@@ -472,7 +515,7 @@ function ChartSurface({
               }
             />
           </ScatterChart>
-        </ResponsiveContainer>
+        </ChartFrame>
         {slotStyles}
       </>
     );
@@ -482,7 +525,7 @@ function ChartSurface({
     const dataKey = config.series[0]?.key ?? "value";
     return (
       <>
-        <ResponsiveContainer width="100%" height="100%">
+        <ChartFrame config={config}>
           <Treemap
             data={rows}
             dataKey={dataKey}
@@ -493,7 +536,7 @@ function ChartSurface({
               chartClick(entry as unknown as Record<string, unknown>, dataKey)
             }
           />
-        </ResponsiveContainer>
+        </ChartFrame>
         {slotStyles}
       </>
     );
@@ -503,7 +546,7 @@ function ChartSurface({
     const dataKey = config.series[0]?.key ?? "value";
     return (
       <>
-        <ResponsiveContainer width="100%" height="100%">
+        <ChartFrame config={config}>
           <FunnelChart>
             <Tooltip content={tooltipContent} />
             <Funnel
@@ -522,7 +565,7 @@ function ChartSurface({
               ))}
             </Funnel>
           </FunnelChart>
-        </ResponsiveContainer>
+        </ChartFrame>
         {slotStyles}
       </>
     );
@@ -538,7 +581,7 @@ function ChartSurface({
 
   return (
     <>
-      <ResponsiveContainer width="100%" height="100%">
+      <ChartFrame config={config}>
         <ChartWrapper
           data={rows}
           margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
@@ -587,7 +630,7 @@ function ChartSurface({
                   <Bar
                     key={series.key}
                     dataKey={series.key}
-                    name={series.label}
+                    name={getSeriesLabel(series.label)}
                     fill={color}
                     radius={4}
                     onClick={(entry) =>
@@ -605,7 +648,7 @@ function ChartSurface({
                     key={series.key}
                     type="monotone"
                     dataKey={series.key}
-                    name={series.label}
+                    name={getSeriesLabel(series.label)}
                     stroke={color}
                     fill={color}
                     fillOpacity={0.2}
@@ -624,7 +667,7 @@ function ChartSurface({
                   key={series.key}
                   type="monotone"
                   dataKey={series.key}
-                  name={series.label}
+                  name={getSeriesLabel(series.label)}
                   stroke={color}
                   strokeWidth={isSparkline ? 3 : 2}
                   dot={false}
@@ -639,7 +682,7 @@ function ChartSurface({
             },
           )}
         </ChartWrapper>
-      </ResponsiveContainer>
+      </ChartFrame>
       {slotStyles}
     </>
   );
@@ -652,6 +695,11 @@ export function Chart({ config }: { config: ChartConfig }) {
   const wsManager = useAtomValue(wsManagerAtom);
   const isRef = isFromRef(config.data);
   const resolvedRef = useSubscribe(config.data);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
+  const resolvedStaticConfig = useResolveFrom({
+    series: config.series,
+    empty: config.empty,
+  });
   const {
     data: fetchedData,
     isLoading,
@@ -665,15 +713,22 @@ export function Chart({ config }: { config: ChartConfig }) {
     }
     return normalizeMetricRows(fetchedData);
   }, [fetchedData, isRef, resolvedRef]);
+  const resolvedSeries =
+    ((resolvedStaticConfig.series as ChartConfig["series"] | undefined) ??
+      config.series) as ChartConfig["series"];
+  const resolvedChartConfig = useMemo(
+    () => ({ ...config, series: resolvedSeries }),
+    [config, resolvedSeries],
+  );
   const chartRows = useMemo<Record<string, unknown>[]>(() => {
     const projectedRows = projectMetricRows(
       rows,
-      config.series.map((series) => series.key),
+      resolvedSeries.map((series) => series.key),
     );
     return projectedRows.map((row) => {
       const nextRow: Record<string, unknown> = { ...row };
 
-      for (const series of config.series) {
+      for (const series of resolvedSeries) {
         const rawValue = nextRow[series.key];
         const numericValue =
           typeof rawValue === "number" ? rawValue : Number(rawValue);
@@ -688,26 +743,31 @@ export function Chart({ config }: { config: ChartConfig }) {
 
       return nextRow;
     });
-  }, [config.series, rows]);
+  }, [resolvedSeries, rows]);
   const lookupMaps = useLookupMaps(
-    config.xLookup
-      ? [{ key: config.xKey, lookup: config.xLookup }]
+    resolvedChartConfig.xLookup
+      ? [{ key: resolvedChartConfig.xKey, lookup: resolvedChartConfig.xLookup }]
       : [],
   );
   const displayRows = useMemo<Record<string, unknown>[]>(() => {
-    if (!config.xLookup) {
+    if (!resolvedChartConfig.xLookup) {
       return chartRows;
     }
 
     return chartRows.map((row) => ({
       ...row,
-      [config.xKey]: resolveLookupValue(
-        row[config.xKey],
-        config.xLookup,
+      [resolvedChartConfig.xKey]: resolveLookupValue(
+        row[resolvedChartConfig.xKey],
+        resolvedChartConfig.xLookup,
         lookupMaps,
       ),
     }));
-  }, [chartRows, config.xKey, config.xLookup, lookupMaps]);
+  }, [
+    chartRows,
+    lookupMaps,
+    resolvedChartConfig.xKey,
+    resolvedChartConfig.xLookup,
+  ]);
 
   const liveConfig = useMemo(
     () =>
@@ -731,8 +791,11 @@ export function Chart({ config }: { config: ChartConfig }) {
     enabled: liveConfig !== null,
   });
   const emptyStateConfig = useMemo(
-    () => toAutoEmptyStateConfig(config.empty),
-    [config.empty],
+    () =>
+      toAutoEmptyStateConfig(
+        (resolvedStaticConfig.empty ?? config.empty) as ChartConfig["empty"],
+      ),
+    [config.empty, resolvedStaticConfig.empty],
   );
   const rootId = config.id ?? "chart";
   const rootSurface = resolveSurfacePresentation({
@@ -840,14 +903,18 @@ export function Chart({ config }: { config: ChartConfig }) {
                 fontSize: "var(--sn-font-size-md, 1rem)",
               }}
             >
-              {config.emptyMessage}
+              {emptyMessage ?? "No data"}
             </div>
           )
         ) : null}
 
         {!loading && !fetchError && displayRows.length > 0 ? (
           <div data-chart-content="" style={{ width: "100%", height: "100%" }}>
-            <ChartSurface config={config} rows={displayRows} rootId={rootId} />
+            <ChartSurface
+              config={resolvedChartConfig}
+              rows={displayRows}
+              rootId={rootId}
+            />
           </div>
         ) : null}
       </div>

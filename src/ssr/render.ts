@@ -103,6 +103,13 @@ export function renderPage(
 ): Promise<Response> {
   return withRequestStore(async () => {
     const { queryClient } = context;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const clearRenderTimeout = () => {
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+        timeoutId = undefined;
+      }
+    };
 
     // Serialize dehydrated QueryClient cache for client hydration
     const dehydratedState = serializeQueryState(queryClient, shell.nonce);
@@ -122,7 +129,7 @@ export function renderPage(
     );
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     let stream: ReadableStream<Uint8Array>;
     try {
@@ -207,8 +214,9 @@ export function renderPage(
           },
         });
       }
-    } finally {
-      clearTimeout(timeoutId);
+    } catch (error) {
+      clearRenderTimeout();
+      throw error;
     }
 
     // After the render (and therefore after any loaders have run), check whether
@@ -223,7 +231,12 @@ export function renderPage(
     const preambleBytes = encoder.encode(preamble);
     const postambleBytes = encoder.encode(POSTAMBLE);
 
-    const body = buildConcatenatedStream(preambleBytes, stream, postambleBytes);
+    const body = buildConcatenatedStream(
+      preambleBytes,
+      stream,
+      postambleBytes,
+      clearRenderTimeout,
+    );
 
     return new Response(body, {
       status: responseInit?.status ?? 200,
@@ -248,13 +261,13 @@ function buildConcatenatedStream(
   preamble: Uint8Array,
   reactStream: ReadableStream<Uint8Array>,
   postamble: Uint8Array,
+  onComplete?: () => void,
 ): ReadableStream<Uint8Array> {
   return new ReadableStream<Uint8Array>({
     async start(controller) {
+      const reader = reactStream.getReader();
       try {
         controller.enqueue(preamble);
-
-        const reader = reactStream.getReader();
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -265,7 +278,14 @@ function buildConcatenatedStream(
         controller.close();
       } catch (err) {
         controller.error(err);
+      } finally {
+        reader.releaseLock();
+        onComplete?.();
       }
+    },
+    async cancel(reason) {
+      onComplete?.();
+      await reactStream.cancel(reason);
     },
   });
 }

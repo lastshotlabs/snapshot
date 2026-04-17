@@ -5,7 +5,19 @@ export declare const accordionSlotNames: readonly ["root", "item", "trigger", "t
  */
 export declare const accordionItemSchema: z.ZodObject<{
     /** Display title for the accordion header. */
-    title: z.ZodString;
+    title: z.ZodUnion<[z.ZodString, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>;
     /** Child components rendered inside the collapsible panel. */
     content: z.ZodArray<z.ZodType<any, z.ZodTypeDef, any>, "many">;
     /** Optional icon name displayed before the title. */
@@ -16,6 +28,7 @@ export declare const accordionItemSchema: z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -519,6 +532,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -1023,6 +1037,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1213,6 +1228,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1404,6 +1420,7 @@ export declare const accordionItemSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -1594,6 +1611,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -1785,6 +1803,7 @@ export declare const accordionItemSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -1975,6 +1994,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2167,6 +2187,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2357,6 +2378,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2549,6 +2571,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2739,6 +2762,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2931,6 +2955,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3121,6 +3146,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3313,6 +3339,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3503,6 +3530,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3695,6 +3723,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -3885,6 +3914,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4078,6 +4108,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4268,6 +4299,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4460,6 +4492,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -4650,6 +4683,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4842,6 +4876,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5032,6 +5067,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5224,6 +5260,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5414,6 +5451,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5606,6 +5644,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -5796,6 +5835,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5984,8 +6024,12 @@ export declare const accordionItemSchema: z.ZodObject<{
         } | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    title: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    };
     content: any[];
-    title: string;
     disabled?: boolean | undefined;
     slots?: {
         content?: {
@@ -5994,6 +6038,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6184,6 +6229,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6376,6 +6422,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6566,6 +6613,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6758,6 +6806,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -6948,6 +6997,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7140,6 +7190,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -7330,6 +7381,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7522,6 +7574,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -7712,6 +7765,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7901,8 +7955,12 @@ export declare const accordionItemSchema: z.ZodObject<{
     } | undefined;
     icon?: string | undefined;
 }, {
+    title: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    };
     content: any[];
-    title: string;
     disabled?: boolean | undefined;
     slots?: {
         content?: {
@@ -7911,6 +7969,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8101,6 +8160,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8293,6 +8353,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8483,6 +8544,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -8675,6 +8737,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8865,6 +8928,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9057,6 +9121,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9247,6 +9312,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9439,6 +9505,7 @@ export declare const accordionItemSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9629,6 +9696,7 @@ export declare const accordionItemSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9842,6 +9910,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -10505,7 +10574,19 @@ export declare const accordionConfigSchema: z.ZodObject<{
     type: z.ZodLiteral<"accordion">;
     items: z.ZodArray<z.ZodObject<{
         /** Display title for the accordion header. */
-        title: z.ZodString;
+        title: z.ZodUnion<[z.ZodString, z.ZodObject<{
+            from: z.ZodString;
+            transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+            transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+        }, "strict", z.ZodTypeAny, {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        }, {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        }>]>;
         /** Child components rendered inside the collapsible panel. */
         content: z.ZodArray<z.ZodType<any, z.ZodTypeDef, any>, "many">;
         /** Optional icon name displayed before the title. */
@@ -10516,6 +10597,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodString>;
             readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
             readonly cursor: z.ZodOptional<z.ZodString>;
+            readonly backgroundColor: z.ZodOptional<z.ZodString>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
             readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -11019,6 +11101,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
                 readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+                readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -11523,6 +11606,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -11713,6 +11797,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -11904,6 +11989,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12094,6 +12180,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12285,6 +12372,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12475,6 +12563,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12667,6 +12756,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12857,6 +12947,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -13049,6 +13140,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13239,6 +13331,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -13431,6 +13524,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13621,6 +13715,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -13813,6 +13908,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14003,6 +14099,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -14195,6 +14292,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14385,6 +14483,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -14578,6 +14677,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14768,6 +14868,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -14960,6 +15061,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15150,6 +15252,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -15342,6 +15445,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15532,6 +15636,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -15724,6 +15829,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15914,6 +16020,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -16106,6 +16213,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -16296,6 +16404,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -16484,8 +16593,12 @@ export declare const accordionConfigSchema: z.ZodObject<{
             } | undefined;
         }>>;
     }, "strip", z.ZodTypeAny, {
+        title: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        };
         content: any[];
-        title: string;
         disabled?: boolean | undefined;
         slots?: {
             content?: {
@@ -16494,6 +16607,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -16684,6 +16798,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -16876,6 +16991,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17066,6 +17182,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -17258,6 +17375,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17448,6 +17566,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -17640,6 +17759,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17830,6 +17950,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -18022,6 +18143,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18212,6 +18334,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -18401,8 +18524,12 @@ export declare const accordionConfigSchema: z.ZodObject<{
         } | undefined;
         icon?: string | undefined;
     }, {
+        title: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        };
         content: any[];
-        title: string;
         disabled?: boolean | undefined;
         slots?: {
             content?: {
@@ -18411,6 +18538,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18601,6 +18729,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -18793,6 +18922,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18983,6 +19113,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -19175,6 +19306,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -19365,6 +19497,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -19557,6 +19690,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -19747,6 +19881,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -19939,6 +20074,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -20129,6 +20265,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -20326,6 +20463,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -20829,6 +20967,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -21333,6 +21472,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -21523,6 +21663,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -21714,6 +21855,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -21904,6 +22046,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -22095,6 +22238,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -22285,6 +22429,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -22477,6 +22622,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -22667,6 +22813,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -22859,6 +23006,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -23049,6 +23197,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -23241,6 +23390,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -23431,6 +23581,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -23623,6 +23774,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -23813,6 +23965,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -24005,6 +24158,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24195,6 +24349,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -24387,6 +24542,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24577,6 +24733,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -24770,6 +24927,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -24960,6 +25118,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -25152,6 +25311,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -25342,6 +25502,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -25534,6 +25695,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -25724,6 +25886,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -25916,6 +26079,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -26106,6 +26270,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -26298,6 +26463,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -26488,6 +26654,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -26680,6 +26847,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -26870,6 +27038,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -27060,8 +27229,12 @@ export declare const accordionConfigSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     type: "accordion";
     items: {
+        title: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        };
         content: any[];
-        title: string;
         disabled?: boolean | undefined;
         slots?: {
             content?: {
@@ -27070,6 +27243,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -27260,6 +27434,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -27452,6 +27627,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -27642,6 +27818,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -27834,6 +28011,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -28024,6 +28202,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -28216,6 +28395,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -28406,6 +28586,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -28598,6 +28779,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -28788,6 +28970,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -29008,6 +29191,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -29228,6 +29412,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -29418,6 +29603,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -29610,6 +29796,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -29800,6 +29987,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -29992,6 +30180,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -30182,6 +30371,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -30374,6 +30564,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -30564,6 +30755,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -30756,6 +30948,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -30946,6 +31139,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -31138,6 +31332,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -31328,6 +31523,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -31522,8 +31718,12 @@ export declare const accordionConfigSchema: z.ZodObject<{
 }, {
     type: "accordion";
     items: {
+        title: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        };
         content: any[];
-        title: string;
         disabled?: boolean | undefined;
         slots?: {
             content?: {
@@ -31532,6 +31732,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -31722,6 +31923,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -31914,6 +32116,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -32104,6 +32307,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -32296,6 +32500,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -32486,6 +32691,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -32678,6 +32884,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -32868,6 +33075,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -33060,6 +33268,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -33250,6 +33459,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -33470,6 +33680,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -33690,6 +33901,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -33880,6 +34092,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -34072,6 +34285,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -34262,6 +34476,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -34454,6 +34669,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -34644,6 +34860,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -34836,6 +35053,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -35026,6 +35244,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -35218,6 +35437,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -35408,6 +35628,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -35600,6 +35821,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -35790,6 +36012,7 @@ export declare const accordionConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;

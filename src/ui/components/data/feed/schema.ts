@@ -6,7 +6,7 @@ import {
   loadingConfigSchema,
 } from "../../../manifest/schema";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Zod schema for the Feed component configuration.
@@ -56,7 +56,7 @@ export const feedSchema: z.ZodType<Record<string, any>> = extendComponentSchema(
       })
       .optional(),
     /** Message shown when there are no items. */
-    emptyMessage: z.string().default("No activity yet"),
+    emptyMessage: z.union([z.string(), fromRefSchema]).default("No activity yet"),
     /** Number of items per page. */
     pageSize: z.number().int().min(1).default(20),
     /** Infinite scroll toggle. */
@@ -70,7 +70,7 @@ export const feedSchema: z.ZodType<Record<string, any>> = extendComponentSchema(
       .array(
         z
           .object({
-            label: z.string(),
+            label: z.union([z.string(), fromRefSchema]),
             icon: z.string().optional(),
             action: z.union([actionSchema, z.array(actionSchema)]),
             variant: z.enum(["default", "destructive"]).optional(),

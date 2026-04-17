@@ -15,4 +15,4 @@ import type { PrefetchLinkProps } from "./schema";
  *
  * @param config - Config object validated by `prefetchLinkSchema`.
  */
-export declare function PrefetchLink({ id, to, prefetch, children, className, style, slots, target, rel, }: PrefetchLinkProps): import("react/jsx-runtime").JSX.Element;
+export declare function PrefetchLink(config: PrefetchLinkProps): import("react/jsx-runtime").JSX.Element;

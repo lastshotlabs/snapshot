@@ -190,6 +190,22 @@ describe("detailCardConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts FromRef field labels, action labels, and empty state", () => {
+    const result = detailCardConfigSchema.safeParse({
+      ...baseConfig,
+      fields: [{ field: "name", label: { from: "detail.labels.name" } }],
+      actions: [
+        {
+          label: { from: "detail.actions.edit" },
+          action: { type: "open-modal", modal: "edit-user" },
+        },
+      ],
+      emptyState: { from: "detail.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("rejects invalid type", () => {
     const result = detailCardConfigSchema.safeParse({
       ...baseConfig,

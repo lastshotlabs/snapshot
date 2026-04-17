@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -327,11 +328,16 @@ export function TagSelector({ config }: { config: TagSelectorConfig }) {
       if (publish) {
         publish({ value: newValues });
       }
-      if (config.changeAction) {
-        void executeAction(config.changeAction, { value: newValues });
-      }
+      void executeEventAction(executeAction, config.on?.change, {
+        id: config.id,
+        value: newValues,
+      });
+      void executeEventAction(executeAction, config.on?.input, {
+        id: config.id,
+        value: newValues,
+      });
     },
-    [config.changeAction, executeAction, publish],
+    [config.id, config.on?.change, config.on?.input, executeAction, publish],
   );
 
   const addTag = useCallback(

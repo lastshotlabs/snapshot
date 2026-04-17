@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from "react";
-import { useSubscribe } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -242,6 +242,7 @@ function DetailsSection({
 export function AuditLog({ config }: { config: AuditLogConfig }) {
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedConfig = useResolveFrom({ filters: config.filters });
   const rootId = config.id ?? "audit-log";
 
   const userField = config.userField ?? "user";
@@ -250,6 +251,20 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
 
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
+  const filters = useMemo(
+    () =>
+      ((resolvedConfig.filters as AuditLogConfig["filters"] | undefined) ??
+        config.filters ??
+        []
+      ).map((filter: NonNullable<AuditLogConfig["filters"]>[number]) => ({
+        ...filter,
+        label: typeof filter.label === "string" ? filter.label : "",
+        options: filter.options.map((option: string) =>
+          typeof option === "string" ? option : "",
+        ),
+      })),
+    [config.filters, resolvedConfig.filters],
+  );
 
   const pageSize = useMemo(() => {
     if (config.pagination === false) return Infinity;
@@ -392,14 +407,14 @@ export function AuditLog({ config }: { config: AuditLogConfig }) {
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        {config.filters && config.filters.length > 0 ? (
+        {filters.length > 0 ? (
           <div
             data-audit-filters
             data-snapshot-id={`${rootId}-filters`}
             className={filtersSurface.className}
             style={filtersSurface.style}
           >
-            {config.filters.map((filter: AuditFilterConfig) => {
+            {filters.map((filter: AuditFilterConfig) => {
               const filterSurface = resolveSurfacePresentation({
                 surfaceId: `${rootId}-filter-${filter.field}`,
                 implementationBase: {

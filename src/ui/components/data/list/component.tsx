@@ -841,7 +841,14 @@ export function ListComponent({ config }: { config: ListConfig }) {
       {/* Loading state */}
       {isLoading && (
         config.loading && !config.loading.disabled ? (
-          <AutoSkeleton componentType="list" config={config.loading} />
+          <div
+            data-testid="list-loading"
+            data-snapshot-id={`${rootId}-loading`}
+            className={loadingSurface.className}
+            style={loadingSurface.style}
+          >
+            <AutoSkeleton componentType="list" config={config.loading} />
+          </div>
         ) : (
           <div
             data-testid="list-loading"

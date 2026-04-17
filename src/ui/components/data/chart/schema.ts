@@ -6,7 +6,7 @@ import {
   loadingConfigSchema,
 } from "../../../manifest/schema";
 import { dataSourceSchema } from "../../../manifest/resources";
-import { pollConfigSchema } from "../../_base/types";
+import { fromRefSchema, pollConfigSchema } from "../../_base/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 export const chartSlotNames = [
@@ -27,7 +27,7 @@ export const seriesConfigSchema = z
     /** Data key in each data record. */
     key: z.string(),
     /** Display label for this series (legend, tooltip). */
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     /** CSS color value or CSS variable (e.g. "var(--sn-chart-1)"). */
     color: z.string().optional(),
     /** Divide numeric series values before display (e.g. cents to dollars). */
@@ -85,7 +85,7 @@ export const chartSchema = extendComponentSchema({
     /** Whether to show grid lines. */
     grid: z.boolean().default(true),
     /** Message shown when there is no data. */
-    emptyMessage: z.string().default("No data"),
+    emptyMessage: z.union([z.string(), fromRefSchema]).default("No data"),
     /** Rich empty state config. */
     empty: emptyStateConfigSchema.optional(),
     /** Hide the entire component (including its container) when there is no data. */

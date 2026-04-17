@@ -3,6 +3,8 @@ import type {
   FocusEventHandler,
   KeyboardEventHandler,
   MouseEventHandler,
+  PointerEventHandler,
+  TouchEventHandler,
 } from "react";
 import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
@@ -48,10 +50,16 @@ export interface InputControlProps {
   onChangeText?: (value: string) => void;
   onChangeChecked?: (checked: boolean) => void;
   onChangeFiles?: (files: FileList | null) => void;
-  onBlur?: () => void;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onClick?: MouseEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onMouseEnter?: MouseEventHandler<HTMLInputElement>;
+  onMouseLeave?: MouseEventHandler<HTMLInputElement>;
+  onPointerDown?: PointerEventHandler<HTMLInputElement>;
+  onPointerUp?: PointerEventHandler<HTMLInputElement>;
+  onTouchStart?: TouchEventHandler<HTMLInputElement>;
+  onTouchEnd?: TouchEventHandler<HTMLInputElement>;
   className?: string;
   style?: CSSProperties;
   surfaceId?: string;

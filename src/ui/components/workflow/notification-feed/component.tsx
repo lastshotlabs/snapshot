@@ -135,6 +135,7 @@ export function NotificationFeed({
   const { data, isLoading, error } = useComponentData(config.data, undefined);
   const execute = useActionExecutor();
   const visible = useSubscribe(config.visible ?? true);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
 
   const titleField = config.titleField ?? "title";
   const messageField = config.messageField ?? "message";
@@ -458,7 +459,7 @@ export function NotificationFeed({
             className={emptyStateSurface.className}
             style={emptyStateSurface.style}
           >
-            {config.emptyMessage ?? "No notifications"}
+            {emptyMessage ?? "No notifications"}
           </div>
         )}
 

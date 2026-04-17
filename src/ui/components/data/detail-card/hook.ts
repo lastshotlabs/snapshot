@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { isFromRef } from "../../../context/utils";
 import {
   buildRequestUrl,
@@ -92,7 +92,7 @@ function resolveFields(
 
   return fieldsConfig.map((fc) => ({
     field: fc.field,
-    label: fc.label ?? humanizeFieldName(fc.field),
+    label: typeof fc.label === "string" ? fc.label : humanizeFieldName(fc.field),
     value: getFieldValue(data, fc.field),
     format: fc.format ?? "text",
     copyable: fc.copyable ?? false,
@@ -131,6 +131,9 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
 
   // Resolve title — could be a FromRef or a static string
   const resolvedTitle = useSubscribe(config.title) as string | undefined;
+  const resolvedStaticConfig = useResolveFrom({
+    fields: Array.isArray(config.fields) ? config.fields : undefined,
+  });
 
   // Resolve params — each value could be a FromRef
   const resolvedParams: Record<string, unknown> = {};
@@ -224,7 +227,11 @@ export function useDetailCard(config: DetailCardConfig): UseDetailCardResult {
       : null;
 
   // Resolve fields
-  const fieldsConfig = config.fields ?? "auto";
+  const fieldsConfig =
+    config.fields === "auto" || config.fields === undefined
+      ? (config.fields ?? "auto")
+      : ((resolvedStaticConfig.fields as DetailFieldConfig[] | undefined) ??
+        config.fields);
   const fields = useMemo(
     () => (data ? resolveFields(data, fieldsConfig) : []),
     [data, fieldsConfig],

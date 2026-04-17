@@ -1,7 +1,16 @@
 'use client';
 
 import { useEffect, useMemo, useState } from "react";
+import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
+import {
+  executeEventAction,
+  focusEventPayload,
+  keyEventPayload,
+  mouseEventPayload,
+  pointerEventPayload,
+  touchEventPayload,
+} from "../../_base/events";
 import { useComponentData } from "../../_base/use-component-data";
 import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -65,6 +74,15 @@ export function SelectControl({
   ariaLabel,
   onChangeValue,
   onBlur,
+  onFocus,
+  onClick,
+  onKeyDown,
+  onMouseEnter,
+  onMouseLeave,
+  onPointerDown,
+  onPointerUp,
+  onTouchStart,
+  onTouchEnd,
   className,
   style,
   surfaceId,
@@ -102,6 +120,7 @@ export function SelectControl({
       width: "100%",
       style: {
         appearance: "none",
+        cursor: "pointer",
         boxSizing: "border-box",
         padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
         fontSize: "var(--sn-font-size-sm, 0.875rem)",
@@ -145,6 +164,15 @@ export function SelectControl({
         required={required}
         onChange={(event) => onChangeValue?.(event.target.value)}
         onBlur={onBlur}
+        onFocus={onFocus}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
         aria-invalid={ariaInvalid}
         aria-describedby={ariaDescribedBy}
         aria-label={ariaLabel}
@@ -161,6 +189,7 @@ export function SelectControl({
 }
 
 export function Select({ config }: { config: SelectConfig }) {
+  const execute = useActionExecutor();
   const publish = config.id ? usePublish(config.id) : null;
   const resolvedDefault = useSubscribe(config.default ?? "");
   const resolvedPlaceholder = useSubscribe(config.placeholder ?? "");
@@ -200,6 +229,11 @@ export function Select({ config }: { config: SelectConfig }) {
     publish?.(value);
   }, [publish, value]);
 
+  const buildPayload = (nextValue = value) => ({
+    id: config.id,
+    value: nextValue,
+  });
+
   if (visible === false) {
     return null;
   }
@@ -230,7 +264,82 @@ export function Select({ config }: { config: SelectConfig }) {
         selectId={config.id}
         value={value}
         ariaLabel={placeholder || config.id || "Select"}
-        onChangeValue={setValue}
+        onChangeValue={(nextValue) => {
+          setValue(nextValue);
+          const payload = buildPayload(nextValue);
+          void executeEventAction(execute, config.on?.input, payload);
+          void executeEventAction(execute, config.on?.change, payload);
+        }}
+        onBlur={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.blur,
+            focusEventPayload(event, buildPayload()),
+          );
+        }}
+        onFocus={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.focus,
+            focusEventPayload(event, buildPayload()),
+          );
+        }}
+        onClick={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.click,
+            mouseEventPayload(event, buildPayload()),
+          );
+        }}
+        onKeyDown={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.keyDown,
+            keyEventPayload(event, buildPayload()),
+          );
+        }}
+        onMouseEnter={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.mouseEnter,
+            mouseEventPayload(event, buildPayload()),
+          );
+        }}
+        onMouseLeave={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.mouseLeave,
+            mouseEventPayload(event, buildPayload()),
+          );
+        }}
+        onPointerDown={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.pointerDown,
+            pointerEventPayload(event, buildPayload()),
+          );
+        }}
+        onPointerUp={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.pointerUp,
+            pointerEventPayload(event, buildPayload()),
+          );
+        }}
+        onTouchStart={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.touchStart,
+            touchEventPayload(event, buildPayload()),
+          );
+        }}
+        onTouchEnd={(event) => {
+          void executeEventAction(
+            execute,
+            config.on?.touchEnd,
+            touchEventPayload(event, buildPayload()),
+          );
+        }}
         surfaceId={`${rootId}-control`}
         surfaceConfig={config.slots?.control}
       >

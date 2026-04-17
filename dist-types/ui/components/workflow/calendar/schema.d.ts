@@ -4,7 +4,19 @@ import { z } from "zod";
  */
 export declare const calendarEventSchema: z.ZodObject<{
     /** Event title text. */
-    title: z.ZodString;
+    title: z.ZodUnion<[z.ZodString, z.ZodObject<{
+        from: z.ZodString;
+        transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+        transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+    }, "strict", z.ZodTypeAny, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }, {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    }>]>;
     /** Event start date (ISO 8601 string). */
     date: z.ZodString;
     /** Event end date (ISO 8601 string). Optional for single-day events. */
@@ -15,13 +27,21 @@ export declare const calendarEventSchema: z.ZodObject<{
     allDay: z.ZodOptional<z.ZodBoolean>;
 }, "strict", z.ZodTypeAny, {
     date: string;
-    title: string;
+    title: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    };
     color?: "destructive" | "success" | "warning" | "info" | "primary" | "secondary" | undefined;
     endDate?: string | undefined;
     allDay?: boolean | undefined;
 }, {
     date: string;
-    title: string;
+    title: string | {
+        from: string;
+        transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+        transformArg?: string | number | undefined;
+    };
     color?: "destructive" | "success" | "warning" | "info" | "primary" | "secondary" | undefined;
     endDate?: string | undefined;
     allDay?: boolean | undefined;

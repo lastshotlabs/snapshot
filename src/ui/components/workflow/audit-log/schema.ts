@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a filter dropdown configuration.
@@ -10,9 +10,9 @@ export const auditLogFilterSchema = z
     /** Data field to filter on. */
     field: z.string(),
     /** Display label for the filter dropdown. */
-    label: z.string(),
+    label: z.union([z.string(), fromRefSchema]),
     /** Available filter options. */
-    options: z.array(z.string()),
+    options: z.array(z.union([z.string(), fromRefSchema])),
   })
   .strict();
 

@@ -1,7 +1,8 @@
 'use client';
 
+import { useMemo } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { useSubscribe } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -659,9 +660,38 @@ function TableVariant({
 export function PricingTable({ config }: { config: PricingTableConfig }) {
   const execute = useActionExecutor();
   const visible = useSubscribe(config.visible ?? true);
-  const currency = config.currency ?? "$";
+  const currency = (useSubscribe(config.currency) as string | undefined) ?? "$";
   const variant = config.variant ?? "cards";
+  const resolvedConfig = useResolveFrom({ tiers: config.tiers });
   const rootId = config.id ?? "pricing-table";
+  const tiers = useMemo(
+    () =>
+      ((resolvedConfig.tiers as PricingTableConfig["tiers"] | undefined) ??
+          config.tiers
+      ).map((tier: PricingTier) => ({
+        ...tier,
+        name: typeof tier.name === "string" ? tier.name : "",
+        price:
+          typeof tier.price === "string" || typeof tier.price === "number"
+            ? tier.price
+            : "",
+        period: typeof tier.period === "string" ? tier.period : undefined,
+        description:
+          typeof tier.description === "string" ? tier.description : undefined,
+        badge: typeof tier.badge === "string" ? tier.badge : undefined,
+        actionLabel:
+          typeof tier.actionLabel === "string" ? tier.actionLabel : undefined,
+        features: tier.features.map((feature: PricingFeature) => ({
+          ...feature,
+          text: typeof feature.text === "string" ? feature.text : "",
+        })),
+      })),
+    [config.tiers, resolvedConfig.tiers],
+  );
+  const runtimeConfig = useMemo<PricingTableConfig>(
+    () => ({ ...config, tiers }),
+    [config, tiers],
+  );
 
   if (visible === false) {
     return null;
@@ -692,7 +722,7 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
         >
           <TableVariant
             rootId={rootId}
-            config={config}
+            config={runtimeConfig}
             currency={currency}
             execute={execute}
           />
@@ -704,10 +734,10 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
 
   const columnCount =
     config.columns === "auto"
-      ? config.tiers.length
+      ? tiers.length
       : config.columns
         ? parseInt(config.columns, 10)
-        : config.tiers.length;
+        : tiers.length;
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
     implementationBase: {
@@ -742,7 +772,7 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
           className={gridSurface.className}
           style={gridSurface.style}
         >
-          {config.tiers.map((tier: PricingTier, index: number) => (
+          {tiers.map((tier: PricingTier, index: number) => (
             <TierCard
               key={index}
               rootId={rootId}
@@ -750,7 +780,7 @@ export function PricingTable({ config }: { config: PricingTableConfig }) {
               tier={tier}
               currency={currency}
               execute={execute}
-              slots={config.slots}
+              slots={runtimeConfig.slots}
             />
           ))}
         </div>

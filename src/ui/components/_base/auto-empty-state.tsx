@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useActionExecutor } from "../../actions/executor";
 import type { ActionConfig } from "../../actions/types";
+import { useSubscribe } from "../../context/hooks";
 import { renderIcon } from "../../icons/render";
 import { SurfaceStyles } from "./surface-styles";
 import {
@@ -41,6 +42,9 @@ export function AutoEmptyState({
   config: AutoEmptyStateConfig;
 }): ReactNode {
   const execute = useActionExecutor();
+  const title = useSubscribe(config.title) as string | undefined;
+  const description = useSubscribe(config.description) as string | undefined;
+  const actionLabel = useSubscribe(config.action?.label) as string | undefined;
   const rootId = config.id ?? "auto-empty-state";
   const size = config.size ?? "md";
   const iconSize = size === "sm" ? 20 : size === "lg" ? 36 : 28;
@@ -132,15 +136,15 @@ export function AutoEmptyState({
           className={titleSurface.className}
           style={titleSurface.style}
         >
-          {config.title}
+          {title ?? "No data"}
         </div>
-        {config.description ? (
+        {description ? (
           <div
             data-snapshot-id={`${rootId}-description`}
             className={descriptionSurface.className}
             style={descriptionSurface.style}
           >
-            {config.description}
+            {description}
           </div>
         ) : null}
         {config.action ? (
@@ -161,7 +165,7 @@ export function AutoEmptyState({
                 {renderIcon(config.action.icon, 14)}
               </span>
             ) : null}
-            {config.action.label ?? "Action"}
+            {actionLabel ?? "Action"}
           </ButtonControl>
         ) : null}
       </div>

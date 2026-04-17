@@ -14,6 +14,7 @@ import {
   containerConfigSchema,
   gridConfigSchema,
   spacerConfigSchema,
+  loadingConfigSchema,
   emptyStateConfigSchema,
   errorStateConfigSchema,
   componentsConfigSchema,
@@ -794,6 +795,39 @@ describe("nav schemas", () => {
 
     expect(emptyResult.success).toBe(true);
     expect(errorResult.success).toBe(true);
+  });
+
+  it("accepts ref-backed helper empty/error copy", () => {
+    const emptyResult = emptyStateConfigSchema.safeParse({
+      title: { from: "empty.title" },
+      description: { from: "empty.description" },
+      action: {
+        label: { from: "empty.actionLabel" },
+        action: { type: "refresh" },
+      },
+    });
+    const errorResult = errorStateConfigSchema.safeParse({
+      title: { from: "error.title" },
+      description: { from: "error.description" },
+      retry: { label: { from: "error.retryLabel" } },
+    });
+
+    expect(emptyResult.success).toBe(true);
+    expect(errorResult.success).toBe(true);
+  });
+
+  it("accepts canonical helper loading state surfaces", () => {
+    const result = loadingConfigSchema.safeParse({
+      className: "loading-root",
+      variant: "list",
+      slots: {
+        root: { className: "loading-root-slot" },
+        row: { className: "loading-row-slot" },
+        block: { className: "loading-block-slot" },
+      },
+    });
+
+    expect(result.success).toBe(true);
   });
 
   it("accepts overlay slot surfaces through manifest overlays", () => {

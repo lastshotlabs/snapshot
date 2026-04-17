@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
 import { endpointTargetSchema } from "../../../manifest/resources";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -67,8 +67,8 @@ export const locationInputConfigSchema = extendComponentSchema({
     minChars: z.number().optional(),
     /** Show a map link after selection. Default: true. */
     showMapLink: z.boolean().optional(),
-    /** Action dispatched when a location is selected. */
-    changeAction: actionSchema.optional(),
+    /** Tiered event action hooks for location input interactions. */
+    on: controlEventActionsSchema.optional(),
     /** Whether the input is disabled. */
     disabled: z.union([z.boolean(), fromRefSchema]).optional(),
     /** Whether the input is required. */

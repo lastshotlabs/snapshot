@@ -55,6 +55,20 @@ describe("feedSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts ref-backed empty and action labels", () => {
+    const result = feedSchema.safeParse({
+      ...baseConfig,
+      emptyMessage: { from: "state.feed.empty" },
+      itemActions: [
+        {
+          label: { from: "state.feed.action" },
+          action: { type: "navigate", to: "/activity" },
+        },
+      ],
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("accepts data as a FromRef", () => {
     const result = feedSchema.safeParse({
       ...baseConfig,

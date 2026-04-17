@@ -22,4 +22,20 @@ describe("filterBarConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts FromRef labels and search placeholder", () => {
+    const result = filterBarConfigSchema.safeParse({
+      type: "filter-bar",
+      searchPlaceholder: { from: "filters.searchPlaceholder" },
+      filters: [
+        {
+          key: "role",
+          label: { from: "filters.roleLabel" },
+          options: [{ label: { from: "filters.roleOption" }, value: "admin" }],
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

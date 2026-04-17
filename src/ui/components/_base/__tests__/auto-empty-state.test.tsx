@@ -2,6 +2,11 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { AtomRegistryImpl } from "../../../context/registry";
+import {
+  AppRegistryContext,
+  PageRegistryContext,
+} from "../../../context/providers";
 import { AutoEmptyState } from "../auto-empty-state";
 
 const executeSpy = vi.fn();
@@ -61,5 +66,35 @@ describe("AutoEmptyState", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Action" }));
     expect(executeSpy).toHaveBeenCalledWith({ type: "refresh" });
+  });
+
+  it("renders ref-backed title, description, and action label", () => {
+    const registry = new AtomRegistryImpl();
+    registry.store.set(registry.register("empty"), {
+      title: "No matching rows",
+      description: "Try widening your filters",
+      actionLabel: "Refresh data",
+    });
+
+    render(
+      <AppRegistryContext.Provider value={null}>
+        <PageRegistryContext.Provider value={registry}>
+          <AutoEmptyState
+            config={{
+              title: { from: "empty.title" } as never,
+              description: { from: "empty.description" } as never,
+              action: {
+                label: { from: "empty.actionLabel" } as never,
+                action: { type: "refresh" } as never,
+              },
+            }}
+          />
+        </PageRegistryContext.Provider>
+      </AppRegistryContext.Provider>,
+    );
+
+    expect(screen.getByText("No matching rows")).toBeTruthy();
+    expect(screen.getByText("Try widening your filters")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Refresh data" })).toBeTruthy();
   });
 });

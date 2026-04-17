@@ -140,6 +140,9 @@ const SURFACE_CONFIG_KEYS = new Set([
   "fontWeight",
   "lineHeight",
   "letterSpacing",
+  "transform",
+  "transition",
+  "whiteSpace",
 ]);
 
 export function extractSurfaceConfig(

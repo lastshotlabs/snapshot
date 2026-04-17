@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -108,15 +109,13 @@ export function ColorPicker({ config }: { config: ColorPickerConfig }) {
   }
 
   const triggerChange = (nextColor: string, nextAlpha: number) => {
-    if (config.onChange) {
-      void execute(config.onChange, {
-        value: formatColorValue(
-          nextColor,
-          config.format,
-          config.showAlpha ? nextAlpha : 1,
-        ),
-      });
-    }
+    const value = formatColorValue(
+      nextColor,
+      config.format,
+      config.showAlpha ? nextAlpha : 1,
+    );
+    void executeEventAction(execute, config.on?.input, { id: config.id, value });
+    void executeEventAction(execute, config.on?.change, { id: config.id, value });
   };
 
   const rootSurface = resolveSurfacePresentation({

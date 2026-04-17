@@ -167,6 +167,39 @@ describe("ModalComponent", () => {
     ).not.toBeNull();
   });
 
+  it("renders ref-backed footer action labels", () => {
+    const appRegistry = new AtomRegistryImpl();
+    const pageRegistry = new AtomRegistryImpl();
+    pageRegistry.store.set(pageRegistry.register("copy"), { save: "Save changes" });
+    store.set(modalStackAtom, ["test-modal"]);
+
+    const config: ModalConfig = {
+      ...baseConfig,
+      footer: {
+        actions: [{ label: { from: "copy.save" }, dismiss: true }],
+      },
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) =>
+      createElement(
+        Provider,
+        { store },
+        createElement(
+          AppRegistryContext.Provider,
+          { value: appRegistry },
+          createElement(
+            PageRegistryContext.Provider,
+            { value: pageRegistry },
+            children,
+          ),
+        ),
+      );
+
+    render(createElement(ModalComponent, { config }), { wrapper });
+
+    expect(screen.getByRole("button", { name: "Save changes" })).toBeTruthy();
+  });
+
   it("renders without title when none provided", () => {
     store.set(modalStackAtom, ["no-title-modal"]);
     const config: ModalConfig = {

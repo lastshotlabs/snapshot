@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
@@ -61,8 +61,8 @@ export const multiSelectConfigSchema: z.ZodType<Record<string, any>> = extendCom
     searchable: z.boolean().optional(),
     /** Disabled state. Can be a FromRef. */
     disabled: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Action to execute when the selection changes. */
-    changeAction: actionSchema.optional(),
+    /** Tiered event action hooks for multi-select interactions. */
+    on: controlEventActionsSchema.optional(),
     slots: slotsSchema([
       "root",
       "label",

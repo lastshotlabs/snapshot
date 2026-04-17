@@ -58,6 +58,16 @@ describe("modalConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts FromRef footer action labels", () => {
+    const result = modalConfigSchema.safeParse({
+      ...baseConfig,
+      footer: {
+        actions: [{ label: { from: "copy.save" } }],
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("accepts content with child component configs", () => {
     const result = modalConfigSchema.safeParse({
       ...baseConfig,

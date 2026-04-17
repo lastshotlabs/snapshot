@@ -1,10 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSubscribe, usePublish } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { Icon } from "../../../icons/index";
 import { setDomRef } from "../../_base/dom-ref";
+import {
+  executeEventAction,
+  focusEventPayload,
+  keyEventPayload,
+  mouseEventPayload,
+  pointerEventPayload,
+  touchEventPayload,
+} from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -43,6 +51,12 @@ export function InputControl({
   onFocus,
   onClick,
   onKeyDown,
+  onMouseEnter,
+  onMouseLeave,
+  onPointerDown,
+  onPointerUp,
+  onTouchStart,
+  onTouchEnd,
   className,
   style,
   surfaceId,
@@ -170,6 +184,12 @@ export function InputControl({
         onFocus={onFocus}
         onClick={onClick}
         onKeyDown={onKeyDown}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
       />
       <SurfaceStyles css={controlSurface.scopedCss} />
     </>
@@ -199,7 +219,6 @@ export function Input({ config }: { config: InputConfig }) {
   const [value, setValue] = useState(resolvedValue ?? "");
   const [validationError, setValidationError] = useState<string | undefined>();
   const [touched, setTouched] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     if (resolvedValue !== undefined) {
@@ -234,6 +253,15 @@ export function Input({ config }: { config: InputConfig }) {
     [config.maxLength, config.pattern, config.required],
   );
 
+  const buildPayload = useCallback(
+    (nextValue = value) => ({
+      id: config.id,
+      value: nextValue,
+      inputType,
+    }),
+    [config.id, inputType, value],
+  );
+
   const handleChange = useCallback(
     (nextValue: string) => {
       setValue(nextValue);
@@ -241,22 +269,94 @@ export function Input({ config }: { config: InputConfig }) {
         setValidationError(validate(nextValue));
       }
 
-      if (config.changeAction) {
-        if (debounceRef.current) {
-          clearTimeout(debounceRef.current);
-        }
-        debounceRef.current = setTimeout(() => {
-          void execute(config.changeAction!, { value: nextValue });
-        }, 300);
-      }
+      const payload = buildPayload(nextValue);
+      void executeEventAction(execute, config.on?.input, payload);
+      void executeEventAction(execute, config.on?.change, payload);
     },
-    [config.changeAction, execute, touched, validate],
+    [buildPayload, config.on?.change, config.on?.input, execute, touched, validate],
   );
 
-  const handleBlur = useCallback(() => {
+  const handleBlur = useCallback<NonNullable<InputControlProps["onBlur"]>>((event) => {
     setTouched(true);
     setValidationError(validate(value));
-  }, [validate, value]);
+    void executeEventAction(
+      execute,
+      config.on?.blur,
+      focusEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.blur, execute, validate, value]);
+
+  const handleFocus = useCallback<NonNullable<InputControlProps["onFocus"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.focus,
+      focusEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.focus, execute]);
+
+  const handleClick = useCallback<NonNullable<InputControlProps["onClick"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.click,
+      mouseEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.click, execute]);
+
+  const handleKeyDown = useCallback<NonNullable<InputControlProps["onKeyDown"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.keyDown,
+      keyEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.keyDown, execute]);
+
+  const handleMouseEnter = useCallback<NonNullable<InputControlProps["onMouseEnter"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.mouseEnter,
+      mouseEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.mouseEnter, execute]);
+
+  const handleMouseLeave = useCallback<NonNullable<InputControlProps["onMouseLeave"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.mouseLeave,
+      mouseEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.mouseLeave, execute]);
+
+  const handlePointerDown = useCallback<NonNullable<InputControlProps["onPointerDown"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.pointerDown,
+      pointerEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.pointerDown, execute]);
+
+  const handlePointerUp = useCallback<NonNullable<InputControlProps["onPointerUp"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.pointerUp,
+      pointerEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.pointerUp, execute]);
+
+  const handleTouchStart = useCallback<NonNullable<InputControlProps["onTouchStart"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.touchStart,
+      touchEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.touchStart, execute]);
+
+  const handleTouchEnd = useCallback<NonNullable<InputControlProps["onTouchEnd"]>>((event) => {
+    void executeEventAction(
+      execute,
+      config.on?.touchEnd,
+      touchEventPayload(event, buildPayload()),
+    );
+  }, [buildPayload, config.on?.touchEnd, execute]);
 
   if (visible === false) {
     return null;
@@ -401,11 +501,20 @@ export function Input({ config }: { config: InputConfig }) {
           required={config.required}
           ariaInvalid={Boolean(errorMessage)}
           ariaDescribedBy={helperId}
-          ariaLabel={resolvedLabel ?? resolvedPlaceholder}
-          onChangeText={handleChange}
-          onBlur={handleBlur}
-          surfaceId={`${rootId}-control`}
-          surfaceConfig={config.slots?.control}
+        ariaLabel={resolvedLabel ?? resolvedPlaceholder}
+        onChangeText={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        surfaceId={`${rootId}-control`}
+        surfaceConfig={config.slots?.control}
           activeStates={resolvedStates}
           style={
             config.icon

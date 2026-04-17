@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
@@ -56,8 +57,8 @@ export const tagSelectorConfigSchema = extendComponentSchema({
     allowCreate: z.boolean().optional(),
     /** Action dispatched when a new tag is created. */
     createAction: actionSchema.optional(),
-    /** Action dispatched when selection changes. */
-    changeAction: actionSchema.optional(),
+    /** Tiered event action hooks for tag selection interactions. */
+    on: controlEventActionsSchema.optional(),
     /** Maximum number of selectable tags. */
     maxTags: z.number().optional(),
     slots: slotsSchema([

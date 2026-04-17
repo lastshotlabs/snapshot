@@ -36,7 +36,9 @@ describe("ColorPicker", () => {
           format: "hex",
           allowCustom: true,
           showAlpha: false,
-          onChange: { type: "set-color" } as never,
+          on: {
+            change: { type: "set-color" } as never,
+          },
         }}
       />,
     );
@@ -50,6 +52,9 @@ describe("ColorPicker", () => {
       target: { value: "#ff0000" },
     });
 
-    expect(executeSpy).toHaveBeenCalledWith({ type: "set-color" }, { value: "#ff0000" });
+    expect(executeSpy).toHaveBeenCalledWith(
+      { type: "set-color" },
+      { id: "brand-color", value: "#ff0000" },
+    );
   });
 });

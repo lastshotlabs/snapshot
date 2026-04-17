@@ -1,7 +1,7 @@
 import { z } from "zod";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
-import { actionSchema } from "../../../actions/types";
 
 export const toggleGroupSlotNames = [
   "root",
@@ -30,6 +30,6 @@ export const toggleGroupConfigSchema = extendComponentSchema({
   size: z.enum(["sm", "md", "lg"]).optional(),
   variant: z.enum(["outline", "ghost"]).optional(),
   publishTo: z.string().optional(),
-  onChange: actionSchema.optional(),
+  on: controlEventActionsSchema.optional(),
   slots: slotsSchema(toggleGroupSlotNames).optional(),
 }).strict();

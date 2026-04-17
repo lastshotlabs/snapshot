@@ -35,7 +35,9 @@ describe("Switch", () => {
           className: "switch-root-class",
           label: { from: "copy.switchLabel" },
           description: { from: "copy.switchDescription" },
-          action: { type: "toggle-notifications" } as never,
+          on: {
+            change: { type: "toggle-notifications" } as never,
+          },
           slots: {
             root: { className: "switch-root-slot" },
           },
@@ -55,6 +57,9 @@ describe("Switch", () => {
     fireEvent.click(screen.getByTestId("switch"));
 
     expect(screen.getByRole("switch").getAttribute("aria-checked")).toBe("true");
-    expect(executeSpy).toHaveBeenCalledWith({ type: "toggle-notifications" });
+    expect(executeSpy).toHaveBeenCalledWith(
+      { type: "toggle-notifications" },
+      { id: "notifications-switch", checked: true, value: true },
+    );
   });
 });

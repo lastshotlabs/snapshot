@@ -255,6 +255,50 @@ function buildLoadContext(
   };
 }
 
+function extractRequestHeaders(source: unknown): Headers {
+  const headers = new Headers();
+  if (!source || typeof source !== "object") {
+    return headers;
+  }
+
+  for (const [key, value] of Object.entries(source as Record<string, unknown>)) {
+    if (Array.isArray(value)) {
+      headers.set(key, value.map((entry) => String(entry)).join(", "));
+      continue;
+    }
+
+    if (value != null) {
+      headers.set(key, String(value));
+    }
+  }
+
+  return headers;
+}
+
+function buildRequestFromContext(url: URL, bsCtx: unknown): Request {
+  if (bsCtx && typeof bsCtx === "object") {
+    const candidate = bsCtx as Record<string, unknown>;
+
+    if (candidate["request"] instanceof Request) {
+      return candidate["request"];
+    }
+
+    const req =
+      candidate["req"] && typeof candidate["req"] === "object"
+        ? (candidate["req"] as Record<string, unknown>)
+        : undefined;
+    if (req) {
+      return new Request(url.toString(), {
+        method:
+          typeof req["method"] === "string" ? (req["method"] as string) : "GET",
+        headers: extractRequestHeaders(req["headers"]),
+      });
+    }
+  }
+
+  return new Request(url.toString());
+}
+
 // ─── SPA shell fallback ───────────────────────────────────────────────────────
 
 /**
@@ -271,6 +315,7 @@ function buildSpaShell(shell: SsrShellShape): string {
     "<head>",
     '<meta charset="UTF-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    shell.headTags,
     shell.assetTags,
     "</head>",
     "<body>",
@@ -461,13 +506,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       shell: SsrShellShape,
       bsCtx: unknown,
     ): Promise<Response> {
-      // Reconstruct a minimal Request for the load context (headers from real request
-      // are not available here — bunshot-ssr doesn't forward the raw Request yet).
-      // TODO: forward raw Request when Track A Phase 4 is updated to pass it.
-      const fakeRequest = new Request(match.url.toString());
+      const request = buildRequestFromContext(match.url, bsCtx);
       const loadContext = buildLoadContext(
         match,
-        fakeRequest,
+        request,
         bsCtx,
         shell._draftMode ?? false,
         shell._after,
@@ -524,7 +566,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       // 4. Handle not found — return SPA shell (SPA renders its own 404 UI)
       if (isNotFoundResult(loadResult)) {
         return new Response(buildSpaShell(shell), {
-          status: 200,
+          status: 404,
           headers: { "Content-Type": "text/html; charset=utf-8" },
         });
       }
@@ -732,10 +774,10 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       shell: SsrShellShape,
       bsCtx: unknown,
     ): Promise<Response> {
-      const fakeRequest = new Request(chain.page.url.toString());
+      const request = buildRequestFromContext(chain.page.url, bsCtx);
       const pageLoadContext = buildLoadContext(
         chain.page,
-        fakeRequest,
+        request,
         bsCtx,
         shell._draftMode ?? false,
         shell._after,
@@ -789,7 +831,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       const layoutLoadContexts = chain.layouts.map((layout) =>
         buildLoadContext(
           layout,
-          fakeRequest,
+          request,
           bsCtx,
           shell._draftMode ?? false,
           shell._after,
@@ -1089,7 +1131,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
                 | undefined;
               const slotLoadCtx = buildLoadContext(
                 slot.match,
-                fakeRequest,
+                request,
                 bsCtx,
                 shell._draftMode ?? false,
                 shell._after,

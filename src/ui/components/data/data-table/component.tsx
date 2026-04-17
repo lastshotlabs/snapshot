@@ -25,7 +25,7 @@ import type { ComponentConfig } from "../../../manifest/types";
 import type { DataTableConfig, ResolvedColumn } from "./types";
 import { wsManagerAtom } from "../../../../ws/atom";
 import { Icon } from "../../../icons/icon";
-import { useSubscribe } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { ButtonControl } from "../../forms/button";
 import { InputControl } from "../../forms/input";
@@ -411,6 +411,7 @@ function ToolbarButton({
   execute: ReturnType<typeof useActionExecutor>;
 }) {
   const disabled = useSubscribe(item.disabled ?? false) as boolean;
+  const label = useSubscribe(item.label) as string;
   const variant = item.variant ?? "outline";
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-toolbar-label-${index}`,
@@ -451,7 +452,7 @@ function ToolbarButton({
         className={labelSurface.className}
         style={labelSurface.style}
       >
-        {item.label}
+        {label}
       </span>
       </ButtonControl>
       <SurfaceStyles css={labelSurface.scopedCss} />
@@ -610,12 +611,49 @@ function DroppableTableBody({
  * ```
  */
 export function DataTable({ config }: { config: DataTableConfig }) {
-  const table = useDataTable(config);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
+  const resolvedManifestConfig = useResolveFrom({
+    columns: Array.isArray(config.columns) ? config.columns : undefined,
+    actions: config.actions,
+    bulkActions: config.bulkActions,
+    toolbar: config.toolbar,
+    searchable:
+      typeof config.searchable === "object" ? config.searchable : undefined,
+    empty: config.empty,
+  });
+  const runtimeConfig = useMemo<DataTableConfig>(
+    () => ({
+      ...config,
+      columns: Array.isArray(config.columns)
+        ? (((resolvedManifestConfig.columns as DataTableConfig["columns"] | undefined) ??
+            config.columns) as DataTableConfig["columns"])
+        : config.columns,
+      actions:
+        (resolvedManifestConfig.actions as DataTableConfig["actions"] | undefined) ??
+        config.actions,
+      bulkActions:
+        (resolvedManifestConfig.bulkActions as DataTableConfig["bulkActions"] | undefined) ??
+        config.bulkActions,
+      toolbar:
+        (resolvedManifestConfig.toolbar as DataTableConfig["toolbar"] | undefined) ??
+        config.toolbar,
+      searchable:
+        typeof config.searchable === "object"
+          ? (((resolvedManifestConfig.searchable as DataTableConfig["searchable"] | undefined) ??
+              config.searchable) as DataTableConfig["searchable"])
+          : config.searchable,
+      empty:
+        (resolvedManifestConfig.empty as DataTableConfig["empty"] | undefined) ??
+        config.empty,
+    }),
+    [config, resolvedManifestConfig],
+  );
+  const table = useDataTable(runtimeConfig);
   const execute = useActionExecutor();
   const wsManager = useAtomValue(wsManagerAtom);
   const sharedDragDrop = useSharedDragDrop();
   const generatedId = useId();
-  const density = config.density ?? "default";
+  const density = runtimeConfig.density ?? "default";
   const cellPadding = getDensityPadding(density);
   const lookupMaps = useLookupMaps(
     table.columns
@@ -675,7 +713,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
         : undefined,
   });
   // Determine if we need an actions column
-  const hasActions = (config.actions?.length ?? 0) > 0;
+  const hasActions = (runtimeConfig.actions?.length ?? 0) > 0;
   const virtualConfig = useMemo(
     () =>
       typeof config.virtualize === "object"
@@ -729,23 +767,25 @@ export function DataTable({ config }: { config: DataTableConfig }) {
   const totalColumns =
     table.columns.length +
     (draggable ? 1 : 0) +
-    (config.selectable ? 1 : 0) +
+    (runtimeConfig.selectable ? 1 : 0) +
     (hasActions ? 1 : 0) +
-    (config.expandable ? 1 : 0);
+    (runtimeConfig.expandable ? 1 : 0);
 
   // Search fields placeholder
   const searchPlaceholder = useMemo(() => {
     if (
-      typeof config.searchable === "object" &&
-      config.searchable.placeholder
+      typeof runtimeConfig.searchable === "object" &&
+      runtimeConfig.searchable.placeholder
     ) {
-      return config.searchable.placeholder;
+      return typeof runtimeConfig.searchable.placeholder === "string"
+        ? runtimeConfig.searchable.placeholder
+        : "Search...";
     }
     return "Search...";
-  }, [config.searchable]);
+  }, [runtimeConfig.searchable]);
   const emptyStateConfig = useMemo(
-    () => toAutoEmptyStateConfig(config.empty),
-    [config.empty],
+    () => toAutoEmptyStateConfig(runtimeConfig.empty),
+    [runtimeConfig.empty],
   );
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
@@ -804,8 +844,8 @@ export function DataTable({ config }: { config: DataTableConfig }) {
 
   // Bulk actions toolbar
   const showBulkActions =
-    config.bulkActions &&
-    config.bulkActions.length > 0 &&
+    runtimeConfig.bulkActions &&
+    runtimeConfig.bulkActions.length > 0 &&
     table.selectedIds.length > 0;
 
   useEffect(() => {
@@ -860,11 +900,11 @@ export function DataTable({ config }: { config: DataTableConfig }) {
         ? "var(--sn-color-accent, #dbeafe)"
         : undefined,
       cursor:
-        config.expandable || config.rowClickAction || draggable
+        runtimeConfig.expandable || runtimeConfig.rowClickAction || draggable
           ? "pointer"
           : undefined,
       hover:
-        config.expandable || config.rowClickAction || draggable
+        runtimeConfig.expandable || runtimeConfig.rowClickAction || draggable
           ? {
               bg: table.selection.has(rowId)
                 ? "var(--sn-color-accent, #dbeafe)"
@@ -901,7 +941,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
 
     const rowChildren = (
       <>
-        {config.expandable && (
+        {runtimeConfig.expandable && (
           <td style={{ padding: cellPadding, width: "32px" }}>
             <span
               style={{
@@ -929,7 +969,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
             </span>
           </td>
         )}
-        {config.selectable && (
+        {runtimeConfig.selectable && (
           <td style={{ padding: cellPadding, width: "40px" }}>
             <InputControl
               type="checkbox"
@@ -977,13 +1017,16 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                 justifyContent: "flex-end",
               }}
             >
-              {config.actions!.map((action: NonNullable<DataTableConfig["actions"]>[number], actionIndex: number) => {
+              {runtimeConfig.actions!.map((action: NonNullable<DataTableConfig["actions"]>[number], actionIndex: number) => {
                 if (
                   action.visible === false ||
                   (typeof action.visible === "boolean" && !action.visible)
                 ) {
                   return null;
                 }
+
+                const label =
+                  typeof action.label === "string" ? action.label : "";
 
                 return (
                   <ButtonControl
@@ -999,7 +1042,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                     }
                   >
                     {action.icon ? <Icon name={action.icon} size={14} /> : null}
-                    {action.label}
+                    {label}
                   </ButtonControl>
                 );
               })}
@@ -1009,11 +1052,11 @@ export function DataTable({ config }: { config: DataTableConfig }) {
       </>
     );
 
-    const onRowClick = config.expandable
+    const onRowClick = runtimeConfig.expandable
       ? () => toggleExpandRow(rowId)
-      : config.rowClickAction
+      : runtimeConfig.rowClickAction
         ? () =>
-            void execute(config.rowClickAction!, {
+            void execute(runtimeConfig.rowClickAction!, {
               row,
               ...row,
             })
@@ -1057,7 +1100,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
             {rowChildren}
           </tr>
         )}
-        {config.expandable && isExpanded && config.expandedContent && (
+        {runtimeConfig.expandable && isExpanded && runtimeConfig.expandedContent && (
           <tr data-expanded-row>
             <td
               colSpan={totalColumns}
@@ -1067,7 +1110,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                 borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
               }}
             >
-              {config.expandedContent.map(
+              {runtimeConfig.expandedContent.map(
                 (
                   child: NonNullable<DataTableConfig["expandedContent"]>[number],
                   ci: number,
@@ -1138,7 +1181,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
         </div>
       ) : null}
       {/* Table header: search + toolbar */}
-      {(config.searchable || config.toolbar?.length) ? (
+      {(runtimeConfig.searchable || runtimeConfig.toolbar?.length) ? (
         <div
           data-table-search
           data-snapshot-id={`${rootId}-toolbar`}
@@ -1146,13 +1189,13 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: config.searchable ? "space-between" : "flex-end",
+            justifyContent: runtimeConfig.searchable ? "space-between" : "flex-end",
             gap: "var(--sn-spacing-sm, 0.5rem)",
             marginBottom: "var(--sn-spacing-md, 12px)",
             ...toolbarSurface.style,
           }}
         >
-          {config.searchable && (
+          {runtimeConfig.searchable && (
             <InputControl
               type="text"
               placeholder={searchPlaceholder}
@@ -1172,9 +1215,9 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               }}
             />
           )}
-          {config.toolbar?.length ? (
+          {runtimeConfig.toolbar?.length ? (
             <div style={{ display: "flex", gap: "var(--sn-spacing-xs, 0.25rem)", flexShrink: 0 }}>
-              {config.toolbar.map((item: NonNullable<DataTableConfig["toolbar"]>[number], i: number) => (
+              {runtimeConfig.toolbar.map((item: NonNullable<DataTableConfig["toolbar"]>[number], i: number) => (
                 <ToolbarButton key={i} rootId={rootId} index={i} item={item} execute={execute} />
               ))}
             </div>
@@ -1202,7 +1245,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
           }}
         >
           <span>{table.selectedIds.length} selected</span>
-          {config.bulkActions!.map((bulkAction: NonNullable<DataTableConfig["bulkActions"]>[number], i: number) => (
+          {runtimeConfig.bulkActions!.map((bulkAction: NonNullable<DataTableConfig["bulkActions"]>[number], i: number) => (
             <ButtonControl
               key={i}
               variant="ghost"
@@ -1216,7 +1259,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                 })
               }
             >
-              {bulkAction.label.replace(
+              {(typeof bulkAction.label === "string" ? bulkAction.label : "").replace(
                 "{count}",
                 String(table.selectedIds.length),
               )}
@@ -1248,14 +1291,14 @@ export function DataTable({ config }: { config: DataTableConfig }) {
               style={headerRowSurface.style}
             >
               {/* Expand column header */}
-              {config.expandable && (
+              {runtimeConfig.expandable && (
                 <th style={{ padding: cellPadding, width: "32px" }} />
               )}
               {draggable && (
                 <th style={{ padding: cellPadding, width: "32px" }} />
               )}
               {/* Select all checkbox */}
-              {config.selectable && (
+              {runtimeConfig.selectable && (
                 (() => {
                   const selectHeaderCellSurface = resolveHeaderCellSurface(
                     `${rootId}-header-cell-select`,
@@ -1474,7 +1517,7 @@ export function DataTable({ config }: { config: DataTableConfig }) {
                       className={emptySurface.className}
                       style={emptySurface.style}
                     >
-                      {config.emptyMessage ?? "No data available"}
+                      {emptyMessage ?? "No data available"}
                     </div>
                   )}
                 </td>

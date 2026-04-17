@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -17,7 +17,7 @@ export const sliderConfigSchema = extendComponentSchema({
   showValue: z.boolean().default(false),
   showLimits: z.boolean().default(false),
   suffix: z.union([z.string(), fromRefSchema]).optional(),
-  onChange: z.union([actionSchema, z.array(actionSchema)]).optional(),
+  on: controlEventActionsSchema.optional(),
   disabled: z.union([z.boolean(), fromRefSchema]).optional(),
   slots: slotsSchema([
     "root",

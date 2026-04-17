@@ -135,6 +135,12 @@ export function resolveColor(value: string): string {
   return COLOR_MAP[value] ?? value;
 }
 
+function isComplexBackgroundValue(value: string): boolean {
+  return /(gradient|url\(|image\(|repeat|position|size|attachment|\/)/i.test(
+    value,
+  );
+}
+
 /** Resolve a shadow token name to a CSS value. */
 export function resolveShadow(value: string): string {
   return SHADOW_MAP[value] ?? value;
@@ -177,7 +183,12 @@ export function resolveStyleProps(
 
   const background = baseValue(config.background);
   if (background != null && typeof background === "string") {
-    s.background = resolveColor(background);
+    const resolvedBackground = resolveColor(background);
+    if (isComplexBackgroundValue(resolvedBackground)) {
+      s.background = resolvedBackground;
+    } else {
+      s.backgroundColor = resolvedBackground;
+    }
   }
 
   const backgroundColor = baseValue(config.backgroundColor);
@@ -242,7 +253,12 @@ export function resolveStyleProps(
 
   if (config.bg != null) {
     if (typeof config.bg === "string") {
-      s.background = resolveColor(config.bg);
+      const resolvedBackground = resolveColor(config.bg);
+      if (isComplexBackgroundValue(resolvedBackground)) {
+        s.background = resolvedBackground;
+      } else {
+        s.backgroundColor = resolvedBackground;
+      }
     }
     if (typeof config.bg === "object" && !Array.isArray(config.bg)) {
       Object.assign(
@@ -357,6 +373,18 @@ export function resolveStyleProps(
 
   if (config.letterSpacing != null) {
     s.letterSpacing = resolve(config.letterSpacing, LETTER_SPACING_MAP);
+  }
+
+  if (config.transform != null) {
+    s.transform = config.transform as string;
+  }
+
+  if (config.transition != null) {
+    s.transition = config.transition as string;
+  }
+
+  if (config.whiteSpace != null) {
+    s.whiteSpace = config.whiteSpace as CSSProperties["whiteSpace"];
   }
 
   return s;

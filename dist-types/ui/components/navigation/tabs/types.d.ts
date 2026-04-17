@@ -1,4 +1,7 @@
 import type { TabConfig } from "./schema";
+export type ResolvedTabConfig = Omit<TabConfig, "label"> & {
+    label: string;
+};
 /**
  * Return type for the useTabs hook.
  */
@@ -8,5 +11,5 @@ export interface UseTabsReturn {
     /** Set the active tab by index. */
     setActiveTab: (index: number) => void;
     /** The tab definitions from config. */
-    tabs: TabConfig[];
+    tabs: ResolvedTabConfig[];
 }

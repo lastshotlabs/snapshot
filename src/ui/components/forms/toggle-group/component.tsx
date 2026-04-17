@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { useSubscribe, usePublish } from "../../../context/index";
 import { useActionExecutor } from "../../../actions/executor";
 import { renderIcon } from "../../../icons/render";
+import { executeEventAction } from "../../_base/events";
 import { ButtonControl } from "../button";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
@@ -222,9 +223,10 @@ export function ToggleGroup({ config }: { config: ToggleGroupConfig }) {
     }
     setInternalValue(next);
     if (config.publishTo) publish(next);
-    if (config.onChange) {
-      void execute(config.onChange as Parameters<typeof execute>[0]);
-    }
+    void executeEventAction(execute, config.on?.change, {
+      id: config.id ?? config.publishTo,
+      value: next,
+    });
   };
 
   const size = config.size ?? "md";

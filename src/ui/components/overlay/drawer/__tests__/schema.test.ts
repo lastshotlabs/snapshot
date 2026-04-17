@@ -71,6 +71,16 @@ describe("drawerConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts FromRef footer action labels", () => {
+    const result = drawerConfigSchema.safeParse({
+      ...baseConfig,
+      footer: {
+        actions: [{ label: { from: "copy.save" } }],
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("rejects wrong type literal", () => {
     const result = drawerConfigSchema.safeParse({
       ...baseConfig,

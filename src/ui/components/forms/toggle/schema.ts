@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -36,8 +36,8 @@ export const toggleConfigSchema = extendComponentSchema({
     size: z.enum(["sm", "md", "lg"]).optional(),
     /** Disabled state. Can be a FromRef. */
     disabled: z.union([z.boolean(), fromRefSchema]).optional(),
-    /** Action to execute on toggle. */
-    changeAction: actionSchema.optional(),
+    /** Tiered event action hooks for toggle interactions. */
+    on: controlEventActionsSchema.optional(),
     slots: slotsSchema(["root", "icon", "label"]).optional(),
   })
   .strict();

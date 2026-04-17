@@ -67,7 +67,9 @@ describe("DatePicker", () => {
             },
           ],
           valueFormat: "iso",
-          onChange: { type: "set-date" } as never,
+          on: {
+            change: { type: "set-date" } as never,
+          },
           slots: {
             root: { className: "date-root-slot" },
           },
@@ -90,7 +92,7 @@ describe("DatePicker", () => {
 
     expect(executeSpy).toHaveBeenCalledWith(
       { type: "set-date" },
-      { value: "2026-04-13T00:00:00.000Z" },
+      { id: "publish-date", value: "2026-04-13T00:00:00.000Z" },
     );
   });
 });

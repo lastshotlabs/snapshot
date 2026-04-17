@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 export const notificationFeedSlotNames = [
   "root",
@@ -54,7 +54,7 @@ export const notificationFeedConfigSchema: z.ZodType<Record<string, any>> = exte
   /** Show "Mark all read" button in header. Default: true. */
   showMarkAllRead: z.boolean().optional(),
   /** Empty state message. Default: "No notifications". */
-  emptyMessage: z.string().optional(),
+  emptyMessage: z.union([z.string(), fromRefSchema]).optional(),
   /** Max height for the scrollable container (CSS value). */
   maxHeight: z.string().optional(),
   /** Canonical slot contract for visible feed surfaces. */

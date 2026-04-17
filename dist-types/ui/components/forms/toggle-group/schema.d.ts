@@ -4,6 +4,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
     className: z.ZodOptional<z.ZodString>;
     style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     cursor: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
     gridTemplateColumns: z.ZodOptional<z.ZodString>;
     gridTemplateRows: z.ZodOptional<z.ZodString>;
     gridColumn: z.ZodOptional<z.ZodString>;
@@ -668,7 +669,19 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
     mode: z.ZodOptional<z.ZodEnum<["single", "multiple"]>>;
     items: z.ZodArray<z.ZodObject<{
         value: z.ZodString;
-        label: z.ZodOptional<z.ZodString>;
+        label: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodObject<{
+            from: z.ZodString;
+            transform: z.ZodOptional<z.ZodEnum<["uppercase", "lowercase", "trim", "length", "number", "boolean", "string", "json", "keys", "values", "first", "last", "count", "sum", "join", "split", "default"]>>;
+            transformArg: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
+        }, "strict", z.ZodTypeAny, {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        }, {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        }>]>>;
         icon: z.ZodOptional<z.ZodString>;
         disabled: z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodObject<{
             from: z.ZodString;
@@ -687,6 +700,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodString>;
             readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
             readonly cursor: z.ZodOptional<z.ZodString>;
+            readonly backgroundColor: z.ZodOptional<z.ZodString>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
             readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -1190,6 +1204,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
                 readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+                readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
                 readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -1694,6 +1709,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -1884,6 +1900,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2075,6 +2092,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2265,6 +2283,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2456,6 +2475,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -2646,6 +2666,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -2838,6 +2859,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3028,6 +3050,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -3220,6 +3243,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3410,6 +3434,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -3602,6 +3627,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -3792,6 +3818,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -3985,6 +4012,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4175,6 +4203,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -4367,6 +4396,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4557,6 +4587,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -4749,6 +4780,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -4939,6 +4971,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -5140,6 +5173,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5330,6 +5364,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -5522,6 +5557,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -5712,6 +5748,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -5904,6 +5941,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6094,6 +6132,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -6281,8 +6320,12 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 }>> | undefined;
             } | undefined;
         } | undefined;
+        label?: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        } | undefined;
         icon?: string | undefined;
-        label?: string | undefined;
     }, {
         value: string;
         disabled?: boolean | {
@@ -6297,6 +6340,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6487,6 +6531,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -6679,6 +6724,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -6869,6 +6915,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -7061,6 +7108,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -7251,6 +7299,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -7438,8 +7487,12 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 }>> | undefined;
             } | undefined;
         } | undefined;
+        label?: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        } | undefined;
         icon?: string | undefined;
-        label?: string | undefined;
     }>, "many">;
     defaultValue: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
     value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">, z.ZodObject<{
@@ -7458,11 +7511,53 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
     size: z.ZodOptional<z.ZodEnum<["sm", "md", "lg"]>>;
     variant: z.ZodOptional<z.ZodEnum<["outline", "ghost"]>>;
     publishTo: z.ZodOptional<z.ZodString>;
-    onChange: z.ZodOptional<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>>;
+    on: z.ZodOptional<z.ZodObject<{
+        click: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        focus: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        blur: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        keyDown: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        mouseEnter: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        mouseLeave: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+    } & {
+        pointerDown: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        pointerUp: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        touchStart: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        touchEnd: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+    } & {
+        change: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+        input: z.ZodOptional<z.ZodUnion<[z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, z.ZodArray<z.ZodType<import("@lastshotlabs/frontend-contract/actions").ActionConfig, z.ZodTypeDef, import("@lastshotlabs/frontend-contract/actions").ActionConfig>, "many">]>>;
+    }, "strict", z.ZodTypeAny, {
+        input?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        focus?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        blur?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        change?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        click?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        keyDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseEnter?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseLeave?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerUp?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchStart?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchEnd?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+    }, {
+        input?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        focus?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        blur?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        change?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        click?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        keyDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseEnter?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseLeave?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerUp?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchStart?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchEnd?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+    }>>;
     slots: z.ZodOptional<z.ZodObject<Record<"root" | "item" | "indicator" | "itemLabel" | "itemIcon", z.ZodOptional<z.ZodObject<{
         readonly className: z.ZodOptional<z.ZodString>;
         readonly style: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
         readonly cursor: z.ZodOptional<z.ZodString>;
+        readonly backgroundColor: z.ZodOptional<z.ZodString>;
         readonly gridTemplateColumns: z.ZodOptional<z.ZodString>;
         readonly gridTemplateRows: z.ZodOptional<z.ZodString>;
         readonly gridColumn: z.ZodOptional<z.ZodString>;
@@ -7966,6 +8061,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             readonly className: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly style: z.ZodOptional<z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber]>>>>;
             readonly cursor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+            readonly backgroundColor: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateColumns: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridTemplateRows: z.ZodOptional<z.ZodOptional<z.ZodString>>;
             readonly gridColumn: z.ZodOptional<z.ZodOptional<z.ZodString>>;
@@ -8470,6 +8566,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8660,6 +8757,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -8851,6 +8949,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -9041,6 +9140,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9232,6 +9332,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
         className?: string | undefined;
         style?: Record<string, string | number> | undefined;
         cursor?: string | undefined;
+        backgroundColor?: string | undefined;
         gridTemplateColumns?: string | undefined;
         gridTemplateRows?: string | undefined;
         gridColumn?: string | undefined;
@@ -9422,6 +9523,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9614,6 +9716,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -9804,6 +9907,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -9996,6 +10100,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -10186,6 +10291,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10378,6 +10484,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -10568,6 +10675,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -10760,6 +10868,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -10950,6 +11059,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -11142,6 +11252,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11332,6 +11443,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -11525,6 +11637,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -11715,6 +11828,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -11907,6 +12021,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12097,6 +12212,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12289,6 +12405,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12479,6 +12596,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -12671,6 +12789,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -12861,6 +12980,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13053,6 +13173,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -13243,6 +13364,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13446,6 +13568,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -13636,6 +13759,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -13828,6 +13952,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14018,6 +14143,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -14210,6 +14336,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -14400,6 +14527,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -14587,8 +14715,12 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 }>> | undefined;
             } | undefined;
         } | undefined;
+        label?: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        } | undefined;
         icon?: string | undefined;
-        label?: string | undefined;
     }[];
     background?: string | {
         size?: "auto" | "cover" | "contain" | undefined;
@@ -14626,6 +14758,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -14846,6 +14979,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -15036,6 +15170,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15228,6 +15363,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -15418,6 +15554,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15610,6 +15747,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -15800,6 +15938,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -15992,6 +16131,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -16182,6 +16322,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -16374,6 +16515,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -16564,6 +16706,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -16751,10 +16894,23 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    size?: "lg" | "sm" | "md" | undefined;
     mode?: "multiple" | "single" | undefined;
+    on?: {
+        input?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        focus?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        blur?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        change?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        click?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        keyDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseEnter?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseLeave?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerUp?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchStart?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchEnd?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+    } | undefined;
     variant?: "outline" | "ghost" | undefined;
-    onChange?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | undefined;
+    size?: "lg" | "sm" | "md" | undefined;
     defaultValue?: string | string[] | undefined;
     publishTo?: string | undefined;
 }, {
@@ -16773,6 +16929,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -16963,6 +17120,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -17155,6 +17313,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17345,6 +17504,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -17537,6 +17697,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -17727,6 +17888,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                     className?: string | undefined;
                     style?: Record<string, string | number> | undefined;
                     cursor?: string | undefined;
+                    backgroundColor?: string | undefined;
                     gridTemplateColumns?: string | undefined;
                     gridTemplateRows?: string | undefined;
                     gridColumn?: string | undefined;
@@ -17914,8 +18076,12 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 }>> | undefined;
             } | undefined;
         } | undefined;
+        label?: string | {
+            from: string;
+            transform?: "string" | "number" | "boolean" | "uppercase" | "lowercase" | "trim" | "length" | "json" | "keys" | "values" | "first" | "last" | "count" | "sum" | "join" | "split" | "default" | undefined;
+            transformArg?: string | number | undefined;
+        } | undefined;
         icon?: string | undefined;
-        label?: string | undefined;
     }[];
     background?: string | {
         size?: "auto" | "cover" | "contain" | undefined;
@@ -17953,6 +18119,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
     className?: string | undefined;
     style?: Record<string, string | number> | undefined;
     cursor?: string | undefined;
+    backgroundColor?: string | undefined;
     gridTemplateColumns?: string | undefined;
     gridTemplateRows?: string | undefined;
     gridColumn?: string | undefined;
@@ -18173,6 +18340,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -18363,6 +18531,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18555,6 +18724,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -18745,6 +18915,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -18937,6 +19108,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -19127,6 +19299,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -19319,6 +19492,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -19509,6 +19683,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -19701,6 +19876,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             className?: string | undefined;
             style?: Record<string, string | number> | undefined;
             cursor?: string | undefined;
+            backgroundColor?: string | undefined;
             gridTemplateColumns?: string | undefined;
             gridTemplateRows?: string | undefined;
             gridColumn?: string | undefined;
@@ -19891,6 +20067,7 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
                 className?: string | undefined;
                 style?: Record<string, string | number> | undefined;
                 cursor?: string | undefined;
+                backgroundColor?: string | undefined;
                 gridTemplateColumns?: string | undefined;
                 gridTemplateRows?: string | undefined;
                 gridColumn?: string | undefined;
@@ -20078,10 +20255,23 @@ export declare const toggleGroupConfigSchema: z.ZodObject<{
             }>> | undefined;
         } | undefined;
     } | undefined;
-    size?: "lg" | "sm" | "md" | undefined;
     mode?: "multiple" | "single" | undefined;
+    on?: {
+        input?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        focus?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        blur?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        change?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        click?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        keyDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseEnter?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        mouseLeave?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerDown?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        pointerUp?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchStart?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+        touchEnd?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | import("@lastshotlabs/frontend-contract/actions").ActionConfig[] | undefined;
+    } | undefined;
     variant?: "outline" | "ghost" | undefined;
-    onChange?: import("@lastshotlabs/frontend-contract/actions").ActionConfig | undefined;
+    size?: "lg" | "sm" | "md" | undefined;
     defaultValue?: string | string[] | undefined;
     publishTo?: string | undefined;
 }>;

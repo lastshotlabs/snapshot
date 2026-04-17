@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionSchema } from "../../../actions/types";
+import { controlEventActionsSchema } from "../../_base/events";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 import { fromRefSchema } from "../../_base/types";
 
@@ -35,8 +35,8 @@ export const switchConfigSchema = extendComponentSchema({
     color: z.enum(["primary", "success", "destructive", "warning"]).optional(),
     /** Size variant. Default: "md". */
     size: z.enum(["sm", "md", "lg"]).optional(),
-    /** Action to execute on toggle. */
-    action: actionSchema.optional(),
+    /** Tiered event action hooks for switch interactions. */
+    on: controlEventActionsSchema.optional(),
     slots: slotsSchema([
       "root",
       "track",

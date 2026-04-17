@@ -78,6 +78,15 @@ describe("chartSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts ref-backed series labels and empty copy", () => {
+    const result = chartSchema.safeParse({
+      ...baseConfig,
+      series: [{ key: "revenue", label: { from: "state.chart.legend" } }],
+      emptyMessage: { from: "state.chart.empty" },
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("accepts canonical chart slots", () => {
     const result = chartSchema.safeParse({
       ...baseConfig,

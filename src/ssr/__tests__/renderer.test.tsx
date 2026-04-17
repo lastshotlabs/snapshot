@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { createReactRenderer } from "../renderer";
@@ -15,6 +16,13 @@ const fakeMatch: ServerRouteMatchShape = {
   query: {},
   url: new URL("http://localhost/posts/test"),
 };
+
+const headerEchoRoutePath = fileURLToPath(
+  new URL("./fixtures/header-echo-route.ts", import.meta.url),
+);
+const notFoundRoutePath = fileURLToPath(
+  new URL("./fixtures/not-found-route.ts", import.meta.url),
+);
 
 describe("createReactRenderer — resolve()", () => {
   it("resolve() always returns null (file resolver is authoritative)", async () => {
@@ -80,6 +88,67 @@ describe("createReactRenderer — render() returns Response", () => {
 
     expect(typeof renderer.resolve).toBe("function");
     expect(typeof renderer.render).toBe("function");
+  });
+
+  it("passes the incoming request headers into load()", async () => {
+    const renderer = createReactRenderer({
+      resolveComponent: async () =>
+        ((props: { loaderData?: Record<string, unknown> }) =>
+          React.createElement(
+            "div",
+            null,
+            String(props.loaderData?.cookie ?? ""),
+            " ",
+            String(props.loaderData?.userAgent ?? ""),
+          )) as React.ComponentType<Record<string, unknown>>,
+    });
+
+    const response = await renderer.render(
+      {
+        ...fakeMatch,
+        filePath: headerEchoRoutePath,
+      },
+      emptyShell,
+      {
+        request: new Request(fakeMatch.url.toString(), {
+          headers: {
+            cookie: "session=abc",
+            "user-agent": "vitest-agent",
+          },
+        }),
+      },
+    );
+
+    const html = await response.text();
+    expect(html).toContain("session=abc");
+    expect(html).toContain("vitest-agent");
+  });
+
+  it("returns a 404 html shell for notFound() results", async () => {
+    const renderer = createReactRenderer({
+      resolveComponent: async () =>
+        (() => React.createElement("div", null, "ignored")) as React.ComponentType<
+          Record<string, unknown>
+        >,
+    });
+
+    const response = await renderer.render(
+      {
+        ...fakeMatch,
+        filePath: notFoundRoutePath,
+      },
+      {
+        headTags: "<title>Missing</title>",
+        assetTags: '<script type="module" src="/assets/app.js"></script>',
+      },
+      {},
+    );
+
+    const html = await response.text();
+    expect(response.status).toBe(404);
+    expect(html).toContain("<title>Missing</title>");
+    expect(html).toContain("/assets/app.js");
+    expect(html).toContain('<div id="root"></div>');
   });
 });
 

@@ -1,7 +1,7 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
@@ -25,7 +25,25 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
   const showSearch = config.showSearch !== false;
-  const filters = config.filters ?? [];
+  const searchPlaceholder = useSubscribe(config.searchPlaceholder) as
+    | string
+    | undefined;
+  const resolvedConfig = useResolveFrom({ filters: config.filters });
+  const filters = useMemo(
+    () =>
+      ((resolvedConfig.filters as FilterBarConfig["filters"] | undefined) ??
+        config.filters ??
+        []
+      ).map((filter) => ({
+        ...filter,
+        label: typeof filter.label === "string" ? filter.label : "",
+        options: filter.options.map((option) => ({
+          ...option,
+          label: typeof option.label === "string" ? option.label : "",
+        })),
+      })),
+    [config.filters, resolvedConfig.filters],
+  );
   const [search, setSearch] = useState("");
   const [filterState, setFilterState] = useState<FilterState>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -387,7 +405,7 @@ export function FilterBar({ config }: { config: FilterBarConfig }) {
               type="text"
               value={search}
               onChangeText={handleSearchChange}
-              placeholder={config.searchPlaceholder ?? "Search..."}
+              placeholder={searchPlaceholder ?? "Search..."}
               testId="filter-bar-search"
               surfaceId={`${rootId}-search-input`}
               surfaceConfig={searchInputSurface.resolvedConfigForWrapper}

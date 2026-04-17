@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
+import { fromRefSchema } from "../../_base/types";
 
 /**
  * Zod schema for a single feature in a pricing tier.
@@ -8,7 +9,7 @@ import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 const pricingFeatureSchema = z
   .object({
     /** Feature description text. */
-    text: z.string(),
+    text: z.union([z.string(), fromRefSchema]),
     /** Whether this feature is included in the tier. Default: true. */
     included: z.boolean().optional(),
   })
@@ -20,23 +21,23 @@ const pricingFeatureSchema = z
 const pricingTierSchema = z
   .object({
     /** Tier display name (e.g., "Starter", "Pro", "Enterprise"). */
-    name: z.string(),
+    name: z.union([z.string(), fromRefSchema]),
     /** Price value — string for custom formatting (e.g., "Custom") or number. */
-    price: z.union([z.string(), z.number()]),
+    price: z.union([z.string(), z.number(), fromRefSchema]),
     /** Billing period label (e.g., "/month", "/year"). */
-    period: z.string().optional(),
+    period: z.union([z.string(), fromRefSchema]).optional(),
     /** Short description of the tier. */
-    description: z.string().optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** List of features with inclusion indicators. */
     features: z.array(pricingFeatureSchema),
     /** Whether this tier should be visually highlighted. */
     highlighted: z.boolean().optional(),
     /** Badge text displayed on the tier (e.g., "Most Popular"). */
-    badge: z.string().optional(),
+    badge: z.union([z.string(), fromRefSchema]).optional(),
     /** Action dispatched when the CTA button is clicked. */
     action: actionSchema.optional(),
     /** CTA button label. Default: "Get Started". */
-    actionLabel: z.string().optional(),
+    actionLabel: z.union([z.string(), fromRefSchema]).optional(),
   })
   .strict();
 
@@ -84,7 +85,7 @@ export const pricingTableConfigSchema: z.ZodType<Record<string, any>> = extendCo
     /** Pricing tiers to display. */
     tiers: z.array(pricingTierSchema),
     /** Currency symbol prepended to numeric prices. Default: "$". */
-    currency: z.string().optional(),
+    currency: z.union([z.string(), fromRefSchema]).optional(),
     /** Number of columns. Default: "auto" (based on tier count). */
     columns: z.enum(["auto", "2", "3", "4"]).optional(),
     /** Visual layout variant. Default: "cards". */

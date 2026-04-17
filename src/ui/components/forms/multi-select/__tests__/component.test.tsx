@@ -83,7 +83,9 @@ describe("MultiSelect", () => {
             { label: { from: "copy.bugLabel" }, value: "bug" },
             { label: { from: "copy.docsLabel" }, value: "docs" },
           ],
-          changeAction: { type: "set-tags" } as never,
+          on: {
+            change: { type: "set-tags" } as never,
+          },
         }}
       />,
     );
@@ -93,7 +95,10 @@ describe("MultiSelect", () => {
     expect(screen.getByText("Bug")).toBeDefined();
     fireEvent.click(screen.getByRole("option", { name: /Bug/ }));
 
-    expect(executeSpy).toHaveBeenCalledWith({ type: "set-tags" }, { value: ["bug"] });
+    expect(executeSpy).toHaveBeenCalledWith(
+      { type: "set-tags" },
+      { id: undefined, value: ["bug"] },
+    );
   });
 
   it("applies canonical error message surfaces", () => {

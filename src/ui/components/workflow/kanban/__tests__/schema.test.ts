@@ -19,4 +19,14 @@ describe("kanbanConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed column titles and empty copy", () => {
+    const result = kanbanConfigSchema.safeParse({
+      type: "kanban",
+      columns: [{ key: "todo", title: { from: "state.board.todo" } }],
+      emptyMessage: { from: "state.board.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

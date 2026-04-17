@@ -19,4 +19,14 @@ describe("notificationFeedConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts a ref-backed empty message", () => {
+    const result = notificationFeedConfigSchema.safeParse({
+      type: "notification-feed",
+      data: "/api/notifications",
+      emptyMessage: { from: "state.notifications.empty" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

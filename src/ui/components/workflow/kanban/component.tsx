@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useComponentData } from "../../_base/use-component-data";
 import { useActionExecutor } from "../../../actions/executor";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { useResolveFrom, useSubscribe, usePublish } from "../../../context/hooks";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -427,10 +427,15 @@ export function Kanban({ config }: { config: KanbanConfig }) {
   const execute = useActionExecutor();
   const visible = useSubscribe(config.visible ?? true);
   const publish = usePublish(config.id);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
+  const resolvedConfig = useResolveFrom({ columns: config.columns });
   const sensors = useDndSensors();
 
   const columnField = config.columnField ?? "status";
   const sortable = config.sortable ?? false;
+  const columns =
+    ((resolvedConfig.columns as KanbanConfig["columns"] | undefined) ??
+      config.columns) as KanbanConfig["columns"];
 
   // Extract items from response
   const rawItems: Record<string, unknown>[] = useMemo(() => {
@@ -468,7 +473,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
   // Group items by column
   const grouped = useMemo(() => {
     const map = new Map<string, Record<string, unknown>[]>();
-    for (const col of config.columns) {
+    for (const col of columns) {
       map.set(col.key, []);
     }
     for (const item of items) {
@@ -477,7 +482,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       if (list) list.push(item);
     }
     return map;
-  }, [items, config.columns, columnField]);
+  }, [items, columns, columnField]);
 
   // Find item by DnD id
   const findItem = useCallback(
@@ -502,9 +507,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       // Check if dragged over a column droppable (id: "column-{key}") or another card
       const overId = String(over.id);
       const overColumnKey = overId.startsWith("column-")
-        ? config.columns.find((c: KanbanColumnConfig) => `column-${c.key}` === overId)
+        ? columns.find((c: KanbanColumnConfig) => `column-${c.key}` === overId)
             ?.key
-        : config.columns.find((c: KanbanColumnConfig) => c.key === overId)?.key;
+        : columns.find((c: KanbanColumnConfig) => c.key === overId)?.key;
       if (overColumnKey) {
         // Dropped on column header — move to that column
         const currentCol = String(activeItem[columnField] ?? "");
@@ -519,7 +524,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
         }
       }
     },
-    [findItem, config.columns, columnField, getCardId],
+    [findItem, columns, columnField, getCardId],
   );
 
   const handleDragEnd = useCallback(
@@ -535,9 +540,9 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       const targetColumnKey =
         // Dropped on a column droppable zone (id: "column-{key}")
         (overId.startsWith("column-")
-          ? config.columns.find((c: KanbanColumnConfig) => `column-${c.key}` === overId)
+          ? columns.find((c: KanbanColumnConfig) => `column-${c.key}` === overId)
               ?.key
-          : config.columns.find((c: KanbanColumnConfig) => c.key === overId)?.key) ??
+          : columns.find((c: KanbanColumnConfig) => c.key === overId)?.key) ??
         // Dropped on another card — find which column that card is in
         (() => {
           const overItem = findItem(overId);
@@ -587,7 +592,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
         });
       }
     },
-    [findItem, config, columnField, getCardId, items, execute, publish],
+    [findItem, config, columns, columnField, getCardId, items, execute, publish],
   );
 
   if (visible === false) return null;
@@ -786,7 +791,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
                 className={emptyStateSurface.className}
                 style={emptyStateSurface.style}
               >
-                {config.emptyMessage ?? "No items"}
+                {emptyMessage ?? "No items"}
               </div>
             )}
 
@@ -844,7 +849,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
                 className={emptyStateSurface.className}
                 style={emptyStateSurface.style}
               >
-                {config.emptyMessage ?? "No items"}
+                {emptyMessage ?? "No items"}
               </div>
             )}
 
@@ -880,7 +885,7 @@ export function Kanban({ config }: { config: KanbanConfig }) {
       className={rootSurface.className}
       style={rootSurface.style}
     >
-      {config.columns.map(renderColumn)}
+      {columns.map(renderColumn)}
       <SurfaceStyles css={rootSurface.scopedCss} />
     </div>
   );

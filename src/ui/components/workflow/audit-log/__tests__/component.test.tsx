@@ -2,6 +2,12 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { AtomRegistryImpl } from "../../../../context/registry";
+import {
+  AppRegistryContext,
+  PageRegistryContext,
+} from "../../../../context/providers";
+import { SnapshotApiContext } from "../../../../actions/executor";
 import { AuditLog } from "../component";
 
 vi.mock("../../../_base/use-component-data", () => ({
@@ -17,10 +23,6 @@ vi.mock("../../../_base/use-component-data", () => ({
     isLoading: false,
     error: null,
   }),
-}));
-
-vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
 }));
 
 describe("AuditLog", () => {
@@ -56,5 +58,39 @@ describe("AuditLog", () => {
     fireEvent.click(screen.getByRole("button", { name: /details/i }));
 
     expect(screen.getByText(/"dark"/)).toBeTruthy();
+  });
+
+  it("renders ref-backed filter labels and options", () => {
+    const registry = new AtomRegistryImpl();
+    const auditAtom = registry.register("audit");
+    registry.store.set(auditAtom, {
+      filterLabel: "Action type",
+      filterOption: "updated settings",
+    });
+
+    render(
+      <AppRegistryContext.Provider value={null}>
+        <PageRegistryContext.Provider value={registry}>
+          <SnapshotApiContext.Provider value={null}>
+            <AuditLog
+              config={{
+                type: "audit-log",
+                data: "/api/audit-log",
+                filters: [
+                  {
+                    field: "action",
+                    label: { from: "audit.filterLabel" },
+                    options: [{ from: "audit.filterOption" }],
+                  },
+                ],
+              }}
+            />
+          </SnapshotApiContext.Provider>
+        </PageRegistryContext.Provider>
+      </AppRegistryContext.Provider>,
+    );
+
+    expect(screen.getByLabelText("Action type")).toBeTruthy();
+    expect(screen.getByRole("option", { name: "updated settings" })).toBeTruthy();
   });
 });

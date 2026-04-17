@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { Icon } from "../../../icons/index";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {
   extractSurfaceConfig,
@@ -346,14 +347,19 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
           next = [...previous, value];
         }
 
-        if (config.changeAction) {
-          void execute(config.changeAction, { value: next });
-        }
+        void executeEventAction(execute, config.on?.change, {
+          id: config.id,
+          value: next,
+        });
+        void executeEventAction(execute, config.on?.input, {
+          id: config.id,
+          value: next,
+        });
 
         return next;
       });
     },
-    [config.changeAction, config.maxSelected, execute],
+    [config.id, config.maxSelected, config.on?.change, config.on?.input, execute],
   );
 
   const removeSelected = useCallback(
@@ -361,13 +367,18 @@ export function MultiSelect({ config }: { config: MultiSelectConfig }) {
       event.stopPropagation();
       setSelected((previous) => {
         const next = previous.filter((entry) => entry !== value);
-        if (config.changeAction) {
-          void execute(config.changeAction, { value: next });
-        }
+        void executeEventAction(execute, config.on?.change, {
+          id: config.id,
+          value: next,
+        });
+        void executeEventAction(execute, config.on?.input, {
+          id: config.id,
+          value: next,
+        });
         return next;
       });
     },
-    [config.changeAction, execute],
+    [config.id, config.on?.change, config.on?.input, execute],
   );
 
   const filteredOptions = useMemo(() => {

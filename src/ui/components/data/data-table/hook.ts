@@ -81,7 +81,10 @@ function resolveColumns(
   if (configs === "auto") return autoDetectColumns(rows);
   return (configs as ColumnConfig[]).map((col) => ({
     field: col.field,
-    label: col.label ?? humanizeFieldName(col.field),
+    label:
+      typeof col.label === "string"
+        ? col.label
+        : humanizeFieldName(col.field),
     sortable: col.sortable ?? false,
     format: col.format,
     badgeColors: col.badgeColors,

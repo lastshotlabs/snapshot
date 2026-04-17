@@ -87,6 +87,30 @@ describe("DetailCard", () => {
     expect(screen.getByText("Select an item to view details")).toBeTruthy();
   });
 
+  it("uses auto skeleton loading config when loading is configured", () => {
+    const Wrapper = createTestWrapper(registry);
+    render(
+      <Wrapper>
+        <DetailCard
+          config={{
+            type: "detail-card",
+            data: "GET /api/users/1" as never,
+            fields: "auto",
+            loading: {
+              variant: "card",
+              className: "detail-loading-auto",
+            },
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByTestId("detail-card-loading")).toBeTruthy();
+    expect(
+      document.querySelector('[data-snapshot-auto-skeleton]')?.className,
+    ).toContain("detail-loading-auto");
+  });
+
   it("renders custom empty state message", () => {
     const Wrapper = createTestWrapper(registry);
     render(
@@ -98,6 +122,22 @@ describe("DetailCard", () => {
     );
 
     expect(screen.getByText("Pick a user first")).toBeTruthy();
+  });
+
+  it("renders a ref-backed empty state message", () => {
+    const Wrapper = createTestWrapper(registry);
+    const detailAtom = registry.register("detail");
+    registry.store.set(detailAtom, { empty: "Choose a record first" });
+
+    render(
+      <Wrapper>
+        <DetailCard
+          config={{ ...baseConfig, emptyState: { from: "detail.empty" } }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Choose a record first")).toBeTruthy();
   });
 
   it("renders fields from FromRef data with auto fields", () => {
@@ -202,6 +242,37 @@ describe("DetailCard", () => {
 
     expect(screen.getByText("Edit")).toBeTruthy();
     expect(screen.getByText("Delete")).toBeTruthy();
+  });
+
+  it("renders ref-backed field and action labels", () => {
+    const Wrapper = createTestWrapper(registry);
+    const sourceAtom = registry.register("source");
+    const detailAtom = registry.register("detail");
+    registry.store.set(sourceAtom, { name: "Alice" });
+    registry.store.set(detailAtom, {
+      labels: { name: "Primary contact" },
+      actions: { edit: "Open editor" },
+    });
+
+    render(
+      <Wrapper>
+        <DetailCard
+          config={{
+            ...baseConfig,
+            fields: [{ field: "name", label: { from: "detail.labels.name" } }],
+            actions: [
+              {
+                label: { from: "detail.actions.edit" },
+                action: { type: "open-modal", modal: "edit-user" },
+              },
+            ],
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Primary contact")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Open editor" })).toBeTruthy();
   });
 
   it("renders clickable action buttons without throwing", () => {

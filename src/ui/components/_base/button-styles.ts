@@ -148,31 +148,31 @@ export const BUTTON_INTERACTIVE_CSS = `
               transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
 }
 [data-sn-button][data-variant="default"]:not(:disabled):hover {
-  background-color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 88%, var(--sn-color-background, #ffffff));
+  background-color: color-mix(in oklch, var(--sn-color-primary, #2563eb) 88%, var(--sn-color-background, #ffffff)) !important;
   box-shadow: 0 1px 2px color-mix(in oklch, var(--sn-color-foreground, #111827) 12%, transparent);
 }
 [data-sn-button][data-variant="secondary"]:not(:disabled):hover {
-  background-color: color-mix(in oklch, var(--sn-color-secondary, #f1f5f9) 92%, var(--sn-color-background, #ffffff));
-  border-color: color-mix(in oklch, var(--sn-color-border, #e5e7eb) 100%, var(--sn-color-background, #ffffff));
+  background-color: color-mix(in oklch, var(--sn-color-secondary, #f1f5f9) 92%, var(--sn-color-background, #ffffff)) !important;
+  border-color: color-mix(in oklch, var(--sn-color-border, #e5e7eb) 100%, var(--sn-color-background, #ffffff)) !important;
 }
 [data-sn-button][data-variant="outline"]:not(:disabled):hover,
 [data-sn-button][data-variant="ghost"]:not(:disabled):hover {
-  background-color: var(--sn-color-accent, #f3f4f6);
+  background-color: var(--sn-color-accent, #f3f4f6) !important;
 }
 [data-sn-button][data-variant="ghost"]:not(:disabled)[data-open="true"],
 [data-sn-button][data-variant="ghost"]:not(:disabled)[data-current="true"],
 [data-sn-button][data-variant="ghost"]:not(:disabled)[data-selected="true"] {
-  background-color: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent);
-  color: var(--sn-color-foreground, #111827);
+  background-color: color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 92%, transparent) !important;
+  color: var(--sn-color-foreground, #111827) !important;
 }
 [data-sn-button][data-variant="ghost"]:not(:disabled)[data-current="true"] {
-  font-weight: var(--sn-font-weight-semibold, 600);
+  font-weight: var(--sn-font-weight-semibold, 600) !important;
 }
 [data-sn-button][data-variant="link"]:not(:disabled):hover {
-  opacity: var(--sn-opacity-hover, 0.8);
+  opacity: var(--sn-opacity-hover, 0.8) !important;
 }
 [data-sn-button][data-variant="destructive"]:not(:disabled):hover {
-  background-color: color-mix(in oklch, var(--sn-color-destructive, #dc2626) 92%, var(--sn-color-background, #ffffff));
+  background-color: color-mix(in oklch, var(--sn-color-destructive, #dc2626) 92%, var(--sn-color-background, #ffffff)) !important;
 }
 [data-sn-button]:focus { outline: none; }
 [data-sn-button]:focus-visible {

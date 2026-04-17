@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { afterEach, describe, it, expect, vi } from "vitest";
+import { cleanup, render, screen, fireEvent, within } from "@testing-library/react";
 import React from "react";
 import { AtomRegistryImpl } from "../../../../context/registry";
 import {
@@ -67,6 +67,10 @@ function baseConfig(overrides: Partial<FeedConfig> = {}): FeedConfig {
     ...overrides,
   };
 }
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("Feed component", () => {
   it("renders with data-snapshot-component attribute", () => {
@@ -228,5 +232,52 @@ describe("Feed component", () => {
     expect((published as Record<string, unknown>)["message"]).toBe(
       "Alice joined the team",
     );
+  });
+
+  it("resolves ref-backed item action labels and empty copy", () => {
+    const { Wrapper, registry } = createWrapper([]);
+    const copyAtom = registry.register("feed-copy");
+    registry.store.set(copyAtom, {
+      action: "Inspect",
+      empty: "Nothing pending",
+    });
+
+    const { rerender } = render(
+      <Wrapper>
+        <Feed
+          config={baseConfig({
+            emptyMessage: { from: "state.feed-copy.empty" } as never,
+            itemActions: [
+              {
+                label: { from: "state.feed-copy.action" } as never,
+                action: { type: "navigate", to: "/activity/{id}" },
+              },
+            ],
+            data: { from: "feed-source" },
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Nothing pending")).toBeDefined();
+
+    registry.store.set(registry.get("feed-source")!, testItems);
+    rerender(
+      <Wrapper>
+        <Feed
+          config={baseConfig({
+            itemActions: [
+              {
+                label: { from: "state.feed-copy.action" } as never,
+                action: { type: "navigate", to: "/activity/{id}" },
+              },
+            ],
+            emptyMessage: { from: "state.feed-copy.empty" } as never,
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getAllByText("Inspect")[0]).toBeDefined();
   });
 });

@@ -128,4 +128,33 @@ describe("ListComponent", () => {
 
     expect(screen.getByText("Nothing here")).toBeTruthy();
   });
+
+  it("keeps the loadingState wrapper when auto skeleton loading is enabled", () => {
+    const { Wrapper } = createWrapper();
+    render(
+      <Wrapper>
+        <ListComponent
+          config={{
+            type: "list",
+            id: "loading-orders",
+            data: "GET /api/orders",
+            loading: {
+              variant: "list",
+              className: "loading-config-root",
+            },
+            slots: {
+              loadingState: { className: "loading-slot" },
+            },
+          }}
+        />
+      </Wrapper>,
+    );
+
+    expect(
+      document.querySelector('[data-snapshot-id="loading-orders-loading"]')?.className,
+    ).toContain("loading-slot");
+    expect(
+      document.querySelector('[data-snapshot-auto-skeleton]')?.className,
+    ).toContain("loading-config-root");
+  });
 });

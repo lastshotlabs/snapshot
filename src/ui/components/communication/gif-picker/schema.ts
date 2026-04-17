@@ -59,7 +59,7 @@ export const gifPickerConfigSchema = extendComponentSchema({
           preview: z.string().optional(),
           width: z.number().optional(),
           height: z.number().optional(),
-          title: z.string().optional(),
+          title: z.union([z.string(), fromRefSchema]).optional(),
         }),
       )
       .optional(),

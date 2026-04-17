@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from "react";
+import { useSubscribe } from "../../context/hooks";
 import { renderIcon } from "../../icons/render";
 import { SurfaceStyles } from "./surface-styles";
 import {
@@ -33,8 +34,11 @@ export function AutoErrorState({
   config: AutoErrorStateConfig;
   onRetry?: () => void;
 }): ReactNode {
-  const retryLabel =
-    typeof config.retry === "object" ? config.retry.label : "Retry";
+  const title = useSubscribe(config.title) as string | undefined;
+  const description = useSubscribe(config.description) as string | undefined;
+  const retryLabel = useSubscribe(
+    typeof config.retry === "object" ? config.retry.label : undefined,
+  ) as string | undefined;
   const showRetry = Boolean(config.retry) && Boolean(onRetry);
   const rootId = config.id ?? "auto-error-state";
   const rootSurface = resolveSurfacePresentation({
@@ -109,15 +113,15 @@ export function AutoErrorState({
           className={titleSurface.className}
           style={titleSurface.style}
         >
-          {config.title ?? "Something went wrong"}
+          {title ?? "Something went wrong"}
         </div>
-        {config.description ? (
+        {description ? (
           <div
             data-snapshot-id={`${rootId}-description`}
             className={descriptionSurface.className}
             style={descriptionSurface.style}
           >
-            {config.description}
+            {description}
           </div>
         ) : null}
         {showRetry ? (
@@ -129,7 +133,7 @@ export function AutoErrorState({
             variant="outline"
             size="sm"
           >
-            {retryLabel}
+            {retryLabel ?? "Retry"}
           </ButtonControl>
         ) : null}
       </div>

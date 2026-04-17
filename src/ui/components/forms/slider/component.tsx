@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useSubscribe } from "../../../context/hooks";
+import { executeEventAction } from "../../_base/events";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { InputControl } from "../input";
@@ -69,9 +70,8 @@ export function Slider({ config }: { config: SliderConfig }) {
     ((singleValue - min) / (max - min)) * 100;
 
   const triggerChange = (value: number | [number, number]) => {
-    if (config.onChange) {
-      void execute(config.onChange, { value });
-    }
+    void executeEventAction(execute, config.on?.change, { id: config.id, value });
+    void executeEventAction(execute, config.on?.input, { id: config.id, value });
   };
 
   const rootSurface = resolveSurfacePresentation({

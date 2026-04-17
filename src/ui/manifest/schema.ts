@@ -22,6 +22,7 @@ import {
   exitAnimationSchema,
   spacingEnum,
   statefulElementSchema,
+  styleableElementFields,
   slotsSchema,
 } from "../components/_base/schema";
 import {
@@ -388,6 +389,12 @@ export const liveConfigSchema = z.union([
 
 export const loadingConfigSchema = z
   .object({
+    id: z.string().optional(),
+    ...styleableElementFields,
+    states: statefulElementSchema.shape.states.optional(),
+    hover: hoverConfigSchema.optional(),
+    focus: focusConfigSchema.optional(),
+    active: activeConfigSchema.optional(),
     disabled: z.boolean().optional(),
     variant: z
       .enum(["auto", "table", "list", "card", "text", "chart", "stat"])
@@ -395,6 +402,7 @@ export const loadingConfigSchema = z
     rows: z.number().int().positive().optional(),
     count: z.number().int().positive().optional(),
     delay: z.number().int().nonnegative().default(100),
+    slots: slotsSchema(["root", "row", "card", "block"]).optional(),
   })
   .strict();
 
@@ -456,13 +464,13 @@ export const emptyStateConfigSchema = z
     lineHeight: z.union([z.string(), z.number()]).optional(),
     letterSpacing: z.union([z.string(), z.number()]).optional(),
     icon: z.string().optional(),
-    title: z.string().default("No data"),
-    description: z.string().optional(),
+    title: textWithFromRefSchema.default("No data"),
+    description: textWithFromRefSchema.optional(),
     size: z.enum(["sm", "md", "lg"]).optional(),
     iconColor: z.string().optional(),
     action: z
       .object({
-        label: z.string().optional(),
+        label: textWithFromRefSchema.optional(),
         action: z.union([actionConfigSchema, z.array(actionConfigSchema)]),
         icon: z.string().optional(),
         variant: z.enum(["default", "primary", "outline"]).default("primary"),
@@ -529,15 +537,18 @@ export const errorStateConfigSchema = z
     lineHeight: z.union([z.string(), z.number()]).optional(),
     letterSpacing: z.union([z.string(), z.number()]).optional(),
     /** Heading text. Default: "Something went wrong". */
-    title: z.string().optional(),
+    title: textWithFromRefSchema.optional(),
     /** Supporting text shown below the title. */
-    description: z.string().optional(),
+    description: textWithFromRefSchema.optional(),
     /**
      * Show a retry button. Pass `true` for the default label ("Retry") or
      * `{ label: "..." }` to customise it.
      */
     retry: z
-      .union([z.boolean(), z.object({ label: z.string() }).strict()])
+      .union([
+        z.boolean(),
+        z.object({ label: textWithFromRefSchema }).strict(),
+      ])
       .optional(),
     /** Icon name. Default: "circle-alert". */
     icon: z.string().optional(),

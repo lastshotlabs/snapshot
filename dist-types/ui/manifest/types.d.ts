@@ -3,13 +3,15 @@ import type { StateConfigMap } from "@lastshotlabs/frontend-contract/state";
 import type { analyticsConfigSchema, appConfigSchema, authProviderSchema, manifestConfigSchema, observabilityConfigSchema, authScreenConfigSchema, pushConfigSchema, realtimeConfigSchema, realtimeSseEndpointSchema, realtimeWsSchema, pageConfigSchema, routeConfigSchema, routeGuardConfigSchema, routeGuardSchema, routeTransitionSchema, navigationConfigSchema, stateValueConfigSchema, overlayConfigSchema, baseComponentConfigSchema, cardConfigSchema, headingConfigSchema, buttonConfigSchema, selectConfigSchema, outletComponentSchema, toastConfigSchema } from "./schema";
 import type { FromRef } from "../context/types";
 import type { Responsive, ThemeConfig } from "../tokens/types";
-import type { EndpointTarget, ResourceMap } from "./resources";
+import type { EndpointTarget, ResourceMap, ResolvedRequest } from "./resources";
 import type { CustomWorkflowActionDeclarationMap, WorkflowDefinition, WorkflowMap } from "../workflows/types";
+import type { ApiClientLike } from "../../api/client";
 /**
  * Raw manifest input shape accepted by `parseManifest()` before defaults are
  * applied during compilation.
  */
 export type ManifestConfig = Omit<z.input<typeof manifestConfigSchema>, "workflows"> & {
+    __runtime?: ManifestRuntimeExtensions;
     workflows?: {
         actions?: {
             custom?: CustomWorkflowActionDeclarationMap;
@@ -23,57 +25,103 @@ export type ManifestConfig = Omit<z.input<typeof manifestConfigSchema>, "workflo
  * Parsed manifest shape after Zod defaults are applied.
  */
 export type ParsedManifestConfig = z.infer<typeof manifestConfigSchema>;
-/** Resolved runtime view of `appConfigSchema`. */
-export type AppConfig = Resolved<z.infer<typeof appConfigSchema>>;
-/** Resolved runtime view of `toastConfigSchema`. */
-export type ToastConfig = z.infer<typeof toastConfigSchema>;
-/** Resolved runtime view of `analyticsConfigSchema`. */
-export type AnalyticsConfig = Resolved<z.infer<typeof analyticsConfigSchema>>;
-/** Resolved runtime view of `observabilityConfigSchema`. */
-export type ObservabilityConfig = Resolved<z.infer<typeof observabilityConfigSchema>>;
-/** Resolved runtime view of `pushConfigSchema`. */
-export type PushConfig = Resolved<z.infer<typeof pushConfigSchema>>;
-/** Resolved runtime view of `authProviderSchema`. */
-export type AuthProviderConfig = Resolved<z.infer<typeof authProviderSchema>>;
-/** Resolved runtime view of `authScreenConfigSchema`. */
-export type AuthScreenConfig = Resolved<z.infer<typeof authScreenConfigSchema>>;
-/** Resolved runtime view of `realtimeWsSchema`. */
-export type RealtimeWsConfig = Resolved<z.infer<typeof realtimeWsSchema>>;
-/** Resolved runtime view of `realtimeSseEndpointSchema`. */
-export type RealtimeSseEndpointConfig = Resolved<z.infer<typeof realtimeSseEndpointSchema>>;
-/** Resolved runtime view of `realtimeConfigSchema`. */
-export type RealtimeConfig = Resolved<z.infer<typeof realtimeConfigSchema>>;
-/** Resolved runtime view of `pageConfigSchema`. */
-export type PageConfig = Resolved<z.infer<typeof pageConfigSchema>>;
-/** Resolved runtime view of `routeConfigSchema`. */
-export type RouteConfig = Resolved<z.infer<typeof routeConfigSchema>>;
-export type RouteTransitionConfig = Resolved<z.infer<typeof routeTransitionSchema>>;
-/** Resolved runtime view of `routeGuardConfigSchema`. */
-export type RouteGuardConfig = Resolved<z.infer<typeof routeGuardConfigSchema>>;
-/** Resolved runtime view of `routeGuardSchema`. */
-export type RouteGuard = Resolved<z.infer<typeof routeGuardSchema>>;
-/** Runtime view of `navigationConfigSchema`. Navigation labels remain locale-resolved at render time. */
-export type NavigationConfig = z.infer<typeof navigationConfigSchema>;
-/** Runtime state declaration for a single named manifest state value. */
-export type StateValueConfig = z.infer<typeof stateValueConfigSchema>;
+/** Input shape for `appConfigSchema` — defaulted fields are optional. */
+export type AppConfig = Resolved<z.input<typeof appConfigSchema>>;
+/** Input shape for `toastConfigSchema` — defaulted fields are optional. */
+export type ToastConfig = z.input<typeof toastConfigSchema>;
+/** Input shape for `analyticsConfigSchema` — defaulted fields are optional. */
+export type AnalyticsConfig = Resolved<z.input<typeof analyticsConfigSchema>>;
+/** Input shape for `observabilityConfigSchema` — defaulted fields are optional. */
+export type ObservabilityConfig = Resolved<z.input<typeof observabilityConfigSchema>>;
+/** Input shape for `pushConfigSchema` — defaulted fields are optional. */
+export type PushConfig = Resolved<z.input<typeof pushConfigSchema>>;
+/** Input shape for `authProviderSchema` — defaulted fields are optional. */
+export type AuthProviderConfig = Resolved<z.input<typeof authProviderSchema>>;
+/** Input shape for `authScreenConfigSchema` — defaulted fields are optional. */
+export type AuthScreenConfig = Resolved<z.input<typeof authScreenConfigSchema>>;
+/** Input shape for `realtimeWsSchema` — defaulted fields are optional. */
+export type RealtimeWsConfig = Resolved<z.input<typeof realtimeWsSchema>>;
+/** Input shape for `realtimeSseEndpointSchema` — defaulted fields are optional. */
+export type RealtimeSseEndpointConfig = Resolved<z.input<typeof realtimeSseEndpointSchema>>;
+/** Input shape for `realtimeConfigSchema` — defaulted fields are optional. */
+export type RealtimeConfig = Resolved<z.input<typeof realtimeConfigSchema>>;
+/** Input shape for `pageConfigSchema` — defaulted fields are optional. */
+export type PageConfig = Resolved<z.input<typeof pageConfigSchema>>;
+/** Input shape for `routeConfigSchema` — defaulted fields are optional. */
+export type RouteConfig = Resolved<z.input<typeof routeConfigSchema>>;
+export type RouteTransitionConfig = Resolved<z.input<typeof routeTransitionSchema>>;
+/** Input shape for `routeGuardConfigSchema` — defaulted fields are optional. */
+export type RouteGuardConfig = Resolved<z.input<typeof routeGuardConfigSchema>>;
+/** Input shape for `routeGuardSchema` — defaulted fields are optional. */
+export type RouteGuard = Resolved<z.input<typeof routeGuardSchema>>;
+/** Input shape for `navigationConfigSchema` — defaulted fields are optional. */
+export type NavigationConfig = z.input<typeof navigationConfigSchema>;
+/** Input shape for `stateValueConfigSchema` — defaulted fields are optional. */
+export type StateValueConfig = z.input<typeof stateValueConfigSchema>;
 /** Named manifest state map keyed by state id. */
 export type StateConfig = StateConfigMap;
+/** @internal Parsed app config with all defaults applied. */
+export type ParsedAppConfig = Resolved<z.infer<typeof appConfigSchema>>;
+/** @internal Parsed auth config with all defaults applied. */
+export type ParsedAuthScreenConfig = Resolved<z.infer<typeof authScreenConfigSchema>>;
+/** @internal Parsed route config with all defaults applied. */
+export type ParsedRouteConfig = Resolved<z.infer<typeof routeConfigSchema>>;
+/** @internal Parsed route transition config with all defaults applied. */
+export type ParsedRouteTransitionConfig = Resolved<z.infer<typeof routeTransitionSchema>>;
+/** @internal Parsed page config with all defaults applied. */
+export type ParsedPageConfig = Resolved<z.infer<typeof pageConfigSchema>>;
+/** @internal Parsed route guard with all defaults applied. */
+export type ParsedRouteGuard = Resolved<z.infer<typeof routeGuardSchema>>;
+/** @internal Parsed toast config with all defaults applied. */
+export type ParsedToastConfig = z.infer<typeof toastConfigSchema>;
+/** @internal Parsed analytics config with all defaults applied. */
+export type ParsedAnalyticsConfig = Resolved<z.infer<typeof analyticsConfigSchema>>;
+/** @internal Parsed observability config with all defaults applied. */
+export type ParsedObservabilityConfig = Resolved<z.infer<typeof observabilityConfigSchema>>;
+/** @internal Parsed push config with all defaults applied. */
+export type ParsedPushConfig = Resolved<z.infer<typeof pushConfigSchema>>;
+/** @internal Parsed overlay config with all defaults applied. */
+export type ParsedOverlayConfig = Resolved<z.infer<typeof overlayConfigSchema>>;
+/** @internal Parsed navigation config with all defaults applied. */
+export type ParsedNavigationConfig = z.infer<typeof navigationConfigSchema>;
+/** @internal Parsed realtime config with all defaults applied. */
+export type ParsedRealtimeConfig = Resolved<z.infer<typeof realtimeConfigSchema>>;
 /** Named manifest resource map keyed by resource id. */
 export type ResourceConfigMap = ResourceMap;
-/** Resolved runtime view of `overlayConfigSchema`. */
-export type OverlayConfig = Resolved<z.infer<typeof overlayConfigSchema>>;
-/** Resolved runtime view of `baseComponentConfigSchema`. */
-export type BaseComponentConfig = Resolved<z.infer<typeof baseComponentConfigSchema>>;
-/** Resolved runtime view of `headingConfigSchema`. */
-export type HeadingConfig = Resolved<z.infer<typeof headingConfigSchema>>;
-/** Resolved runtime view of `buttonConfigSchema`. */
-export type ButtonConfig = Resolved<z.infer<typeof buttonConfigSchema>>;
-/** Resolved runtime view of `selectConfigSchema`. */
-export type SelectConfig = Resolved<z.infer<typeof selectConfigSchema>>;
-/** Resolved runtime view of `cardConfigSchema`. */
-export type CardConfig = Resolved<z.infer<typeof cardConfigSchema>>;
-/** Resolved runtime view of `outletComponentSchema`. */
-export type OutletConfig = Resolved<z.infer<typeof outletComponentSchema>>;
+export interface ManifestResourceLoaderContext {
+    manifest: CompiledManifest;
+    resourceName: string;
+    params: Record<string, unknown>;
+    request: ResolvedRequest & {
+        url: string;
+    };
+    signal?: AbortSignal;
+    client: ApiClientLike;
+    clients: Record<string, ApiClientLike>;
+    loadTarget: (target: EndpointTarget, params?: Record<string, unknown>, options?: {
+        signal?: AbortSignal;
+    }) => Promise<unknown>;
+}
+export type ManifestResourceLoader = (context: ManifestResourceLoaderContext) => Promise<unknown>;
+export interface ManifestRuntimeExtensions {
+    resources?: Record<string, {
+        load?: ManifestResourceLoader;
+    }>;
+}
+/** Input shape for `overlayConfigSchema` — defaulted fields are optional. */
+export type OverlayConfig = Resolved<z.input<typeof overlayConfigSchema>>;
+/** Input shape for `baseComponentConfigSchema` — defaulted fields are optional. */
+export type BaseComponentConfig = Resolved<z.input<typeof baseComponentConfigSchema>>;
+/** Input shape for `headingConfigSchema` — defaulted fields are optional. */
+export type HeadingConfig = Resolved<z.input<typeof headingConfigSchema>>;
+/** Input shape for `buttonConfigSchema` — defaulted fields are optional. */
+export type ButtonConfig = Resolved<z.input<typeof buttonConfigSchema>>;
+/** Input shape for `selectConfigSchema` — defaulted fields are optional. */
+export type SelectConfig = Resolved<z.input<typeof selectConfigSchema>>;
+/** Input shape for `cardConfigSchema` — defaulted fields are optional. */
+export type CardConfig = Resolved<z.input<typeof cardConfigSchema>>;
+/** Input shape for `outletComponentSchema` — defaulted fields are optional. */
+export type OutletConfig = Resolved<z.input<typeof outletComponentSchema>>;
 type EnvRefLike = {
     env: string;
     default?: string;
@@ -129,16 +177,16 @@ export interface CompiledRoute {
     path: string;
     parentId?: string | null;
     parentPath?: string | null;
-    page: PageConfig;
+    page: ParsedPageConfig;
     preload?: EndpointTarget[];
     prefetch?: EndpointTarget[];
     refreshOnEnter?: string[];
     invalidateOnLeave?: string[];
-    enter?: RouteConfig["enter"];
-    leave?: RouteConfig["leave"];
-    guard?: RouteGuard;
-    events?: RouteConfig["events"];
-    transition?: RouteTransitionConfig;
+    enter?: ParsedRouteConfig["enter"];
+    leave?: ParsedRouteConfig["leave"];
+    guard?: ParsedRouteGuard;
+    events?: ParsedRouteConfig["events"];
+    transition?: ParsedRouteTransitionConfig;
 }
 /**
  * Resolved route match for the current pathname.
@@ -154,19 +202,20 @@ export interface RouteMatch {
  */
 export interface CompiledManifest {
     raw: ParsedManifestConfig;
-    app: AppConfig;
-    toast?: ToastConfig;
-    analytics?: AnalyticsConfig;
-    observability?: ObservabilityConfig;
-    push?: PushConfig;
+    __runtime?: ManifestRuntimeExtensions;
+    app: ParsedAppConfig;
+    toast?: ParsedToastConfig;
+    analytics?: ParsedAnalyticsConfig;
+    observability?: ParsedObservabilityConfig;
+    push?: ParsedPushConfig;
     theme?: ThemeConfig;
     state?: StateConfig;
     resources?: ResourceConfigMap;
     workflows?: WorkflowMap;
-    overlays?: Record<string, OverlayConfig>;
-    navigation?: NavigationConfig;
-    auth?: AuthScreenConfig;
-    realtime?: RealtimeConfig;
+    overlays?: Record<string, ParsedOverlayConfig>;
+    navigation?: ParsedNavigationConfig;
+    auth?: ParsedAuthScreenConfig;
+    realtime?: ParsedRealtimeConfig;
     routes: CompiledRoute[];
     routeMap: Record<string, CompiledRoute>;
     firstRoute: CompiledRoute | null;

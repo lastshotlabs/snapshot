@@ -38,7 +38,9 @@ describe("Toggle", () => {
           className: "toggle-root-class",
           label: { from: "toolbar.boldLabel" },
           icon: "bold",
-          changeAction: { type: "toggle-bold" } as never,
+          on: {
+            change: { type: "toggle-bold" } as never,
+          },
           slots: {
             root: { className: "toggle-root-slot" },
           },
@@ -57,6 +59,9 @@ describe("Toggle", () => {
     fireEvent.click(screen.getByTestId("toggle"));
 
     expect(screen.getByTestId("toggle").getAttribute("aria-pressed")).toBe("true");
-    expect(executeSpy).toHaveBeenCalledWith({ type: "toggle-bold" }, { pressed: true });
+    expect(executeSpy).toHaveBeenCalledWith(
+      { type: "toggle-bold" },
+      { id: "bold-toggle", pressed: true, value: true },
+    );
   });
 });

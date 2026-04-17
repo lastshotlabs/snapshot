@@ -619,4 +619,65 @@ describe("DataTable component", () => {
       container.querySelector('[data-snapshot-id="users-table-pagination"]')?.className,
     ).toContain("table-pagination-slot");
   });
+
+  it("resolves ref-backed search, labels, and toolbar copy", () => {
+    const { Wrapper, registry } = createWrapper();
+    const copyAtom = registry.register("table-copy");
+    registry.store.set(copyAtom, {
+      header: "Display Name",
+      search: "Find teammates...",
+      action: "Inspect",
+      toolbar: "Reload",
+    });
+
+    render(
+      <Wrapper>
+        <DataTable
+          config={baseConfig({
+            columns: [{ field: "name", label: { from: "state.table-copy.header" } as never }],
+            searchable: {
+              placeholder: { from: "state.table-copy.search" } as never,
+            },
+            actions: [
+              {
+                label: { from: "state.table-copy.action" } as never,
+                action: { type: "navigate", to: "/users/{id}" },
+              },
+            ],
+            toolbar: [
+              {
+                label: { from: "state.table-copy.toolbar" } as never,
+                action: { type: "refresh" } as never,
+              },
+            ],
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Display Name")).toBeDefined();
+    expect(screen.getByPlaceholderText("Find teammates...")).toBeDefined();
+    expect(screen.getAllByText("Inspect").length).toBe(3);
+    expect(screen.getByText("Reload")).toBeDefined();
+  });
+
+  it("renders a ref-backed empty message", () => {
+    const { Wrapper, registry } = createWrapper([]);
+    const copyAtom = registry.register("table-copy");
+    registry.store.set(copyAtom, {
+      empty: "Nothing to review",
+    });
+
+    render(
+      <Wrapper>
+        <DataTable
+          config={baseConfig({
+            emptyMessage: { from: "state.table-copy.empty" } as never,
+          })}
+        />
+      </Wrapper>,
+    );
+
+    expect(screen.getByText("Nothing to review")).toBeDefined();
+  });
 });

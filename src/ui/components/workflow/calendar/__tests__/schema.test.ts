@@ -12,4 +12,15 @@ describe("calendarConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed event titles and today label", () => {
+    const result = calendarConfigSchema.safeParse({
+      type: "calendar",
+      view: "month",
+      todayLabel: { from: "state.calendar.today" },
+      events: [{ title: { from: "state.calendar.launch" }, date: "2026-04-13" }],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

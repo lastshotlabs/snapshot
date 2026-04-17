@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAtomValue } from "jotai/react";
 import { useActionExecutor } from "../../../actions/executor";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { isFromRef } from "../../../context/utils";
 import { Icon } from "../../../icons/index";
 import { useInfiniteScroll } from "../../../hooks/use-infinite-scroll";
@@ -597,6 +597,11 @@ export function Feed({ config }: { config: FeedConfig }) {
   const wsManager = useAtomValue(wsManagerAtom);
   const isRef = isFromRef(config.data);
   const resolvedRef = useSubscribe(config.data);
+  const emptyMessage = useSubscribe(config.emptyMessage) as string | undefined;
+  const resolvedStaticConfig = useResolveFrom({
+    itemActions: config.itemActions,
+    empty: config.empty,
+  });
   const {
     data: fetchedData,
     isLoading,
@@ -631,6 +636,9 @@ export function Feed({ config }: { config: FeedConfig }) {
   }, [fetchedData, isRef, resolvedRef]);
 
   const resolvedItems = useMemo(() => resolveItems(rawRows, config), [config, rawRows]);
+  const itemActions =
+    (resolvedStaticConfig.itemActions as FeedConfig["itemActions"] | undefined) ??
+    config.itemActions;
   const pageSize = config.pageSize ?? 20;
   const totalPages = Math.max(1, Math.ceil(resolvedItems.length / pageSize));
   const visibleItems = useMemo(
@@ -642,8 +650,11 @@ export function Feed({ config }: { config: FeedConfig }) {
     [config.groupBy, visibleItems],
   );
   const emptyStateConfig = useMemo(
-    () => toAutoEmptyStateConfig(config.empty),
-    [config.empty],
+    () =>
+      toAutoEmptyStateConfig(
+        (resolvedStaticConfig.empty ?? config.empty) as FeedConfig["empty"],
+      ),
+    [config.empty, resolvedStaticConfig.empty],
   );
   const hasMore = page * pageSize < resolvedItems.length;
 
@@ -861,7 +872,14 @@ export function Feed({ config }: { config: FeedConfig }) {
 
         {loading ? (
           config.loading && !config.loading.disabled ? (
-            <AutoSkeleton componentType="feed" config={config.loading} />
+            <div
+              data-feed-loading=""
+              data-snapshot-id={`${rootId}-loadingState`}
+              className={loadingStateSurface.className}
+              style={loadingStateSurface.style}
+            >
+              <AutoSkeleton componentType="feed" config={config.loading} />
+            </div>
           ) : (
             <div
               data-feed-loading=""
@@ -896,7 +914,7 @@ export function Feed({ config }: { config: FeedConfig }) {
               className={emptyStateSurface.className}
               style={emptyStateSurface.style}
             >
-              {config.emptyMessage}
+              {emptyMessage ?? "No activity yet"}
             </div>
           )
         ) : null}
@@ -950,7 +968,7 @@ export function Feed({ config }: { config: FeedConfig }) {
                     item={item}
                     onClick={selectItem}
                     isSelected={selectedItem === item.raw}
-                    itemActions={config.itemActions}
+                    itemActions={itemActions}
                     relativeTime={config.relativeTime ?? false}
                     slots={config.slots}
                   />

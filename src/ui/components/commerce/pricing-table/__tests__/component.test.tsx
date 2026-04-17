@@ -197,4 +197,59 @@ describe("PricingTable", () => {
     expect(table.getAttribute("data-variant")).toBe("table");
     expect(table.querySelector("table")).toBeTruthy();
   });
+
+  it("renders ref-backed currency and tier copy", () => {
+    const registry = new AtomRegistryImpl();
+    registry.store.set(registry.register("pricing"), {
+      currency: "€",
+      name: "Scale",
+      price: 49,
+      period: "/seat",
+      description: "For growing teams",
+      badge: "Best value",
+      cta: "Choose Scale",
+      feature: "Priority support",
+    });
+
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <AppRegistryContext.Provider value={null}>
+        <PageRegistryContext.Provider value={registry}>
+          <SnapshotApiContext.Provider value={null}>
+            {children}
+          </SnapshotApiContext.Provider>
+        </PageRegistryContext.Provider>
+      </AppRegistryContext.Provider>
+    );
+
+    render(
+      <PricingTable
+        config={{
+          type: "pricing-table",
+          currency: { from: "pricing.currency" },
+          tiers: [
+            {
+              name: { from: "pricing.name" },
+              price: { from: "pricing.price" },
+              period: { from: "pricing.period" },
+              description: { from: "pricing.description" },
+              badge: { from: "pricing.badge" },
+              actionLabel: { from: "pricing.cta" },
+              features: [{ text: { from: "pricing.feature" } }],
+              action: { type: "navigate", to: "/scale" },
+            },
+          ],
+        }}
+      />,
+      { wrapper },
+    );
+
+    expect(screen.getByTestId("pricing-tier-name").textContent).toContain("Scale");
+    expect(screen.getByTestId("pricing-tier-price").textContent).toContain("€49");
+    expect(screen.getByTestId("pricing-tier-description").textContent).toContain(
+      "For growing teams",
+    );
+    expect(screen.getByTestId("pricing-tier-badge").textContent).toContain("Best value");
+    expect(screen.getByText("Priority support")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Choose Scale" })).toBeTruthy();
+  });
 });

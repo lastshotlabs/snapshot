@@ -1,20 +1,17 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { NotificationFeed } from "../component";
 
 const executeSpy = vi.fn();
+const useComponentDataMock = vi.fn();
+const refValues: Record<string, unknown> = {
+  "state.notifications.empty": "All caught up",
+};
 
 vi.mock("../../../_base/use-component-data", () => ({
-  useComponentData: () => ({
-    data: [
-      { id: "n1", title: "Build passed", message: "CI is green", read: false, type: "success", timestamp: "2026-04-13T00:00:00.000Z" },
-      { id: "n2", title: "Deploy ready", message: "Ready for release", read: false, type: "info", timestamp: "2026-04-13T01:00:00.000Z" },
-    ],
-    isLoading: false,
-    error: null,
-  }),
+  useComponentData: (...args: unknown[]) => useComponentDataMock(...args),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -22,12 +19,29 @@ vi.mock("../../../../actions/executor", () => ({
 }));
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value && typeof value === "object" && "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
 }));
+
+afterEach(() => {
+  cleanup();
+  executeSpy.mockReset();
+  useComponentDataMock.mockReset();
+});
 
 describe("NotificationFeed", () => {
   it("renders unread count and marks all unread items", () => {
     executeSpy.mockReset();
+    useComponentDataMock.mockReturnValue({
+      data: [
+        { id: "n1", title: "Build passed", message: "CI is green", read: false, type: "success", timestamp: "2026-04-13T00:00:00.000Z" },
+        { id: "n2", title: "Deploy ready", message: "Ready for release", read: false, type: "info", timestamp: "2026-04-13T01:00:00.000Z" },
+      ],
+      isLoading: false,
+      error: null,
+    });
 
     render(
       <NotificationFeed
@@ -52,6 +66,15 @@ describe("NotificationFeed", () => {
   });
 
   it("applies canonical slot styling to header and items", () => {
+    useComponentDataMock.mockReturnValue({
+      data: [
+        { id: "n1", title: "Build passed", message: "CI is green", read: false, type: "success", timestamp: "2026-04-13T00:00:00.000Z" },
+        { id: "n2", title: "Deploy ready", message: "Ready for release", read: false, type: "info", timestamp: "2026-04-13T01:00:00.000Z" },
+      ],
+      isLoading: false,
+      error: null,
+    });
+
     const { container } = render(
       <NotificationFeed
         config={{
@@ -109,5 +132,25 @@ describe("NotificationFeed", () => {
         .querySelector('[data-snapshot-id="alerts-feed-item-n1-body"]')
         ?.classList.contains("feed-item-body-slot"),
     ).toBe(true);
+  });
+
+  it("renders a ref-backed empty message", () => {
+    useComponentDataMock.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+
+    render(
+      <NotificationFeed
+        config={{
+          type: "notification-feed",
+          data: "/api/notifications",
+          emptyMessage: { from: "state.notifications.empty" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("All caught up")).toBeTruthy();
   });
 });

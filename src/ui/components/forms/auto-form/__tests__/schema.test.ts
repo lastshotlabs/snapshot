@@ -180,29 +180,35 @@ describe("autoFormConfigSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("accepts onSuccess as single action", () => {
+  it("accepts on.success as single action", () => {
     const result = autoFormConfigSchema.safeParse({
       ...baseConfig,
-      onSuccess: { type: "toast", message: "Done!", variant: "success" },
+      on: {
+        success: { type: "toast", message: "Done!", variant: "success" },
+      },
     });
     expect(result.success).toBe(true);
   });
 
-  it("accepts onSuccess as array of actions", () => {
+  it("accepts on.success as array of actions", () => {
     const result = autoFormConfigSchema.safeParse({
       ...baseConfig,
-      onSuccess: [
-        { type: "toast", message: "Created!", variant: "success" },
-        { type: "navigate", to: "/users" },
-      ],
+      on: {
+        success: [
+          { type: "toast", message: "Created!", variant: "success" },
+          { type: "navigate", to: "/users" },
+        ],
+      },
     });
     expect(result.success).toBe(true);
   });
 
-  it("accepts onError actions", () => {
+  it("accepts on.error actions", () => {
     const result = autoFormConfigSchema.safeParse({
       ...baseConfig,
-      onError: { type: "toast", message: "Failed!", variant: "error" },
+      on: {
+        error: { type: "toast", message: "Failed!", variant: "error" },
+      },
     });
     expect(result.success).toBe(true);
   });
@@ -266,8 +272,10 @@ describe("autoFormConfigSchema", () => {
       ],
       submitLabel: "Update User",
       resetOnSubmit: false,
-      onSuccess: { type: "toast", message: "Updated!", variant: "success" },
-      onError: { type: "toast", message: "Error!", variant: "error" },
+      on: {
+        success: { type: "toast", message: "Updated!", variant: "success" },
+        error: { type: "toast", message: "Error!", variant: "error" },
+      },
     });
     expect(result.success).toBe(true);
   });

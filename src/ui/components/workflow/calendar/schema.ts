@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 /**
  * Schema for a static event definition.
@@ -9,7 +9,7 @@ import { dataSourceSchema } from "../../_base/types";
 export const calendarEventSchema = z
   .object({
     /** Event title text. */
-    title: z.string(),
+    title: z.union([z.string(), fromRefSchema]),
     /** Event start date (ISO 8601 string). */
     date: z.string(),
     /** Event end date (ISO 8601 string). Optional for single-day events. */
@@ -71,7 +71,7 @@ export const calendarConfigSchema: z.ZodType<Record<string, any>> = extendCompon
     /** Show ISO week numbers in the first column. Default: false. */
     showWeekNumbers: z.boolean().optional(),
     /** Label for the "Today" button. Default: "Today". */
-    todayLabel: z.string().optional(),
+    todayLabel: z.union([z.string(), fromRefSchema]).optional(),
     slots: slotsSchema([
       "root",
       "header",
