@@ -36,4 +36,18 @@ describe("stepperConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed step copy", () => {
+    const result = stepperConfigSchema.safeParse({
+      type: "stepper",
+      steps: [
+        {
+          title: { from: "stepperState.title" },
+          description: { from: "stepperState.description" },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

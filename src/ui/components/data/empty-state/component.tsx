@@ -21,6 +21,9 @@ const SPACING_MAP = {
 export function EmptyState({ config }: { config: EmptyStateConfig }) {
   const execute = useActionExecutor();
   const visible = useSubscribe(config.visible ?? true);
+  const title = useSubscribe(config.title);
+  const description = useSubscribe(config.description);
+  const actionLabel = useSubscribe(config.actionLabel);
 
   if (visible === false) {
     return null;
@@ -115,21 +118,21 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
         className={titleSurface.className}
         style={titleSurface.style}
       >
-        {config.title}
+        {typeof title === "string" ? title : ""}
       </h3>
 
-      {config.description ? (
+      {typeof description === "string" ? (
         <p
           data-testid="empty-state-description"
           data-snapshot-id={`${rootId}-description`}
           className={descriptionSurface.className}
           style={descriptionSurface.style}
         >
-          {config.description}
+          {description}
         </p>
       ) : null}
 
-      {config.action && config.actionLabel ? (
+      {config.action && typeof actionLabel === "string" ? (
         <ButtonControl
           variant="default"
           size="md"
@@ -138,7 +141,7 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
           surfaceConfig={actionSurface.resolvedConfigForWrapper}
           testId="empty-state-action"
         >
-          {config.actionLabel}
+          {actionLabel}
         </ButtonControl>
       ) : null}
 

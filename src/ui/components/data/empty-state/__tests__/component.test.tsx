@@ -1,13 +1,23 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { EmptyState } from "../component";
 
 const executeSpy = vi.fn();
+const refValues: Record<string, unknown> = {
+  "emptyState.title": "Resolved title",
+  "emptyState.description": "Resolved description",
+  "emptyState.actionLabel": "Resolved action",
+};
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -17,6 +27,10 @@ vi.mock("../../../../actions/executor", () => ({
 vi.mock("../../../../icons/index", () => ({
   Icon: ({ name }: { name: string }) => <span data-testid="empty-state-icon-node">{name}</span>,
 }));
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("EmptyState", () => {
   it("renders content and dispatches the optional action", () => {
@@ -70,6 +84,30 @@ describe("EmptyState", () => {
         ?.className,
     ).toContain(
       "action-slot",
+    );
+  });
+
+  it("renders ref-backed copy", () => {
+    render(
+      <EmptyState
+        config={{
+          type: "empty-state",
+          title: { from: "emptyState.title" } as never,
+          description: { from: "emptyState.description" } as never,
+          actionLabel: { from: "emptyState.actionLabel" } as never,
+          action: { type: "reset" } as never,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("empty-state-title").textContent).toBe(
+      "Resolved title",
+    );
+    expect(screen.getByTestId("empty-state-description").textContent).toBe(
+      "Resolved description",
+    );
+    expect(screen.getByTestId("empty-state-action").textContent).toContain(
+      "Resolved action",
     );
   });
 });

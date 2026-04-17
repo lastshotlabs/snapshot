@@ -5,7 +5,7 @@ import {
 } from "../../../manifest/schema";
 import { actionSchema } from "../../../actions/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
-import { dataSourceSchema } from "../../_base/types";
+import { dataSourceSchema, fromRefSchema } from "../../_base/types";
 
 export const timelineSlotNames = [
   "root",
@@ -52,9 +52,9 @@ export const timelineItemSlotNames = [
 export const timelineItemSchema: z.ZodType<Record<string, any>> = z
   .object({
     /** Title text for this event. */
-    title: z.string(),
+    title: z.union([z.string(), fromRefSchema]),
     /** Optional description text. */
-    description: z.string().optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** Date/time string for display. */
     date: z.string().optional(),
     /** Lucide icon name. */

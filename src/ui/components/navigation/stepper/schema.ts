@@ -17,9 +17,9 @@ export const stepperSlotNames = [
  */
 export const stepConfigSchema: z.ZodType<Record<string, any>> = z.object({
   /** Display title for this step. */
-  title: z.string(),
+  title: z.union([z.string(), fromRefSchema]),
   /** Optional description text. */
-  description: z.string().optional(),
+  description: z.union([z.string(), fromRefSchema]).optional(),
   /** Lucide icon name (overrides the step number). */
   icon: z.string().optional(),
   /** Whether this step is non-interactive. */

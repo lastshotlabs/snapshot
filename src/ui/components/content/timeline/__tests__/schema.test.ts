@@ -36,4 +36,18 @@ describe("timelineConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed item copy", () => {
+    const result = timelineConfigSchema.safeParse({
+      type: "timeline",
+      items: [
+        {
+          title: { from: "timelineState.title" },
+          description: { from: "timelineState.description" },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

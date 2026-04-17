@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { usePublish, useSubscribe } from "../../../context/hooks";
+import React, { useEffect, useMemo, useState } from "react";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import type { ComponentConfig } from "../../../manifest/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -10,6 +10,10 @@ import {
   resolveSurfacePresentation,
 } from "../../_base/style-surfaces";
 import type { StepConfig, StepperConfig } from "./types";
+
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
 
 function getStepStates(
   step: StepConfig,
@@ -25,11 +29,22 @@ function getStepStates(
 
 export function Stepper({ config }: { config: StepperConfig }) {
   const resolvedActiveStep = useSubscribe(config.activeStep ?? 0);
+  const resolvedConfig = useResolveFrom({ steps: config.steps });
   const initialStep =
     typeof resolvedActiveStep === "number" ? resolvedActiveStep : 0;
   const [currentStep, setCurrentStep] = useState(initialStep);
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);
+  const resolvedSteps = useMemo<StepConfig[]>(
+    () =>
+      (((resolvedConfig.steps as StepperConfig["steps"] | undefined) ??
+        config.steps) as StepConfig[]).map((step) => ({
+        ...step,
+        title: resolveText(step.title) ?? "",
+        description: resolveText(step.description),
+      })),
+    [config.steps, resolvedConfig.steps],
+  );
 
   useEffect(() => {
     if (typeof resolvedActiveStep === "number") {
@@ -44,11 +59,11 @@ export function Stepper({ config }: { config: StepperConfig }) {
 
     publish({
       activeStep: currentStep,
-      title: config.steps[currentStep]?.title,
+      title: resolvedSteps[currentStep]?.title,
       isFirst: currentStep === 0,
-      isLast: currentStep === config.steps.length - 1,
+      isLast: currentStep === resolvedSteps.length - 1,
     });
-  }, [config.steps, currentStep, publish]);
+  }, [currentStep, publish, resolvedSteps]);
 
   if (visible === false) {
     return null;
@@ -59,7 +74,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
   const clickable = config.clickable ?? false;
   const isHorizontal = orientation === "horizontal";
   const rootId = config.id ?? "stepper";
-  const activeStepContent = config.steps[currentStep]?.content;
+  const activeStepContent = resolvedSteps[currentStep]?.content;
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
     componentSurface: extractSurfaceConfig(config),
@@ -74,12 +89,12 @@ export function Stepper({ config }: { config: StepperConfig }) {
       gap: "var(--sn-spacing-md, 1rem)",
     } as Record<string, unknown>,
     componentSurface: config.slots?.content,
-    itemSurface: config.steps[currentStep]?.slots?.content,
+    itemSurface: resolvedSteps[currentStep]?.slots?.content,
     activeStates: activeStepContent?.length ? ["active"] : [],
   });
 
   const handleStepClick = (index: number) => {
-    const step = config.steps[index];
+    const step = resolvedSteps[index];
     if (!clickable || step?.disabled) {
       return;
     }
@@ -107,7 +122,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
               : "var(--sn-spacing-xs, 0.25rem)",
         }}
       >
-        {config.steps.map((step: StepConfig, index: number) => {
+        {resolvedSteps.map((step: StepConfig, index: number) => {
           const isCompleted = index < currentStep;
           const isActive = index === currentStep;
           const stepStates = getStepStates(step, isActive, isCompleted);
@@ -356,7 +371,7 @@ export function Stepper({ config }: { config: StepperConfig }) {
                   </span>
                 )}
               </StepTag>
-              {index < config.steps.length - 1 ? (
+              {index < resolvedSteps.length - 1 ? (
                 <div
                   data-testid="stepper-connector"
                   data-snapshot-id={`${rootId}-connector-${index}`}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, type CSSProperties } from "react";
-import { useSubscribe, usePublish } from "../../../context/hooks";
+import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { AutoErrorState } from "../../_base/auto-error-state";
 import { useComponentData } from "../../_base/use-component-data";
@@ -15,10 +15,17 @@ import { Icon } from "../../../icons/icon";
 import type { ComponentConfig } from "../../../manifest/types";
 import type { TimelineConfig, TimelineItem } from "./types";
 
+function resolveText(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 /**
  * Resolve timeline items from either static config or API data.
  */
-function useTimelineItems(config: TimelineConfig): {
+function useTimelineItems(
+  config: TimelineConfig,
+  staticItems: TimelineItem[],
+): {
   items: TimelineItem[];
   isLoading: boolean;
   error: Error | null;
@@ -30,7 +37,9 @@ function useTimelineItems(config: TimelineConfig): {
   );
 
   const items = useMemo((): TimelineItem[] => {
-    if (!hasEndpoint) return config.items ?? [];
+    if (!hasEndpoint) {
+      return staticItems;
+    }
     if (!data) return [];
 
     const rawItems = Array.isArray(data)
@@ -51,7 +60,7 @@ function useTimelineItems(config: TimelineConfig): {
         date: record[config.dateField ?? "date"] as string | undefined,
       };
     });
-  }, [data, hasEndpoint, config]);
+  }, [data, hasEndpoint, config, staticItems]);
 
   return {
     items,
@@ -65,7 +74,22 @@ function useTimelineItems(config: TimelineConfig): {
  * Timeline component: grouped timeline sugar over canonical visible surfaces.
  */
 export function Timeline({ config }: { config: TimelineConfig }) {
-  const { items, isLoading, error, refetch } = useTimelineItems(config);
+  const resolvedConfig = useResolveFrom({ items: config.items });
+  const staticItems = useMemo<TimelineItem[]>(
+    () =>
+      (((resolvedConfig.items as TimelineConfig["items"] | undefined) ??
+        config.items ??
+        []) as TimelineItem[]).map((item) => ({
+        ...item,
+        title: resolveText(item.title) ?? "",
+        description: resolveText(item.description),
+      })),
+    [config.items, resolvedConfig.items],
+  );
+  const { items, isLoading, error, refetch } = useTimelineItems(
+    config,
+    staticItems,
+  );
   const execute = useActionExecutor();
   const publish = usePublish(config.id);
   const visible = useSubscribe(config.visible ?? true);

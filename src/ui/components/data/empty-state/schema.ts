@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { actionSchema } from "../../../actions/types";
+import { fromRefSchema } from "../../_base/types";
 import { extendComponentSchema, slotsSchema } from "../../_base/schema";
 
 /**
@@ -24,15 +25,15 @@ export const emptyStateConfigSchema = extendComponentSchema({
     /** Component type discriminator. */
     type: z.literal("empty-state"),
     /** Heading text. */
-    title: z.string(),
+    title: z.union([z.string(), fromRefSchema]),
     /** Explanatory body text. */
-    description: z.string().optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** Icon rendered above the title (string name, rendered as text for now). */
     icon: z.string().optional(),
     /** CTA button action. */
     action: actionSchema.optional(),
     /** CTA button label. */
-    actionLabel: z.string().optional(),
+    actionLabel: z.union([z.string(), fromRefSchema]).optional(),
     /** Size variant. Default: "md". */
     size: z.enum(["sm", "md", "lg"]).optional(),
     /** Icon color token name (e.g., "primary", "info"). */

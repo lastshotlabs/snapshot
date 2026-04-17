@@ -27,4 +27,15 @@ describe("emptyStateConfigSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts ref-backed copy fields", () => {
+    const result = emptyStateConfigSchema.safeParse({
+      type: "empty-state",
+      title: { from: "emptyState.title" },
+      description: { from: "emptyState.description" },
+      actionLabel: { from: "emptyState.actionLabel" },
+    });
+
+    expect(result.success).toBe(true);
+  });
 });

@@ -1,14 +1,50 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { Timeline } from "../component";
 
 const executeSpy = vi.fn();
+const refValues: Record<string, unknown> = {
+  "timelineState.title": "Resolved title",
+  "timelineState.description": "Resolved description",
+};
+
+function resolveRefs<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((entry) => resolveRefs(entry)) as T;
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>) &&
+    typeof (value as unknown as { from: unknown }).from === "string"
+  ) {
+    return refValues[(value as unknown as { from: string }).from] as T;
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        resolveRefs(entry),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
 
 vi.mock("../../../../context/hooks", () => ({
-  useSubscribe: (value: unknown) => value,
+  useSubscribe: (value: unknown) =>
+    value &&
+    typeof value === "object" &&
+    "from" in (value as Record<string, unknown>)
+      ? refValues[(value as { from: string }).from]
+      : value,
   usePublish: () => vi.fn(),
+  useResolveFrom: <T,>(value: T) => resolveRefs(value),
 }));
 
 vi.mock("../../../../actions/executor", () => ({
@@ -33,6 +69,10 @@ vi.mock("../../../../manifest/renderer", () => ({
 vi.mock("../../../../icons/icon", () => ({
   Icon: ({ name }: { name: string }) => <span data-testid={`timeline-icon-${name}`}>{name}</span>,
 }));
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("Timeline", () => {
   it("renders items and dispatches item actions", () => {
@@ -118,5 +158,28 @@ describe("Timeline", () => {
         .querySelector('[data-testid="timeline-title"]')
         ?.classList.contains("timeline-title-slot"),
     ).toBe(true);
+  });
+
+  it("renders ref-backed static item copy", () => {
+    render(
+      <Timeline
+        config={{
+          type: "timeline",
+          items: [
+            {
+              title: { from: "timelineState.title" } as never,
+              description: { from: "timelineState.description" } as never,
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId("timeline-title").textContent).toBe(
+      "Resolved title",
+    );
+    expect(screen.getByTestId("timeline-description").textContent).toBe(
+      "Resolved description",
+    );
   });
 });
