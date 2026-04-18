@@ -388,40 +388,84 @@ export function Nav({
         aria-label="Main navigation"
         data-variant={variant}
         data-collapsed={isCollapsed ? "true" : undefined}
+        style={!isTopNav ? {
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          padding: "var(--sn-spacing-sm, 0.5rem)",
+          gap: "var(--sn-spacing-xs, 0.25rem)",
+        } : {
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--sn-spacing-xs, 0.25rem)",
+        }}
       >
-        {effectiveLogo ? (
-          <NavLogo
-            config={{
-              type: "nav-logo",
-              id: `${config.id ?? "nav"}-brand`,
-              src: effectiveLogo.src,
-              text: resolveNavText(
-                effectiveLogo.text,
-                activeLocale,
-                manifest?.raw.i18n,
-              ),
-              path: effectiveLogo.path,
-              slots: {
-                root: config.slots?.brand,
-                icon: config.slots?.brandIcon,
-                label: config.slots?.brandLabel,
-              },
-            }}
-            onNavigate={onNavigate}
-          />
-        ) : null}
-
-        {config.collapsible !== false && !isTopNav ? (
-          <ButtonControl
-            variant="ghost"
-            onClick={toggle}
-            surfaceId={`${config.id ?? "nav"}-toggle`}
-            surfaceConfig={toggleSurface.resolvedConfigForWrapper}
-            activeStates={isCollapsed ? ["active"] : []}
-          >
-            {isCollapsed ? "Menu" : "Close"}
-          </ButtonControl>
-        ) : null}
+        {!isTopNav ? (
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "var(--sn-nav-header-justify, space-between)",
+            marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+          }}>
+            {effectiveLogo ? (
+              <NavLogo
+                config={{
+                  type: "nav-logo",
+                  id: `${config.id ?? "nav"}-brand`,
+                  src: effectiveLogo.src,
+                  text: resolveNavText(
+                    effectiveLogo.text,
+                    activeLocale,
+                    manifest?.raw.i18n,
+                  ),
+                  path: effectiveLogo.path,
+                  slots: {
+                    root: config.slots?.brand,
+                    icon: config.slots?.brandIcon,
+                    label: config.slots?.brandLabel,
+                  },
+                }}
+                onNavigate={onNavigate}
+              />
+            ) : null}
+            {config.collapsible !== false ? (
+              <ButtonControl
+                variant="ghost"
+                onClick={toggle}
+                surfaceId={`${config.id ?? "nav"}-toggle`}
+                surfaceConfig={toggleSurface.resolvedConfigForWrapper}
+                activeStates={isCollapsed ? ["active"] : []}
+                ariaLabel={isCollapsed ? "Expand navigation" : "Collapse navigation"}
+              >
+                {renderIcon(isCollapsed ? "panel-right" : "panel-left", 16)}
+              </ButtonControl>
+            ) : null}
+          </div>
+        ) : (
+          <>
+            {effectiveLogo ? (
+              <NavLogo
+                config={{
+                  type: "nav-logo",
+                  id: `${config.id ?? "nav"}-brand`,
+                  src: effectiveLogo.src,
+                  text: resolveNavText(
+                    effectiveLogo.text,
+                    activeLocale,
+                    manifest?.raw.i18n,
+                  ),
+                  path: effectiveLogo.path,
+                  slots: {
+                    root: config.slots?.brand,
+                    icon: config.slots?.brandIcon,
+                    label: config.slots?.brandLabel,
+                  },
+                }}
+                onNavigate={onNavigate}
+              />
+            ) : null}
+          </>
+        )}
 
         <ul
           data-snapshot-id={`${config.id ?? "nav"}-list`}
@@ -443,34 +487,75 @@ export function Nav({
         </ul>
 
         {user && config.userMenu !== false ? (
-          <div style={isTopNav ? { marginLeft: "auto" } : undefined}>
-            <NavUserMenu
-              config={{
-                type: "nav-user-menu",
-                id: `${config.id ?? "nav"}-user-menu`,
-                mode: isTopNav ? "compact" : "full",
-                showAvatar:
-                  typeof config.userMenu === "object"
-                    ? config.userMenu.showAvatar
-                    : undefined,
-                showEmail:
-                  typeof config.userMenu === "object"
-                    ? config.userMenu.showEmail
-                    : undefined,
-                showName: !isTopNav,
-                items:
-                  typeof config.userMenu === "object"
-                    ? config.userMenu.items
-                    : undefined,
-                slots: {
-                  trigger: config.slots?.userMenuTrigger,
-                  avatar: config.slots?.userAvatar,
-                  panel: config.slots?.userMenu,
-                  item: config.slots?.userMenuItem,
-                },
-              }}
-            />
-          </div>
+          isTopNav ? (
+            <div style={{ marginLeft: "auto" }}>
+              <NavUserMenu
+                config={{
+                  type: "nav-user-menu",
+                  id: `${config.id ?? "nav"}-user-menu`,
+                  mode: "compact",
+                  showAvatar:
+                    typeof config.userMenu === "object"
+                      ? config.userMenu.showAvatar
+                      : undefined,
+                  showEmail:
+                    typeof config.userMenu === "object"
+                      ? config.userMenu.showEmail
+                      : undefined,
+                  showName: false,
+                  items:
+                    typeof config.userMenu === "object"
+                      ? config.userMenu.items
+                      : undefined,
+                  slots: {
+                    trigger: config.slots?.userMenuTrigger,
+                    avatar: config.slots?.userAvatar,
+                    panel: config.slots?.userMenu,
+                    item: config.slots?.userMenuItem,
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <div data-sn-nav-user="" style={{
+              marginTop: "auto",
+              borderTop: "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
+              paddingTop: "var(--sn-spacing-sm, 0.5rem)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "var(--sn-nav-user-justify, flex-start)",
+              gap: "var(--sn-nav-link-gap, var(--sn-spacing-sm, 0.5rem))",
+              overflow: "hidden",
+            }}>
+              <span style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "1.75rem",
+                height: "1.75rem",
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                background: "var(--sn-color-accent)",
+                color: "var(--sn-color-accent-foreground)",
+                fontSize: "var(--sn-font-size-xs, 0.75rem)",
+                fontWeight: 600,
+                flexShrink: 0,
+                overflow: "hidden",
+              }}>
+                {(user as { avatar?: string }).avatar
+                  ? <img src={(user as { avatar?: string }).avatar} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : ((user as { name?: string }).name?.charAt(0)?.toUpperCase() ?? "U")
+                }
+              </span>
+              <span data-sn-nav-user-name="" style={{
+                fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}>
+                {(user as { name?: string }).name ?? (user as { email?: string }).email ?? "User"}
+              </span>
+            </div>
+          )
         ) : null}
 
         <FloatingMenuStyles />

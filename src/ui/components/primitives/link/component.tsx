@@ -40,10 +40,10 @@ function getVariantSurfaceBase(
     return {
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-start",
-      gap: "var(--sn-spacing-xs, 0.5rem)",
+      justifyContent: "var(--sn-nav-link-justify, flex-start)",
+      gap: "var(--sn-nav-link-gap, var(--sn-spacing-xs, 0.5rem))",
       minHeight: "2.25rem",
-      padding: "var(--sn-spacing-2xs, 0.25rem) var(--sn-spacing-sm, 0.75rem)",
+      padding: "var(--sn-nav-link-padding, 0.25rem 0.75rem)",
       borderRadius: "var(--sn-radius-md, 0.375rem)",
       color: "var(--sn-color-foreground, #111827)",
       whiteSpace: "nowrap",

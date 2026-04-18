@@ -9,6 +9,49 @@ import {
   resolveSurfacePresentation,
 } from "../../_base/style-surfaces";
 
+/**
+ * Remap generic token vars inside the sidebar so children (nav links, buttons)
+ * inherit sidebar-appropriate colors instead of the page-level palette.
+ * Also ensure the nav component wrapper fills the sidebar height so
+ * marginTop:auto can push the user menu to the bottom.
+ */
+const SIDEBAR_CONTEXT_CSS = `
+  [data-layout-sidebar] {
+    --sn-color-foreground: var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground));
+    --sn-color-muted-foreground: color-mix(in oklch, var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground)) 60%, var(--sn-color-sidebar, var(--sn-color-card)));
+    --sn-color-accent: color-mix(in oklch, var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground)) 12%, var(--sn-color-sidebar, var(--sn-color-card)));
+    --sn-color-accent-foreground: var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground));
+    --sn-color-border: color-mix(in oklch, var(--sn-color-sidebar-foreground, var(--sn-color-card-foreground)) 15%, var(--sn-color-sidebar, var(--sn-color-card)));
+    transition: width var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease);
+  }
+  [data-layout-sidebar] > [data-snapshot-component="nav"] {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Collapsed sidebar: shrink width, hide labels, center icons.
+     Uses custom property overrides so consumers can still override via slots. */
+  [data-layout-sidebar]:has(nav[data-collapsed="true"]) {
+    --sn-sidebar-width: 3.5rem;
+    --sn-sidebar-overflow: hidden;
+  }
+  nav[data-collapsed="true"] {
+    --sn-nav-header-justify: center;
+    --sn-nav-link-justify: center;
+    --sn-nav-link-gap: 0;
+    --sn-nav-link-padding: 0.25rem 0;
+    --sn-nav-user-justify: center;
+  }
+  nav[data-collapsed="true"] [data-snapshot-component="link"] [data-snapshot-id$="-label"],
+  nav[data-collapsed="true"] [data-snapshot-component="link"] [data-snapshot-id$="-badge"],
+  nav[data-collapsed="true"] [data-snapshot-component="nav-logo"] [data-snapshot-id$="-label"],
+  nav[data-collapsed="true"] [data-sn-nav-user-name] {
+    display: none;
+  }
+`;
+
 const SIDEBAR_LAYOUT_MOBILE_CSS = `
   @media (max-width: 768px) {
     [data-layout-variant="sidebar"] [data-layout-sidebar] {
@@ -72,7 +115,7 @@ function SidebarLayout({
     surfaceConfig,
     implementationBase: {
       display: "flex",
-      minHeight: "100vh",
+      height: "100vh",
       style: {
         background: "var(--sn-color-background)",
         color: "var(--sn-color-foreground)",
@@ -115,7 +158,7 @@ function SidebarLayout({
                   "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
                 display: "flex",
                 flexDirection: "column",
-                overflow: "auto",
+                overflow: "var(--sn-sidebar-overflow, auto)",
               }}
             >
               {sidebar}
@@ -149,6 +192,7 @@ function SidebarLayout({
           </footer>
         ) : null}
       </div>
+      <SurfaceStyles css={SIDEBAR_CONTEXT_CSS} />
       <SurfaceStyles css={SIDEBAR_LAYOUT_MOBILE_CSS} />
       <SurfaceStyles css={rootSurface.scopedCss} />
     </>
