@@ -5,3 +5,5 @@ export type {
   PrefetchLinkSlotNames,
 } from "./types";
 export { PrefetchLink } from "./component";
+export { PrefetchLinkBase } from "./standalone";
+export type { PrefetchLinkBaseProps } from "./standalone";

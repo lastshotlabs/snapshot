@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
 import { useComponentData } from "../../_base/use-component-data";
-import { Icon } from "../../../icons/index";
 import {
   buildRequestUrl,
   isResourceRef,
@@ -18,35 +17,20 @@ import {
 } from "../../../manifest/runtime";
 import { useRouteRuntime } from "../../../manifest/runtime";
 import { executeEventAction } from "../../_base/events";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { ButtonControl } from "../button";
-import { InputControl } from "../input";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
 import {
   resolveOptionalPrimitiveValue,
   type PrimitiveValueOptions,
 } from "../../primitives/resolve-value";
-import { SelectControl } from "../select";
-import { TextareaControl } from "../textarea";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useEvaluateExpression } from "../../../expressions/use-expression";
 import { resolveTemplateValue } from "../../../expressions/template";
 import { useAutoForm } from "./hook";
 import { useApiClient } from "../../../state";
+import { AutoFormBase, type AutoFormFieldConfig, type AutoFormSectionConfig } from "./standalone";
 import type { AutoFormConfig, FieldConfig, FieldSectionConfig } from "./types";
 import type { ApiClient } from "../../../../api/client";
 
-// ── Gap map ───────────────────────────────────────────────────────────────
-
-const GAP_MAP: Record<string, string> = {
-  xs: "var(--sn-spacing-xs, 0.25rem)",
-  sm: "var(--sn-spacing-sm, 0.5rem)",
-  md: "var(--sn-spacing-md, 1rem)",
-  lg: "var(--sn-spacing-lg, 1.5rem)",
-};
+// ── Helpers ──────────────────────────────────────────────────────────────
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -356,1188 +340,6 @@ function resolveStaticFieldOptions(
   }));
 }
 
-// ── Tag input with pill UI ────────────────────────────────────────────────
-
-function TagInputField({
-  fieldId,
-  fieldName,
-  tags,
-  disabled,
-  readOnly,
-  required,
-  hasError,
-  describedBy,
-  label,
-  placeholder,
-  onChange,
-  onBlur,
-  rootId,
-  inputSurface,
-  inputStyle,
-}: {
-  fieldId: string;
-  fieldName: string;
-  tags: string[];
-  disabled?: boolean;
-  readOnly?: boolean;
-  required: boolean;
-  hasError: boolean;
-  describedBy: string | undefined;
-  label: string | undefined;
-  placeholder: string | undefined;
-  onChange: (value: unknown) => void;
-  onBlur: () => void;
-  rootId: string;
-  inputSurface: { className?: string };
-  inputStyle?: React.CSSProperties;
-}) {
-  const [inputText, setInputText] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const addTag = useCallback(
-    (text: string) => {
-      const trimmed = text.trim().toLowerCase().replace(/,/g, "");
-      if (trimmed && !tags.includes(trimmed)) {
-        onChange([...tags, trimmed]);
-      }
-      setInputText("");
-    },
-    [tags, onChange],
-  );
-
-  const removeTag = useCallback(
-    (index: number) => {
-      onChange(tags.filter((_, i) => i !== index));
-    },
-    [tags, onChange],
-  );
-
-  const [focused, setFocused] = useState(false);
-
-  return (
-    <div
-      data-snapshot-id={`${rootId}-input-${fieldName}`}
-      className={inputSurface.className}
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: "0.375rem",
-        cursor: disabled ? "not-allowed" : "text",
-        width: "100%",
-        minHeight: "var(--sn-input-height, 2.5rem)",
-        padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-md, 1rem)",
-        border: `var(--sn-border-thin, 1px) solid ${focused ? "var(--sn-color-primary, #2563eb)" : "var(--sn-color-border, #e5e7eb)"}`,
-        borderRadius: "var(--sn-radius-md, 0.5rem)",
-        background: "var(--sn-color-background, #ffffff)",
-        color: "var(--sn-color-foreground, #111827)",
-        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        lineHeight: "var(--sn-leading-normal, 1.5)",
-        boxShadow: focused
-          ? "0 0 0 1px var(--sn-color-primary, #2563eb)"
-          : "none",
-        transition:
-          "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-        boxSizing: "border-box",
-      }}
-      onClick={() => inputRef.current?.focus()}
-    >
-      {tags.map((tag, i) => (
-        <span
-          key={tag}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.25rem",
-            padding: "0.125rem 0.5rem",
-            borderRadius: "var(--sn-radius-full, 9999px)",
-            backgroundColor: "var(--sn-color-primary, #2563eb)",
-            color: "var(--sn-color-primary-foreground, #ffffff)",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            lineHeight: "1.5",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {tag}
-          {!disabled && !readOnly ? (
-            <button
-              type="button"
-              aria-label={`Remove ${tag}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                removeTag(i);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "inherit",
-                cursor: "pointer",
-                padding: 0,
-                fontSize: "1rem",
-                lineHeight: 1,
-                opacity: 0.7,
-              }}
-            >
-              ×
-            </button>
-          ) : null}
-        </span>
-      ))}
-      <input
-        ref={inputRef}
-        id={fieldId}
-        type="text"
-        value={inputText}
-        disabled={disabled}
-        readOnly={readOnly}
-        required={required && tags.length === 0}
-        aria-invalid={hasError}
-        aria-describedby={describedBy}
-        aria-label={label}
-        placeholder={placeholder ?? "Type and press Enter..."}
-        onChange={(e) => setInputText(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onKeyDown={(e) => {
-          if (
-            (e.key === "Enter" || e.key === "," || e.key === " ") &&
-            inputText.trim()
-          ) {
-            e.preventDefault();
-            addTag(inputText);
-          }
-          if (e.key === "Backspace" && inputText === "" && tags.length > 0) {
-            removeTag(tags.length - 1);
-          }
-        }}
-        onBlur={() => {
-          if (inputText.trim()) addTag(inputText);
-          setFocused(false);
-          onBlur();
-        }}
-        style={{
-          flex: 1,
-          minWidth: "10rem",
-          border: "none",
-          outline: "none",
-          background: "transparent",
-          fontSize: "inherit",
-          fontFamily: "inherit",
-          color: "inherit",
-          padding: "0.25rem 0",
-          minHeight: "auto",
-          borderRadius: 0,
-          boxShadow: "none",
-        }}
-      />
-    </div>
-  );
-}
-
-// ── Field renderer ────────────────────────────────────────────────────────
-
-function FieldRenderer({
-  rootId,
-  field,
-  value,
-  required,
-  error,
-  showError,
-  onChange,
-  onBlur,
-  slots,
-  primitiveOptions,
-}: {
-  rootId: string;
-  field: FieldConfig;
-  value: unknown;
-  required: boolean;
-  error: string | undefined;
-  showError: boolean;
-  onChange: (value: unknown) => void;
-  onBlur: () => void;
-  slots?: AutoFormConfig["slots"];
-  primitiveOptions: PrimitiveValueOptions;
-}) {
-  const executeAction = useActionExecutor();
-  const showByExpression = useEvaluateExpression(field.visibleWhen);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const label = resolveText(field.label, primitiveOptions) ?? field.name;
-  const placeholder = resolveText(field.placeholder, primitiveOptions);
-  const helperText = resolveText(field.helperText, primitiveOptions);
-  const description = resolveText(field.description, primitiveOptions);
-  const inlineActionLabel = resolveText(
-    field.inlineAction?.label,
-    primitiveOptions,
-  );
-  const inlineActionTarget = resolveText(
-    field.inlineAction?.to,
-    primitiveOptions,
-  );
-  const staticFieldOptions = resolveStaticFieldOptions(field, primitiveOptions);
-  const validation = field.validate ?? field.validation;
-  const fieldId = `sn-field-${field.name}`;
-  const hasError = showError && !!error;
-  const describedBy = hasError
-    ? `${fieldId}-error`
-    : helperText
-      ? `${fieldId}-helper`
-      : undefined;
-  const activeStates = [
-    ...(hasError ? ["invalid"] : []),
-    ...(field.disabled ? ["disabled"] : []),
-  ] as Array<"invalid" | "disabled">;
-  const fieldSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-field-${field.name}`,
-    implementationBase: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "var(--sn-spacing-xs, 0.25rem)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.field,
-    itemSurface: field.slots?.field,
-    activeStates,
-  });
-  const labelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-label-${field.name}`,
-    implementationBase: {
-      display:
-        field.type === "checkbox"
-          ? "inline-flex"
-          : inlineActionLabel && inlineActionTarget
-            ? "flex"
-            : "block",
-      alignItems:
-        field.type === "checkbox"
-          ? "center"
-          : inlineActionLabel && inlineActionTarget
-            ? "baseline"
-            : undefined,
-      justifyContent:
-        inlineActionLabel && inlineActionTarget && field.type !== "checkbox"
-          ? "between"
-          : undefined,
-      gap:
-        field.type === "checkbox"
-          ? "var(--sn-spacing-sm, 0.5rem)"
-          : undefined,
-      cursor:
-        field.type === "checkbox"
-          ? (field.disabled ? "not-allowed" : "pointer")
-          : undefined,
-      fontSize: "var(--sn-font-size-sm, 0.875rem)",
-      fontWeight: "var(--sn-font-weight-medium, 500)",
-      color: "var(--sn-color-foreground, #111827)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.label,
-    itemSurface: field.slots?.label,
-    activeStates,
-  });
-  const descriptionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-description-${field.name}`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-xs, 0.75rem)",
-      color: "var(--sn-color-muted-foreground, #6b7280)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.description,
-    itemSurface: field.slots?.description,
-  });
-  const inputWrapperSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-inputWrapper-${field.name}`,
-    implementationBase:
-      ({
-        width: "100%",
-        ...(field.type === "password" ? { position: "relative" } : {}),
-      } as Record<string, unknown>),
-    componentSurface: slots?.inputWrapper,
-    itemSurface: field.slots?.inputWrapper,
-    activeStates,
-  });
-  const inputSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-input-${field.name}`,
-    implementationBase: {
-      focus: {
-        ring: true,
-      },
-      states: {
-        invalid: {
-          borderColor: "var(--sn-color-destructive, #ef4444)",
-        },
-      },
-    },
-    componentSurface: slots?.input,
-    itemSurface: field.slots?.input,
-    activeStates,
-  });
-  const optionsSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-options-${field.name}`,
-    implementationBase:
-      field.type === "radio-group"
-        ? ({
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--sn-spacing-xs, 0.25rem)",
-          } as Record<string, unknown>)
-        : undefined,
-    componentSurface: slots?.options,
-    itemSurface: field.slots?.options,
-    activeStates,
-  });
-  const helperSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-helper-${field.name}`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-xs, 0.75rem)",
-      color: "var(--sn-color-muted-foreground, #6b7280)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.helper,
-    itemSurface: field.slots?.helper,
-  });
-  const errorSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-error-${field.name}`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-xs, 0.75rem)",
-      color: "var(--sn-color-destructive, #ef4444)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.error,
-    itemSurface: field.slots?.error,
-    activeStates: hasError ? ["invalid"] : [],
-  });
-  const requiredIndicatorSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-required-${field.name}`,
-    implementationBase: {
-      color: "var(--sn-color-destructive, #ef4444)",
-      style: {
-        marginLeft: "var(--sn-spacing-2xs, 2px)",
-      },
-    } as Record<string, unknown>,
-    componentSurface: slots?.requiredIndicator,
-    itemSurface: field.slots?.requiredIndicator,
-  });
-  const inlineActionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-inlineAction-${field.name}`,
-    implementationBase: {
-      bg: "transparent",
-      color: "var(--sn-color-primary, #2563eb)",
-      hover: {
-        color: "var(--sn-color-primary, #2563eb)",
-        textDecoration: "underline",
-      },
-      focus: {
-        ring: true,
-      },
-      style: {
-        minHeight: "auto",
-        padding: 0,
-        fontSize: "var(--sn-font-size-xs, 0.75rem)",
-        fontWeight: "var(--sn-font-weight-medium, 500)",
-      },
-    } as Record<string, unknown>,
-    componentSurface: slots?.inlineAction,
-    itemSurface: field.slots?.inlineAction,
-  });
-  const passwordToggleSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-passwordToggle-${field.name}`,
-    implementationBase: {
-      bg: "transparent",
-      color: "var(--sn-color-muted-foreground, #6b7280)",
-      hover: {
-        color: "var(--sn-color-foreground, #111827)",
-      },
-      focus: {
-        ring: true,
-      },
-      style: {
-        position: "absolute",
-        right: "var(--sn-spacing-sm, 0.5rem)",
-        top: "50%",
-        transform: "translateY(-50%)",
-        minHeight: "2rem",
-        minWidth: "2rem",
-        padding: "var(--sn-spacing-xs, 0.25rem)",
-      },
-    } as Record<string, unknown>,
-    componentSurface: slots?.passwordToggle,
-    itemSurface: field.slots?.passwordToggle,
-  });
-
-  const inputStyle = inputSurface.style as React.CSSProperties | undefined;
-
-  const optionsResult = useComponentData(
-    !Array.isArray(staticFieldOptions) && staticFieldOptions
-      ? staticFieldOptions
-      : "",
-  );
-  let input: React.ReactNode;
-
-  if (!showByExpression) {
-    return null;
-  }
-
-  switch (field.type) {
-    case "textarea":
-      input = (
-        <TextareaControl
-          textareaId={fieldId}
-          name={field.name}
-          value={(value as string) ?? ""}
-          disabled={field.disabled}
-          readOnly={field.readOnly}
-          required={required}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          placeholder={placeholder}
-          onChangeText={onChange}
-          onBlur={onBlur}
-          rows={3}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={inputStyle}
-        />
-      );
-      break;
-
-    case "select": {
-      const fieldOptions = Array.isArray(staticFieldOptions)
-        ? staticFieldOptions
-        : toFieldOptions(
-            optionsResult.data,
-            field.labelField,
-            field.valueField,
-          );
-
-      input = (
-        <SelectControl
-          selectId={fieldId}
-          name={field.name}
-          value={toNormalizedString(value)}
-          disabled={field.disabled}
-          required={required}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          onChangeValue={onChange}
-          onBlur={onBlur}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={inputStyle}
-        >
-          {!value && !field.default ? (
-            <option value="">{placeholder ?? "Select..."}</option>
-          ) : null}
-          {fieldOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </SelectControl>
-      );
-      break;
-    }
-
-    case "multi-select": {
-      const fieldOptions = Array.isArray(staticFieldOptions)
-        ? staticFieldOptions
-        : toFieldOptions(
-            optionsResult.data,
-            field.labelField,
-            field.valueField,
-          );
-      const selectedValues = Array.isArray(value)
-        ? value.map((item) => toNormalizedString(item)).filter(Boolean)
-        : [];
-      const multiSelectSurface = resolveSurfacePresentation({
-        surfaceId: `${rootId}-input-${field.name}`,
-        implementationBase: {
-          width: "100%",
-          minHeight: `${Math.min(fieldOptions.length + 0.5, 8) * 1.75}rem`,
-          cursor: field.disabled ? "not-allowed" : "pointer",
-          style: {
-            appearance: "none",
-            boxSizing: "border-box",
-            padding:
-              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-            paddingRight: "var(--sn-spacing-sm, 0.5rem)",
-            fontSize: "var(--sn-font-size-sm, 0.875rem)",
-            lineHeight: "var(--sn-leading-normal, 1.5)",
-            color: "var(--sn-color-foreground, #111827)",
-            backgroundColor: "var(--sn-color-background, #ffffff)",
-            border:
-              "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
-            borderRadius: "var(--sn-radius-md, 0.375rem)",
-            outline: "none",
-            fontFamily: "inherit",
-            transition:
-              "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out), box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)",
-          },
-          states: {
-            focus: {
-              style: {
-                borderColor: "var(--sn-color-primary, #2563eb)",
-                boxShadow:
-                  "0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent)",
-              },
-            },
-            invalid: {
-              style: {
-                borderColor: "var(--sn-color-destructive, #ef4444)",
-              },
-            },
-            disabled: {
-              opacity: 0.5,
-              cursor: "not-allowed",
-            },
-          },
-        },
-        componentSurface: slots?.input,
-        itemSurface: field.slots?.input,
-        activeStates,
-      });
-
-      input = (
-        <>
-          <select
-            id={fieldId}
-            name={field.name}
-            multiple
-            disabled={field.disabled}
-            required={required}
-            aria-invalid={hasError}
-            aria-describedby={describedBy}
-            aria-label={label}
-            value={selectedValues}
-            onChange={(event) =>
-              onChange(
-                Array.from(event.currentTarget.selectedOptions).map(
-                  (option) => option.value,
-                ),
-              )
-            }
-            onBlur={onBlur}
-            data-snapshot-id={`${rootId}-input-${field.name}`}
-            className={multiSelectSurface.className}
-            style={multiSelectSurface.style}
-          >
-            {fieldOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          <SurfaceStyles css={multiSelectSurface.scopedCss} />
-        </>
-      );
-      break;
-    }
-
-    case "checkbox":
-      input = (
-        <InputControl
-          inputId={fieldId}
-          name={field.name}
-          type="checkbox"
-          checked={!!value}
-          disabled={field.disabled}
-          readOnly={field.readOnly}
-          required={required}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          onChangeChecked={onChange}
-          onBlur={onBlur}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={{
-            width: "16px",
-            height: "16px",
-            accentColor: "var(--sn-color-primary, #2563eb)",
-            ...(inputStyle ?? {}),
-          }}
-        />
-      );
-      break;
-
-    case "switch": {
-      const switchChecked = !!value;
-      const switchTrackW = 44;
-      const switchTrackH = 24;
-      const switchThumb = 20;
-      const switchThumbOffset = 2;
-      const switchThumbTranslate = switchChecked
-        ? switchTrackW - switchThumb - switchThumbOffset * 2
-        : 0;
-      const switchStates = [
-        ...(switchChecked ? (["active"] as const) : []),
-        ...(field.disabled ? (["disabled"] as const) : []),
-      ];
-      const switchButtonSurface = resolveSurfacePresentation({
-        surfaceId: `${rootId}-input-${field.name}`,
-        implementationBase: {
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "var(--sn-spacing-sm, 0.5rem)",
-          padding: 0,
-          border: "none",
-          bg: "transparent",
-          cursor: field.disabled ? "not-allowed" : "pointer",
-          style: {
-            appearance: "none",
-          },
-          states: {
-            disabled: {
-              opacity: 0.5,
-            },
-          },
-        },
-        componentSurface: slots?.input,
-        itemSurface: field.slots?.input,
-        activeStates: switchStates,
-      });
-      const switchTrackSurface = resolveSurfacePresentation({
-        surfaceId: `${rootId}-switch-track-${field.name}`,
-        implementationBase: {
-          position: "relative",
-          display: "inline-flex",
-          alignItems: "center",
-          width: `${switchTrackW}px`,
-          height: `${switchTrackH}px`,
-          borderRadius: "9999px",
-          bg: "var(--sn-color-secondary, #e5e7eb)",
-          style: {
-            flexShrink: 0,
-          },
-          transition:
-            "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)",
-          states: {
-            active: {
-              bg: "var(--sn-color-primary, #2563eb)",
-            },
-          },
-        },
-        componentSurface: slots?.switchTrack,
-        itemSurface: field.slots?.switchTrack,
-        activeStates: switchStates,
-      });
-      const switchThumbSurface = resolveSurfacePresentation({
-        surfaceId: `${rootId}-switch-thumb-${field.name}`,
-        implementationBase: {
-          position: "absolute",
-          width: `${switchThumb}px`,
-          height: `${switchThumb}px`,
-          borderRadius: "9999px",
-          bg: "var(--sn-color-card, #ffffff)",
-          transform: "translateX(0px)",
-          style: {
-            top: `${switchThumbOffset}px`,
-            left: `${switchThumbOffset}px`,
-            boxShadow: "var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.2))",
-          },
-          transition:
-            "transform var(--sn-duration-fast, 150ms) cubic-bezier(0.34, 1.56, 0.64, 1)",
-          states: {
-            active: {
-              transform: `translateX(${switchThumbTranslate}px)`,
-            },
-          },
-        },
-        componentSurface: slots?.switchThumb,
-        itemSurface: field.slots?.switchThumb,
-        activeStates: switchStates,
-      });
-
-      input = (
-        <>
-          <button
-            type="button"
-            id={fieldId}
-            role="switch"
-            aria-checked={switchChecked}
-            aria-invalid={hasError}
-            aria-describedby={describedBy}
-            aria-label={label}
-            disabled={field.disabled}
-            onClick={() => onChange(!switchChecked)}
-            onBlur={onBlur}
-            data-snapshot-id={`${rootId}-input-${field.name}`}
-            className={switchButtonSurface.className}
-            style={switchButtonSurface.style}
-          >
-            <span
-              data-snapshot-id={`${rootId}-switch-track-${field.name}`}
-              className={switchTrackSurface.className}
-              style={switchTrackSurface.style}
-            >
-              <span
-                data-snapshot-id={`${rootId}-switch-thumb-${field.name}`}
-                className={switchThumbSurface.className}
-                style={switchThumbSurface.style}
-              />
-            </span>
-          </button>
-          <SurfaceStyles css={switchButtonSurface.scopedCss} />
-          <SurfaceStyles css={switchTrackSurface.scopedCss} />
-          <SurfaceStyles css={switchThumbSurface.scopedCss} />
-        </>
-      );
-      break;
-    }
-
-    case "number":
-      input = (
-        <InputControl
-          inputId={fieldId}
-          name={field.name}
-          type="number"
-          value={
-            value === "" || value === undefined || value === null
-              ? ""
-              : String(value)
-          }
-          disabled={field.disabled}
-          readOnly={field.readOnly}
-          required={required}
-          min={validation?.min != null ? String(validation.min) : undefined}
-          max={validation?.max != null ? String(validation.max) : undefined}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          placeholder={placeholder}
-          onChangeText={(v) => {
-            onChange(v === "" ? "" : Number(v));
-          }}
-          onBlur={onBlur}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={inputStyle}
-        />
-      );
-      break;
-
-    case "file":
-      input = (
-        <InputControl
-          inputId={fieldId}
-          name={field.name}
-          type="file"
-          disabled={field.disabled}
-          required={required}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          onChangeFiles={(files) => {
-            onChange(files && files.length > 0 ? files[0] : null);
-          }}
-          onBlur={onBlur}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={inputStyle}
-        />
-      );
-      break;
-
-    case "radio-group": {
-      const fieldOptions = Array.isArray(staticFieldOptions)
-        ? staticFieldOptions
-        : toFieldOptions(
-            optionsResult.data,
-            field.labelField,
-            field.valueField,
-          );
-
-      input = (
-        <div
-          role="radiogroup"
-          aria-labelledby={`${fieldId}-legend`}
-          data-snapshot-id={`${rootId}-options-${field.name}`}
-          className={optionsSurface.className}
-          style={optionsSurface.style}
-        >
-          {fieldOptions.map((opt) => {
-            const isSelected = String(value ?? "") === opt.value;
-            const optionActiveStates = [
-              ...(isSelected ? (["selected"] as const) : []),
-              ...(field.disabled ? (["disabled"] as const) : []),
-            ];
-            const optionSurface = resolveSurfacePresentation({
-              surfaceId: `${rootId}-option-${field.name}-${opt.value}`,
-              implementationBase: {
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "var(--sn-spacing-sm, 0.5rem)",
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              } as Record<string, unknown>,
-              componentSurface: slots?.option,
-              itemSurface: field.slots?.option,
-              activeStates: optionActiveStates,
-            });
-            const optionLabelSurface = resolveSurfacePresentation({
-              surfaceId: `${rootId}-optionLabel-${field.name}-${opt.value}`,
-              componentSurface: slots?.optionLabel,
-              itemSurface: field.slots?.optionLabel,
-              activeStates: optionActiveStates,
-            });
-
-            return (
-              <label
-                key={opt.value}
-                data-snapshot-id={`${rootId}-option-${field.name}-${opt.value}`}
-                className={optionSurface.className}
-                style={optionSurface.style}
-              >
-                <InputControl
-                  type="radio"
-                  inputId={`${fieldId}-${opt.value}`}
-                  name={field.name}
-                  checked={isSelected}
-                  disabled={field.disabled}
-                  required={required}
-                  ariaInvalid={hasError}
-                  ariaDescribedBy={describedBy}
-                  ariaLabel={opt.label}
-                  onChangeChecked={(checked) => {
-                    if (checked) {
-                      onChange(opt.value);
-                    }
-                  }}
-                  onBlur={onBlur}
-                  surfaceId={`${rootId}-input-${field.name}-${opt.value}`}
-                  className={inputSurface.className}
-                  style={{
-                    width: "16px",
-                    height: "16px",
-                    accentColor: "var(--sn-color-primary, #2563eb)",
-                    ...(inputStyle ?? {}),
-                  }}
-                />
-                <span
-                  data-snapshot-id={`${rootId}-optionLabel-${field.name}-${opt.value}`}
-                  className={optionLabelSurface.className}
-                  style={optionLabelSurface.style}
-                >
-                  {opt.label}
-                </span>
-                <SurfaceStyles css={optionSurface.scopedCss} />
-                <SurfaceStyles css={optionLabelSurface.scopedCss} />
-              </label>
-            );
-          })}
-          <SurfaceStyles css={optionsSurface.scopedCss} />
-        </div>
-      );
-      break;
-    }
-
-    case "slider":
-      input = (
-        <InputControl
-          inputId={fieldId}
-          name={field.name}
-          type="range"
-          value={
-            value === "" || value === undefined || value === null
-              ? "0"
-              : String(Number(value))
-          }
-          disabled={field.disabled}
-          required={required}
-          min={field.validation?.min != null ? String(field.validation.min) : undefined}
-          max={field.validation?.max != null ? String(field.validation.max) : undefined}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          onChangeText={(nextValue) => onChange(Number(nextValue))}
-          onBlur={onBlur}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={inputStyle}
-        />
-      );
-      break;
-
-    case "color":
-      input = (
-        <InputControl
-          inputId={fieldId}
-          name={field.name}
-          type="color"
-          value={typeof value === "string" && value ? value : "#2563eb"}
-          disabled={field.disabled}
-          required={required}
-          ariaInvalid={hasError}
-          ariaDescribedBy={describedBy}
-          ariaLabel={label}
-          onChangeText={onChange}
-          onBlur={onBlur}
-          surfaceId={`${rootId}-input-${field.name}`}
-          className={inputSurface.className}
-          style={{
-            ...(inputStyle ?? {}),
-            minHeight: "2.75rem",
-            padding: "var(--sn-spacing-xs, 0.25rem)",
-          }}
-        />
-      );
-      break;
-
-    case "combobox": {
-      const fieldOptions = Array.isArray(staticFieldOptions)
-        ? staticFieldOptions
-        : toFieldOptions(
-            optionsResult.data,
-            field.labelField,
-            field.valueField,
-          );
-      const listId = `${fieldId}-list`;
-
-      input = (
-        <>
-          <InputControl
-            inputId={fieldId}
-            name={field.name}
-            list={listId}
-            value={(value as string) ?? ""}
-            disabled={field.disabled}
-            readOnly={field.readOnly}
-            required={required}
-            ariaInvalid={hasError}
-            ariaDescribedBy={describedBy}
-            ariaLabel={label}
-            placeholder={placeholder}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            surfaceId={`${rootId}-input-${field.name}`}
-            className={inputSurface.className}
-            style={inputStyle}
-          />
-          <datalist id={listId}>
-            {fieldOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </datalist>
-        </>
-      );
-      break;
-    }
-
-    case "tag-input": {
-      const tags: string[] = Array.isArray(value)
-        ? (value as string[]).filter(Boolean)
-        : [];
-      input = (
-        <TagInputField
-          fieldId={fieldId}
-          fieldName={field.name}
-          tags={tags}
-          disabled={field.disabled}
-          readOnly={field.readOnly}
-          required={required}
-          hasError={hasError}
-          describedBy={describedBy}
-          label={label}
-          placeholder={placeholder}
-          onChange={onChange}
-          onBlur={onBlur}
-          rootId={rootId}
-          inputSurface={inputSurface}
-          inputStyle={inputStyle}
-        />
-      );
-      break;
-    }
-
-    default:
-      input = (
-        <>
-          <InputControl
-            inputId={fieldId}
-            name={field.name}
-            type={(
-              field.type === "password"
-                ? (passwordVisible ? "text" : "password")
-                : field.type === "datetime"
-                  ? "datetime-local"
-                  : field.type
-            ) as Parameters<typeof InputControl>[0]["type"]}
-            value={(value as string) ?? ""}
-            disabled={field.disabled}
-            readOnly={field.readOnly}
-            required={required}
-            ariaInvalid={hasError}
-            ariaDescribedBy={describedBy}
-            ariaLabel={label}
-            placeholder={placeholder}
-            autoComplete={field.autoComplete}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            surfaceId={`${rootId}-input-${field.name}`}
-            className={inputSurface.className}
-            style={{
-              ...(inputStyle ?? {}),
-              paddingRight:
-                field.type === "password"
-                  ? "var(--sn-spacing-2xl, 2.5rem)"
-                  : inputStyle?.paddingRight,
-            }}
-          />
-          {field.type === "password" ? (
-            <ButtonControl
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => setPasswordVisible((current) => !current)}
-              ariaLabel={passwordVisible ? "Hide password" : "Show password"}
-              surfaceId={`${rootId}-password-toggle-${field.name}`}
-              surfaceConfig={passwordToggleSurface.resolvedConfigForWrapper}
-            >
-              <Icon name={passwordVisible ? "eye-off" : "eye"} size={16} />
-            </ButtonControl>
-          ) : null}
-        </>
-      );
-      break;
-  }
-
-  // Checkbox has label inline
-  if (field.type === "checkbox") {
-    return (
-      <div
-        data-sn-field={field.name}
-        data-snapshot-id={`${rootId}-field-${field.name}`}
-        className={fieldSurface.className}
-        style={fieldSurface.style}
-      >
-        <label
-          htmlFor={fieldId}
-          data-snapshot-id={`${rootId}-label-${field.name}`}
-          className={labelSurface.className}
-          style={labelSurface.style}
-        >
-          {input}
-          <span>{label}</span>
-        </label>
-        {helperText && !hasError && (
-          <div
-            id={`${fieldId}-helper`}
-            data-snapshot-id={`${rootId}-helper-${field.name}`}
-            className={helperSurface.className}
-            style={helperSurface.style}
-          >
-            {helperText}
-          </div>
-        )}
-        {hasError && (
-          <div
-            id={`${fieldId}-error`}
-            role="alert"
-            data-sn-field-error
-            data-snapshot-id={`${rootId}-error-${field.name}`}
-            className={errorSurface.className}
-            style={errorSurface.style}
-          >
-            {error}
-          </div>
-        )}
-        <SurfaceStyles css={fieldSurface.scopedCss} />
-        <SurfaceStyles css={labelSurface.scopedCss} />
-        <SurfaceStyles css={inputSurface.scopedCss} />
-        <SurfaceStyles css={helperSurface.scopedCss} />
-        <SurfaceStyles css={errorSurface.scopedCss} />
-      </div>
-    );
-  }
-
-  return (
-    <div
-      data-sn-field={field.name}
-      data-snapshot-id={`${rootId}-field-${field.name}`}
-      className={fieldSurface.className}
-      style={fieldSurface.style}
-    >
-      <label
-        htmlFor={fieldId}
-        data-snapshot-id={`${rootId}-label-${field.name}`}
-        className={labelSurface.className}
-        style={labelSurface.style}
-      >
-          <span>
-            {label}
-            {required && (
-            <span
-              data-snapshot-id={`${rootId}-required-${field.name}`}
-              className={requiredIndicatorSurface.className}
-              style={requiredIndicatorSurface.style}
-            >
-              *
-            </span>
-          )}
-        </span>
-        {inlineActionLabel && inlineActionTarget ? (
-          <ButtonControl
-            type="button"
-            onClick={() => {
-              void executeAction({ type: "navigate", to: inlineActionTarget } as never);
-            }}
-            variant="ghost"
-            size="sm"
-            surfaceId={`${rootId}-inline-action-${field.name}`}
-            surfaceConfig={inlineActionSurface.resolvedConfigForWrapper}
-          >
-            {inlineActionLabel}
-          </ButtonControl>
-        ) : null}
-      </label>
-      <div
-        data-snapshot-id={`${rootId}-inputWrapper-${field.name}`}
-        className={inputWrapperSurface.className}
-        style={inputWrapperSurface.style}
-      >
-        {input}
-      </div>
-      {description && (
-        <div
-          data-snapshot-id={`${rootId}-description-${field.name}`}
-          className={descriptionSurface.className}
-          style={descriptionSurface.style}
-        >
-          {description}
-        </div>
-      )}
-      {helperText && !hasError && (
-        <div
-          id={`${fieldId}-helper`}
-          data-snapshot-id={`${rootId}-helper-${field.name}`}
-          className={helperSurface.className}
-          style={helperSurface.style}
-        >
-          {helperText}
-        </div>
-      )}
-      {hasError && (
-        <div
-          id={`${fieldId}-error`}
-          role="alert"
-          data-sn-field-error
-          data-snapshot-id={`${rootId}-error-${field.name}`}
-          className={errorSurface.className}
-          style={errorSurface.style}
-        >
-          {error}
-        </div>
-      )}
-      <SurfaceStyles css={fieldSurface.scopedCss} />
-      <SurfaceStyles css={labelSurface.scopedCss} />
-      <SurfaceStyles css={descriptionSurface.scopedCss} />
-      <SurfaceStyles css={inputWrapperSurface.scopedCss} />
-      <SurfaceStyles css={inputSurface.scopedCss} />
-      <SurfaceStyles css={optionsSurface.scopedCss} />
-      <SurfaceStyles css={helperSurface.scopedCss} />
-      <SurfaceStyles css={errorSurface.scopedCss} />
-      <SurfaceStyles css={requiredIndicatorSurface.scopedCss} />
-    </div>
-  );
-}
-
 function buildTemplateContext(
   runtime: ReturnType<typeof useManifestRuntime>,
   routeRuntime: ReturnType<typeof useRouteRuntime>,
@@ -1601,8 +403,6 @@ function resolveEndpointTemplates<T>(
   return value;
 }
 
-// ── Section renderer ──────────────────────────────────────────────────────
-
 function buildPrimitiveOptions(
   locale: string | undefined,
   runtime: ReturnType<typeof useManifestRuntime>,
@@ -1613,236 +413,6 @@ function buildPrimitiveOptions(
     locale,
     i18n: runtime?.raw.i18n,
   };
-}
-
-function SectionRenderer({
-  rootId,
-  section,
-  form,
-  columns,
-  gap,
-  slots,
-  primitiveOptions,
-}: {
-  rootId: string;
-  section: FieldSectionConfig;
-  form: ReturnType<typeof useAutoForm>;
-  columns: number;
-  gap: string;
-  slots?: AutoFormConfig["slots"];
-  primitiveOptions: PrimitiveValueOptions;
-}) {
-  const [collapsed, setCollapsed] = useState(section.defaultCollapsed ?? false);
-  const sectionTitle =
-    resolveText(section.title, primitiveOptions) ?? "section";
-  const sectionDescription = resolveText(
-    section.description,
-    primitiveOptions,
-  );
-  const sectionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-${sectionTitle}`,
-    implementationBase: {
-      border: "none",
-      padding: 0,
-      margin: 0,
-      style: {
-        marginBottom: "var(--sn-spacing-sm, 0.5rem)",
-      },
-    } as Record<string, unknown>,
-    componentSurface: slots?.section,
-    itemSurface: section.slots?.section,
-  });
-  const sectionHeaderSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-header-${sectionTitle}`,
-    implementationBase: {
-      display: "flex",
-      alignItems: "center",
-      gap: "var(--sn-spacing-sm, 0.5rem)",
-      cursor: section.collapsible ? "pointer" : undefined,
-      style: {
-        marginBottom: collapsed ? 0 : gap,
-      },
-    } as Record<string, unknown>,
-    componentSurface: slots?.sectionHeader,
-    itemSurface: section.slots?.sectionHeader,
-    activeStates: section.collapsible && !collapsed ? ["open"] : undefined,
-  });
-  const sectionToggleSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-toggle-${sectionTitle}`,
-    implementationBase: {
-      display: "inline-flex",
-      transform: collapsed ? "rotate(0deg)" : "rotate(90deg)",
-      transition:
-        "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.sectionToggle,
-    itemSurface: section.slots?.sectionToggle,
-    activeStates: section.collapsible && !collapsed ? ["open"] : undefined,
-  });
-  const sectionTitleSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-title-${sectionTitle}`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-md, 1rem)",
-      fontWeight: "var(--sn-font-weight-semibold, 600)",
-      color: "var(--sn-color-foreground, #111827)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.sectionTitle,
-    itemSurface: section.slots?.sectionTitle,
-  });
-  const sectionDescriptionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-section-description-${sectionTitle}`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-sm, 0.875rem)",
-      color: "var(--sn-color-muted-foreground, #6b7280)",
-    } as Record<string, unknown>,
-    componentSurface: slots?.sectionDescription,
-    itemSurface: section.slots?.sectionDescription,
-  });
-
-  return (
-    <fieldset
-      data-sn-section={sectionTitle}
-      data-snapshot-id={`${rootId}-section-${sectionTitle}`}
-      className={sectionSurface.className}
-      style={sectionSurface.style}
-    >
-      {/* Section header */}
-      <div
-        data-snapshot-id={`${rootId}-section-header-${sectionTitle}`}
-        className={sectionHeaderSurface.className}
-        style={sectionHeaderSurface.style}
-        onClick={
-          section.collapsible ? () => setCollapsed(!collapsed) : undefined
-        }
-      >
-        {section.collapsible && (
-          <span
-            data-snapshot-id={`${rootId}-section-toggle-${sectionTitle}`}
-            className={sectionToggleSurface.className}
-            style={sectionToggleSurface.style}
-          >
-            <Icon name="chevron-right" size={16} />
-          </span>
-        )}
-        <div>
-          <div
-            data-snapshot-id={`${rootId}-section-title-${sectionTitle}`}
-            className={sectionTitleSurface.className}
-            style={sectionTitleSurface.style}
-          >
-            {sectionTitle}
-          </div>
-          {sectionDescription && (
-            <div
-              data-snapshot-id={`${rootId}-section-description-${sectionTitle}`}
-              className={sectionDescriptionSurface.className}
-              style={sectionDescriptionSurface.style}
-            >
-              {sectionDescription}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Section fields */}
-      {!collapsed && (
-        <FieldGrid
-          gridId={`${rootId}-section-fields-${sectionTitle}`}
-          rootId={rootId}
-          fields={section.fields}
-          form={form}
-          columns={columns}
-          gap={gap}
-          slots={slots}
-          primitiveOptions={primitiveOptions}
-        />
-      )}
-      <SurfaceStyles css={sectionSurface.scopedCss} />
-      <SurfaceStyles css={sectionHeaderSurface.scopedCss} />
-      <SurfaceStyles css={sectionToggleSurface.scopedCss} />
-      <SurfaceStyles css={sectionTitleSurface.scopedCss} />
-      <SurfaceStyles css={sectionDescriptionSurface.scopedCss} />
-    </fieldset>
-  );
-}
-
-// ── Field grid ────────────────────────────────────────────────────────────
-
-function FieldGrid({
-  gridId,
-  rootId,
-  fields,
-  form,
-  columns,
-  gap,
-  slots,
-  primitiveOptions,
-}: {
-  gridId: string;
-  rootId: string;
-  fields: FieldConfig[];
-  form: ReturnType<typeof useAutoForm>;
-  columns: number;
-  gap: string;
-  slots?: AutoFormConfig["slots"];
-  primitiveOptions: PrimitiveValueOptions;
-}) {
-  const gridSurface = resolveSurfacePresentation({
-    surfaceId: gridId,
-    implementationBase: {
-      display: "grid",
-      gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-      gap,
-    },
-    componentSurface: slots?.fieldGrid,
-  });
-
-  return (
-    <div
-      data-snapshot-id={gridId}
-      className={gridSurface.className}
-      style={gridSurface.style}
-    >
-      {fields.map((field) => {
-        if (!isFieldVisible(field, form.values)) return null;
-
-        const cellSurface = resolveSurfacePresentation({
-          surfaceId: `${gridId}-cell-${field.name}`,
-          implementationBase: {
-            gridColumn: field.span
-              ? `span ${Math.min(field.span, columns)}`
-              : `span ${columns}`,
-          },
-          componentSurface: slots?.fieldCell,
-          itemSurface: field.slots?.fieldCell,
-        });
-
-        return (
-          <div
-            key={field.name}
-            data-snapshot-id={`${gridId}-cell-${field.name}`}
-            className={cellSurface.className}
-            style={cellSurface.style}
-          >
-            <FieldRenderer
-              rootId={rootId}
-              field={field}
-              value={form.values[field.name]}
-              required={isFieldRequired(field, form.values)}
-              error={form.errors[field.name]}
-              showError={!!form.touched[field.name]}
-              onChange={(value) => form.setValue(field.name, value)}
-              onBlur={() => form.touchField(field.name)}
-              slots={slots}
-              primitiveOptions={primitiveOptions}
-            />
-            <SurfaceStyles css={cellSurface.scopedCss} />
-          </div>
-        );
-      })}
-      <SurfaceStyles css={gridSurface.scopedCss} />
-    </div>
-  );
 }
 
 // ── Submit helper ─────────────────────────────────────────────────────────
@@ -1873,6 +443,148 @@ async function submitToApi(
     default:
       return api.post(endpoint, values);
   }
+}
+
+// ── Dynamic options hook ─────────────────────────────────────────────────
+
+/**
+ * Resolves options for a single field. Calls useComponentData unconditionally
+ * (hook rules) and returns the resolved option array.
+ */
+function useFieldOptions(
+  field: FieldConfig,
+  staticFieldOptions: ReturnType<typeof resolveStaticFieldOptions>,
+): { label: string; value: string }[] {
+  const dynamicTarget =
+    !Array.isArray(staticFieldOptions) && staticFieldOptions
+      ? staticFieldOptions
+      : "";
+  const optionsResult = useComponentData(dynamicTarget);
+
+  if (Array.isArray(staticFieldOptions)) {
+    return staticFieldOptions as { label: string; value: string }[];
+  }
+
+  return toFieldOptions(
+    optionsResult.data,
+    field.labelField,
+    field.valueField,
+  );
+}
+
+/**
+ * Wrapper component that resolves dynamic options and visibleWhen expression
+ * for a single field. This is needed because each field may call
+ * useComponentData (a hook) for its dynamic options and
+ * useEvaluateExpression for its visibleWhen expression.
+ *
+ * Returns the resolved standalone field config or null if the field
+ * should be hidden (visibleWhen evaluated to false).
+ */
+function useResolvedFieldConfig(
+  field: FieldConfig,
+  resolvedField: FieldConfig,
+  formValues: Record<string, unknown>,
+  primitiveOptions: PrimitiveValueOptions,
+): AutoFormFieldConfig | null {
+  const staticFieldOptions = resolveStaticFieldOptions(
+    resolvedField,
+    primitiveOptions,
+  );
+  const fieldOptions = useFieldOptions(resolvedField, staticFieldOptions);
+  const showByExpression = useEvaluateExpression(field.visibleWhen);
+
+  if (!showByExpression) {
+    return null;
+  }
+
+  if (!isFieldVisible(field, formValues)) {
+    return null;
+  }
+
+  const label = resolveText(resolvedField.label, primitiveOptions) ?? resolvedField.name;
+  const placeholder = resolveText(resolvedField.placeholder, primitiveOptions);
+  const helperText = resolveText(resolvedField.helperText, primitiveOptions);
+  const description = resolveText(resolvedField.description, primitiveOptions);
+  const inlineActionLabel = resolveText(
+    resolvedField.inlineAction?.label,
+    primitiveOptions,
+  );
+  const inlineActionTarget = resolveText(
+    resolvedField.inlineAction?.to,
+    primitiveOptions,
+  );
+
+  return {
+    name: resolvedField.name,
+    type: resolvedField.type ?? "text",
+    label,
+    placeholder,
+    helperText,
+    description,
+    required: isFieldRequired(field, formValues),
+    disabled: resolvedField.disabled,
+    readOnly: resolvedField.readOnly,
+    hidden: false,
+    defaultValue: resolvedField.default,
+    options: fieldOptions,
+    validate: resolvedField.validate,
+    validation: resolvedField.validation,
+    divisor: resolvedField.divisor,
+    inlineAction:
+      inlineActionLabel && inlineActionTarget
+        ? { label: inlineActionLabel, to: inlineActionTarget }
+        : undefined,
+    slots: resolvedField.slots as Record<string, Record<string, unknown>> | undefined,
+    autoComplete: resolvedField.autoComplete,
+    span: resolvedField.span,
+    labelField: resolvedField.labelField,
+    valueField: resolvedField.valueField,
+  };
+}
+
+/**
+ * Per-field resolver component. Needed because each field may call hooks
+ * (useComponentData, useEvaluateExpression) that must be called at
+ * the component level with consistent hook ordering.
+ */
+function FieldResolver({
+  field,
+  resolvedField,
+  formValues,
+  primitiveOptions,
+  onResolved,
+}: {
+  field: FieldConfig;
+  resolvedField: FieldConfig;
+  formValues: Record<string, unknown>;
+  primitiveOptions: PrimitiveValueOptions;
+  onResolved: (name: string, config: AutoFormFieldConfig | null) => void;
+}) {
+  const resolved = useResolvedFieldConfig(
+    field,
+    resolvedField,
+    formValues,
+    primitiveOptions,
+  );
+
+  const serialized = JSON.stringify(resolved);
+  const prevRef = useRef(serialized);
+
+  useEffect(() => {
+    if (prevRef.current !== serialized) {
+      prevRef.current = serialized;
+      onResolved(field.name, resolved);
+    }
+  });
+
+  // On mount, report the initial resolved config
+  useEffect(() => {
+    onResolved(field.name, resolved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return null;
 }
 
 // ── Main component ────────────────────────────────────────────────────────
@@ -2028,23 +740,8 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
       primitiveOptions,
     ) ?? "Submitting...";
   const columns = config.columns ?? 1;
-  const gap = GAP_MAP[config.gap ?? "md"] ?? GAP_MAP.md!;
+  const gap = (config.gap ?? "md") as "xs" | "sm" | "md" | "lg";
   const rootId = config.id ?? "auto-form";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-root`,
-    implementationBase: {
-      display: "flex",
-      flexDirection: "column",
-      gap,
-      alignItems: config.layout === "horizontal" ? "stretch" : undefined,
-    } as Record<string, unknown>,
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-  const actionsSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-actions`,
-    componentSurface: config.slots?.actions,
-  });
 
   const onSubmit = useCallback(
     async (values: Record<string, unknown>) => {
@@ -2295,73 +992,155 @@ export function AutoForm({ config }: { config: AutoFormConfig }) {
     }
   }, [config.autoSubmit, form.isDirty, form.isSubmitting, saveStatus]);
 
+  // ── Resolve manifest fields to standalone field configs ──────────────
+
+  // Track per-field resolved configs from FieldResolver children
+  const [resolvedFieldConfigs, setResolvedFieldConfigs] = useState<
+    Record<string, AutoFormFieldConfig | null>
+  >({});
+
+  const handleFieldResolved = useCallback(
+    (name: string, fieldConfig: AutoFormFieldConfig | null) => {
+      setResolvedFieldConfigs((prev) => {
+        if (prev[name] === fieldConfig) return prev;
+        // Deep compare to avoid unnecessary re-renders
+        if (
+          fieldConfig !== null &&
+          prev[name] !== null &&
+          prev[name] !== undefined &&
+          JSON.stringify(prev[name]) === JSON.stringify(fieldConfig)
+        ) {
+          return prev;
+        }
+        return { ...prev, [name]: fieldConfig };
+      });
+    },
+    [],
+  );
+
+  // Build the standalone fields/sections from resolved configs
+  const standaloneFields = useMemo((): AutoFormFieldConfig[] => {
+    return resolvedFields
+      .map((field) => {
+        const resolved = resolvedFieldConfigs[field.name];
+        if (resolved === null) return null; // hidden by visibleWhen
+        if (resolved === undefined) {
+          // Not yet resolved by FieldResolver; provide a fallback
+          // from the resolved manifest field so we render something
+          // on the first frame
+          if (!isFieldVisible(field, form.values)) return null;
+          return {
+            name: field.name,
+            type: field.type ?? "text",
+            label: typeof field.label === "string" ? field.label : field.name,
+            placeholder: typeof field.placeholder === "string" ? field.placeholder : undefined,
+            helperText: typeof field.helperText === "string" ? field.helperText : undefined,
+            description: typeof field.description === "string" ? field.description : undefined,
+            required: isFieldRequired(field, form.values),
+            disabled: field.disabled,
+            readOnly: field.readOnly,
+            hidden: false,
+            options: Array.isArray(field.options)
+              ? (field.options as { label: string; value: string }[])
+              : [],
+            validate: field.validate,
+            validation: field.validation,
+            divisor: field.divisor,
+            autoComplete: field.autoComplete,
+            span: field.span,
+            slots: field.slots as Record<string, Record<string, unknown>> | undefined,
+          } satisfies AutoFormFieldConfig;
+        }
+        return resolved;
+      })
+      .filter((f): f is AutoFormFieldConfig => f !== null);
+  }, [resolvedFields, resolvedFieldConfigs, form.values]);
+
+  const standaloneSections = useMemo((): AutoFormSectionConfig[] | undefined => {
+    if (!resolvedSections) return undefined;
+    return resolvedSections.map((section: FieldSectionConfig) => ({
+      title: typeof section.title === "string" ? section.title : undefined,
+      description: typeof section.description === "string" ? section.description : undefined,
+      fields: section.fields
+        .map((field: FieldConfig) => {
+          const resolved = resolvedFieldConfigs[field.name];
+          if (resolved === null) return null;
+          if (resolved === undefined) {
+            if (!isFieldVisible(field, form.values)) return null;
+            return {
+              name: field.name,
+              type: field.type ?? "text",
+              label: typeof field.label === "string" ? field.label : field.name,
+              required: isFieldRequired(field, form.values),
+              disabled: field.disabled,
+              readOnly: field.readOnly,
+              hidden: false,
+              span: field.span,
+              slots: field.slots as Record<string, Record<string, unknown>> | undefined,
+            } satisfies AutoFormFieldConfig;
+          }
+          return resolved;
+        })
+        .filter((f: AutoFormFieldConfig | null): f is AutoFormFieldConfig => f !== null),
+      slots: section.slots as Record<string, Record<string, unknown>> | undefined,
+      collapsible: section.collapsible,
+      defaultCollapsed: section.defaultCollapsed,
+    }));
+  }, [resolvedSections, resolvedFieldConfigs, form.values]);
+
+  // Inline action handler — delegates to manifest action executor
+  const handleInlineAction = useCallback(
+    (fieldName: string, to: string) => {
+      void executeAction({ type: "navigate", to } as never);
+    },
+    [executeAction],
+  );
+
   if (visible === false) return null;
 
   return (
-    <form
-      data-snapshot-component="form"
-      data-testid="form"
-      data-snapshot-id={`${rootId}-root`}
-      className={rootSurface.className}
-      onSubmit={(e) => {
-        e.preventDefault();
-        void handleSubmit();
-      }}
-      noValidate
-      style={rootSurface.style}
-    >
-      {/* Sections mode */}
-      {resolvedSections ? (
-        resolvedSections.map((section: FieldSectionConfig, index: number) => (
-          <SectionRenderer
-            key={`${resolveText(section.title, primitiveOptions) ?? "section"}-${index}`}
-            rootId={rootId}
-            section={section}
-            form={form}
-            columns={columns}
-            gap={gap}
-            slots={config.slots}
-            primitiveOptions={primitiveOptions}
-          />
-        ))
-      ) : (
-        /* Flat fields mode */
-        <FieldGrid
-          gridId={`${rootId}-fields`}
-          rootId={rootId}
-          fields={resolvedFields}
-          form={form}
-          columns={columns}
-          gap={gap}
-          slots={config.slots}
+    <>
+      {/* Field resolvers — each calls hooks for dynamic options and visibleWhen */}
+      {allFields.map((field, index) => (
+        <FieldResolver
+          key={field.name}
+          field={field}
+          resolvedField={resolvedFieldMap.get(field.name) ?? field}
+          formValues={form.values}
           primitiveOptions={primitiveOptions}
+          onResolved={handleFieldResolved}
         />
-      )}
-
-      {/* Submit button */}
-      <div
-        data-snapshot-id={`${rootId}-actions`}
-        className={actionsSurface.className}
-        style={actionsSurface.style}
-      >
-        <ButtonControl
-          type="submit"
-          disabled={form.isSubmitting || !form.isValid}
-          variant={config.submitVariant ?? "default"}
-          size={config.submitSize ?? "sm"}
-          fullWidth={config.submitFullWidth}
-          surfaceId={`${rootId}-submit`}
-          surfaceConfig={config.slots?.submitButton}
-          activeStates={form.isSubmitting || !form.isValid ? ["disabled"] : []}
-        >
-          {config.submitIcon ? (
-            <Icon name={config.submitIcon} size={16} />
-          ) : null}
-          {form.isSubmitting ? submitLoadingLabel : submitLabel}
-        </ButtonControl>
-      </div>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={actionsSurface.scopedCss} />
-    </form>
+      ))}
+      <AutoFormBase
+        id={rootId}
+        fields={standaloneSections ? undefined : standaloneFields}
+        sections={standaloneSections}
+        values={form.values}
+        errors={form.errors}
+        touched={form.touched}
+        isSubmitting={form.isSubmitting}
+        isDirty={form.isDirty}
+        isValid={form.isValid}
+        submitLabel={submitLabel}
+        submitLoadingLabel={submitLoadingLabel}
+        columns={columns}
+        gap={gap}
+        layout={config.layout}
+        onFieldChange={(name, value) => form.setValue(name, value)}
+        onFieldBlur={(name) => form.touchField(name)}
+        onSubmit={handleSubmit}
+        onReset={form.reset}
+        onInlineAction={handleInlineAction}
+        submitVariant={config.submitVariant}
+        submitSize={config.submitSize}
+        submitFullWidth={config.submitFullWidth}
+        submitIcon={config.submitIcon}
+        dataComponent="form"
+        dataTestId="form"
+        className={config.className as string | undefined}
+        style={config.style as React.CSSProperties | undefined}
+        slots={config.slots as Record<string, Record<string, unknown>> | undefined}
+      />
+    </>
   );
 }

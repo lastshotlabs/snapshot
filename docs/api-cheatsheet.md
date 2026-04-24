@@ -286,15 +286,10 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `AnalyticsProviderFactory` *(typealias)* — Factory used to create analytics providers per snapshot instance.
 - `AnalyticsProviderInitConfig` *(interface)* — Analytics provider initialization payload.
 - `colorToOklch(color: string) => [number, number, number]` — Convert any supported color string to OKLCH values.
-- `ComponentTokens` *(typealias)* — Component-level token overrides.
-- `componentTokensSchema` — Zod schema for component-level token overrides.
 - `contrastRatio(left: string, right: string) => number` — Calculate the WCAG contrast ratio between two supported color values.
 - `defineFlavor(name: string, config: FlavorConfig) => Flavor` — Define and register a new flavor.
 - `deriveDarkVariant(lightColor: string) => string` — Derive a dark mode variant of a light color.
 - `deriveForeground(backgroundColor: string) => string` — Derive a foreground color that passes WCAG AA contrast (4.5:1) against the given background color.
-- `Flavor` *(interface)* — Named theme preset.
-- `FontConfig` *(typealias)* — Font configuration.
-- `fontSchema` — Zod schema for font configuration.
 - `getAllFlavors() => Record<string, Flavor>` — Get all registered flavors as a record.
 - `getFlavor(name: string) => Flavor | undefined` — Retrieve a registered flavor by name.
 - `getRegisteredClient(name: string) => ClientFactory | undefined` — Look up a previously registered custom client factory.
@@ -304,30 +299,19 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `oklchToHex(l: number, c: number, h: number) => string` — Convert OKLCH values back to a hex color string.
 - `oklchToString(l: number, c: number, h: number) => string` — Format OKLCH values as a CSS-compatible string (without the oklch() wrapper).
 - `parseOklchString(str: string) => [number, number, number]` — Parse an oklch string (the CSS variable format "L C H") back to values.
-- `RadiusScale` *(typealias)* — Border radius scale.
-- `radiusSchema` — Zod schema for border radius scale.
 - `registerAnalyticsProvider(name: string, factory: AnalyticsProviderFactory) => void` — Register a custom analytics provider factory by name.
 - `registerClient(name: string, factory: ClientFactory) => void` — Register a named custom client factory.
 - `relativeLuminance(color: string) => number` — Compute relative luminance from OKLCH for WCAG contrast calculations.
 - `resolveFrameworkStyles(options?: { respectReducedMotion?: boolean | undefined; } | undefined) => string` — Returns a CSS string containing framework-level styles:  1.
 - `resolveTokens(config?: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: strin...` — Resolve a theme configuration into a complete CSS string.
-- `Responsive` *(typealias)* — A breakpoint-aware value.
-- `SpacingScale` *(typealias)* — Spacing density.
-- `spacingSchema` — Zod schema for spacing density.
-- `ThemeColors` *(typealias)* — Semantic color tokens.
-- `themeColorsSchema` — Zod schema for semantic color tokens.
-- `ThemeConfig` *(typealias)* — Theme configuration in the manifest.
-- `themeConfigSchema` — Zod schema for the full theme configuration in the manifest.
-- `TokenEditor` *(interface)* — Return type of useTokenEditor().
 - `useTokenEditor() => TokenEditor` — React hook for runtime token editing.
 - `validateContrast(theme: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: stri...` — Warn when manifest theme color pairs fail WCAG AA contrast.
 
 ### Context & Data Binding
 - `AppContextProvider({ globals, resources, api, children, }: AppContextProviderProps) => Element` — Provides persistent global state that survives route changes.
 - `AppContextProviderProps` *(interface)* — Props for AppContextProvider.
-- `FromRef` *(interface)* — A reference to another component's published value.
 - `GlobalConfig` *(typealias)* — Global state definition from the manifest.
-- `isFromRef(value: unknown) => value is FromRef` — Type guard for FromRef values.
+- `isFromRef(value: unknown) => value is FromRef`
 - `PageContextProvider({ state, resources, api, children, }: PageContextProviderProps) => Element` — Provides per-page state that is destroyed on route change.
 - `PageContextProviderProps` *(interface)* — Props for PageContextProvider.
 - `ResolvedConfig` *(typealias)* — Resolves a type where FromRef values are replaced with their resolved types.
@@ -339,12 +323,12 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `AtomRegistry` *(interface)* — Registry of named state atoms.
 - `clearPersistedState(key: string, storage: PersistStorage) => void` — Remove a persisted state value from the selected browser storage area.
 - `readPersistedState(key: string, storage: PersistStorage) => unknown` — Read and JSON-decode a persisted state value, returning `undefined` on failure or absence.
-- `RuntimeStateConfig` *(interface)* — Named state definition from the manifest.
+- `RuntimeStateConfig` *(typealias)* — Named state definition from the manifest.
 - `StateConfigMap` *(typealias)* — Map of named state definitions declared by the manifest runtime.
 - `StateHookScope` *(typealias)* — Hook-level scope override that can force app, route, or auto-discovered state resolution.
 - `StateProviderProps` *(interface)* — Props accepted by the provider layer that wires manifest state into a React tree.
-- `StateScope` *(typealias)* — Lifetime scope for manifest state: shared across the app or recreated per route.
 - `toPersistedStateKey(key: string) => string` — Build the storage key used for persisted Snapshot state entries.
+- `useApiClient() => ApiClient | null` — Read the active API client from the app-scope Jotai store.
 - `usePersistedAtom<T>(sourceAtom: PrimitiveAtom<T>, key: string, storage: PersistStorage) => [T, (value: T) => void]` — Bind a primitive atom to browser storage so its value survives page reloads.
 - `useResetStateValue(id: string, options?: { scope?: StateHookScope | undefined; } | undefined) => () => void` — Return a callback that resets a named manifest state entry to its configured default.
 - `useSetStateValue(id: string, options?: { scope?: StateHookScope | undefined; } | undefined) => (value: unknown) => void` — Return a setter that writes to a named manifest state entry in the resolved scope.
@@ -352,75 +336,41 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `writePersistedState(key: string, value: unknown, storage: PersistStorage) => void` — Serialize and store a persisted state value, ignoring browser storage failures.
 
 ### Actions
-- `ActionBase` *(interface)* — Shared timing controls available on every action.
-- `ActionConfig` *(typealias)* — All possible action configs.
-- `ActionExecuteFn` *(typealias)* — The execute function returned by useActionExecutor.
-- `actionSchema` — Discriminated union schema for all action types.
-- `ApiAction` *(interface)* — Call an API endpoint.
-- `apiActionSchema` — Schema for api action.
-- `CloseModalAction` *(interface)* — Close a modal or drawer.
-- `closeModalActionSchema` — Schema for close-modal action.
-- `ConfirmAction` *(interface)* — Show a confirmation dialog.
-- `confirmActionSchema` — Schema for confirm action.
 - `ConfirmDialog() => ReactNode` — Render the global confirmation dialog for requests queued through `useConfirmManager`.
 - `ConfirmManager` *(interface)* — Imperative API for opening a confirmation dialog from manifest actions or custom UI.
 - `ConfirmOptions` *(typealias)* — Options accepted when opening a confirmation dialog.
 - `ConfirmRequest` *(interface)* — Internal confirm-dialog request stored in the atom-backed manager queue.
-- `CopyAction` *(interface)* — Copy plain text and optionally continue with follow-up actions.
-- `CopyToClipboardAction` *(interface)* — Copy plain text and optionally show a simple confirmation toast.
-- `copyToClipboardActionSchema` — Schema for the `copy-to-clipboard` action.
 - `debounceAction<T>(key: string, fn: () => T | Promise<T>, ms: number) => Promise<T>` — Debounce async or sync action execution by key and resolve all pending callers with the final invocation result.
-- `DownloadAction` *(interface)* — Download a file from an endpoint.
-- `downloadActionSchema` — Schema for download action.
 - `interpolate(template: string, context: Record<string, unknown>) => string` — Replace `{key}` placeholders with values from context.
-- `LogAction` *(interface)* — Emit a structured client-side log entry.
 - `ModalManager` *(interface)* — Return type of useModalManager.
-- `NavigateAction` *(interface)* — Navigate to a route.
-- `navigateActionSchema` — Schema for navigate action.
-- `OpenModalAction` *(interface)* — Open a modal or drawer by id.
-- `openModalActionSchema` — Schema for open-modal action.
-- `RefreshAction` *(interface)* — Re-fetch a component's data.
-- `refreshActionSchema` — Schema for refresh action.
-- `RunWorkflowAction` *(interface)* — Run a named manifest workflow.
-- `runWorkflowActionSchema` — Schema for run-workflow action.
-- `ScrollToAction` *(interface)* — Show a toast notification.
-- `scrollToActionSchema` — Schema for the `scroll-to` action.
-- `SetValueAction` *(interface)* — Set another component's published value.
-- `setValueActionSchema` — Schema for set-value action.
 - `ShowToastOptions` *(interface)* — User-facing toast options accepted by the toast manager.
-- `SnapshotApiContext(props: ProviderProps<ApiClient | null>) => ReactNode` — API client context consumed by built-in `api`, `download`, and related runtime actions.
+- `SnapshotApiContext` — Backward-compatible provider shim that writes the API client into Jotai state.
 - `throttleAction<T>(key: string, fn: () => T | Promise<T>, ms: number) => Promise<T | undefined>` — Throttle async or sync action execution by key and drop calls inside the active throttle window.
-- `ToastAction` *(interface)* — Show a toast notification.
-- `toastActionSchema` — Schema for toast action.
 - `ToastContainer() => ReactNode` — Render the active toast queue using runtime-configured placement defaults.
 - `ToastItem` *(interface)* — Resolved toast entry stored in the runtime queue.
 - `ToastManager` *(interface)* — Imperative API for enqueueing and dismissing transient toast messages.
-- `TrackAction` *(interface)* — Track an analytics event through all manifest-configured providers.
-- `trackActionSchema` — Schema for track action.
 - `useActionExecutor() => ActionExecuteFn` — Return the action executor bound to the active runtime, registries, overlays, workflows, and optional API client.
 - `useConfirmManager() => ConfirmManager` — Return the shared confirmation manager for the current Snapshot UI tree.
 - `useModalManager() => ModalManager` — Hook to manage modal open/close state via a Jotai atom stack.
 - `useToastManager() => ToastManager` — Return the toast manager bound to the active manifest runtime configuration.
 
 ### Manifest & Rendering
-- `AnalyticsConfig` *(typealias)* — Resolved runtime view of `analyticsConfigSchema`.
+- `AnalyticsConfig` *(typealias)* — Input shape for `analyticsConfigSchema` — defaulted fields are optional.
 - `analyticsConfigSchema` — Manifest analytics runtime configuration.
 - `analyticsProviderSchema` — Analytics provider declaration schema.
-- `AppConfig` *(typealias)* — Resolved runtime view of `appConfigSchema`.
+- `AppConfig` *(typealias)* — Input shape for `appConfigSchema` — defaulted fields are optional.
 - `appConfigSchema` — Schema for the top-level manifest `app` section.
-- `AuthProviderConfig` *(typealias)* — Resolved runtime view of `authProviderSchema`.
+- `AuthProviderConfig` *(typealias)* — Input shape for `authProviderSchema` — defaulted fields are optional.
 - `authProviderSchema` — Auth provider declaration schema.
-- `AuthScreenConfig` *(typealias)* — Resolved runtime view of `authScreenConfigSchema`.
+- `AuthScreenConfig` *(typealias)* — Input shape for `authScreenConfigSchema` — defaulted fields are optional.
 - `authScreenConfigSchema` — Schema for the manifest auth screen and auth workflow configuration.
-- `BaseComponentConfig` *(typealias)* — Resolved runtime view of `baseComponentConfigSchema`.
+- `BaseComponentConfig` *(typealias)* — Input shape for `baseComponentConfigSchema` — defaulted fields are optional.
 - `baseComponentConfigSchema` — Shared base schema applied to all manifest-driven components.
 - `bootBuiltins() => void` — Register all built-in manifest registries exactly once.
 - `BreadcrumbAutoConfig` *(interface)* — Auto-breadcrumb configuration used to derive labels and optional home state from routes.
 - `BreadcrumbItem` *(interface)* — A single breadcrumb entry rendered from the matched route stack.
-- `buildRequestUrl(endpoint: string, params?: Record<string, unknown>, pathParams?: Record<string, unknown>) => string` — Interpolate path params and append remaining params as a query string.
-- `ButtonConfig` *(typealias)* — Resolved runtime view of `buttonConfigSchema`.
-- `buttonConfigSchema` — Schema for the built-in `button` component.
-- `CardConfig` *(typealias)* — Resolved runtime view of `cardConfigSchema`.
+- `ButtonConfig` *(typealias)* — Input shape for `buttonConfigSchema` — defaulted fields are optional.
+- `CardConfig` *(typealias)* — Input shape for `cardConfigSchema` — defaulted fields are optional.
 - `cardConfigSchema` — Zod config schema for the Card component.
 - `CompiledManifest` *(interface)* — Runtime manifest shape produced by `compileManifest()`.
 - `CompiledRoute` *(interface)* — Runtime route shape produced by `compileManifest()`.
@@ -433,39 +383,37 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `ConfigDrivenComponent` *(typealias)* — React component type that can participate in the config-driven manifest runtime.
 - `customComponentDeclarationSchema` — Schema for a custom component declaration under `components.custom`.
 - `customComponentPropSchema` — Schema for a declared prop on a manifest custom component registration.
-- `dataSourceSchema` — Data source accepted by data-aware manifest components.
 - `defineManifest<TManifest extends ManifestConfig>(manifest: TManifest) => TManifest` — Define a manifest without compiling it.
-- `endpointTargetSchema` — Endpoint target accepted by actions and resource-aware components.
-- `fromRefSchema` — Zod schema for a FromRef value.
 - `generateBreadcrumbs(match: RouteMatch, config: BreadcrumbAutoConfig) => BreadcrumbItem[]` — Generate breadcrumb items from the current matched route hierarchy.
 - `generateJsonSchema() => Record<string, unknown>` — Generate a JSON Schema for snapshot manifests.
 - `getRegisteredGuards() => string[]` — List the names of all currently registered route guards.
 - `getRegisteredSchemaTypes() => string[]` — Return the currently registered manifest component type names.
-- `HeadingConfig` *(typealias)* — Resolved runtime view of `headingConfigSchema`.
+- `HeadingConfig` *(typealias)* — Input shape for `headingConfigSchema` — defaulted fields are optional.
 - `headingConfigSchema` — Schema for the built-in `heading` component.
-- `httpMethodSchema` — Supported HTTP methods for manifest resources and endpoint targets.
 - `injectStyleSheet(id: string, css: string) => void` — Inject or update a stylesheet in the document head.
-- `isResourceRef(value: unknown) => value is { resource: string; params?: Record<string, unknown> | undefined; }` — Return `true` when a value is a manifest resource reference object.
 - `ManifestApp({ manifest, apiUrl, lazyComponents, }: ManifestAppProps) => Element | null` — Render the manifest-driven application shell.
 - `ManifestAppProps` *(interface)* — Props accepted by the `ManifestApp` component.
 - `ManifestConfig` *(typealias)* — Raw manifest input shape accepted by `parseManifest()` before defaults are applied during compilation.
 - `manifestConfigSchema` — Top-level schema for `snapshot.manifest.json`.
+- `ManifestResourceLoader` *(typealias)*
+- `ManifestResourceLoaderContext` *(interface)*
+- `ManifestRuntimeExtensions` *(interface)*
 - `ManifestRuntimeProvider({ manifest, api, clients, children, }: { manifest: CompiledManifest; api?: ApiClientLike | un...` — Provides manifest runtime state, resource cache state, and mutation helpers.
-- `NavigationConfig` *(typealias)* — Runtime view of `navigationConfigSchema`.
+- `NavigationConfig` *(typealias)* — Input shape for `navigationConfigSchema` — defaulted fields are optional.
 - `navigationConfigSchema` — Schema for the top-level manifest navigation configuration.
 - `NavItem` *(interface)* — Navigation item rendered by Snapshot navigation components.
 - `navItemSchema` — Recursive schema for navigation items used by manifest navigation surfaces.
 - `outletComponentSchema` — Schema for the built-in `outlet` component used by route layouts.
-- `OutletConfig` *(typealias)* — Resolved runtime view of `outletComponentSchema`.
-- `OverlayConfig` *(typealias)* — Resolved runtime view of `overlayConfigSchema`.
+- `OutletConfig` *(typealias)* — Input shape for `outletComponentSchema` — defaulted fields are optional.
+- `OverlayConfig` *(typealias)* — Input shape for `overlayConfigSchema` — defaulted fields are optional.
 - `overlayConfigSchema` — Schema for named modal, drawer, and confirm-dialog overlay declarations.
 - `OverlayRuntimeProvider({ value, children, }: { value: OverlayRuntimeValue; children: ReactNode; }) => Element` — Provide the current overlay runtime payload and metadata.
-- `PageConfig` *(typealias)* — Resolved runtime view of `pageConfigSchema`.
+- `PageConfig` *(typealias)* — Input shape for `pageConfigSchema` — defaulted fields are optional.
 - `pageConfigSchema` — Schema for a manifest page definition.
 - `PageRenderer({ page, routeId, state, resources, api, }: PageRendererProps) => Element` — Renders a page from its manifest config.
 - `PageRendererProps` *(interface)* — Props for the PageRenderer component.
-- `parseManifest(manifest: unknown) => { routes: any[]; push?: { vapidPublicKey: string | { env: string; default?: strin...` — Parse an unknown value into a validated manifest.
-- `PushConfig` *(typealias)* — Resolved runtime view of `pushConfigSchema`.
+- `parseManifest(manifest: unknown) => Record<string, any>` — Parse an unknown value into a validated manifest.
+- `PushConfig` *(typealias)* — Input shape for `pushConfigSchema` — defaulted fields are optional.
 - `pushConfigSchema` — Manifest push-notification runtime configuration.
 - `registerComponent(type: string, component: ConfigDrivenComponent) => void` — Register a React component for a manifest component type string.
 - `registerComponentSchema(type: string, schema: ZodType<any, ZodTypeDef, any>) => void` — Register a component-specific manifest schema by component `type`.
@@ -473,12 +421,10 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `resetBootBuiltins() => void` — Reset the boot flag so tests can re-run built-in registration deterministically.
 - `resolveGuard(name: string) => GuardDef | undefined` — Resolve a previously registered route guard by name.
 - `ResourceConfigMap` *(typealias)* — Named manifest resource map keyed by resource id.
-- `resourceConfigSchema` — Schema for a manifest resource declaration.
-- `resourceRefSchema` — Reference to a named manifest resource with optional parameter overrides.
-- `RouteConfig` *(typealias)* — Resolved runtime view of `routeConfigSchema`.
+- `RouteConfig` *(typealias)* — Input shape for `routeConfigSchema` — defaulted fields are optional.
 - `routeConfigSchema` — Recursive schema for a manifest route tree node.
-- `RouteGuard` *(typealias)* — Resolved runtime view of `routeGuardSchema`.
-- `RouteGuardConfig` *(typealias)* — Resolved runtime view of `routeGuardConfigSchema`.
+- `RouteGuard` *(typealias)* — Input shape for `routeGuardSchema` — defaulted fields are optional.
+- `RouteGuardConfig` *(typealias)* — Input shape for `routeGuardConfigSchema` — defaulted fields are optional.
 - `routeGuardConfigSchema` — Object-form route guard schema with auth, role, and policy controls.
 - `routeGuardSchema` — Route guard schema, accepting either a named guard or inline guard config.
 - `RouteMatch` *(interface)* — Resolved route match for the current pathname.
@@ -486,12 +432,10 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `routeTransitionSchema` — Schema for route transition metadata.
 - `RowConfig` *(interface)* — Runtime config for the built-in `row` layout component.
 - `rowConfigSchema` — Schema for the built-in `row` layout component.
-- `SelectConfig` *(typealias)* — Resolved runtime view of `selectConfigSchema`.
-- `selectConfigSchema` — Schema for the built-in `select` component.
+- `SelectConfig` *(typealias)* — Input shape for `selectConfigSchema` — defaulted fields are optional.
 - `StateConfig` *(typealias)* — Named manifest state map keyed by state id.
-- `StateValueConfig` *(typealias)* — Runtime state declaration for a single named manifest state value.
-- `stateValueConfigSchema` — Schema for a named manifest state value declaration.
-- `ToastConfig` *(typealias)* — Resolved runtime view of `toastConfigSchema`.
+- `StateValueConfig` *(typealias)* — Input shape for `stateValueConfigSchema` — defaulted fields are optional.
+- `ToastConfig` *(typealias)* — Input shape for `toastConfigSchema` — defaulted fields are optional.
 - `toastConfigSchema` — Manifest toast defaults used by the `toast` action runtime.
 - `TransitionWrapper({ config, routeKey, children, }: { config?: TransitionConfig | undefined; routeKey: string; childre...` — Apply enter transitions around routed content when a route transition config is present.
 - `useManifestResourceCache() => ManifestResourceCacheValue | null` — Access the manifest resource cache runtime for loads, invalidation, and resource-driven mutations.
@@ -503,212 +447,416 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `useRouteRuntime() => RouteRuntimeValue | null` — Access the current route runtime state.
 
 ### Data Components
-- `AvatarGroup({ config }: { config: { type: "avatar-group"; data?: string | { resource: string; params?: Record<string,...` — AvatarGroup — displays a row of overlapping avatars with "+N" overflow.
+- `AlertBase({ id, title, description, variant, icon: iconProp, dismissible, actionLabel, onAction, className, style, sl...` — Standalone Alert — a styled alert/notification box with optional icon, action button, and dismiss.
+- `AlertBaseProps` *(interface)*
+- `AvatarBase({ id, src, name, alt, size, shape, color, icon, status, className, style, slots, }: AvatarBaseProps) => El...` — Standalone Avatar — image, initials, or icon fallback.
+- `AvatarBaseProps` *(interface)*
+- `AvatarGroup({ config }: { config: { type: "avatar-group"; data?: string | { resource: string; params?: Record<string,...`
+- `AvatarGroupBase({ id, avatars, size, max, overlap: overlapProp, className, style, slots, }: AvatarGroupBaseProps) => ...` — Standalone AvatarGroup — overlapping avatars with +N overflow.
+- `AvatarGroupBaseProps` *(interface)*
 - `AvatarGroupConfig` *(typealias)* — Inferred config type from the AvatarGroup Zod schema.
 - `avatarGroupConfigSchema` — Zod config schema for the AvatarGroup component.
+- `BadgeBase({ id, text, color, variant, size, rounded, icon, className, style, slots, }: BadgeBaseProps) => Element` — Standalone Badge — a small label with color-coded variants.
+- `BadgeBaseProps` *(interface)*
 - `BulkAction` *(typealias)* — Inferred bulk action type.
 - `bulkActionSchema` — Schema for a bulk action on selected rows.
-- `Chart({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } | { ...` — Render a config-driven chart with manifest data sources, live refresh, and slot-aware styling.
+- `Chart({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } | { ...`
+- `ChartBase({ id, chartType, data: rows, xKey, series, height, aspectRatio, grid: showGrid, legend: showLegend, isLoadi...` — Standalone Chart — renders data-driven charts via recharts.
+- `ChartBaseProps` *(interface)*
+- `ChartBaseSeries` *(interface)*
 - `ChartConfig` *(typealias)* — Inferred type for the Chart component configuration.
 - `chartSchema` — Zod schema for the Chart component configuration.
 - `ColumnConfig` *(typealias)* — Inferred column configuration type.
 - `columnConfigSchema` — Schema for individual column configuration.
-- `DataTable({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } ...` — Config-driven DataTable component.
+- `DataTable({ config }: { config: Record<string, any>; }) => Element` — Config-driven DataTable component.
+- `DataTableBase({ id, columns, rows, sort, onSortChange, pagination, onPageChange, selectable, selection, onToggleRow, ...` — Standalone DataTable — feature-rich data table with sorting, pagination, selection, and search.
+- `DataTableBaseColumn` *(interface)*
+- `DataTableBaseProps` *(interface)*
 - `DataTableConfig` *(typealias)* — Inferred DataTable configuration type from the Zod schema.
 - `dataTableConfigSchema` — Zod schema for the DataTable component configuration.
-- `DetailCard({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; }...` — DetailCard — data-driven detail view that resolves fields from a record resource and renders them inside a configurable card surface with formatted values, copy-to-clipboard, and header actions.
+- `DetailCard({ config }: { config: Record<string, any>; }) => Element`
+- `DetailCardBase({ id, data, fields, title, actions, isLoading, error, emptyMessage, loadingContent, className, style, ...` — Standalone DetailCard — data-driven detail view with formatted fields and header actions.
+- `DetailCardBaseAction` *(interface)*
+- `DetailCardBaseField` *(interface)*
+- `DetailCardBaseProps` *(interface)*
 - `DetailCardConfig` *(typealias)* — DetailCard configuration type inferred from the schema.
 - `detailCardConfigSchema` — Zod schema for DetailCard component configuration.
-- `EntityPicker({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined;...` — Render a searchable entity picker from manifest-provided options or data.
+- `EmptyStateBase({ id, title, description, icon, iconColor, size, actionLabel, onAction, className, style, slots, }: Em...` — Standalone EmptyState — a centered message with optional icon and action.
+- `EmptyStateBaseProps` *(interface)*
+- `EntityPicker({ config }: { config: Record<string, any>; }) => Element | null`
+- `EntityPickerBase({ id, entities, value, label: triggerBaseLabel, multiple: isMultiple, searchable, maxHeight, isLoadi...` — Standalone EntityPicker — dropdown with search, single/multi select.
+- `EntityPickerBaseProps` *(interface)*
 - `EntityPickerConfig` *(typealias)* — Inferred config type from the EntityPicker Zod schema.
 - `entityPickerConfigSchema` — Zod config schema for the EntityPicker component.
-- `FavoriteButton({ config }: { config: { type: "favorite-button"; size?: "sm" | "md" | "lg" | undefined; id?: string | ...` — FavoriteButton component — a config-driven star toggle for marking favorites.
+- `EntityPickerEntity` *(interface)*
+- `FavoriteButton({ config }: { config: { type: "favorite-button"; background?: string | { size?: "auto" | "cover" | "co...`
+- `FavoriteButtonBase({ id, active: activeProp, size: sizeProp, onToggle, className, style, slots, }: FavoriteButtonBase...` — Standalone FavoriteButton — a toggle button with a star icon.
+- `FavoriteButtonBaseProps` *(interface)*
 - `FavoriteButtonConfig` *(typealias)* — Inferred config type from the FavoriteButton Zod schema.
 - `favoriteButtonConfigSchema` — Zod config schema for the FavoriteButton component.
-- `Feed({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } | { f...` — Render an activity feed with grouping, empty states, live refresh, and optional infinite scrolling.
+- `Feed({ config }: { config: Record<string, any>; }) => Element`
+- `FeedBase({ id, items, relativeTime, groupBy, pageSize, infinite, itemActions, isLoading, error, emptyMessage, hasNewD...` — Standalone Feed — feed/activity list with grouping, pagination, and live updates.
+- `FeedBaseItem` *(interface)*
+- `FeedBaseItemAction` *(interface)*
+- `FeedBaseProps` *(interface)*
 - `FeedConfig` *(typealias)* — Inferred type for the Feed component config (from Zod schema).
 - `FeedItem` *(interface)* — A single resolved feed item for rendering.
 - `feedSchema` — Zod schema for the Feed component configuration.
-- `FilterBar({ config }: { config: { type: "filter-bar"; id?: string | undefined; visible?: boolean | { from: string; tr...` — FilterBar component — search input + filter dropdowns + active filter pills.
+- `FilterBar({ config }: { config: { type: "filter-bar"; background?: string | { size?: "auto" | "cover" | "contain" | u...`
+- `FilterBarBase({ id, filters, showSearch, searchPlaceholder, onChange, className, style, slots, }: FilterBarBaseProps)...` — Standalone FilterBar — search + filter dropdowns + active pills.
+- `FilterBarBaseProps` *(interface)*
 - `FilterBarConfig` *(typealias)* — Inferred config type for the FilterBar component.
-- `filterBarConfigSchema` — Zod config schema for the FilterBar component.
-- `HighlightedText({ config }: { config: { type: "highlighted-text"; text: string | { from: string; transform?: "string"...` — HighlightedText component — renders text with search query highlighting.
+- `filterBarConfigSchema`
+- `FilterBarFilter` *(interface)*
+- `HighlightedText({ config }: { config: { type: "highlighted-text"; text: string | { from: string; transform?: "string"...`
+- `HighlightedTextBase({ id, text, highlight, caseSensitive, highlightColor, className, style, slots, }: HighlightedText...` — Standalone HighlightedText — renders text with search query highlighting.
+- `HighlightedTextBaseProps` *(interface)*
 - `HighlightedTextConfig` *(typealias)* — Inferred config type from the HighlightedText Zod schema.
 - `highlightedTextConfigSchema` — Zod config schema for the HighlightedText component.
-- `NotificationBell({ config, }: { config: { type: "notification-bell"; ariaLive: "off" | "polite" | "assertive"; size?:...` — NotificationBell component — a config-driven bell icon with unread count badge.
+- `ListBase({ id, items, variant, selectable, divider: showDividerProp, limit, isLoading, error, emptyMessage, hasNewDat...` — Standalone List — renders a vertical list of items with optional icons, descriptions, badges, and click actions.
+- `ListBaseItem` *(interface)*
+- `ListBaseProps` *(interface)*
+- `NotificationBell({ config, }: { config: { type: "notification-bell"; ariaLive: "off" | "polite" | "assertive"; backgr...`
+- `NotificationBellBase({ id, count, size, max, onClick, ariaLive, className, style, slots, }: NotificationBellBaseProps...` — Standalone NotificationBell — bell icon with unread count badge.
+- `NotificationBellBaseProps` *(interface)*
 - `NotificationBellConfig` *(typealias)* — Inferred config type from the NotificationBell Zod schema.
 - `notificationBellConfigSchema` — Zod config schema for the NotificationBell component.
 - `PaginationState` *(interface)* — Pagination state for the data table.
+- `ProgressBase({ id, value: resolvedValue, max, label, size, variant, showValue, color, segments, className, style, slo...` — Standalone Progress — bar or circular progress indicator.
+- `ProgressBaseProps` *(interface)*
 - `ResolvedColumn` *(interface)* — Resolved column definition used internally by the hook and component.
 - `RowAction` *(typealias)* — Inferred row action type.
 - `rowActionSchema` — Schema for a per-row action button.
-- `SaveIndicator({ config }: { config: { status: "error" | { from: string; transform?: "string" | "number" | "boolean" |...` — SaveIndicator component — a config-driven inline status indicator showing idle, saving, saved, or error states.
+- `SaveIndicator({ config }: { config: { status: "error" | { from: string; transform?: "string" | "number" | "boolean" |...`
+- `SaveIndicatorBase({ id, status, showIcon, savingText, savedText, errorText, className, style, slots, }: SaveIndicator...` — Standalone SaveIndicator — shows saving/saved/error status.
+- `SaveIndicatorBaseProps` *(interface)*
 - `SaveIndicatorConfig` *(typealias)* — Inferred config type from the SaveIndicator Zod schema.
 - `saveIndicatorConfigSchema` — Zod config schema for the SaveIndicator component.
-- `ScrollArea({ config }: { config: { type: "scroll-area"; id?: string | undefined; visible?: boolean | { from: string; ...` — ScrollArea component — a scrollable container with custom-styled thin scrollbars.
+- `ScrollArea({ config }: { config: { type: "scroll-area"; background?: string | { size?: "auto" | "cover" | "contain" |...`
+- `ScrollAreaBase({ id, orientation, maxHeight, maxWidth, showScrollbar, children, className, style, slots, }: ScrollAre...` — Standalone ScrollArea — a scrollable container with custom-styled thin scrollbars.
+- `ScrollAreaBaseProps` *(interface)*
 - `ScrollAreaConfig` *(typealias)* — Inferred config type for the ScrollArea component.
 - `scrollAreaConfigSchema` — Zod config schema for the ScrollArea component.
-- `Separator({ config }: { config: { type: "separator"; id?: string | undefined; visible?: boolean | { from: string; tra...` — Separator component — a simple visual divider line (horizontal or vertical).
+- `Separator({ config }: { config: { type: "separator"; background?: string | { size?: "auto" | "cover" | "contain" | un...`
+- `SeparatorBase({ id, orientation, label, className, style, slots, }: SeparatorBaseProps) => Element` — Standalone Separator — a horizontal or vertical line with optional label.
+- `SeparatorBaseProps` *(interface)*
 - `SeparatorConfig` *(typealias)* — Inferred config type for the Separator component.
 - `separatorConfigSchema` — Zod config schema for the Separator component.
 - `SeriesConfig` *(typealias)* — Inferred type for a single chart series config.
 - `seriesConfigSchema` — Schema for a single data series in the chart.
+- `SkeletonBase({ id, variant, animated, lines, width, height, className, style, slots, }: SkeletonBaseProps) => Element` — Standalone Skeleton — a placeholder loading indicator.
+- `SkeletonBaseProps` *(interface)*
 - `SortState` *(interface)* — Sort state for the data table.
-- `StatCard({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } |...` — StatCard component — a data-fetching card that displays a single metric with optional trend indicator.
+- `StatCard({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } |...`
+- `StatCardBase({ id, value, label, isLoading, error, icon, iconColor, loadingVariant, trend, onClick, emptyMessage, cla...` — Standalone StatCard — displays a single metric with optional trend indicator.
+- `StatCardBaseProps` *(interface)*
 - `StatCardConfig` *(typealias)* — Inferred config type from the StatCard Zod schema.
 - `statCardConfigSchema` — Zod config schema for the StatCard component.
+- `StatCardTrend` *(interface)*
+- `TooltipBase({ id, text, placement, delay, children, className, style, slots, }: TooltipBaseProps) => Element` — Standalone Tooltip — wraps child content and shows informational text on hover with configurable placement and delay.
+- `TooltipBaseProps` *(interface)*
 - `trendConfigSchema` — Schema for the trend indicator configuration.
-- `useDataTable(config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } | { from: s...` — Headless hook for managing data table state.
+- `useDataTable(config: Record<string, any>) => UseDataTableResult` — Headless hook for managing data table state.
 - `UseDataTableResult` *(interface)* — Return type of the `useDataTable` headless hook.
-- `useDetailCard(config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; } | { from: ...` — Hook that powers the DetailCard component.
+- `useDetailCard(config: Record<string, any>) => UseDetailCardResult` — Hook that powers the DetailCard component.
 - `UseDetailCardResult` *(interface)* — Return type of the useDetailCard hook.
 - `UseFeedResult` *(interface)* — Return type of the useFeed headless hook.
 - `UseStatCardResult` *(interface)* — Result returned by the StatCard headless hook or internal logic.
+- `VoteBase({ id, value, onUpvote, onDownvote, className, style, slots, }: VoteBaseProps) => Element` — Standalone Vote — upvote/downvote toggle with count display.
+- `VoteBaseProps` *(interface)*
 
 ### Form Components
-- `AutoForm({ config }: { config: { type: "form" | "auto-form"; fields: "auto" | { name: string; type: "number" | "selec...` — Config-driven form component with multi-column layout, conditional field visibility, and section grouping.
+- `AutoForm({ config }: { config: Record<string, any>; }) => Element | null` — Config-driven form component with multi-column layout, conditional field visibility, and section grouping.
+- `AutoFormBase({ id, fields, sections, values, errors, touched, isSubmitting, isDirty, isValid, submitLabel: submitLabe...` — Standalone AutoFormBase -- renders a config-driven form with fields, sections, validation, and submit/reset actions.
+- `AutoFormBaseProps` *(interface)*
 - `AutoFormConfig` *(typealias)* — Inferred type for the AutoForm component config.
 - `autoFormConfigSchema` — Zod schema for the AutoForm component config.
-- `ColorPicker({ config }: { config: { type: "color-picker"; format: "hex" | "rgb" | "hsl"; allowCustom: boolean; showAl...` — Render a manifest-driven color picker input.
+- `AutoFormFieldConfig` *(interface)*
+- `AutoFormSectionConfig` *(interface)*
+- `Button({ config }: { config: { action: ActionConfig | ActionConfig[]; type: "button"; label: string | { from: string;...`
+- `ButtonBase({ id, label, icon, variant, size, disabled, fullWidth, onClick, type, ariaLabel, children, className, styl...` — Standalone ButtonBase -- a styled button that works with plain React props.
+- `ButtonBaseProps` *(interface)*
+- `buttonConfigSchema`
+- `ColorPicker({ config }: { config: { type: "color-picker"; background?: string | { size?: "auto" | "cover" | "contain"...`
 - `ColorPickerConfig` *(typealias)* — Config for the manifest-driven color picker component.
 - `colorPickerConfigSchema` — Schema for color picker components with optional swatches, alpha, and change actions.
-- `DatePicker({ config }: { config: { type: "date-picker"; mode: "single" | "range" | "multiple"; valueFormat: "iso" | "...` — Render a manifest-driven date picker input.
+- `ColorPickerField({ id, label, defaultValue, format, showAlpha, allowCustom, swatches, onChange, className, style, slo...` — Standalone ColorPickerField -- a color picker with optional swatches, alpha slider, and custom hex input.
+- `ColorPickerFieldProps` *(interface)*
+- `DatePicker({ config }: { config: { type: "date-picker"; background?: string | { size?: "auto" | "cover" | "contain" |...`
 - `DatePickerConfig` *(typealias)* — Config for the manifest-driven date picker component.
 - `datePickerConfigSchema` — Schema for date picker components covering single, range, and multi-date selection.
+- `DatePickerField({ id, label, placeholder, mode, format, valueFormat, min, max, presets, disabledDates, onChange, clas...` — Standalone DatePickerField -- date picker supporting single, range, and multiple selection modes with presets and disabled dates.
+- `DatePickerFieldProps` *(interface)*
 - `FieldConfig` *(typealias)* — Inferred type for a single field configuration.
 - `fieldConfigSchema` — Schema for an individual field configuration.
 - `FieldErrors` *(typealias)* — Per-field validation error.
+- `IconButtonBase({ id, icon, ariaLabel, variant, size: sizeProp, shape, tooltip, disabled, onClick, className, style, s...` — Standalone IconButtonBase -- an icon-only button with configurable shape, size, and variant.
+- `IconButtonBaseProps` *(interface)*
 - `InlineEdit({ config }: { config: { type: "inline-edit"; background?: string | { size?: "auto" | "cover" | "contain" |...` — InlineEdit component — click-to-edit text field.
 - `InlineEditConfig` *(typealias)* — Inferred config type for the InlineEdit component.
 - `inlineEditConfigSchema` — Zod config schema for the InlineEdit component.
-- `Input({ config }: { config: { type: "input"; value?: string | { from: string; transform?: "string" | "number" | "bool...` — Config-driven Input component — a standalone text input field with label, placeholder, validation, optional icon, and helper/error text.
+- `InlineEditField({ id, value: valueProp, placeholder: placeholderProp, inputType, cancelOnEscape: cancelOnEscapeProp, ...` — Standalone InlineEditField -- a click-to-edit text field that toggles between display and input modes.
+- `InlineEditFieldProps` *(interface)*
+- `Input({ config }: { config: { type: "input"; background?: string | { size?: "auto" | "cover" | "contain" | undefined;...` — Manifest adapter — resolves config refs and actions, delegates to InputField.
 - `InputConfig` *(typealias)* — Inferred config type from the Input Zod schema.
 - `inputConfigSchema` — Zod config schema for the Input component.
-- `LocationInput({ config }: { config: LocationInputConfig; }) => Element | null` — LocationInput — geocode autocomplete input.
-- `LocationInputConfig` *(interface)* — Public config shape for the LocationInput component.
+- `InputField({ id, label, placeholder, value: controlledValue, type, required, disabled, readOnly, maxLength, pattern, ...` — Standalone InputField — a complete form field (label + input + helper/error) that works with plain React props.
+- `InputFieldProps` *(interface)*
+- `LocationInput({ config }: { config: { type: "location-input"; searchEndpoint: string | { resource: string; params?: R...`
+- `LocationInputConfig` *(typealias)* — Config for the manifest-driven location input component.
 - `locationInputConfigSchema` — Zod config schema for the LocationInput component.
-- `MultiSelect({ config }: { config: { type: "multi-select"; data?: string | { resource: string; params?: Record<string,...` — Config-driven MultiSelect component — a dropdown with checkboxes for selecting multiple values.
+- `LocationInputField({ id, label, placeholder: placeholderProp, helperText, errorText: errorTextProp, required, disable...` — Standalone LocationInputField -- a location search input with results dropdown and optional Google Maps link.
+- `LocationInputFieldProps` *(interface)*
+- `LocationResult` *(interface)*
+- `MultiSelect({ config }: { config: Record<string, any>; }) => Element | null`
 - `MultiSelectConfig` *(typealias)* — Inferred config type from the MultiSelect Zod schema.
 - `multiSelectConfigSchema` — Zod config schema for the MultiSelect component.
-- `QuickAdd({ config }: { config: { type: "quick-add"; id?: string | undefined; visible?: boolean | { from: string; tran...` — QuickAdd component — a config-driven inline creation bar for quick item entry.
+- `MultiSelectField({ id, label, placeholder: placeholderProp, options: optionsProp, value: controlledValue, defaultValu...` — Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search, and configurable max selection.
+- `MultiSelectFieldOption` *(interface)*
+- `MultiSelectFieldProps` *(interface)*
+- `QuickAdd({ config }: { config: { type: "quick-add"; background?: string | { size?: "auto" | "cover" | "contain" | und...`
 - `QuickAddConfig` *(typealias)* — Inferred config type from the QuickAdd Zod schema.
 - `quickAddConfigSchema` — Zod config schema for the QuickAdd component.
-- `Select({ config }: { config: { options: string | { resource: string; params?: { [x: string]: unknown; } | undefined; ...` — Manifest-driven select input with support for static options and resource-backed option lists.
-- `Slider({ config }: { config: { type: "slider"; min: number; max: number; range: boolean; step: number; showValue: boo...` — Render a manifest-driven slider input.
+- `QuickAddField({ id, placeholder: placeholderProp, icon: iconProp, submitOnEnter: submitOnEnterProp, showButton: showB...` — Standalone QuickAddField -- a compact input with submit button for quickly adding items to a list.
+- `QuickAddFieldProps` *(interface)*
+- `Select({ config }: { config: { options: string | { resource: string; params?: Record<string, unknown> | undefined; } ...`
+- `selectConfigSchema`
+- `SelectField({ id, label, placeholder, value: controlledValue, defaultValue, required, disabled, helperText, errorText...` — Standalone SelectField -- a complete select form field with label, options, helper/error text, and required indicator.
+- `SelectFieldProps` *(interface)*
+- `Slider({ config }: { config: { type: "slider"; background?: string | { size?: "auto" | "cover" | "contain" | undefine...` — Render a manifest-driven slider input.
 - `SliderConfig` *(typealias)* — Config for the manifest-driven slider component.
 - `sliderConfigSchema` — Schema for single-value and ranged slider controls with optional value display/actions.
-- `TagSelector({ config }: { config: { type: "tag-selector"; data?: string | { resource: string; params?: Record<string,...` — TagSelector component — a tag input for selecting and creating tags.
+- `SliderField({ id, label, min: minProp, max: maxProp, step, defaultValue, range, showValue, showLimits, suffix, disabl...` — Standalone SliderField -- a range slider with optional label, value display, limit labels, and dual-thumb range mode.
+- `SliderFieldProps` *(interface)*
+- `SwitchField({ id, label, description, checked: controlledChecked, defaultChecked, disabled, size: sizeProp, color, on...` — Standalone SwitchField -- a toggle switch with label, description, and configurable size and color.
+- `SwitchFieldProps` *(interface)*
+- `TagSelector({ config }: { config: { type: "tag-selector"; data?: string | { resource: string; params?: Record<string,...`
 - `TagSelectorConfig` *(typealias)* — Inferred config type from the TagSelector Zod schema.
 - `tagSelectorConfigSchema` — Zod config schema for the TagSelector component.
-- `Textarea({ config }: { config: { type: "textarea"; value?: string | { from: string; transform?: "string" | "number" |...` — Config-driven Textarea component — a multi-line text input with label, character count, validation, and configurable resize.
+- `TagSelectorField({ id, label, tags: tagsProp, value: controlledValue, defaultValue, allowCreate, maxTags, onChange, o...` — Standalone TagSelectorField -- tag pills with dropdown selection, search filtering, and optional tag creation.
+- `TagSelectorFieldProps` *(interface)*
+- `TagSelectorTag` *(interface)*
+- `Textarea({ config }: { config: { type: "textarea"; background?: string | { size?: "auto" | "cover" | "contain" | unde...`
 - `TextareaConfig` *(typealias)* — Inferred config type from the Textarea Zod schema.
 - `textareaConfigSchema` — Zod config schema for the Textarea component.
-- `Toggle({ config }: { config: { type: "toggle"; size?: "sm" | "md" | "lg" | undefined; variant?: "default" | "outline"...` — Config-driven Toggle component — a pressed/unpressed toggle button.
+- `TextareaField({ id, label, placeholder, value: controlledValue, required, disabled, readOnly, maxLength, rows, resize...` — Standalone TextareaField -- a complete textarea form field with label, character counter, validation, and helper/error text.
+- `TextareaFieldProps` *(interface)*
+- `Toggle({ config }: { config: { type: "toggle"; background?: string | { size?: "auto" | "cover" | "contain" | undefine...`
 - `ToggleConfig` *(typealias)* — Inferred config type from the Toggle Zod schema.
 - `toggleConfigSchema` — Zod config schema for the Toggle component.
+- `ToggleField({ id, label, icon, variant: variantProp, size: sizeProp, pressed: controlledPressed, defaultPressed, disa...` — Standalone ToggleField -- a pressable toggle button with optional icon and label.
+- `ToggleFieldProps` *(interface)*
+- `ToggleGroupBase({ id, items, mode, value: controlledValue, defaultValue, variant, size, onChange, className, style, s...` — Standalone ToggleGroupBase -- a group of toggle buttons supporting single or multi-select modes.
+- `ToggleGroupBaseProps` *(interface)*
+- `ToggleGroupItem` *(interface)*
 - `TouchedFields` *(typealias)* — Tracks which fields have been interacted with.
 - `useAutoForm(fields: { name: string; type: "number" | "select" | "date" | "text" | "color" | "email" | "datetime" | "t...` — Headless hook for form state management.
 - `UseAutoFormResult` *(interface)* — Return type for the useAutoForm headless hook.
-- `useWizard(config: { type: "wizard"; submitLabel: string; steps: { title: string; fields: { name: string; type: "numbe...` — Manage wizard step state, validation, submission, and transition flow.
+- `useWizard(config: Record<string, any>) => UseWizardResult` — Headless hook that manages multi-step wizard state including step navigation, per-step validation, field tracking, and final submission.
 - `UseWizardResult` *(interface)* — Return type of the useWizard headless hook.
-- `Wizard({ config }: { config: { type: "wizard"; submitLabel: string; steps: { title: string; fields: { name: string; t...` — Render a multi-step form wizard with built-in validation, step state, and slot-aware styling.
+- `Wizard({ config }: { config: Record<string, any>; }) => Element` — Render a multi-step form wizard with built-in validation, step state, and slot-aware styling.
+- `WizardBase({ id, steps, state: wizard, submitLabel: submitLabelProp, className, style, slots, }: WizardBaseProps) => ...` — Standalone WizardBase -- a multi-step form wizard with progress indicator, step navigation, field validation, and completion state.
+- `WizardBaseProps` *(interface)*
 - `WizardConfig` *(typealias)* — Inferred type for the Wizard component configuration.
+- `WizardFieldConfig` *(interface)*
 - `wizardSchema` — Zod schema for the Wizard component configuration.
+- `WizardState` *(interface)*
 - `WizardStepConfig` *(typealias)* — Inferred type for a single wizard step configuration.
+- `WizardStepDef` *(interface)*
 - `wizardStepSchema` — Schema for a single wizard step.
 
 ### Communication Components
 - `buildEmojiMap(emojis: CustomEmoji[]) => Map<string, CustomEmoji>` — Builds a shortcode lookup map from an array of custom emojis.
-- `ChatWindow({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; }...` — ChatWindow — full chat interface composing a message thread, rich input, and typing indicator.
+- `ChatWindow({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined; }...` — Manifest adapter — resolves config refs, composes manifest sub-components, delegates to ChatWindowBase.
+- `ChatWindowBase({ id, title, subtitle, showHeader, height, threadSlot, typingSlot, inputSlot, showTypingIndicator, cla...` — Standalone ChatWindow — composable chat container with header, message thread, typing indicator, and input slots.
+- `ChatWindowBaseProps` *(interface)*
 - `ChatWindowConfig` *(typealias)* — Inferred config type from the ChatWindow Zod schema.
 - `chatWindowConfigSchema` — Zod config schema for the ChatWindow component.
-- `CommentSection({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefine...` — CommentSection — displays a list of comments with author avatars, timestamps, and an embedded rich input for posting new comments.
+- `CommentSection({ config }: { config: Record<string, any>; }) => Element | null` — Manifest adapter — resolves data endpoint, wires actions, delegates to CommentSectionBase.
+- `CommentSectionBase({ id, comments, loading, error, emptyText, authorNameField, authorAvatarField, contentField, times...` — Standalone CommentSection — threaded comment list with avatars, timestamps, optional delete actions, and a composable input slot.
+- `CommentSectionBaseProps` *(interface)*
 - `CommentSectionConfig` *(typealias)* — Inferred config type from the CommentSection Zod schema.
 - `commentSectionConfigSchema` — Zod config schema for the CommentSection component.
 - `CUSTOM_EMOJI_CSS` — CSS for custom emoji sizing.
 - `CustomEmoji` *(interface)* — Shape of a custom emoji entry.
-- `EmojiPicker({ config }: { config: { type: "emoji-picker"; id?: string | undefined; visible?: boolean | { from: string...` — EmojiPicker — searchable grid of emojis organized by category.
+- `EmojiPicker({ config }: { config: { type: "emoji-picker"; background?: string | { size?: "auto" | "cover" | "contain"...` — Manifest adapter — resolves custom emoji data, wires actions/publish, delegates to EmojiPickerBase.
+- `EmojiPickerBase({ id, perRow, maxHeight, categories: allowedCategories, customEmojis, onSelect, className, style, slo...` — Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji support.
+- `EmojiPickerBaseProps` *(interface)*
 - `EmojiPickerConfig` *(typealias)* — Inferred config type from the EmojiPicker Zod schema.
 - `emojiPickerConfigSchema` — Zod config schema for the EmojiPicker component.
 - `GifEntry` *(interface)* — Shape of a GIF entry.
-- `GifPicker({ config }: { config: { type: "gif-picker"; id?: string | undefined; visible?: boolean | { from: string; tr...` — GifPicker — searchable GIF grid with support for API-powered search or static GIF data.
+- `GifPicker({ config }: { config: { type: "gif-picker"; background?: string | { size?: "auto" | "cover" | "contain" | u...` — Manifest adapter — resolves config refs, wires actions/publish, delegates to GifPickerBase.
+- `GifPickerBase({ id, columns, maxHeight, placeholder, attribution, gifs, loading, onSelect, onSearchChange, className,...` — Standalone GifPicker — searchable GIF grid with debounced search, loading states, and optional attribution.
+- `GifPickerBaseProps` *(interface)*
 - `GifPickerConfig` *(typealias)* — Inferred config type from the GifPicker Zod schema.
 - `gifPickerConfigSchema` — Zod config schema for the GifPicker component.
-- `MessageThread({ config }: { config: { data: string | { resource: string; params?: Record<string, unknown> | undefined...` — MessageThread — scrollable message list with avatars, timestamps, message grouping, and date separators.
+- `MessageThread({ config }: { config: Record<string, any>; }) => Element | null` — Manifest adapter — resolves data endpoint, wires actions/publish, delegates to MessageThreadBase.
+- `MessageThreadBase({ id, messages, loading, error, emptyText, contentField, authorNameField, authorAvatarField, timest...` — Standalone MessageThread — scrollable message list with avatars, date separators, auto-scroll, embed rendering, and consecutive-message grouping.
+- `MessageThreadBaseProps` *(interface)*
 - `MessageThreadConfig` *(typealias)* — Inferred config type from the MessageThread Zod schema.
 - `messageThreadConfigSchema` — Zod config schema for the MessageThread component.
 - `parseShortcodes(text: string, emojis: Map<string, CustomEmoji>) => string` — Parses shortcodes in text and replaces them with `<img>` tags.
-- `PresenceIndicator({ config, }: { config: { status: { from: string; transform?: "string" | "number" | "boolean" | "len...` — PresenceIndicator — displays online/offline/away/busy/dnd status with a colored dot and optional label.
+- `PresenceIndicator({ config, }: { config: { status: { from: string; transform?: "string" | "number" | "boolean" | "len...` — Manifest adapter — resolves config refs and delegates to PresenceIndicatorBase.
+- `PresenceIndicatorBase({ id, status, label, showDot, showLabel, size, className, style, slots, }: PresenceIndicatorBas...` — Standalone PresenceIndicator — displays online/offline/away/busy/dnd status with a colored dot and optional label.
+- `PresenceIndicatorBaseProps` *(interface)*
 - `PresenceIndicatorConfig` *(typealias)* — Inferred config type from the PresenceIndicator Zod schema.
 - `presenceIndicatorConfigSchema` — Zod config schema for the PresenceIndicator component.
-- `ReactionBar({ config }: { config: { type: "reaction-bar"; data?: string | { resource: string; params?: Record<string,...` — ReactionBar — displays emoji reactions with counts and an optional add button that opens an emoji picker popover.
+- `ReactionBar({ config }: { config: { type: "reaction-bar"; data?: string | { resource: string; params?: Record<string,...` — Manifest adapter — wires actions/publish and delegates to ReactionBarBase.
+- `ReactionBarBase({ id, reactions, showAddButton, onReactionClick, onEmojiSelect, EmojiPickerComponent, className, styl...` — Standalone ReactionBar — row of emoji reaction pills with counts and an add-reaction button that opens an inline emoji picker.
+- `ReactionBarBaseProps` *(interface)*
 - `ReactionBarConfig` *(typealias)* — Inferred config type from the ReactionBar Zod schema.
 - `reactionBarConfigSchema` — Zod config schema for the ReactionBar component.
+- `ReactionEntry` *(interface)*
 - `resolveEmojiRecords(records: Record<string, unknown>[], urlField?: string, urlPrefix?: string | undefined) => CustomE...` — Resolves emoji records from the API into CustomEmoji entries.
-- `TypingIndicator({ config }: { config: { type: "typing-indicator"; id?: string | undefined; visible?: boolean | { from...` — TypingIndicator — shows animated bouncing dots with user names to indicate who is currently typing.
+- `TypingIndicator({ config }: { config: { type: "typing-indicator"; background?: string | { size?: "auto" | "cover" | "...` — Manifest adapter — resolves config refs and delegates to TypingIndicatorBase.
+- `TypingIndicatorBase({ id, users, maxDisplay, className, style, slots, }: TypingIndicatorBaseProps) => Element | null` — Standalone TypingIndicator — shows animated bouncing dots with user names to indicate who is currently typing.
+- `TypingIndicatorBaseProps` *(interface)*
 - `TypingIndicatorConfig` *(typealias)* — Inferred config type from the TypingIndicator Zod schema.
 - `typingIndicatorConfigSchema` — Zod config schema for the TypingIndicator component.
+- `TypingUser` *(interface)* — A user entry for the typing indicator.
 
 ### Content Components
-- `Code({ config }: { config: { value: string | { from: string; transform?: "string" | "number" | "boolean" | "length" |...` — Inline code primitive rendered inside flowing text or compact metadata.
+- `BannerBase({ id, height, align, background, className, style, slots, children, }: BannerBaseProps) => Element` — Standalone Banner — a full-width hero section with background, overlay, and content alignment.
+- `BannerBaseProps` *(interface)*
+- `Code({ config }: { config: { value: string | { from: string; transform?: "string" | "number" | "boolean" | "length" |...` — Manifest adapter — resolves config refs and delegates to CodeBase.
+- `CodeBase({ id, value, fallback, className, style, slots, }: CodeBaseProps) => Element` — Standalone Code — an inline code element for displaying code snippets within flowing text.
+- `CodeBaseProps` *(interface)*
+- `CodeBlockBase({ id, code, language, title, showCopy, showLineNumbers, wrap, highlight: highlightEnabled, maxHeight, c...` — Standalone CodeBlock — displays code with syntax highlighting, optional line numbers, copy button, and title bar.
+- `CodeBlockBaseProps` *(interface)*
 - `CodeConfig` *(typealias)* — Inferred config type for the Code component.
 - `codeConfigSchema` — Inline code primitive schema for manifest-rendered code snippets.
-- `CompareView({ config }: { config: { type: "compare-view"; left: string | { from: string; transform?: "string" | "numb...` — CompareView component — a config-driven side-by-side diff viewer for comparing two text values.
+- `CompareView({ config }: { config: { type: "compare-view"; left: string | { from: string; transform?: "string" | "numb...` — Manifest adapter — resolves config refs and delegates to CompareViewBase.
+- `CompareViewBase({ id, left, right, leftLabel, rightLabel, maxHeight, showLineNumbers, className, style, slots, }: Com...` — Standalone CompareView — a side-by-side diff viewer for comparing two text blocks.
+- `CompareViewBaseProps` *(interface)*
 - `CompareViewConfig` *(typealias)* — Inferred config type from the CompareView Zod schema.
 - `compareViewConfigSchema` — Zod config schema for the CompareView component.
 - `detectPlatform(url: string, options?: { darkMode?: boolean | undefined; } | undefined) => PlatformInfo | null` — Detects the platform from a URL and extracts embed info.
-- `Heading({ config }: { config: { type: "heading"; text: string | { from: string; transform?: "string" | "number" | "bo...` — Heading component for manifest-driven page titles and section headings.
-- `LinkEmbed({ config }: { config: { url: string | { from: string; transform?: "string" | "number" | "boolean" | "length...` — LinkEmbed — renders rich URL previews with platform-specific renderers.
+- `FileUploaderBase({ id, variant, label, description, maxFiles, maxSize, accept, onFilesAdded, onFileRemoved, files: co...` — Standalone FileUploader — a file upload component with dropzone, button, and compact variants.
+- `FileUploaderBaseProps` *(interface)*
+- `Heading({ config }: { config: { type: "heading"; text: string | { from: string; transform?: "string" | "number" | "bo...` — Manifest adapter — resolves template text, locale, and route context, then delegates to HeadingBase.
+- `HeadingBase({ id, text, level, align, className, style, slots, }: HeadingBaseProps) => Element` — Standalone Heading — a styled heading element (h1-h6) that works with plain React props.
+- `HeadingBaseProps` *(interface)*
+- `LinkEmbed({ config }: { config: { url: string | { from: string; transform?: "string" | "number" | "boolean" | "length...` — Manifest adapter — resolves config refs and delegates to LinkEmbedBase.
+- `LinkEmbedBase({ id, url, meta, allowIframe, aspectRatio, maxWidth, className, style, slots, }: LinkEmbedBaseProps) =>...` — Standalone LinkEmbed — renders rich link previews with platform-specific embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card.
+- `LinkEmbedBaseProps` *(interface)*
 - `LinkEmbedConfig` *(typealias)* — Inferred config type from the LinkEmbed Zod schema.
 - `linkEmbedConfigSchema` — Zod config schema for the LinkEmbed component.
-- `Markdown({ config }: { config: { type: "markdown"; content: string | { from: string; transform?: "string" | "number" ...` — Markdown component — renders markdown content with full GFM support and syntax highlighting powered by rehype-highlight.
+- `LinkEmbedMeta` *(interface)*
+- `Markdown({ config }: { config: Record<string, any>; }) => Element | null` — Manifest adapter — resolves config refs and delegates to MarkdownBase.
+- `MarkdownBase({ id, content, maxHeight, className, style, slots, }: MarkdownBaseProps) => Element` — Standalone Markdown — renders markdown content with syntax highlighting and Snapshot design tokens.
+- `MarkdownBaseProps` *(interface)*
 - `MarkdownConfig` *(typealias)* — Inferred config type from the Markdown Zod schema.
 - `markdownConfigSchema` — Zod config schema for the Markdown component.
 - `Platform` *(typealias)* — Platform detection and embed URL extraction.
 - `PLATFORM_COLORS` — Platform accent colors.
 - `PLATFORM_NAMES` — Platform display names.
 - `PlatformInfo` *(interface)* — Resolved platform metadata used to render a platform-specific embedded preview.
-- `RichInput({ config }: { config: { type: "rich-input"; id?: string | undefined; visible?: boolean | { from: string; tr...` — RichInput component — TipTap-based WYSIWYG editor for chat messages, comments, and posts.
+- `RichInput({ config }: { config: { type: "rich-input"; background?: string | { size?: "auto" | "cover" | "contain" | u...` — Manifest adapter — resolves config refs, wires actions, and delegates to RichInputBase.
+- `RichInputBase({ id, placeholder, readonly, features, sendOnEnter, maxLength, minHeight, maxHeight, showSendButton, on...` — Standalone RichInput — a rich text editor with formatting toolbar, powered by tiptap.
+- `RichInputBaseProps` *(interface)*
 - `RichInputConfig` *(typealias)* — Inferred config type from the RichInput Zod schema.
 - `richInputConfigSchema` — Zod config schema for the RichInput component.
-- `RichTextEditor({ config }: { config: { type: "rich-text-editor"; mode?: "split" | "edit" | "preview" | undefined; id?...` — RichTextEditor component — a CodeMirror 6-based markdown editor with toolbar, preview pane, and split view support.
+- `RichTextEditor({ config }: { config: { type: "rich-text-editor"; background?: string | { size?: "auto" | "cover" | "c...` — Manifest adapter — resolves config refs, wires publish, and delegates to RichTextEditorBase.
+- `RichTextEditorBase({ id, content: initialContent, placeholder: placeholderText, readonly, mode: initialMode, toolbar,...` — Standalone RichTextEditor — a markdown editor with live preview, powered by CodeMirror.
+- `RichTextEditorBaseProps` *(interface)*
 - `RichTextEditorConfig` *(typealias)* — Inferred config type from the RichTextEditor Zod schema.
 - `richTextEditorConfigSchema` — Zod config schema for the RichTextEditor component.
+- `TimelineBase({ id, items, variant, showConnector, loading, error, emptyText, onItemClick, className, style, slots, }:...` — Standalone Timeline — vertical event timeline with dot markers, connectors, date labels, and default/compact/alternating layout variants.
+- `TimelineBaseProps` *(interface)*
+- `TimelineItemEntry` *(interface)*
 
 ### Overlay Components
-- `CommandPalette({ config }: { config: { type: "command-palette"; shortcut: string; autoRegisterShortcuts: boolean; dat...` — CommandPalette — search-driven command palette that renders static groups or fetches remote results, then dispatches manifest actions for the selected command.
+- `CommandPalette({ config }: { config: { type: "command-palette"; data?: string | { resource: string; params?: Record<s...` — CommandPalette — search-driven command palette that renders static groups or fetches remote results, then dispatches manifest actions for the selected command.
+- `CommandPaletteBase({ id, open, onClose, onSelect, groups, placeholder, emptyMessage, maxHeight, query: controlledQuer...` — Standalone CommandPalette — a search-driven command list with keyboard navigation.
+- `CommandPaletteBaseGroup` *(interface)*
+- `CommandPaletteBaseItem` *(interface)*
+- `CommandPaletteBaseProps` *(interface)*
 - `CommandPaletteConfig` *(typealias)* — Inferred config type for the CommandPalette component.
 - `commandPaletteConfigSchema` — Zod config schema for the CommandPalette component.
-- `ConfirmDialogComponent({ config, }: { config: { type: "confirm-dialog"; description?: string | { from: string; transf...` — Confirmation dialog alias built on top of the modal overlay runtime.
+- `ConfirmDialogBase({ id, title, description, confirmLabel, cancelLabel, confirmVariant, cancelVariant, open, onClose, ...` — Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props.
+- `ConfirmDialogBaseProps` *(interface)*
+- `ConfirmDialogComponent({ config, }: { config: { type: "confirm-dialog"; description?: string | { from: string; transf...` — Manifest-driven confirmation dialog adapter.
 - `ConfirmDialogConfig` *(typealias)* — Input config type for the ConfirmDialog component.
 - `confirmDialogConfigSchema` — Overlay alias schema for manifest-driven confirmation dialogs.
-- `ContextMenu({ config }: { config: { type: "context-menu"; background?: string | { size?: "auto" | "cover" | "contain"...` — Render a right-click context menu backed by the shared context-menu portal runtime.
+- `ContextMenu({ config }: { config: Record<string, any>; }) => Element | null` — Manifest-driven context menu adapter.
+- `ContextMenuBase({ id, items, onSelect, onOpenChange, children, className, style, slots, }: ContextMenuBaseProps) => E...` — Standalone ContextMenu — a right-click context menu with plain React props.
+- `ContextMenuBaseEntry` *(typealias)*
+- `ContextMenuBaseItem` *(interface)*
+- `ContextMenuBaseProps` *(interface)*
 - `ContextMenuConfig` *(typealias)* — Inferred config type for the ContextMenu component.
 - `contextMenuConfigSchema` — Zod schema for the ContextMenu component.
-- `DrawerComponent({ config }: { config: { type: "drawer"; size: "sm" | "md" | "lg" | "xl" | "full"; content: Record<str...` — Drawer component — renders a slide-in panel from the left or right edge.
+- `DrawerBase({ id, title, side, size, open, onClose, trapFocus, initialFocus, returnFocus, footer, footerAlign, onOpen,...` — Standalone Drawer — a sliding panel overlay with plain React props.
+- `DrawerBaseFooterAction` *(interface)*
+- `DrawerBaseProps` *(interface)*
+- `DrawerComponent({ config }: { config: { type: "drawer"; content: Record<string, unknown>[]; title?: string | { from: ...`
 - `DrawerConfig` *(typealias)* — Inferred type for drawer config.
 - `drawerConfigSchema` — Zod schema for drawer component config.
-- `ModalComponent({ config }: { config: { type: "modal"; size: "sm" | "md" | "lg" | "xl" | "full"; content: Record<strin...` — Modal component — renders an overlay dialog with child components.
+- `DropdownMenuBase({ id, trigger, items, onSelect, align, side, className, style, slots, }: DropdownMenuBaseProps) => E...` — Standalone DropdownMenu — a button-triggered floating menu with plain React props.
+- `DropdownMenuBaseEntry` *(typealias)*
+- `DropdownMenuBaseItem` *(interface)*
+- `DropdownMenuBaseProps` *(interface)*
+- `DropdownMenuBaseTrigger` *(interface)*
+- `HoverCardBase({ id, trigger, children, openDelay, closeDelay, side, align, width, className, style, slots, }: HoverCa...` — Standalone HoverCard — a floating panel that appears on hover with plain React props.
+- `HoverCardBaseProps` *(interface)*
+- `ModalBase({ id, title, size, open, onClose, trapFocus, initialFocus, returnFocus, footer, footerAlign, onOpen, classN...` — Standalone Modal — a centered overlay dialog with plain React props.
+- `ModalBaseFooterAction` *(interface)*
+- `ModalBaseProps` *(interface)*
+- `ModalComponent({ config }: { config: { type: "modal"; content: Record<string, unknown>[]; title?: string | { from: st...`
 - `ModalConfig` *(typealias)* — Inferred type for modal config.
 - `modalConfigSchema` — Zod schema for modal component config.
-- `Popover({ config }: { config: { type: "popover"; trigger: string | { from: string; transform?: "string" | "number" | ...` — Floating panel component triggered by a button-like control.
+- `Popover({ config }: { config: { type: "popover"; trigger: string | { from: string; transform?: "string" | "number" | ...` — Manifest adapter — resolves config refs, publishes state, renders manifest children, delegates layout to PopoverBase.
+- `PopoverBase({ id, triggerLabel, triggerIcon, triggerVariant, title, description, placement, width, onOpenChange, foot...` — Standalone Popover — a button-triggered floating panel with plain React props.
+- `PopoverBaseProps` *(interface)*
 - `PopoverConfig` *(typealias)* — Inferred config type for the Popover component.
 - `popoverConfigSchema` — Zod schema for the Popover component.
 
 ### Navigation Components
-- `PrefetchLink({ id, to, prefetch, children, className, style, slots, target, rel, }: { to: string; target?: string | u...` — `<PrefetchLink>` — a prefetch primitive that renders a plain `<a>` anchor and automatically injects `<link rel="prefetch">` tags for the matching route's JS chunks and CSS files.
+- `AccordionBase({ id, items, mode, variant, iconPosition, defaultOpen, className, style, slots, }: AccordionBaseProps) ...` — Standalone Accordion — an expandable/collapsible panel list with plain React children.
+- `AccordionBaseItem` *(interface)*
+- `AccordionBaseProps` *(interface)*
+- `BreadcrumbBase({ id, items, separator: separatorProp, maxItems, onNavigate, className, style, slots, }: BreadcrumbBas...` — Standalone Breadcrumb — a navigation trail rendered with plain React props.
+- `BreadcrumbBaseItem` *(interface)*
+- `BreadcrumbBaseProps` *(interface)*
+- `PrefetchLink(config: { to: string; background?: string | { size?: "auto" | "cover" | "contain" | undefined; overlay?:...` — Manifest adapter — wires the SSR prefetch route hook into PrefetchLinkBase.
+- `PrefetchLinkBase({ id, to, prefetch, children, target, rel, onPrefetch, className, style, slots, }: PrefetchLinkBaseP...` — Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback based on the configured strategy.
+- `PrefetchLinkBaseProps` *(interface)*
 - `PrefetchLinkConfig` *(typealias)* — The output type of `prefetchLinkSchema` — all fields fully resolved with defaults applied.
 - `prefetchLinkSchema` — Zod schema for `<PrefetchLink>` config.
+- `StepperBase({ id, steps, activeStep: controlledStep, orientation, variant, clickable, onStepChange, className, style,...` — Standalone Stepper — a multi-step progress indicator with plain React props.
+- `StepperBaseProps` *(interface)*
+- `StepperBaseStep` *(interface)*
 - `TabConfig` *(typealias)* — Inferred type for a single tab config.
 - `tabConfigSchema` — Schema for a single tab within the tabs component.
-- `TabsComponent({ config }: { config: { type: "tabs"; variant: "default" | "underline" | "pills"; children: { label: st...` — Tabs component — renders a tab bar with content panels.
+- `TabsBase({ id, tabs, defaultTab, variant, onTabChange, className, style, slots, }: TabsBaseProps) => Element` — Standalone Tabs — tabbed navigation with plain React props.
+- `TabsBaseProps` *(interface)*
+- `TabsBaseTab` *(interface)*
+- `TabsComponent({ config }: { config: { type: "tabs"; children: { label: string | { from: string; transform?: "string" ...` — Manifest adapter — resolves config refs via useTabs hook, renders manifest children in tab panels, delegates layout to TabsBase.
 - `TabsConfig` *(typealias)* — Inferred type for tabs config.
 - `tabsConfigSchema` — Zod schema for tabs component config.
+- `TreeViewBase({ id, items, selectable, multiSelect, showIcon, showConnectors, onSelect: onSelectProp, emptyMessage, is...` — Standalone TreeView — a hierarchical tree with expand/collapse and selection.
+- `TreeViewBaseItem` *(interface)*
+- `TreeViewBaseProps` *(interface)*
 
 ### Layout Components
-- `Card({ config }: { config: { type: "card"; children: any[]; suspense?: { type: "custom" | "skeleton" | "spinner"; var...` — Card layout primitive for grouped content with an optional title block.
-- `Column({ config }: { config: { type: "column"; children: any[]; background?: string | { size?: "auto" | "cover" | "co...` — Column layout primitive for vertical composition with the same mental model as `row`.
-- `Layout({ config, nav, slots, children }: LayoutProps) => Element` — Layout shell component that wraps page content.
+- `BoxBase({ id, as, className, style, slots, children, }: BoxBaseProps) => Element` — Standalone Box -- a generic container element with configurable HTML tag.
+- `BoxBaseProps` *(interface)*
+- `Card({ config }: { config: { type: "card"; title?: string | { from: string; transform?: "string" | "number" | "boolea...` — Manifest adapter — resolves config refs, renders manifest children, delegates layout to CardBase.
+- `CardBase({ id, title, subtitle, gap: gapProp, background, staggerDelay, className, style, slots, children, }: CardBas...` — Standalone Card — a styled container with optional title/subtitle and standard React children.
+- `CardBaseProps` *(interface)*
+- `CollapsibleBase({ id, open: controlledOpen, defaultOpen, duration: durationProp, onOpenChange, className, style, slot...` — Standalone Collapsible -- an animated expand/collapse container with an optional trigger.
+- `CollapsibleBaseProps` *(interface)*
+- `Column({ config }: { config: { type: "column"; children: any[]; background?: string | { size?: "auto" | "cover" | "co...`
+- `ColumnBase({ id, gap: gapProp, align, justify, overflow, maxHeight, className, style, slots, children, }: ColumnBaseP...` — Standalone Column -- a vertical flex container.
+- `ColumnBaseProps` *(interface)*
+- `ContainerBase({ id, maxWidth, padding, center, className, style, slots, children, }: ContainerBaseProps) => Element` — Standalone Container -- a centered, max-width-constrained wrapper.
+- `ContainerBaseProps` *(interface)*
+- `GridBase({ id, areas, columns, rows, gap: gapProp, className, style, slots, children, }: GridBaseProps) => Element` — Standalone Grid -- a CSS grid container.
+- `GridBaseProps` *(interface)*
+- `Layout({ config, nav, slots, children }: LayoutProps) => Element` — Manifest adapter — resolves registered custom layouts, then delegates to LayoutBase for built-in variants.
+- `LayoutBase({ variant, className, style, nav, layoutSlots, children, }: LayoutBaseProps) => Element` — Standalone Layout -- a layout shell component that wraps page content.
+- `LayoutBaseProps` *(interface)*
+- `LayoutBaseSlots` *(typealias)* — Named slot content map for slot-aware layouts.
+- `LayoutBaseVariant` *(typealias)*
 - `LayoutColumnConfig` *(typealias)* — Inferred config type for the Column layout component.
 - `layoutColumnConfigSchema` — Zod config schema for the Column layout component.
 - `LayoutConfig` *(typealias)* — Inferred layout config type from the Zod schema.
@@ -716,18 +864,52 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `LayoutProps` *(interface)* — Props for the Layout component.
 - `LayoutVariant` *(typealias)* — Layout variant type extracted from the schema.
 - `Nav({ config, pathname, onNavigate, variant, }: NavComponentProps) => Element` — Grouped navigation component for manifest app shells.
+- `NavBase({ id, variant, items, logo, collapsible, pathname, onNavigate, className, style, slots, children, }: NavBaseP...` — Standalone Nav -- a navigation component with items, logo, and collapse support.
+- `NavBaseItem` *(interface)*
+- `NavBaseLogo` *(interface)*
+- `NavBaseProps` *(interface)*
+- `NavBaseUser` *(interface)*
 - `NavConfig` *(typealias)* — Runtime config type for the Nav component.
 - `navConfigSchema` — Zod schema for the grouped Nav component.
+- `NavDropdownBase({ id, label, icon, current, disabled, align, trigger: triggerMode, width, className, style, slots, ch...` — Standalone NavDropdown -- a navigation dropdown with floating panel.
+- `NavDropdownBaseProps` *(interface)*
 - `NavItemConfig` *(typealias)* — Runtime config type for a grouped nav item, including optional child items and per-item slots.
+- `NavLinkBase({ id, label, path, icon, badge, disabled, active, onNavigate, className, style, slots, }: NavLinkBaseProp...` — Standalone NavLink -- a navigation link with optional icon and badge.
+- `NavLinkBaseProps` *(interface)*
+- `NavLogoBase({ id, text, src, path, logoHeight, onNavigate, className, style, slots, }: NavLogoBaseProps) => Element` — Standalone NavLogo -- a clickable brand logo/text element for navigation headers.
+- `NavLogoBaseProps` *(interface)*
+- `NavSearchBase({ id, placeholder, shortcut, onSearch, onValueChange, className, style, slots, }: NavSearchBaseProps) =...` — Standalone NavSearch -- a search input with optional keyboard shortcut display.
+- `NavSearchBaseProps` *(interface)*
+- `NavSectionBase({ id, label, collapsible, defaultCollapsed, className, style, slots, children, }: NavSectionBaseProps)...` — Standalone NavSection -- a labeled, optionally collapsible group within navigation.
+- `NavSectionBaseProps` *(interface)*
+- `NavUserMenuBase({ id, mode, showAvatar, showName, showEmail, userName, userEmail, userAvatar, items, className, style...` — Standalone NavUserMenu -- a user menu dropdown with avatar trigger.
+- `NavUserMenuBaseItem` *(interface)*
+- `NavUserMenuBaseProps` *(interface)*
 - `Outlet({ config }: { config: { type: "outlet"; background?: string | { size?: "auto" | "cover" | "contain" | undefine...` — Layout outlet primitive used to render nested child routes from the compiled manifest route tree.
 - `ResolvedNavItem` *(interface)* — A nav item enriched with computed state: active detection, visibility based on role, and resolved badge value.
-- `useNav(config: { type: "nav"; background?: string | { size?: "auto" | "cover" | "contain" | undefined; overlay?: stri...` — Headless hook for nav component logic.
+- `RowBase({ id, gap: gapProp, align, justify, wrap, overflow, maxHeight, className, style, slots, children, }: RowBaseP...` — Standalone Row -- a horizontal flex container.
+- `RowBaseProps` *(interface)*
+- `SectionBase({ id, height, align, justify, bleed, className, style, slots, children, }: SectionBaseProps) => Element` — Standalone Section -- a full-width vertical section with optional height and alignment.
+- `SectionBaseProps` *(interface)*
+- `SpacerBase({ id, size: sizeProp, axis, flex, className, style, slots, }: SpacerBaseProps) => Element` — Standalone Spacer -- an empty element that takes up space along an axis.
+- `SpacerBaseProps` *(interface)*
+- `SplitPaneBase({ id, direction, defaultSplit, minSize, className, style, slots, first, second, }: SplitPaneBaseProps) ...` — Standalone SplitPane -- a resizable two-pane layout with a draggable divider.
+- `SplitPaneBaseProps` *(interface)*
+- `useNav(config: Record<string, any>, pathname: string) => UseNavResult` — Headless hook for nav component logic.
 - `UseNavResult` *(interface)* — Return type of the useNav headless hook.
 
 ### Media Components
-- `SnapshotImage({ config }: { config: { type: "image"; width: number; format: "avif" | "webp" | "jpeg" | "png" | "origi...` — Render a manifest-driven image component with Snapshot styling tokens.
+- `CarouselBase({ id, children, autoPlay, interval: intervalMs, showArrows, showDots, className, style, slots, }: Carous...` — Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation, and dot indicators.
+- `CarouselBaseProps` *(interface)*
+- `EmbedBase({ id, url, aspectRatio, title, className, style, slots, }: EmbedBaseProps) => Element` — Standalone Embed — a responsive iframe container for embedding external content.
+- `EmbedBaseProps` *(interface)*
+- `SnapshotImage({ config }: { config: { type: "image"; width: number; format: "avif" | "webp" | "jpeg" | "png" | "origi...` — Manifest adapter — extracts config props and delegates to SnapshotImageBase.
+- `SnapshotImageBase({ id, src, alt, width, height, quality, format, sizes, priority, placeholder, loading: loadingProp,...` — Standalone SnapshotImage — an optimized image component with placeholder support.
+- `SnapshotImageBaseProps` *(interface)*
 - `SnapshotImageConfig` *(typealias)* — Inferred config type from the SnapshotImage Zod schema.
 - `snapshotImageSchema` — Schema for optimized image components rendered through Snapshot's image route.
+- `VideoBase({ id, src, poster, controls, autoPlay, loop, muted, className, style, slots, }: VideoBaseProps) => Element` — Standalone Video — a styled video element that works with plain React props.
+- `VideoBaseProps` *(interface)*
 
 ### Page Presets
 - `ActivityFeedDef` *(interface)* — Feed section definition for dashboard-style presets.
@@ -760,6 +942,8 @@ These are the hooks and methods available on the object returned by `createSnaps
 ### Hooks & Utilities
 - `Breakpoint` *(typealias)* — All breakpoint names including `"default"` (below `sm`).
 - `ComponentDataResult` *(interface)* — Result returned by `useComponentData`.
+- `ComponentGroupBase({ id, className, style, slots, children, }: ComponentGroupBaseProps) => Element` — Standalone ComponentGroup — a simple wrapper for pre-rendered group content.
+- `ComponentGroupBaseProps` *(interface)*
 - `getSortableStyle(transform: Transform | null, transition: string | undefined, isDragging: boolean) => CSSProperties` — CSS transform helper for sortable items.
 - `resolveResponsiveValue<T>(value: T | { default: T; sm?: T | undefined; md?: T | undefined; lg?: T | undefined; xl?: T...` — Resolve a responsive value for a given breakpoint.
 - `UI_BREAKPOINTS` — Breakpoint pixel thresholds (mobile-first, min-width).
@@ -781,32 +965,132 @@ These are the hooks and methods available on the object returned by `createSnaps
 - `IconProps` *(interface)* — Props for the {@link Icon} component.
 
 ### Workflows
-- `AssignWorkflowNode` *(interface)* — Write values into the workflow execution context.
-- `CaptureWorkflowNode` *(interface)* — Execute an action and capture its result into the workflow context.
 - `getRegisteredWorkflowAction(type: string) => WorkflowActionHandler | undefined` — Retrieve a registered runtime handler for a custom workflow action type.
-- `IfWorkflowNode` *(interface)* — Branch workflow execution based on a condition.
-- `ParallelWorkflowNode` *(interface)* — Run multiple workflow definitions in parallel.
 - `registerWorkflowAction(type: string, handler: WorkflowActionHandler) => void` — Register a runtime handler for a custom workflow action type.
-- `RetryWorkflowNode` *(interface)* — Retry a workflow definition with optional delay and backoff.
 - `runWorkflow(definition: WorkflowDefinition, options: { workflows?: WorkflowMap | undefined; context?: Record<string, ...` — Execute a workflow definition against the supplied runtime hooks and mutable context.
-- `TryWorkflowNode` *(interface)* — Execute a workflow definition with optional catch and finally handlers.
-- `WaitWorkflowNode` *(interface)* — Pause workflow execution for a duration in milliseconds.
-- `WorkflowActionHandler` *(typealias)* — Handler signature for registered custom workflow actions.
-- `WorkflowCondition` *(interface)* — Simple conditional expression used by workflow nodes.
-- `WorkflowConditionOperator` *(typealias)* — Supported condition operators for manifest workflows.
-- `workflowConditionSchema` — Schema for conditional expressions used by workflow control-flow nodes.
-- `WorkflowDefinition` *(typealias)* — A single workflow node or a sequential list of nodes.
-- `workflowDefinitionSchema` — Schema for a workflow definition expressed as one node or a sequential node list.
-- `WorkflowMap` *(typealias)* — Named workflow map keyed by workflow id.
-- `WorkflowNode` *(typealias)* — Any node that can appear inside a workflow definition.
-- `workflowNodeSchema` — Recursive schema describing every built-in workflow node and action node shape.
 
 ### Other
+- `ActionBase` *(interface)*
+- `ActionConfig` *(typealias)*
+- `ActionExecuteFn` *(typealias)*
+- `actionSchema`
+- `ApiAction` *(interface)*
+- `apiActionSchema`
+- `AssignWorkflowNode` *(interface)*
+- `AuditLogBase({ id, items: allItems, loading, error, userField, actionField, timestampField, detailsField, filters, pa...` — Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries with user avatars, relative timestamps, and expandable detail panels.
+- `AuditLogBaseProps` *(interface)*
+- `AuditLogFilterEntry` *(interface)*
+- `buildRequestUrl(endpoint: string, params?: Record<string, unknown>, pathParams?: Record<string, unknown>) => string`
+- `CalendarBase({ id, view, events, loading, error, todayLabel, showWeekNumbers, onDateClick, onEventClick, className, s...` — Standalone CalendarBase — renders a month or week calendar grid with event pills, navigation controls, and optional week numbers.
+- `CalendarBaseProps` *(interface)*
+- `CalendarEventEntry` *(interface)*
+- `CaptureWorkflowNode` *(interface)*
+- `CloseModalAction` *(interface)*
+- `closeModalActionSchema`
+- `ComponentTokens` *(typealias)*
+- `componentTokensSchema`
+- `ConfirmAction` *(interface)*
+- `confirmActionSchema`
+- `CopyAction` *(interface)*
+- `CopyToClipboardAction` *(interface)*
+- `copyToClipboardActionSchema`
+- `dataSourceSchema`
+- `DefaultErrorBase({ title, description, showRetry, retryLabel, onRetry, id, className, style, slots, }: DefaultErrorBa...` — Standalone DefaultError — renders an error feedback card with optional retry button.
+- `DefaultErrorBaseProps` *(interface)*
+- `DefaultLoadingBase({ label, size, id, className, style, slots, }: DefaultLoadingBaseProps) => Element` — Standalone DefaultLoading — renders a loading spinner with label.
+- `DefaultLoadingBaseProps` *(interface)*
+- `DefaultNotFoundBase({ title, description, id, className, style, slots, }: DefaultNotFoundBaseProps) => Element` — Standalone DefaultNotFound — renders a 404 page with title and description.
+- `DefaultNotFoundBaseProps` *(interface)*
+- `DefaultOfflineBase({ title, description, id, className, style, slots, }: DefaultOfflineBaseProps) => Element` — Standalone DefaultOffline — renders an offline status banner.
+- `DefaultOfflineBaseProps` *(interface)*
+- `DividerBase({ label, orientation, id, className, style, slots, }: DividerBaseProps) => Element` — Standalone Divider — renders a horizontal or vertical separator line, optionally with a centered label.
+- `DividerBaseProps` *(interface)*
+- `DownloadAction` *(interface)*
+- `downloadActionSchema`
+- `endpointTargetSchema`
+- `ExprRef` *(interface)*
+- `Flavor` *(interface)*
+- `FloatingMenuBase({ triggerLabel, triggerIcon, items, open: controlledOpen, align, side, id, className, style, slots, ...` — Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation, and pre-resolved items.
+- `FloatingMenuBaseItem` *(interface)*
+- `FloatingMenuBaseLabel` *(interface)*
+- `FloatingMenuBaseProps` *(interface)*
+- `FloatingMenuBaseSeparator` *(interface)*
+- `FontConfig` *(typealias)*
+- `fontSchema`
+- `FromRef` *(interface)*
+- `fromRefSchema`
 - `getRegisteredLayouts() => string[]` — List the names of all currently registered manifest layouts.
+- `httpMethodSchema`
+- `IfWorkflowNode` *(interface)*
+- `isResourceRef(value: unknown) => value is { resource: string; params?: Record<string, unknown> | undefined; }`
+- `KanbanBase({ id, columns, items: rawItems, loading, error, columnField, titleField, descriptionField, assigneeField, ...` — Standalone KanbanBase — renders a multi-column board with cards, WIP limits, assignee avatars, priority indicators, and optional drag-and-drop reordering.
+- `KanbanBaseProps` *(interface)*
+- `KanbanColumnEntry` *(interface)*
+- `LinkBase({ text, to, icon, badge, external, disabled, current, align, variant, onNavigate, id, className, style, slot...` — Standalone Link — renders a styled anchor element with optional icon and badge.
+- `LinkBaseProps` *(interface)*
+- `LogAction` *(interface)*
+- `NavigateAction` *(interface)*
+- `navigateActionSchema`
+- `NotificationFeedBase({ id, items, loading, error, titleField, messageField, timestampField, readField, typeField, sho...` — Standalone NotificationFeedBase — renders a scrollable notification list with type icons, unread indicators, relative timestamps, and a mark-all-read action.
+- `NotificationFeedBaseProps` *(interface)*
+- `OAuthButtonsBase({ heading, providers, providerMode, onProviderClick, id, className, style, slots, }: OAuthButtonsBas...` — Standalone OAuthButtons — renders OAuth provider buttons with optional heading and auto-redirect support.
+- `OAuthButtonsBaseProps` *(interface)*
+- `OAuthProvider` *(interface)*
+- `OpenModalAction` *(interface)*
+- `openModalActionSchema`
+- `ParallelWorkflowNode` *(interface)*
+- `PasskeyButtonBase({ label, loadingLabel, loading, visible, autoPrompt, onClick, id, className, style, slots, }: Passk...` — Standalone PasskeyButton — renders a passkey authentication button.
+- `PasskeyButtonBaseProps` *(interface)*
+- `PricingFeatureEntry` *(interface)*
+- `PricingTableBase({ id, tiers, variant, currency, columns, className, style, slots, }: PricingTableBaseProps) => Element` — Standalone PricingTableBase — renders a responsive pricing comparison as either a card grid or a feature-comparison table with CTA buttons per tier.
+- `PricingTableBaseProps` *(interface)*
+- `PricingTierEntry` *(interface)*
+- `RadiusScale` *(typealias)*
+- `radiusSchema`
+- `RefreshAction` *(interface)*
+- `refreshActionSchema`
 - `registerBuiltInComponents(force?: boolean) => void` — Register all built-in config-driven components with the manifest system.
 - `registerLayout(name: string, layout: RegisteredLayout) => void` — Register a named layout component for manifest layout resolution.
 - `resetBuiltInComponentRegistration() => void` — Reset the built-in component registration guard so tests can rebuild the registry.
 - `resolveLayout(name: string) => RegisteredLayout | undefined` — Resolve a previously registered layout by name.
+- `resourceConfigSchema`
+- `resourceRefSchema`
+- `Responsive` *(typealias)*
+- `RetryWorkflowNode` *(interface)*
+- `RunWorkflowAction` *(interface)*
+- `runWorkflowActionSchema`
+- `ScrollToAction` *(interface)*
+- `scrollToActionSchema`
+- `SetValueAction` *(interface)*
+- `setValueActionSchema`
+- `SpacingScale` *(typealias)*
+- `spacingSchema`
+- `StackBase({ gap, align, justify, maxWidth, overflow, maxHeight, padding, staggerDelay, id, className, style, slots, c...` — Standalone Stack — a flex-column layout container with token-based spacing.
+- `StackBaseProps` *(interface)*
+- `StateScope` *(typealias)*
+- `stateValueConfigSchema`
+- `TextBase({ value, variant, size, weight, align, id, className, style, slots, }: TextBaseProps) => Element` — Standalone Text — renders a styled paragraph element with token-based typography.
+- `TextBaseProps` *(interface)*
+- `ThemeColors` *(typealias)*
+- `themeColorsSchema`
+- `ThemeConfig` *(typealias)*
+- `themeConfigSchema`
+- `ToastAction` *(interface)*
+- `toastActionSchema`
+- `TokenEditor` *(interface)*
+- `TrackAction` *(interface)*
+- `trackActionSchema`
+- `TryWorkflowNode` *(interface)*
+- `WaitWorkflowNode` *(interface)*
+- `WorkflowActionHandler` *(typealias)*
+- `WorkflowCondition` *(interface)*
+- `WorkflowConditionOperator` *(typealias)*
+- `workflowConditionSchema`
+- `WorkflowDefinition` *(typealias)*
+- `workflowDefinitionSchema`
+- `WorkflowMap` *(typealias)*
+- `WorkflowNode` *(typealias)*
+- `workflowNodeSchema`
 
 ## SSR (`@lastshotlabs/snapshot/ssr`)
 

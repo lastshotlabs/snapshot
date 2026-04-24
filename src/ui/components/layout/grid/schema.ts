@@ -27,5 +27,5 @@ export const gridConfigSchema = extendComponentSchema({
     z.enum(["none", "2xs", "xs", "sm", "md", "lg", "xl", "2xl"]),
   ).optional(),
   children: z.array(componentConfigSchema).min(1),
-  slots: slotsSchema(["root", "item"]).optional(),
+  slots: slotsSchema(["root"]).optional(),
 }).strict();

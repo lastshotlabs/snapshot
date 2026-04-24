@@ -1,112 +1,122 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
-import { useResolveFrom, useSubscribe, usePublish } from "../../../context/hooks";
+import { useCallback, type CSSProperties } from "react";
+import { useActionExecutor } from "../../../actions/executor";
 import {
-  ContextMenuPortal,
-  type ContextMenuPortalItem,
-} from "../../_base/context-menu-portal";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
-import { resolveOptionalPrimitiveValue, usePrimitiveValueOptions } from "../../primitives/resolve-value";
+  useResolveFrom,
+  useSubscribe,
+  usePublish,
+} from "../../../context/hooks";
+import { extractSurfaceConfig } from "../../_base/style-surfaces";
+import {
+  resolveOptionalPrimitiveValue,
+  usePrimitiveValueOptions,
+} from "../../primitives/resolve-value";
+import {
+  ContextMenuBase,
+  type ContextMenuBaseEntry,
+  type ContextMenuBaseItem,
+} from "./standalone";
 import type { ContextMenuConfig } from "./types";
 
 /**
- * Render a right-click context menu backed by the shared context-menu portal runtime.
+ * Manifest-driven context menu adapter.
+ *
+ * Resolves primitive values and actions from manifest config, handles
+ * visibility and state publishing, then delegates all rendering to
+ * `ContextMenuBase`.
  */
 export function ContextMenu({ config }: { config: ContextMenuConfig }) {
   const visible = useSubscribe(config.visible ?? true);
+  const execute = useActionExecutor();
   const primitiveOptions = usePrimitiveValueOptions();
   const resolvedConfig = useResolveFrom({
     triggerText: config.triggerText,
     items: config.items,
   });
   const publish = usePublish(config.id);
-  const [menuState, setMenuState] = useState<{
-    x: number;
-    y: number;
-    context?: Record<string, unknown>;
-  } | null>(null);
-
-  useEffect(() => {
-    publish?.({ isOpen: menuState !== null });
-  }, [menuState, publish]);
-
-  const handleContextMenu = useCallback((event: React.MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setMenuState({
-      x: event.clientX,
-      y: event.clientY,
-    });
-  }, []);
-
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: `${config.id ?? "context-menu"}-root`,
-    implementationBase: {
-      position: "relative",
-      display: "inline-block",
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-  const triggerSurface = resolveSurfacePresentation({
-    surfaceId: `${config.id ?? "context-menu"}-trigger`,
-    implementationBase: {
-      cursor: "context-menu",
-      userSelect: "none",
-    },
-    componentSurface: config.slots?.trigger,
-  });
 
   const triggerText = resolveOptionalPrimitiveValue(
     resolvedConfig.triggerText,
     primitiveOptions,
   );
+
   const resolvedItems =
-    (resolvedConfig.items as ContextMenuConfig["items"] | undefined)?.map((item: NonNullable<ContextMenuConfig["items"]>[number]) =>
-      item.type === "item"
-        ? {
-            ...item,
-            label: resolveOptionalPrimitiveValue(item.label, primitiveOptions) ?? "",
-          }
-        : item.type === "label"
-          ? {
-              ...item,
-              text: resolveOptionalPrimitiveValue(item.text, primitiveOptions) ?? "",
-            }
-          : item,
-    ) ?? config.items;
+    (resolvedConfig.items as ContextMenuConfig["items"] | undefined)?.map(
+      (
+        item: NonNullable<ContextMenuConfig["items"]>[number],
+      ): ContextMenuBaseEntry => {
+        if (item.type === "item") {
+          return {
+            type: "item",
+            label:
+              resolveOptionalPrimitiveValue(item.label, primitiveOptions) ?? "",
+            icon: item.icon,
+            destructive: item.variant === "destructive",
+            disabled: item.disabled,
+          };
+        }
+
+        if (item.type === "label") {
+          return {
+            type: "label",
+            text:
+              resolveOptionalPrimitiveValue(item.text, primitiveOptions) ?? "",
+          };
+        }
+
+        return { type: "separator" };
+      },
+    ) ?? [];
+
+  // Keep original items for action lookup
+  const originalItems =
+    (resolvedConfig.items as ContextMenuConfig["items"] | undefined) ??
+    config.items;
+
+  const handleSelect = useCallback(
+    (item: ContextMenuBaseItem) => {
+      // Find matching original item by label to get the action config
+      const originalItem = originalItems?.find(
+        (orig: NonNullable<ContextMenuConfig["items"]>[number]) =>
+          orig.type === "item" &&
+          (resolveOptionalPrimitiveValue(orig.label, primitiveOptions) ??
+            "") === item.label,
+      );
+      if (originalItem && originalItem.type === "item" && originalItem.action) {
+        void execute(
+          originalItem.action as Parameters<typeof execute>[0],
+          undefined,
+        );
+      }
+    },
+    [execute, originalItems, primitiveOptions],
+  );
+
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      publish?.({ isOpen: open });
+    },
+    [publish],
+  );
 
   if (visible === false) {
     return null;
   }
 
+  const surfaceConfig = extractSurfaceConfig(config);
+
   return (
-    <div
-      data-snapshot-component="context-menu"
-      data-snapshot-id={`${config.id ?? "context-menu"}-root`}
-      className={rootSurface.className}
-      style={rootSurface.style}
+    <ContextMenuBase
+      id={config.id}
+      items={resolvedItems}
+      onSelect={handleSelect}
+      onOpenChange={handleOpenChange}
+      className={surfaceConfig?.className as string | undefined}
+      style={surfaceConfig?.style as CSSProperties | undefined}
+      slots={config.slots as Record<string, Record<string, unknown>>}
     >
-      <div
-        data-testid="context-menu-area"
-        data-snapshot-id={`${config.id ?? "context-menu"}-trigger`}
-        onContextMenu={handleContextMenu}
-        className={triggerSurface.className}
-        style={triggerSurface.style}
-      >
-        {triggerText ?? null}
-      </div>
-      <ContextMenuPortal
-        items={(resolvedItems ?? []) as ContextMenuPortalItem[]}
-        state={menuState}
-        onClose={() => setMenuState(null)}
-        slots={config.slots}
-        idBase={config.id ?? "context-menu"}
-      />
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={triggerSurface.scopedCss} />
-    </div>
+      {triggerText ?? null}
+    </ContextMenuBase>
   );
 }

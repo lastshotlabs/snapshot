@@ -1199,6 +1199,10 @@ Key things to notice in the expanded output:
 
 ---
 
+## Standalone Component Usage
+
+If you do not need a full manifest app, every component in the examples above is also available as a standalone React component with plain props. See the [Component Library](/build/component-library/) for the full catalog and standalone usage patterns.
+
 ## Playground
 
 For live interactive exploration of individual components (not full apps), use the playground:

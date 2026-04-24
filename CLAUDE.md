@@ -52,10 +52,10 @@ Use this order:
 
 1. `apps/docs/src/content/docs/index.md`
 2. `apps/docs/src/content/docs/start-here/index.md`
-3. the persona guide for the job:
-   - `apps/docs/src/content/docs/build/manifest-apps.md`
-   - `apps/docs/src/content/docs/build/sdk-apps.md`
-   - `apps/docs/src/content/docs/integrate/ssr-rsc.md`
+3. the guide for the job:
+   - Code-first: `apps/docs/src/content/docs/guides/authentication.md` and the relevant guide under `apps/docs/src/content/docs/guides/`
+   - Manifest-first: `apps/docs/src/content/docs/manifest/quick-start.md`
+   - SSR: `apps/docs/src/content/docs/server/ssr-rsc.md`
 4. `docs/api-cheatsheet.md` — auto-generated single-file API surface (all exports, hook signatures, grouped by domain)
 5. generated reference for the relevant surface
 6. `apps/docs/src/content/docs/examples/index.md`
@@ -68,7 +68,7 @@ Use this order:
 - Capability changes must review top-level docs, not just reference pages. At minimum consider:
   - `apps/docs/src/content/docs/index.md`
   - `apps/docs/src/content/docs/start-here/index.md`
-  - `apps/docs/src/content/docs/start-here/capabilities.md`
+  - `apps/docs/src/content/docs/start-here/installation.md`
   - `apps/docs/src/content/docs/examples/index.md`
 - If a change affects app-builder discovery, update the persona guide that should send readers to it.
 - `bun run docs:ci` is the default docs validation path for contributor work.

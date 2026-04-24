@@ -35,7 +35,7 @@ When a change affects what users or agents should discover at a high level, revi
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
 - `apps/docs/src/content/docs/examples/index.md`
 
 ## What Counts As Incomplete

@@ -174,7 +174,24 @@ export function useAutoForm(
   fields: FieldConfig[],
   onSubmit: (values: Record<string, unknown>) => Promise<void>,
 ): UseAutoFormResult {
-  const initialValues = useMemo(() => buildInitialValues(fields), [fields]);
+  // Stabilise initialValues so that parent re-renders that produce a
+  // structurally identical field list do not reset the form.  We serialise
+  // the parts of each FieldConfig that influence buildInitialValues (name,
+  // type, default) into a string key and only recompute when that key
+  // actually changes.
+  const fieldsKey = useMemo(
+    () =>
+      fields
+        .map(
+          (f) =>
+            `${f.name}:${f.type ?? "text"}:${f.default !== undefined ? JSON.stringify(f.default) : ""}`,
+        )
+        .join("|"),
+    [fields],
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const initialValues = useMemo(() => buildInitialValues(fields), [fieldsKey]);
   const [pristineValues, setPristineValues] =
     useState<Record<string, unknown>>(initialValues);
   const [values, setValuesState] =

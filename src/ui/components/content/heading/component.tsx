@@ -4,24 +4,12 @@ import { useSubscribe } from "../../../context";
 import { resolveTemplate } from "../../../expressions/template";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { HeadingBase } from "./standalone";
 import type { HeadingConfig } from "./types";
 
-const HEADING_SIZE: Record<number, string> = {
-  1: "var(--sn-font-size-4xl, 2.25rem)",
-  2: "var(--sn-font-size-3xl, 1.875rem)",
-  3: "var(--sn-font-size-2xl, 1.5rem)",
-  4: "var(--sn-font-size-xl, 1.25rem)",
-  5: "var(--sn-font-size-lg, 1.125rem)",
-  6: "var(--sn-font-size-md, 1rem)",
-};
-
 /**
- * Heading component for manifest-driven page titles and section headings.
- *
- * Resolves FromRef and template-backed text, then renders an `h1`-`h6`
- * element with Snapshot token-based typography defaults.
+ * Manifest adapter — resolves template text, locale, and route context,
+ * then delegates to HeadingBase.
  */
 export function Heading({ config }: { config: HeadingConfig }) {
   const routeRuntime = useRouteRuntime();
@@ -30,8 +18,6 @@ export function Heading({ config }: { config: HeadingConfig }) {
   const text = useSubscribe(config.text);
   const activeLocale = resolveRuntimeLocale(manifest?.raw.i18n, localeState);
   const level = config.level ?? 2;
-  const Tag = `h${level}` as const;
-  const rootId = config.id ?? "heading";
 
   const resolvedText = resolveTemplate(
     typeof text === "string" ? text : String(text ?? ""),
@@ -67,40 +53,15 @@ export function Heading({ config }: { config: HeadingConfig }) {
           },
         );
 
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      style: {
-        fontSize: HEADING_SIZE[level],
-        fontWeight:
-          level <= 2
-            ? "var(--sn-font-weight-bold, 700)"
-            : "var(--sn-font-weight-semibold, 600)",
-        lineHeight: "var(--sn-leading-tight, 1.25)",
-        textAlign: config.align ?? "left",
-        letterSpacing:
-          level <= 2
-            ? "var(--sn-tracking-tight, -0.025em)"
-            : "var(--sn-tracking-normal, 0)",
-        color: "var(--sn-color-foreground, #111827)",
-        margin: 0,
-      },
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-
   return (
-    <>
-      <Tag
-        data-snapshot-component="heading"
-        data-snapshot-id={rootId}
-        className={rootSurface.className}
-        style={rootSurface.style}
-      >
-        {displayText}
-      </Tag>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-    </>
+    <HeadingBase
+      id={config.id}
+      text={displayText}
+      level={level as 1 | 2 | 3 | 4 | 5 | 6}
+      align={config.align}
+      className={config.className}
+      style={config.style}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }

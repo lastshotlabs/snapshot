@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ConfirmDialogComponent } from "../component";
 
-const modalCapture = vi.hoisted(() => ({ config: null as Record<string, unknown> | null }));
 const refValues: Record<string, unknown> = {
   "state.dialog.confirm": "Delete forever {route.params.id}",
   "state.dialog.cancel": "Keep it for {route.path}",
@@ -62,15 +61,22 @@ vi.mock("../../../../manifest/runtime", async () => {
   };
 });
 
-vi.mock("../../modal", () => ({
-  ModalComponent: ({ config }: { config: Record<string, unknown> }) => {
-    modalCapture.config = config;
-    return <div data-testid="confirm-dialog-modal" />;
-  },
+vi.mock("../../../../actions/executor", () => ({
+  useActionExecutor: () => vi.fn(),
+}));
+
+vi.mock("../../../../actions/modal-manager", () => ({
+  useModalManager: () => ({
+    isOpen: () => true,
+    open: vi.fn(),
+    close: vi.fn(),
+    getPayload: () => undefined,
+    getResult: () => undefined,
+  }),
 }));
 
 describe("ConfirmDialogComponent", () => {
-  it("adapts confirm-dialog config into a modal overlay config", () => {
+  it("renders confirm dialog with title, description, and button labels", () => {
     render(
       <ConfirmDialogComponent
         config={{
@@ -87,20 +93,13 @@ describe("ConfirmDialogComponent", () => {
       />,
     );
 
-    expect(screen.getByTestId("confirm-dialog-modal")).toBeDefined();
-    expect(modalCapture.config?.type).toBe("modal");
-    expect(modalCapture.config?.className).toContain("confirm-root-class");
-    expect((modalCapture.config?.style as { opacity?: number } | undefined)?.opacity).toBe(0.85);
-    const content = modalCapture.config?.content as Array<{ value: string }> | undefined;
-    const footer = modalCapture.config?.footer as
-      | { actions: Array<{ label: string }> }
-      | undefined;
-    expect(content?.[0]?.value).toBe("This action cannot be undone.");
-    expect(footer?.actions[0]?.label).toBe("Keep");
-    expect(footer?.actions[1]?.label).toBe("Delete");
+    expect(screen.getByText("Delete item")).toBeDefined();
+    expect(screen.getByText("This action cannot be undone.")).toBeDefined();
+    expect(screen.getByText("Delete")).toBeDefined();
+    expect(screen.getByText("Keep")).toBeDefined();
   });
 
-  it("resolves ref-backed footer labels before adapting to modal config", () => {
+  it("resolves ref-backed footer labels before rendering", () => {
     render(
       <ConfirmDialogComponent
         config={{
@@ -112,10 +111,7 @@ describe("ConfirmDialogComponent", () => {
       />,
     );
 
-    const footer = modalCapture.config?.footer as
-      | { actions: Array<{ label: string }> }
-      | undefined;
-    expect(footer?.actions[0]?.label).toBe("Keep it for /dialog/delete");
-    expect(footer?.actions[1]?.label).toBe("Delete forever delete");
+    expect(screen.getByText("Delete forever delete")).toBeDefined();
+    expect(screen.getByText("Keep it for /dialog/delete")).toBeDefined();
   });
 });

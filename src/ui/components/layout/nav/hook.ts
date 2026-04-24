@@ -96,6 +96,26 @@ function findActiveItem(items: ResolvedNavItem[]): ResolvedNavItem | null {
  * @param config - Nav component configuration from the manifest
  * @param pathname - Current URL pathname for active route detection
  * @returns Resolved nav items, active item, collapse state, and user info
+ *
+ * @example
+ * ```tsx
+ * const nav = useNav(navConfig, window.location.pathname);
+ *
+ * return (
+ *   <aside>
+ *     <button onClick={nav.toggleCollapse}>
+ *       {nav.isCollapsed ? "Expand" : "Collapse"}
+ *     </button>
+ *     <ul>
+ *       {nav.items.map((item) => (
+ *         <li key={item.id} aria-current={item.isActive ? "page" : undefined}>
+ *           <a href={item.href}>{item.label}</a>
+ *         </li>
+ *       ))}
+ *     </ul>
+ *   </aside>
+ * );
+ * ```
  */
 export function useNav(config: NavConfig, pathname: string): UseNavResult {
   const [isCollapsed, setIsCollapsed] = useState(false);

@@ -103,40 +103,6 @@ Many manifest fields accept dynamic values in addition to static strings. These 
 | `EndpointTarget` | `string \| { resource, params? }` | API endpoint — string URL or named resource reference |
 | `PolicyExpr` | `string \| { all } \| { any } \| { not } \| { equals } \| ...` | Boolean logic expression with `all`, `any`, `not`, `equals`, `not-equals`, `exists`, `truthy`, `falsy`, `in` |
 
-### Reserved `from` Prefixes
-
-`FromRef` paths are resolved against built-in sources **before** checking workflow context or state. The following prefixes are reserved and always resolve against their built-in source:
-
-| Prefix | Resolves against | Example |
-|--------|-----------------|---------|
-| `params.` | Route URL parameters | `{ "from": "params.id" }` |
-| `route.` | Route metadata (id, path, pattern, params, query) | `{ "from": "route.query.tab" }` |
-| `overlay.` | Overlay state (id, kind, payload, result) | `{ "from": "overlay.payload.title" }` |
-| `auth.` | Manifest `auth` config (providers, redirects, session settings) | `{ "from": "auth.redirects.afterLogin" }` |
-| `app.` | Manifest `app` config (title, shell, apiUrl, etc.) | `{ "from": "app.title" }` |
-| `global.` | App-scope state atoms | `{ "from": "global.currentUser" }` |
-| `state.` | Named state atoms (page or app scope) | `{ "from": "state.selectedId" }` |
-
-:::caution[Workflow context key collisions]
-If a workflow `capture` or `assign` stores a value under a key that starts with a reserved prefix, the `from` reference will silently resolve against the built-in source instead of the workflow context.
-
-For example, using `"as": "auth.orgs"` in a capture and then referencing `{ "from": "auth.orgs.0.id" }` will look up `orgs.0.id` in the **manifest auth config** — not the captured API response. This produces `undefined` with no error.
-
-Use a non-reserved prefix for workflow context keys:
-
-```json
-// Bad — "auth." is reserved
-{ "type": "capture", "as": "auth.orgs", "action": { ... } }
-
-// Good — "session." is not reserved
-{ "type": "capture", "as": "session.orgs", "action": { ... } }
-```
-
-In development mode, snapshot logs a console warning when a reserved prefix shadows a workflow context key.
-:::
-
-The same reserved-prefix behavior applies to **template strings** (e.g. `"{auth.me}"`). The template context merges workflow context with built-in sources, and built-in keys (`auth`, `app`, `route`) overwrite workflow context keys of the same name. Use `FromRef` objects instead of template strings when referencing workflow context values that share a name with a reserved prefix.
-
 ---
 
 ## `app`
@@ -170,6 +136,7 @@ Application-level configuration.
 | `notFound` | `string \| EnvRef` | — | No |
 | `offline` | `{ type: string } \| string \| EnvRef` | — | No |
 | `breadcrumbs` | `object` | — | No |
+| `currencyDivisor` | `number` | `1` | No |
 | `a11y` | `{ respectReducedMotion: boolean, skipLinks: { label: string, target: string }[] }` | — | No |
 
 #### `app.cache`
@@ -264,6 +231,7 @@ Navigation UI configuration. Must define either `items` (legacy mode) or `templa
 | `brand` | `SlotStyle` | — | No |
 | `brandIcon` | `SlotStyle` | — | No |
 | `brandLabel` | `SlotStyle` | — | No |
+| `toggle` | `SlotStyle` | — | No |
 | `list` | `SlotStyle` | — | No |
 | `item` | `SlotStyle` | — | No |
 | `itemLabel` | `SlotStyle` | — | No |
@@ -273,6 +241,7 @@ Navigation UI configuration. Must define either `items` (legacy mode) or `templa
 | `dropdownItem` | `SlotStyle` | — | No |
 | `dropdownItemLabel` | `SlotStyle` | — | No |
 | `dropdownItemIcon` | `SlotStyle` | — | No |
+| `dropdownItemBadge` | `SlotStyle` | — | No |
 | `userMenu` | `SlotStyle` | — | No |
 | `userMenuTrigger` | `SlotStyle` | — | No |
 | `userMenuItem` | `SlotStyle` | — | No |
@@ -1548,8 +1517,6 @@ Workflow nodes support these control-flow types:
 | `try` | `step`, `catch?`, `finally?` | Error handling |
 | `capture` | `action`, `as` (string) | Execute action and capture result |
 
-The `capture` node's `as` field sets a dot-path key in the workflow context. **Avoid reserved prefixes** (`auth.`, `app.`, `route.`, `params.`, `overlay.`) — see [Reserved `from` Prefixes](#reserved-from-prefixes).
-
 All nodes support optional `id` and `when` (condition) fields.
 
 ---
@@ -1602,50 +1569,218 @@ Each overlay is one of three types:
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
+| `id` | `string` | — | No |
+| `tokens` | `Record<string, string>` | — | No |
+| `visibleWhen` | `string` | — | No |
+| `visible` | `boolean \| FromRef \| Expr` | — | No |
+| `sticky` | `boolean \| { top: string, zIndex: "base" \| "dropdown" \| "sticky" \| "overlay" \| "modal" \| "popover"...` | — | No |
+| `zIndex` | `"base" \| "dropdown" \| "sticky" \| "overlay" \| "modal" \| "popover" \| "toast" \| number` | — | No |
+| `animation` | `object` | — | No |
+| `glass` | `boolean` | — | No |
+| `background` | `string \| object` | — | No |
+| `transition` | `"all" \| "colors" \| "opacity" \| "shadow" \| "transform" \| { property: string, duration: "instant" \|...` | — | No |
+| `exitAnimation` | `{ preset: "fade" \| "fade-up" \| "fade-down" \| "slide-left" \| "slide-right" \| "scale", duration: "i...` | — | No |
+| `span` | `number \| object` | — | No |
+| `slots` | `object` | — | No |
+| `padding` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `margin` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `gap` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `width` | `string \| number \| object` | — | No |
+| `minWidth` | `string \| number \| object` | — | No |
+| `maxWidth` | `string \| number \| object` | — | No |
+| `height` | `string \| number \| object` | — | No |
+| `minHeight` | `string \| number \| object` | — | No |
+| `maxHeight` | `string \| number \| object` | — | No |
+| `bg` | `string \| string \| object` | — | No |
+| `color` | `string` | — | No |
+| `borderRadius` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "full" \| string \| number` | — | No |
+| `border` | `string` | — | No |
+| `shadow` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| string` | — | No |
+| `opacity` | `number` | — | No |
+| `overflow` | `"auto" \| "hidden" \| "scroll" \| "visible"` | — | No |
+| `position` | `"relative" \| "absolute" \| "fixed" \| "sticky"` | — | No |
+| `inset` | `string \| number` | — | No |
+| `display` | `"flex" \| "grid" \| "block" \| "inline" \| "inline-flex" \| "inline-grid" \| "none" \| object` | — | No |
+| `flexDirection` | `"row" \| "column" \| "row-reverse" \| "column-reverse" \| object` | — | No |
+| `alignItems` | `"start" \| "center" \| "end" \| "stretch" \| "baseline"` | — | No |
+| `justifyContent` | `"start" \| "center" \| "end" \| "between" \| "around" \| "evenly"` | — | No |
+| `flexWrap` | `"wrap" \| "nowrap" \| "wrap-reverse"` | — | No |
+| `flex` | `string \| number` | — | No |
+| `textAlign` | `"left" \| "center" \| "right" \| "justify"` | — | No |
+| `fontSize` | `"xs" \| "sm" \| "base" \| "lg" \| "xl" \| "2xl" \| "3xl" \| "4xl" \| string \| number \| object` | — | No |
+| `fontWeight` | `"light" \| "normal" \| "medium" \| "semibold" \| "bold" \| number \| string` | — | No |
+| `lineHeight` | `"none" \| "tight" \| "snug" \| "normal" \| "relaxed" \| "loose" \| string \| number` | — | No |
+| `letterSpacing` | `"tight" \| "normal" \| "wide" \| string \| number` | — | No |
+| `hover` | `object` | — | No |
+| `focus` | `object` | — | No |
+| `active` | `object` | — | No |
+| `className` | `string` | — | No |
+| `style` | `Record<string, string \| number>` | — | No |
+| `cursor` | `string` | — | No |
+| `backgroundColor` | `string` | — | No |
+| `gridTemplateColumns` | `string` | — | No |
+| `gridTemplateRows` | `string` | — | No |
+| `gridColumn` | `string` | — | No |
+| `gridRow` | `string` | — | No |
 | `type` | `"modal"` | — | **Yes** |
-| `title` | `string \| FromRef \| TRef` | — | No |
-| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | — | No |
-| `content` | `{ type: string }[]` | — | **Yes** |
-| `onOpen` | `string \| object \| ...[]` | — | No |
-| `onClose` | `string \| object \| ...[]` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | `"md"` | No |
+| `trigger` | `FromRef` | — | No |
+| `content` | `Record<string, unknown>[]` | — | **Yes** |
+| `onOpen` | `string \| ... \| object \| ...[]` | — | No |
+| `onClose` | `string \| ... \| object \| ...[]` | — | No |
 | `urlParam` | `string` | — | No |
 | `trapFocus` | `boolean` | `true` | No |
 | `initialFocus` | `string` | — | No |
 | `returnFocus` | `boolean` | `true` | No |
-| `className` | `string` | — | No |
-| `style` | `Record<string, string \| number>` | — | No |
 | `footer` | `{ actions: object[], align: "left" \| "center" \| "right" }` | — | No |
 
 ### `overlays.<name>` — type: `"drawer"`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
+| `id` | `string` | — | No |
+| `tokens` | `Record<string, string>` | — | No |
+| `visibleWhen` | `string` | — | No |
+| `visible` | `boolean \| FromRef \| Expr` | — | No |
+| `sticky` | `boolean \| { top: string, zIndex: "base" \| "dropdown" \| "sticky" \| "overlay" \| "modal" \| "popover"...` | — | No |
+| `zIndex` | `"base" \| "dropdown" \| "sticky" \| "overlay" \| "modal" \| "popover" \| "toast" \| number` | — | No |
+| `animation` | `object` | — | No |
+| `glass` | `boolean` | — | No |
+| `background` | `string \| object` | — | No |
+| `transition` | `"all" \| "colors" \| "opacity" \| "shadow" \| "transform" \| { property: string, duration: "instant" \|...` | — | No |
+| `exitAnimation` | `{ preset: "fade" \| "fade-up" \| "fade-down" \| "slide-left" \| "slide-right" \| "scale", duration: "i...` | — | No |
+| `span` | `number \| object` | — | No |
+| `slots` | `object` | — | No |
+| `padding` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `margin` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `gap` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `width` | `string \| number \| object` | — | No |
+| `minWidth` | `string \| number \| object` | — | No |
+| `maxWidth` | `string \| number \| object` | — | No |
+| `height` | `string \| number \| object` | — | No |
+| `minHeight` | `string \| number \| object` | — | No |
+| `maxHeight` | `string \| number \| object` | — | No |
+| `bg` | `string \| string \| object` | — | No |
+| `color` | `string` | — | No |
+| `borderRadius` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "full" \| string \| number` | — | No |
+| `border` | `string` | — | No |
+| `shadow` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| string` | — | No |
+| `opacity` | `number` | — | No |
+| `overflow` | `"auto" \| "hidden" \| "scroll" \| "visible"` | — | No |
+| `position` | `"relative" \| "absolute" \| "fixed" \| "sticky"` | — | No |
+| `inset` | `string \| number` | — | No |
+| `display` | `"flex" \| "grid" \| "block" \| "inline" \| "inline-flex" \| "inline-grid" \| "none" \| object` | — | No |
+| `flexDirection` | `"row" \| "column" \| "row-reverse" \| "column-reverse" \| object` | — | No |
+| `alignItems` | `"start" \| "center" \| "end" \| "stretch" \| "baseline"` | — | No |
+| `justifyContent` | `"start" \| "center" \| "end" \| "between" \| "around" \| "evenly"` | — | No |
+| `flexWrap` | `"wrap" \| "nowrap" \| "wrap-reverse"` | — | No |
+| `flex` | `string \| number` | — | No |
+| `textAlign` | `"left" \| "center" \| "right" \| "justify"` | — | No |
+| `fontSize` | `"xs" \| "sm" \| "base" \| "lg" \| "xl" \| "2xl" \| "3xl" \| "4xl" \| string \| number \| object` | — | No |
+| `fontWeight` | `"light" \| "normal" \| "medium" \| "semibold" \| "bold" \| number \| string` | — | No |
+| `lineHeight` | `"none" \| "tight" \| "snug" \| "normal" \| "relaxed" \| "loose" \| string \| number` | — | No |
+| `letterSpacing` | `"tight" \| "normal" \| "wide" \| string \| number` | — | No |
+| `hover` | `object` | — | No |
+| `focus` | `object` | — | No |
+| `active` | `object` | — | No |
+| `className` | `string` | — | No |
+| `style` | `Record<string, string \| number>` | — | No |
+| `cursor` | `string` | — | No |
+| `backgroundColor` | `string` | — | No |
+| `gridTemplateColumns` | `string` | — | No |
+| `gridTemplateRows` | `string` | — | No |
+| `gridColumn` | `string` | — | No |
+| `gridRow` | `string` | — | No |
 | `type` | `"drawer"` | — | **Yes** |
-| `title` | `string \| FromRef \| TRef` | — | No |
-| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | — | No |
-| `side` | `"left" \| "right"` | — | No |
-| `content` | `{ type: string }[]` | — | **Yes** |
-| `onOpen` | `string \| object \| ...[]` | — | No |
-| `onClose` | `string \| object \| ...[]` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | `"md"` | No |
+| `side` | `"left" \| "right"` | `"right"` | No |
+| `trigger` | `FromRef` | — | No |
+| `content` | `Record<string, unknown>[]` | — | **Yes** |
+| `onOpen` | `string \| ... \| object \| ...[]` | — | No |
+| `onClose` | `string \| ... \| object \| ...[]` | — | No |
 | `urlParam` | `string` | — | No |
 | `trapFocus` | `boolean` | `true` | No |
 | `initialFocus` | `string` | — | No |
 | `returnFocus` | `boolean` | `true` | No |
-| `className` | `string` | — | No |
-| `style` | `Record<string, string \| number>` | — | No |
 | `footer` | `{ actions: object[], align: "left" \| "center" \| "right" }` | — | No |
 
 ### `overlays.<name>` — type: `"confirm-dialog"`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `type` | `"confirm-dialog"` | — | **Yes** |
 | `id` | `string` | — | No |
+| `tokens` | `Record<string, string>` | — | No |
+| `visibleWhen` | `string` | — | No |
+| `visible` | `boolean \| FromRef \| Expr` | — | No |
+| `sticky` | `boolean \| { top: string, zIndex: "base" \| "dropdown" \| "sticky" \| "overlay" \| "modal" \| "popover"...` | — | No |
+| `zIndex` | `"base" \| "dropdown" \| "sticky" \| "overlay" \| "modal" \| "popover" \| "toast" \| number` | — | No |
+| `animation` | `object` | — | No |
+| `glass` | `boolean` | — | No |
+| `background` | `string \| object` | — | No |
+| `transition` | `"all" \| "colors" \| "opacity" \| "shadow" \| "transform" \| { property: string, duration: "instant" \|...` | — | No |
+| `exitAnimation` | `{ preset: "fade" \| "fade-up" \| "fade-down" \| "slide-left" \| "slide-right" \| "scale", duration: "i...` | — | No |
+| `span` | `number \| object` | — | No |
+| `slots` | `object` | — | No |
+| `padding` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `margin` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `gap` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `width` | `string \| number \| object` | — | No |
+| `minWidth` | `string \| number \| object` | — | No |
+| `maxWidth` | `string \| number \| object` | — | No |
+| `height` | `string \| number \| object` | — | No |
+| `minHeight` | `string \| number \| object` | — | No |
+| `maxHeight` | `string \| number \| object` | — | No |
+| `bg` | `string \| string \| object` | — | No |
+| `color` | `string` | — | No |
+| `borderRadius` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "full" \| string \| number` | — | No |
+| `border` | `string` | — | No |
+| `shadow` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| string` | — | No |
+| `opacity` | `number` | — | No |
+| `overflow` | `"auto" \| "hidden" \| "scroll" \| "visible"` | — | No |
+| `position` | `"relative" \| "absolute" \| "fixed" \| "sticky"` | — | No |
+| `inset` | `string \| number` | — | No |
+| `display` | `"flex" \| "grid" \| "block" \| "inline" \| "inline-flex" \| "inline-grid" \| "none" \| object` | — | No |
+| `flexDirection` | `"row" \| "column" \| "row-reverse" \| "column-reverse" \| object` | — | No |
+| `alignItems` | `"start" \| "center" \| "end" \| "stretch" \| "baseline"` | — | No |
+| `justifyContent` | `"start" \| "center" \| "end" \| "between" \| "around" \| "evenly"` | — | No |
+| `flexWrap` | `"wrap" \| "nowrap" \| "wrap-reverse"` | — | No |
+| `flex` | `string \| number` | — | No |
+| `textAlign` | `"left" \| "center" \| "right" \| "justify"` | — | No |
+| `fontSize` | `"xs" \| "sm" \| "base" \| "lg" \| "xl" \| "2xl" \| "3xl" \| "4xl" \| string \| number \| object` | — | No |
+| `fontWeight` | `"light" \| "normal" \| "medium" \| "semibold" \| "bold" \| number \| string` | — | No |
+| `lineHeight` | `"none" \| "tight" \| "snug" \| "normal" \| "relaxed" \| "loose" \| string \| number` | — | No |
+| `letterSpacing` | `"tight" \| "normal" \| "wide" \| string \| number` | — | No |
+| `hover` | `object` | — | No |
+| `focus` | `object` | — | No |
+| `active` | `object` | — | No |
+| `className` | `string` | — | No |
+| `style` | `Record<string, string \| number>` | — | No |
+| `cursor` | `string` | — | No |
+| `backgroundColor` | `string` | — | No |
+| `gridTemplateColumns` | `string` | — | No |
+| `gridTemplateRows` | `string` | — | No |
+| `gridColumn` | `string` | — | No |
+| `gridRow` | `string` | — | No |
+| `type` | `"confirm-dialog"` | — | **Yes** |
 | `title` | `string \| FromRef` | — | No |
 | `description` | `string \| FromRef` | — | No |
 | `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | — | No |
-| `confirmLabel` | `string` | `"Confirm"` | No |
-| `cancelLabel` | `string` | `"Cancel"` | No |
+| `confirmLabel` | `string \| FromRef` | `"Confirm"` | No |
+| `cancelLabel` | `string \| FromRef` | `"Cancel"` | No |
 | `confirmVariant` | `"default" \| "secondary" \| "destructive" \| "ghost"` | `"default"` | No |
 | `cancelVariant` | `"default" \| "secondary" \| "destructive" \| "ghost"` | `"secondary"` | No |
 | `confirmAction` | `object \| ... \| object \| ...[]` | — | No |
@@ -1658,8 +1793,6 @@ Each overlay is one of three types:
 | `trapFocus` | `boolean` | `true` | No |
 | `initialFocus` | `string` | — | No |
 | `returnFocus` | `boolean` | `true` | No |
-| `className` | `string` | — | No |
-| `style` | `Record<string, string \| number>` | — | No |
 
 ---
 
@@ -2192,29 +2325,174 @@ Used by data-aware components for loading state customization.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
+| `id` | `string` | — | No |
+| `padding` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `paddingY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `margin` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `marginY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `gap` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number \| object` | — | No |
+| `width` | `string \| number \| object` | — | No |
+| `minWidth` | `string \| number \| object` | — | No |
+| `maxWidth` | `string \| number \| object` | — | No |
+| `height` | `string \| number \| object` | — | No |
+| `minHeight` | `string \| number \| object` | — | No |
+| `maxHeight` | `string \| number \| object` | — | No |
+| `bg` | `string \| string \| object` | — | No |
+| `color` | `string` | — | No |
+| `borderRadius` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "full" \| string \| number` | — | No |
+| `border` | `string` | — | No |
+| `shadow` | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| string` | — | No |
+| `opacity` | `number` | — | No |
+| `overflow` | `"auto" \| "hidden" \| "scroll" \| "visible"` | — | No |
+| `position` | `"relative" \| "absolute" \| "fixed" \| "sticky"` | — | No |
+| `inset` | `string \| number` | — | No |
+| `display` | `"flex" \| "grid" \| "block" \| "inline" \| "inline-flex" \| "inline-grid" \| "none" \| object` | — | No |
+| `flexDirection` | `"row" \| "column" \| "row-reverse" \| "column-reverse" \| object` | — | No |
+| `alignItems` | `"start" \| "center" \| "end" \| "stretch" \| "baseline"` | — | No |
+| `justifyContent` | `"start" \| "center" \| "end" \| "between" \| "around" \| "evenly"` | — | No |
+| `flexWrap` | `"wrap" \| "nowrap" \| "wrap-reverse"` | — | No |
+| `flex` | `string \| number` | — | No |
+| `textAlign` | `"left" \| "center" \| "right" \| "justify"` | — | No |
+| `fontSize` | `"xs" \| "sm" \| "base" \| "lg" \| "xl" \| "2xl" \| "3xl" \| "4xl" \| string \| number \| object` | — | No |
+| `fontWeight` | `"light" \| "normal" \| "medium" \| "semibold" \| "bold" \| number \| string` | — | No |
+| `lineHeight` | `"none" \| "tight" \| "snug" \| "normal" \| "relaxed" \| "loose" \| string \| number` | — | No |
+| `letterSpacing` | `"tight" \| "normal" \| "wide" \| string \| number` | — | No |
+| `hover` | `object` | — | No |
+| `focus` | `object` | — | No |
+| `active` | `object` | — | No |
+| `className` | `string` | — | No |
+| `style` | `Record<string, string \| number>` | — | No |
+| `cursor` | `string` | — | No |
+| `backgroundColor` | `string` | — | No |
+| `gridTemplateColumns` | `string` | — | No |
+| `gridTemplateRows` | `string` | — | No |
+| `gridColumn` | `string` | — | No |
+| `gridRow` | `string` | — | No |
+| `states` | `Record<string, object>` | — | No |
 | `disabled` | `boolean` | — | No |
 | `variant` | `"auto" \| "table" \| "list" \| "card" \| "text" \| "chart" \| "stat"` | `"auto"` | No |
 | `rows` | `number` | — | No |
 | `count` | `number` | — | No |
 | `delay` | `number` | `100` | No |
+| `slots` | `object` | — | No |
 
 ### Empty State Config
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
+| `id` | `string` | — | No |
+| `className` | `string` | — | No |
+| `style` | `Record<string, string \| number>` | — | No |
+| `states` | `Record<string, object>` | — | No |
+| `hover` | `object` | — | No |
+| `focus` | `object` | — | No |
+| `active` | `object` | — | No |
+| `background` | `string \| object` | — | No |
+| `backgroundColor` | `string` | — | No |
+| `padding` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `paddingX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `paddingY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `margin` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `marginX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `marginY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `gap` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `width` | `string \| number` | — | No |
+| `minWidth` | `string \| number` | — | No |
+| `maxWidth` | `string \| number` | — | No |
+| `height` | `string \| number` | — | No |
+| `minHeight` | `string \| number` | — | No |
+| `maxHeight` | `string \| number` | — | No |
+| `bg` | `string` | — | No |
+| `color` | `string` | — | No |
+| `borderRadius` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `border` | `string` | — | No |
+| `shadow` | `string` | — | No |
+| `opacity` | `string \| number` | — | No |
+| `overflow` | `string` | — | No |
+| `cursor` | `string` | — | No |
+| `position` | `"relative" \| "absolute" \| "fixed" \| "sticky"` | — | No |
+| `inset` | `string \| number` | — | No |
+| `display` | `"flex" \| "grid" \| "block" \| "inline" \| "inline-flex" \| "inline-grid" \| "none" \| object` | — | No |
+| `flexDirection` | `"row" \| "column" \| "row-reverse" \| "column-reverse" \| object` | — | No |
+| `alignItems` | `string` | — | No |
+| `justifyContent` | `string` | — | No |
+| `flexWrap` | `string` | — | No |
+| `flex` | `string \| number` | — | No |
+| `gridTemplateColumns` | `string` | — | No |
+| `gridTemplateRows` | `string` | — | No |
+| `gridColumn` | `string` | — | No |
+| `gridRow` | `string` | — | No |
+| `textAlign` | `string` | — | No |
+| `fontSize` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `fontWeight` | `string \| number` | — | No |
+| `lineHeight` | `string \| number` | — | No |
+| `letterSpacing` | `string \| number` | — | No |
 | `icon` | `string` | — | No |
-| `title` | `string` | `"No data"` | No |
-| `description` | `string` | — | No |
+| `title` | `string \| EnvRef \| FromRef \| Expr \| TRef` | `"No data"` | No |
+| `description` | `string \| EnvRef \| FromRef \| Expr \| TRef` | — | No |
+| `size` | `"sm" \| "md" \| "lg"` | — | No |
+| `iconColor` | `string` | — | No |
 | `action` | `object` | — | No |
+| `slots` | `object` | — | No |
 
 ### Error State Config
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `title` | `string` | — | No |
-| `description` | `string` | — | No |
-| `retry` | `boolean \| { label: string }` | — | No |
+| `id` | `string` | — | No |
+| `className` | `string` | — | No |
+| `style` | `Record<string, string \| number>` | — | No |
+| `states` | `Record<string, object>` | — | No |
+| `hover` | `object` | — | No |
+| `focus` | `object` | — | No |
+| `active` | `object` | — | No |
+| `background` | `string \| object` | — | No |
+| `backgroundColor` | `string` | — | No |
+| `padding` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `paddingX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `paddingY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `margin` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `marginX` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `marginY` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `gap` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `width` | `string \| number` | — | No |
+| `minWidth` | `string \| number` | — | No |
+| `maxWidth` | `string \| number` | — | No |
+| `height` | `string \| number` | — | No |
+| `minHeight` | `string \| number` | — | No |
+| `maxHeight` | `string \| number` | — | No |
+| `bg` | `string` | — | No |
+| `color` | `string` | — | No |
+| `borderRadius` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `border` | `string` | — | No |
+| `shadow` | `string` | — | No |
+| `opacity` | `string \| number` | — | No |
+| `overflow` | `string` | — | No |
+| `cursor` | `string` | — | No |
+| `position` | `"relative" \| "absolute" \| "fixed" \| "sticky"` | — | No |
+| `inset` | `string \| number` | — | No |
+| `display` | `"flex" \| "grid" \| "block" \| "inline" \| "inline-flex" \| "inline-grid" \| "none" \| object` | — | No |
+| `flexDirection` | `"row" \| "column" \| "row-reverse" \| "column-reverse" \| object` | — | No |
+| `alignItems` | `string` | — | No |
+| `justifyContent` | `string` | — | No |
+| `flexWrap` | `string` | — | No |
+| `flex` | `string \| number` | — | No |
+| `gridTemplateColumns` | `string` | — | No |
+| `gridTemplateRows` | `string` | — | No |
+| `gridColumn` | `string` | — | No |
+| `gridRow` | `string` | — | No |
+| `textAlign` | `string` | — | No |
+| `fontSize` | `"none" \| "2xs" \| "xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| string \| number` | — | No |
+| `fontWeight` | `string \| number` | — | No |
+| `lineHeight` | `string \| number` | — | No |
+| `letterSpacing` | `string \| number` | — | No |
+| `title` | `string \| EnvRef \| FromRef \| Expr \| TRef` | — | No |
+| `description` | `string \| EnvRef \| FromRef \| Expr \| TRef` | — | No |
+| `retry` | `boolean \| { label: string \| EnvRef \| FromRef \| Expr \| TRef }` | — | No |
 | `icon` | `string` | — | No |
+| `slots` | `object` | — | No |
 
 ### Suspense Fallback Config
 

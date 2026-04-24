@@ -125,8 +125,6 @@ describe("NavSection", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("button", { name: "Resolved Resources guides" }),
-    ).toBeTruthy();
+    expect(screen.getByText("Resolved Resources guides")).toBeTruthy();
   });
 });

@@ -30,7 +30,7 @@ For app-builder-facing discovery truth, treat these files as canonical:
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
 - `apps/docs/src/content/docs/examples/index.md`
 - `playground/src/showcase.tsx`
 
@@ -50,7 +50,7 @@ If you introduce or change a visible manifest UI surface:
 
 - define or update named `slots`
 - use canonical runtime state names
-- update [Styling and Slots](/build/styling-and-slots/) when the platform pattern changed
+- update [Theming and Styling](/guides/theming-and-styling/) when the platform pattern changed
 - update any persona guide that should send app builders to the new surface
 
 Canonical contributor instructions live in:

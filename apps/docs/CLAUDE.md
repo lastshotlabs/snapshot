@@ -7,10 +7,11 @@ This app is Snapshot's public documentation product. It is also the primary disc
 - `apps/docs/astro.config.mjs`
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/build/manifest-apps.md`
-- `apps/docs/src/content/docs/build/sdk-apps.md`
-- `apps/docs/src/content/docs/integrate/ssr-rsc.md`
-- `apps/docs/src/content/docs/examples/index.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
+- `apps/docs/src/content/docs/guides/authentication.md`
+- `apps/docs/src/content/docs/guides/forms.md`
+- `apps/docs/src/content/docs/manifest/quick-start.md`
+- `apps/docs/src/content/docs/manifest/examples.md`
 - `apps/docs/src/content/docs/contribute/overview.md`
 - `apps/docs/src/content/docs/contribute/agent-flow.md`
 - `apps/docs/src/content/docs/contribute/testing.md`
@@ -31,8 +32,9 @@ When a user-facing capability changes, review these pages in addition to the loc
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
-- `apps/docs/src/content/docs/examples/index.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
+- `apps/docs/src/content/docs/guides/` (the relevant guide)
+- `apps/docs/src/content/docs/manifest/examples.md`
 
 ## Required Follow-Through
 

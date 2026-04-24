@@ -15,6 +15,5 @@ export const cardConfigSchema = extendComponentSchema({
     "title",
     "subtitle",
     "content",
-    "item",
   ]).optional(),
 }).strict();

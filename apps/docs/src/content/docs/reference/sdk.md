@@ -52,7 +52,7 @@ Generated from `src/index.ts`.
 | `DeleteAccountBody` | interface | `src/types.ts` | Request body for deleting the current account. |
 | `ForgotPasswordBody` | interface | `src/types.ts` | Request body for the forgot-password endpoint. |
 | `formatAuthError` | function | `src/auth/error-format.ts` | Format a raw auth `ApiError` into the message shown to application code. |
-| `generateManifestSchema` | function | `src/schema-generator.ts` | Generate a JSON Schema for the snapshot manifest and write it to disk. When called without plugins, produces the built-in schema. Consumer apps call this with their plugins to get a schema that includes custom types. |
+| `generateManifestSchema` | function | `src/schema-generator.ts` | Generate a JSON Schema for the snapshot manifest and write it to disk.  When called without plugins, produces the built-in schema. Consumer apps call this with their plugins to get a schema that includes custom types. |
 | `getRegisteredClient` | function | `src/api/client.ts` | Look up a previously registered custom client factory. |
 | `isMfaChallenge` | function | `src/types.ts` | Narrow a login result to the MFA challenge branch. |
 | `ListParams` | interface | `src/community/types.ts` | Shared page-based pagination parameters. |
@@ -471,7 +471,7 @@ const { state, subscribe, unsubscribe } = usePushNotifications({
 
 | Export | Kind | Description |
 |---|---|---|
-| `generateManifestSchema` | function | Generate a JSON Schema for the snapshot manifest and write it to disk. When called without plugins, produces the built-in schema. Consumer apps call this with their plugins to get a schema that includes custom types. |
+| `generateManifestSchema` | function | Generate a JSON Schema for the snapshot manifest and write it to disk.  When called without plugins, produces the built-in schema. Consumer apps call this with their plugins to get a schema that includes custom types. |
 
 ### Details
 

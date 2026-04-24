@@ -304,7 +304,7 @@ describe("Nav component", () => {
       const { container } = renderWithContext(
         <Nav config={baseConfig} pathname="/users" />,
       );
-      const activeItem = container.querySelector('[data-current="true"]');
+      const activeItem = container.querySelector('[aria-current="page"]');
       expect(activeItem).not.toBeNull();
       expect(activeItem?.textContent).toContain("Users");
     });
@@ -313,7 +313,7 @@ describe("Nav component", () => {
       const { container } = renderWithContext(
         <Nav config={baseConfig} pathname="/other" />,
       );
-      const activeItems = container.querySelectorAll('[data-current="true"]');
+      const activeItems = container.querySelectorAll('[aria-current="page"]');
       expect(activeItems.length).toBe(0);
     });
   });

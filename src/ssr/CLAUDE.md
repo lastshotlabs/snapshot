@@ -16,7 +16,7 @@ Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, PPR
 - `src/vite/index.ts`
 - `src/vite/rsc-transform.ts`
 - `src/vite/prefetch.ts`
-- `apps/docs/src/content/docs/integrate/ssr-rsc.md`
+- `apps/docs/src/content/docs/server/ssr-rsc.md`
 - `apps/docs/src/content/docs/reference/ssr.md`
 - `apps/docs/src/content/docs/reference/vite.md`
 - `apps/docs/src/content/docs/contribute/testing.md`
@@ -32,9 +32,9 @@ Read this after root `CLAUDE.md` when changing SSR, manifest rendering, RSC, PPR
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
-- `apps/docs/src/content/docs/build/sdk-apps.md`
-- `apps/docs/src/content/docs/integrate/ssr-rsc.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
+- `apps/docs/src/content/docs/guides/authentication.md`
+- `apps/docs/src/content/docs/server/ssr-rsc.md`
 - `apps/docs/src/content/docs/examples/index.md`
 
 ## Required Follow-Through

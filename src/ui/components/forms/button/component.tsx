@@ -1,150 +1,13 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useSubscribe } from "../../../context/hooks";
-import { renderIcon } from "../../../icons/render";
-import { setDomRef } from "../../_base/dom-ref";
-import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
-import type { ButtonConfig, ButtonControlProps } from "./types";
+import { ButtonBase } from "./standalone";
+import type { ButtonConfig } from "./types";
 
-export function ButtonControl({
-  children,
-  type = "button",
-  variant = "default",
-  size = "sm",
-  disabled,
-  fullWidth,
-  onClick,
-  onKeyDown,
-  onFocus,
-  onBlur,
-  onPointerDown,
-  onPointerUp,
-  onPointerEnter,
-  onPointerLeave,
-  onTouchStart,
-  onTouchEnd,
-  className,
-  style,
-  buttonRef,
-  surfaceId,
-  surfaceConfig,
-  itemSurfaceConfig,
-  testId,
-  ariaLabel,
-  ariaDescribedBy,
-  ariaLive,
-  ariaPressed,
-  ariaChecked,
-  ariaCurrent,
-  ariaSelected,
-  ariaExpanded,
-  ariaHasPopup,
-  role,
-  tabIndex,
-  title,
-  activeStates,
-}: ButtonControlProps) {
-  const minHeightBySize: Record<string, string> = {
-    sm: "2.25rem",
-    md: "2.5rem",
-    lg: "2.875rem",
-    icon: "2.5rem",
-  };
-  const resolvedStates = new Set([
-    ...(activeStates ?? []),
-    ...(disabled ? (["disabled"] as const) : []),
-  ]);
-  const resolvedItemSurfaceConfig =
-    className || style
-      ? {
-          ...(itemSurfaceConfig ?? {}),
-          className: [
-            typeof itemSurfaceConfig?.className === "string"
-              ? itemSurfaceConfig.className
-              : undefined,
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined,
-          style: {
-            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
-            ...(style ?? {}),
-          },
-        }
-      : itemSurfaceConfig;
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId,
-    implementationBase: {
-      ...getButtonStyle(variant, size, disabled),
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "var(--sn-spacing-xs, 0.5rem)",
-      width: fullWidth ? "100%" : "auto",
-      minHeight: minHeightBySize[size] ?? minHeightBySize.sm,
-      appearance: "none",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    },
-    componentSurface: surfaceConfig,
-    itemSurface: resolvedItemSurfaceConfig,
-    activeStates: Array.from(resolvedStates),
-  });
-
-  return (
-    <>
-      <button
-        ref={(instance) => setDomRef(buttonRef, instance)}
-        type={type}
-        disabled={disabled}
-        onClick={onClick}
-        onKeyDown={onKeyDown}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-        data-sn-button=""
-        data-variant={variant}
-        data-snapshot-id={surfaceId}
-        data-testid={testId}
-        data-open={resolvedStates.has("open") ? "true" : undefined}
-        data-selected={resolvedStates.has("selected") ? "true" : undefined}
-        data-current={resolvedStates.has("current") ? "true" : undefined}
-        data-active={resolvedStates.has("active") ? "true" : undefined}
-        data-disabled={resolvedStates.has("disabled") ? "true" : undefined}
-        aria-label={ariaLabel}
-        aria-describedby={ariaDescribedBy}
-        aria-live={ariaLive}
-        aria-pressed={ariaPressed}
-        aria-checked={ariaChecked}
-        aria-current={ariaCurrent}
-        aria-selected={ariaSelected}
-        aria-expanded={ariaExpanded}
-        aria-haspopup={ariaHasPopup}
-        aria-disabled={disabled || undefined}
-        role={role}
-        tabIndex={tabIndex}
-        title={title}
-        className={rootSurface.className}
-        style={rootSurface.style}
-      >
-        {children}
-      </button>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={BUTTON_INTERACTIVE_CSS} />
-    </>
-  );
-}
+// Re-export ButtonControl from its standalone module for backwards compatibility
+export { ButtonControl } from "./control";
 
 export function Button({ config }: { config: ButtonConfig }) {
   const execute = useActionExecutor();
@@ -160,11 +23,7 @@ export function Button({ config }: { config: ButtonConfig }) {
     return null;
   }
 
-  const variant = config.variant ?? "default";
-  const size = config.size ?? "md";
-  const fullWidth = config.fullWidth;
   const action = config.action;
-  const rootId = config.id ?? "button-root";
   const label =
     typeof config.label === "string"
       ? config.label
@@ -172,63 +31,24 @@ export function Button({ config }: { config: ButtonConfig }) {
         ? resolvedLabel
         : "";
 
-  const labelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-label`,
-    implementationBase: {
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    componentSurface: config.slots?.label,
-  });
-  const iconSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-icon`,
-    implementationBase: {
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexShrink: 0,
-    },
-    componentSurface: config.slots?.icon ?? config.slots?.leadingIcon,
-  });
-
   return (
-    <div data-snapshot-component="button">
-      <ButtonControl
-        type="button"
-        variant={variant}
-        size={size}
-        disabled={disabled}
-        fullWidth={fullWidth}
-        onClick={() => {
-          if (disabled || !action) {
-            return;
-          }
-          void execute(action as Parameters<typeof execute>[0]);
-        }}
-        surfaceId={rootId}
-        surfaceConfig={extractSurfaceConfig(config)}
-        itemSurfaceConfig={config.slots?.root}
-      >
-        {config.icon ? (
-          <span
-            data-snapshot-id={`${rootId}-icon`}
-            className={iconSurface.className}
-            style={iconSurface.style}
-          >
-            {renderIcon(config.icon, 16)}
-          </span>
-        ) : null}
-        <span
-          data-snapshot-id={`${rootId}-label`}
-          className={labelSurface.className}
-          style={labelSurface.style}
-        >
-          {label}
-        </span>
-      </ButtonControl>
-      <SurfaceStyles css={labelSurface.scopedCss} />
-      <SurfaceStyles css={iconSurface.scopedCss} />
-    </div>
+    <ButtonBase
+      id={config.id}
+      label={label}
+      icon={config.icon}
+      variant={config.variant ?? "default"}
+      size={config.size ?? "md"}
+      disabled={disabled}
+      fullWidth={config.fullWidth}
+      onClick={() => {
+        if (disabled || !action) {
+          return;
+        }
+        void execute(action as Parameters<typeof execute>[0]);
+      }}
+      className={config.className}
+      style={config.style as CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }

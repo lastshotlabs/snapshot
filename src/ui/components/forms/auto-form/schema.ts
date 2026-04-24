@@ -34,6 +34,8 @@ export const autoFormSlotNames = [
   "switchThumb",
   "actions",
   "submitButton",
+  "fields",
+  "resetButton",
 ] as const;
 
 export const autoFormFieldSlotNames = [
@@ -273,6 +275,10 @@ export const autoFormConfigSchema: z.ZodType<Record<string, any>> = extendCompon
       })
       .strict()
       .optional(),
+    /** Legacy alias for on.success — accepted for backward compatibility. */
+    onSuccess: z.union([actionSchema, z.array(actionSchema)]).optional(),
+    /** Legacy alias for on.error — accepted for backward compatibility. */
+    onError: z.union([actionSchema, z.array(actionSchema)]).optional(),
     autoSubmit: z.boolean().optional(),
     autoSubmitWhen: z.string().optional(),
     autoSubmitDelay: z.number().int().nonnegative().optional(),

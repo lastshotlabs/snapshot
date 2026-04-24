@@ -92,7 +92,7 @@ When a capability changes, do not stop at the local page. Review these cross-cut
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
 - `apps/docs/src/content/docs/examples/index.md`
 
 These pages are where drift becomes most expensive because they shape how humans and agents discover the framework.

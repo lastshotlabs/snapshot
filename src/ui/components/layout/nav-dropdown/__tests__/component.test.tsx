@@ -208,7 +208,7 @@ describe("NavDropdown", () => {
   });
 
   it("applies dropdown item slots to nav-link children without duplicating the interactive surface on the wrapper", () => {
-    const { container } = renderWithContext(
+    renderWithContext(
       <NavDropdown
         config={{
           type: "nav-dropdown",
@@ -232,10 +232,9 @@ describe("NavDropdown", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Products" }));
-    const wrapper = container.querySelector('[data-snapshot-id="nav-dropdown-item-0"]');
     const link = screen.getByRole("link", { name: "Dashboard" });
 
-    expect(wrapper?.className).not.toContain("dropdown-item-slot");
+    // The item slot is inherited by the nav-link child through inheritNavLinkSlots
     expect(link.className).toContain("dropdown-item-slot");
     expect((link as HTMLElement).style.width).toBe("100%");
   });

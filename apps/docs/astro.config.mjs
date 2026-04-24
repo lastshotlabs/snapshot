@@ -18,45 +18,89 @@ export default defineConfig({
       ],
       sidebar: [
         {
-          label: "Start Here",
+          label: "Getting Started",
           items: [
-            { label: "Choose Your Path", link: "/start-here/" },
-            { label: "Capabilities", link: "/start-here/capabilities/" },
+            { label: "Installation", link: "/start-here/installation/" },
+            { label: "Quick Start", link: "/start-here/" },
+            { label: "Core Concepts", link: "/start-here/core-concepts/" },
           ],
         },
         {
-          label: "Build",
+          label: "Guides",
           items: [
-            { label: "Manifest Apps", link: "/build/manifest-apps/" },
-            { label: "Styling and Slots", link: "/build/styling-and-slots/" },
-            { label: "SDK Apps", link: "/build/sdk-apps/" },
-          ],
-        },
-        {
-          label: "Integrate",
-          items: [
-            { label: "SSR and RSC", link: "/integrate/ssr-rsc/" },
+            { label: "Authentication", link: "/guides/authentication/" },
+            { label: "Forms and Validation", link: "/guides/forms/" },
+            { label: "Data Tables and Lists", link: "/guides/data-tables/" },
             {
-              label: "Community and Realtime",
-              link: "/integrate/community-and-realtime/",
+              label: "Layout and Navigation",
+              link: "/guides/layout-and-navigation/",
             },
-            { label: "Content and Media", link: "/integrate/content-and-media/" },
+            { label: "Overlays and Modals", link: "/guides/overlays/" },
+            {
+              label: "Theming and Styling",
+              link: "/guides/theming-and-styling/",
+            },
+            { label: "Community and Chat", link: "/guides/community-and-chat/" },
+            { label: "Realtime", link: "/guides/realtime/" },
+            {
+              label: "File Uploads and Media",
+              link: "/guides/file-uploads-and-media/",
+            },
+            {
+              label: "Component Overview",
+              link: "/build/component-library/",
+            },
           ],
         },
         {
-          label: "Examples",
-          items: [{ label: "Examples and Showcase", link: "/examples/" }],
+          label: "Recipes",
+          items: [
+            { label: "Login Page", link: "/recipes/login-page/" },
+            { label: "Admin Dashboard", link: "/recipes/admin-dashboard/" },
+            { label: "Chat Application", link: "/recipes/chat-app/" },
+            { label: "Settings Page", link: "/recipes/settings-page/" },
+          ],
+        },
+        {
+          label: "Manifest Mode",
+          items: [
+            {
+              label: "Manifest Quick Start",
+              link: "/manifest/quick-start/",
+            },
+            { label: "Manifest Examples", link: "/manifest/examples/" },
+            { label: "Presets", link: "/manifest/presets/" },
+            {
+              label: "Manifest App Patterns",
+              link: "/build/manifest-apps/",
+            },
+            {
+              label: "Full App Examples",
+              link: "/examples/",
+            },
+            {
+              label: "Styling and Slots",
+              link: "/build/styling-and-slots/",
+            },
+          ],
+        },
+        {
+          label: "Server Integration",
+          items: [
+            { label: "SSR and RSC", link: "/server/ssr-rsc/" },
+            { label: "Vite Plugin", link: "/server/vite/" },
+          ],
         },
         {
           label: "Reference",
           items: [
             { label: "Reference Overview", link: "/reference/" },
             { label: "SDK", link: "/reference/sdk/" },
+            { label: "Component Library", link: "/reference/components/" },
             { label: "UI", link: "/reference/ui/" },
             { label: "SSR", link: "/reference/ssr/" },
             { label: "Vite", link: "/reference/vite/" },
             { label: "Manifest", link: "/reference/manifest/" },
-            { label: "Components", link: "/reference/components/" },
             { label: "CLI", link: "/reference/cli/" },
           ],
         },

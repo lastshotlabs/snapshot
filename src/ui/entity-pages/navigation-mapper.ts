@@ -38,7 +38,6 @@ export function mapAppConfig(config: BunshotNavigationConfig): AppConfig {
   return {
     title: config.title,
     shell: config.shell === "none" ? "full-width" : config.shell,
-    currencyDivisor: 100,
   };
 }
 

@@ -486,7 +486,7 @@ export function Nav({
           ))}
         </ul>
 
-        {user && config.userMenu !== false ? (
+        {user && config.userMenu ? (
           isTopNav ? (
             <div style={{ marginLeft: "auto" }}>
               <NavUserMenu
@@ -521,39 +521,33 @@ export function Nav({
               marginTop: "auto",
               borderTop: "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
               paddingTop: "var(--sn-spacing-sm, 0.5rem)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "var(--sn-nav-user-justify, flex-start)",
-              gap: "var(--sn-nav-link-gap, var(--sn-spacing-sm, 0.5rem))",
-              overflow: "hidden",
             }}>
-              <span style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "1.75rem",
-                height: "1.75rem",
-                borderRadius: "var(--sn-radius-full, 9999px)",
-                background: "var(--sn-color-accent)",
-                color: "var(--sn-color-accent-foreground)",
-                fontSize: "var(--sn-font-size-xs, 0.75rem)",
-                fontWeight: 600,
-                flexShrink: 0,
-                overflow: "hidden",
-              }}>
-                {(user as { avatar?: string }).avatar
-                  ? <img src={(user as { avatar?: string }).avatar} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : ((user as { name?: string }).name?.charAt(0)?.toUpperCase() ?? "U")
-                }
-              </span>
-              <span data-sn-nav-user-name="" style={{
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}>
-                {(user as { name?: string }).name ?? (user as { email?: string }).email ?? "User"}
-              </span>
+              <NavUserMenu
+                config={{
+                  type: "nav-user-menu",
+                  id: `${config.id ?? "nav"}-user-menu`,
+                  mode: "full",
+                  showAvatar:
+                    typeof config.userMenu === "object"
+                      ? config.userMenu.showAvatar
+                      : undefined,
+                  showEmail:
+                    typeof config.userMenu === "object"
+                      ? config.userMenu.showEmail
+                      : undefined,
+                  showName: true,
+                  items:
+                    typeof config.userMenu === "object"
+                      ? config.userMenu.items
+                      : undefined,
+                  slots: {
+                    trigger: config.slots?.userMenuTrigger,
+                    avatar: config.slots?.userAvatar,
+                    panel: config.slots?.userMenu,
+                    item: config.slots?.userMenuItem,
+                  },
+                }}
+              />
             </div>
           )
         ) : null}

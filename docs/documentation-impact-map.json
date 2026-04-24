@@ -15,8 +15,8 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
-        "apps/docs/src/content/docs/build/sdk-apps.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
+        "apps/docs/src/content/docs/guides/authentication.md",
         "apps/docs/src/content/docs/reference/sdk.md",
         "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
@@ -27,8 +27,8 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
-        "apps/docs/src/content/docs/build/sdk-apps.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
+        "apps/docs/src/content/docs/guides/authentication.md",
         "apps/docs/src/content/docs/build/manifest-apps.md",
         "apps/docs/src/content/docs/reference/sdk.md",
         "apps/docs/src/content/docs/reference/manifest.md",
@@ -47,9 +47,9 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
-        "apps/docs/src/content/docs/build/sdk-apps.md",
-        "apps/docs/src/content/docs/integrate/community-and-realtime.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
+        "apps/docs/src/content/docs/guides/community-and-chat.md",
+        "apps/docs/src/content/docs/guides/realtime.md",
         "apps/docs/src/content/docs/reference/sdk.md",
         "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
@@ -76,9 +76,10 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
         "apps/docs/src/content/docs/build/manifest-apps.md",
         "apps/docs/src/content/docs/build/styling-and-slots.md",
+        "apps/docs/src/content/docs/guides/theming-and-styling.md",
         "apps/docs/src/content/docs/reference/ui/index.md",
         "apps/docs/src/content/docs/reference/manifest.md",
         "apps/docs/src/content/docs/examples/index.md",
@@ -90,11 +91,14 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
+        "apps/docs/src/content/docs/guides/forms.md",
+        "apps/docs/src/content/docs/guides/data-tables.md",
+        "apps/docs/src/content/docs/guides/layout-and-navigation.md",
+        "apps/docs/src/content/docs/guides/overlays.md",
+        "apps/docs/src/content/docs/guides/file-uploads-and-media.md",
         "apps/docs/src/content/docs/build/manifest-apps.md",
         "apps/docs/src/content/docs/build/styling-and-slots.md",
-        "apps/docs/src/content/docs/integrate/content-and-media.md",
-        "apps/docs/src/content/docs/integrate/community-and-realtime.md",
         "apps/docs/src/content/docs/reference/ui/index.md",
         "apps/docs/src/content/docs/reference/components.md",
         "apps/docs/src/content/docs/examples/index.md",
@@ -106,9 +110,9 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
-        "apps/docs/src/content/docs/build/sdk-apps.md",
-        "apps/docs/src/content/docs/integrate/ssr-rsc.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
+        "apps/docs/src/content/docs/server/ssr-rsc.md",
+        "apps/docs/src/content/docs/server/vite.md",
         "apps/docs/src/content/docs/reference/ssr.md",
         "apps/docs/src/content/docs/reference/vite.md",
         "apps/docs/src/content/docs/examples/index.md",
@@ -120,9 +124,9 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
         "apps/docs/src/content/docs/build/manifest-apps.md",
-        "apps/docs/src/content/docs/build/sdk-apps.md",
+        "apps/docs/src/content/docs/manifest/quick-start.md",
         "apps/docs/src/content/docs/reference/cli.md",
         "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/contribute/testing.md"
@@ -137,7 +141,7 @@
       "docs": [
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/capabilities.md",
+        "apps/docs/src/content/docs/start-here/installation.md",
         "apps/docs/src/content/docs/examples/index.md",
         "apps/docs/src/content/docs/reference/components.md",
         "apps/docs/src/content/docs/contribute/testing.md"

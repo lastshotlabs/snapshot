@@ -17,5 +17,5 @@ export const selectConfigSchema = extendComponentSchema({
   default: z.union([z.string(), fromRefSchema]).optional(),
   placeholder: z.union([z.string(), fromRefSchema]).optional(),
   on: controlEventActionsSchema.optional(),
-  slots: slotsSchema(["root", "control"]).optional(),
+  slots: slotsSchema(["root", "control", "label", "requiredIndicator", "helper"]).optional(),
 }).strict();

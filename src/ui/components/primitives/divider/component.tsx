@@ -1,11 +1,11 @@
 'use client';
 
+import type { CSSProperties } from "react";
 import { useResolveFrom, useSubscribe } from "../../../context";
 import { resolveRuntimeLocale } from "../../../i18n/resolve";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { resolveOptionalPrimitiveValue } from "../resolve-value";
+import { DividerBase } from "./standalone";
 import type { DividerConfig } from "./types";
 
 export function Divider({ config }: { config: DividerConfig }) {
@@ -31,134 +31,15 @@ export function Divider({ config }: { config: DividerConfig }) {
     locale: activeLocale,
     i18n: manifest?.raw.i18n,
   });
-  const rootId = config.id ?? "divider";
-
-  if (config.orientation === "vertical") {
-    const rootSurface = resolveSurfacePresentation({
-      surfaceId: `${rootId}-root`,
-      implementationBase: {
-        style: {
-          width: "1px",
-          alignSelf: "stretch",
-          background: "var(--sn-color-border)",
-        },
-      },
-      componentSurface: extractSurfaceConfig(config),
-      itemSurface: config.slots?.root,
-    });
-
-    return (
-      <>
-        <div
-          role="separator"
-          aria-orientation="vertical"
-          data-snapshot-component="divider"
-          data-snapshot-id={`${rootId}-root`}
-          className={rootSurface.className}
-          style={rootSurface.style}
-        />
-        <SurfaceStyles css={rootSurface.scopedCss} />
-      </>
-    );
-  }
-
-  if (!resolvedLabel) {
-    const rootSurface = resolveSurfacePresentation({
-      surfaceId: `${rootId}-root`,
-      implementationBase: {
-        border: "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
-        style: { borderLeft: "none", borderRight: "none", borderBottom: "none" },
-      },
-      componentSurface: extractSurfaceConfig(config),
-      itemSurface: config.slots?.root,
-    });
-
-    return (
-      <>
-        <div
-          role="separator"
-          data-snapshot-component="divider"
-          data-snapshot-id={`${rootId}-root`}
-          className={rootSurface.className}
-          style={rootSurface.style}
-        />
-        <SurfaceStyles css={rootSurface.scopedCss} />
-      </>
-    );
-  }
-
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-root`,
-    implementationBase: {
-      display: "flex",
-      alignItems: "center",
-      gap: "md",
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-  const startLineSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-line-start`,
-    implementationBase: {
-      style: {
-        flex: 1,
-        height: 0,
-        borderTop: "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
-      },
-    },
-    componentSurface: config.slots?.lineStart,
-  });
-  const labelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-label`,
-    implementationBase: {
-      color: "var(--sn-color-muted-foreground)",
-      fontSize: "var(--sn-font-size-xs, 0.75rem)",
-    },
-    componentSurface: config.slots?.label,
-  });
-  const endLineSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-line-end`,
-    implementationBase: {
-      style: {
-        flex: 1,
-        height: 0,
-        borderTop: "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
-      },
-    },
-    componentSurface: config.slots?.lineEnd,
-  });
 
   return (
-    <>
-      <div
-        role="separator"
-        data-snapshot-component="divider"
-        data-snapshot-id={`${rootId}-root`}
-        className={rootSurface.className}
-        style={rootSurface.style}
-      >
-        <div
-          data-snapshot-id={`${rootId}-line-start`}
-          className={startLineSurface.className}
-          style={startLineSurface.style}
-        />
-        <span
-          data-snapshot-id={`${rootId}-label`}
-          className={labelSurface.className}
-          style={labelSurface.style}
-        >
-          {resolvedLabel}
-        </span>
-        <div
-          data-snapshot-id={`${rootId}-line-end`}
-          className={endLineSurface.className}
-          style={endLineSurface.style}
-        />
-      </div>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={startLineSurface.scopedCss} />
-      <SurfaceStyles css={labelSurface.scopedCss} />
-      <SurfaceStyles css={endLineSurface.scopedCss} />
-    </>
+    <DividerBase
+      label={resolvedLabel}
+      orientation={config.orientation}
+      id={config.id}
+      className={config.className}
+      style={config.style as CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }

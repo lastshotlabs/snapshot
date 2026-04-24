@@ -1,10 +1,13 @@
 "use client";
 
 import { useSubscribe } from "../../../context/index";
-import { extractSurfaceConfig } from "../../_base/style-surfaces";
-import { Link } from "../../primitives/link";
-import type { LinkConfig } from "../../primitives/link/types";
+import { useRouteRuntime } from "../../../manifest/runtime";
+import { NavLinkBase } from "./standalone";
 import type { NavLinkConfig } from "./types";
+
+function isFromRef(value: unknown): value is { from: string } {
+  return typeof value === "object" && value !== null && "from" in value;
+}
 
 export function NavLink({
   config,
@@ -13,13 +16,23 @@ export function NavLink({
   config: NavLinkConfig;
   onNavigate?: (path: string) => void;
 }) {
-  const resolvedDisabled = useSubscribe(
-    typeof config.disabled === "object" &&
-      config.disabled !== null &&
-      "from" in config.disabled
-      ? config.disabled
-      : undefined,
-  );
+  const routeRuntime = useRouteRuntime();
+
+  const resolvedLabel = useSubscribe(isFromRef(config.label) ? config.label : undefined);
+  const label = typeof config.label === "string"
+    ? config.label
+    : typeof resolvedLabel === "string"
+      ? resolvedLabel
+      : undefined;
+
+  const resolvedBadge = useSubscribe(isFromRef(config.badge) ? config.badge : undefined);
+  const badge = typeof config.badge === "number"
+    ? config.badge
+    : typeof resolvedBadge === "number"
+      ? resolvedBadge
+      : undefined;
+
+  const resolvedDisabled = useSubscribe(isFromRef(config.disabled) ? config.disabled : undefined);
   const isDisabled =
     typeof config.disabled === "boolean"
       ? config.disabled
@@ -27,13 +40,7 @@ export function NavLink({
         ? resolvedDisabled
         : false;
 
-  const resolvedActive = useSubscribe(
-    typeof config.active === "object" &&
-      config.active !== null &&
-      "from" in config.active
-      ? config.active
-      : undefined,
-  );
+  const resolvedActive = useSubscribe(isFromRef(config.active) ? config.active : undefined);
   const isActive =
     typeof config.active === "boolean"
       ? config.active
@@ -56,32 +63,22 @@ export function NavLink({
     }
   }
 
-  const linkSlots = config.slots as LinkConfig["slots"];
-  const rootId = config.id ?? config.path;
+  const handleNavigate = onNavigate ?? ((path: string) => routeRuntime?.navigate(path));
 
   return (
-    <div
-      data-snapshot-component="nav-link"
-      data-snapshot-id={`${rootId}-nav-link`}
-      style={{ display: "contents" }}
-    >
-      <Link
-        config={{
-          type: "link",
-          id: config.id ?? config.path,
-          ...extractSurfaceConfig(config),
-          text: config.label,
-          to: config.path,
-          icon: config.icon,
-          badge: config.badge,
-          variant: "navigation",
-          disabled: isDisabled,
-          current: isActive,
-          matchChildren: config.matchChildren ?? true,
-          slots: linkSlots,
-        }}
-        onNavigate={onNavigate}
-      />
-    </div>
+    <NavLinkBase
+      id={config.id}
+      label={label}
+      path={config.path}
+      icon={config.icon}
+      badge={badge}
+      disabled={isDisabled}
+      active={isActive}
+      matchChildren={config.matchChildren}
+      onNavigate={handleNavigate}
+      className={config.className}
+      style={config.style}
+      slots={config.slots}
+    />
   );
 }

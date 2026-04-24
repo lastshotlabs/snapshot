@@ -1,61 +1,170 @@
 ---
-title: Choose Your Path
-description: Start from the right Snapshot workflow instead of scanning the repo.
+title: Quick Start
+description: Build a working app with auth and a data table in under 30 lines.
 draft: false
 ---
 
-Snapshot has four primary personas. Many real apps will mix them, but you should still start from the persona that owns the core problem.
+This guide builds a working app with login, a user greeting, and a data table. You'll have something running in five minutes.
 
-## Manifest App Builder
+**Prerequisites:** A Bunshot backend running at `/api` with auth enabled. See [Installation](/start-here/installation/) if you haven't set up your project yet.
 
-Use this path if the app shell, routes, navigation, resources, presets, workflows, and most screen composition should come from `snapshot.manifest.json`.
+## 1. Create your snapshot instance
 
-- Start with [Manifest Apps](/build/manifest-apps/)
-- Then read [Styling and Slots](/build/styling-and-slots/)
-- Then read [Manifest Reference](/reference/manifest/)
-- Then use [UI Reference](/reference/ui/), [Components](/reference/components/), and [Examples and Showcase](/examples/)
-- Then verify the broad capability inventory in [Capabilities](/start-here/capabilities/)
+```tsx
+// src/snapshot.ts
+import { createSnapshot } from "@lastshotlabs/snapshot";
 
-Most manifest builders will spend the most time in these showcase sections:
+export const snap = createSnapshot({
+  apiUrl: "/api",
+  manifest: {
+    app: {
+      name: "My App",
+      auth: { loginPath: "/login", homePath: "/" },
+    },
+  },
+});
+```
 
-- `dashboard`
-- `data`
-- `forms`
-- `navigation`
-- `overlay`
-- `presets`
+This is the single entry point for the entire Snapshot runtime. Every hook and primitive comes from this object.
 
-## SDK App Builder
+## 2. Build a login page
 
-Use this path if you want custom React and want Snapshot to provide the platform runtime around it.
+```tsx
+// src/pages/Login.tsx
+import { snap } from "../snapshot";
+import { InputField, ButtonBase, CardBase } from "@lastshotlabs/snapshot/ui";
+import { useState } from "react";
 
-- Start with [SDK Apps](/build/sdk-apps/)
-- Then read [SDK Reference](/reference/sdk/)
-- Then read [CLI Reference](/reference/cli/) and [Vite Reference](/reference/vite/) if sync or bootstrapping is part of the app
-- Then use [Community and Realtime](/integrate/community-and-realtime/) and [Content and Media](/integrate/content-and-media/)
-- Then use [Examples and Showcase](/examples/)
+export function LoginPage() {
+  const { mutate: login, isPending } = snap.useLogin();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-Most SDK builders will care most about these showcase sections:
+  return (
+    <CardBase title="Sign in">
+      <form onSubmit={(e) => { e.preventDefault(); login({ email, password }); }}>
+        <InputField label="Email" type="email" value={email} onChange={setEmail} />
+        <InputField label="Password" type="password" value={password} onChange={setPassword} />
+        <ButtonBase label="Sign in" type="submit" disabled={isPending} />
+      </form>
+    </CardBase>
+  );
+}
+```
 
-- `communication`
-- `content`
-- `workflow`
-- `feed-chart-wizard`
+`useLogin()` returns a TanStack Query mutation. On success, it stores tokens, fetches the user, and navigates to `homePath`.
 
-## SSR / Platform Integrator
+## 3. Build a dashboard
 
-Use this path when Snapshot is being integrated with Bunshot SSR, manifest rendering, React Server Components, prefetch manifests, static params, PPR, or SSG.
+```tsx
+// src/pages/Dashboard.tsx
+import { snap } from "../snapshot";
+import { NavBase, DataTableBase, ButtonBase } from "@lastshotlabs/snapshot/ui";
 
-- Start with [SSR and RSC](/integrate/ssr-rsc/)
-- Then read [SSR Reference](/reference/ssr/) and [Vite Reference](/reference/vite/)
-- Then confirm the currently documented platform inventory in [Capabilities](/start-here/capabilities/)
+export function Dashboard() {
+  const { user } = snap.useUser();
+  const { mutate: logout } = snap.useLogout();
 
-## Snapshot Contributor
+  return (
+    <>
+      <NavBase
+        logo={{ text: "My App", path: "/" }}
+        items={[
+          { label: "Dashboard", path: "/", active: true },
+          { label: "Settings", path: "/settings" },
+        ]}
+      >
+        <ButtonBase label="Sign out" variant="ghost" onClick={() => logout()} />
+      </NavBase>
+      <main style={{ padding: "2rem" }}>
+        <h1>Welcome, {user?.name}</h1>
+        <DataTableBase
+          columns={[
+            { field: "name", label: "Name", sortable: true },
+            { field: "email", label: "Email" },
+            { field: "role", label: "Role" },
+          ]}
+          rows={[
+            { name: "Alice", email: "alice@example.com", role: "Admin" },
+            { name: "Bob", email: "bob@example.com", role: "Member" },
+          ]}
+        />
+      </main>
+    </>
+  );
+}
+```
 
-Use this path if you are implementing Snapshot itself and need the repo-native discovery and docs-update workflow.
+## 4. Wire it together
 
-- Start with [Contributor Flow](/contribute/overview/)
-- Then read [Contributor Testing](/contribute/testing/)
-- Then read [Agent Flow](/contribute/agent-flow/)
-- Then read the relevant surface `CLAUDE.md` plus generated reference for the area you are changing
-- Then update the canonical showcase or top-level docs page that proves the visible behavior on `main`
+```tsx
+// src/App.tsx
+import { snap } from "./snapshot";
+import { LoginPage } from "./pages/Login";
+import { Dashboard } from "./pages/Dashboard";
+
+export default function App() {
+  const { user, isLoading } = snap.useUser();
+
+  return (
+    <snap.QueryProvider>
+      {isLoading ? null : user ? <Dashboard /> : <LoginPage />}
+    </snap.QueryProvider>
+  );
+}
+```
+
+`QueryProvider` wraps TanStack Query and Jotai providers. Every Snapshot hook must be rendered inside it.
+
+## What just happened
+
+- `createSnapshot()` created an API client, token storage, query client, and all hooks
+- `useUser()` fetches `/api/auth/me` and caches the result
+- `useLogin()` posts to `/api/auth/login`, stores the JWT, and refetches the user
+- `useLogout()` clears tokens and cache, then navigates to `loginPath`
+- Every `*Base` component is a standalone React component with typed props
+
+## Next steps
+
+- [Authentication](/guides/authentication/) -- MFA, OAuth, passkeys, registration, password reset
+- [Forms and Validation](/guides/forms/) -- all 18 form components and validation patterns
+- [Data Tables and Lists](/guides/data-tables/) -- sorting, filtering, pagination, row actions
+- [Layout and Navigation](/guides/layout-and-navigation/) -- sidebars, top-nav, grids, cards
+- [Theming and Styling](/guides/theming-and-styling/) -- tokens, slots, dark mode
+
+## Same app in manifest mode
+
+The same app can be expressed as a JSON manifest instead of React code. If you prefer config-driven assembly, see [Manifest Quick Start](/manifest/quick-start/).
+
+```json
+{
+  "app": {
+    "name": "My App",
+    "auth": { "loginPath": "/login", "homePath": "/" }
+  },
+  "navigation": {
+    "position": "top",
+    "logo": { "text": "My App" },
+    "items": [
+      { "label": "Dashboard", "path": "/" },
+      { "label": "Settings", "path": "/settings" }
+    ]
+  },
+  "routes": [
+    {
+      "path": "/",
+      "content": [
+        {
+          "type": "data-table",
+          "resource": "users",
+          "columns": [
+            { "field": "name", "header": "Name", "sortable": true },
+            { "field": "email", "header": "Email" },
+            { "field": "role", "header": "Role" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```

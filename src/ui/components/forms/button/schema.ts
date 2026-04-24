@@ -8,8 +8,6 @@ export const buttonSlotNames = [
   "label",
   "icon",
   "leadingIcon",
-  "trailingIcon",
-  "spinner",
 ] as const;
 
 export const buttonConfigSchema = extendComponentSchema({

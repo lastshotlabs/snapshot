@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { useResolveFrom, useSubscribe } from "../../../context";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
@@ -8,14 +8,9 @@ import {
   isPasskeySupported,
   startPasskeyAuthentication,
 } from "../../../manifest/passkey";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
-import { ButtonControl } from "../../forms/button";
 import { useApiClient } from "../../../state";
 import { resolvePrimitiveValue, usePrimitiveValueOptions } from "../resolve-value";
+import { PasskeyButtonBase } from "./standalone";
 import type { PasskeyButtonConfig } from "./types";
 
 export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
@@ -25,12 +20,10 @@ export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
   const routeRuntime = useRouteRuntime();
   useSubscribe({ from: "global.locale" });
   const [isLoading, setIsLoading] = useState(false);
-  const autoPromptedRef = useRef(false);
   const passkeySupported = isPasskeySupported();
   const primitiveOptions = usePrimitiveValueOptions();
 
   const routeId = routeRuntime?.currentRoute?.id;
-  const rootId = config.id ?? "passkey-button";
   const screenOptions = useMemo(
     () =>
       routeId &&
@@ -74,10 +67,16 @@ export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
   const resolvedConfig = useResolveFrom({
     label,
   });
-  const labelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-label`,
-    componentSurface: config.slots?.label,
+
+  const resolvedLabel = resolvePrimitiveValue(resolvedConfig.label, {
+    ...primitiveOptions,
   });
+
+  const autoPrompt =
+    screenPasskeyConfig &&
+    Object.prototype.hasOwnProperty.call(screenPasskeyConfig, "autoPrompt")
+      ? screenPasskeyConfig["autoPrompt"] === true
+      : manifestPasskeyConfig?.["autoPrompt"] === true;
 
   const handleClick = async () => {
     if (!api || isLoading) {
@@ -115,56 +114,17 @@ export function PasskeyButton({ config }: { config: PasskeyButtonConfig }) {
     }
   };
 
-  useEffect(() => {
-    if (!canRender) {
-      return;
-    }
-
-    const autoPrompt =
-      screenPasskeyConfig &&
-      Object.prototype.hasOwnProperty.call(screenPasskeyConfig, "autoPrompt")
-        ? screenPasskeyConfig["autoPrompt"] === true
-        : manifestPasskeyConfig?.["autoPrompt"] === true;
-    if (!autoPrompt || autoPromptedRef.current || isLoading) {
-      return;
-    }
-
-    autoPromptedRef.current = true;
-    void handleClick();
-  }, [canRender, isLoading, manifestPasskeyConfig, screenPasskeyConfig]);
-
-  if (!canRender) {
-    return null;
-  }
-
-  const resolvedLabel = resolvePrimitiveValue(resolvedConfig.label, {
-    ...primitiveOptions,
-  });
-
   return (
-    <>
-      <ButtonControl
-        surfaceId={`${rootId}-root`}
-        surfaceConfig={extractSurfaceConfig(config)}
-        itemSurfaceConfig={config.slots?.root}
-        variant="outline"
-        size="sm"
-        fullWidth
-        onClick={() => void handleClick()}
-        disabled={isLoading}
-        activeStates={isLoading ? ["active"] : []}
-      >
-        <span
-          data-snapshot-id={`${rootId}-label`}
-          className={labelSurface.className}
-          style={labelSurface.style}
-        >
-          {isLoading
-            ? "Preparing passkey..."
-            : resolvedLabel}
-        </span>
-      </ButtonControl>
-      <SurfaceStyles css={labelSurface.scopedCss} />
-    </>
+    <PasskeyButtonBase
+      label={resolvedLabel}
+      loading={isLoading}
+      visible={canRender}
+      autoPrompt={autoPrompt}
+      onClick={handleClick}
+      id={config.id}
+      className={config.className}
+      style={config.style as CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }

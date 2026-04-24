@@ -21,7 +21,7 @@ describe("Box", () => {
           slots: {
             root: { className: "slot-root" },
             item: { className: "item-slot" },
-          },
+          } as never,
           children: [{ type: "markdown", id: "box-copy", content: "Hello" } as never],
         }}
       />,

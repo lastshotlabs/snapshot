@@ -1,108 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
-import { FloatingPanel } from "../../primitives/floating-menu";
+import { HoverCardBase } from "./standalone";
 import type { HoverCardConfig } from "./types";
 
+/**
+ * Manifest adapter — renders manifest children inside HoverCardBase.
+ */
 export function HoverCard({ config }: { config: HoverCardConfig }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const openDelay = config.openDelay ?? 300;
-  const closeDelay = config.closeDelay ?? 200;
-  const rootId = config.id ?? "hover-card";
-
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-root`,
-    implementationBase: {
-      position: "relative",
-      display: "inline-block",
-    },
-    componentSurface: extractSurfaceConfig(config, { omit: ["width"] }),
-    itemSurface: config.slots?.root,
-  });
-  const contentSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-content`,
-    implementationBase: {
-      display: "grid",
-      gap: "var(--sn-spacing-xs, 0.5rem)",
-    },
-    componentSurface: config.slots?.content,
-  });
-
-  const clearTimers = () => {
-    if (openTimerRef.current) {
-      clearTimeout(openTimerRef.current);
-      openTimerRef.current = null;
-    }
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  };
-
-  const handleEnter = () => {
-    clearTimers();
-    openTimerRef.current = setTimeout(() => {
-      setIsOpen(true);
-      openTimerRef.current = null;
-    }, openDelay);
-  };
-
-  const handleLeave = () => {
-    clearTimers();
-    closeTimerRef.current = setTimeout(() => {
-      setIsOpen(false);
-      closeTimerRef.current = null;
-    }, closeDelay);
-  };
-
-  useEffect(() => {
-    return () => clearTimers();
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      data-snapshot-component="hover-card"
-      data-snapshot-id={`${rootId}-root`}
-      onPointerEnter={handleEnter}
-      onPointerLeave={handleLeave}
-      className={rootSurface.className}
-      style={rootSurface.style}
+    <HoverCardBase
+      id={config.id}
+      trigger={<ComponentRenderer config={config.trigger} />}
+      openDelay={config.openDelay}
+      closeDelay={config.closeDelay}
+      side={config.side}
+      align={config.align}
+      width={config.width}
+      className={config.className}
+      style={config.style as import("react").CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
     >
-      <ComponentRenderer config={config.trigger} />
-      <FloatingPanel
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        containerRef={containerRef}
-        side={config.side ?? "bottom"}
-        align={config.align ?? "center"}
-        surfaceId={`${rootId}-panel`}
-        slot={config.slots?.panel}
-        activeStates={isOpen ? ["open"] : []}
-        style={config.width ? { width: config.width } : undefined}
-      >
-        <div
-          data-snapshot-id={`${rootId}-content`}
-          className={contentSurface.className}
-          style={contentSurface.style}
-        >
-          {config.content.map((child, index) => (
-            <ComponentRenderer
-              key={(child as { id?: string }).id ?? index}
-              config={child}
-            />
-          ))}
-        </div>
-      </FloatingPanel>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={contentSurface.scopedCss} />
-    </div>
+      {config.content.map((child, index) => (
+        <ComponentRenderer
+          key={(child as { id?: string }).id ?? index}
+          config={child}
+        />
+      ))}
+    </HoverCardBase>
   );
 }

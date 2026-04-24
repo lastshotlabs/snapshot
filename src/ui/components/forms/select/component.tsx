@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useActionExecutor } from "../../../actions/executor";
 import { usePublish, useResolveFrom, useSubscribe } from "../../../context/hooks";
 import {
@@ -8,21 +8,19 @@ import {
   focusEventPayload,
   keyEventPayload,
   mouseEventPayload,
-  pointerEventPayload,
-  touchEventPayload,
 } from "../../_base/events";
 import { useComponentData } from "../../_base/use-component-data";
-import { setDomRef } from "../../_base/dom-ref";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
-import type { SelectConfig, SelectControlProps } from "./types";
+import { extractSurfaceConfig } from "../../_base/style-surfaces";
 import {
   resolveOptionalPrimitiveValue,
   usePrimitiveValueOptions,
 } from "../../primitives/resolve-value";
+import type { CSSProperties } from "react";
+import { SelectField } from "./standalone";
+import type { SelectConfig } from "./types";
+
+// Re-export SelectControl from its canonical location for backwards compatibility.
+export { SelectControl } from "./control";
 
 type SelectOption = {
   label: string;
@@ -66,132 +64,6 @@ function toOptions(
   }));
 }
 
-export function SelectControl({
-  selectRef,
-  selectId,
-  name,
-  value,
-  disabled,
-  required,
-  ariaInvalid,
-  ariaDescribedBy,
-  ariaLabel,
-  onChangeValue,
-  onBlur,
-  onFocus,
-  onClick,
-  onKeyDown,
-  onMouseEnter,
-  onMouseLeave,
-  onPointerDown,
-  onPointerUp,
-  onTouchStart,
-  onTouchEnd,
-  className,
-  style,
-  surfaceId,
-  surfaceConfig,
-  itemSurfaceConfig,
-  activeStates,
-  testId,
-  children,
-}: SelectControlProps) {
-  const resolvedStates = new Set([
-    ...(activeStates ?? []),
-    ...(disabled ? (["disabled"] as const) : []),
-  ]);
-  const resolvedItemSurfaceConfig =
-    className || style
-      ? {
-          ...(itemSurfaceConfig ?? {}),
-          className: [
-            typeof itemSurfaceConfig?.className === "string"
-              ? itemSurfaceConfig.className
-              : undefined,
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined,
-          style: {
-            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
-            ...(style ?? {}),
-          },
-        }
-      : itemSurfaceConfig;
-  const controlSurface = resolveSurfacePresentation({
-    surfaceId,
-    implementationBase: {
-      width: "100%",
-      style: {
-        appearance: "none",
-        cursor: "pointer",
-        boxSizing: "border-box",
-        padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-        fontSize: "var(--sn-font-size-sm, 0.875rem)",
-        lineHeight: "var(--sn-leading-normal, 1.5)",
-        color: "var(--sn-color-foreground, #111827)",
-        backgroundColor: "var(--sn-color-background, #ffffff)",
-        border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
-        borderRadius: "var(--sn-radius-md, 0.375rem)",
-        outline: "none",
-        fontFamily: "inherit",
-        transition:
-          "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out), box-shadow var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)",
-      },
-      states: {
-        focus: {
-          style: {
-            borderColor: "var(--sn-color-primary, #2563eb)",
-            boxShadow:
-              "0 0 0 var(--sn-ring-width, 2px) color-mix(in oklch, var(--sn-color-primary, #2563eb) 25%, transparent)",
-          },
-        },
-        disabled: {
-          opacity: 0.5,
-          cursor: "not-allowed",
-        },
-      },
-    },
-    componentSurface: surfaceConfig,
-    itemSurface: resolvedItemSurfaceConfig,
-    activeStates: Array.from(resolvedStates),
-  });
-
-  return (
-    <>
-      <select
-        ref={(instance) => setDomRef(selectRef, instance)}
-        id={selectId}
-        name={name}
-        value={value}
-        disabled={disabled}
-        required={required}
-        onChange={(event) => onChangeValue?.(event.target.value)}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        onClick={onClick}
-        onKeyDown={onKeyDown}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-        aria-invalid={ariaInvalid}
-        aria-describedby={ariaDescribedBy}
-        aria-label={ariaLabel}
-        data-snapshot-id={surfaceId}
-        data-testid={testId}
-        className={controlSurface.className}
-        style={controlSurface.style}
-      >
-        {children}
-      </select>
-      <SurfaceStyles css={controlSurface.scopedCss} />
-    </>
-  );
-}
-
 export function Select({ config }: { config: SelectConfig }) {
   const execute = useActionExecutor();
   const publish = config.id ? usePublish(config.id) : null;
@@ -233,147 +105,63 @@ export function Select({ config }: { config: SelectConfig }) {
       : String(resolvedDefault ?? "");
   const placeholder =
     resolveOptionalPrimitiveValue(resolvedConfig.placeholder, primitiveOptions) ?? "";
-  const [value, setValue] = useState(defaultValue);
-
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
-
-  useEffect(() => {
-    publish?.(value);
-  }, [publish, value]);
-
-  const buildPayload = (nextValue = value) => ({
-    id: config.id,
-    value: nextValue,
-  });
-
-  if (visible === false) {
-    return null;
-  }
 
   const isLoading =
     !Array.isArray(config.options) &&
     Boolean(config.options) &&
     dataResult.isLoading &&
     options.length === 0;
-  const rootId = config.id ?? "select";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      width: "100%",
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
+
+  if (visible === false) {
+    return null;
+  }
+
+  const surfaceConfig = extractSurfaceConfig(config);
 
   return (
-    <div
-      data-snapshot-component="select"
-      data-snapshot-id={rootId}
-      className={rootSurface.className}
-      style={rootSurface.style}
-    >
-      <SelectControl
-        selectId={config.id}
-        value={value}
-        ariaLabel={placeholder || config.id || "Select"}
-        onChangeValue={(nextValue) => {
-          setValue(nextValue);
-          const payload = buildPayload(nextValue);
-          void executeEventAction(execute, config.on?.input, payload);
-          void executeEventAction(execute, config.on?.change, payload);
-        }}
-        onBlur={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.blur,
-            focusEventPayload(event, buildPayload()),
-          );
-        }}
-        onFocus={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.focus,
-            focusEventPayload(event, buildPayload()),
-          );
-        }}
-        onClick={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.click,
-            mouseEventPayload(event, buildPayload()),
-          );
-        }}
-        onKeyDown={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.keyDown,
-            keyEventPayload(event, buildPayload()),
-          );
-        }}
-        onMouseEnter={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.mouseEnter,
-            mouseEventPayload(event, buildPayload()),
-          );
-        }}
-        onMouseLeave={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.mouseLeave,
-            mouseEventPayload(event, buildPayload()),
-          );
-        }}
-        onPointerDown={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.pointerDown,
-            pointerEventPayload(event, buildPayload()),
-          );
-        }}
-        onPointerUp={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.pointerUp,
-            pointerEventPayload(event, buildPayload()),
-          );
-        }}
-        onTouchStart={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.touchStart,
-            touchEventPayload(event, buildPayload()),
-          );
-        }}
-        onTouchEnd={(event) => {
-          void executeEventAction(
-            execute,
-            config.on?.touchEnd,
-            touchEventPayload(event, buildPayload()),
-          );
-        }}
-        surfaceId={`${rootId}-control`}
-        surfaceConfig={config.slots?.control}
-      >
-        {placeholder ? (
-          <option value="" disabled>
-            {placeholder}
-          </option>
-        ) : null}
-        {isLoading ? (
-          <option value="" disabled>
-            Loading...
-          </option>
-        ) : null}
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </SelectControl>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-    </div>
+    <SelectField
+      id={config.id}
+      placeholder={placeholder}
+      defaultValue={defaultValue}
+      options={options}
+      loading={isLoading}
+      onChange={(nextValue) => {
+        publish?.(nextValue);
+        const payload = { id: config.id, value: nextValue };
+        void executeEventAction(execute, config.on?.input, payload);
+        void executeEventAction(execute, config.on?.change, payload);
+      }}
+      onBlur={(event) => {
+        void executeEventAction(
+          execute,
+          config.on?.blur,
+          focusEventPayload(event, { id: config.id, value: "" }),
+        );
+      }}
+      onFocus={(event) => {
+        void executeEventAction(
+          execute,
+          config.on?.focus,
+          focusEventPayload(event, { id: config.id, value: "" }),
+        );
+      }}
+      onClick={(event) => {
+        void executeEventAction(
+          execute,
+          config.on?.click,
+          mouseEventPayload(event, { id: config.id, value: "" }),
+        );
+      }}
+      onKeyDown={(event) => {
+        void executeEventAction(
+          execute,
+          config.on?.keyDown,
+          keyEventPayload(event, { id: config.id, value: "" }),
+        );
+      }}
+      className={surfaceConfig?.className as string | undefined}
+      style={surfaceConfig?.style as CSSProperties | undefined}
+      slots={config.slots}
+    />
   );
 }

@@ -48,10 +48,9 @@ Total components: **114** across 13 domains.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `title` | `string \| EnvRef \| FromRef \| Expr \| TRef` | — | No |
-| `subtitle` | `string \| EnvRef \| FromRef \| Expr \| TRef` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `subtitle` | `string \| FromRef` | — | No |
 | `children` | `{ type: string }[]` | `[]` | No |
-| `suspense` | `object` | — | No |
 
 ---
 
@@ -67,6 +66,8 @@ Total components: **114** across 13 domains.
 | `children` | `{ type: string }[]` | — | **Yes** |
 | `duration` | `"instant" \| "fast" \| "normal" \| "slow"` | — | No |
 | `publishTo` | `string` | — | No |
+
+**Slots:** `root`, `trigger`, `content`
 
 ---
 
@@ -117,9 +118,7 @@ Total components: **114** across 13 domains.
 
 ### `nav`
 
-Zod schema for the grouped Nav component.
-Supports either `items`-driven navigation or template composition, optional logo and user menu
-configuration, collapsible sidebar behavior, and canonical slot-based surface styling.
+Zod schema for the grouped Nav component.Supports either `items`-driven navigation or template composition, optional logo and user menuconfiguration, collapsible sidebar behavior, and canonical slot-based surface styling.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
@@ -129,7 +128,7 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | `userMenu` | `boolean \| { showAvatar: boolean, showEmail: boolean, items: object[] }` | — | No |
 | `logo` | `{ src: string, text: string \| TRef, path: string }` | — | No |
 
-**Slots:** `root`, `brand`, `brandIcon`, `brandLabel`, `list`, `item`, `itemLabel`, `itemIcon`, `itemBadge`, `dropdown`, `dropdownItem`, `dropdownItemLabel`, `dropdownItemIcon`, `userMenu`, `userMenuTrigger`, `userMenuItem`, `userAvatar`
+**Slots:** `root`, `brand`, `brandIcon`, `brandLabel`, `toggle`, `list`, `item`, `itemLabel`, `itemIcon`, `itemBadge`, `dropdown`, `dropdownItem`, `dropdownItemLabel`, `dropdownItemIcon`, `dropdownItemBadge`, `userMenu`, `userMenuTrigger`, `userMenuItem`, `userAvatar`
 
 ---
 
@@ -139,9 +138,11 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | **Yes** |
+| `label` | `string \| FromRef` | — | **Yes** |
 | `icon` | `string` | — | No |
 | `trigger` | `"click" \| "hover"` | — | No |
+| `current` | `boolean` | — | No |
+| `disabled` | `boolean` | — | No |
 | `align` | `"start" \| "center" \| "end"` | — | No |
 | `items` | `{ type: string }[]` | — | **Yes** |
 | `roles` | `string[]` | — | No |
@@ -177,9 +178,11 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `src` | `string` | — | No |
-| `text` | `string` | — | No |
+| `text` | `string \| FromRef` | — | No |
 | `path` | `string` | — | No |
 | `logoHeight` | `string` | — | No |
+
+**Slots:** `root`, `icon`, `label`
 
 ---
 
@@ -189,10 +192,12 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `placeholder` | `string` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `onSearch` | `object` | — | No |
 | `shortcut` | `string` | — | No |
 | `publishTo` | `string` | — | No |
+
+**Slots:** `root`, `input`, `shortcut`
 
 ---
 
@@ -202,7 +207,7 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
 | `collapsible` | `boolean` | — | No |
 | `defaultCollapsed` | `boolean` | — | No |
 | `items` | `{ type: string }[]` | — | **Yes** |
@@ -223,7 +228,7 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | `mode` | `"full" \| "compact"` | — | No |
 | `items` | `object[]` | — | No |
 
-**Slots:** `root`, `trigger`, `triggerLabel`, `triggerIcon`, `avatar`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`
+**Slots:** `root`, `trigger`, `triggerLabel`, `triggerIcon`, `avatar`, `avatarImage`, `email`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`
 
 ---
 
@@ -303,22 +308,28 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | `fields` | `"auto" \| object[]` | — | **Yes** |
 | `sections` | `object[]` | — | No |
 | `columns` | `number` | — | No |
-| `submitLabel` | `string` | — | No |
-| `submitLoadingLabel` | `string` | — | No |
+| `submitLabel` | `string \| FromRef` | — | No |
+| `submitLoadingLabel` | `string \| FromRef` | — | No |
+| `submitVariant` | `"default" \| "secondary" \| "outline" \| "ghost" \| "destructive" \| "link"` | — | No |
+| `submitSize` | `"sm" \| "md" \| "lg"` | — | No |
+| `submitFullWidth` | `boolean` | — | No |
+| `submitIcon` | `string` | — | No |
 | `resetOnSubmit` | `boolean` | — | No |
+| `on` | `object` | — | No |
 | `onSuccess` | `object \| ... \| object \| ...[]` | — | No |
 | `onError` | `object \| ... \| object \| ...[]` | — | No |
-| `on` | `object` | — | No |
 | `autoSubmit` | `boolean` | — | No |
 | `autoSubmitWhen` | `string` | — | No |
 | `autoSubmitDelay` | `number` | — | No |
 | `layout` | `"vertical" \| "horizontal" \| "grid"` | `"vertical"` | No |
 
-**Slots:** `field`, `label`, `description`, `input`, `helper`, `error`, `requiredIndicator`
+**Slots:** `field`, `fieldCell`, `label`, `description`, `inputWrapper`, `input`, `options`, `option`, `optionLabel`, `helper`, `error`, `requiredIndicator`, `inlineAction`, `passwordToggle`, `switchTrack`, `switchThumb`
 
 ---
 
 ### `button`
+
+**Manifest type:** `button`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
@@ -330,7 +341,7 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | `disabled` | `boolean \| FromRef` | — | No |
 | `fullWidth` | `boolean` | — | No |
 
-**Slots:** `root`, `label`, `icon`, `leadingIcon`, `trailingIcon`, `spinner`
+**Slots:** `root`, `label`, `icon`, `leadingIcon`
 
 ---
 
@@ -345,8 +356,8 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | `swatches` | `string[]` | — | No |
 | `allowCustom` | `boolean` | `true` | No |
 | `showAlpha` | `boolean` | `false` | No |
-| `label` | `string` | — | No |
-| `onChange` | `object \| ... \| object \| ...[]` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
@@ -357,15 +368,15 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `mode` | `"single" \| "range" \| "multiple"` | `"single"` | No |
-| `label` | `string` | — | No |
-| `placeholder` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `min` | `string` | — | No |
 | `max` | `string` | — | No |
 | `disabledDates` | `string \| { dayOfWeek: number[] }[]` | — | No |
-| `presets` | `{ label: string, start: string, end: string }[]` | — | No |
+| `presets` | `{ label: string \| FromRef, start: string, end: string }[]` | — | No |
 | `format` | `string` | — | No |
 | `valueFormat` | `"iso" \| "unix" \| "locale"` | `"iso"` | No |
-| `onChange` | `object \| ... \| object \| ...[]` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
@@ -387,26 +398,14 @@ configuration, collapsible sidebar behavior, and canonical slot-based surface st
 
 ### `inline-edit`
 
-Zod config schema for the InlineEdit component.
-A click-to-edit text field that toggles between display and edit modes.
-Publishes `{ value, editing }` to the page context.
-
-```json
-{
-  "type": "inline-edit",
-  "id": "title-edit",
-  "value": "My Title",
-  "placeholder": "Enter title",
-  "saveAction": { "type": "api", "method": "PUT", "endpoint": "/api/title", "body": { "from": "title-edit" } }
-}
-```
+Zod config schema for the InlineEdit component.A click-to-edit text field that toggles between display and edit modes.Publishes `{ value, editing }` to the page context.```json{  "type": "inline-edit",  "id": "title-edit",  "value": "My Title",  "placeholder": "Enter title",  "saveAction": { "type": "api", "method": "PUT", "endpoint": "/api/title", "body": { "from": "title-edit" } }}```
 
 **Manifest type:** `inline-edit`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `value` | `string \| FromRef` | — | No |
-| `placeholder` | `string` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `inputType` | `"text" \| "number"` | — | No |
 | `saveAction` | `object` | — | No |
 | `cancelOnEscape` | `boolean` | — | No |
@@ -417,28 +416,14 @@ Publishes `{ value, editing }` to the page context.
 
 ### `input`
 
-Zod config schema for the Input component.
-Defines a standalone text input field with label, placeholder,
-validation, and optional icon.
-
-```json
-{
-  "type": "input",
-  "id": "email-field",
-  "label": "Email",
-  "inputType": "email",
-  "placeholder": "you
-  "required": true,
-  "helperText": "We'll never share your email"
-}
-```
+Zod config schema for the Input component.Defines a standalone text input field with label, placeholder,validation, and optional icon.```json{  "type": "input",  "id": "email-field",  "label": "Email",  "inputType": "email",  "placeholder": "you  "required": true,  "helperText": "We'll never share your email"}```
 
 **Manifest type:** `input`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
-| `placeholder` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `value` | `string \| FromRef` | — | No |
 | `inputType` | `"text" \| "email" \| "password" \| "number" \| "url" \| "tel" \| "search"` | — | No |
 | `required` | `boolean` | — | No |
@@ -446,52 +431,23 @@ validation, and optional icon.
 | `readonly` | `boolean \| FromRef` | — | No |
 | `maxLength` | `number` | — | No |
 | `pattern` | `string` | — | No |
-| `helperText` | `string` | — | No |
+| `helperText` | `string \| FromRef` | — | No |
 | `errorText` | `string \| FromRef` | — | No |
 | `icon` | `string` | — | No |
-| `changeAction` | `object` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
 ### `location-input`
 
-Zod config schema for the LocationInput component.
-Geocode autocomplete input that searches a backend endpoint,
-displays matching locations in a dropdown, and extracts
-coordinates on selection. Publishes `{ name, lat, lng, address }`.
-
-```json
-{
-  "type": "location-input",
-  "id": "venue-location",
-  "label": "Venue",
-  "placeholder": "Search for a location...",
-  "searchEndpoint": "GET /api/geocode",
-  "changeAction": {
-    "type": "set-value",
-    "target": "map",
-    "value": { "from": "venue-location" }
-  }
-}
-```
-Expected API response format:
-```json
-[
-  {
-    "name": "Central Park",
-    "address": "New York, NY, USA",
-    "lat": 40.7829,
-    "lng": -73.9654
-  }
-]
-```
+Zod config schema for the LocationInput component.Geocode autocomplete input that searches a backend endpoint,displays matching locations in a dropdown, and extractscoordinates on selection. Publishes `{ name, lat, lng, address }`.```json{  "type": "location-input",  "id": "venue-location",  "label": "Venue",  "placeholder": "Search for a location...",  "searchEndpoint": "GET /api/geocode",  "changeAction": {    "type": "set-value",    "target": "map",    "value": { "from": "venue-location" }  }}```Expected API response format:```json[  {    "name": "Central Park",    "address": "New York, NY, USA",    "lat": 40.7829,    "lng": -73.9654  }]```
 
 **Manifest type:** `location-input`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
-| `placeholder` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `value` | `string \| FromRef` | — | No |
 | `searchEndpoint` | `EndpointTarget` | — | **Yes** |
 | `nameField` | `string` | — | No |
@@ -501,42 +457,24 @@ Expected API response format:
 | `debounceMs` | `number` | — | No |
 | `minChars` | `number` | — | No |
 | `showMapLink` | `boolean` | — | No |
-| `changeAction` | `object` | — | No |
+| `on` | `object` | — | No |
 | `disabled` | `boolean \| FromRef` | — | No |
 | `required` | `boolean` | — | No |
-| `helperText` | `string` | — | No |
+| `helperText` | `string \| FromRef` | — | No |
 | `errorText` | `string \| FromRef` | — | No |
 
 ---
 
 ### `multi-select`
 
-Zod config schema for the MultiSelect component.
-Defines a dropdown with checkboxes for selecting multiple values,
-with optional search filtering and pill display.
-
-```json
-{
-  "type": "multi-select",
-  "id": "tags",
-  "label": "Tags",
-  "placeholder": "Select tags...",
-  "options": [
-    { "label": "Bug", "value": "bug", "icon": "bug" },
-    { "label": "Feature", "value": "feature", "icon": "star" },
-    { "label": "Docs", "value": "docs", "icon": "file-text" }
-  ],
-  "maxSelected": 5,
-  "searchable": true
-}
-```
+Zod config schema for the MultiSelect component.Defines a dropdown with checkboxes for selecting multiple values,with optional search filtering and pill display.```json{  "type": "multi-select",  "id": "tags",  "label": "Tags",  "placeholder": "Select tags...",  "options": [    { "label": "Bug", "value": "bug", "icon": "bug" },    { "label": "Feature", "value": "feature", "icon": "star" },    { "label": "Docs", "value": "docs", "icon": "file-text" }  ],  "maxSelected": 5,  "searchable": true}```
 
 **Manifest type:** `multi-select`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
-| `placeholder` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `options` | `object[]` | — | No |
 | `data` | `DataSource` | — | No |
 | `labelField` | `string` | — | No |
@@ -545,35 +483,24 @@ with optional search filtering and pill display.
 | `maxSelected` | `number` | — | No |
 | `searchable` | `boolean` | — | No |
 | `disabled` | `boolean \| FromRef` | — | No |
-| `changeAction` | `object` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
 ### `quick-add`
 
-Zod config schema for the QuickAdd component.
-Defines all manifest-settable fields for an inline creation bar
-that allows quick item entry with a text input and submit button.
-
-```json
-{
-  "type": "quick-add",
-  "placeholder": "Add a task...",
-  "submitAction": { "type": "api", "method": "POST", "endpoint": "/api/tasks" },
-  "clearOnSubmit": true
-}
-```
+Zod config schema for the QuickAdd component.Defines all manifest-settable fields for an inline creation barthat allows quick item entry with a text input and submit button.```json{  "type": "quick-add",  "placeholder": "Add a task...",  "submitAction": { "type": "api", "method": "POST", "endpoint": "/api/tasks" },  "clearOnSubmit": true}```
 
 **Manifest type:** `quick-add`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `placeholder` | `string` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `icon` | `string` | — | No |
-| `submitAction` | `unknown` | — | No |
+| `on` | `{ submit: object \| ... \| ...[] }` | — | No |
 | `submitOnEnter` | `boolean` | — | No |
 | `showButton` | `boolean` | — | No |
-| `buttonText` | `string` | — | No |
+| `buttonText` | `string \| FromRef` | — | No |
 | `clearOnSubmit` | `boolean` | — | No |
 
 ---
@@ -584,11 +511,12 @@ that allows quick item entry with a text input and submit button.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `options` | `{ label: ... \| TRef, value: string }[] \| DataSource` | — | **Yes** |
+| `options` | `{ label: string \| FromRef, value: string }[] \| DataSource` | — | **Yes** |
 | `valueField` | `string` | — | No |
 | `labelField` | `string` | — | No |
-| `default` | `string \| EnvRef \| TRef` | — | No |
-| `placeholder` | `string \| EnvRef \| TRef` | — | No |
+| `default` | `string \| FromRef` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
@@ -603,70 +531,42 @@ that allows quick item entry with a text input and submit button.
 | `step` | `number` | `1` | No |
 | `defaultValue` | `number \| [number, number]` | — | No |
 | `range` | `boolean` | `false` | No |
-| `label` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
 | `showValue` | `boolean` | `false` | No |
 | `showLimits` | `boolean` | `false` | No |
-| `suffix` | `string` | — | No |
-| `onChange` | `object \| ... \| object \| ...[]` | — | No |
-| `disabled` | `boolean` | — | No |
+| `suffix` | `string \| FromRef` | — | No |
+| `on` | `object` | — | No |
+| `disabled` | `boolean \| FromRef` | — | No |
 
 ---
 
 ### `switch`
 
-Zod config schema for the Switch component.
-Defines all manifest-settable fields for a toggle switch
-that controls a boolean value.
-
-```json
-{
-  "type": "switch",
-  "label": "Enable notifications",
-  "description": "Receive email alerts for new activity",
-  "defaultChecked": false,
-  "color": "success"
-}
-```
+Zod config schema for the Switch component.Defines all manifest-settable fields for a toggle switchthat controls a boolean value.```json{  "type": "switch",  "label": "Enable notifications",  "description": "Receive email alerts for new activity",  "defaultChecked": false,  "color": "success"}```
 
 **Manifest type:** `switch`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `label` | `string \| FromRef` | — | No |
-| `description` | `string` | — | No |
+| `description` | `string \| FromRef` | — | No |
 | `defaultChecked` | `boolean` | — | No |
 | `disabled` | `boolean \| FromRef` | — | No |
 | `size` | `"sm" \| "md" \| "lg"` | — | No |
-| `action` | `object` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
 ### `tag-selector`
 
-Zod config schema for the TagSelector component.
-A tag input that allows selecting from predefined tags or creating new ones.
-Tags display as colored pills with remove buttons.
-
-```json
-{
-  "type": "tag-selector",
-  "id": "topic-tags",
-  "label": "Topics",
-  "tags": [
-    { "label": "React", "value": "react", "color": "#61dafb" },
-    { "label": "TypeScript", "value": "ts", "color": "#3178c6" }
-  ],
-  "allowCreate": true,
-  "maxTags": 5
-}
-```
+Zod config schema for the TagSelector component.A tag input that allows selecting from predefined tags or creating new ones.Tags display as colored pills with remove buttons.```json{  "type": "tag-selector",  "id": "topic-tags",  "label": "Topics",  "tags": [    { "label": "React", "value": "react", "color": "#61dafb" },    { "label": "TypeScript", "value": "ts", "color": "#3178c6" }  ],  "allowCreate": true,  "maxTags": 5}```
 
 **Manifest type:** `tag-selector`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
-| `tags` | `{ label: string, value: string, color: string }[]` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `tags` | `{ label: string \| FromRef, value: string, color: string }[]` | — | No |
 | `data` | `DataSource` | — | No |
 | `labelField` | `string` | — | No |
 | `valueField` | `string` | — | No |
@@ -674,76 +574,49 @@ Tags display as colored pills with remove buttons.
 | `value` | `string[] \| FromRef` | — | No |
 | `allowCreate` | `boolean` | — | No |
 | `createAction` | `object` | — | No |
-| `changeAction` | `object` | — | No |
+| `on` | `object` | — | No |
 | `maxTags` | `number` | — | No |
 
 ---
 
 ### `textarea`
 
-Zod config schema for the Textarea component.
-Defines a multi-line text input with label, character count,
-validation, and configurable resize behavior.
-
-```json
-{
-  "type": "textarea",
-  "id": "bio-field",
-  "label": "Bio",
-  "placeholder": "Tell us about yourself...",
-  "rows": 5,
-  "maxLength": 500,
-  "resize": "vertical"
-}
-```
+Zod config schema for the Textarea component.Defines a multi-line text input with label, character count,validation, and configurable resize behavior.```json{  "type": "textarea",  "id": "bio-field",  "label": "Bio",  "placeholder": "Tell us about yourself...",  "rows": 5,  "maxLength": 500,  "resize": "vertical"}```
 
 **Manifest type:** `textarea`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
-| `placeholder` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `value` | `string \| FromRef` | — | No |
 | `rows` | `number` | — | No |
 | `maxLength` | `number` | — | No |
 | `required` | `boolean` | — | No |
 | `disabled` | `boolean \| FromRef` | — | No |
 | `readonly` | `boolean \| FromRef` | — | No |
-| `helperText` | `string` | — | No |
+| `helperText` | `string \| FromRef` | — | No |
 | `errorText` | `string \| FromRef` | — | No |
 | `resize` | `"none" \| "vertical" \| "horizontal" \| "both"` | — | No |
-| `changeAction` | `object` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
 ### `toggle`
 
-Zod config schema for the Toggle component.
-Defines a pressed/unpressed toggle button that publishes its state.
-Can display text, an icon, or both.
-
-```json
-{
-  "type": "toggle",
-  "id": "bold-toggle",
-  "icon": "bold",
-  "label": "Bold",
-  "variant": "outline",
-  "size": "sm"
-}
-```
+Zod config schema for the Toggle component.Defines a pressed/unpressed toggle button that publishes its state.Can display text, an icon, or both.```json{  "type": "toggle",  "id": "bold-toggle",  "icon": "bold",  "label": "Bold",  "variant": "outline",  "size": "sm"}```
 
 **Manifest type:** `toggle`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
 | `icon` | `string` | — | No |
 | `pressed` | `boolean \| FromRef` | — | No |
 | `variant` | `"default" \| "outline"` | — | No |
 | `size` | `"sm" \| "md" \| "lg"` | — | No |
 | `disabled` | `boolean \| FromRef` | — | No |
-| `changeAction` | `object` | — | No |
+| `on` | `object` | — | No |
 
 ---
 
@@ -760,7 +633,7 @@ Can display text, an icon, or both.
 | `size` | `"sm" \| "md" \| "lg"` | — | No |
 | `variant` | `"outline" \| "ghost"` | — | No |
 | `publishTo` | `string` | — | No |
-| `onChange` | `object` | — | No |
+| `on` | `object` | — | No |
 
 **Slots:** `root`, `item`, `itemLabel`, `itemIcon`, `indicator`
 
@@ -774,11 +647,11 @@ Can display text, an icon, or both.
 |-------|------|---------|----------|
 | `steps` | `object[]` | — | **Yes** |
 | `submitEndpoint` | `EndpointTarget` | — | No |
-| `submitLabel` | `string` | `"Submit"` | No |
+| `submitLabel` | `string \| FromRef` | `"Submit"` | No |
 | `onComplete` | `object` | — | No |
 | `allowSkip` | `boolean` | `false` | No |
 
-**Slots:** `root`, `steps`, `step`, `stepLabel`, `stepDescription`, `stepMarker`, `stepConnector`, `panel`, `actions`, `backButton`, `nextButton`, `submitButton`
+**Slots:** `root`, `progress`, `steps`, `step`, `stepMarker`, `stepBody`, `stepLabel`, `stepDescription`, `stepConnector`, `panel`, `header`, `title`, `description`, `completionState`, `completionTitle`, `completionDescription`, `submitError`, `actions`, `actionGroup`, `backButton`, `nextButton`, `submitButton`
 
 ---
 
@@ -786,19 +659,7 @@ Can display text, an icon, or both.
 
 ### `alert`
 
-Zod config schema for the Alert component.
-Defines all manifest-settable fields for a notification banner/alert
-with icon, title, description, and optional action button.
-
-```json
-{
-  "type": "alert",
-  "title": "Success",
-  "description": "Your changes have been saved.",
-  "variant": "success",
-  "dismissible": true
-}
-```
+Zod config schema for the Alert component.Defines all manifest-settable fields for a notification banner/alertwith icon, title, description, and optional action button.```json{  "type": "alert",  "title": "Success",  "description": "Your changes have been saved.",  "variant": "success",  "dismissible": true}```
 
 **Manifest type:** `alert`
 
@@ -810,7 +671,7 @@ with icon, title, description, and optional action button.
 | `icon` | `string` | — | No |
 | `dismissible` | `boolean` | — | No |
 | `action` | `object` | — | No |
-| `actionLabel` | `string` | — | No |
+| `actionLabel` | `string \| FromRef` | — | No |
 
 ---
 
@@ -846,24 +707,7 @@ with image, initials, or icon fallback and optional status dot.
 
 ### `avatar-group`
 
-Zod config schema for the AvatarGroup component.
-Displays a row of overlapping avatars with an optional "+N" overflow
-count. Commonly used for showing team members, assignees, or participants.
-
-```json
-{
-  "type": "avatar-group",
-  "avatars": [
-    { "name": "Alice", "src": "/avatars/alice.jpg" },
-    { "name": "Bob" },
-    { "name": "Charlie", "src": "/avatars/charlie.jpg" },
-    { "name": "Diana" },
-    { "name": "Eve" }
-  ],
-  "max": 3,
-  "size": "md"
-}
-```
+Zod config schema for the AvatarGroup component.Displays a row of overlapping avatars with an optional "+N" overflowcount. Commonly used for showing team members, assignees, or participants.```json{  "type": "avatar-group",  "avatars": [    { "name": "Alice", "src": "/avatars/alice.jpg" },    { "name": "Bob" },    { "name": "Charlie", "src": "/avatars/charlie.jpg" },    { "name": "Diana" },    { "name": "Eve" }  ],  "max": 3,  "size": "md"}```
 
 **Manifest type:** `avatar-group`
 
@@ -915,11 +759,12 @@ used for labels, statuses, and counts.
 | `data` | `DataSource` | — | **Yes** |
 | `chartType` | `"bar" \| "line" \| "area" \| "pie" \| "donut" \| "sparkline" \| "funnel" \| "radar" \| "treemap" \| "scatter"` | `"bar"` | No |
 | `xKey` | `string` | — | **Yes** |
-| `series` | `{ key: string, label: string, color: string }[]` | — | **Yes** |
+| `xLookup` | `{ resource: string, valueField: string, labelField: string }` | — | No |
+| `series` | `object[]` | — | **Yes** |
 | `aspectRatio` | `string` | — | No |
 | `legend` | `boolean` | `true` | No |
 | `grid` | `boolean` | `true` | No |
-| `emptyMessage` | `string` | `"No data"` | No |
+| `emptyMessage` | `string \| FromRef` | `"No data"` | No |
 | `empty` | `object` | — | No |
 | `hideWhenEmpty` | `boolean` | `false` | No |
 | `loading` | `object` | — | No |
@@ -942,7 +787,7 @@ used for labels, statuses, and counts.
 | `columns` | `"auto" \| object[]` | — | **Yes** |
 | `pagination` | `object \| false` | — | No |
 | `selectable` | `boolean` | — | No |
-| `searchable` | `boolean \| { placeholder: string, fields: string[] }` | — | No |
+| `searchable` | `boolean \| { placeholder: string \| FromRef, fields: string[] }` | — | No |
 | `actions` | `object[]` | — | No |
 | `bulkActions` | `object[]` | — | No |
 | `draggable` | `boolean` | — | No |
@@ -951,7 +796,7 @@ used for labels, statuses, and counts.
 | `dragGroup` | `string` | — | No |
 | `dropTargets` | `string[]` | — | No |
 | `onDrop` | `object` | — | No |
-| `contextMenu` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string, ...` | — | No |
+| `contextMenu` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string \|...` | — | No |
 | `poll` | `{ interval: number, pauseWhenHidden: boolean }` | — | No |
 | `urlSync` | `boolean \| { params: Record<string, string>, replace: boolean }` | — | No |
 | `clientFilter` | `{ field: string, operator: "equals" \| "contains" \| "startsWith" \| "endsWith" \| "gt" \| "lt" \| "gte...` | — | No |
@@ -959,7 +804,7 @@ used for labels, statuses, and counts.
 | `live` | `boolean \| { event: string, debounce: number, indicator: boolean }` | — | No |
 | `loading` | `object` | — | No |
 | `empty` | `object` | — | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 | `virtualize` | `boolean \| { itemHeight: number, overscan: number }` | — | No |
 | `expandable` | `boolean` | — | No |
 | `expandedContent` | `Record<string, unknown>[]` | — | No |
@@ -982,7 +827,7 @@ used for labels, statuses, and counts.
 | `title` | `string \| FromRef` | — | No |
 | `fields` | `"auto" \| object[]` | `"auto"` | No |
 | `actions` | `object[]` | — | No |
-| `emptyState` | `string` | — | No |
+| `emptyState` | `string \| FromRef` | — | No |
 | `empty` | `object` | — | No |
 | `error` | `object` | — | No |
 | `loading` | `object` | — | No |
@@ -993,30 +838,17 @@ used for labels, statuses, and counts.
 
 ### `empty-state`
 
-Zod config schema for the EmptyState component.
-Defines all manifest-settable fields for a placeholder shown
-when there is no data to display.
-
-```json
-{
-  "type": "empty-state",
-  "title": "No results found",
-  "description": "Try adjusting your search or filters.",
-  "icon": "search",
-  "actionLabel": "Clear filters",
-  "action": { "type": "set-value", "target": "filters", "value": {} }
-}
-```
+Zod config schema for the EmptyState component.Defines all manifest-settable fields for a placeholder shownwhen there is no data to display.```json{  "type": "empty-state",  "title": "No results found",  "description": "Try adjusting your search or filters.",  "icon": "search",  "actionLabel": "Clear filters",  "action": { "type": "set-value", "target": "filters", "value": {} }}```
 
 **Manifest type:** `empty-state`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `title` | `string` | — | **Yes** |
-| `description` | `string` | — | No |
+| `title` | `string \| FromRef` | — | **Yes** |
+| `description` | `string \| FromRef` | — | No |
 | `icon` | `string` | — | No |
 | `action` | `object` | — | No |
-| `actionLabel` | `string` | — | No |
+| `actionLabel` | `string \| FromRef` | — | No |
 | `size` | `"sm" \| "md" \| "lg"` | — | No |
 | `iconColor` | `string` | — | No |
 
@@ -1024,29 +856,13 @@ when there is no data to display.
 
 ### `entity-picker`
 
-Zod config schema for the EntityPicker component.
-A searchable dropdown for selecting entities (users, documents, items)
-from an API endpoint. Supports single and multi-select.
-
-```json
-{
-  "type": "entity-picker",
-  "id": "user-picker",
-  "label": "Assign to...",
-  "data": "GET /api/users",
-  "labelField": "name",
-  "valueField": "id",
-  "descriptionField": "email",
-  "avatarField": "avatar_url",
-  "multiple": true
-}
-```
+Zod config schema for the EntityPicker component.A searchable dropdown for selecting entities (users, documents, items)from an API endpoint. Supports single and multi-select.```json{  "type": "entity-picker",  "id": "user-picker",  "label": "Assign to...",  "data": "GET /api/users",  "labelField": "name",  "valueField": "id",  "descriptionField": "email",  "avatarField": "avatar_url",  "multiple": true}```
 
 **Manifest type:** `entity-picker`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `label` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
 | `data` | `DataSource` | — | **Yes** |
 | `labelField` | `string` | — | No |
 | `valueField` | `string` | — | No |
@@ -1081,7 +897,7 @@ used to mark items as favorites.
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `size` | `"sm" \| "md" \| "lg"` | — | No |
-| `toggleAction` | `unknown` | — | No |
+| `toggleAction` | `object` | — | No |
 
 ---
 
@@ -1100,7 +916,7 @@ Zod schema for the Feed component configuration.Renders a scrollable activity/e
 | `description` | `string` | — | No |
 | `timestamp` | `string` | — | No |
 | `badge` | `{ field: string, colorMap: Record<string, string> }` | — | No |
-| `emptyMessage` | `string` | `"No activity yet"` | No |
+| `emptyMessage` | `string \| FromRef` | `"No activity yet"` | No |
 | `pageSize` | `number` | `20` | No |
 | `infinite` | `boolean` | — | No |
 | `relativeTime` | `boolean` | `false` | No |
@@ -1114,33 +930,11 @@ Zod schema for the Feed component configuration.Renders a scrollable activity/e
 
 ### `filter-bar`
 
-Zod config schema for the FilterBar component.
-Renders a search input + filter dropdowns + active filter pills.
-Publishes `{ search, filters }` to the page context.
-
-```json
-{
-  "type": "filter-bar",
-  "id": "user-filters",
-  "searchPlaceholder": "Search users...",
-  "filters": [
-    {
-      "key": "role",
-      "label": "Role",
-      "options": [
-        { "label": "Admin", "value": "admin" },
-        { "label": "User", "value": "user" }
-      ]
-    }
-  ]
-}
-```
-
 **Manifest type:** `filter-bar`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `searchPlaceholder` | `string` | — | No |
+| `searchPlaceholder` | `string \| FromRef` | — | No |
 | `showSearch` | `boolean` | — | No |
 | `filters` | `object[]` | — | No |
 | `changeAction` | `object` | — | No |
@@ -1194,7 +988,7 @@ wrapped in `<mark>` elements with a configurable highlight color.
 | `dragGroup` | `string` | — | No |
 | `dropTargets` | `string[]` | — | No |
 | `onDrop` | `object` | — | No |
-| `contextMenu` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string, ...` | — | No |
+| `contextMenu` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string \|...` | — | No |
 | `poll` | `{ interval: number, pauseWhenHidden: boolean }` | — | No |
 | `clientFilter` | `{ field: string, operator: "equals" \| "contains" \| "startsWith" \| "endsWith" \| "gt" \| "lt" \| "gte...` | — | No |
 | `clientSort` | `{ field: string, direction: "asc" \| "desc" }[]` | — | No |
@@ -1202,10 +996,10 @@ wrapped in `<mark>` elements with a configurable highlight color.
 | `loading` | `object` | — | No |
 | `empty` | `object` | — | No |
 | `virtualize` | `boolean \| { itemHeight: number, overscan: number }` | — | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 | `error` | `object` | — | No |
 
-**Slots:** `item`, `itemTitle`, `itemDescription`, `itemIcon`, `itemBadge`
+**Slots:** `item`, `itemBody`, `itemLink`, `itemHandle`, `itemTitle`, `itemDescription`, `itemIcon`, `itemBadge`, `divider`
 
 ---
 
@@ -1226,19 +1020,7 @@ Zod config schema for the NotificationBell component.Defines all manifest-setta
 
 ### `progress`
 
-Zod config schema for the Progress component.
-Defines all manifest-settable fields for a progress bar/ring
-that displays determinate or indeterminate progress.
-
-```json
-{
-  "type": "progress",
-  "value": 65,
-  "label": "Upload progress",
-  "showValue": true,
-  "color": "primary"
-}
-```
+Zod config schema for the Progress component.Defines all manifest-settable fields for a progress bar/ringthat displays determinate or indeterminate progress.```json{  "type": "progress",  "value": 65,  "label": "Upload progress",  "showValue": true,  "color": "primary"}```
 
 **Manifest type:** `progress`
 
@@ -1283,21 +1065,7 @@ that shows idle, saving, saved, or error states.
 
 ### `scroll-area`
 
-Zod config schema for the ScrollArea component.
-A scrollable container with custom-styled thin scrollbars
-that respect the design token system.
-
-```json
-{
-  "type": "scroll-area",
-  "maxHeight": "300px",
-  "orientation": "vertical",
-  "showScrollbar": "hover",
-  "content": [
-    { "type": "heading", "text": "Long list..." }
-  ]
-}
-```
+Zod config schema for the ScrollArea component.A scrollable container with custom-styled thin scrollbarsthat respect the design token system.```json{  "type": "scroll-area",  "maxHeight": "300px",  "orientation": "vertical",  "showScrollbar": "hover",  "content": [    { "type": "heading", "text": "Long list..." }  ]}```
 
 **Manifest type:** `scroll-area`
 
@@ -1374,6 +1142,7 @@ Zod config schema for the StatCard component.Defines all manifest-settable fiel
 | `decimals` | `number` | — | No |
 | `prefix` | `string` | — | No |
 | `suffix` | `string` | — | No |
+| `divisor` | `number` | — | No |
 | `icon` | `string` | — | No |
 | `iconColor` | `string` | — | No |
 | `trend` | `{ field: string, sentiment: "up-is-good" \| "up-is-bad", format: "percent" \| "absolute" }` | — | No |
@@ -1420,9 +1189,9 @@ configurable placement and delay.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `value` | `number \| { $ref: string }` | — | No |
-| `upAction` | `Record<string, unknown>` | — | No |
-| `downAction` | `Record<string, unknown>` | — | No |
+| `value` | `number \| FromRef` | — | No |
+| `upAction` | `object` | — | No |
+| `downAction` | `object` | — | No |
 
 ---
 
@@ -1454,19 +1223,7 @@ Inline code primitive schema for manifest-rendered code snippets.
 
 ### `code-block`
 
-Zod config schema for the CodeBlock component.
-Defines all manifest-settable fields for a code display block
-with optional copy button and line numbers.
-
-```json
-{
-  "type": "code-block",
-  "code": "const x = 42;",
-  "language": "typescript",
-  "showLineNumbers": true,
-  "title": "example.ts"
-}
-```
+Zod config schema for the CodeBlock component.Defines all manifest-settable fields for a code display blockwith optional copy button and line numbers.```json{  "type": "code-block",  "code": "const x = 42;",  "language": "typescript",  "showLineNumbers": true,  "title": "example.ts"}```
 
 **Manifest type:** `code-block`
 
@@ -1477,26 +1234,14 @@ with optional copy button and line numbers.
 | `highlight` | `boolean` | — | No |
 | `showLineNumbers` | `boolean` | — | No |
 | `showCopy` | `boolean` | — | No |
-| `title` | `string` | — | No |
+| `title` | `string \| FromRef` | — | No |
 | `wrap` | `boolean` | — | No |
 
 ---
 
 ### `compare-view`
 
-Zod config schema for the CompareView component.
-Defines all manifest-settable fields for a side-by-side content
-comparison view with diff highlighting.
-
-```json
-{
-  "type": "compare-view",
-  "left": "Original text content",
-  "right": "Modified text content",
-  "leftLabel": "Before",
-  "rightLabel": "After"
-}
-```
+Zod config schema for the CompareView component.Defines all manifest-settable fields for a side-by-side contentcomparison view with diff highlighting.```json{  "type": "compare-view",  "left": "Original text content",  "right": "Modified text content",  "leftLabel": "Before",  "rightLabel": "After"}```
 
 **Manifest type:** `compare-view`
 
@@ -1504,29 +1249,15 @@ comparison view with diff highlighting.
 |-------|------|---------|----------|
 | `left` | `string \| FromRef` | — | **Yes** |
 | `right` | `string \| FromRef` | — | **Yes** |
-| `leftLabel` | `string` | — | No |
-| `rightLabel` | `string` | — | No |
+| `leftLabel` | `string \| FromRef` | — | No |
+| `rightLabel` | `string \| FromRef` | — | No |
 | `showLineNumbers` | `boolean` | — | No |
 
 ---
 
 ### `file-uploader`
 
-Zod config schema for the FileUploader component.
-Renders a drag-and-drop file upload zone with file list,
-progress tracking, and optional endpoint upload.
-
-```json
-{
-  "type": "file-uploader",
-  "accept": "image/*,.pdf",
-  "maxSize": 5242880,
-  "maxFiles": 5,
-  "label": "Upload documents",
-  "description": "PDF or images up to 5MB each",
-  "uploadEndpoint": "POST /api/uploads"
-}
-```
+Zod config schema for the FileUploader component.Renders a drag-and-drop file upload zone with file list,progress tracking, and optional endpoint upload.```json{  "type": "file-uploader",  "accept": "image/*,.pdf",  "maxSize": 5242880,  "maxFiles": 5,  "label": "Upload documents",  "description": "PDF or images up to 5MB each",  "uploadEndpoint": "POST /api/uploads"}```
 
 **Manifest type:** `file-uploader`
 
@@ -1535,8 +1266,8 @@ progress tracking, and optional endpoint upload.
 | `accept` | `string` | — | No |
 | `maxSize` | `number` | — | No |
 | `maxFiles` | `number` | — | No |
-| `label` | `string` | — | No |
-| `description` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
+| `description` | `string \| FromRef` | — | No |
 | `variant` | `"dropzone" \| "button" \| "compact"` | — | No |
 | `uploadEndpoint` | `EndpointTarget` | — | No |
 | `onUpload` | `object` | — | No |
@@ -1558,31 +1289,7 @@ progress tracking, and optional endpoint upload.
 
 ### `link-embed`
 
-Zod config schema for the LinkEmbed component.
-Renders rich URL previews with platform-specific renderers for
-YouTube, Instagram, TikTok, Twitter/X, and generic Open Graph cards.
-Also supports inline GIF embeds.
-
-```json
-{
-  "type": "link-embed",
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-```
-
-```json
-{
-  "type": "link-embed",
-  "url": "https://twitter.com/user/status/123",
-  "meta": {
-    "title": "Tweet by 
-    "description": "Hello world!",
-    "image": "https://pbs.twimg.com/...",
-    "siteName": "Twitter",
-    "favicon": "https://abs.twimg.com/favicons/twitter.3.ico"
-  }
-}
-```
+Zod config schema for the LinkEmbed component.Renders rich URL previews with platform-specific renderers forYouTube, Instagram, TikTok, Twitter/X, and generic Open Graph cards.Also supports inline GIF embeds.```json{  "type": "link-embed",  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}``````json{  "type": "link-embed",  "url": "https://twitter.com/user/status/123",  "meta": {    "title": "Tweet by     "description": "Hello world!",    "image": "https://pbs.twimg.com/...",    "siteName": "Twitter",    "favicon": "https://abs.twimg.com/favicons/twitter.3.ico"  }}```
 
 **Manifest type:** `link-embed`
 
@@ -1597,15 +1304,7 @@ Also supports inline GIF embeds.
 
 ### `markdown`
 
-Zod config schema for the Markdown component.
-Renders markdown content with full GFM support and syntax highlighting.
-
-```json
-{
-  "type": "markdown",
-  "content": "# Hello\n\nSome **bold** text and a [link](https://example.com)."
-}
-```
+Zod config schema for the Markdown component.Renders markdown content with full GFM support and syntax highlighting.```json{  "type": "markdown",  "content": "# Hello\n\nSome **bold** text and a [link](https://example.com)."}```
 
 **Manifest type:** `markdown`
 
@@ -1617,32 +1316,13 @@ Renders markdown content with full GFM support and syntax highlighting.
 
 ### `rich-input`
 
-Zod config schema for the RichInput component.
-A TipTap-based WYSIWYG editor for chat messages, comments, and posts.
-Users see formatted text as they type (bold, italic, mentions, etc.)
-rather than raw markdown.
-
-```json
-{
-  "type": "rich-input",
-  "id": "chat-input",
-  "placeholder": "Type a message...",
-  "sendOnEnter": true,
-  "features": ["bold", "italic", "mention", "emoji", "code"],
-  "sendAction": {
-    "type": "api",
-    "method": "POST",
-    "endpoint": "/api/channels/general/messages",
-    "body": { "from": "chat-input" }
-  }
-}
-```
+Zod config schema for the RichInput component.A TipTap-based WYSIWYG editor for chat messages, comments, and posts.Users see formatted text as they type (bold, italic, mentions, etc.)rather than raw markdown.```json{  "type": "rich-input",  "id": "chat-input",  "placeholder": "Type a message...",  "sendOnEnter": true,  "features": ["bold", "italic", "mention", "emoji", "code"],  "sendAction": {    "type": "api",    "method": "POST",    "endpoint": "/api/channels/general/messages",    "body": { "from": "chat-input" }  }}```
 
 **Manifest type:** `rich-input`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `placeholder` | `string` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `features` | `"bold" \| "italic" \| "underline" \| "strike" \| "code" \| "code-block" \| "link" \| "bullet-list" \| "or...` | — | No |
 | `mentionData` | `DataSource` | — | No |
 | `mentionDisplayField` | `string` | — | No |
@@ -1656,26 +1336,14 @@ rather than raw markdown.
 
 ### `rich-text-editor`
 
-Zod config schema for the RichTextEditor component.
-Defines all manifest-settable fields for a CodeMirror 6-based markdown editor
-with toolbar, preview pane, and split view support.
-
-```json
-{
-  "type": "rich-text-editor",
-  "id": "content-editor",
-  "content": "# Hello\n\nStart writing...",
-  "mode": "split",
-  "toolbar": ["bold", "italic", "h1", "h2", "separator", "code", "link"]
-}
-```
+Zod config schema for the RichTextEditor component.Defines all manifest-settable fields for a CodeMirror 6-based markdown editorwith toolbar, preview pane, and split view support.```json{  "type": "rich-text-editor",  "id": "content-editor",  "content": "# Hello\n\nStart writing...",  "mode": "split",  "toolbar": ["bold", "italic", "h1", "h2", "separator", "code", "link"]}```
 
 **Manifest type:** `rich-text-editor`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `content` | `string \| FromRef` | — | No |
-| `placeholder` | `string` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
 | `mode` | `"edit" \| "preview" \| "split"` | — | No |
 | `readonly` | `boolean \| FromRef` | — | No |
 | `toolbar` | `boolean \| "bold" \| "italic" \| "strikethrough" \| "h1" \| "h2" \| "h3" \| "bullet-list" \| "ordered-lis...` | — | No |
@@ -1698,7 +1366,7 @@ with toolbar, preview pane, and split view support.
 | `action` | `object` | — | No |
 | `error` | `object` | — | No |
 
-**Slots:** `item`, `marker`, `connector`, `title`, `description`, `meta`, `content`
+**Slots:** `item`, `markerColumn`, `marker`, `connector`, `body`, `header`, `titleGroup`, `itemIcon`, `title`, `description`, `meta`, `content`
 
 ---
 
@@ -1733,7 +1401,7 @@ with toolbar, preview pane, and split view support.
 | `maxItems` | `number` | — | No |
 | `action` | `object` | — | No |
 
-**Slots:** `root`, `item`, `link`, `current`, `separator`, `icon`
+**Slots:** `root`, `list`, `item`, `link`, `current`, `separator`, `icon`
 
 ---
 
@@ -1765,7 +1433,7 @@ Zod schema for `<PrefetchLink>` config.`<PrefetchLink>` is a prefetch primitive
 | `variant` | `"default" \| "simple" \| "dots"` | — | No |
 | `clickable` | `boolean` | — | No |
 
-**Slots:** `root`, `item`, `marker`, `label`, `description`, `connector`, `content`
+**Slots:** `root`, `track`, `item`, `marker`, `label`, `description`, `textGroup`, `connector`, `content`
 
 ---
 
@@ -1799,7 +1467,7 @@ Zod schema for `<PrefetchLink>` config.`<PrefetchLink>` is a prefetch primitive
 | `action` | `object` | — | No |
 | `error` | `object` | — | No |
 
-**Slots:** `root`, `item`, `row`, `label`, `icon`, `badge`, `connector`, `disclosure`, `children`
+**Slots:** `root`, `loadingState`, `loadingItem`, `loadingMarker`, `loadingLabel`, `loadingLabelSecondary`, `errorState`, `emptyState`, `item`, `row`, `label`, `icon`, `badge`, `connector`, `disclosure`, `children`
 
 ---
 
@@ -1811,14 +1479,14 @@ Zod schema for `<PrefetchLink>` config.`<PrefetchLink>` is a prefetch primitive
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `placeholder` | `string` | — | No |
-| `groups` | `{ label: string, items: object[] }[]` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
+| `groups` | `{ label: string \| FromRef, items: object[] }[]` | — | No |
 | `data` | `DataSource` | — | No |
 | `autoRegisterShortcuts` | `boolean` | `true` | No |
 | `searchEndpoint` | `{ endpoint: EndpointTarget, debounce: number, minLength: number }` | — | No |
 | `recentItems` | `{ enabled: boolean, maxItems: number }` | — | No |
 | `shortcut` | `string` | `"ctrl+k"` | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 
 **Slots:** `item`, `itemLabel`, `itemIcon`
 
@@ -1835,8 +1503,8 @@ Overlay alias schema for manifest-driven confirmation dialogs.
 | `title` | `string \| FromRef` | — | No |
 | `description` | `string \| FromRef` | — | No |
 | `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | — | No |
-| `confirmLabel` | `string` | `"Confirm"` | No |
-| `cancelLabel` | `string` | `"Cancel"` | No |
+| `confirmLabel` | `string \| FromRef` | `"Confirm"` | No |
+| `cancelLabel` | `string \| FromRef` | `"Cancel"` | No |
 | `confirmVariant` | `"default" \| "secondary" \| "destructive" \| "ghost"` | `"default"` | No |
 | `cancelVariant` | `"default" \| "secondary" \| "destructive" \| "ghost"` | `"secondary"` | No |
 | `confirmAction` | `object \| ... \| object \| ...[]` | — | No |
@@ -1854,16 +1522,14 @@ Overlay alias schema for manifest-driven confirmation dialogs.
 
 ### `context-menu`
 
-Zod schema for the ContextMenu component.
-Defines a right-click menu with styleable trigger, panel, item, label, and separator surfaces.
-Visibility can be driven by a boolean or a binding reference.
+Zod schema for the ContextMenu component.Defines a right-click menu with styleable trigger, panel, item, label, and separator surfaces.Visibility can be driven by a boolean or a binding reference.
 
 **Manifest type:** `context-menu`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `items` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string, ...` | — | No |
-| `triggerText` | `string` | — | No |
+| `items` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string \|...` | — | No |
+| `triggerText` | `string \| FromRef` | — | No |
 
 **Slots:** `root`, `trigger`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`
 
@@ -1890,6 +1556,8 @@ Zod schema for drawer component config.Drawers are slide-in panels from the lef
 | `returnFocus` | `boolean` | `true` | No |
 | `footer` | `{ actions: object[], align: "left" \| "center" \| "right" }` | — | No |
 
+**Slots:** `root`, `overlay`, `panel`, `header`, `title`, `closeButton`, `body`, `footer`, `footerAction`
+
 ---
 
 ### `dropdown-menu`
@@ -1898,8 +1566,8 @@ Zod schema for drawer component config.Drawers are slide-in panels from the lef
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `trigger` | `{ label: string, icon: string, variant: "default" \| "secondary" \| "outline" \| "ghost" \| "destruct...` | — | **Yes** |
-| `items` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string, ...` | — | **Yes** |
+| `trigger` | `{ label: string \| FromRef, icon: string, variant: "default" \| "secondary" \| "outline" \| "ghost" \|...` | — | **Yes** |
+| `items` | `object \| { type: "separator", slots: { separator: SlotStyle } } \| { type: "label", text: string \|...` | — | **Yes** |
 | `align` | `"start" \| "center" \| "end"` | — | No |
 | `side` | `"top" \| "bottom"` | — | No |
 
@@ -1919,6 +1587,8 @@ Zod schema for drawer component config.Drawers are slide-in panels from the lef
 | `side` | `"top" \| "bottom" \| "left" \| "right"` | — | No |
 | `openDelay` | `number` | — | No |
 | `closeDelay` | `number` | — | No |
+
+**Slots:** `root`, `panel`, `content`
 
 ---
 
@@ -1942,13 +1612,13 @@ Zod schema for modal component config.Modals are overlay dialogs that display c
 | `returnFocus` | `boolean` | `true` | No |
 | `footer` | `{ actions: object[], align: "left" \| "center" \| "right" }` | — | No |
 
+**Slots:** `root`, `overlay`, `panel`, `header`, `title`, `closeButton`, `body`, `footer`, `footerAction`
+
 ---
 
 ### `popover`
 
-Zod schema for the Popover component.
-Defines a trigger-driven floating panel with optional title, description, footer content, width,
-placement, and canonical slot-based styling for the trigger and panel sub-surfaces.
+Zod schema for the Popover component.Defines a trigger-driven floating panel with optional title, description, footer content, width,placement, and canonical slot-based styling for the trigger and panel sub-surfaces.
 
 **Manifest type:** `popover`
 
@@ -1957,8 +1627,8 @@ placement, and canonical slot-based styling for the trigger and panel sub-surfac
 | `trigger` | `string \| FromRef` | — | **Yes** |
 | `triggerIcon` | `string` | — | No |
 | `triggerVariant` | `"default" \| "secondary" \| "outline" \| "ghost" \| "destructive" \| "link"` | — | No |
-| `title` | `string` | — | No |
-| `description` | `string` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `description` | `string \| FromRef` | — | No |
 | `content` | `unknown[]` | — | No |
 | `footer` | `unknown[]` | — | No |
 | `placement` | `"top" \| "bottom"` | — | No |
@@ -1991,9 +1661,9 @@ placement, and canonical slot-based styling for the trigger and panel sub-surfac
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `url` | `string` | — | **Yes** |
-| `aspectRatio` | `string` | — | No |
-| `title` | `string` | — | No |
+| `url` | `string \| FromRef` | — | **Yes** |
+| `aspectRatio` | `string \| FromRef` | — | No |
+| `title` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2034,23 +1704,7 @@ placement, and canonical slot-based styling for the trigger and panel sub-surfac
 
 ### `chat-window`
 
-Zod config schema for the ChatWindow component.
-A full chat interface composing a message thread, rich input,
-and typing indicator into a single component.
-
-```json
-{
-  "type": "chat-window",
-  "title": "#general",
-  "data": "GET /api/channels/general/messages",
-  "sendAction": {
-    "type": "api",
-    "method": "POST",
-    "endpoint": "/api/channels/general/messages"
-  },
-  "height": "600px"
-}
-```
+Zod config schema for the ChatWindow component.A full chat interface composing a message thread, rich input,and typing indicator into a single component.```json{  "type": "chat-window",  "title": "#general",  "data": "GET /api/channels/general/messages",  "sendAction": {    "type": "api",    "method": "POST",    "endpoint": "/api/channels/general/messages"  },  "height": "600px"}```
 
 **Manifest type:** `chat-window`
 
@@ -2064,7 +1718,7 @@ and typing indicator into a single component.
 | `title` | `string \| FromRef` | — | No |
 | `subtitle` | `string \| FromRef` | — | No |
 | `showHeader` | `boolean` | — | No |
-| `inputPlaceholder` | `string` | — | No |
+| `inputPlaceholder` | `string \| FromRef` | — | No |
 | `inputFeatures` | `string[]` | — | No |
 | `mentionData` | `DataSource` | — | No |
 | `sendAction` | `object` | — | No |
@@ -2075,22 +1729,7 @@ and typing indicator into a single component.
 
 ### `comment-section`
 
-Zod config schema for the CommentSection component.
-Renders a comment list with nested replies and an embedded rich input
-for posting new comments.
-
-```json
-{
-  "type": "comment-section",
-  "data": "GET /api/posts/123/comments",
-  "inputPlaceholder": "Write a comment...",
-  "submitAction": {
-    "type": "api",
-    "method": "POST",
-    "endpoint": "/api/posts/123/comments"
-  }
-}
-```
+Zod config schema for the CommentSection component.Renders a comment list with nested replies and an embedded rich inputfor posting new comments.```json{  "type": "comment-section",  "data": "GET /api/posts/123/comments",  "inputPlaceholder": "Write a comment...",  "submitAction": {    "type": "api",    "method": "POST",    "endpoint": "/api/posts/123/comments"  }}```
 
 **Manifest type:** `comment-section`
 
@@ -2101,12 +1740,12 @@ for posting new comments.
 | `authorNameField` | `string` | — | No |
 | `authorAvatarField` | `string` | — | No |
 | `timestampField` | `string` | — | No |
-| `inputPlaceholder` | `string` | — | No |
+| `inputPlaceholder` | `string \| FromRef` | — | No |
 | `inputFeatures` | `string[]` | — | No |
 | `submitAction` | `object` | — | No |
 | `deleteAction` | `object` | — | No |
 | `sortOrder` | `"newest" \| "oldest"` | — | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2140,39 +1779,7 @@ Renders a searchable grid of emojis organized by category.
 
 ### `gif-picker`
 
-Zod config schema for the GifPicker component.
-Searchable GIF picker that queries a GIF API (Giphy/Tenor) and
-displays results in a masonry-style grid.
-The component expects a backend proxy endpoint that handles the
-actual API key and returns GIF results. This avoids exposing
-API keys in the frontend.
-
-```json
-{
-  "type": "gif-picker",
-  "searchEndpoint": "GET /api/gifs/search",
-  "trendingEndpoint": "GET /api/gifs/trending",
-  "selectAction": {
-    "type": "toast",
-    "message": "GIF selected!"
-  }
-}
-```
-Expected API response format:
-```json
-{
-  "results": [
-    {
-      "id": "abc123",
-      "url": "https://media.giphy.com/media/abc123/giphy.gif",
-      "preview": "https://media.giphy.com/media/abc123/200w.gif",
-      "width": 480,
-      "height": 270,
-      "title": "Funny cat"
-    }
-  ]
-}
-```
+Zod config schema for the GifPicker component.Searchable GIF picker that queries a GIF API (Giphy/Tenor) anddisplays results in a masonry-style grid.The component expects a backend proxy endpoint that handles theactual API key and returns GIF results. This avoids exposingAPI keys in the frontend.```json{  "type": "gif-picker",  "searchEndpoint": "GET /api/gifs/search",  "trendingEndpoint": "GET /api/gifs/trending",  "selectAction": {    "type": "toast",    "message": "GIF selected!"  }}```Expected API response format:```json{  "results": [    {      "id": "abc123",      "url": "https://media.giphy.com/media/abc123/giphy.gif",      "preview": "https://media.giphy.com/media/abc123/200w.gif",      "width": 480,      "height": 270,      "title": "Funny cat"    }  ]}```
 
 **Manifest type:** `gif-picker`
 
@@ -2186,26 +1793,14 @@ Expected API response format:
 | `titleField` | `string` | — | No |
 | `selectAction` | `object` | — | No |
 | `columns` | `number` | — | No |
-| `placeholder` | `string` | — | No |
-| `attribution` | `string` | — | No |
+| `placeholder` | `string \| FromRef` | — | No |
+| `attribution` | `string \| FromRef` | — | No |
 
 ---
 
 ### `message-thread`
 
-Zod config schema for the MessageThread component.
-Renders a scrollable message list with avatars, timestamps,
-message grouping, date separators, and optional reactions/threading.
-
-```json
-{
-  "type": "message-thread",
-  "data": "GET /api/channels/general/messages",
-  "showReactions": true,
-  "groupByDate": true,
-  "maxHeight": "500px"
-}
-```
+Zod config schema for the MessageThread component.Renders a scrollable message list with avatars, timestamps,message grouping, date separators, and optional reactions/threading.```json{  "type": "message-thread",  "data": "GET /api/channels/general/messages",  "showReactions": true,  "groupByDate": true,  "maxHeight": "500px"}```
 
 **Manifest type:** `message-thread`
 
@@ -2224,7 +1819,7 @@ message grouping, date separators, and optional reactions/threading.
 | `showTimestamps` | `boolean` | — | No |
 | `groupByDate` | `boolean` | — | No |
 | `messageAction` | `object` | — | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2256,19 +1851,7 @@ Displays an online/offline/away/busy/dnd status dot with optional label.
 
 ### `reaction-bar`
 
-Zod config schema for the ReactionBar component.
-Displays emoji reactions with counts and an add button.
-
-```json
-{
-  "type": "reaction-bar",
-  "reactions": [
-    { "emoji": "\ud83d\udc4d", "count": 5, "active": true },
-    { "emoji": "\u2764\ufe0f", "count": 3 },
-    { "emoji": "\ud83d\ude02", "count": 2 }
-  ]
-}
-```
+Zod config schema for the ReactionBar component.Displays emoji reactions with counts and an add button.```json{  "type": "reaction-bar",  "reactions": [    { "emoji": "\ud83d\udc4d", "count": 5, "active": true },    { "emoji": "\u2764\ufe0f", "count": 3 },    { "emoji": "\ud83d\ude02", "count": 2 }  ]}```
 
 **Manifest type:** `reaction-bar`
 
@@ -2318,7 +1901,7 @@ Displays an animated "User is typing..." indicator with bouncing dots.
 | `detailsField` | `string` | — | No |
 | `iconField` | `string` | — | No |
 | `pagination` | `boolean \| { pageSize: number }` | — | No |
-| `filters` | `{ field: string, label: string, options: string[] }[]` | — | No |
+| `filters` | `{ field: string, label: string \| FromRef, options: string \| FromRef[] }[]` | — | No |
 
 ---
 
@@ -2337,7 +1920,7 @@ Displays an animated "User is typing..." indicator with bouncing dots.
 | `eventAction` | `object` | — | No |
 | `dateAction` | `object` | — | No |
 | `showWeekNumbers` | `boolean` | — | No |
-| `todayLabel` | `string` | — | No |
+| `todayLabel` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2357,7 +1940,7 @@ Displays an animated "User is typing..." indicator with bouncing dots.
 | `cardAction` | `object` | — | No |
 | `sortable` | `boolean` | — | No |
 | `reorderAction` | `object` | — | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 
 **Slots:** `root`, `column`, `columnHeader`, `columnTitle`, `columnCount`, `columnBody`, `card`, `cardTitle`, `cardDescription`, `cardMeta`, `emptyState`
 
@@ -2365,9 +1948,7 @@ Displays an animated "User is typing..." indicator with bouncing dots.
 
 ### `notification-feed`
 
-Zod config schema for the NotificationFeed component.
-Renders a scrollable list of notifications with read/unread states,
-type-based icons, relative timestamps, and mark-as-read actions.
+Zod config schema for the NotificationFeed component.Renders a scrollable list of notifications with read/unread states,type-based icons, relative timestamps, and mark-as-read actions.
 
 **Manifest type:** `notification-feed`
 
@@ -2382,9 +1963,9 @@ type-based icons, relative timestamps, and mark-as-read actions.
 | `markReadAction` | `object` | — | No |
 | `itemAction` | `object` | — | No |
 | `showMarkAllRead` | `boolean` | — | No |
-| `emptyMessage` | `string` | — | No |
+| `emptyMessage` | `string \| FromRef` | — | No |
 
-**Slots:** `root`, `header`, `title`, `unreadBadge`, `markAllButton`, `list`, `item`, `itemIcon`, `itemTitle`, `itemMessage`, `itemTimestamp`, `emptyState`
+**Slots:** `root`, `header`, `headerContent`, `title`, `unreadBadge`, `markAllButton`, `list`, `loadingState`, `loadingItem`, `loadingIcon`, `loadingBody`, `loadingTitle`, `loadingMessage`, `errorState`, `item`, `itemBody`, `itemIcon`, `itemIconGlyph`, `itemTitle`, `itemMessage`, `itemTimestamp`, `emptyState`
 
 ---
 
@@ -2392,85 +1973,48 @@ type-based icons, relative timestamps, and mark-as-read actions.
 
 ### `pricing-table`
 
-Zod schema for a single feature in a pricing tier.
-/
+Zod schema for a single feature in a pricing tier./
 const pricingFeatureSchema = z
   .object({
     /** Feature description text. */
-    text: z.string(),
+    text: z.union([z.string(), fromRefSchema]),
     /** Whether this feature is included in the tier. Default: true. */
     included: z.boolean().optional(),
   })
   .strict();
 
-/**
-Zod schema for a single pricing tier (plan).
-/
+/**Zod schema for a single pricing tier (plan)./
 const pricingTierSchema = z
   .object({
     /** Tier display name (e.g., "Starter", "Pro", "Enterprise"). */
-    name: z.string(),
+    name: z.union([z.string(), fromRefSchema]),
     /** Price value — string for custom formatting (e.g., "Custom") or number. */
-    price: z.union([z.string(), z.number()]),
+    price: z.union([z.string(), z.number(), fromRefSchema]),
     /** Billing period label (e.g., "/month", "/year"). */
-    period: z.string().optional(),
+    period: z.union([z.string(), fromRefSchema]).optional(),
     /** Short description of the tier. */
-    description: z.string().optional(),
+    description: z.union([z.string(), fromRefSchema]).optional(),
     /** List of features with inclusion indicators. */
     features: z.array(pricingFeatureSchema),
     /** Whether this tier should be visually highlighted. */
     highlighted: z.boolean().optional(),
     /** Badge text displayed on the tier (e.g., "Most Popular"). */
-    badge: z.string().optional(),
+    badge: z.union([z.string(), fromRefSchema]).optional(),
     /** Action dispatched when the CTA button is clicked. */
     action: actionSchema.optional(),
     /** CTA button label. Default: "Get Started". */
-    actionLabel: z.string().optional(),
+    actionLabel: z.union([z.string(), fromRefSchema]).optional(),
   })
   .strict();
 
-/**
-Zod config schema for the PricingTable component.
-Renders a comparison table of pricing tiers with features,
-highlights, badges, and CTA buttons.
-
-```json
-{
-  "type": "pricing-table",
-  "currency": "$",
-  "variant": "cards",
-  "tiers": [
-    {
-      "name": "Starter",
-      "price": 9,
-      "period": "/month",
-      "features": [
-        { "text": "5 projects", "included": true },
-        { "text": "API access", "included": false }
-      ],
-      "actionLabel": "Start Free"
-    },
-    {
-      "name": "Pro",
-      "price": 29,
-      "period": "/month",
-      "highlighted": true,
-      "badge": "Most Popular",
-      "features": [
-        { "text": "Unlimited projects", "included": true },
-        { "text": "API access", "included": true }
-      ]
-    }
-  ]
-}
-```
+/**Zod config schema for the PricingTable component.Renders a comparison table of pricing tiers with features,highlights, badges, and CTA buttons.```json{  "type": "pricing-table",  "currency": "$",  "variant": "cards",  "tiers": [    {      "name": "Starter",      "price": 9,      "period": "/month",      "features": [        { "text": "5 projects", "included": true },        { "text": "API access", "included": false }      ],      "actionLabel": "Start Free"    },    {      "name": "Pro",      "price": 29,      "period": "/month",      "highlighted": true,      "badge": "Most Popular",      "features": [        { "text": "Unlimited projects", "included": true },        { "text": "API access", "included": true }      ]    }  ]}```
 
 **Manifest type:** `pricing-table`
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `tiers` | `object[]` | — | **Yes** |
-| `currency` | `string` | — | No |
+| `currency` | `string \| FromRef` | — | No |
 | `columns` | `"auto" \| "2" \| "3" \| "4"` | — | No |
 | `variant` | `"cards" \| "table"` | — | No |
 
@@ -2484,10 +2028,10 @@ highlights, badges, and CTA buttons.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `title` | `string` | — | No |
-| `description` | `string` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `description` | `string \| FromRef` | — | No |
 | `showRetry` | `boolean` | — | No |
-| `retryLabel` | `string` | — | No |
+| `retryLabel` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2498,7 +2042,7 @@ highlights, badges, and CTA buttons.
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
 | `size` | `"sm" \| "md" \| "lg"` | — | No |
-| `label` | `string` | — | No |
+| `label` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2508,9 +2052,9 @@ highlights, badges, and CTA buttons.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `title` | `string` | — | No |
-| `description` | `string` | — | No |
-| `homeLabel` | `string` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `description` | `string \| FromRef` | — | No |
+| `homeLabel` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2520,8 +2064,8 @@ highlights, badges, and CTA buttons.
 
 | Field | Type | Default | Required |
 |-------|------|---------|----------|
-| `title` | `string` | — | No |
-| `description` | `string` | — | No |
+| `title` | `string \| FromRef` | — | No |
+| `description` | `string \| FromRef` | — | No |
 
 ---
 
@@ -2568,8 +2112,11 @@ highlights, badges, and CTA buttons.
 | `icon` | `string` | — | No |
 | `badge` | `string \| number \| FromRef \| EnvRef \| { expr: string } \| TRef` | — | No |
 | `external` | `boolean` | `false` | No |
+| `disabled` | `boolean` | — | No |
+| `current` | `boolean` | — | No |
+| `matchChildren` | `boolean` | `true` | No |
 | `align` | `"left" \| "center" \| "right"` | `"left"` | No |
-| `variant` | `"default" \| "muted" \| "button"` | `"default"` | No |
+| `variant` | `"default" \| "muted" \| "button" \| "navigation"` | `"default"` | No |
 
 **Slots:** `root`, `label`, `icon`, `badge`
 
@@ -2583,7 +2130,7 @@ highlights, badges, and CTA buttons.
 |-------|------|---------|----------|
 | `heading` | `string \| FromRef \| EnvRef \| { expr: string } \| TRef` | — | No |
 
-**Slots:** `root`, `heading`, `provider`, `providerIcon`, `providerLabel`, `providerDescription`
+**Slots:** `root`, `heading`, `providerGroup`, `provider`, `providerIcon`, `providerLabel`, `providerDescription`
 
 ---
 

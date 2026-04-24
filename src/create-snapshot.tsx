@@ -356,12 +356,6 @@ export function createSnapshot<
     },
   });
 
-  // ── Security posture warnings ─────────────────────────────────────────────
-  // Warning 4: verbose auth errors enabled on non-localhost
-
-  if (false) {
-  }
-
   // ── WebSocket manager (created once if ws config present) ──────────────────
   let wsManager: WebSocketManager<TWSEvents> | null = null;
   if (runtimeWsConfig) {

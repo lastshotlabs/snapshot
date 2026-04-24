@@ -18,11 +18,11 @@ This path is best when you want:
 Start with these source-backed references:
 
 - [Manifest Reference](/reference/manifest/)
-- [Styling and Slots](/build/styling-and-slots/)
+- [Theming and Styling](/guides/theming-and-styling/)
 - [UI Reference](/reference/ui/)
 - [Component Catalog](/reference/components/)
-- [Examples and Showcase](/examples/)
-- [Capabilities](/start-here/capabilities/)
+- [Manifest Examples](/manifest/examples/)
+- [Full App Examples](/examples/)
 
 Canonical source for the manifest contract lives in:
 
@@ -75,5 +75,5 @@ If you need custom React for a small part of the app, that does not invalidate t
 When that happens, keep the app-builder flow narrow:
 
 - stay in this guide for manifest shape and UI composition
-- move to [SDK Apps](/build/sdk-apps/) only for the custom React surface
-- move to [SSR and RSC](/integrate/ssr-rsc/) only if the deployment/runtime integration actually needs it
+- move to the [Guides](/guides/authentication/) for the custom React surface
+- move to [SSR and RSC](/server/ssr-rsc/) only if the deployment/runtime integration actually needs it

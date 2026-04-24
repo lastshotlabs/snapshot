@@ -3,63 +3,28 @@
 import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { SectionBase } from "./standalone";
 import type { SectionConfig } from "./types";
-
-const ALIGN_MAP: Record<string, string> = {
-  start: "flex-start",
-  center: "center",
-  end: "flex-end",
-  stretch: "stretch",
-};
-
-const JUSTIFY_MAP: Record<string, string> = {
-  start: "flex-start",
-  center: "center",
-  end: "flex-end",
-  between: "space-between",
-  around: "space-around",
-};
 
 export function Section({ config }: { config: SectionConfig }) {
   const rootId = config.id ?? "section";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      position: "relative",
-      display: "flex",
-      flexDirection: "column",
-      width: "100%",
-      minHeight:
-        config.height === "screen"
-          ? "100vh"
-          : config.height === "auto"
-            ? undefined
-            : config.height,
-      alignItems: config.align ? ALIGN_MAP[config.align] : undefined,
-      justifyContent: config.justify ? JUSTIFY_MAP[config.justify] : undefined,
-      style: config.bleed
-        ? {
-            marginInline: "calc(-1 * var(--sn-spacing-lg, 1.5rem))",
-            paddingInline: "var(--sn-spacing-lg, 1.5rem)",
-          }
-        : undefined,
-    },
-    componentSurface: extractSurfaceConfig(config, { omit: ["height"] }),
-    itemSurface: config.slots?.root,
-  });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,
     implementationBase: {},
-    componentSurface: config.slots?.item,
+    componentSurface: (config.slots as Record<string, unknown> | undefined)?.item as Record<string, unknown> | undefined,
   });
 
   return (
-    <div
-      data-snapshot-component="section"
-      data-snapshot-id={rootId}
-      className={rootSurface.className}
-      style={rootSurface.style}
+    <SectionBase
+      id={config.id}
+      height={config.height}
+      align={config.align}
+      justify={config.justify}
+      bleed={config.bleed}
+      className={config.className}
+      style={config.style as CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
     >
       {(config.children ?? []).map((child, index) => (
         <div
@@ -78,8 +43,7 @@ export function Section({ config }: { config: SectionConfig }) {
           <ComponentRenderer config={child} />
         </div>
       ))}
-      <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={itemSurface.scopedCss} />
-    </div>
+    </SectionBase>
   );
 }

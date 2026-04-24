@@ -9,5 +9,5 @@ export const sectionConfigSchema = extendComponentSchema({
   justify: z.enum(["start", "center", "end", "between", "around"]).optional(),
   bleed: z.boolean().optional(),
   children: z.array(componentConfigSchema).default([]),
-  slots: slotsSchema(["root", "item"]).optional(),
+  slots: slotsSchema(["root"]).optional(),
 }).strict();

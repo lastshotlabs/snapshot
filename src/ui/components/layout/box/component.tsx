@@ -1,40 +1,33 @@
 "use client";
 
-import { createElement } from "react";
+import type { CSSProperties } from "react";
 import { ComponentRenderer } from "../../../manifest/renderer";
 import { ComponentWrapper } from "../../_base/component-wrapper";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { BoxBase } from "./standalone";
 import type { BoxConfig } from "./types";
 
 export function Box({ config }: { config: BoxConfig }) {
   const rootId = config.id ?? "box";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      width: "100%",
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item`,
     implementationBase: {
       width: "100%",
     },
-    componentSurface: config.slots?.item,
+    componentSurface: (config.slots as Record<string, unknown> | undefined)?.item as Record<string, unknown> | undefined,
   });
 
   return (
     <ComponentWrapper type="box" id={config.id} config={config}>
-      {createElement(
-        config.as ?? "div",
-        {
-          "data-snapshot-id": rootId,
-          className: rootSurface.className,
-          style: rootSurface.style,
-        },
-        config.children?.map((child, index) => (
+      <BoxBase
+        id={config.id}
+        as={config.as}
+        className={config.className}
+        style={config.style as CSSProperties}
+        slots={config.slots as Record<string, Record<string, unknown>>}
+      >
+        {config.children?.map((child, index) => (
           <div
             key={(child as { id?: string }).id ?? index}
             data-snapshot-id={`${rootId}-item`}
@@ -43,9 +36,8 @@ export function Box({ config }: { config: BoxConfig }) {
           >
             <ComponentRenderer config={child} />
           </div>
-        )),
-      )}
-      <SurfaceStyles css={rootSurface.scopedCss} />
+        ))}
+      </BoxBase>
       <SurfaceStyles css={itemSurface.scopedCss} />
     </ComponentWrapper>
   );

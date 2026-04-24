@@ -8,6 +8,14 @@ export {
   type FloatingPanelProps,
   type MenuItemProps,
 } from "./component";
+export { FloatingMenuBase } from "./standalone";
+export type {
+  FloatingMenuBaseProps,
+  FloatingMenuBaseEntry,
+  FloatingMenuBaseItem,
+  FloatingMenuBaseSeparator,
+  FloatingMenuBaseLabel,
+} from "./standalone";
 export {
   floatingMenuConfigSchema,
   floatingMenuEntrySchema,

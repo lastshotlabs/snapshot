@@ -1,30 +1,16 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { useResolveFrom, useSubscribe } from "../../../context";
 import { resolveTemplate } from "../../../expressions/template";
-import { renderIcon } from "../../../icons/render";
 import { useManifestRuntime, useRouteRuntime } from "../../../manifest/runtime";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
-import { ButtonControl } from "../../forms/button";
 import {
   resolveOptionalPrimitiveValue,
   usePrimitiveValueOptions,
 } from "../resolve-value";
+import { OAuthButtonsBase } from "./standalone";
+import type { OAuthProvider } from "./standalone";
 import type { OAuthButtonsConfig } from "./types";
-
-const PROVIDER_ICON_MAP: Record<string, string> = {
-  google: "mail",
-  github: "globe",
-  microsoft: "globe",
-  apple: "globe",
-  facebook: "globe",
-  discord: "globe",
-};
 
 function titleCase(value: string): string {
   return value
@@ -36,10 +22,8 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
   const manifest = useManifestRuntime();
   const routeRuntime = useRouteRuntime();
   useSubscribe({ from: "global.locale" });
-  const autoRedirectedRef = useRef(false);
   const primitiveOptions = usePrimitiveValueOptions();
   const routeId = routeRuntime?.currentRoute?.id;
-  const rootId = config.id ?? "oauth-buttons";
   const screenOptions = useMemo(
     () =>
       routeId &&
@@ -65,7 +49,6 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
       allowedProviders ? allowedProviders.has(providerName) : true,
     );
   }, [manifest?.auth?.providers, screenOptions?.providers]);
-  const hasProviders = providers.length > 0;
 
   const providerMode =
     (typeof screenOptions?.providerMode === "string"
@@ -99,7 +82,8 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
     locale: primitiveOptions.locale,
     i18n: primitiveOptions.i18n,
   };
-  const resolvedProviders = providers.map(([providerName, provider]) => {
+
+  const resolvedProviders: OAuthProvider[] = providers.map(([providerName, provider]) => {
     const providerRecord = provider as Record<string, unknown>;
     const label = resolveTemplate(
       typeof providerRecord.label === "string"
@@ -130,189 +114,22 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
       templateOptions,
     );
 
-    return {
-      providerName,
-      providerRecord,
-      label,
-      description,
-      url,
-    };
-  });
+    const autoRedirect = typeof providerRecord.autoRedirect === "boolean"
+      ? providerRecord.autoRedirect
+      : undefined;
 
-  useEffect(() => {
-    if (
-      !hasProviders ||
-      providerMode !== "auto" ||
-      autoRedirectedRef.current ||
-      resolvedProviders.length !== 1
-    ) {
-      return;
-    }
-
-    const provider = resolvedProviders[0]!;
-    const autoRedirect =
-      (provider.providerRecord["autoRedirect"] as boolean | undefined) !== false;
-    if (!autoRedirect) {
-      return;
-    }
-
-    autoRedirectedRef.current = true;
-    window.dispatchEvent(
-      new CustomEvent("snapshot:auth-provider-redirect", {
-        detail: {
-          provider: provider.providerName,
-          url: provider.url,
-        },
-      }),
-    );
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = provider.url;
-    document.body.appendChild(form);
-    form.submit();
-  }, [hasProviders, providerMode, resolvedProviders]);
-
-  if (!hasProviders) {
-    return null;
-  }
-
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-root`,
-    implementationBase: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "sm",
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-  const headingSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-heading`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-sm, 0.875rem)",
-      fontWeight: "var(--sn-font-weight-medium, 500)",
-      color: "var(--sn-color-foreground, #111827)",
-    },
-    componentSurface: config.slots?.heading,
-  });
-  const providerGroupSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-provider-group`,
-    implementationBase: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "var(--sn-spacing-2xs, 0.125rem)",
-    },
-    componentSurface: config.slots?.providerGroup,
-  });
-  const providerButtonSurface = config.slots?.provider;
-  const providerIconSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-provider-icon`,
-    implementationBase: {
-      display: "inline-flex",
-      alignItems: "center",
-      style: { flexShrink: 0 },
-    },
-    componentSurface: config.slots?.providerIcon,
-  });
-  const providerLabelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-provider-label`,
-    implementationBase: {
-      flex: 1,
-      textAlign: "center",
-    },
-    componentSurface: config.slots?.providerLabel,
-  });
-  const providerDescriptionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-provider-description`,
-    implementationBase: {
-      fontSize: "var(--sn-font-size-xs, 0.75rem)",
-      color: "var(--sn-color-muted-foreground, #6b7280)",
-      textAlign: "center",
-    },
-    componentSurface: config.slots?.providerDescription,
+    return { name: providerName, label, description, url, autoRedirect };
   });
 
   return (
-    <>
-      <div
-        data-snapshot-component="oauth-buttons"
-        data-snapshot-id={`${rootId}-root`}
-        className={rootSurface.className}
-        style={rootSurface.style}
-      >
-        {resolvedHeading ? (
-          <div
-            data-snapshot-id={`${rootId}-heading`}
-            className={headingSurface.className}
-            style={headingSurface.style}
-          >
-            {resolvedHeading}
-          </div>
-        ) : null}
-        {resolvedProviders.map((provider, index) => {
-          const descriptionId = `sn-oauth-provider-${provider.providerName}`;
-
-          return (
-            <div
-              key={provider.providerName}
-              data-snapshot-id={`${rootId}-provider-group-${index}`}
-              className={providerGroupSurface.className}
-              style={providerGroupSurface.style}
-            >
-              <ButtonControl
-                surfaceId={`${rootId}-provider-${index}`}
-                surfaceConfig={providerButtonSurface}
-                variant="outline"
-                size="sm"
-                ariaLabel={provider.label}
-                ariaDescribedBy={provider.description ? descriptionId : undefined}
-                ariaHasPopup={false}
-                onClick={() => {
-                  const form = document.createElement("form");
-                  form.method = "POST";
-                  form.action = provider.url;
-                  document.body.appendChild(form);
-                  form.submit();
-                }}
-              >
-                <span
-                  data-snapshot-id={`${rootId}-provider-icon-${index}`}
-                  className={providerIconSurface.className}
-                  style={providerIconSurface.style}
-                >
-                  {renderIcon(
-                    PROVIDER_ICON_MAP[provider.providerName] ?? "globe",
-                    16,
-                  )}
-                </span>
-                <span
-                  data-snapshot-id={`${rootId}-provider-label-${index}`}
-                  className={providerLabelSurface.className}
-                  style={providerLabelSurface.style}
-                >
-                  {provider.label}
-                </span>
-              </ButtonControl>
-              {provider.description ? (
-                <div
-                  id={descriptionId}
-                  data-snapshot-id={`${rootId}-provider-description-${index}`}
-                  className={providerDescriptionSurface.className}
-                  style={providerDescriptionSurface.style}
-                >
-                  {provider.description}
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
-      </div>
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={headingSurface.scopedCss} />
-      <SurfaceStyles css={providerGroupSurface.scopedCss} />
-      <SurfaceStyles css={providerIconSurface.scopedCss} />
-      <SurfaceStyles css={providerLabelSurface.scopedCss} />
-      <SurfaceStyles css={providerDescriptionSurface.scopedCss} />
-    </>
+    <OAuthButtonsBase
+      heading={resolvedHeading}
+      providers={resolvedProviders}
+      providerMode={providerMode as "buttons" | "auto"}
+      id={config.id}
+      className={config.className}
+      style={config.style as CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }

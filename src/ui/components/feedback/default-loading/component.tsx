@@ -1,12 +1,12 @@
 "use client";
 
-import { useResolveFrom, useSubscribe } from "../../../context/hooks";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
+import type { CSSProperties } from "react";
+import { useResolveFrom } from "../../../context/hooks";
 import {
   resolveOptionalPrimitiveValue,
   usePrimitiveValueOptions,
 } from "../../primitives/resolve-value";
+import { DefaultLoadingBase } from "./standalone";
 import type { SpinnerConfig } from "./types";
 
 export function DefaultLoading({ config }: { config: SpinnerConfig }) {
@@ -16,82 +16,15 @@ export function DefaultLoading({ config }: { config: SpinnerConfig }) {
     resolvedConfig.label,
     primitiveOptions,
   );
-  const size = config.size ?? "md";
-  const diameter = size === "sm" ? "1rem" : size === "lg" ? "2rem" : "1.5rem";
-  const rootId = config.id ?? "spinner";
-
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      display: "grid",
-      gap: "var(--sn-spacing-sm, 0.5rem)",
-      color: "var(--sn-color-muted-foreground, #64748b)",
-      style: {
-        placeItems: "center",
-        padding: "var(--sn-spacing-lg, 1.5rem)",
-      },
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-    activeStates: ["active"],
-  });
-  const spinnerSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-spinner`,
-    implementationBase: {
-      borderRadius: "full",
-      style: {
-        width: diameter,
-        height: diameter,
-        border: "2px solid var(--sn-color-border, #cbd5e1)",
-        borderTopColor: "var(--sn-color-primary, #0f172a)",
-        animation: "sn-spin 0.8s linear infinite",
-      },
-    },
-    componentSurface: config.slots?.spinner,
-    activeStates: ["active"],
-  });
-  const labelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-label`,
-    implementationBase: {
-      fontSize: "sm",
-    },
-    componentSurface: config.slots?.label,
-    activeStates: ["active"],
-  });
-  const spinCss = `
-    @keyframes sn-spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  `;
 
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      aria-busy="true"
-      data-snapshot-feedback="loading"
-      className={rootSurface.className}
-      style={rootSurface.style}
-    >
-      <span
-        aria-hidden="true"
-        data-snapshot-id={`${rootId}-spinner`}
-        className={spinnerSurface.className}
-        style={spinnerSurface.style}
-      />
-      <span
-        data-snapshot-id={`${rootId}-label`}
-        className={labelSurface.className}
-        style={labelSurface.style}
-      >
-        {resolvedLabel ?? "Loading"}
-      </span>
-      <SurfaceStyles css={spinCss} />
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={spinnerSurface.scopedCss} />
-      <SurfaceStyles css={labelSurface.scopedCss} />
-    </div>
+    <DefaultLoadingBase
+      label={resolvedLabel}
+      size={config.size}
+      id={config.id}
+      className={config.className}
+      style={config.style as CSSProperties}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }

@@ -16,7 +16,7 @@ Read this after root `CLAUDE.md` when changing scaffold, sync, manifest commands
 - `src/cli/templates/snapshot-config.ts`
 - `src/cli/templates/vite-config.ts`
 - `apps/docs/src/content/docs/build/manifest-apps.md`
-- `apps/docs/src/content/docs/build/sdk-apps.md`
+- `apps/docs/src/content/docs/start-here/index.md`
 - `apps/docs/src/content/docs/reference/cli.md`
 - `apps/docs/src/content/docs/contribute/testing.md`
 
@@ -30,9 +30,9 @@ Read this after root `CLAUDE.md` when changing scaffold, sync, manifest commands
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
 - `apps/docs/src/content/docs/build/manifest-apps.md`
-- `apps/docs/src/content/docs/build/sdk-apps.md`
+- `apps/docs/src/content/docs/manifest/quick-start.md`
 - `apps/docs/src/content/docs/examples/index.md`
 
 ## Required Follow-Through

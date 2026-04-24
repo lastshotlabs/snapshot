@@ -2,25 +2,13 @@
 
 import { useResolveFrom, useSubscribe } from "../../../context/hooks";
 import { useActionExecutor } from "../../../actions/executor";
-import { Icon } from "../../../icons/index";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import {
-  extractSurfaceConfig,
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
+import { extractSurfaceConfig } from "../../_base/style-surfaces";
 import {
   resolveOptionalPrimitiveValue,
   usePrimitiveValueOptions,
 } from "../../primitives/resolve-value";
-import { ButtonControl } from "../../forms/button";
 import type { EmptyStateConfig } from "./types";
-
-const ICON_SIZE_MAP = { sm: 32, md: 48, lg: 64 } as const;
-const SPACING_MAP = {
-  sm: "var(--sn-spacing-md, 1rem)",
-  md: "var(--sn-spacing-xl, 2rem)",
-  lg: "var(--sn-spacing-xl, 2rem)",
-} as const;
+import { EmptyStateBase } from "./standalone";
 
 export function EmptyState({ config }: { config: EmptyStateConfig }) {
   const execute = useActionExecutor();
@@ -48,127 +36,23 @@ export function EmptyState({ config }: { config: EmptyStateConfig }) {
     return null;
   }
 
-  const size = config.size ?? "md";
-  const iconSize = ICON_SIZE_MAP[size];
-  const spacing = SPACING_MAP[size];
-  const rootId = config.id ?? "empty-state";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      style: {
-        padding: spacing,
-        gap: "var(--sn-spacing-md, 1rem)",
-      },
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-
-  const iconSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-icon`,
-    implementationBase: {
-      color: config.iconColor
-        ? `var(--sn-color-${config.iconColor}, ${config.iconColor})`
-        : "var(--sn-color-muted-foreground, #6b7280)",
-      style: {
-        lineHeight: "var(--sn-leading-none, 1)",
-      },
-    },
-    componentSurface: config.slots?.icon,
-  });
-  const titleSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-title`,
-    implementationBase: {
-      color: "var(--sn-color-foreground, #111827)",
-      fontSize: size === "sm" ? "base" : size === "lg" ? "xl" : "lg",
-      fontWeight: "semibold",
-      style: {
-        margin: 0,
-      },
-    },
-    componentSurface: config.slots?.title,
-  });
-  const descriptionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-description`,
-    implementationBase: {
-      color: "var(--sn-color-muted-foreground, #6b7280)",
-      fontSize: "sm",
-      maxWidth: "var(--sn-container-md, 400px)",
-      lineHeight: "normal",
-      style: {
-        margin: 0,
-      },
-    },
-    componentSurface: config.slots?.description,
-  });
-  const actionSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-action`,
-    componentSurface: config.slots?.action,
-  });
+  const surface = extractSurfaceConfig(config);
 
   return (
-    <div
-      data-snapshot-component="empty-state"
-      data-testid="empty-state"
-      data-snapshot-id={rootId}
-      className={rootSurface.className}
-      style={rootSurface.style}
-    >
-      {config.icon ? (
-        <span
-          data-testid="empty-state-icon"
-          aria-hidden="true"
-          data-snapshot-id={`${rootId}-icon`}
-          className={iconSurface.className}
-          style={iconSurface.style}
-        >
-          <Icon name={config.icon} size={iconSize} />
-        </span>
-      ) : null}
-
-      <h3
-        data-testid="empty-state-title"
-        data-snapshot-id={`${rootId}-title`}
-        className={titleSurface.className}
-        style={titleSurface.style}
-      >
-        {title ?? ""}
-      </h3>
-
-      {description ? (
-        <p
-          data-testid="empty-state-description"
-          data-snapshot-id={`${rootId}-description`}
-          className={descriptionSurface.className}
-          style={descriptionSurface.style}
-        >
-          {description}
-        </p>
-      ) : null}
-
-      {config.action && actionLabel ? (
-        <ButtonControl
-          variant="default"
-          size="md"
-          onClick={() => void execute(config.action!)}
-          surfaceId={`${rootId}-action`}
-          surfaceConfig={actionSurface.resolvedConfigForWrapper}
-          testId="empty-state-action"
-        >
-          {actionLabel}
-        </ButtonControl>
-      ) : null}
-
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={iconSurface.scopedCss} />
-      <SurfaceStyles css={titleSurface.scopedCss} />
-      <SurfaceStyles css={descriptionSurface.scopedCss} />
-      <SurfaceStyles css={actionSurface.scopedCss} />
-    </div>
+    <EmptyStateBase
+      id={config.id}
+      title={title ?? ""}
+      description={description ?? undefined}
+      icon={config.icon}
+      iconColor={config.iconColor}
+      size={config.size}
+      actionLabel={actionLabel ?? undefined}
+      onAction={
+        config.action ? () => void execute(config.action!) : undefined
+      }
+      className={surface?.className as string | undefined}
+      style={surface?.style as React.CSSProperties | undefined}
+      slots={config.slots}
+    />
   );
 }

@@ -18,5 +18,5 @@ export const boxConfigSchema = extendComponentSchema({
     ])
     .optional(),
   children: z.array(componentConfigSchema).optional(),
-  slots: slotsSchema(["root", "item"]).optional(),
+  slots: slotsSchema(["root"]).optional(),
 }).strict();

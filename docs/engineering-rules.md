@@ -163,7 +163,7 @@ When implementing or reviewing manifest UI, start with:
 - Capability changes must review the cross-cutting docs, not just the local reference page:
   - `apps/docs/src/content/docs/index.md`
   - `apps/docs/src/content/docs/start-here/index.md`
-  - `apps/docs/src/content/docs/start-here/capabilities.md`
+  - `apps/docs/src/content/docs/start-here/installation.md`
   - `apps/docs/src/content/docs/examples/index.md`
 - Playground coverage is part of the documentation system until a broader example suite exists.
 - `bun run docs:ci` is the default documentation validation path for contributor work.

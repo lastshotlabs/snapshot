@@ -59,7 +59,7 @@ describe("Card", () => {
           slots: {
             root: { className: "slot-root" },
             item: { className: "item-slot" },
-          },
+          } as never,
           children: [{ type: "text", id: "details" }],
         }}
       />,

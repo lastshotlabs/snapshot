@@ -42,11 +42,7 @@ describe("listConfigSchema phase D", () => {
       slots: {
         root: { className: "root-slot" },
         list: { className: "list-slot" },
-        dropZone: { className: "drop-zone-slot" },
-        sortableItem: { className: "sortable-item-slot" },
         itemBody: { className: "body-slot" },
-        virtualContent: { className: "virtual-content-slot" },
-        virtualSpacer: { className: "virtual-spacer-slot" },
         liveBanner: { className: "live-slot" },
         loadingItem: { className: "loading-item-slot" },
         emptyState: { className: "empty-slot" },

@@ -1,87 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { useResolveFrom, useSubscribe } from "../../../context/hooks";
+import { useResolveFrom } from "../../../context/hooks";
 import { ComponentRenderer } from "../../../manifest/renderer";
-import { ButtonControl } from "../../forms/button";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
 import {
   resolveOptionalPrimitiveValue,
   usePrimitiveValueOptions,
 } from "../../primitives/resolve-value";
+import { NavSectionBase } from "./standalone";
 import type { NavSectionConfig } from "./types";
 
 export function NavSection({ config }: { config: NavSectionConfig }) {
-  const [isCollapsed, setIsCollapsed] = useState(config.defaultCollapsed ?? false);
   const primitiveOptions = usePrimitiveValueOptions();
   const resolvedConfig = useResolveFrom({ label: config.label });
   const label = resolveOptionalPrimitiveValue(resolvedConfig.label, primitiveOptions);
-  const showItems = !config.collapsible || !isCollapsed;
-  const rootId = config.id ?? "nav-section";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-root`,
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-  const headerLabelSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-header-label`,
-    implementationBase: {
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      width: "100%",
-    },
-    componentSurface: config.slots?.headerLabel,
-  });
-  const contentSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-content`,
-    implementationBase: {
-      display: "flex",
-      flexDirection: "column",
-    },
-    componentSurface: config.slots?.content,
-    activeStates: showItems ? ["open"] : [],
-  });
 
   return (
-    <div
-      data-snapshot-component="nav-section"
-      data-snapshot-id={`${rootId}-root`}
-      className={rootSurface.className}
-      style={rootSurface.style}
+    <NavSectionBase
+      id={config.id}
+      label={label}
+      collapsible={config.collapsible}
+      defaultCollapsed={config.defaultCollapsed}
+      className={config.className}
+      style={config.style}
+      slots={config.slots}
     >
-      {label ? (
-        <ButtonControl
-          variant="ghost"
-          onClick={config.collapsible ? () => setIsCollapsed((value) => !value) : undefined}
-          surfaceId={`${rootId}-header`}
-          surfaceConfig={config.slots?.header}
-          activeStates={showItems ? ["open"] : []}
-        >
-          <span
-            data-snapshot-id={`${rootId}-header-label`}
-            className={headerLabelSurface.className}
-            style={headerLabelSurface.style}
-          >
-            {label}
-          </span>
-        </ButtonControl>
-      ) : null}
-      {showItems ? (
-        <div
-          data-snapshot-id={`${rootId}-content`}
-          className={contentSurface.className}
-          style={contentSurface.style}
-        >
-          {config.items.map((item, index) => (
-            <ComponentRenderer key={(item as { id?: string }).id ?? index} config={item} />
-          ))}
-        </div>
-      ) : null}
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={headerLabelSurface.scopedCss} />
-      <SurfaceStyles css={contentSurface.scopedCss} />
-    </div>
+      {config.items.map((item, index) => (
+        <ComponentRenderer key={(item as { id?: string }).id ?? index} config={item} />
+      ))}
+    </NavSectionBase>
   );
 }

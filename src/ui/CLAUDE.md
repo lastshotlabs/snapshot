@@ -37,7 +37,7 @@ UI changes often affect more than one guide. Review:
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
-- `apps/docs/src/content/docs/start-here/capabilities.md`
+- `apps/docs/src/content/docs/start-here/installation.md`
 - `apps/docs/src/content/docs/examples/index.md`
 - `apps/docs/src/content/docs/build/manifest-apps.md`
 - `apps/docs/src/content/docs/build/styling-and-slots.md`

@@ -1,14 +1,16 @@
 'use client';
 
-import { useResolveFrom, useSubscribe } from "../../../context/hooks";
-import { SurfaceStyles } from "../../_base/surface-styles";
-import { extractSurfaceConfig, resolveSurfacePresentation } from "../../_base/style-surfaces";
+import { useResolveFrom } from "../../../context/hooks";
 import {
   resolveOptionalPrimitiveValue,
   usePrimitiveValueOptions,
 } from "../../primitives/resolve-value";
+import { EmbedBase } from "./standalone";
 import type { EmbedSchemaConfig } from "./types";
 
+/**
+ * Manifest adapter — resolves config refs and delegates to EmbedBase.
+ */
 export function Embed({ config }: { config: EmbedSchemaConfig }) {
   const primitiveOptions = usePrimitiveValueOptions();
   const resolvedConfig = useResolveFrom({
@@ -27,52 +29,16 @@ export function Embed({ config }: { config: EmbedSchemaConfig }) {
     resolvedConfig.title,
     primitiveOptions,
   );
-  const rootId = config.id ?? "embed";
-  const rootSurface = resolveSurfacePresentation({
-    surfaceId: rootId,
-    implementationBase: {
-      position: "relative",
-      width: "100%",
-      overflow: "hidden",
-      borderRadius: "lg",
-      style: {
-        aspectRatio,
-      },
-    },
-    componentSurface: extractSurfaceConfig(config),
-    itemSurface: config.slots?.root,
-  });
-  const frameSurface = resolveSurfacePresentation({
-    surfaceId: `${rootId}-frame`,
-    implementationBase: {
-      position: "absolute",
-      inset: "0",
-      width: "100%",
-      height: "100%",
-      style: {
-        border: "none",
-      },
-    },
-    componentSurface: config.slots?.frame,
-  });
 
   return (
-    <div
-      data-snapshot-component="embed"
-      className={rootSurface.className}
-      style={rootSurface.style}
-    >
-      <iframe
-        src={url}
-        title={title ?? "Embedded content"}
-        data-snapshot-id={`${rootId}-frame`}
-        className={frameSurface.className}
-        style={frameSurface.style}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      />
-      <SurfaceStyles css={rootSurface.scopedCss} />
-      <SurfaceStyles css={frameSurface.scopedCss} />
-    </div>
+    <EmbedBase
+      id={config.id}
+      url={url}
+      aspectRatio={aspectRatio}
+      title={title}
+      className={config.className}
+      style={config.style}
+      slots={config.slots as Record<string, Record<string, unknown>>}
+    />
   );
 }
