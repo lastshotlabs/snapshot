@@ -283,6 +283,270 @@ function App({ apiClient }) {
 }
 ```
 
+## All action schemas
+
+Full reference for every action type:
+
+### `navigate`
+
+```ts
+{ type: "navigate", to: string, replace?: boolean }
+```
+
+`to` supports interpolation: `{ "to": "/users/{id}" }`.
+`replace` replaces the history entry instead of pushing.
+
+### `api`
+
+```ts
+{
+  type: "api",
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+  endpoint: string,
+  body?: Record<string, unknown> | { from: string },
+  params?: Record<string, unknown>,
+  onSuccess?: ActionConfig | ActionConfig[],
+  onError?: ActionConfig | ActionConfig[],
+}
+```
+
+The response is available as `{result}` in `onSuccess`. The error message is available as
+`{error}` in `onError`. Endpoint, body, and params values support interpolation.
+
+`body` accepts a FromRef to submit an entire form's values — useful when a form isn't
+using its own `submit` field but instead delegates submission to a button elsewhere:
+
+```json
+{
+  "type": "api",
+  "method": "POST",
+  "endpoint": "/api/users",
+  "body": { "from": "create-user-form" }
+}
+```
+
+The form must have `"id": "create-user-form"` and publish `{ values }`. The `body`
+receives the form's current `values` object.
+
+`params` appends query parameters to the endpoint URL.
+
+### `open-modal`
+
+```ts
+{ type: "open-modal", modal: string }
+```
+
+`modal` must match the `id` of a modal or drawer in the current page's `content`.
+
+### `close-modal`
+
+```ts
+{ type: "close-modal", modal?: string }
+```
+
+Without `modal`, closes the topmost modal on the stack.
+
+### `refresh`
+
+```ts
+{ type: "refresh", target: string }
+```
+
+`target` is a component `id` or a comma-separated list of ids:
+`"target": "users-table, revenue-stat"`.
+
+### `set-value`
+
+```ts
+{ type: "set-value", target: string, value: unknown }
+```
+
+Publishes a value to the page context atom keyed by `target`. Equivalent to calling
+`usePublish(target)(value)` programmatically.
+
+Use `set-value` when you need to push data into the context from an action chain rather
+than from a component interaction. Common patterns:
+
+**Pass row data to a custom context key before opening a modal:**
+
+```json
+[
+  { "type": "set-value", "target": "editing-user", "value": "{row}" },
+  { "type": "open-modal", "modal": "edit-user-modal" }
+]
+```
+
+The modal's form can then read `{ "from": "editing-user" }` to pre-fill its fields.
+
+**Clear a filter after an operation:**
+
+```json
+[
+  { "type": "api", "method": "POST", "endpoint": "/api/search" },
+  { "type": "set-value", "target": "search-query", "value": "" }
+]
+```
+
+### `download`
+
+```ts
+{ type: "download", endpoint: string, filename?: string }
+```
+
+Calls the endpoint and triggers a file download. `filename` defaults to the
+`Content-Disposition` header value.
+
+```json
+{
+  "label": "Export CSV",
+  "icon": "Download",
+  "action": {
+    "type": "download",
+    "endpoint": "/api/users/export.csv",
+    "filename": "users.csv"
+  }
+}
+```
+
+With the current row's ID (as a row action on a data-table):
+
+```json
+{
+  "type": "download",
+  "endpoint": "/api/invoices/{id}/pdf",
+  "filename": "invoice-{id}.pdf"
+}
+```
+
+### `confirm`
+
+```ts
+{
+  type: "confirm",
+  message: string,
+  confirmLabel?: string,
+  cancelLabel?: string,
+  variant?: "default" | "destructive",
+}
+```
+
+Pauses the chain. Resumes on confirm; cancels the entire chain on dismiss.
+
+### `toast`
+
+```ts
+{
+  type: "toast",
+  message: string,
+  variant?: "success" | "error" | "warning" | "info",
+  duration?: number,
+  action?: { label: string; action: ActionConfig },
+}
+```
+
+`duration` is in milliseconds. Set to `0` to disable auto-dismiss.
+
+`action` adds a button inside the toast — useful for "undo" patterns:
+
+```json
+{
+  "type": "toast",
+  "message": "User archived",
+  "variant": "success",
+  "action": {
+    "label": "Undo",
+    "action": { "type": "api", "method": "POST", "endpoint": "/api/users/{id}/unarchive" }
+  }
+}
+```
+
+---
+
+## Error handling
+
+By default, if an `api` action fails the chain stops silently. Add `onError` to handle it:
+
+```json
+{
+  "type": "api",
+  "method": "POST",
+  "endpoint": "/api/users",
+  "onSuccess": [
+    { "type": "close-modal" },
+    { "type": "refresh", "target": "users-table" },
+    { "type": "toast", "message": "User created", "variant": "success" }
+  ],
+  "onError": {
+    "type": "toast",
+    "message": "Failed to create user: {error}",
+    "variant": "error"
+  }
+}
+```
+
+For destructive operations, always include an error handler so users know what failed:
+
+```json
+{
+  "type": "api",
+  "method": "DELETE",
+  "endpoint": "/api/users/{id}",
+  "onSuccess": { "type": "refresh", "target": "users-table" },
+  "onError": { "type": "toast", "message": "Delete failed: {error}", "variant": "error" }
+}
+```
+
+### Error in a chain
+
+When an action in a top-level chain (not inside `onSuccess`/`onError`) fails, the chain
+stops. To handle errors in a top-level chain, use nested `onSuccess`/`onError` on the
+`api` action:
+
+```json
+[
+  { "type": "confirm", "message": "Archive this?" },
+  {
+    "type": "api",
+    "method": "POST",
+    "endpoint": "/api/projects/{id}/archive",
+    "onSuccess": [
+      { "type": "navigate", "to": "/projects" },
+      { "type": "toast", "message": "Archived", "variant": "success" }
+    ],
+    "onError": { "type": "toast", "message": "Archive failed", "variant": "error" }
+  }
+]
+```
+
+---
+
+## Debugging action chains
+
+**Chain stops without any visible error**
+
+The most common cause: a `confirm` was cancelled (expected) or an `api` action failed
+without an `onError` handler. Add `onError` with a `toast` to make failures visible
+during development.
+
+**`{param}` interpolation not resolving**
+
+Check: (1) the key exists in the row data / execution context, (2) the key is spelled
+exactly correctly (case-sensitive), (3) nested paths use dot notation: `{user.name}`.
+Missing keys are preserved as-is (`{missing}`) rather than clearing to empty string.
+
+**`open-modal` does nothing**
+
+The `modal` value must match the `id` of a modal or drawer component in the page's
+`content` array. Check for typos and ensure the modal is in the same page, not a
+different route.
+
+**`refresh` doesn't re-fetch**
+
+The `target` must match the `id` of the component that fetched the data. If the component
+has no `id`, it can't be refreshed by target name.
+
+---
+
 ## Zod Validation
 
 All action configs have Zod schemas for manifest validation:
@@ -298,4 +562,5 @@ const result = actionSchema.safeParse({
 ```
 
 Individual schemas are also exported: `navigateActionSchema`, `apiActionSchema`,
-`toastActionSchema`, etc.
+`openModalActionSchema`, `closeModalActionSchema`, `refreshActionSchema`,
+`setValueActionSchema`, `downloadActionSchema`, `confirmActionSchema`, `toastActionSchema`.

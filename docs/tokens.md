@@ -1,8 +1,8 @@
 # Design Token System
 
-The token system provides flavor-based theming with runtime customization. It replaces
-hardcoded CSS palettes with a configurable, extensible design token layer that integrates
-with shadcn's CSS variable system.
+The token system provides flavor-based theming with runtime customization. All tokens are
+emitted as CSS custom properties with the `--sn-` prefix. Components use these variables
+for every visual attribute — changing a token updates every component that references it.
 
 ## Quick Start
 
@@ -278,3 +278,134 @@ import {
   parseOklchString,
 } from "@lastshotlabs/snapshot/ui";
 ```
+
+---
+
+## CSS variable names
+
+All CSS custom properties use the `--sn-` prefix. These are the valid token names —
+referencing anything else silently falls back to a hardcoded value, breaking theme switching.
+
+**Colors** — each generates a `-foreground` companion:
+`--sn-color-primary`, `--sn-color-secondary`, `--sn-color-muted`, `--sn-color-accent`,
+`--sn-color-destructive`, `--sn-color-success`, `--sn-color-warning`, `--sn-color-info`,
+`--sn-color-background` / `--sn-color-foreground`,
+`--sn-color-card`, `--sn-color-popover`, `--sn-color-sidebar`,
+`--sn-color-border`, `--sn-color-input`, `--sn-color-ring`,
+`--sn-chart-1` through `--sn-chart-5`
+
+**Aliases:** `--sn-color-surface` (= card), `--sn-color-text` (= foreground)
+
+**Radius:** `--sn-radius-none`, `--sn-radius-xs`, `--sn-radius-sm`, `--sn-radius-md`,
+`--sn-radius-lg`, `--sn-radius-xl`, `--sn-radius-full`
+
+**Spacing:** `--sn-spacing-2xs` through `--sn-spacing-3xl`
+
+**Font:** `--sn-font-sans`, `--sn-font-mono`, `--sn-font-display`,
+`--sn-font-size-xs` through `--sn-font-size-4xl`,
+`--sn-font-weight-light` through `--sn-font-weight-bold`
+
+**Shadows:** `--sn-shadow-none` through `--sn-shadow-xl`
+
+**Component tokens:** `--sn-card-*`, `--sn-table-*`, `--sn-button-*`, `--sn-input-*`,
+`--sn-modal-*`, `--sn-nav-*`, `--sn-badge-*`, `--sn-toast-*`
+
+---
+
+## Common mistakes
+
+These mistakes cause silent visual breakage — the value is accepted but doesn't respond
+to theme changes or dark mode.
+
+**Wrong token name:**
+
+```css
+/* Wrong — this variable doesn't exist */
+color: var(--sn-color-danger);
+/* Correct */
+color: var(--sn-color-destructive);
+
+/* Wrong */
+font-size: var(--sn-font-sm);
+/* Correct */
+font-size: var(--sn-font-size-sm);
+```
+
+**`muted` as a text color:**
+
+`--sn-color-muted` is a background color with very high lightness. Text set to it becomes
+invisible in light mode. Use `--sn-color-muted-foreground` for secondary/dimmed text:
+
+```css
+/* Wrong — invisible text */
+color: var(--sn-color-muted);
+/* Correct */
+color: var(--sn-color-muted-foreground);
+```
+
+**Background without foreground:**
+
+When using a semantic color as a background, always pair it with its `-foreground` companion
+to guarantee contrast in every theme:
+
+```css
+/* Wrong — text color is unspecified, may have no contrast */
+background-color: var(--sn-color-primary);
+
+/* Correct */
+background-color: var(--sn-color-primary);
+color: var(--sn-color-primary-foreground);
+```
+
+**`setToken()` for flavor switching:**
+
+`useTokenEditor().setToken()` applies a single CSS property inline on `:root`. Inline styles
+have higher specificity than stylesheet rules, so they override the `.dark` block and break
+dark mode. For flavor changes, use `setFlavor()` or regenerate the full stylesheet:
+
+```ts
+// Wrong — breaks dark mode
+const { setToken } = useTokenEditor();
+setToken("colors.primary", "#6d28d9");
+setToken("colors.background", "#1a1a2e");
+
+// Correct — for flavor switching
+const { setFlavor } = useTokenEditor();
+setFlavor("midnight");
+
+// Correct — for full theme switch (e.g. brand override)
+const css = resolveTokens({ flavor: "neutral", overrides: { colors: { primary: "#6d28d9" } } });
+injectStyleSheet("my-app-tokens", css);
+```
+
+**Hardcoded font sizes:**
+
+```tsx
+// Wrong — bypasses the font size token, doesn't respond to the font scale control
+<span style={{ fontSize: "0.875rem" }}>label</span>
+
+// Correct — responds to token overrides
+<span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)" }}>label</span>
+```
+
+---
+
+## Dark mode
+
+Dark mode is handled automatically. `resolveTokens()` emits both `:root { ... }` (light)
+and `.dark { ... }` (dark) blocks. The `useTheme()` hook toggles the `.dark` class on
+`<html>`.
+
+To force dark mode at startup:
+
+```ts
+const css = resolveTokens({ flavor: "midnight", mode: "dark" });
+injectStyleSheet("my-app-tokens", css);
+```
+
+The `:root` block includes `color-scheme: light` and `.dark` includes `color-scheme: dark`.
+This ensures native browser elements (scrollbars, form controls, date pickers) match the
+current theme.
+
+When a user overrides a color in light mode (via `useTokenEditor`), the dark variant
+auto-derives from the override — you don't need to set both.
