@@ -1,2160 +1,395 @@
 # @lastshotlabs/snapshot
 
-React frontend framework for [bunshot](https://github.com/lastshotlabs/bunshot)-powered backends.
+[![npm version](https://img.shields.io/npm/v/@lastshotlabs/snapshot.svg)](https://www.npmjs.com/package/@lastshotlabs/snapshot)
 
-Provides auth, API client, WebSocket, routing guards, and theme — all wired via a single factory call.
+Snapshot is the React SDK and config-driven UI runtime for
+[Bunshot](https://github.com/lastshotlabs/bunshot)-powered apps.
 
----
+It gives a frontend app one `createSnapshot()` factory for auth, account
+management, realtime, generated API hooks, manifest rendering, theming, and UI
+components. Use it code-first with normal React components, manifest-first with
+`snapshot.manifest.json`, or mix both in the same app.
 
-## Installation
+## What You Get
 
-```bash
-bun add @lastshotlabs/snapshot
-```
+- 100+ hooks across auth, MFA, OAuth, passkeys, account management, WebSocket,
+  SSE, community, webhooks, and notifications.
+- 100+ standalone UI components imported from `@lastshotlabs/snapshot/ui`.
+- Manifest-driven app rendering for routes, navigation, auth screens, overlays,
+  actions, workflows, resources, and themed page composition.
+- Vite plugins for manifest apps, OpenAPI sync, SSR, RSC, prefetch manifests,
+  SSG, and PPR build metadata.
+- Server rendering helpers exported from `@lastshotlabs/snapshot/ssr`.
+- A CLI for scaffolding apps, syncing API types and hooks, validating manifests,
+  and running manifest apps locally.
 
-**Peer dependencies** (install separately):
-
-```bash
-bun add react react-dom @tanstack/react-router @tanstack/react-query jotai @unhead/react
-```
-
----
-
-## Scaffolding
-
-The fastest way to start is with the scaffold CLI — it generates a complete Vite + TanStack Router + shadcn app pre-wired to snapshot.
-
-```bash
-bunx @lastshotlabs/snapshot init "My App"
-```
-
-**With a custom output directory:**
+## Install
 
 ```bash
-bunx @lastshotlabs/snapshot init "My App" my-app-dir
+npm install @lastshotlabs/snapshot react react-dom @tanstack/react-query @tanstack/react-router @unhead/react jotai recharts
 ```
 
-**Skip all prompts and accept defaults:**
+Optional peers depend on the features you use:
 
 ```bash
-bunx @lastshotlabs/snapshot init "My App" --yes
+npm install -D vite
+npm install zod react-server-dom-webpack
 ```
 
-### Prompts
+Bun users can install the same packages with `bun add`.
 
-| Prompt            | Options                                    | Default                   |
-| ----------------- | ------------------------------------------ | ------------------------- |
-| Project name      | free text                                  | —                         |
-| Package name      | free text                                  | derived from project name |
-| Security profile  | `hardened` · `prototype`                   | `hardened`                |
-| Layout            | `minimal` · `top-nav` · `sidebar`          | `top-nav`                 |
-| Theme             | `default` · `dark` · `minimal` · `vibrant` | `default`                 |
-| Auth pages        | yes · no                                   | yes                       |
-| MFA pages         | yes · no (shown if auth pages: yes)        | no                        |
-| Passkey pages     | yes · no (shown if auth pages: yes)        | no                        |
-| shadcn components | multi-select                               | recommended set           |
-| WebSocket support | yes · no                                   | yes                       |
-| Git init          | yes · no                                   | yes                       |
+## Public Imports
 
-### What gets generated
-
-```
-my-app/
-  src/
-    routes/
-      __root.tsx
-      _authenticated.tsx
-      _authenticated/index.tsx
-      _authenticated/mfa-setup.tsx  ← (if MFA pages: yes)
-      _authenticated/passkey.tsx    ← (if passkey pages: yes)
-      _authenticated/settings/
-        index.tsx                   ← (if auth pages: yes)
-        password.tsx                ← (if auth pages: yes)
-        sessions.tsx                ← (if auth pages: yes)
-        delete-account.tsx          ← (if auth pages: yes)
-        email-otp.tsx               ← (if auth pages + mfa pages: yes)
-      _guest.tsx
-      _guest/auth/           ← login, register, forgot-password,
-                               reset-password, verify-email,
-                               oauth/callback (if auth pages: yes)
-                               mfa-verify (if MFA pages: yes)
-    pages/
-      auth/                  ← LoginPage, RegisterPage, ForgotPasswordPage,
-                               ResetPasswordPage, VerifyEmailPage,
-                               OAuthCallbackPage (if auth pages: yes)
-                               MfaVerifyPage, MfaSetupPage (if MFA pages: yes)
-      PasskeyManagePage.tsx  ← (if passkey pages: yes)
-      settings/
-        SettingsPage.tsx              ← (if auth pages: yes)
-        SettingsPasswordPage.tsx      ← (if auth pages: yes)
-        SettingsSessionsPage.tsx      ← (if auth pages: yes)
-        SettingsDeleteAccountPage.tsx ← (if auth pages: yes)
-        SettingsEmailOtpPage.tsx      ← (if auth pages + mfa pages: yes)
-    components/
-      layout/                ← RootLayout, AuthLayout, shared components (layout-specific)
-      ui/                    ← shadcn components
-      shared/
-    api/                     ← plain async functions (populated by snapshot sync)
-    hooks/                   ← custom hooks (your code)
-      api/                   ← generated TanStack Query hooks (snapshot sync)
-    lib/
-      snapshot.ts            ← createSnapshot() call, all hooks exported
-      router.ts
-      utils.ts
-    store/ui.ts
-    styles/globals.css       ← theme-specific CSS variables
-    types/api.ts             ← generated types (snapshot sync)
-    main.tsx
-  public/
-    vite.svg
-  vite.config.ts
-  tsconfig.json              ← project references root
-  tsconfig.app.json          ← app compiler options + path aliases
-  tsconfig.node.json         ← vite.config.ts compiler options
-  snapshot.config.json       ← sync output directories (edit to customise)
-  components.json
-  package.json
-  index.html
-  .env
-  .gitignore                 ← includes routeTree.gen.ts
-```
-
-> **Note:** `routeTree.gen.ts` is auto-generated by TanStack Router on the first `bun dev` run. TypeScript will show an error for it until you start the dev server once.
-
-### Layouts
-
-- **Minimal** — bare `div` wrapper, no navigation
-- **Top nav** — header with app name, theme toggle, sign in/out
-- **Sidebar** — collapsible sidebar (mobile overlay + desktop fixed), top bar with hamburger
-
-### Themes
-
-All themes include both `:root` (light) and `.dark` variable sets — dark mode always works regardless of theme.
-
-- **Default** — shadcn neutral palette, light mode default
-- **Dark** — same palette, dark mode default (seeds `localStorage` on first visit to prevent FOUC)
-- **Minimal** — reduced border radius, muted/low-contrast palette
-- **Vibrant** — saturated violet/indigo palette, higher contrast
-
-### After scaffolding
-
-```bash
-cd my-app
-
-# Fill in .env:
-# VITE_API_URL  — your bunshot backend URL
-# VITE_WS_URL   — your WebSocket URL (if WS enabled)
-
-bun dev         # start the dev server (also generates routeTree.gen.ts)
-bun run sync    # generate src/api/, src/hooks/api/, src/types/api.ts from your backend
-```
-
-`snapshot.config.json` is pre-generated with the default output paths. Edit it if you need to rename directories or point sync at a different backend.
-
----
+| Import                        | Use it for                                                                                            |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `@lastshotlabs/snapshot`      | `createSnapshot`, plugins, push notifications, contracts, shared types                                |
+| `@lastshotlabs/snapshot/ui`   | Standalone UI components such as `ButtonBase`, `InputField`, `CardBase`, `DataTableBase`, `ModalBase` |
+| `@lastshotlabs/snapshot/vite` | `snapshotApp`, `snapshotSync`, `snapshotSsr`                                                          |
+| `@lastshotlabs/snapshot/ssr`  | React, manifest, RSC, PPR, and prefetch rendering utilities                                           |
 
 ## Quick Start
 
-### 1. Create the snapshot instance
+Create one Snapshot instance and put the app under `QueryProvider`.
 
-> **Note:** The examples below use `@lib/snapshot` — a path alias pointing to `src/lib/snapshot.ts`. All aliases are configured in `tsconfig.app.json` and `vite.config.ts` in the generated scaffold. Available aliases: `@` → `src`, `@lib`, `@components`, `@hooks`, `@api`, `@store`, `@styles`, `@types`. All hooks and primitives flow through `@lib/snapshot`, not through direct package imports.
-
-```ts
-// src/lib/snapshot.ts
+```tsx
+import type { ReactNode } from "react";
 import { createSnapshot } from "@lastshotlabs/snapshot";
-
-export const snapshot = createSnapshot({
-  apiUrl: import.meta.env.VITE_API_URL,
-  loginPath: "/login",
-  homePath: "/dashboard",
-});
-
-export const {
-  // Core auth
-  useUser,
-  useLogin,
-  useLogout,
-  useRegister,
-  useForgotPassword,
-  // Account management
-  useSetPassword,
-  useDeleteAccount,
-  useCancelDeletion,
-  useRefreshToken,
-  useSessions,
-  useRevokeSession,
-  useResetPassword,
-  useVerifyEmail,
-  useResendVerification,
-  // OAuth
-  getOAuthUrl,
-  getLinkUrl,
-  useOAuthExchange,
-  useOAuthUnlink,
-  // MFA (opt-in — only needed if your bunshot backend has MFA enabled)
-  useMfaVerify,
-  useMfaSetup,
-  useMfaVerifySetup,
-  useMfaDisable,
-  useMfaRecoveryCodes,
-  useMfaResend,
-  useMfaMethods,
-  usePendingMfaChallenge,
-  isMfaChallenge,
-  // WebAuthn (opt-in — only needed if bunshot has webauthn MFA enabled)
-  useWebAuthnRegisterOptions,
-  useWebAuthnRegister,
-  useWebAuthnCredentials,
-  useWebAuthnRemoveCredential,
-  useWebAuthnDisable,
-  // Passkey login (opt-in — only when allowPasswordlessLogin: true on server)
-  usePasskeyLoginOptions,
-  usePasskeyLogin,
-  // WebSocket
-  useSocket,
-  useRoom,
-  useRoomEvent,
-  useWebSocketManager,
-  // UI / routing
-  useTheme,
-  protectedBeforeLoad,
-  guestBeforeLoad,
-  QueryProvider,
-  // Primitives
-  api,
-  queryClient,
-  tokenStorage,
-} = snapshot;
-```
-
-### 2. Set up the router
-
-```ts
-// src/lib/router.ts
-import { createRouter } from "@tanstack/react-router";
-import { routeTree } from "../routeTree.gen";
-import { snapshot } from "./snapshot";
-
-export const router = createRouter({
-  routeTree,
-  context: { queryClient: snapshot.queryClient },
-  defaultPreload: "intent",
-  defaultPreloadStaleTime: 0,
-  scrollRestoration: true,
-});
-
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
-```
-
-### 3. Wire up providers in main.tsx
-
-```tsx
-// src/main.tsx
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { RouterProvider } from "@tanstack/react-router";
-import { QueryProvider } from "@lib/snapshot";
-import { router } from "@lib/router";
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryProvider>
-      <RouterProvider router={router} />
-    </QueryProvider>
-  </StrictMode>,
-);
-```
-
-### 4. Set up the root route (manual setup only)
-
-> **Using the scaffold?** `__root.tsx`, `_authenticated.tsx`, `_guest.tsx`, and all layout components are pre-generated. Skip to step 5.
-
-```tsx
-// src/routes/__root.tsx
-import { createRootRouteWithContext } from "@tanstack/react-router";
-import { HeadProvider } from "@unhead/react";
-import { Outlet } from "@tanstack/react-router";
-import type { QueryClient } from "@tanstack/react-query";
-
-function RootDocument() {
-  return <Outlet />;
-}
-
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
-  {
-    component: () => (
-      <HeadProvider>
-        <RootDocument />
-      </HeadProvider>
-    ),
-  },
-);
-```
-
-### 5. Generate typed API hooks
-
-Once your bunshot backend is running, sync its schema into your app:
-
-```bash
-bun run sync
-```
-
-This generates plain async functions in `src/api/`, TanStack Query hooks in `src/hooks/api/`, and updates `src/types/api.ts`. See [API Sync](#api-sync) for details.
-
----
-
-## Configuration
-
-```ts
-createSnapshot({
-  // Required
-  apiUrl: "https://api.example.com",
-
-  // Auth mode — default: 'cookie' (recommended for browser apps)
-  auth: "cookie", // 'cookie' | 'token'
-
-  // Static API credential — not a user session token.
-  // Do not use in browser deployments. Emits a runtime warning in browser contexts.
-  bearerToken: "my-api-key",
-
-  // Redirect paths — dev error thrown if missing when a guarded route fires
-  loginPath: "/login",
-  homePath: "/dashboard",
-  forbiddenPath: "/403",
-  mfaPath: "/auth/mfa-verify", // redirect when login returns MFA challenge
-  mfaSetupPath: "/mfa-setup", // redirect when backend requires MFA setup (403)
-
-  // Callbacks — fire alongside redirects (analytics, state cleanup, etc.)
-  onUnauthenticated: () => console.log("not logged in"),
-  onForbidden: () => console.log("access denied"),
-  onLogoutSuccess: () => console.log("logged out"),
-
-  // Token storage
-  tokenStorage: "sessionStorage", // 'sessionStorage' | 'memory' | 'localStorage' — default: 'sessionStorage' (token mode only)
-  tokenKey: "x-user-token", // default: 'x-user-token'
-
-  // Auth error formatting — controls how auth error messages are displayed to users
-  authErrors: {
-    verbose: false, // default: true on localhost, false elsewhere
-    messages: { login: "Incorrect credentials." },
-    format: (error, context) => `[${context}] ${error.message}`,
-  },
-
-  // Auth contract — remap endpoint paths, header names, or CSRF cookie name
-  contract: {
-    endpoints: { login: "/v2/auth/login" },
-    headers: { userToken: "x-session-token", csrf: "x-xsrf-token" },
-    csrfCookieName: "XSRF-TOKEN",
-  },
-
-  // TanStack Query defaults
-  staleTime: 5 * 60 * 1000, // default: 5 minutes
-  gcTime: 10 * 60 * 1000, // default: 10 minutes
-  retry: 1, // default: 1
-
-  // WebSocket — entire block optional; WS is disabled if omitted
-  ws: {
-    url: "wss://api.example.com/chat",
-
-    autoReconnect: true, // default: true
-    reconnectOnLogin: true, // default: true — reconnects after login succeeds
-    reconnectOnFocus: true, // default: true — reconnects when tab regains focus
-    maxReconnectAttempts: Infinity, // default: Infinity
-    reconnectBaseDelay: 1000, // default: 1000ms
-    reconnectMaxDelay: 30000, // default: 30000ms
-
-    onConnected: () => {},
-    onDisconnected: () => {},
-    onReconnecting: (attempt) => console.log(`Reconnect attempt ${attempt}`),
-    onReconnectFailed: () => console.log("Gave up reconnecting"),
-  },
-});
-```
-
----
-
-## Security Model
-
-Snapshot is the hardened browser client for Bunshot-backed apps. The security contract between snapshot and Bunshot is normative — not optional guidance.
-
-### Default: cookie auth
-
-Cookie auth is the default. Browser apps use `HttpOnly` session cookies managed by Bunshot. Tokens are never exposed to JavaScript.
-
-The Bunshot browser contract requires:
-
-**Session cookie:**
-
-- `HttpOnly=true` — not readable by JS
-- `Secure=true` in production
-- `SameSite=Lax` minimum
-- `Path=/`
-- No broad `Domain` unless subdomain sharing is intentional
-
-**CSRF cookie:**
-
-- `HttpOnly=false` — must be readable by JS (snapshot reads it to send `x-csrf-token` header)
-- `Secure=true` in production
-- `SameSite=Lax`
-- `Path=/`
-- Rotated on login and logout
-
-**CORS:**
-
-- `Access-Control-Allow-Credentials: true`
-- Exact-match origin allowlist — never `*`
-- `Vary: Origin` on responses with dynamic `Access-Control-Allow-Origin`
-- Allowed headers include `x-csrf-token`
-
-**OAuth:**
-
-- Bunshot validates `state` and completes the provider exchange server-side
-- Session cookie is established during the server-side callback
-- Browser callback page receives only success/error status — no provider code or intermediate exchange code
-- Redirect allowlist (`allowedRedirectUrls`) is required and must be non-empty; unset or empty fails closed
-
-**WebSocket:**
-
-- Auth uses cookies, not query params (query params appear in server logs)
-- CSRF protection is `Origin` header validation on upgrade — exact-match against an allowlist
-- Missing or mismatched Origin is rejected
-
-**Transport:**
-
-- `https:` and `wss:` required in production
-- localhost is the only exception for local development
-
-### Token mode (explicit opt-in)
-
-Token mode is available for non-browser clients or unusual browser cases. Set `auth: 'token'` explicitly. It is not the recommended Bunshot web deployment model.
-
-- Default storage is `'sessionStorage'` (tab-scoped, not shared across tabs)
-- `'memory'` is available as a stricter opt-in (state lost on page reload)
-- Auth state is not shared across tabs in either storage mode
-
-### Scaffold security profiles
-
-The scaffold CLI offers two profiles:
-
-**`hardened` (default):** Production-safe defaults. No static credentials in env. In-memory MFA challenge. Passive OAuth callback. No `useOAuthExchange` in exports.
-
-**`prototype`:** Local dev ergonomics. Includes `VITE_BEARER_TOKEN` (with warning). Uses legacy OAuth exchange. Includes a startup guard that throws if the app runs on a non-localhost origin unless `VITE_ALLOW_PROTOTYPE_DEPLOYMENT=true` is set.
-
-> Prototype mode is for local development only. The startup guard is a safety net, not a deployment strategy.
-
-### `bearerToken`
-
-`bearerToken` in `createSnapshot` config is a static API credential — not a user session token. It is intended for machine-to-machine or API gateway auth, not browser user sessions. Using it in a browser context emits a runtime warning in all environments. It is not included in hardened scaffold output.
-
----
-
-## Auth
-
-### Reading the current user
-
-```tsx
-import { useUser } from "@lib/snapshot";
-
-function ProfileBadge() {
-  const { user, isLoading, isError } = useUser();
-
-  if (isLoading) return <Spinner />;
-  if (!user) return null;
-  return <span>{user.email}</span>;
-}
-```
-
-`useUser` returns `null` (not an error) when the user is not logged in. It caches the `/auth/me` response via TanStack Query.
-
-### Login
-
-```tsx
-import { useLogin } from "@lib/snapshot";
-
-function LoginForm() {
-  const login = useLogin();
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    login.mutate(
-      {
-        email: data.get("email") as string,
-        password: data.get("password") as string,
+import { ButtonBase, CardBase } from "@lastshotlabs/snapshot/ui";
+
+export const snap = createSnapshot({
+  apiUrl: "/api",
+  manifest: {
+    app: {
+      name: "My App",
+      auth: {
+        loginPath: "/login",
+        homePath: "/",
       },
-      {
-        onSuccess: (user) => console.log("logged in as", user.email),
-        onError: (err) => console.error(err.status, err.body),
-      },
-    );
-  }
+    },
+  },
+});
+
+function Providers({ children }: { children: ReactNode }) {
+  return <snap.QueryProvider>{children}</snap.QueryProvider>;
+}
+
+function Dashboard() {
+  const { user, isLoading } = snap.useUser();
+
+  if (isLoading) return null;
+  if (!user) return <LoginPage />;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <CardBase>
+      <h1>Welcome back, {user.email}</h1>
+      <ButtonBase>Open dashboard</ButtonBase>
+    </CardBase>
+  );
+}
+
+export function App() {
+  return (
+    <Providers>
+      <Dashboard />
+    </Providers>
+  );
+}
+```
+
+Mutation hooks follow TanStack Query conventions.
+
+```tsx
+function LoginPage() {
+  const login = snap.useLogin();
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+
+        login.mutate({
+          email: String(form.get("email")),
+          password: String(form.get("password")),
+        });
+      }}
+    >
       <input name="email" type="email" />
       <input name="password" type="password" />
-      <button disabled={login.isPending}>Login</button>
-      {login.isError && <p>{login.error.message}</p>}
+      <ButtonBase type="submit" disabled={login.isPending}>
+        Sign in
+      </ButtonBase>
     </form>
   );
 }
 ```
 
-### Logout
+## Code-First Apps
 
-```tsx
-import { useLogout } from "@lib/snapshot";
+Code-first apps use Snapshot hooks and standalone components inside your own
+React routes, layouts, and state model.
 
-function LogoutButton() {
-  const logout = useLogout();
-  return <button onClick={() => logout.mutate()}>Logout</button>;
-}
-```
+Use this mode when you need custom UI behavior, complex validation, bespoke
+state, or third-party integrations.
 
-Logout clears the stored token and the entire query cache — no stale user data remains.
+Core patterns:
 
-> **Note:** Failed logouts do **not** clear auth state. If the server call fails, the user remains authenticated. Only a successful server response or `force: true` triggers cleanup.
+- Call `createSnapshot({ apiUrl, manifest })` once.
+- Wrap hook usage in `snap.QueryProvider`.
+- Read data with query hooks such as `snap.useUser()`.
+- Write data with mutation hooks such as `snap.useLogin()` and
+  `snap.useLogout()`.
+- Import standalone UI from `@lastshotlabs/snapshot/ui`.
 
-**Force-logout** — bypass the server call and immediately clear local state (useful when the server is unreachable or you've already invalidated the session externally):
-
-```tsx
-const logout = useLogout();
-logout.mutate({ force: true });
-```
-
-> `force: true` resolves immediately without hitting `/auth/logout`. All local state (tokens, cache, MFA challenge) is still cleared.
-
-The `onLogoutSuccess` callback fires after a successful logout (or after `force: true`). It is distinct from `onUnauthenticated`, which fires on session expiry:
-
-| Callback            | When it fires                                                     |
-| ------------------- | ----------------------------------------------------------------- |
-| `onUnauthenticated` | Session expiry, 401 responses, or redirect from a protected route |
-| `onLogoutSuccess`   | After a successful logout (server confirmed or `force: true`)     |
-
-### Register
-
-```tsx
-import { useRegister } from "@lib/snapshot";
-
-const register = useRegister();
-register.mutate({ email, password });
-```
-
-### Forgot Password
-
-```tsx
-import { useForgotPassword } from "@lib/snapshot";
-
-const forgotPassword = useForgotPassword();
-forgotPassword.mutate({ email });
-```
-
-All auth hooks return TanStack Query mutation results. Use `onSuccess`, `onError`, `onSettled` natively.
-
-### Cookie-based auth
-
-Cookie auth is the default and recommended mode for browser apps. Tokens are never exposed to JavaScript, eliminating XSS token theft.
-
-```ts
-export const snapshot = createSnapshot({
-  apiUrl: import.meta.env.VITE_API_URL,
-  loginPath: "/login",
-  homePath: "/dashboard",
-  // auth: 'cookie' is the default — no need to set it explicitly
-});
-```
-
-When cookie mode is active:
-
-- All requests include `credentials: 'include'` so the browser sends the auth cookie automatically
-- Mutating requests (POST, PUT, PATCH, DELETE) attach the `x-csrf-token` header, read from the `csrf_token` cookie set by bunshot
-- Token storage becomes a no-op — `tokenStorage.get()` returns `null`, `set()` and `clear()` do nothing
-- Login and register responses no longer extract a token from the response body
-- The `bearerToken`, `tokenStorage`, and `tokenKey` config options are ignored
-
-> **CORS requirement:** When using cookie auth cross-origin, the bunshot backend must set `Access-Control-Allow-Credentials: true`, `Vary: Origin`, and use an exact-match `Access-Control-Allow-Origin` allowlist (never `*`).
-
-### Token-based auth (explicit opt-in)
-
-Token mode is available for non-browser clients or unusual browser cases where cookie auth is not appropriate. It is not the recommended Bunshot web deployment model.
-
-```ts
-export const snapshot = createSnapshot({
-  apiUrl: import.meta.env.VITE_API_URL,
-  auth: "token",
-  loginPath: "/login",
-  homePath: "/dashboard",
-});
-```
-
-Token mode behavior:
-
-- The access token is stored client-side and sent as `x-user-token` on every request
-- Default storage is `'sessionStorage'` (tab-scoped — survives page refresh, cleared on tab close, does not share across tabs)
-- `'memory'` is available as a stricter opt-in (state lost on page reload, does not share across tabs)
-- `'localStorage'` is available but not recommended for auth tokens
-
-> Token mode is tab-scoped by default. A user logged in on one tab will not be authenticated in a new tab opened from the same browser.
-
----
-
-## MFA (Multi-Factor Authentication)
-
-MFA is fully opt-in. If your bunshot backend has MFA configured, snapshot provides hooks to handle every step of the flow. Apps that don't use MFA see zero changes.
-
-### Login with MFA
-
-When a user with MFA enabled logs in, `useLogin` returns an `MfaChallenge` instead of an `AuthUser`. Use `isMfaChallenge` to distinguish:
-
-```tsx
-import { useLogin, isMfaChallenge } from "@lib/snapshot";
-
-function LoginPage() {
-  const login = useLogin();
-
-  // If mfaPath is configured, useLogin auto-redirects on MFA challenge.
-  // The challenge is stored in memory — read it on the MFA page with usePendingMfaChallenge().
-  // For manual handling:
-  useEffect(() => {
-    if (login.data && isMfaChallenge(login.data)) {
-      // login.data.mfaMethods — ['totp', 'emailOtp', etc.]
-      // mfaToken is stored internally — use usePendingMfaChallenge() on the MFA page
-    }
-  }, [login.data]);
-
-  // ... form
-}
-```
-
-If `mfaPath` is set in `createSnapshot` config, the redirect happens automatically — no manual handling needed.
-
-### Verifying MFA during login
-
-The MFA challenge is held in memory by the snapshot instance after `useLogin` redirects. Read it on the MFA page with `usePendingMfaChallenge`:
+Standalone components are plain React components. They do not require the
+manifest runtime.
 
 ```tsx
 import {
-  useMfaVerify,
-  useMfaResend,
-  usePendingMfaChallenge,
-} from "@lib/snapshot";
-import { Link } from "@tanstack/react-router";
+  CardBase,
+  DataTableBase,
+  InputField,
+  ModalBase,
+} from "@lastshotlabs/snapshot/ui";
 
-function MfaVerifyPage() {
-  const pendingChallenge = usePendingMfaChallenge();
-  const verify = useMfaVerify();
-  const resend = useMfaResend();
-
-  // Challenge is gone if the user navigated here directly or refreshed the page
-  if (!pendingChallenge) {
-    return (
-      <p>
-        Session expired. <Link to="/auth/login">Sign in again.</Link>
-      </p>
-    );
-  }
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const code = new FormData(e.currentTarget).get("code") as string;
-    verify.mutate({ code }); // mfaToken is read internally from the pending challenge
-  }
-
+function UsersPanel() {
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="code" inputMode="numeric" maxLength={6} />
-      <button disabled={verify.isPending}>Verify</button>
-      {verify.isError && <p>{verify.error.message}</p>}
-      <button
-        type="button"
-        onClick={() => resend.mutate({ mfaToken: pendingChallenge.mfaToken })}
-      >
-        Resend email code
-      </button>
-    </form>
+    <CardBase>
+      <InputField label="Search" placeholder="Search users" />
+      <DataTableBase
+        columns={[
+          { field: "email", label: "Email" },
+          { field: "role", label: "Role" },
+        ]}
+        rows={[{ id: "1", email: "admin@example.com", role: "Admin" }]}
+      />
+      <ModalBase open={false} title="Invite user" onClose={() => undefined} />
+    </CardBase>
   );
 }
 ```
 
-`useMfaVerify` completes the login — it stores the session (cookie mode) or token (token mode), fetches `/auth/me`, updates the auth cache, clears the pending challenge, and navigates to `homePath`.
+Component naming is consistent:
 
-The pending challenge is automatically cleared on successful verify, logout, and auth reset. If the user refreshes mid-flow, `usePendingMfaChallenge()` returns `null` — show an expired message and link back to login.
+- `*Field` components are form inputs.
+- `*Base` components are everything else.
 
-### Setting up MFA
+## Manifest Apps
 
-```tsx
-import { useMfaSetup, useMfaVerifySetup } from "@lib/snapshot";
-
-function MfaSetupPage() {
-  const setup = useMfaSetup();
-  const verifySetup = useMfaVerifySetup();
-
-  // Step 1: Generate TOTP secret
-  // setup.mutate() → { secret, uri }
-
-  // Step 2: User scans QR code, enters code
-  // verifySetup.mutate({ code }) → { message, recoveryCodes }
-
-  // Step 3: Display recovery codes
-}
-```
-
-### Disabling MFA
+Manifest apps render routes, navigation, auth, overlays, resources, workflows,
+and page content from configuration.
 
 ```tsx
-import { useMfaDisable } from "@lib/snapshot";
-
-const disable = useMfaDisable();
-disable.mutate({ code: "123456" }); // requires current TOTP code
-```
-
-### Recovery codes
-
-```tsx
-import { useMfaRecoveryCodes } from "@lib/snapshot";
-
-const regenerate = useMfaRecoveryCodes();
-regenerate.mutate({ code: "123456" }); // requires TOTP code
-// regenerate.data.recoveryCodes — new codes (old ones invalidated)
-```
-
-### Email OTP
-
-```tsx
-import {
-  useMfaEmailOtpEnable,
-  useMfaEmailOtpVerifySetup,
-  useMfaEmailOtpDisable,
-} from "@lib/snapshot";
-
-// Enable: sends verification code to user's email
-const enable = useMfaEmailOtpEnable();
-enable.mutate(); // → { message, setupToken }
-
-// Verify: confirm with the code from email
-const verifySetup = useMfaEmailOtpVerifySetup();
-verifySetup.mutate({ setupToken: enable.data.setupToken, code: "123456" });
-
-// Disable
-const disable = useMfaEmailOtpDisable();
-disable.mutate({ code: "123456" }); // TOTP code if TOTP enabled, or { password } if only method
-```
-
-### Checking enabled MFA methods
-
-```tsx
-import { useMfaMethods } from "@lib/snapshot";
-
-function SecuritySettings() {
-  const { methods, isLoading } = useMfaMethods();
-  // methods: ['totp', 'emailOtp'] | null
-}
-```
-
-### MFA setup required (forced enrollment)
-
-When bunshot is configured with `mfa.required: true`, authenticated users without MFA receive a `403` with code `MFA_SETUP_REQUIRED` on any API call. If `mfaSetupPath` is set in `createSnapshot`, snapshot automatically redirects to that page.
-
-```ts
-createSnapshot({
-  apiUrl: import.meta.env.VITE_API_URL,
-  mfaSetupPath: "/mfa-setup", // auto-redirect on MFA_SETUP_REQUIRED
-});
-```
-
----
-
-## Account Management
-
-```tsx
-import {
-  useSetPassword,
-  useDeleteAccount,
-  useCancelDeletion,
-  useRefreshToken,
-  useSessions,
-  useRevokeSession,
-  useResetPassword,
-  useVerifyEmail,
-  useResendVerification,
-} from "@lib/snapshot";
-
-// Set or change password
-const setPassword = useSetPassword();
-setPassword.mutate({ password: "new-pass" });
-setPassword.mutate({ password: "new-pass", currentPassword: "old-pass" });
-
-// Delete account — clears token, flushes query cache, navigates to loginPath
-const deleteAccount = useDeleteAccount();
-deleteAccount.mutate(); // OAuth-only accounts (no password)
-deleteAccount.mutate({ password: "…" }); // credential accounts
-
-// Cancel a queued deletion (within the grace period configured on the backend)
-const cancelDeletion = useCancelDeletion();
-cancelDeletion.mutate();
-
-// Manually refresh the access token
-const refresh = useRefreshToken();
-refresh.mutate(); // uses cookie or stored refresh token
-refresh.mutate({ refreshToken: "…" }); // explicit token
-
-// List active sessions
-const { sessions, isLoading } = useSessions();
-// sessions: Session[] — { sessionId, createdAt, lastActiveAt, expiresAt, ipAddress?, userAgent?, isActive }
-
-// Revoke a session (sign out of another device)
-const revokeSession = useRevokeSession();
-revokeSession.mutate(session.sessionId);
-
-// Password reset flow (token from email link)
-const resetPassword = useResetPassword();
-resetPassword.mutate({ token, password });
-
-// Email verification flow (token from email link)
-const verifyEmail = useVerifyEmail();
-verifyEmail.mutate({ token });
-
-const resendVerification = useResendVerification();
-resendVerification.mutate({ email });
-```
-
----
-
-## OAuth
-
-OAuth initiation is a simple redirect — no hook needed. Call `getOAuthUrl` and navigate:
-
-```ts
-import { getOAuthUrl, getLinkUrl } from "@lib/snapshot";
-
-// Redirect to OAuth provider sign-in
-window.location.href = getOAuthUrl("google"); // → {apiUrl}/auth/google
-
-// Link an additional OAuth provider to an existing account
-window.location.href = getLinkUrl("github"); // → {apiUrl}/auth/github/link
-
-// Supported providers: 'google' | 'apple' | 'microsoft' | 'github'
-```
-
-After the OAuth flow completes, the provider redirects back to your callback page. In the default (hardened) browser flow, Bunshot establishes the session cookie server-side during the OAuth callback and redirects back with only a success or error indicator — no code exchange is needed in the browser:
-
-```tsx
-// Hardened OAuth callback — passive, no exchange step
-import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { useUser, queryClient } from "@lib/snapshot";
-
-function OAuthCallbackPage() {
-  const { error } = Route.useSearch(); // only { success?, error? } in search params
-  const { user } = useUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!error) queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
-  }, []);
-
-  useEffect(() => {
-    if (user) navigate({ to: "/" });
-  }, [user]);
-
-  if (error) return <p>Sign in failed: {error}</p>;
-  return <p>Signing in...</p>;
-}
-```
-
-The scaffolded `OAuthCallbackPage` is generated this way automatically. No `useOAuthExchange` call — the session is already established by the time the browser lands on this page.
-
-**Legacy exchange (prototype scaffold only):**
-
-`useOAuthExchange` is available for compatibility with non-browser or prototype flows where Bunshot's one-time code pattern is used client-side:
-
-```ts
-// @deprecated — use the hardened cookie flow above for browser apps
-import { useOAuthExchange } from "@lib/snapshot";
-
-const exchange = useOAuthExchange();
-exchange.mutate({ code });
-```
-
-> `useOAuthExchange` will be removed in the next major version. It is not included in hardened scaffold output.
-
-Unlink a connected provider:
-
-```ts
-import { useOAuthUnlink } from "@lib/snapshot";
-
-const unlink = useOAuthUnlink();
-unlink.mutate("google"); // invalidates /auth/me cache on success
-```
-
----
-
-## WebAuthn
-
-WebAuthn registration requires `@simplewebauthn/browser` on the client side to call the browser's credential APIs. snapshot provides the hooks; you wire them to the browser API.
-
-```ts
-import {
-  useWebAuthnRegisterOptions,
-  useWebAuthnRegister,
-  useWebAuthnCredentials,
-  useWebAuthnRemoveCredential,
-  useWebAuthnDisable,
-} from "@lib/snapshot";
-import { startRegistration } from "@simplewebauthn/browser";
-
-// Registration flow
-function useRegisterSecurityKey(name?: string) {
-  const getOptions = useWebAuthnRegisterOptions();
-  const register = useWebAuthnRegister();
-
-  async function registerKey() {
-    // Step 1: get challenge from server
-    const { options, registrationToken } = await getOptions.mutateAsync();
-
-    // Step 2: browser prompts user to tap security key / use Touch ID
-    const attestationResponse = await startRegistration(options);
-
-    // Step 3: send result back to server
-    register.mutate({ registrationToken, attestationResponse, name });
-  }
-
-  return { registerKey, isPending: getOptions.isPending || register.isPending };
-}
-
-// List registered credentials
-const { credentials, isLoading } = useWebAuthnCredentials();
-// credentials: { credentialId, name?, createdAt, transports? }[]
-
-// Remove a specific credential
-const remove = useWebAuthnRemoveCredential();
-remove.mutate(credentialId);
-
-// Disable WebAuthn entirely
-const disable = useWebAuthnDisable();
-disable.mutate();
-```
-
----
-
-## Passkey Login
-
-Passkeys (Windows Hello, Face ID, Touch ID) as a **passwordless first-factor** — no password, no MFA prompt. Requires bunshot `mfa.webauthn.allowPasswordlessLogin: true` on the server.
-
-```ts
-import {
-  usePasskeyLoginOptions,
-  usePasskeyLogin,
-  isMfaChallenge,
-} from "@lib/snapshot";
-import { startAuthentication } from "@simplewebauthn/browser";
-
-function usePasskeySignIn() {
-  const getOptions = usePasskeyLoginOptions();
-  const login = usePasskeyLogin();
-
-  async function signInWithPasskey(email?: string) {
-    // Step 1 — get challenge (enumeration-safe: safe to pass unknown email)
-    const { options, passkeyToken } = await getOptions.mutateAsync({ email });
-
-    // Step 2 — OS prompt (Windows Hello / Face ID / Touch ID)
-    // Throws NotAllowedError if user cancels — catch it and fall back to password
-    const assertionResponse = await startAuthentication(options);
-
-    // Step 3 — verify server-side; hook stores token + navigates on success
-    const result = await login.mutateAsync({ passkeyToken, assertionResponse });
-
-    // isMfaChallenge only when server has passkeyMfaBypass: false
-    if (isMfaChallenge(result)) {
-      // redirect to MFA page with result.mfaToken
-    }
-  }
-
-  return {
-    signInWithPasskey,
-    isPending: getOptions.isPending || login.isPending,
-    error: login.error,
-  };
-}
-```
-
-#### Handling cancellation and retries
-
-```ts
-async function handlePasskeyLogin(email?: string) {
-  // Check browser support first — hide button if unsupported
-  if (!window.PublicKeyCredential) return;
-
-  try {
-    const { options, passkeyToken } = await getOptions.mutateAsync({ email });
-    const assertionResponse = await startAuthentication(options);
-    await login.mutateAsync({ passkeyToken, assertionResponse });
-  } catch (err: any) {
-    if (err.name === "NotAllowedError") {
-      // User cancelled the OS prompt — not an error, just fall back to password
-      return;
-    }
-    // Network error or token expiry (410 / challenge-not-found) — retry once with fresh challenge
-    if (err.status === 410 || err.name === "NetworkError") {
-      const { options: freshOptions, passkeyToken: freshToken } =
-        await getOptions.mutateAsync({ email });
-      const assertionResponse = await startAuthentication(freshOptions);
-      await login.mutateAsync({ passkeyToken: freshToken, assertionResponse });
-      return;
-    }
-    // 401 authentication failure — surface to user, do not retry
-    throw err;
-  }
-}
-```
-
-`usePasskeyLogin` stores the session token and navigates to `homePath` on success, identical to `useLogin`.
-
-`usePasskeyLogin` accepts `PasskeyLoginVars` — a `PasskeyLoginBody` extended with an optional `redirectTo` override:
-
-```ts
-passkeyLogin.mutate({
-  passkeyToken,
-  assertionResponse,
-  redirectTo: "/dashboard",
-});
-```
-
----
-
-## Auth Error Formatting
-
-By default, scaffold templates display raw server error messages, which can leak account existence information (e.g. "email not found" confirms an email is registered). The `formatAuthError` utility returns safe, context-appropriate messages instead.
-
-### Standalone usage
-
-```tsx
-import { formatAuthError } from "@lastshotlabs/snapshot";
-
-// In a component:
-{
-  login.isError && <p>{formatAuthError(login.error, "login")}</p>;
-}
-```
-
-Safe defaults per context (on non-localhost):
-
-| Context           | Default message                                                            |
-| ----------------- | -------------------------------------------------------------------------- |
-| `login`           | Invalid email or password.                                                 |
-| `register`        | Unable to create account. Please try again.                                |
-| `forgot-password` | If that email is registered, you'll receive a password reset link shortly. |
-| `reset-password`  | Unable to reset password. The link may have expired.                       |
-| `verify-email`    | Unable to verify email. The link may have expired or already been used.    |
-
-On `localhost`, verbose mode is enabled automatically — raw server messages are shown to aid development.
-
-### Configuration
-
-```ts
-createSnapshot({
-  apiUrl: "...",
-  authErrors: {
-    // Force verbose mode (shows raw server messages). Default: true on localhost, false elsewhere.
-    verbose: false,
-
-    // Override individual messages:
-    messages: {
-      login: "Incorrect credentials.",
-    },
-
-    // Or provide a fully custom formatter:
-    format: (error, context) => `[${context}] ${error.message}`,
-  },
-});
-```
-
-The instance also exposes a pre-bound formatter that picks up your `authErrors` config automatically:
-
-```tsx
-const { formatAuthError } = snapshot;
-
-// equivalent to formatAuthError(error, context, config.authErrors)
-```
-
-### Factory usage
-
-For cases where you want a reusable formatter outside of a snapshot instance:
-
-```tsx
-import { createAuthErrorFormatter } from "@lastshotlabs/snapshot";
-
-const fmt = createAuthErrorFormatter({ verbose: false });
-fmt(error, "login"); // → 'Invalid email or password.'
-```
-
----
-
-## Configurable Auth Contract
-
-By default, snapshot uses Bunshot's standard endpoint paths (e.g. `/auth/login`, `/auth/me`) and header names (`x-user-token`, `x-csrf-token`). If your backend uses different paths — due to API versioning, a gateway prefix, or a custom auth server — you can remap any of them without forking the library.
-
-### Remapping endpoints
-
-```ts
-createSnapshot({
-  apiUrl: "https://api.example.com",
-  contract: {
-    endpoints: {
-      login: "/v2/auth/login",
-      me: "/v2/users/me",
-    },
-    // All other endpoints remain at their defaults
-  },
-});
-```
-
-### Remapping headers and cookies
-
-```ts
-createSnapshot({
-  apiUrl: "https://api.example.com",
-  contract: {
-    headers: {
-      userToken: "x-session-token", // default: 'x-user-token'
-      csrf: "x-xsrf-token", // default: 'x-csrf-token'
-    },
-    csrfCookieName: "XSRF-TOKEN", // default: 'csrf_token'
-  },
-});
-```
-
-### Dynamic path overrides
-
-For dynamic paths (session revocation, WebAuthn credential removal, OAuth URLs), provide a function:
-
-```ts
-createSnapshot({
-  apiUrl: "https://api.example.com",
-  contract: {
-    sessionRevoke: (id) => `/v2/sessions/${id}`,
-    oauthUrl: (provider) => `https://auth.example.com/oauth/${provider}`,
-  },
-});
-```
-
-### All configurable fields
-
-| Field                               | Type                                  | Default                                      |
-| ----------------------------------- | ------------------------------------- | -------------------------------------------- |
-| `endpoints.me`                      | `string`                              | `/auth/me`                                   |
-| `endpoints.login`                   | `string`                              | `/auth/login`                                |
-| `endpoints.logout`                  | `string`                              | `/auth/logout`                               |
-| `endpoints.register`                | `string`                              | `/auth/register`                             |
-| `endpoints.forgotPassword`          | `string`                              | `/auth/forgot-password`                      |
-| `endpoints.refresh`                 | `string`                              | `/auth/refresh`                              |
-| `endpoints.resetPassword`           | `string`                              | `/auth/reset-password`                       |
-| `endpoints.verifyEmail`             | `string`                              | `/auth/verify-email`                         |
-| `endpoints.resendVerification`      | `string`                              | `/auth/resend-verification`                  |
-| `endpoints.setPassword`             | `string`                              | `/auth/set-password`                         |
-| `endpoints.deleteAccount`           | `string`                              | `/auth/me`                                   |
-| `endpoints.cancelDeletion`          | `string`                              | `/auth/cancel-deletion`                      |
-| `endpoints.sessions`                | `string`                              | `/auth/sessions`                             |
-| `endpoints.mfaVerify`               | `string`                              | `/auth/mfa/verify`                           |
-| `endpoints.mfaSetup`                | `string`                              | `/auth/mfa/setup`                            |
-| `endpoints.mfaVerifySetup`          | `string`                              | `/auth/mfa/verify-setup`                     |
-| `endpoints.mfaDisable`              | `string`                              | `/auth/mfa`                                  |
-| `endpoints.mfaRecoveryCodes`        | `string`                              | `/auth/mfa/recovery-codes`                   |
-| `endpoints.mfaEmailOtpEnable`       | `string`                              | `/auth/mfa/email-otp/enable`                 |
-| `endpoints.mfaEmailOtpVerifySetup`  | `string`                              | `/auth/mfa/email-otp/verify-setup`           |
-| `endpoints.mfaEmailOtpDisable`      | `string`                              | `/auth/mfa/email-otp`                        |
-| `endpoints.mfaResend`               | `string`                              | `/auth/mfa/resend`                           |
-| `endpoints.mfaMethods`              | `string`                              | `/auth/mfa/methods`                          |
-| `endpoints.webauthnRegisterOptions` | `string`                              | `/auth/mfa/webauthn/register-options`        |
-| `endpoints.webauthnRegister`        | `string`                              | `/auth/mfa/webauthn/register`                |
-| `endpoints.webauthnCredentials`     | `string`                              | `/auth/mfa/webauthn/credentials`             |
-| `endpoints.webauthnDisable`         | `string`                              | `/auth/mfa/webauthn`                         |
-| `endpoints.passkeyLoginOptions`     | `string`                              | `/auth/passkey/login-options`                |
-| `endpoints.passkeyLogin`            | `string`                              | `/auth/passkey/login`                        |
-| `endpoints.oauthExchange`           | `string`                              | `/auth/oauth/exchange`                       |
-| `sessionRevoke`                     | `(id: string) => string`              | `` `/auth/sessions/${id}` ``                 |
-| `webauthnRemoveCredential`          | `(id: string) => string`              | `` `/auth/mfa/webauthn/credentials/${id}` `` |
-| `oauthUrl`                          | `(provider: OAuthProvider) => string` | `` `${apiUrl}/auth/${provider}` ``           |
-| `oauthLinkUrl`                      | `(provider: OAuthProvider) => string` | `` `${apiUrl}/auth/${provider}/link` ``      |
-| `oauthUnlink`                       | `(provider: OAuthProvider) => string` | `` `/auth/${provider}/link` ``               |
-| `headers.userToken`                 | `string`                              | `x-user-token`                               |
-| `headers.csrf`                      | `string`                              | `x-csrf-token`                               |
-| `csrfCookieName`                    | `string`                              | `csrf_token`                                 |
-
-### Building on the default contract
-
-If you want to start from the defaults and only patch a few values:
-
-```ts
-import { defaultContract, mergeContract } from "@lastshotlabs/snapshot";
-
-const myContract = mergeContract("https://api.example.com", {
-  endpoints: { login: "/v2/login" },
-});
-```
-
----
-
-## Route Guards
-
-Assign `protectedBeforeLoad` and `guestBeforeLoad` in your route files:
-
-```ts
-// src/routes/dashboard.tsx — authenticated users only
-import { createFileRoute } from "@tanstack/react-router";
-import { protectedBeforeLoad } from "@lib/snapshot";
-
-export const Route = createFileRoute("/dashboard")({
-  beforeLoad: protectedBeforeLoad,
-  component: DashboardPage,
-});
-```
-
-```ts
-// src/routes/login.tsx — redirect to home if already logged in
-import { createFileRoute } from "@tanstack/react-router";
-import { guestBeforeLoad } from "@lib/snapshot";
-
-export const Route = createFileRoute("/login")({
-  beforeLoad: guestBeforeLoad,
-  component: LoginPage,
-});
-```
-
-Both guards fetch `/auth/me` via the router context's `queryClient` (configured in step 2). TanStack Query serves from cache if the result is fresh.
-
----
-
-## API Client
-
-The `api` primitive gives direct access to the HTTP client — useful outside React (Jotai atoms, event handlers, utilities):
-
-```ts
-import { api } from "@lib/snapshot";
-
-// Typed response
-const user = await api.get<User>("/users/123");
-
-// With body
-const post = await api.post<Post>("/posts", { title: "Hello", body: "..." });
-
-// With custom headers
-const data = await api.get<Data>("/protected", {
-  headers: { "x-custom-header": "value" },
-});
-
-// With abort signal
-const controller = new AbortController();
-const data = await api.get<Data>("/slow-endpoint", {
-  signal: controller.signal,
-});
-```
-
-Available methods: `get`, `post`, `put`, `patch`, `delete` — all return `Promise<T>`.
-
-### Error handling
-
-Non-2xx responses throw `ApiError`:
-
-```ts
-import { ApiError } from "@lastshotlabs/snapshot";
-
-try {
-  await api.post("/posts", body);
-} catch (err) {
-  if (err instanceof ApiError) {
-    console.log(err.status); // HTTP status code
-    console.log(err.body); // parsed JSON response body
-    console.log(err.message); // "HTTP 422"
-  }
-}
-```
-
-In TanStack Query mutations, errors are typed automatically when you annotate the mutation:
-
-```ts
-const mutation = useMutation<Post, ApiError, CreatePostBody>({
-  mutationFn: (body) => api.post("/posts", body),
-});
-```
-
-> `ApiError` is the one thing imported directly from the package. Everything else (`api`, `useUser`, etc.) comes from `@lib/snapshot`.
-
----
-
-## WebSocket
-
-### Basic usage
-
-```tsx
-import { useSocket } from "@lib/snapshot";
-
-function StatusIndicator() {
-  const socket = useSocket();
-  return <span>{socket.isConnected ? "Live" : "Offline"}</span>;
-}
-```
-
-`useSocket()` returns a `SocketHook` with:
-
-- `isConnected: boolean`
-- `send(type, payload)` — send a message to the server
-- `on(event, handler)` / `off(event, handler)` — raw event listeners
-- `subscribe(room)` / `unsubscribe(room)` — available but prefer `useRoom` / `useRoomEvent`, which handle cleanup and auto-resubscription on reconnect
-- `reconnect()` — manual reconnect trigger
-
-If `ws` is not configured in `createSnapshot`, `useSocket()` is a no-op: `isConnected` is always `false` and all methods are safe to call (they do nothing).
-
-### Typed events
-
-```ts
-// src/types/ws.ts
-export interface WebSocketEvents {
-  'chat:message': { roomId: string; content: string; author: string }
-  'presence:update': { roomId: string; members: string[] }
-  'notification': { id: string; text: string }
-}
-
-// src/lib/snapshot.ts
-export const snapshot = createSnapshot<WebSocketEvents>({ ... })
-```
-
-With the type parameter, `useSocket<WebSocketEvents>()` is fully typed.
-
-### Room hooks
-
-```tsx
-import { useRoom, useRoomEvent } from "@lib/snapshot";
-
-function ChatRoom({ roomId }: { roomId: string }) {
-  const { isSubscribed } = useRoom(`chat:${roomId}`);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-
-  useRoomEvent(`chat:${roomId}`, "chat:message", (msg) => {
-    setMessages((prev) => [...prev, msg]);
-  });
-
-  if (!isSubscribed) return <Spinner />;
-  return <MessageList messages={messages} />;
-}
-```
-
-`useRoom` subscribes on mount and unsubscribes on unmount. The WebSocket manager automatically re-subscribes to all rooms after reconnect — no manual handling needed.
-
-`useRoomEvent` is scoped — the handler only fires when the event name matches AND the message was received from the specified room. Events from other rooms with the same name are ignored.
-
-### Building custom hooks
-
-Use `useWebSocketManager` for direct access to the `WebSocketManager` instance:
-
-```ts
-import { useWebSocketManager } from "@lib/snapshot";
-import { useState, useEffect } from "react";
-
-export function usePresence(roomId: string) {
-  const manager = useWebSocketManager();
-  const [members, setMembers] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (!manager) return;
-    manager.subscribe(`presence:${roomId}`);
-    const handler = (data: { roomId: string; members: string[] }) => {
-      if (data.roomId === roomId) setMembers(data.members);
-    };
-    manager.on("presence:update", handler);
-    return () => {
-      manager.unsubscribe(`presence:${roomId}`);
-      manager.off("presence:update", handler);
-    };
-  }, [roomId, manager]);
-
-  return members;
-}
-```
-
-### WebSocket auth
-
-The browser sends the auth cookie automatically on the WebSocket upgrade request — no token in query params (which appear in server logs). After login, snapshot automatically reconnects the WebSocket so the new connection carries the authenticated cookie (when `reconnectOnLogin: true`, which is the default).
-
----
-
-## Server-Sent Events (SSE)
-
-> **Breaking change from older versions:** The single-URL `sse.url` config and `useSseManager()` hook have been replaced with a per-endpoint model. If you were using the old API, see the migration notes below.
-
-### When to use SSE vs WebSocket
-
-Use **SSE** when the server needs to push events to the browser but the browser never sends data back — activity feeds, notification streams, live counters. The browser connects once and the server writes events forever. SSE is unidirectional (server → client only).
-
-Use **WebSocket** when you need bidirectional communication — chat, presence, collaborative editing, anything where the client also sends messages to the server.
-
-### Config
-
-SSE config is a map of endpoint paths. Each key must start with `/__sse/` and must match a key in your bunshot `sse.endpoints` config. One `EventSource` is created per endpoint at startup.
-
-```ts
-// src/lib/snapshot.ts
-export const snapshot = createSnapshot({
-  apiUrl: "https://api.example.com",
-  sse: {
-    endpoints: {
-      "/__sse/feed": {
-        withCredentials: false, // default false; set true for cross-origin
-        onConnected: () => console.log("feed connected"),
-        onError: (e) => console.warn("feed error", e),
-        onClosed: () => console.log("feed closed"),
+import { createSnapshot } from "@lastshotlabs/snapshot";
+
+const snap = createSnapshot({
+  apiUrl: "/api",
+  manifest: {
+    routes: [
+      {
+        id: "home",
+        path: "/",
+        title: "Home",
+        content: [
+          { type: "heading", level: 1, text: "Welcome" },
+          { type: "text", text: "Your first manifest app." },
+        ],
       },
-      "/__sse/notifications": {}, // empty object = default options
-    },
-    reconnectOnLogin: true, // default true — reconnect all endpoints after login
+    ],
   },
 });
+
+export function App() {
+  return <snap.ManifestApp />;
+}
 ```
 
-`SseEndpointConfig` fields are all optional. An empty object `{}` is valid.
+Use manifest mode when you want standard CRUD pages, configurable navigation,
+themeable app shells, auth screens, non-developer editing, or fast internal-tool
+prototypes. You can still drop into custom React components and Snapshot hooks
+where the app needs more control.
 
-### Connection status
+## Styling
 
-`useSSE(endpoint)` returns `{ status }` for the given endpoint:
+Snapshot components support normal React styling plus a slot model for precise
+surface-level overrides.
 
 ```tsx
-import { snapshot } from "@lib/snapshot";
-
-const { useSSE } = snapshot;
-
-function FeedStatus() {
-  const { status } = useSSE("/__sse/feed");
-  // status: 'connecting' | 'open' | 'closed'
-  return <span>{status === "open" ? "Live" : "Connecting..."}</span>;
-}
+<ButtonBase
+  slots={{
+    root: {
+      className: "bg-black text-white",
+      states: {
+        hover: { className: "bg-neutral-800" },
+        disabled: { className: "opacity-50" },
+      },
+    },
+  }}
+>
+  Save
+</ButtonBase>
 ```
 
-### Receiving events
+Slots compose with theme tokens and stateful styling. Common states include
+`hover`, `focus`, `open`, `selected`, `current`, `active`, `completed`,
+`invalid`, and `disabled`.
 
-`useSseEvent<T>(endpoint, event)` subscribes to a named event on a specific endpoint. Returns `{ data: T | null; status }`.
+## CLI
 
-```tsx
-import { snapshot } from "@lib/snapshot";
-
-const { useSseEvent } = snapshot;
-
-function ThreadFeed() {
-  const { data: newThread, status } = useSseEvent<{
-    id: string;
-    title: string;
-  }>("/__sse/feed", "community:thread.created");
-
-  useEffect(() => {
-    if (newThread) {
-      // handle new thread arrival
-    }
-  }, [newThread]);
-
-  return <span>{status}</span>;
-}
-```
-
-`data` is the latest received payload. It starts as `null` and updates each time the event fires. The subscription is set up on mount and cleaned up on unmount.
-
-### SSE auth
-
-**Same-origin:** The browser sends cookies automatically on the SSE request — no extra config needed.
-
-**Cross-origin:** Set `withCredentials: true` on the endpoint config. The server must respond with `Access-Control-Allow-Origin: <your-origin>` (not `*`) and `Access-Control-Allow-Credentials: true`.
-
-**Important:** Browsers do not allow custom request headers on SSE connections. You cannot send `Authorization: Bearer <token>` with a native `EventSource`. If you need token auth for SSE, use cookie-based auth (the default snapshot mode) or proxy the SSE endpoint through your own server.
-
-After login, snapshot automatically reconnects all SSE endpoints so new connections carry the authenticated cookie (when `reconnectOnLogin: true`, which is the default). On logout, all SSE connections are closed.
-
-### Migration from the old single-URL API
-
-| Old                                      | New                                                            |
-| ---------------------------------------- | -------------------------------------------------------------- |
-| `sse: { url: '/__sse/feed', ... }`       | `sse: { endpoints: { '/__sse/feed': { ... } } }`               |
-| `useSseManager()`                        | `useSSE(endpoint)` — returns `{ status }`                      |
-| `useSseEvent(event, handler)` (callback) | `useSseEvent<T>(endpoint, event)` — returns `{ data, status }` |
-| `TSseEvents` generic on `createSnapshot` | Removed — type each `useSseEvent<T>` call site directly        |
-
----
-
-## Community
-
-The community module provides hooks for the full bunshot-community API surface — containers, threads, replies, reactions, members, moderation, notifications, and search.
-
-### Factory
-
-```ts
-import { createCommunityHooks } from "@lastshotlabs/snapshot";
-import { api, queryClient } from "@lib/snapshot";
-
-export const community = createCommunityHooks({ api, queryClient });
-
-export const {
-  useContainers,
-  useContainer,
-  useCreateContainer,
-  useContainerThreads,
-  useContainerThread,
-  useCreateThread,
-  useThreadReplies,
-  useCreateReply,
-  useSearchThreads,
-  useSearchReplies,
-  // ... all 47 hooks
-} = community;
-```
-
-### Available hooks
-
-**Containers**
-
-| Hook                        | Description                     |
-| --------------------------- | ------------------------------- |
-| `useContainers(params?)`    | List all containers (paginated) |
-| `useContainer(containerId)` | Get a single container          |
-| `useCreateContainer()`      | Create a container              |
-| `useUpdateContainer()`      | Update a container              |
-| `useDeleteContainer()`      | Delete a container              |
-
-**Threads**
-
-| Hook                                              | Description                 |
-| ------------------------------------------------- | --------------------------- |
-| `useContainerThreads({ containerId, ...params })` | List threads in a container |
-| `useContainerThread(threadId)`                    | Get a single thread         |
-| `useCreateThread()`                               | Create a thread             |
-| `useUpdateThread()`                               | Update a thread             |
-| `useDeleteThread()`                               | Delete a thread             |
-| `usePublishThread()`                              | Publish a draft thread      |
-| `useLockThread()`                                 | Lock a thread (mod/admin)   |
-| `usePinThread()`                                  | Pin a thread                |
-| `useUnpinThread()`                                | Unpin a thread              |
-
-**Replies**
-
-| Hook                                        | Description              |
-| ------------------------------------------- | ------------------------ |
-| `useThreadReplies({ threadId, ...params })` | List replies to a thread |
-| `useReply(replyId)`                         | Get a single reply       |
-| `useCreateReply()`                          | Create a reply           |
-| `useUpdateReply()`                          | Update a reply           |
-| `useDeleteReply()`                          | Delete a reply           |
-
-**Reactions**
-
-| Hook                           | Description                     |
-| ------------------------------ | ------------------------------- |
-| `useThreadReactions(threadId)` | List reactions on a thread      |
-| `useAddThreadReaction()`       | Add a reaction to a thread      |
-| `useRemoveThreadReaction()`    | Remove a reaction from a thread |
-| `useReplyReactions(replyId)`   | List reactions on a reply       |
-| `useAddReplyReaction()`        | Add a reaction to a reply       |
-| `useRemoveReplyReaction()`     | Remove a reaction from a reply  |
-
-**Members, Moderators, Owners**
-
-| Hook                                           | Description                 |
-| ---------------------------------------------- | --------------------------- |
-| `useContainerMembers(containerId, params?)`    | List members of a container |
-| `useContainerModerators(containerId, params?)` | List moderators             |
-| `useContainerOwners(containerId, params?)`     | List owners                 |
-| `useAddMember()`                               | Add a member to a container |
-| `useRemoveMember()`                            | Remove a member             |
-| `useAssignModerator()`                         | Assign a moderator          |
-| `useRemoveModerator()`                         | Remove a moderator          |
-| `useAssignOwner()`                             | Assign an owner             |
-| `useRemoveOwner()`                             | Remove an owner             |
-
-**Notifications**
-
-| Hook                            | Description                             |
-| ------------------------------- | --------------------------------------- |
-| `useNotifications(params?)`     | List notifications for the current user |
-| `useNotificationsUnreadCount()` | Get unread notification count           |
-| `useMarkNotificationRead()`     | Mark a single notification read         |
-| `useMarkAllNotificationsRead()` | Mark all notifications read             |
-
-**Reports and Moderation**
-
-| Hook                  | Description                     |
-| --------------------- | ------------------------------- |
-| `useReports(params?)` | List all reports (mod/admin)    |
-| `useReport(reportId)` | Get a single report             |
-| `useCreateReport()`   | File a report on content        |
-| `useResolveReport()`  | Resolve a report                |
-| `useDismissReport()`  | Dismiss a report without action |
-
-**Bans**
-
-| Hook                                | Description                                     |
-| ----------------------------------- | ----------------------------------------------- |
-| `useBans(params?)`                  | List all bans (mod/admin)                       |
-| `useCheckBan(userId, containerId?)` | Check if a user is banned (scoped or site-wide) |
-| `useCreateBan()`                    | Ban a user                                      |
-| `useRemoveBan()`                    | Remove a ban                                    |
-
-**Search**
-
-| Hook                       | Description                         |
-| -------------------------- | ----------------------------------- |
-| `useSearchThreads(params)` | Search threads (requires `q` param) |
-| `useSearchReplies(params)` | Search replies (requires `q` param) |
-
-### Cache invalidation
-
-- Create/update/delete mutations for threads and replies sweep the `['community', 'search']` prefix — new content appears in search immediately.
-- Reaction mutations invalidate the affected thread or reply detail query.
-- Ban mutations sweep `['community', 'bans', userId, 'check']` — all check variants for that user (scoped and site-wide) are invalidated together.
-
----
-
-## Webhooks
-
-The webhooks module provides hooks for managing outbound webhook endpoints and inspecting delivery history.
-
-### Factory
-
-```ts
-import { createWebhookHooks } from "@lastshotlabs/snapshot";
-import { api, queryClient } from "@lib/snapshot";
-
-export const webhooks = createWebhookHooks({ api, queryClient });
-
-export const {
-  useListWebhookEndpoints,
-  useCreateWebhookEndpoint,
-  useUpdateWebhookEndpoint,
-  useTestWebhookEndpoint,
-  // ...
-} = webhooks;
-```
-
-### Available hooks
-
-**Endpoints**
-
-| Hook                                | Description                           |
-| ----------------------------------- | ------------------------------------- |
-| `useListWebhookEndpoints()`         | List all registered webhook endpoints |
-| `useGetWebhookEndpoint(endpointId)` | Get a single endpoint                 |
-| `useCreateWebhookEndpoint()`        | Register a new endpoint               |
-| `useUpdateWebhookEndpoint()`        | Update an endpoint (PATCH)            |
-| `useDeleteWebhookEndpoint()`        | Soft-delete an endpoint               |
-
-**Deliveries**
-
-| Hook                                                  | Description                           |
-| ----------------------------------------------------- | ------------------------------------- |
-| `useListWebhookDeliveries({ endpointId, ...params })` | List delivery history for an endpoint |
-| `useGetWebhookDelivery(deliveryId)`                   | Get a single delivery record          |
-
-**Testing**
-
-| Hook                       | Description                                                               |
-| -------------------------- | ------------------------------------------------------------------------- |
-| `useTestWebhookEndpoint()` | Fire a test delivery to an endpoint; invalidates delivery list on success |
-
-> **No retry hook:** Bunshot manages retries internally via BullMQ. There is no client-triggered retry endpoint.
-
----
-
-## Theme
-
-```tsx
-import { useTheme } from "@lib/snapshot";
-
-function ThemeToggle() {
-  const { theme, toggle } = useTheme();
-  return (
-    <button onClick={toggle}>
-      {theme === "dark" ? "Light mode" : "Dark mode"}
-    </button>
-  );
-}
-```
-
-`useTheme` returns:
-
-- `theme: 'light' | 'dark'`
-- `toggle()` — switches between light and dark
-- `set(t: 'light' | 'dark')` — set explicitly
-
-Theme is persisted in `localStorage` under the key `snapshot-theme`. The `dark` class is automatically applied to `document.documentElement` (compatible with Tailwind v4's `dark:` variant).
-
-On first load, the theme defaults to the user's OS preference (`prefers-color-scheme`).
-
----
-
-## Token Storage
-
-Access the token storage directly for custom auth flows:
-
-```ts
-import { tokenStorage } from "@lib/snapshot";
-
-tokenStorage.get(); // returns string | null
-tokenStorage.set("token"); // stores a token
-tokenStorage.clear(); // removes the token
-```
-
-### Building custom auth hooks
-
-```ts
-import { api, tokenStorage } from "@lib/snapshot";
-import { useMutation } from "@tanstack/react-query";
-
-export function useImpersonate() {
-  return useMutation({
-    mutationFn: (userId: string) =>
-      api.post<{ token: string }>("/admin/impersonate", { userId }),
-    onSuccess: ({ token }) => tokenStorage.set(token),
-  });
-}
-```
-
----
-
-## Composition Patterns
-
-All hooks and primitives returned by `createSnapshot` are designed for composition. Apps build domain hooks from them — no reimplementing, no copying package internals.
-
-### Custom API calls with Jotai
-
-```ts
-// src/store/products.ts
-import { atom } from "jotai";
-import { api } from "@lib/snapshot";
-import type { Product } from "@/types/api";
-
-const selectedIdAtom = atom<string | null>(null);
-
-// Works outside React — no hooks required
-export const selectedProductAtom = atom(async (get) => {
-  const id = get(selectedIdAtom);
-  if (!id) return null;
-  return api.get<Product>(`/products/${id}`);
-});
-```
-
-### Custom query hooks
-
-```ts
-// src/hooks/useProducts.ts
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@lib/snapshot";
-import type { Product, CreateProductBody } from "@/types/api";
-
-export function useProducts() {
-  return useQuery({
-    queryKey: ["products"],
-    queryFn: () => api.get<Product[]>("/products"),
-  });
-}
-
-export function useCreateProduct() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (body: CreateProductBody) =>
-      api.post<Product>("/products", body),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
-  });
-}
-```
-
----
-
-## Instance Shape
-
-`createSnapshot` returns a `SnapshotInstance<TWSEvents>` with:
-
-| Property                      | Type                                                                               | Description                                                                                                             |
-| ----------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `useUser`                     | Hook                                                                               | Current auth user, loading, error state                                                                                 |
-| `useLogin`                    | Hook                                                                               | Login mutation                                                                                                          |
-| `useLogout`                   | Hook                                                                               | Logout mutation                                                                                                         |
-| `useRegister`                 | Hook                                                                               | Register mutation                                                                                                       |
-| `useForgotPassword`           | Hook                                                                               | Forgot password mutation                                                                                                |
-| `useSocket`                   | Hook                                                                               | WebSocket connection and messaging                                                                                      |
-| `useRoom`                     | Hook                                                                               | Subscribe to a named room                                                                                               |
-| `useRoomEvent`                | Hook                                                                               | Listen to events in a named room                                                                                        |
-| `useTheme`                    | Hook                                                                               | Light/dark theme toggle                                                                                                 |
-| `useMfaVerify`                | Hook                                                                               | Complete MFA login with code                                                                                            |
-| `useMfaSetup`                 | Hook                                                                               | Generate TOTP secret + QR URI                                                                                           |
-| `useMfaVerifySetup`           | Hook                                                                               | Confirm TOTP setup, get recovery codes                                                                                  |
-| `useMfaDisable`               | Hook                                                                               | Disable MFA (requires TOTP code)                                                                                        |
-| `useMfaRecoveryCodes`         | Hook                                                                               | Regenerate recovery codes                                                                                               |
-| `useMfaEmailOtpEnable`        | Hook                                                                               | Initiate email OTP setup                                                                                                |
-| `useMfaEmailOtpVerifySetup`   | Hook                                                                               | Confirm email OTP setup                                                                                                 |
-| `useMfaEmailOtpDisable`       | Hook                                                                               | Disable email OTP method                                                                                                |
-| `useMfaResend`                | Hook                                                                               | Resend email OTP code during login                                                                                      |
-| `useMfaMethods`               | Hook                                                                               | Query enabled MFA methods                                                                                               |
-| `isMfaChallenge`              | Utility                                                                            | Type guard for `LoginResult`                                                                                            |
-| `usePendingMfaChallenge`      | Hook                                                                               | Read the in-memory MFA challenge on the MFA verify page                                                                 |
-| `useSetPassword`              | Hook                                                                               | Set or change account password                                                                                          |
-| `useDeleteAccount`            | Hook                                                                               | Delete account with full session teardown                                                                               |
-| `useCancelDeletion`           | Hook                                                                               | Cancel a queued account deletion                                                                                        |
-| `useRefreshToken`             | Hook                                                                               | Exchange refresh token for new access token                                                                             |
-| `useSessions`                 | Hook                                                                               | List active sessions for current user                                                                                   |
-| `useRevokeSession`            | Hook                                                                               | Revoke a session by ID                                                                                                  |
-| `useResetPassword`            | Hook                                                                               | Reset password using email token                                                                                        |
-| `useVerifyEmail`              | Hook                                                                               | Verify email address using token                                                                                        |
-| `useResendVerification`       | Hook                                                                               | Resend email verification link                                                                                          |
-| `getOAuthUrl`                 | Utility                                                                            | Get OAuth provider redirect URL                                                                                         |
-| `getLinkUrl`                  | Utility                                                                            | Get OAuth account-linking redirect URL                                                                                  |
-| `useOAuthExchange`            | Hook                                                                               | **Legacy.** Exchange OAuth one-time code for session. Not used in hardened browser flow. Removed in next major version. |
-| `useOAuthUnlink`              | Hook                                                                               | Unlink an OAuth provider                                                                                                |
-| `useWebAuthnRegisterOptions`  | Hook                                                                               | Get WebAuthn registration challenge                                                                                     |
-| `useWebAuthnRegister`         | Hook                                                                               | Complete WebAuthn credential registration                                                                               |
-| `useWebAuthnCredentials`      | Hook                                                                               | List registered WebAuthn credentials                                                                                    |
-| `useWebAuthnRemoveCredential` | Hook                                                                               | Remove a WebAuthn credential                                                                                            |
-| `useWebAuthnDisable`          | Hook                                                                               | Disable WebAuthn MFA method                                                                                             |
-| `usePasskeyLoginOptions`      | Hook                                                                               | Get passkey login challenge options (passkeyPages: true)                                                                |
-| `usePasskeyLogin`             | Hook                                                                               | Complete passwordless passkey login (passkeyPages: true)                                                                |
-| `formatAuthError`             | `(error: ApiError, context: AuthErrorContext, config?: AuthErrorConfig) => string` | Format an auth error with safe defaults. Bound to the instance's `authErrors` config.                                   |
-| `api`                         | Primitive                                                                          | `ApiClient` — typed HTTP methods                                                                                        |
-| `tokenStorage`                | Primitive                                                                          | Read/write/clear auth token                                                                                             |
-| `queryClient`                 | Primitive                                                                          | Stable `QueryClient` singleton                                                                                          |
-| `useWebSocketManager`         | Hook                                                                               | Raw `WebSocketManager` instance                                                                                         |
-| `protectedBeforeLoad`         | Loader                                                                             | Redirect unauthenticated users                                                                                          |
-| `guestBeforeLoad`             | Loader                                                                             | Redirect authenticated users                                                                                            |
-| `QueryProvider`               | Component                                                                          | Pre-bound `QueryClientProvider`                                                                                         |
-
----
-
-## Peer Dependencies
-
-| Package                  | Required Version                                         |
-| ------------------------ | -------------------------------------------------------- |
-| `react`                  | `>=19.0.0`                                               |
-| `react-dom`              | `>=19.0.0`                                               |
-| `@tanstack/react-router` | `>=1.0.0`                                                |
-| `@tanstack/react-query`  | `>=5.0.0`                                                |
-| `jotai`                  | `>=2.0.0`                                                |
-| `@unhead/react`          | `>=2.0.0`                                                |
-| `vite`                   | `>=5.0.0` · optional — only required for the Vite plugin |
-| `zod`                    | `^3.0.0` · optional — only required for `--zod` flag     |
-
----
-
-## API Sync
-
-Generate fully-typed TanStack Query hooks directly from your bunshot backend's OpenAPI schema:
+Use the package directly with npm or Bun:
 
 ```bash
-bun run sync                                    # reads VITE_API_URL from .env
-bunx snapshot sync --api http://localhost:3000  # explicit URL
-bunx snapshot sync --file ./openapi.json        # local file
-bunx snapshot sync --watch                      # re-run automatically on schema change
-bunx snapshot sync --zod                        # also generate Zod validators
+npx @lastshotlabs/snapshot init my-app
+bunx @lastshotlabs/snapshot init my-app
 ```
 
-Run it any time your backend routes or types change. It only touches generated files and is safe to re-run as many times as needed.
+Common commands:
 
-### URL resolution
+| Command                      | Description                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| `snapshot init`              | Scaffold a new Snapshot app                                                     |
+| `snapshot sync`              | Generate TypeScript types, API functions, and TanStack Query hooks from OpenAPI |
+| `snapshot dev`               | Run a manifest app with Snapshot's built-in Vite dev server                     |
+| `snapshot build`             | Build a manifest app                                                            |
+| `snapshot preview`           | Preview the local build output                                                  |
+| `snapshot add-page`          | Add a page to `snapshot.manifest.json`                                          |
+| `snapshot add-resource`      | Add a manifest resource                                                         |
+| `snapshot manifest/init`     | Create `snapshot.manifest.json`                                                 |
+| `snapshot manifest/schema`   | Generate the manifest JSON Schema                                               |
+| `snapshot manifest/validate` | Validate a manifest file                                                        |
+| `snapshot validate`          | Alias for manifest validation                                                   |
 
-The command resolves the API URL in this order:
+Examples:
 
-1. `--api <url>` flag
-2. `VITE_API_URL` environment variable (bun loads `.env` automatically for `bun run sync`)
-3. `VITE_API_URL` in the `.env` file in the current directory
-
-The schema is fetched from `{apiUrl}/openapi.json`. Use `--file` to skip the network and read directly from a local file.
-
-### What gets generated
-
-**`src/types/api.ts`** — TypeScript types for every schema in `components.schemas`:
-
-```ts
-// Generated by bunx snapshot sync. Do not edit manually.
-
-export interface User {
-  id: string;
-  email: string;
-  createdAt: string;
-}
-
-export type UserRole = "admin" | "member" | "guest";
+```bash
+snapshot init my-app --template admin
+snapshot sync --api http://localhost:3000 --zod
+snapshot sync --file ./openapi.json --watch
+snapshot manifest/validate
 ```
 
-**`src/api/{tag}.ts`** — one file per OpenAPI tag containing plain async functions. No React dependencies — callable anywhere (Jotai atoms, event handlers, utilities).
+## Vite
+
+Snapshot exports Vite plugins for three integration points.
 
 ```ts
-// Generated by bunx snapshot sync. Do not edit manually.
-
-import { api } from "@lib/snapshot";
-import type { User, CreateUserBody } from "../types/api";
-
-/** List all users */
-export const listUsers = (): Promise<User[]> => api.get<User[]>("/users");
-
-/** Get user by ID */
-export const getUser = (id: string): Promise<User> =>
-  api.get<User>(`/users/${id}`);
-
-/** Create a user */
-export const createUser = (body: CreateUserBody): Promise<User> =>
-  api.post<User>("/users", body);
-```
-
-**`src/hooks/api/{tag}.ts`** — one file per OpenAPI tag containing TanStack Query hooks. Imports plain functions from `../../api/{tag}`.
-
-```ts
-// Generated by bunx snapshot sync. Do not edit manually.
-
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  type UseQueryOptions,
-  type UseMutationOptions,
-  type QueryKey,
-} from "@tanstack/react-query";
-import { ApiError } from "@lastshotlabs/snapshot";
-import { listUsers, getUser, createUser } from "../../api/users";
-import type { User, CreateUserBody } from "../../types/api";
-
-/** List all users */
-export function useListUsersQuery(
-  options?: Omit<UseQueryOptions<User[], ApiError>, "queryKey" | "queryFn">,
-) {
-  return useQuery({
-    queryKey: ["users"],
-    queryFn: listUsers,
-    ...options,
-  });
-}
-
-/** Get user by ID */
-export function useGetUserQuery(
-  params: { id: string },
-  options?: Omit<UseQueryOptions<User, ApiError>, "queryKey" | "queryFn">,
-) {
-  return useQuery({
-    queryKey: ["users", params.id],
-    queryFn: () => getUser(params.id),
-    ...options,
-  });
-}
-
-/** Create a user */
-export function useCreateUserMutation(
-  options?: UseMutationOptions<User, ApiError, CreateUserBody> & {
-    invalidateKeys?: QueryKey[];
-  },
-) {
-  const { invalidateKeys, ...mutationOptions } = options ?? {};
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: createUser,
-    ...mutationOptions,
-    onSuccess: (...args) => {
-      invalidateKeys?.forEach((key) =>
-        queryClient.invalidateQueries({ queryKey: key }),
-      );
-      mutationOptions.onSuccess?.(...args);
-    },
-  });
-}
-```
-
-GET operations become `useQuery` hooks. All other methods become `useMutation` hooks. Operations with an `operationId` get clean names (`listUsers` → `useListUsersQuery`). Operations without one fall back to method + path segments. Deprecated operations have `/** @deprecated */` added to both exports.
-
-For mutations that include path parameters (e.g. `PUT /users/{id}`), the mutation variables combine path params and body into a single object:
-
-```ts
-// Generated for PUT /users/{id}
-export const updateUser = (id: string, body: UpdateUserBody): Promise<User> =>
-  api.put<User>(`/users/${id}`, body);
-
-export function useUpdateUserMutation(
-  options?: UseMutationOptions<
-    User,
-    ApiError,
-    { id: string; body: UpdateUserBody }
-  > & { invalidateKeys?: QueryKey[] },
-) {
-  const { invalidateKeys, ...mutationOptions } = options ?? {};
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (vars) => updateUser(vars.id, vars.body),
-    ...mutationOptions,
-    onSuccess: (...args) => {
-      invalidateKeys?.forEach((key) =>
-        queryClient.invalidateQueries({ queryKey: key }),
-      );
-      mutationOptions.onSuccess?.(...args);
-    },
-  });
-}
-```
-
-Usage:
-
-```ts
-const update = useUpdateUserMutation();
-update.mutate({ id: user.id, body: { email: "new@example.com" } });
-```
-
-### Mutation hook options
-
-Generated mutation hooks accept the full `UseMutationOptions` type (no restrictions), plus an `invalidateKeys` extension:
-
-**Override `mutationFn` to inject context** (e.g. an `accountId` from a parent component or store):
-
-```ts
-const { accountId } = useAccount();
-
-const create = useCreateUserMutation({
-  mutationFn: (body) => createUser({ ...body, accountId }),
-});
-```
-
-**Auto-invalidate queries on success:**
-
-```ts
-const create = useCreateUserMutation({
-  invalidateKeys: [["users"], ["stats"]],
-});
-```
-
-**Both together:**
-
-```ts
-const create = useCreateUserMutation({
-  mutationFn: (body) => createUser({ ...body, accountId }),
-  invalidateKeys: [["users", accountId]],
-  onSuccess: () => toast.success("User created"),
-});
-```
-
-`invalidateKeys` runs before `onSuccess` — by the time your callback fires, the relevant queries are already invalidated.
-
-### Paginated endpoints
-
-When an endpoint returns a bunshot pagination envelope (`{ data: T[], total: number, page: number, perPage: number }`), sync detects it automatically and generates a paginated hook:
-
-```ts
-// Generated for GET /users (paginated response)
-export const listUsers = (
-  page = 1,
-  perPage = 20,
-): Promise<PaginatedResponse<User>> =>
-  api.get<PaginatedResponse<User>>(`/users?page=${page}&perPage=${perPage}`);
-
-export function useListUsersQuery(
-  params: { page?: number; perPage?: number } = {},
-  options?: Omit<
-    UseQueryOptions<PaginatedResponse<User>, ApiError>,
-    "queryKey" | "queryFn"
-  >,
-) {
-  return useQuery({
-    queryKey: ["users", params.page ?? 1, params.perPage ?? 20],
-    queryFn: () => listUsers(params.page ?? 1, params.perPage ?? 20),
-    ...options,
-  });
-}
-```
-
-The `page` and `perPage` values are included in the `queryKey` so TanStack Query caches each page separately. `PaginatedResponse<T>` is exported from `src/types/api.ts`.
-
-### Zod form schemas (`--zod`)
-
-Pass `--zod` to also generate Zod validators for mutation request bodies. These are placed alongside each mutation hook and are ready to use with `react-hook-form` or any Zod-compatible form library:
-
-```ts
-/** Zod schema for useCreateUserMutation form validation */
-export const createUserSchema = z.object({
-  email: z.string(),
-  role: z.enum(["admin", "member"]),
-});
-export type CreateUserInput = z.infer<typeof createUserSchema>;
-```
-
-Usage with `react-hook-form`:
-
-```ts
-import { createUserSchema, type CreateUserInput } from "@api/users";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-const form = useForm<CreateUserInput>({
-  resolver: zodResolver(createUserSchema),
-});
-```
-
-`zod` must be installed in your project (`bun add zod`). It is an optional peer dependency of snapshot.
-
-### Watch mode (`--watch` / `-w`)
-
-Keep hooks in sync while developing — sync re-runs automatically whenever the schema changes:
-
-```bash
-bunx snapshot sync --watch                      # polls API every 3s
-bunx snapshot sync --file ./openapi.json --watch  # polls file every 1s
-```
-
-Ctrl+C stops the watcher cleanly. On each change, all affected hook files and `src/types/api.ts` are regenerated.
-
-### Vite plugin
-
-Run sync automatically as part of the Vite dev server lifecycle — no manual `bun run sync` needed on startup:
-
-```ts
-// vite.config.ts
-import { snapshotSync } from "@lastshotlabs/snapshot/vite";
+  snapshotApp,
+  snapshotSsr,
+  snapshotSync,
+} from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
   plugins: [
-    snapshotSync({ file: "openapi.json" }), // file mode: re-runs on file change in dev
-    // snapshotSync({ apiUrl: 'http://localhost:3000' }),  // API mode: runs once on start
+    react(),
+    snapshotApp({
+      manifestFile: "snapshot.manifest.json",
+      apiUrl: "/api",
+    }),
+    snapshotSync({
+      file: "./openapi.json",
+      zod: true,
+    }),
+    snapshotSsr({
+      rsc: true,
+      prefetchManifest: true,
+    }),
   ],
 });
 ```
 
-The plugin runs `snapshot sync` on `buildStart` (both `vite dev` and `vite build`). In dev mode with `file` option, it also watches the schema file via Vite's watcher and re-generates on changes. Dropping the schema file into your project for the first time also triggers sync automatically — no dev server restart needed.
+- `snapshotApp()` boots a manifest-driven app from `snapshot.manifest.json`.
+- `snapshotSync()` runs OpenAPI sync during the Vite lifecycle.
+- `snapshotSsr()` configures client and server builds, RSC transforms, prefetch
+  manifests, optional SSG, and optional PPR metadata.
 
-> **Note:** API URL polling in dev mode is not supported by the Vite plugin. For live schema updates from a running API, use `bunx snapshot sync --watch` in a separate terminal instead.
+## SSR And RSC
 
-`vite` must be installed in your project. It is an optional peer dependency of snapshot.
-
-### Using plain functions in Jotai atoms
-
-Plain functions live in `src/api/` with no React dependencies — import them directly anywhere:
+Server rendering utilities are exported from `@lastshotlabs/snapshot/ssr`.
 
 ```ts
-// src/store/users.ts
-import { atom } from "jotai";
-import { getUser } from "@api/users";
+import {
+  createManifestRenderer,
+  createReactRenderer,
+  renderPage,
+  usePrefetchRoute,
+} from "@lastshotlabs/snapshot/ssr";
 
-const selectedIdAtom = atom<string | null>(null);
+export const reactRenderer = createReactRenderer({
+  routes: import.meta.glob("./pages/**/*.tsx"),
+});
 
-export const selectedUserAtom = atom(async (get) => {
-  const id = get(selectedIdAtom);
-  return id ? getUser(id) : null;
+export const manifestRenderer = createManifestRenderer({
+  manifest,
+  apiUrl: "/api",
 });
 ```
 
----
+The SSR package also includes RSC helpers, server action plumbing, PPR shell
+cache utilities, safe state serialization, and prefetch support.
 
-## Build
+## Realtime And Community
 
-```bash
-bun run build      # tsup → dist/
-bun run typecheck  # tsc --noEmit
-bun run dev        # tsup --watch
+Snapshot includes hooks for WebSocket rooms, SSE streams, push notifications,
+community containers, threads, replies, reactions, reports, bans, notifications,
+and webhooks.
+
+```tsx
+function Room({ roomId }: { roomId: string }) {
+  const { isSubscribed } = snap.useRoom(roomId);
+
+  snap.useRoomEvent(roomId, "message", (message) => {
+    console.log(message);
+  });
+
+  return <div>{isSubscribed ? "Subscribed" : "Subscribing"}</div>;
+}
 ```
 
-Output:
+Manifest apps can declare realtime endpoints in config, while code-first apps
+can use the hooks directly.
 
-- `dist/index.mjs` — library ESM
-- `dist/index.cjs` — library CommonJS
-- `dist/index.d.ts` — TypeScript declarations
-- `dist/cli.mjs` — self-contained CLI executable (bundled, no runtime deps)
-- `dist/vite.js` — Vite plugin ESM
-- `dist/vite.cjs` — Vite plugin CommonJS
-- `dist/vite.d.ts` — Vite plugin TypeScript declarations
+## Documentation
+
+The docs app is the source of truth for product guides and generated API
+references:
+
+| Topic                 | Docs                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Start here            | [apps/docs/src/content/docs/start-here/index.md](apps/docs/src/content/docs/start-here/index.md)                         |
+| Installation          | [apps/docs/src/content/docs/start-here/installation.md](apps/docs/src/content/docs/start-here/installation.md)           |
+| Core concepts         | [apps/docs/src/content/docs/start-here/core-concepts.md](apps/docs/src/content/docs/start-here/core-concepts.md)         |
+| Capabilities          | [apps/docs/src/content/docs/start-here/capabilities.md](apps/docs/src/content/docs/start-here/capabilities.md)           |
+| Component library     | [apps/docs/src/content/docs/build/component-library.md](apps/docs/src/content/docs/build/component-library.md)           |
+| Manifest apps         | [apps/docs/src/content/docs/build/manifest-apps.md](apps/docs/src/content/docs/build/manifest-apps.md)                   |
+| Manifest quick start  | [apps/docs/src/content/docs/manifest/quick-start.md](apps/docs/src/content/docs/manifest/quick-start.md)                 |
+| Auth                  | [apps/docs/src/content/docs/guides/authentication.md](apps/docs/src/content/docs/guides/authentication.md)               |
+| Forms                 | [apps/docs/src/content/docs/guides/forms.md](apps/docs/src/content/docs/guides/forms.md)                                 |
+| Data tables           | [apps/docs/src/content/docs/guides/data-tables.md](apps/docs/src/content/docs/guides/data-tables.md)                     |
+| Layout and navigation | [apps/docs/src/content/docs/guides/layout-and-navigation.md](apps/docs/src/content/docs/guides/layout-and-navigation.md) |
+| Realtime              | [apps/docs/src/content/docs/guides/realtime.md](apps/docs/src/content/docs/guides/realtime.md)                           |
+| Theming and slots     | [apps/docs/src/content/docs/build/styling-and-slots.md](apps/docs/src/content/docs/build/styling-and-slots.md)           |
+| CLI reference         | [apps/docs/src/content/docs/reference/cli.md](apps/docs/src/content/docs/reference/cli.md)                               |
+| SDK reference         | [apps/docs/src/content/docs/reference/sdk.md](apps/docs/src/content/docs/reference/sdk.md)                               |
+| UI reference          | [apps/docs/src/content/docs/reference/ui/index.md](apps/docs/src/content/docs/reference/ui/index.md)                     |
+| Component reference   | [apps/docs/src/content/docs/reference/components.md](apps/docs/src/content/docs/reference/components.md)                 |
+| Vite reference        | [apps/docs/src/content/docs/reference/vite.md](apps/docs/src/content/docs/reference/vite.md)                             |
+| SSR reference         | [apps/docs/src/content/docs/reference/ssr.md](apps/docs/src/content/docs/reference/ssr.md)                               |
+
+## Development
+
+```bash
+npm install
+npm run typecheck
+npm test
+npm run docs:ci
+npm run release:check
+```
+
+`docs:ci` regenerates docs, typechecks docs examples, checks docs impact and
+coverage, verifies component coverage, smoke-tests examples, and builds the docs
+site.
+
+Releases are published to npm from GitHub Actions.
