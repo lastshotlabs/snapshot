@@ -27,9 +27,20 @@ export default defineConfig([
       copyFileSync("src/push/sw.js", "dist/sw.js");
     },
   },
-  // UI entry point (config-driven components, tokens, manifest)
+  // UI entry point (config-driven components, tokens, manifest).
+  //
+  // The main `./ui` barrel re-exports every component. Subpath entries
+  // below (`./ui/rich-input`, `./ui/emoji-picker`, `./ui/gif-picker`)
+  // bundle just the slice they name, so consumers that import only one
+  // surface don't drag the whole tree into their bundle. Each subpath
+  // gets its own `dist/ui/<name>.{js,cjs}` produced by tsup.
   {
-    entry: ["src/ui.ts"],
+    entry: {
+      ui: "src/ui.ts",
+      "ui/rich-input": "src/ui/rich-input.ts",
+      "ui/emoji-picker": "src/ui/emoji-picker.ts",
+      "ui/gif-picker": "src/ui/gif-picker.ts",
+    },
     format: ["esm", "cjs"],
     dts: false,
     sourcemap: true,

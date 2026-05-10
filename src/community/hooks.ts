@@ -13,6 +13,7 @@ import type {
   CreateReplyBody,
   UpdateReplyBody,
   ReactionBody,
+  ReactionResponse,
   ReportBody,
   ReportResponse,
   ResolveReportBody,
@@ -29,8 +30,13 @@ import type {
 } from "./types";
 
 // ── Cache key helpers ──────────────────────────────────────────────────────────
+//
+// Exported as `communityKeys` so SSR loaders (in any consuming app) can seed
+// the QueryClient under the SAME keys these hooks read. Drift between
+// loader-seeded keys and hook-read keys is the canonical cause of pages
+// loading twice (seed lands in cache, hook reads a different key, refetches).
 
-const keys = {
+export const communityKeys = {
   containers: () => ["community", "containers"] as const,
   container: (containerId: string) =>
     ["community", "containers", containerId] as const,
@@ -59,6 +65,9 @@ const keys = {
   searchThreads: () => ["community", "search", "threads"] as const,
   searchReplies: () => ["community", "search", "replies"] as const,
 };
+
+// Local alias kept for the rest of this file (every existing reference uses `keys`).
+const keys = communityKeys;
 
 // ── Factory ───────────────────────────────────────────────────────────────────
 
@@ -404,10 +413,10 @@ export function createCommunityHooks({
 
   /** Fetch all reactions on a specific thread. */
   function useThreadReactions(threadId: string) {
-    return useQuery<ReactionBody[], ApiError>({
+    return useQuery<ReactionResponse[], ApiError>({
       queryKey: ["community", "thread-reactions", threadId] as const,
       queryFn: () =>
-        api.get<ReactionBody[]>(`/community/threads/${threadId}/reactions`),
+        api.get<ReactionResponse[]>(`/community/threads/${threadId}/reactions`),
       enabled: !!threadId,
     });
   }
@@ -460,10 +469,10 @@ export function createCommunityHooks({
 
   /** Fetch all reactions on a specific reply. */
   function useReplyReactions(replyId: string) {
-    return useQuery<ReactionBody[], ApiError>({
+    return useQuery<ReactionResponse[], ApiError>({
       queryKey: ["community", "reply-reactions", replyId] as const,
       queryFn: () =>
-        api.get<ReactionBody[]>(`/community/replies/${replyId}/reactions`),
+        api.get<ReactionResponse[]>(`/community/replies/${replyId}/reactions`),
       enabled: !!replyId,
     });
   }

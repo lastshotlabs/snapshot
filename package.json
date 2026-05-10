@@ -3,6 +3,10 @@
   "version": "0.1.4",
   "description": "React frontend framework for bunshot-powered backends",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "./dist/sw.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lastshotlabs/snapshot.git"
@@ -24,6 +28,21 @@
       "types": "./dist-types/ui.d.ts",
       "import": "./dist/ui.js",
       "require": "./dist/ui.cjs"
+    },
+    "./ui/rich-input": {
+      "types": "./dist-types/ui/rich-input.d.ts",
+      "import": "./dist/ui/rich-input.js",
+      "require": "./dist/ui/rich-input.cjs"
+    },
+    "./ui/emoji-picker": {
+      "types": "./dist-types/ui/emoji-picker.d.ts",
+      "import": "./dist/ui/emoji-picker.js",
+      "require": "./dist/ui/emoji-picker.cjs"
+    },
+    "./ui/gif-picker": {
+      "types": "./dist-types/ui/gif-picker.d.ts",
+      "import": "./dist/ui/gif-picker.js",
+      "require": "./dist/ui/gif-picker.cjs"
     },
     "./vite": {
       "types": "./dist/vite.d.ts",
@@ -160,7 +179,8 @@
     "highlight.js": "^11.11.1",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "tiptap-markdown": "^0.9.0"
   },
   "optionalDependencies": {
     "zod-to-json-schema": "^3.25.2"

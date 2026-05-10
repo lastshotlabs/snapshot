@@ -64,6 +64,13 @@ export const richInputConfigSchema = extendComponentSchema({
     sendAction: actionSchema.optional(),
     /** Whether Enter submits (true) or inserts newline (false). Default: true. */
     sendOnEnter: z.boolean().optional(),
+    /**
+     * Emit a `markdown` field on the change/send payloads via
+     * `tiptap-markdown`. Off by default — turn on for surfaces that
+     * store markdown so the editor's HTML is converted to markdown
+     * before submission.
+     */
+    emitMarkdown: z.boolean().optional(),
     /** Maximum character count. */
     maxLength: z.number().optional(),
     /** Minimum editor height. CSS value. */

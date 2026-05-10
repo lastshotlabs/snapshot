@@ -68,6 +68,7 @@ export function RichInput({ config }: { config: RichInputConfig }) {
       readonly={readonly}
       features={config.features}
       sendOnEnter={config.sendOnEnter}
+      emitMarkdown={config.emitMarkdown}
       maxLength={config.maxLength}
       minHeight={config.minHeight}
       maxHeight={config.maxHeight}

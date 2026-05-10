@@ -25,7 +25,6 @@ import { useTheme } from "./theme/hook";
 import { createLoaders } from "./routing/loaders";
 import { QueryProviderInner } from "./providers/QueryProvider";
 import { createAuthErrorFormatter } from "./auth/error-format";
-import { getAuthScreenPath } from "./ui/manifest/auth-routes";
 import type {
   SnapshotConfig,
   SnapshotInstance,
@@ -35,53 +34,6 @@ import type {
   SseHookResult,
   SseEventHookResult,
 } from "./types";
-import type { ManifestConfig } from "./ui/manifest/types";
-import { bootBuiltins } from "./ui/manifest/boot-builtins";
-import { compileManifestWithEnv } from "./ui/manifest/compiler";
-import { getDefaultEnvSource } from "./ui/manifest/env";
-import { registerComponent } from "./ui/manifest/component-registry";
-import { registerComponentSchema } from "./ui/manifest/schema";
-import type { PluginSetupContext } from "./plugin";
-
-const MANIFEST_AUTH_WORKFLOW_EVENT = "snapshot:manifest-auth-workflow";
-const MANIFEST_REALTIME_WORKFLOW_EVENT = "snapshot:manifest-realtime-workflow";
-
-type ManifestAuthWorkflowKind = "unauthenticated" | "forbidden" | "logout";
-type ManifestRealtimeWorkflowChannel = "ws" | "sse";
-
-interface ManifestRealtimeWorkflowDetail {
-  channel: ManifestRealtimeWorkflowChannel;
-  kind: string;
-  endpoint?: string;
-  event?: string;
-  payload?: unknown;
-}
-
-function dispatchManifestAuthWorkflow(kind: ManifestAuthWorkflowKind): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.dispatchEvent(
-    new CustomEvent(MANIFEST_AUTH_WORKFLOW_EVENT, {
-      detail: { kind },
-    }),
-  );
-}
-
-function dispatchManifestRealtimeWorkflow(
-  detail: ManifestRealtimeWorkflowDetail,
-): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.dispatchEvent(
-    new CustomEvent(MANIFEST_REALTIME_WORKFLOW_EVENT, {
-      detail,
-    }),
-  );
-}
 
 function resolveWebSocketUrl(apiUrl: string): string {
   if (apiUrl.startsWith("https:")) {
@@ -95,41 +47,21 @@ function resolveWebSocketUrl(apiUrl: string): string {
   return apiUrl;
 }
 
-function createManifestRealtimeCallback(
-  detail: ManifestRealtimeWorkflowDetail,
-  workflow: string | undefined,
-  fallback?: () => void,
-): (payload?: unknown) => void {
-  return (payload) => {
-    if (workflow && typeof window !== "undefined") {
-      dispatchManifestRealtimeWorkflow({
-        ...detail,
-        payload,
-      });
-      return;
-    }
-
-    fallback?.();
-  };
-}
-
 /**
- * Create a per-instance snapshot runtime from bootstrap config and a manifest.
+ * Create a per-instance Snapshot runtime from code-first bootstrap config.
  *
- * Resolves manifest env refs, builds per-instance runtime managers, and wires
- * manifest-driven auth/realtime workflow dispatch events.
+ * Builds per-instance API, auth, realtime, community, and webhook hooks without
+ * compiling or booting a JSON manifest.
  *
- * @param config - Four-field bootstrap config
+ * @param config - Code-first Snapshot runtime config
  * @returns A fully initialized snapshot instance
  *
  * @example
  * ```ts
  * import { createSnapshot } from '@lastshotlabs/snapshot';
- * import manifest from './manifest.json';
  *
  * const snap = createSnapshot({
  *   apiUrl: 'https://api.example.com',
- *   manifest,
  * });
  *
  * // Use hooks in your React components
@@ -142,7 +74,25 @@ function createManifestRealtimeCallback(
 export function createSnapshot<
   TWSEvents extends Record<string, unknown> = Record<string, unknown>,
 >(config: SnapshotConfig): SnapshotInstance<TWSEvents> {
-  bootBuiltins();
+  // KNOWN ISSUE — bundle weight:
+  //
+  // `bootBuiltins` and `compileManifestWithEnv` are statically imported
+  // at the top of this file. That's enough for Vite/esbuild to follow
+  // their import chain at build time and pull the entire ~125-component
+  // registry (tiptap, codemirror, recharts, react-markdown, emoji-data,
+  // …) into every app's bundle, regardless of whether the app actually
+  // renders `<ManifestApp>`. Gating the call below behind a flag does
+  // NOT shake the import — bundlers care about top-level imports, not
+  // call-site reachability.
+  //
+  // The right fix is to deprecate or remove the manifest UI tree
+  // entirely (see snapshot's own roadmap). Until then, code-driven
+  // apps can omit `manifest` and leave `useManifestUI` unset; runtime
+  // behavior matches a no-op compiled manifest, but bundle weight is
+  // unchanged.
+  if (config.useManifestUI === true) {
+    bootBuiltins();
+  }
 
   // ── Plugin registration ───────────────────────────────────────────────────
   const plugins = config.plugins ?? [];
@@ -165,8 +115,13 @@ export function createSnapshot<
     }
   }
 
-  // Merge plugin componentGroups into manifest before compilation
-  let manifestWithPlugins = config.manifest;
+  // Merge plugin componentGroups into manifest before compilation.
+  // When the consumer omits `manifest` entirely (code-driven apps),
+  // start from an empty object — the compiler applies its Zod defaults
+  // and downstream consumers see a `compiledManifest` with empty
+  // routes/no auth/etc., which all the optional-chained reads below
+  // (e.g. `compiledManifest.auth?.providers`) handle natively.
+  let manifestWithPlugins: ManifestConfig = config.manifest ?? ({} as ManifestConfig);
   const pluginGroups = plugins.flatMap((p) =>
     p.componentGroups ? Object.entries(p.componentGroups) : [],
   );

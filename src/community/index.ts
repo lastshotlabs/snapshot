@@ -1,4 +1,4 @@
-export { createCommunityHooks } from "./hooks";
+export { createCommunityHooks, communityKeys } from "./hooks";
 export type { CommunityHooks } from "./hooks";
 export { communityContract } from "./contract";
 export type {
@@ -12,6 +12,7 @@ export type {
   CreateReplyBody,
   UpdateReplyBody,
   ReactionBody,
+  ReactionResponse,
   ReportBody,
   ReportResponse,
   ResolveReportBody,

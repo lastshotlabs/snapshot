@@ -111,11 +111,34 @@ export function createOAuthHooks({
     return parsed.toString();
   }
 
-  /** Build the full OAuth login URL for a given provider, including any configured query params. */
-  function getOAuthUrl(provider: OAuthProvider): string {
+  /**
+   * Build the full OAuth login URL for a given provider.
+   *
+   * Pass `opts.returnTo` to override the api's configured post-login
+   * redirect with a per-flow target — typically used by an admin or
+   * other secondary origin that shares the same OAuth client as the
+   * primary app and needs the callback to come back to its own origin.
+   * The api validates the value against its `allowedRedirectUrls` at
+   * flow start; an unallowed value falls back silently to the default.
+   */
+  function getOAuthUrl(
+    provider: OAuthProvider,
+    opts?: { returnTo?: string },
+  ): string {
     const providerConfig = config.providers?.[provider];
     const target = resolveProviderTarget(provider);
-    return appendProviderQuery(contract.oauthUrl(target), providerConfig);
+    const base = appendProviderQuery(contract.oauthUrl(target), providerConfig);
+    if (!opts?.returnTo) return base;
+    if (typeof URL === "undefined") return base;
+    const origin =
+      typeof window !== "undefined" &&
+      window.location.origin &&
+      window.location.origin !== "null"
+        ? window.location.origin
+        : "http://localhost";
+    const parsed = new URL(base, origin);
+    parsed.searchParams.set("return_to", opts.returnTo);
+    return parsed.toString();
   }
 
   /** Build the OAuth account-linking URL for a given provider, including any configured query params. */
@@ -130,11 +153,22 @@ export function createOAuthHooks({
    *
    * The provider callback redirects the browser back to the app with a short-lived
    * authorization `code`. Snapshot exchanges that code via
-   * `POST /auth/oauth/exchange`, then hydrates the auth cache and navigates to the
-   * configured home path.
+   * `POST /auth/oauth/exchange`, then hydrates the auth cache and (by default)
+   * navigates to the configured home path.
+   *
+   * Pass `{ navigateOnSuccess: false }` to suppress the auto-navigate. The
+   * mutation still mints the session and hydrates the auth cache, but
+   * navigation is left entirely to the caller. Use this when the caller
+   * needs to make a post-exchange decision before deciding where to go —
+   * for example, an admin callback page that checks a permission grant
+   * and either navigates to the admin home or logs the user out and
+   * shows a "not authorized" panel. With the default auto-navigate the
+   * user lands on the destination *before* the decision can resolve,
+   * defeating the gate.
    */
-  function useOAuthExchange() {
+  function useOAuthExchange(opts?: { navigateOnSuccess?: boolean }) {
     const queryClient = useQueryClient();
+    const navigateOnSuccess = opts?.navigateOnSuccess !== false;
     return useMutation<OAuthExchangeResponse, ApiError, OAuthExchangeBody>({
       mutationFn: (body) =>
         api.post<OAuthExchangeResponse>(contract.endpoints.oauthExchange, body),
@@ -148,7 +182,7 @@ export function createOAuthHooks({
         const user = await api.get<AuthUser>(contract.endpoints.me);
         queryClient.setQueryData(AUTH_QUERY_KEY, user);
         onLoginSuccess?.();
-        navigateToPath(config.homePath);
+        if (navigateOnSuccess) navigateToPath(config.homePath);
       },
     });
   }

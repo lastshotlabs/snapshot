@@ -683,12 +683,22 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
           );
         }
       } catch (err) {
-        // Static param scanning is a best-effort build artifact — warn but do
-        // not fail the build if bunshot-ssr is not installed or scanning throws.
-        console.warn(
-          "[snapshot-static-params] Failed to generate static-params.json:",
-          err instanceof Error ? err.message : err,
-        );
+        // Static param scanning is a best-effort build artifact. The
+        // `@lastshotlabs/bunshot-ssr` package is genuinely optional —
+        // most consumers (those using ISR or pure SSR rather than SSG)
+        // will never install it, and "module not found" is the
+        // expected steady state for them. Stay silent in that case;
+        // any OTHER error (scanning threw, manifest write failed) is
+        // a real misconfiguration and gets a warning.
+        const message = err instanceof Error ? err.message : String(err);
+        const isOptionalMissing =
+          /cannot find package|err_module_not_found|module not found/i.test(message);
+        if (!isOptionalMissing) {
+          console.warn(
+            "[snapshot-static-params] Failed to generate static-params.json:",
+            message,
+          );
+        }
       }
     },
   };

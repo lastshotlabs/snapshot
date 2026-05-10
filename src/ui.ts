@@ -428,9 +428,17 @@ export type { CodeConfig, CodeBaseProps } from "./ui/components/content/code/ind
 export {
   RichInput,
   RichInputBase,
+  DefaultMentionList,
   richInputConfigSchema,
 } from "./ui/components/content/rich-input/index";
-export type { RichInputConfig, RichInputBaseProps } from "./ui/components/content/rich-input/index";
+export type {
+  RichInputConfig,
+  RichInputBaseProps,
+  RichInputBaseHandle,
+  MentionSuggestion,
+  MentionListProps,
+  MentionListHandle,
+} from "./ui/components/content/rich-input/index";
 
 // Components — EmojiPicker
 export {

@@ -10,6 +10,11 @@
     "baseUrl": ".",
     "paths": {}
   },
-  "include": ["src/ui.ts"],
+  "include": [
+    "src/ui.ts",
+    "src/ui/rich-input.ts",
+    "src/ui/emoji-picker.ts",
+    "src/ui/gif-picker.ts"
+  ],
   "exclude": ["node_modules", "dist", "dist-types"]
 }

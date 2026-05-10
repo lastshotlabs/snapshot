@@ -1,7 +1,33 @@
 import type { QueryClient } from "@tanstack/react-query";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
-import type { ContainerResponse, CreateContainerBody, UpdateContainerBody, ThreadResponse, CreateThreadBody, UpdateThreadBody, ReplyResponse, CreateReplyBody, UpdateReplyBody, ReactionBody, ReportBody, ReportResponse, ResolveReportBody, BanBody, BanResponse, BanCheckResponse, PaginatedResponse, SearchResponse, NotificationResponse, ListParams, ThreadListParams, ReplyListParams, CommunitySearchParams } from "./types";
+import type { ContainerResponse, CreateContainerBody, UpdateContainerBody, ThreadResponse, CreateThreadBody, UpdateThreadBody, ReplyResponse, CreateReplyBody, UpdateReplyBody, ReactionBody, ReactionResponse, ReportBody, ReportResponse, ResolveReportBody, BanBody, BanResponse, BanCheckResponse, PaginatedResponse, SearchResponse, NotificationResponse, ListParams, ThreadListParams, ReplyListParams, CommunitySearchParams } from "./types";
+
+/**
+ * Cache-key builders mirroring what the hooks emit. Exported so SSR
+ * loaders in any consuming app seed under the same keys the hooks read.
+ */
+export declare const communityKeys: {
+    containers: () => readonly ["community", "containers"];
+    container: (containerId: string) => readonly ["community", "containers", string];
+    threads: (containerId: string) => readonly ["community", "threads", string];
+    threadDetail: (threadId: string) => readonly ["community", "threads", "detail", string];
+    replies: (threadId: string) => readonly ["community", "replies", string];
+    replyDetail: (replyId: string) => readonly ["community", "replies", "detail", string];
+    reports: () => readonly ["community", "reports"];
+    report: (reportId: string) => readonly ["community", "reports", string];
+    bans: () => readonly ["community", "bans"];
+    banCheck: (userId: string, containerId?: string) => readonly ["community", "bans", string, "check", string | null];
+    banCheckPrefix: (userId: string) => readonly ["community", "bans", string, "check"];
+    notifications: () => readonly ["community", "notifications"];
+    notificationsUnread: () => readonly ["community", "notifications", "unread"];
+    members: (containerId: string) => readonly ["community", "members", string];
+    moderators: (containerId: string) => readonly ["community", "moderators", string];
+    owners: (containerId: string) => readonly ["community", "owners", string];
+    searchThreads: () => readonly ["community", "search", "threads"];
+    searchReplies: () => readonly ["community", "search", "replies"];
+};
+
 /**
  * Create a complete set of React Query hooks for the community API surface.
  *
@@ -65,8 +91,8 @@ export declare function createCommunityHooks({ api, queryClient: _qc, }: {
         replyId: string;
         threadId: string;
     }, unknown>;
-    useThreadReactions: (threadId: string) => import("@tanstack/react-query").UseQueryResult<ReactionBody[], ApiError>;
-    useReplyReactions: (replyId: string) => import("@tanstack/react-query").UseQueryResult<ReactionBody[], ApiError>;
+    useThreadReactions: (threadId: string) => import("@tanstack/react-query").UseQueryResult<ReactionResponse[], ApiError>;
+    useReplyReactions: (replyId: string) => import("@tanstack/react-query").UseQueryResult<ReactionResponse[], ApiError>;
     useAddThreadReaction: () => import("@tanstack/react-query").UseMutationResult<void, ApiError, {
         threadId: string;
         containerId: string;

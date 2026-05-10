@@ -411,8 +411,10 @@ export interface SnapshotConfig {
      * deployments - emits a runtime warning in browser contexts.
      */
     bearerToken?: string;
-    /** The frontend manifest for the running app. */
-    manifest: ManifestConfig;
+    /** The frontend manifest for the running app. Optional — code-driven apps that never render `<ManifestApp>` can omit it. */
+    manifest?: ManifestConfig;
+    /** Opt-in to running `bootBuiltins()` at createSnapshot time. Defaults to false. Does not currently affect bundle weight (pending upstream refactor). */
+    useManifestUI?: boolean;
     /** Optional plugins to register custom components, groups, and setup hooks. */
     plugins?: import("./plugin").SnapshotPlugin[];
     /**
@@ -534,11 +536,11 @@ export interface SnapshotInstance<TWSEvents extends Record<string, unknown> = Re
     /** Revoke a session by its ID. Logs out that device. */
     useRevokeSession: () => UseMutationResult<void, ApiError, string>;
     /** Exchange an OAuth callback code for session tokens. Called after the provider redirects back. */
-    useOAuthExchange: () => UseMutationResult<OAuthExchangeResponse, ApiError, OAuthExchangeBody>;
+    useOAuthExchange: (opts?: { navigateOnSuccess?: boolean }) => UseMutationResult<OAuthExchangeResponse, ApiError, OAuthExchangeBody>;
     /** Remove an OAuth provider link from the current account. */
     useOAuthUnlink: () => UseMutationResult<void, ApiError, OAuthProvider>;
     /** Build the redirect URL for starting an OAuth login flow with the given provider. */
-    getOAuthUrl: (provider: OAuthProvider) => string;
+    getOAuthUrl: (provider: OAuthProvider, opts?: { returnTo?: string }) => string;
     /** Build the redirect URL for linking an OAuth provider to the current account. */
     getLinkUrl: (provider: OAuthProvider) => string;
     /** Request WebAuthn registration options (challenge, relying party info) from the server. */

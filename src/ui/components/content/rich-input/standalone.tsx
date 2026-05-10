@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import { Extension } from "@tiptap/core";
@@ -8,6 +8,14 @@ import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { Markdown } from "tiptap-markdown";
+import { buildMentionExtension } from "./mention-extension";
+import type {
+  MentionListHandle,
+  MentionListProps,
+  MentionSuggestion,
+} from "./mention-list";
+import type { ComponentType } from "react";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
@@ -32,6 +40,23 @@ const ALL_TOOLBAR_ITEMS: ToolbarItem[] = [
   { name: "ordered-list", icon: "list-ordered", label: "Numbered list", action: "toggleOrderedList" },
   { name: "link", icon: "link", label: "Insert link", action: "setLink" },
 ];
+
+/**
+ * Read the markdown projection from a Tiptap editor instance, defensively
+ * tolerating the absence of the `tiptap-markdown` extension storage.
+ *
+ * Returns `undefined` if `tiptap-markdown` is not registered on the
+ * editor (e.g. the consumer set `emitMarkdown` to `true` but a future
+ * dependency rev removed the storage shape). The `onSend` / `onChange`
+ * payloads omit the `markdown` field in that case rather than emit an
+ * empty string that consumers might mistake for an empty document.
+ */
+function readMarkdown(editor: unknown): string | undefined {
+  const storage = (editor as { storage?: Record<string, unknown> } | null)?.storage?.[
+    'markdown'
+  ] as { getMarkdown?: () => string } | undefined;
+  return typeof storage?.getMarkdown === 'function' ? storage.getMarkdown() : undefined;
+}
 
 function createSendOnEnterExtension(onSend: () => void) {
   return Extension.create({
@@ -75,10 +100,53 @@ export interface RichInputBaseProps {
   maxHeight?: string;
   /** Whether to show a send button. */
   showSendButton?: boolean;
+  /**
+   * Emit a `markdown` field on `onSend` / `onChange` payloads.
+   *
+   * When true, registers the `tiptap-markdown` Tiptap extension and
+   * exposes `editor.storage.markdown.getMarkdown()` on each event.
+   * Off by default to keep the editor's emitted payload minimal for
+   * consumers that store HTML or plain text. Storage cost is the
+   * `tiptap-markdown` package and its `markdown-it` transitive dep.
+   */
+  emitMarkdown?: boolean;
+
+  /**
+   * @-mention typeahead source. When provided, the editor registers a
+   * mention extension; typing `@` opens a suggestion popover, and
+   * selecting an item inserts a mention chip that round-trips through
+   * the slingshot content-token format (`<@<id>>`) in both the plain-text
+   * and markdown projections. Server-side `parseBody` then derives the
+   * mention sidecar fields directly from the body.
+   *
+   * Returning a `Promise` lets you debounce / cancel; the editor only
+   * shows the latest resolved batch.
+   */
+  onMentionSearch?: (
+    query: string,
+  ) => Promise<readonly MentionSuggestion[]> | readonly MentionSuggestion[];
+
+  /**
+   * Optional consumer-rendered popover. If omitted, snapshot uses a
+   * minimal default list styled with the framework's CSS variables.
+   * Accepts the same props the default does and exposes
+   * `onKeyDown({ event })` via `forwardRef` so the suggestion plugin
+   * can forward arrow / Enter keys.
+   */
+  renderMentionList?: ComponentType<MentionListProps & React.RefAttributes<MentionListHandle>>;
+
+  /**
+   * Override the mention serialization format. Defaults to slingshot's
+   * `<@<id>>` content-token format, which `slingshot-core/parseBody`
+   * understands. Override only when integrating into a non-slingshot
+   * server.
+   */
+  serializeMention?: (attrs: { id: string; label: string }) => string;
+
   /** Called when the send button is pressed or Enter is pressed (if sendOnEnter). */
-  onSend?: (data: { html: string; text: string }) => void;
+  onSend?: (data: { html: string; text: string; markdown?: string }) => void;
   /** Called on every content change. */
-  onChange?: (data: { html: string; text: string }) => void;
+  onChange?: (data: { html: string; text: string; markdown?: string }) => void;
 
   // ── Style / Slot overrides ───────────────────────────────────────────────
   /** className applied to the root element. */
@@ -87,6 +155,28 @@ export interface RichInputBaseProps {
   style?: CSSProperties;
   /** Slot overrides for sub-elements. */
   slots?: SlotOverrides;
+}
+
+/**
+ * Imperative handle exposed via `ref`. Use this when an external surface
+ * (emoji picker, GIF picker, slash-command menu) needs to insert content
+ * at the user's current cursor position without going through the
+ * controlled-value path (which clobbers the cursor).
+ *
+ * @example
+ * ```tsx
+ * const editorRef = useRef<RichInputBaseHandle>(null);
+ * <RichInputBase ref={editorRef} ... />
+ * <button onClick={() => editorRef.current?.insertText('👍')}>👍</button>
+ * ```
+ */
+export interface RichInputBaseHandle {
+  /** Insert plain text at the cursor (or replace the current selection). */
+  insertText(text: string): void;
+  /** Insert raw HTML at the cursor — Tiptap parses it through the schema. */
+  insertContent(html: string): void;
+  /** Move keyboard focus into the editor without changing content. */
+  focus(): void;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -104,7 +194,7 @@ export interface RichInputBaseProps {
  * />
  * ```
  */
-export function RichInputBase({
+export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>(function RichInputBase({
   id,
   placeholder,
   defaultValue,
@@ -116,12 +206,16 @@ export function RichInputBase({
   minHeight,
   maxHeight,
   showSendButton = false,
+  emitMarkdown = false,
+  onMentionSearch,
+  renderMentionList,
+  serializeMention,
   onSend,
   onChange,
   className,
   style,
   slots,
-}: RichInputBaseProps) {
+}: RichInputBaseProps, ref) {
   const [charCount, setCharCount] = useState(0);
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
@@ -137,6 +231,25 @@ export function RichInputBase({
   }, []);
 
   const featuresSet = useMemo(() => new Set<string>(features), [features]);
+
+  // The mention extension is configuration-locked at editor-init time.
+  // Wrapping in `useMemo` keyed on the relevant props prevents Tiptap
+  // from recreating the editor on every render — but ALSO means runtime
+  // changes to `onMentionSearch` are not picked up. That's the right
+  // tradeoff for a callback that's typically stable across the lifetime
+  // of a Composer mount.
+  const mentionExtension = useMemo(
+    () =>
+      onMentionSearch
+        ? buildMentionExtension({
+            onSearch: onMentionSearch,
+            renderList: renderMentionList,
+            serializeMention,
+          })
+        : null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [Boolean(onMentionSearch)],
+  );
 
   const extensions = [
     StarterKit.configure({
@@ -154,6 +267,12 @@ export function RichInputBase({
     ...(featuresSet.has("link")
       ? [Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } })]
       : []),
+    // Markdown extension: registered when `emitMarkdown` is on. Provides
+    // `editor.storage.markdown.getMarkdown()` and a richer markdown
+    // round-trip on `setContent`. Costs ~70 KB raw (markdown-it +
+    // prosemirror-markdown) so we leave it off by default.
+    ...(emitMarkdown ? [Markdown.configure({ html: false, transformPastedText: true })] : []),
+    ...(mentionExtension ? [mentionExtension] : []),
     ...(sendOnEnter && onSend ? [createSendOnEnterExtension(() => sendRef.current())] : []),
   ] as unknown as NonNullable<Parameters<typeof useEditor>[0]["extensions"]>;
 
@@ -166,13 +285,34 @@ export function RichInputBase({
       const html = instance.getHTML();
       const text = instance.getText();
       setCharCount(text.length);
-      onChange?.({ html, text });
+      const markdown = emitMarkdown ? readMarkdown(instance) : undefined;
+      onChange?.({ html, text, ...(markdown !== undefined ? { markdown } : {}) });
     },
   });
 
   useEffect(() => {
     editor?.setEditable(!readonly);
   }, [editor, readonly]);
+
+  // Expose a small imperative API for external surfaces (emoji picker,
+  // GIF picker, slash-command menu) to insert content at the cursor
+  // without going through the controlled-value path. Callers hold a ref
+  // typed as `RichInputBaseHandle`.
+  useImperativeHandle(
+    ref,
+    () => ({
+      insertText: (text: string) => {
+        editor?.chain().focus().insertContent(text).run();
+      },
+      insertContent: (html: string) => {
+        editor?.chain().focus().insertContent(html).run();
+      },
+      focus: () => {
+        editor?.commands.focus();
+      },
+    }),
+    [editor],
+  );
 
   // Controlled-mode sync: when external `value` changes, replace the editor
   // doc unless the user is mid-edit (i.e. the current HTML already matches).
@@ -188,10 +328,11 @@ export function RichInputBase({
     const html = editor.getHTML();
     const text = editor.getText();
     if (!text.trim()) return;
-    onSend?.({ html, text });
+    const markdown = emitMarkdown ? readMarkdown(editor) : undefined;
+    onSend?.({ html, text, ...(markdown !== undefined ? { markdown } : {}) });
     editor.commands.clearContent(true);
     setCharCount(0);
-  }, [editor, onSend]);
+  }, [editor, onSend, emitMarkdown]);
 
   sendRef.current = handleSend;
 
@@ -367,4 +508,4 @@ export function RichInputBase({
       <SurfaceStyles css={counterSurface.scopedCss} />
     </>
   );
-}
+});
