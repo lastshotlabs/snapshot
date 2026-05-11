@@ -4,25 +4,25 @@ export function generateSnapshotLib(config: ScaffoldConfig): string {
   const realtimeConfig =
     config.webSocket || config.sse
       ? `
-    realtime: {${
+  ${
       config.webSocket
         ? `
-      ws: {
-        url: import.meta.env.VITE_WS_URL,
-        reconnectOnLogin: true,
-        reconnectOnFocus: true,
-      },`
+  ws: {
+    url: import.meta.env.VITE_WS_URL,
+    reconnectOnLogin: true,
+    reconnectOnFocus: true,
+  },`
         : ""
     }${
       config.sse
         ? `
-      sse: {
-        // Add /__sse/ endpoint keys here. Example: '/__sse/feed': true
-        endpoints: {},
-      },`
+  sse: {
+    // Add /__sse/ endpoint keys here.
+    endpoints: {},
+  },`
         : ""
     }
-    },`
+`
       : "";
 
   const wsExports = config.webSocket
@@ -80,19 +80,7 @@ export function generateSnapshotLib(config: ScaffoldConfig): string {
 
 export const snapshot = createSnapshot({
   apiUrl: import.meta.env.VITE_API_URL,${bearerTokenLine}
-  // Code-first apps don't render via the manifest, but a single placeholder
-  // route keeps manifest defaults like app.home available to auth redirects.
-  manifest: {
-    app: {
-      home: '/',
-    },
-    routes: [
-      {
-        id: 'home',
-        path: '/',
-      },
-    ],${realtimeConfig}
-  },
+  homePath: '/',${realtimeConfig}
 })
 
 export const {

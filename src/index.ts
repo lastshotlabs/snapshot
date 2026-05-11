@@ -2,15 +2,14 @@
  * @lastshotlabs/snapshot
  *
  * Public SDK entry point for Snapshot. Exposes the runtime factory, core
- * types, auth/community/webhook primitives, plugin support, and schema
- * generation helpers used by downstream apps and framework tooling.
+ * types, auth/community/webhook primitives, and code-first helpers used by
+ * downstream apps and framework tooling.
  */
 export { createSnapshot } from "./create-snapshot";
 export { ApiError } from "./api/error";
 export { registerClient, getRegisteredClient } from "./api/client";
 export { isMfaChallenge } from "./types";
 export { formatAuthError, createAuthErrorFormatter } from "./auth/error-format";
-export { definePlugin } from "./plugin";
 /**
  * Stable query key under which `useUser()` and the route guards cache the
  * authenticated user. Apps can use this to invalidate, seed, or read the
@@ -18,15 +17,15 @@ export { definePlugin } from "./plugin";
  */
 export { AUTH_QUERY_KEY } from "./routing/loaders";
 export type {
-  SnapshotPlugin,
-  PluginSetupContext,
-  PluginComponentEntry,
-  PluginComponentGroupDefinition,
-} from "./plugin";
-
-export type {
   SnapshotConfig,
   SnapshotInstance,
+  SnapshotAuthConfig,
+  SnapshotCacheConfig,
+  SnapshotMfaConfig,
+  SnapshotOAuthProviderConfig,
+  SnapshotSessionConfig,
+  SnapshotWebAuthnConfig,
+  SnapshotWebSocketConfig,
   AuthUser,
   LoginBody,
   LoginVars,

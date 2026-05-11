@@ -4,33 +4,25 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSnapshot } from "./create-snapshot";
 
 const originalWebSocket = global.WebSocket;
+const originalFetch = global.fetch;
 
 afterEach(() => {
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.clear();
   }
   global.WebSocket = originalWebSocket;
+  global.fetch = originalFetch;
+  vi.restoreAllMocks();
 });
 
 describe("createSnapshot", () => {
-  it("uses the manifest app cache for QueryClient defaults", () => {
+  it("uses code-first cache defaults for QueryClient", () => {
     const snapshot = createSnapshot({
       apiUrl: "https://api.example.com",
-      manifest: {
-        app: {
-          cache: {
-            staleTime: 60_000,
-            gcTime: 120_000,
-            retry: 3,
-          },
-        },
-        routes: [
-          {
-            id: "home",
-            path: "/",
-            content: [{ type: "heading", text: "Home" }],
-          },
-        ],
+      cache: {
+        staleTime: 60_000,
+        gcTime: 120_000,
+        retry: 3,
       },
     });
 
@@ -43,7 +35,7 @@ describe("createSnapshot", () => {
     expect(snapshot.queryClient.getDefaultOptions().queries?.retry).toBe(3);
   });
 
-  it("uses manifest.app.apiUrl when provided", () => {
+  it("derives the websocket url from apiUrl", () => {
     const createdUrls: string[] = [];
     class MockWebSocket {
       static OPEN = 1;
@@ -68,29 +60,15 @@ describe("createSnapshot", () => {
 
     createSnapshot({
       apiUrl: "https://api.bootstrap.example.com",
-      manifest: {
-        app: {
-          apiUrl: "https://api.manifest.example.com",
-        },
-        realtime: {
-          ws: {
-            reconnectOnLogin: false,
-          },
-        },
-        routes: [
-          {
-            id: "home",
-            path: "/",
-            content: [{ type: "heading", text: "Home" }],
-          },
-        ],
+      ws: {
+        reconnectOnLogin: false,
       },
     });
 
-    expect(createdUrls).toEqual(["wss://api.manifest.example.com"]);
+    expect(createdUrls).toEqual(["wss://api.bootstrap.example.com"]);
   });
 
-  it("resolves manifest env refs from the provided env source", () => {
+  it("uses an explicit websocket url when provided", () => {
     const createdUrls: string[] = [];
     class MockWebSocket {
       static OPEN = 1;
@@ -115,50 +93,24 @@ describe("createSnapshot", () => {
 
     createSnapshot({
       apiUrl: "https://api.bootstrap.example.com",
-      env: {
-        SNAPSHOT_API_URL: "https://api.from.env.example.com",
-      },
-      manifest: {
-        app: {
-          apiUrl: { env: "SNAPSHOT_API_URL" },
-        },
-        realtime: {
-          ws: {
-            reconnectOnLogin: false,
-          },
-        },
-        routes: [
-          {
-            id: "home",
-            path: "/",
-            content: [{ type: "heading", text: "Home" }],
-          },
-        ],
+      ws: {
+        url: "wss://ws.example.com/socket",
+        reconnectOnLogin: false,
       },
     });
 
-    expect(createdUrls).toEqual(["wss://api.from.env.example.com"]);
+    expect(createdUrls).toEqual(["wss://ws.example.com/socket"]);
   });
 
-  it("uses the manifest auth session for token storage", () => {
+  it("uses the code-first auth session for token storage", () => {
     const snapshot = createSnapshot({
       apiUrl: "https://api.example.com",
-      manifest: {
-        auth: {
-          screens: ["login"],
-          session: {
-            mode: "token",
-            storage: "sessionStorage",
-            key: "manifest.token",
-          },
+      auth: {
+        session: {
+          mode: "token",
+          storage: "sessionStorage",
+          key: "snapshot.token",
         },
-        routes: [
-          {
-            id: "login",
-            path: "/login",
-            content: [{ type: "heading", text: "Login" }],
-          },
-        ],
       },
     });
 
@@ -169,26 +121,14 @@ describe("createSnapshot", () => {
   it("keeps cookie mode as a no-op token storage by default", () => {
     const snapshot = createSnapshot({
       apiUrl: "https://api.example.com",
-      manifest: {
-        auth: {
-          screens: ["login"],
-        },
-        routes: [
-          {
-            id: "login",
-            path: "/login",
-            content: [{ type: "heading", text: "Login" }],
-          },
-        ],
-      },
     });
 
     snapshot.tokenStorage.set("abc123");
     expect(snapshot.tokenStorage.get()).toBeNull();
   });
 
-  it("dispatches a manifest auth workflow event on 401", async () => {
-    const dispatchSpy = vi.spyOn(window, "dispatchEvent");
+  it("calls the code-first unauthenticated callback on 401", async () => {
+    const onUnauthenticated = vi.fn();
     global.fetch = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.endsWith("/protected")) {
@@ -209,26 +149,10 @@ describe("createSnapshot", () => {
 
     const snapshot = createSnapshot({
       apiUrl: "https://api.example.com",
-      manifest: {
-        auth: {
-          screens: ["login"],
-          on: {
-            unauthenticated: "auth-401",
-          },
+      auth: {
+        on: {
+          unauthenticated: onUnauthenticated,
         },
-        workflows: {
-          "auth-401": {
-            type: "toast",
-            message: "Handled",
-          },
-        },
-        routes: [
-          {
-            id: "login",
-            path: "/login",
-            content: [{ type: "heading", text: "Login" }],
-          },
-        ],
       },
     });
 
@@ -236,15 +160,10 @@ describe("createSnapshot", () => {
       status: 401,
     });
 
-    expect(dispatchSpy).toHaveBeenCalled();
-    const event = dispatchSpy.mock.calls[0]?.[0] as CustomEvent<{
-      kind?: string;
-    }>;
-    expect(event.type).toBe("snapshot:manifest-auth-workflow");
-    expect(event.detail.kind).toBe("unauthenticated");
+    expect(onUnauthenticated).toHaveBeenCalledOnce();
   });
 
-  it("derives the websocket url from apiUrl when manifest.realtime.ws.url is omitted", () => {
+  it("creates a websocket when ws config is provided", () => {
     const createdUrls: string[] = [];
     class MockWebSocket {
       static OPEN = 1;
@@ -269,19 +188,8 @@ describe("createSnapshot", () => {
 
     createSnapshot({
       apiUrl: "https://api.example.com",
-      manifest: {
-        realtime: {
-          ws: {
-            reconnectOnLogin: false,
-          },
-        },
-        routes: [
-          {
-            id: "home",
-            path: "/",
-            content: [{ type: "heading", text: "Home" }],
-          },
-        ],
+      ws: {
+        reconnectOnLogin: false,
       },
     });
 

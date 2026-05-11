@@ -2174,9 +2174,20 @@ export function ManifestApp({
     () =>
       createSnapshot({
         apiUrl: runtimeApiUrl,
-        manifest: compiledManifest.raw,
+        cache: compiledManifest.app.cache,
+        auth: compiledManifest.auth
+          ? {
+              session: compiledManifest.auth.session,
+              contract: compiledManifest.auth.contract as Parameters<
+                typeof mergeContract
+              >[1],
+              providers: compiledManifest.auth.providers,
+              mfa: compiledManifest.auth.mfa,
+              webauthn: compiledManifest.auth.webauthn,
+            }
+          : undefined,
       }),
-    [compiledManifest.raw, runtimeApiUrl],
+    [compiledManifest, runtimeApiUrl],
   );
   const runtimeClients = useMemo(
     () => buildManifestClientMap(runtimeManifest, snapshot),

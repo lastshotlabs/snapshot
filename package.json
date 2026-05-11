@@ -77,7 +77,7 @@
     "topicSeparator": " "
   },
   "scripts": {
-    "build": "tsup && node scripts/build-ui-types.mjs && oclif manifest && bun run scripts/generate-manifest-schema.ts",
+    "build": "tsup && node scripts/build-ui-types.mjs && oclif manifest",
     "build:vite-runtime": "node scripts/build-vite-runtime.mjs",
     "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",
@@ -181,8 +181,5 @@
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
     "tiptap-markdown": "^0.9.0"
-  },
-  "optionalDependencies": {
-    "zod-to-json-schema": "^3.25.2"
   }
 }

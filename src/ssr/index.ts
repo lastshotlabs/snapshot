@@ -71,23 +71,11 @@ export { renderPage } from "./render";
  */
 export { createReactRenderer } from "./renderer";
 
-/**
- * Manifest-driven SSR renderer for bunshot-ssr.
- *
- * Routes are resolved from the Snapshot manifest config.
- * Enables SSR for config-driven pages with no server route files required.
- */
-export { createManifestRenderer } from "./manifest-renderer";
-
 // ─── Types — renderer config ──────────────────────────────────────────────────
 
 export type {
   /** Config for `createReactRenderer()`. */
   SnapshotSsrConfig,
-  /** Config for `createManifestRenderer()`. */
-  ManifestSsrConfig,
-  /** Server-side resolver for a named manifest resource. */
-  ManifestPreloadResolver,
   /** Structural equivalent of `SsrRouteMatch` from bunshot-ssr. */
   ServerRouteMatchShape,
   /** Structural equivalent of `SsrShell` from bunshot-ssr. */

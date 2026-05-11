@@ -1,8 +1,6 @@
 import React from "react";
-import {
-  ComponentRenderer,
-  bootBuiltins,
-} from "@lastshotlabs/snapshot/ui";
+import { bootBuiltins } from "../../manifest/boot-builtins";
+import { ComponentRenderer } from "../../manifest/renderer";
 import type { ComponentConfig } from "../../manifest/types";
 import {
   getComponentFixtures,

@@ -2,22 +2,11 @@
 import { QueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import React from "react";
-import { AppContextProvider } from "../ui/context/providers";
 import {
-  AppShellWrapper,
   isCustomPage,
-  mapNavComponentConfig,
-  mapPageDeclaration,
   type CustomPageDeclaration,
   type PageLoaderResult,
 } from "../ui/entity-pages";
-import { compileManifest } from "../ui/manifest/compiler";
-import { PageRenderer } from "../ui/manifest/renderer";
-import type { ManifestConfig } from "../ui/manifest/types";
-import {
-  ManifestRuntimeProvider,
-  RouteRuntimeProvider,
-} from "../ui/manifest/runtime";
 import { buildHeadTags } from "./head";
 import { renderPage } from "./render";
 import type {
@@ -365,49 +354,6 @@ function buildEntityPageMatch(
     unauthorizedFilePath: null,
     templateFilePath: null,
   };
-}
-
-function buildEntityHeadTags(
-  shell: SsrShellShape,
-  result: PageLoaderResult,
-): string {
-  const entityHeadTags = buildHeadTags(
-    result.meta as Parameters<typeof buildHeadTags>[0],
-  );
-  return [shell.headTags, entityHeadTags].filter(Boolean).join("");
-}
-
-function applyEntityPageMetadata(
-  shell: SsrShellShape,
-  result: PageLoaderResult,
-): void {
-  if (!shell._isr) {
-    return;
-  }
-
-  shell._isr.revalidate = result.revalidate;
-  shell._isr.tags = result.tags;
-}
-
-function withEntityPageHeaders(
-  response: Response,
-  result: PageLoaderResult,
-): Response {
-  const headers = new Headers(response.headers);
-
-  if (result.revalidate !== undefined) {
-    headers.set("x-bunshot-revalidate", String(result.revalidate));
-  }
-
-  if (result.tags && result.tags.length > 0) {
-    headers.set("x-bunshot-tags", result.tags.join(","));
-  }
-
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
 }
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
@@ -1276,11 +1222,12 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
     },
 
     /**
-     * Render an entity-driven bunshot page by mapping it onto Snapshot's
-     * manifest component system.
+     * Render an entity-driven bunshot page.
      *
      * Custom handler-ref pages are delegated back to the standard route render
-     * path using the handler module path as the route file.
+     * path using the handler module path as the route file. Config-driven
+     * entity pages previously rendered through Snapshot's manifest component
+     * system; that legacy path is intentionally removed.
      */
     async renderPage(
       result: PageLoaderResult,
@@ -1298,98 +1245,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         return reactRenderer.render(routeMatch, shell, bsCtx);
       }
 
-      const mapped = mapPageDeclaration(result);
-      const routeId = result.declaration.key;
-      const rawManifest: ManifestConfig = {
-        routes: [
-          {
-            id: routeId,
-            path: result.declaration.declaration.path,
-            ...mapped.page,
-          },
-        ],
-        resources: mapped.resources,
-        state: mapped.state,
-        overlays: mapped.overlays,
-      };
-      const compiled = compileManifest(rawManifest);
-      const currentRoute = compiled.routes[0];
-
-      if (!currentRoute) {
-        throw new Error(
-          `[snapshot-ssr] Failed to compile entity page "${routeId}".`,
-        );
-      }
-
-      applyEntityPageMetadata(shell, result);
-
-      const api = frozen.snapshot?.api;
-      const pageElement = React.createElement(PageRenderer, {
-        page: currentRoute.page,
-        routeId: currentRoute.id,
-        state: compiled.state,
-        resources: compiled.resources,
-        api,
-      });
-      const navConfig = result.navigation
-        ? mapNavComponentConfig(result.navigation)
-        : undefined;
-      const wrappedPage =
-        result.navigation && navConfig
-          ? React.createElement(AppShellWrapper, {
-              shell: result.navigation.shell,
-              navConfig,
-              pathname: currentRoute.path,
-              children: pageElement,
-            })
-          : pageElement;
-      const element = React.createElement(ManifestRuntimeProvider, {
-        manifest: compiled,
-        api,
-        children: React.createElement(AppContextProvider, {
-          globals: compiled.state,
-          resources: compiled.resources,
-          api,
-          children: React.createElement(RouteRuntimeProvider, {
-            value: {
-              currentPath: currentRoute.path,
-              currentRoute,
-              match: {
-                route: currentRoute,
-                params: {},
-                parents: [],
-                activeRoutes: [currentRoute],
-              },
-              params: {},
-              query: {},
-              navigate: () => {},
-              isPreloading: false,
-            },
-            children: wrappedPage,
-          }),
-        }),
-      });
-
-      const requestContext: SsrRequestContext = {
-        queryClient: new QueryClient({
-          defaultOptions: {
-            queries: { staleTime: Infinity, retry: false },
-          },
-        }),
-        match: buildEntityPageMatch(`__page:${routeId}`, currentRoute.path),
-      };
-      const response = await renderPage(
-        element,
-        requestContext,
-        {
-          ...shell,
-          headTags: buildEntityHeadTags(shell, result),
-        },
-        timeoutMs,
-        rscOptions,
+      throw new Error(
+        "[snapshot-ssr] Config-driven entity page rendering was removed with the manifest app builder. Use a custom page handler instead.",
       );
-
-      return withEntityPageHeaders(response, result);
     },
   };
 

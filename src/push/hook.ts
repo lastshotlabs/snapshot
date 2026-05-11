@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useManifestRuntime } from "../ui/manifest/runtime";
 
 /**
  * Convert a URL-safe base64 string to a Uint8Array.
@@ -27,16 +26,16 @@ export type PushState =
   | "unsubscribed";
 
 /**
- * Optional overrides for the manifest-backed push configuration.
+ * Push notification subscription options.
  */
 export interface UsePushNotificationsOpts {
-  /** Optional override for the manifest VAPID key. */
+  /** VAPID public key used to subscribe the browser PushManager. */
   vapidPublicKey?: string;
   /** Optional override for the application server key. */
   applicationServerKey?: string;
   /** URL for subscribe/unsubscribe requests. Default: '/__push/subscribe' */
   subscribeUrl?: string;
-  /** Optional override for the manifest service worker path. */
+  /** Service worker path. Default: '/sw.js'. */
   serviceWorkerPath?: string;
 }
 
@@ -78,16 +77,10 @@ export interface UsePushNotificationsResult {
 export function usePushNotifications(
   opts?: UsePushNotificationsOpts,
 ): UsePushNotificationsResult {
-  const manifestRuntime = useManifestRuntime();
-  const manifestPush = manifestRuntime?.push;
-  const vapidPublicKey = opts?.vapidPublicKey ?? manifestPush?.vapidPublicKey;
-  const applicationServerKey =
-    opts?.applicationServerKey ??
-    manifestPush?.applicationServerKey ??
-    vapidPublicKey;
+  const vapidPublicKey = opts?.vapidPublicKey;
+  const applicationServerKey = opts?.applicationServerKey ?? vapidPublicKey;
   const subscribeUrl = opts?.subscribeUrl ?? "/__push/subscribe";
-  const swPath =
-    opts?.serviceWorkerPath ?? manifestPush?.serviceWorkerPath ?? "/sw.js";
+  const swPath = opts?.serviceWorkerPath ?? "/sw.js";
 
   const isSupported =
     typeof window !== "undefined" &&
@@ -133,7 +126,7 @@ export function usePushNotifications(
 
     if (!applicationServerKey) {
       throw new Error(
-        "Push config missing vapidPublicKey. Set manifest.push.vapidPublicKey or pass usePushNotifications({ vapidPublicKey }).",
+        "Push config missing vapidPublicKey. Pass usePushNotifications({ vapidPublicKey }).",
       );
     }
 

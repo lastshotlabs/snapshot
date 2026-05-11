@@ -64,9 +64,6 @@
         "vitest": "^3.0.0",
         "zod": "^3.24.0",
       },
-      "optionalDependencies": {
-        "zod-to-json-schema": "^3.25.2",
-      },
       "peerDependencies": {
         "@tanstack/react-query": ">=5.0.0",
         "@tanstack/react-router": ">=1.0.0",

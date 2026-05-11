@@ -74,230 +74,56 @@ function resolveWebSocketUrl(apiUrl: string): string {
 export function createSnapshot<
   TWSEvents extends Record<string, unknown> = Record<string, unknown>,
 >(config: SnapshotConfig): SnapshotInstance<TWSEvents> {
-  // KNOWN ISSUE — bundle weight:
-  //
-  // `bootBuiltins` and `compileManifestWithEnv` are statically imported
-  // at the top of this file. That's enough for Vite/esbuild to follow
-  // their import chain at build time and pull the entire ~125-component
-  // registry (tiptap, codemirror, recharts, react-markdown, emoji-data,
-  // …) into every app's bundle, regardless of whether the app actually
-  // renders `<ManifestApp>`. Gating the call below behind a flag does
-  // NOT shake the import — bundlers care about top-level imports, not
-  // call-site reachability.
-  //
-  // The right fix is to deprecate or remove the manifest UI tree
-  // entirely (see snapshot's own roadmap). Until then, code-driven
-  // apps can omit `manifest` and leave `useManifestUI` unset; runtime
-  // behavior matches a no-op compiled manifest, but bundle weight is
-  // unchanged.
-  if (config.useManifestUI === true) {
-    bootBuiltins();
-  }
-
-  // ── Plugin registration ───────────────────────────────────────────────────
-  const plugins = config.plugins ?? [];
-  const seenTypeNames = new Set<string>();
-  for (const plugin of plugins) {
-    if (plugin.components) {
-      for (const [typeName, entry] of Object.entries(plugin.components)) {
-        if (seenTypeNames.has(typeName)) {
-          console.warn(
-            `[snapshot] Duplicate component type "${typeName}" registered by plugin "${plugin.name}". Later registration overrides earlier one.`,
-          );
-        }
-        seenTypeNames.add(typeName);
-        registerComponent(
-          typeName,
-          entry.component as Parameters<typeof registerComponent>[1],
-        );
-        registerComponentSchema(typeName, entry.schema);
-      }
-    }
-  }
-
-  // Merge plugin componentGroups into manifest before compilation.
-  // When the consumer omits `manifest` entirely (code-driven apps),
-  // start from an empty object — the compiler applies its Zod defaults
-  // and downstream consumers see a `compiledManifest` with empty
-  // routes/no auth/etc., which all the optional-chained reads below
-  // (e.g. `compiledManifest.auth?.providers`) handle natively.
-  let manifestWithPlugins: ManifestConfig = config.manifest ?? ({} as ManifestConfig);
-  const pluginGroups = plugins.flatMap((p) =>
-    p.componentGroups ? Object.entries(p.componentGroups) : [],
-  );
-  if (pluginGroups.length > 0) {
-    const existingGroups = (manifestWithPlugins as Record<string, unknown>)[
-      "componentGroups"
-    ] as Record<string, unknown> | undefined;
-    manifestWithPlugins = {
-      ...manifestWithPlugins,
-      componentGroups: {
-        ...Object.fromEntries(pluginGroups),
-        ...existingGroups,
-      },
-    } as typeof manifestWithPlugins;
-  }
-
-  const env = config.env ?? getDefaultEnvSource();
-  const compiledManifest = compileManifestWithEnv(manifestWithPlugins, env);
-
-  // ── Plugin setup hooks ────────────────────────────────────────────────────
-  if (plugins.length > 0) {
-    const workflowActions = new Map<string, (...args: unknown[]) => unknown>();
-    const guards = new Map<string, (...args: unknown[]) => unknown>();
-    const globalState = new Map<string, unknown>();
-
-    const setupContext: PluginSetupContext = {
-      manifest: Object.freeze({
-        ...compiledManifest.raw,
-      }) as PluginSetupContext["manifest"],
-      registerWorkflowAction: (type, handler) => {
-        workflowActions.set(type, handler);
-      },
-      registerGuard: (name, guard) => {
-        guards.set(name, guard);
-      },
-      setGlobalState: (key, value) => {
-        globalState.set(key, value);
-      },
-    };
-
-    for (const plugin of plugins) {
-      if (plugin.setup) {
-        const result = plugin.setup(setupContext);
-        if (result && typeof (result as Promise<void>).then === "function") {
-          console.warn(
-            `[snapshot] Plugin "${plugin.name}" setup() returned a Promise. Async setup is not awaited — use synchronous setup or manage the async lifecycle externally.`,
-          );
-        }
-      }
-    }
-  }
-  const runtimeApiUrl = compiledManifest.app.apiUrl ?? config.apiUrl;
-  const runtimeRealtime = compiledManifest.realtime;
-  const runtimeAuthMode = compiledManifest.auth?.session?.mode ?? "cookie";
-  const runtimeSession = compiledManifest.auth?.session;
-  const runtimeWsConfig = runtimeRealtime?.ws
+  const runtimeApiUrl = config.apiUrl;
+  const runtimeAuthMode = config.auth?.session?.mode ?? "cookie";
+  const runtimeSession = config.auth?.session;
+  const runtimeWsConfig = config.ws
     ? {
-        url: runtimeRealtime.ws.url ?? resolveWebSocketUrl(runtimeApiUrl),
-        autoReconnect:
-          runtimeRealtime.ws.reconnect?.enabled ??
-          runtimeRealtime.ws.autoReconnect,
-        reconnectOnLogin: runtimeRealtime.ws.reconnectOnLogin,
-        reconnectOnFocus: runtimeRealtime.ws.reconnectOnFocus,
-        maxReconnectAttempts:
-          runtimeRealtime.ws.reconnect?.maxAttempts ??
-          runtimeRealtime.ws.maxReconnectAttempts,
-        reconnectBaseDelay:
-          runtimeRealtime.ws.reconnect?.baseDelay ??
-          runtimeRealtime.ws.reconnectBaseDelay,
-        reconnectMaxDelay:
-          runtimeRealtime.ws.reconnect?.maxDelay ??
-          runtimeRealtime.ws.reconnectMaxDelay,
-        auth: runtimeRealtime.ws.auth
+        url: config.ws.url ?? resolveWebSocketUrl(runtimeApiUrl),
+        autoReconnect: config.ws.autoReconnect,
+        reconnectOnLogin: config.ws.reconnectOnLogin,
+        reconnectOnFocus: config.ws.reconnectOnFocus,
+        maxReconnectAttempts: config.ws.maxReconnectAttempts,
+        reconnectBaseDelay: config.ws.reconnectBaseDelay,
+        reconnectMaxDelay: config.ws.reconnectMaxDelay,
+        auth: config.ws.auth
           ? {
-              strategy: runtimeRealtime.ws.auth.strategy,
-              paramName: runtimeRealtime.ws.auth.paramName,
+              strategy: config.ws.auth.strategy,
+              paramName: config.ws.auth.paramName,
               token: () => tokenStorage.get(),
             }
           : undefined,
-        heartbeat: runtimeRealtime.ws.heartbeat
-          ? {
-              enabled: runtimeRealtime.ws.heartbeat.enabled,
-              interval: runtimeRealtime.ws.heartbeat.interval,
-              message: runtimeRealtime.ws.heartbeat.message,
-            }
-          : undefined,
-        events: runtimeRealtime.ws.events,
-        onConnected: createManifestRealtimeCallback(
-          { channel: "ws", kind: "connected" },
-          runtimeRealtime.ws.on?.connected,
-        ),
-        onDisconnected: createManifestRealtimeCallback(
-          { channel: "ws", kind: "disconnected" },
-          runtimeRealtime.ws.on?.disconnected,
-        ),
-        onReconnecting: createManifestRealtimeCallback(
-          { channel: "ws", kind: "reconnecting" },
-          runtimeRealtime.ws.on?.reconnecting,
-        ),
-        onReconnectFailed: createManifestRealtimeCallback(
-          { channel: "ws", kind: "reconnectFailed" },
-          runtimeRealtime.ws.on?.reconnectFailed,
-        ),
+        heartbeat: config.ws.heartbeat,
+        onConnected: config.ws.onConnected,
+        onDisconnected: config.ws.onDisconnected,
+        onReconnecting: config.ws.onReconnecting,
+        onReconnectFailed: config.ws.onReconnectFailed,
       }
     : undefined;
-  const runtimeSseConfig = runtimeRealtime?.sse
-    ? {
-        reconnectOnLogin: runtimeRealtime.sse.reconnectOnLogin,
-        endpoints: Object.fromEntries(
-          Object.entries(runtimeRealtime.sse.endpoints).map(
-            ([path, manifestEndpoint]) =>
-              [
-                path,
-                {
-                  withCredentials: manifestEndpoint.withCredentials,
-                  events: manifestEndpoint.events,
-                  onConnected: createManifestRealtimeCallback(
-                    { channel: "sse", kind: "connected", endpoint: path },
-                    manifestEndpoint.on?.connected,
-                  ),
-                  onError: createManifestRealtimeCallback(
-                    { channel: "sse", kind: "error", endpoint: path },
-                    manifestEndpoint.on?.error,
-                  ),
-                  onClosed: createManifestRealtimeCallback(
-                    { channel: "sse", kind: "closed", endpoint: path },
-                    manifestEndpoint.on?.closed,
-                  ),
-                },
-              ] as const,
-          ),
-        ),
-      }
-    : undefined;
-  const manifestLoginPath = compiledManifest.auth
-    ? getAuthScreenPath(compiledManifest, "login")
-    : undefined;
-  const mfaScreenPath = compiledManifest.auth
-    ? getAuthScreenPath(compiledManifest, "mfa")
-    : undefined;
-  // Resolution precedence: explicit `SnapshotConfig.loginPath` / `homePath`
-  // win, then the manifest-driven paths, then the manifest's redirect overrides.
-  // Apps configure routing in code and treat the manifest as fallback / override
-  // for when an auth manifest is also wired up.
-  const loginScreenPath = config.loginPath ?? manifestLoginPath;
-  const homeScreenPath =
-    config.homePath ?? compiledManifest.app.home ?? compiledManifest.firstRoute?.path;
-  const loaderLoginPath =
-    config.loginPath ??
-    compiledManifest.auth?.redirects?.unauthenticated ??
-    manifestLoginPath;
+  const runtimeSseConfig = config.sse;
+  const loginScreenPath = config.loginPath;
+  const homeScreenPath = config.homePath;
+  const mfaScreenPath = config.mfaPath;
+  const loaderLoginPath = config.loginPath;
 
-  function createManifestAuthCallback(
-    kind: ManifestAuthWorkflowKind,
+  function createAuthCallback(
+    kind: "unauthenticated" | "forbidden" | "logout",
   ): () => void {
     return () => {
-      if (compiledManifest.auth?.on?.[kind] && typeof window !== "undefined") {
-        dispatchManifestAuthWorkflow(kind);
-        return;
-      }
+      config.auth?.on?.[kind]?.();
     };
   }
 
   // ── Auth contract ────────────────────────────────────────────────────────────
-  const contract = mergeContract(
-    runtimeApiUrl,
-    compiledManifest.auth?.contract as Parameters<typeof mergeContract>[1],
-  );
+  const contract = mergeContract(runtimeApiUrl, config.auth?.contract);
 
   // ── API client ──────────────────────────────────────────────────────────────
   const api = new ApiClient({
     apiUrl: runtimeApiUrl,
     auth: runtimeAuthMode,
     bearerToken: config.bearerToken,
-    onUnauthenticated: createManifestAuthCallback("unauthenticated"),
-    onForbidden: createManifestAuthCallback("forbidden"),
+    onUnauthenticated: createAuthCallback("unauthenticated"),
+    onForbidden: createAuthCallback("forbidden"),
     contract,
   });
 
@@ -313,9 +139,9 @@ export function createSnapshot<
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: compiledManifest.app.cache?.staleTime ?? 5 * 60 * 1000,
-        gcTime: compiledManifest.app.cache?.gcTime ?? 10 * 60 * 1000,
-        retry: compiledManifest.app.cache?.retry ?? 1,
+        staleTime: config.cache?.staleTime ?? 5 * 60 * 1000,
+        gcTime: config.cache?.gcTime ?? 10 * 60 * 1000,
+        retry: config.cache?.retry ?? 1,
       },
     },
   });
@@ -341,26 +167,16 @@ export function createSnapshot<
         onClosed: endpointCfg.onClosed,
       });
       manager.connect(url);
-      for (const [event, workflow] of Object.entries(
-        endpointCfg.events ?? {},
-      )) {
-        const dispatch = createManifestRealtimeCallback(
-          { channel: "sse", kind: event, event, endpoint: path },
-          workflow,
-        );
-        manager.on(event, (payload) => dispatch(payload));
+      for (const [event, handler] of Object.entries(endpointCfg.events ?? {})) {
+        manager.on(event, handler);
       }
       sseRegistry.set(path, { manager, url });
     }
   }
 
-  if (wsManager && runtimeRealtime?.ws?.events) {
-    for (const [event, workflow] of Object.entries(runtimeRealtime.ws.events)) {
-      const dispatch = createManifestRealtimeCallback(
-        { channel: "ws", kind: event, event },
-        workflow,
-      );
-      wsManager.on(event as keyof TWSEvents, (payload) => dispatch(payload));
+  if (wsManager && config.ws?.events) {
+    for (const [event, handler] of Object.entries(config.ws.events)) {
+      wsManager.on(event as keyof TWSEvents, (payload) => handler(payload));
     }
   }
 
@@ -616,11 +432,11 @@ export function createSnapshot<
       storage: tokenStorage,
       config: {
         auth: runtimeAuthMode,
-        staleTime: compiledManifest.app.cache?.staleTime,
+        staleTime: config.cache?.staleTime,
         loginPath: loginScreenPath,
         homePath: homeScreenPath,
         mfaPath: mfaScreenPath,
-        onLogoutSuccess: createManifestAuthCallback("logout"),
+        onLogoutSuccess: createAuthCallback("logout"),
       },
       contract,
       pendingMfaChallengeAtom,
@@ -635,12 +451,12 @@ export function createSnapshot<
   const mfaHooks = createMfaHooks({
     api,
     storage: tokenStorage,
-    config: {
-      auth: runtimeAuthMode,
-      homePath: homeScreenPath,
-      staleTime: compiledManifest.app.cache?.staleTime,
-      mfa: compiledManifest.auth?.mfa,
-    },
+      config: {
+        auth: runtimeAuthMode,
+        homePath: homeScreenPath,
+        staleTime: config.cache?.staleTime,
+        mfa: config.auth?.mfa,
+      },
     contract,
     pendingMfaChallengeAtom,
     onLoginSuccess: () => {
@@ -657,7 +473,7 @@ export function createSnapshot<
       loginPath: loginScreenPath,
     },
     contract,
-    onUnauthenticated: createManifestAuthCallback("unauthenticated"),
+    onUnauthenticated: createAuthCallback("unauthenticated"),
     queryClient,
   });
 
@@ -668,7 +484,7 @@ export function createSnapshot<
     config: {
       auth: runtimeAuthMode,
       homePath: homeScreenPath,
-      providers: compiledManifest.auth?.providers,
+      providers: config.auth?.providers,
     },
     contract,
     onLoginSuccess: () => {
@@ -685,7 +501,7 @@ export function createSnapshot<
       auth: runtimeAuthMode,
       homePath: homeScreenPath,
       mfaPath: mfaScreenPath,
-      webauthn: compiledManifest.auth?.webauthn,
+      webauthn: config.auth?.webauthn,
     },
     contract,
     pendingMfaChallengeAtom,
@@ -700,8 +516,8 @@ export function createSnapshot<
     {
       loginPath: loaderLoginPath,
       homePath: homeScreenPath,
-      onUnauthenticated: createManifestAuthCallback("unauthenticated"),
-      staleTime: compiledManifest.app.cache?.staleTime,
+      onUnauthenticated: createAuthCallback("unauthenticated"),
+      staleTime: config.cache?.staleTime,
     },
     api,
     contract,
@@ -717,28 +533,8 @@ export function createSnapshot<
     );
   }
 
-  // ── ManifestApp (created when manifest config is provided) ──────────────────
-  let ManifestAppComponent: React.ComponentType | undefined;
-  if (compiledManifest.raw) {
-    const capturedApiUrl = runtimeApiUrl;
-    const capturedManifest = compiledManifest.raw;
-    ManifestAppComponent = function SnapshotManifestApp() {
-      // Lazy import to avoid pulling UI code into SDK-only consumers.
-      const { ManifestApp: ManifestAppImpl } = require("./ui/manifest/app") as {
-        ManifestApp: React.ComponentType<{
-          manifest: ManifestConfig;
-          apiUrl: string;
-        }>;
-      };
-      return (
-        <ManifestAppImpl manifest={capturedManifest} apiUrl={capturedApiUrl} />
-      );
-    };
-  }
-
   return {
     bootstrap: {
-      env,
       bearerToken: config.bearerToken,
     },
     // High-level hooks
@@ -804,8 +600,5 @@ export function createSnapshot<
 
     // Components
     QueryProvider,
-
-    // Config-driven UI
-    ManifestApp: ManifestAppComponent,
   };
 }

@@ -2,7 +2,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 import type { RscOptions } from "./rsc";
 import type { SnapshotInstance } from "../types";
-import type { ManifestConfig } from "../ui/manifest/types";
 
 // ─── Structural shapes (no cross-repo import from bunshot-ssr) ────────────────
 
@@ -432,73 +431,4 @@ export interface SsrLoadContext {
    * ```
    */
   after(callback: () => void | Promise<void>): void;
-}
-
-// ─── Manifest renderer config ─────────────────────────────────────────────────
-
-/**
- * Server-side resolver for a single named manifest resource.
- *
- * Called instead of an HTTP fetch during SSR preload. Receives the extracted
- * URL params and the full BunshotContext for direct DB/adapter access.
- *
- * @param params - Dynamic URL params extracted from the matched route path.
- * @param bsCtx - The BunshotContext (typed `unknown` — cast inside the resolver).
- * @returns The data to cache under `[resourceKey, params]` queryKey.
- */
-export type ManifestPreloadResolver = (
-  params: Readonly<Record<string, string>>,
-  bsCtx: unknown,
-) => Promise<unknown>;
-
-/**
- * Configuration for `createManifestRenderer()`.
- *
- * The manifest is compiled at construction time — route patterns and resource
- * maps are resolved once, not per request.
- */
-export interface ManifestSsrConfig {
-  /**
-   * The raw Snapshot manifest config object.
-   * Compiled via `compileManifest()` at construction time.
-   */
-  manifest: ManifestConfig;
-  /**
-   * Server-side resolvers for named resources declared in `manifest.resources`.
-   *
-   * Map resource key → async function. When provided, the resolver is called
-   * directly during SSR preload (no HTTP). When omitted for a key, that resource
-   * is skipped during SSR and fetched client-side after hydration.
-   *
-   * @example
-   * ```ts
-   * preloadResolvers: {
-   *   listPosts: async (params, bsCtx) => {
-   *     const { threadAdapter } = (bsCtx as BunshotContext)
-   *       .pluginState.get('bunshot-community');
-   *     return threadAdapter.list({ containerId: params.containerId });
-   *   },
-   * }
-   * ```
-   */
-  preloadResolvers?: Record<string, ManifestPreloadResolver>;
-  /**
-   * Resolve the authenticated user from request headers for guard checks.
-   *
-   * Called when a route declares `guard.authenticated: true` or `guard.roles`.
-   * Returns `null` when no valid session exists.
-   *
-   * When omitted, all `guard.authenticated: true` routes redirect to
-   * `guard.redirectTo` (default: `/login`).
-   */
-  getUser?: (
-    headers: Headers,
-  ) => Promise<{ id: string; roles: string[] } | null>;
-  /**
-   * Optional React Server Components manifest configuration.
-   *
-   * When omitted, `createManifestRenderer()` may still enable RSC automatically
-   * from `manifest.ssr` by loading `rsc-manifest.json` at construction time.
-   */
-  rscOptions?: RscOptions;
 }
