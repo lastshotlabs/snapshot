@@ -37,7 +37,7 @@ export interface InlineEditFieldProps {
 
 /**
  * Standalone InlineEditField -- a click-to-edit text field that toggles between
- * display and input modes. No manifest context required.
+ * display and input modes. Works with plain React props.
  *
  * @example
  * ```tsx

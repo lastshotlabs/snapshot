@@ -39,7 +39,7 @@ export interface FavoriteButtonBaseProps {
 
 /**
  * Standalone FavoriteButton — a toggle button with a star icon.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

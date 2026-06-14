@@ -28,7 +28,7 @@ export interface DefaultLoadingBaseProps {
 
 /**
  * Standalone DefaultLoading — renders a loading spinner with label.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

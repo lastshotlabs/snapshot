@@ -103,7 +103,7 @@ function TierCard({ rootId, index, tier, currency, slots }: { rootId: string; in
 
 /**
  * Standalone PricingTableBase — renders a responsive pricing comparison as either
- * a card grid or a feature-comparison table with CTA buttons per tier. No manifest context required.
+ * a card grid or a feature-comparison table with CTA buttons per tier. Works with plain React props.
  *
  * @example
  * ```tsx

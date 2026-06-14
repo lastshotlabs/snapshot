@@ -1,4 +1,13 @@
-import type { NavItemConfig } from "./schema";
+
+export interface NavItemConfig extends Record<string, unknown> {
+  label: string;
+  path?: string;
+  icon?: string;
+  badge?: number;
+  disabled?: boolean;
+  visible?: boolean;
+  children?: NavItemConfig[];
+}
 
 /**
  * A nav item enriched with computed state:

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useMemo, useRef } from "react";
 import { Provider as JotaiProvider } from "jotai/react";
-import { buildRequestUrl, resolveEndpointTarget } from "../manifest/resources";
+import { buildRequestUrl, resolveEndpointTarget } from "../resources";
 import {
   AtomRegistryImpl,
   createComputedAtom,

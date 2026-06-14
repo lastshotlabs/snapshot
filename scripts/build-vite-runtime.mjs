@@ -49,11 +49,6 @@ writeFileSync(
   path.join(outDir, "vite.d.ts"),
   `import type { Plugin } from "vite";
 
-export interface SnapshotAppOptions {
-  manifestFile?: string;
-  apiUrl?: string;
-}
-
 export interface SnapshotSyncOptions {
   apiUrl?: string;
   file?: string;
@@ -72,9 +67,10 @@ export interface SnapshotSsrOptions {
   serverActions?: boolean;
   target?: "node" | "edge-cloudflare" | "edge-deno";
   rsc?: boolean;
+  analyze?: boolean;
+  ppr?: boolean;
 }
 
-export declare function snapshotApp(opts?: SnapshotAppOptions): Plugin;
 export declare function snapshotSync(opts?: SnapshotSyncOptions): Plugin;
 export declare function snapshotSsr(opts?: SnapshotSsrOptions): Plugin[];
 `,

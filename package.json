@@ -44,6 +44,36 @@
       "import": "./dist/ui/gif-picker.js",
       "require": "./dist/ui/gif-picker.cjs"
     },
+    "./ui/markdown": {
+      "types": "./dist-types/ui/markdown.d.ts",
+      "import": "./dist/ui/markdown.js",
+      "require": "./dist/ui/markdown.cjs"
+    },
+    "./ui/link-embed": {
+      "types": "./dist-types/ui/link-embed.d.ts",
+      "import": "./dist/ui/link-embed.js",
+      "require": "./dist/ui/link-embed.cjs"
+    },
+    "./ui/button": {
+      "types": "./dist-types/ui/button.d.ts",
+      "import": "./dist/ui/button.js",
+      "require": "./dist/ui/button.cjs"
+    },
+    "./ui/card": {
+      "types": "./dist-types/ui/card.d.ts",
+      "import": "./dist/ui/card.js",
+      "require": "./dist/ui/card.cjs"
+    },
+    "./ui/input": {
+      "types": "./dist-types/ui/input.d.ts",
+      "import": "./dist/ui/input.js",
+      "require": "./dist/ui/input.cjs"
+    },
+    "./ui/icon": {
+      "types": "./dist-types/ui/icon.d.ts",
+      "import": "./dist/ui/icon.js",
+      "require": "./dist/ui/icon.cjs"
+    },
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js",
@@ -77,7 +107,7 @@
     "topicSeparator": " "
   },
   "scripts": {
-    "build": "tsup && node scripts/build-ui-types.mjs && oclif manifest && bun run scripts/generate-manifest-schema.ts",
+    "build": "tsup && node scripts/build-ui-types.mjs && oclif manifest",
     "build:vite-runtime": "node scripts/build-vite-runtime.mjs",
     "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",
@@ -181,8 +211,5 @@
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
     "tiptap-markdown": "^0.9.0"
-  },
-  "optionalDependencies": {
-    "zod-to-json-schema": "^3.25.2"
   }
 }

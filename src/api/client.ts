@@ -5,7 +5,7 @@ import type { TokenStorage } from "../auth/storage";
 import type { AuthContract } from "../auth/contract";
 
 /**
- * API client surface required by manifest runtime resources.
+ * API client surface shared by the runtime and generated clients.
  */
 export interface ApiClientLike {
   request<T>(
@@ -30,7 +30,7 @@ export interface CustomClientBootstrap {
 }
 
 /**
- * Factory contract for manifest-declared custom clients.
+ * Factory contract for custom clients.
  */
 export type ClientFactory = (
   apiUrl: string,
@@ -42,7 +42,7 @@ const clientFactories = new Map<string, ClientFactory>();
 /**
  * Register a named custom client factory.
  *
- * @param name - Manifest-facing client factory name
+ * @param name - Client factory name
  * @param factory - Factory that creates an ApiClient-like instance
  */
 export function registerClient(name: string, factory: ClientFactory): void {

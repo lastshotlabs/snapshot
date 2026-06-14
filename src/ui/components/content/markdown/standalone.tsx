@@ -65,7 +65,7 @@ export interface MarkdownBaseProps {
 
 /**
  * Standalone Markdown — renders markdown content with syntax highlighting
- * and Snapshot design tokens. No manifest context required.
+ * and Snapshot design tokens. Works with plain React props.
  *
  * @example
  * ```tsx

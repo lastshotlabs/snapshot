@@ -36,11 +36,11 @@ export function getRegisteredWorkflowAction(
 }
 
 /**
- * Replace the manifest-declared custom action schema registry.
+ * Replace the custom action schema registry.
  *
- * Called by the manifest compiler once per compilation pass.
+ * Called by code that needs to swap the available custom action declarations.
  *
- * @param declarations - Parsed `manifest.workflows.actions.custom` declarations
+ * @param declarations - Parsed custom action declarations
  */
 export function setDeclaredCustomActionSchemas(
   declarations: CustomWorkflowActionDeclarationMap,
@@ -52,7 +52,7 @@ export function setDeclaredCustomActionSchemas(
 }
 
 /**
- * Retrieve the manifest-declared schema for a custom workflow action type.
+ * Retrieve the schema for a custom workflow action type.
  *
  * @param name - Custom workflow action type name
  * @returns The declared schema when available

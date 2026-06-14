@@ -77,7 +77,7 @@ export interface StackBaseProps {
 
 /**
  * Standalone Stack — a flex-column layout container with token-based spacing.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

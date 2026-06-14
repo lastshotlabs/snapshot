@@ -37,7 +37,7 @@ export interface PasskeyButtonBaseProps {
 
 /**
  * Standalone PasskeyButton — renders a passkey authentication button.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

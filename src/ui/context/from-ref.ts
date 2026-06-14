@@ -6,7 +6,7 @@ import { applyTransform, getNestedValue } from "./utils";
 /**
  * Reserved prefixes for `from` references.
  *
- * These prefixes are resolved against built-in sources (manifest config, route
+ * These prefixes are resolved against built-in sources (runtime config, route
  * params, overlay state, etc.) and take priority over workflow context keys.
  * Using one of these as a workflow `capture` / `assign` key prefix will cause
  * silent mis-resolution — the value will be read from the built-in source
@@ -69,7 +69,7 @@ export interface ResolveFromRefContext {
     payload?: unknown;
     result?: unknown;
   } | null;
-  manifest?: {
+  runtime?: {
     app?: Record<string, unknown>;
     auth?: Record<string, unknown>;
   } | null;
@@ -80,8 +80,8 @@ export function buildExpressionContext(
 ): Record<string, unknown> {
   return {
     ...(context.context ?? {}),
-    app: context.manifest?.app ?? {},
-    auth: context.manifest?.auth ?? {},
+    app: context.runtime?.app ?? {},
+    auth: context.runtime?.auth ?? {},
     route: {
       id: context.route?.id,
       path: context.route?.path,
@@ -189,7 +189,7 @@ export function resolveFromRef(
     appRegistry,
     route,
     overlay,
-    manifest,
+    runtime,
   }: ResolveFromRefContext,
 ): unknown {
   const refPath = ref.from;
@@ -246,10 +246,10 @@ export function resolveFromRef(
 
   if (refPath.startsWith("auth.")) {
     if (context && "auth" in context) {
-      warnReservedPrefix(refPath, "auth.", "manifest auth config");
+      warnReservedPrefix(refPath, "auth.", "runtime auth config");
     }
     return applyTransform(
-      getNestedValue(manifest?.auth, refPath.slice(5)),
+      getNestedValue(runtime?.auth, refPath.slice(5)),
       ref.transform,
       ref.transformArg,
     );
@@ -257,10 +257,10 @@ export function resolveFromRef(
 
   if (refPath.startsWith("app.")) {
     if (context && "app" in context) {
-      warnReservedPrefix(refPath, "app.", "manifest app config");
+      warnReservedPrefix(refPath, "app.", "runtime app config");
     }
     return applyTransform(
-      getNestedValue(manifest?.app, refPath.slice(4)),
+      getNestedValue(runtime?.app, refPath.slice(4)),
       ref.transform,
       ref.transformArg,
     );

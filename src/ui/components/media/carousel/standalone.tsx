@@ -41,7 +41,7 @@ export interface CarouselBaseProps {
 
 /**
  * Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation,
- * and dot indicators. Pauses on hover. No manifest context required.
+ * and dot indicators. Pauses on hover. Works with plain React props.
  *
  * @example
  * ```tsx

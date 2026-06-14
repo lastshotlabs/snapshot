@@ -1,5 +1,5 @@
 /**
- * Shared utility functions for config-driven components.
+ * Shared utility functions for Snapshot UI components.
  *
  * Centralizes commonly-needed helpers so component files stay focused on
  * rendering logic. Every function here must be pure and side-effect free.

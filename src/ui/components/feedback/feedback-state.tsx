@@ -77,7 +77,7 @@ export interface FeedbackStateBaseProps {
  * Renders a title + description + optional action button inside a styled card
  * with ARIA attributes and `data-snapshot-feedback` identification.
  *
- * This is an internal primitive — app builders should use the domain-specific
+ * This is an internal primitive — app authors should use the domain-specific
  * feedback components (`DefaultErrorBase`, `DefaultOfflineBase`, etc.) instead.
  */
 export function FeedbackStateBase({

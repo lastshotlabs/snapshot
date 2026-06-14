@@ -98,7 +98,7 @@ function CommentItem({ rootId, index, comment, authorNameField, authorAvatarFiel
 
 /**
  * Standalone CommentSection — threaded comment list with avatars, timestamps,
- * optional delete actions, and a composable input slot. No manifest context required.
+ * optional delete actions, and a composable input slot. Works with plain React props.
  *
  * @example
  * ```tsx

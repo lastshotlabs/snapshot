@@ -12,7 +12,7 @@ import {
   InputField, ButtonBase,
 } from "@lastshotlabs/snapshot/ui";
 
-const snap = createSnapshot({ apiUrl: "/api", manifest: {} });
+const snap = createSnapshot({ apiUrl: "/api" });
 
 function ChatRoom({ containerId }: { containerId: string }) {
   const { data } = snap.useContainerThreads({ containerId });

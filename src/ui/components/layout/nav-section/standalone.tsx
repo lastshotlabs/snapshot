@@ -30,7 +30,7 @@ export interface NavSectionBaseProps {
 
 /**
  * Standalone NavSection -- a labeled, optionally collapsible group within navigation.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

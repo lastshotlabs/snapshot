@@ -30,7 +30,7 @@ export interface EmbedBaseProps {
 
 /**
  * Standalone Embed — a responsive iframe container for embedding external
- * content. No manifest context required.
+ * content. Works with plain React props.
  *
  * @example
  * ```tsx

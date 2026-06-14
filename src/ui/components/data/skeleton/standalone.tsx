@@ -47,7 +47,7 @@ export interface SkeletonBaseProps {
 
 /**
  * Standalone Skeleton — a placeholder loading indicator.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

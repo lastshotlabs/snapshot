@@ -5,8 +5,6 @@ import type { ReactNode } from "react";
 import { SurfaceStyles } from "../components/_base/surface-styles";
 import { resolveSurfacePresentation } from "../components/_base/style-surfaces";
 import { ButtonControl } from "../components/forms/button";
-import { useManifestRuntime } from "../manifest/runtime";
-import { useActionExecutor } from "./executor";
 import type { ActionConfig } from "./types";
 
 type ToastVariant = "success" | "error" | "warning" | "info";
@@ -61,17 +59,14 @@ export interface ToastManager {
 
 let toastCounter = 0;
 
-/** Return the toast manager bound to the active manifest runtime configuration. */
+/** Return the toast manager. */
 export function useToastManager(): ToastManager {
-  const runtime = useManifestRuntime();
   const [, setQueue] = useAtom(toastQueueAtom);
-  const manifestToast = runtime?.toast;
 
   const show = useCallback(
     (options: ShowToastOptions): string => {
       const id = `toast-${++toastCounter}-${Date.now()}`;
       const variant = options.variant ?? "info";
-      const variantDefaults = manifestToast?.variants?.[variant];
       const toast: ToastItem = {
         id,
         message: options.message,
@@ -79,11 +74,9 @@ export function useToastManager(): ToastManager {
         duration:
           options.duration ??
           options.undo?.duration ??
-          variantDefaults?.duration ??
-          manifestToast?.duration ??
           4000,
-        icon: options.icon ?? variantDefaults?.icon,
-        color: options.color ?? variantDefaults?.color,
+        icon: options.icon,
+        color: options.color,
         action: options.action,
         undo: options.undo
           ? {
@@ -96,7 +89,7 @@ export function useToastManager(): ToastManager {
       setQueue((currentQueue) => [...currentQueue, toast]);
       return id;
     },
-    [manifestToast?.duration, manifestToast?.variants, setQueue],
+    [setQueue],
   );
 
   const dismiss = useCallback(
@@ -180,7 +173,6 @@ function ToastCard({
   toast: ToastItem;
   onDismiss: (id: string) => void;
 }) {
-  const execute = useActionExecutor();
   const [remainingMs, setRemainingMs] = useState(
     toast.undo?.duration ?? toast.duration,
   );
@@ -273,7 +265,6 @@ function ToastCard({
           <ButtonControl
             type="button"
             onClick={() => {
-              void execute(toast.undo!.action);
               onDismiss(toast.id);
             }}
             variant="ghost"
@@ -315,11 +306,10 @@ function ToastCard({
   );
 }
 
-/** Render the active toast queue using runtime-configured placement defaults. */
+/** Render the active toast queue. */
 export function ToastContainer(): ReactNode {
-  const runtime = useManifestRuntime();
   const [queue, setQueue] = useAtom(toastQueueAtom);
-  const position = runtime?.toast?.position ?? "bottom-right";
+  const position: ToastPosition = "bottom-right";
   const containerSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-toasts",
     implementationBase: {

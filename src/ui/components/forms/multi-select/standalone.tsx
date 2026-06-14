@@ -289,7 +289,7 @@ function StandaloneMultiSelectOptionRow({
 
 /**
  * Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search,
- * and configurable max selection. No manifest context required.
+ * and configurable max selection. Works with plain React props.
  *
  * @example
  * ```tsx

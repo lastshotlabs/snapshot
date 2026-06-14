@@ -1,3 +1,2 @@
-export { dataTableConfigSchema } from "./schema";
-export { DataTable } from "./component";
-export { DataTableBase, type DataTableBaseProps, type DataTableBaseColumn } from "./standalone";
+export * from "./standalone";
+export type * from "./types";

@@ -18,10 +18,9 @@ import { useState, useCallback, useRef, useEffect } from "react";
 
 const snap = createSnapshot({
   apiUrl: "/api",
-  manifest: {
-    app: { auth: { loginPath: "/login", homePath: "/" } },
-    realtime: { ws: { url: "wss://api.example.com/ws" } },
-  },
+  loginPath: "/login",
+  homePath: "/",
+  ws: { url: "wss://api.example.com/ws" },
 });
 
 // ── Types ─────────────────────────────────────────────────────────────────

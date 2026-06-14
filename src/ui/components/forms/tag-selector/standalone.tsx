@@ -253,7 +253,7 @@ function StandaloneTagOption({
 
 /**
  * Standalone TagSelectorField -- tag pills with dropdown selection, search filtering,
- * and optional tag creation. No manifest context required.
+ * and optional tag creation. Works with plain React props.
  *
  * @example
  * ```tsx

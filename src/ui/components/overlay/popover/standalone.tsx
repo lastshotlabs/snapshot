@@ -50,7 +50,7 @@ export interface PopoverBaseProps {
 
 /**
  * Standalone Popover — a button-triggered floating panel with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

@@ -292,7 +292,7 @@ function EntityPickerItem({
 
 /**
  * Standalone EntityPicker — dropdown with search, single/multi select.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

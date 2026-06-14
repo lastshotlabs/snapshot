@@ -14,19 +14,18 @@ Use this discovery order:
 4. Read the nearest surface `CLAUDE.md`.
 5. Read [Contributor Testing](/contribute/testing/).
 6. Read the public entrypoint for the surface you are changing.
-7. Read the schema, runtime, registry, generator, example, and nearest test files named by that surface guide.
+7. Read the component, runtime, registry, generator, example, and nearest test files named by that surface guide.
 
-For manifest UI work, treat these files as the canonical styling and composition pattern library:
+For Snapshot UI work, treat these files as the canonical styling and composition pattern library:
 
 - `src/ui/components/_base/schema.ts`
 - `src/ui/components/_base/style-surfaces.ts`
-- `src/ui/components/forms/button/schema.ts`
-- `src/ui/components/forms/button/component.tsx`
-- `src/ui/components/overlay/popover/schema.ts`
-- `src/ui/components/overlay/popover/component.tsx`
+- `src/ui/components/forms/button/standalone.tsx`
+- `src/ui/components/forms/button/control.tsx`
+- `src/ui/components/overlay/popover/standalone.tsx`
 - `playground/src/showcase.tsx`
 
-For app-builder-facing discovery truth, treat these files as canonical:
+For app-author-facing discovery truth, treat these files as canonical:
 
 - `apps/docs/src/content/docs/index.md`
 - `apps/docs/src/content/docs/start-here/index.md`
@@ -46,12 +45,12 @@ Then execute the change in one pass:
 8. update the documentation impact map if the surface is new
 9. run `bun run docs:ci`
 
-If you introduce or change a visible manifest UI surface:
+If you introduce or change a visible UI surface:
 
 - define or update named `slots`
 - use canonical runtime state names
 - update [Theming and Styling](/guides/theming-and-styling/) when the platform pattern changed
-- update any persona guide that should send app builders to the new surface
+- update any persona guide that should send app authors to the new surface
 
 Canonical contributor instructions live in:
 

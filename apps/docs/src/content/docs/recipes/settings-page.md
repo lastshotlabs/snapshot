@@ -18,7 +18,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const snap = createSnapshot({
   apiUrl: "/api",
-  manifest: { app: { auth: { loginPath: "/login", homePath: "/" } } },
+  loginPath: "/login",
+  homePath: "/",
 });
 
 // ── Settings Page ─────────────────────────────────────────────────────────

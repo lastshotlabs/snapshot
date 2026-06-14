@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import type { ApiClient } from "../../api/client";
 import type { ExprRef, FromRef } from "@lastshotlabs/frontend-contract/refs";
 import type { StateConfigMap, StateValueConfig } from "@lastshotlabs/frontend-contract/state";
-import type { ResourceMap } from "../manifest/resources";
+import type { ResourceMap } from "../resources";
 import type { AtomRegistry, JotaiStore } from "../state/types";
 /** Backwards-compatible alias for the shared state registry interface. */
 export type { AtomRegistry, JotaiStore };
 export type { ExprRef, FromRef };
 /**
- * Global state definition from the manifest.
+ * Global state definition from app configuration.
  * This now aliases the shared state config used by the runtime.
  */
 export type GlobalConfig = StateValueConfig;
@@ -17,9 +17,9 @@ export type GlobalConfig = StateValueConfig;
  * Wraps the entire app to provide persistent global state.
  */
 export interface AppContextProviderProps {
-    /** Global state definitions from manifest. Keyed by id. */
+    /** Global state definitions keyed by id. */
     globals?: Record<string, GlobalConfig>;
-    /** Named manifest resources available to global state loaders. */
+    /** Named resources available to global state loaders. */
     resources?: ResourceMap;
     /** The API client instance (from createSnapshot) for fetching global data. */
     api?: ApiClient;
@@ -33,7 +33,7 @@ export interface AppContextProviderProps {
 export interface PageContextProviderProps {
     /** Named route-scope state definitions. */
     state?: StateConfigMap;
-    /** Named manifest resources available to route state loaders. */
+    /** Named resources available to route state loaders. */
     resources?: ResourceMap;
     /** API client for route state loaders. */
     api?: ApiClient;

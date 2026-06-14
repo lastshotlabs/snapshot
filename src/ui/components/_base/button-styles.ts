@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 /**
- * Shared button variant + size styles for config-driven components.
+ * Shared button variant + size styles for Snapshot UI components.
  *
  * Every component that renders action/CTA buttons should use these instead
  * of defining ad-hoc inline styles. This ensures consistent appearance,

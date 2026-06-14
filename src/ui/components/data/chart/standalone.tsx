@@ -228,7 +228,7 @@ function ChartFrame({
 
 /**
  * Standalone Chart — renders data-driven charts via recharts.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

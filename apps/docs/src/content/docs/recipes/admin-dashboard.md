@@ -14,18 +14,22 @@ import {
   StatCardBase, DataTableBase, ButtonBase,
   ModalBase, DrawerBase, ConfirmDialogBase,
   InputField, SelectField, AlertBase, SkeletonBase,
+  resolveTokens,
 } from "@lastshotlabs/snapshot/ui";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const snap = createSnapshot({
   apiUrl: "/api",
-  manifest: {
-    app: { auth: { loginPath: "/login", homePath: "/" } },
-    theme: {
-      colors: { primary: "#3b82f6" },
-      fonts: { sans: "Inter" },
-    },
+  loginPath: "/login",
+  homePath: "/",
+});
+
+const snapshotCss = resolveTokens({
+  flavor: "neutral",
+  overrides: {
+    colors: { primary: "#3b82f6" },
+    font: { sans: "Inter" },
   },
 });
 

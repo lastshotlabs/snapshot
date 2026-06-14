@@ -1,8 +1,6 @@
-import type { z } from "zod";
-import type { kanbanConfigSchema, kanbanColumnSchema } from "./schema";
 
 /** Inferred config type from the Kanban Zod schema. */
-export type KanbanConfig = z.input<typeof kanbanConfigSchema>;
+export type KanbanConfig = Record<string, unknown>;
 
 /** Inferred column definition type. */
-export type KanbanColumnConfig = z.input<typeof kanbanColumnSchema>;
+export type KanbanColumnConfig = Record<string, unknown>;

@@ -8,807 +8,483 @@ Generated from `src/ui.ts`.
 
 ## Contents
 
-- [Tokens & Flavors](#tokens-flavors) (22)
-- [API Client](#api-client) (2)
-- [Context & Data Binding](#context-data-binding) (10)
-- [State Runtime](#state-runtime) (14)
-- [Actions](#actions) (17)
-- [Manifest & Rendering](#manifest-rendering) (90)
-- [Components — Data](#components-data) (117)
-- [Components — Forms](#components-forms) (98)
-- [Components — Communication](#components-communication) (48)
-- [Components — Content](#components-content) (48)
-- [Components — Overlay](#components-overlay) (43)
-- [Components — Navigation](#components-navigation) (25)
-- [Components — Layout](#components-layout) (59)
-- [Components — Media](#components-media) (11)
-- [Components — Primitives](#components-primitives) (18)
+- [Tokens & Flavors](#tokens-flavors) (18)
+- [Context & Data Binding](#context-data-binding) (11)
+- [State Runtime](#state-runtime) (15)
+- [Actions](#actions) (15)
+- [Components — Data](#components-data) (61)
+- [Components — Forms](#components-forms) (83)
+- [Components — Communication](#components-communication) (23)
+- [Components — Content](#components-content) (30)
+- [Components — Overlay](#components-overlay) (29)
+- [Components — Navigation](#components-navigation) (17)
+- [Components — Layout](#components-layout) (44)
+- [Components — Media](#components-media) (8)
+- [Components — Primitives](#components-primitives) (19)
 - [Component Utilities](#component-utilities) (4)
-- [Page Presets](#page-presets) (26)
-- [Hooks & Utilities](#hooks-utilities) (14)
+- [Hooks & Utilities](#hooks-utilities) (12)
 - [Icons](#icons) (3)
-- [Workflows](#workflows) (3)
-- [Other](#other) (103)
+- [Other](#other) (63)
 
 <details>
 <summary><strong>All exports (alphabetical)</strong></summary>
 
 | Export | Kind | Source | Description |
 |---|---|---|---|
-| `AccordionBase` | function | `src/ui/components/navigation/accordion/standalone.tsx` | Standalone Accordion — an expandable/collapsible panel list with plain React children. No manifest context required. |
+| `AccordionBase` | function | `src/ui/components/navigation/accordion/standalone.tsx` | Standalone Accordion — an expandable/collapsible panel list with plain React children. Works with plain React props. |
 | `AccordionBaseItem` | interface | `src/ui/components/navigation/accordion/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `AccordionBaseProps` | interface | `src/ui/components/navigation/accordion/standalone.tsx` | Props accepted by the AccordionBase standalone component. |
-| `ActionBase` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `ActionConfig` | typealias | `../frontend-contract/src/actions/types.ts` | Manifest configuration type for action config. |
+| `ActionConfig` | typealias | `../frontend-contract/src/actions/types.ts` | Configuration type for action config. |
 | `ActionExecuteFn` | typealias | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `actionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating action schema. |
-| `ActivityFeedDef` | interface | `src/ui/presets/types.ts` | Feed section definition for dashboard-style presets. |
-| `AlertBase` | function | `src/ui/components/data/alert/standalone.tsx` | Standalone Alert — a styled alert/notification box with optional icon, action button, and dismiss. No manifest context required. |
+| `AlertBase` | function | `src/ui/components/data/alert/standalone.tsx` | Standalone Alert — a styled alert/notification box with optional icon, action button, and dismiss. Works with plain React props. |
 | `AlertBaseProps` | interface | `src/ui/components/data/alert/standalone.tsx` | Props accepted by the AlertBase standalone component. |
-| `AnalyticsConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `analyticsConfigSchema` — defaulted fields are optional. |
-| `analyticsConfigSchema` | variable | `src/ui/manifest/schema.ts` | Manifest analytics runtime configuration. |
-| `AnalyticsProvider` | interface | `src/ui/analytics/types.ts` | Analytics provider runtime contract. |
-| `AnalyticsProviderFactory` | typealias | `src/ui/analytics/types.ts` | Factory used to create analytics providers per snapshot instance. |
-| `AnalyticsProviderInitConfig` | interface | `src/ui/analytics/types.ts` | Analytics provider initialization payload. |
-| `analyticsProviderSchema` | variable | `src/ui/manifest/schema.ts` | Analytics provider declaration schema. |
-| `ApiAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `apiActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating api action schema. |
-| `AppConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `appConfigSchema` — defaulted fields are optional. |
-| `appConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the top-level manifest `app` section. |
-| `AppContextProvider` | function | `src/ui/context/providers.tsx` | Provides persistent global state that survives route changes. Initializes globals from the manifest config. |
+| `AppContextProvider` | function | `src/ui/context/providers.tsx` | Provides persistent global state that survives route changes. Initializes globals from runtime config. |
 | `AppContextProviderProps` | interface | `src/ui/context/types.ts` | Props for AppContextProvider. Wraps the entire app to provide persistent global state. |
-| `AssignWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
 | `AtomRegistry` | interface | `src/ui/state/types.ts` | Registry of named state atoms. Backing store is shared per scope (app or route). |
-| `AuditLogBase` | function | `src/ui/components/workflow/audit-log/standalone.tsx` | Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries with user avatars, relative timestamps, and expandable detail panels. No manifest context required. |
+| `AuditLogBase` | function | `src/ui/components/workflow/audit-log/standalone.tsx` | Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries with user avatars, relative timestamps, and expandable detail panels. Works with plain React props. |
 | `AuditLogBaseProps` | interface | `src/ui/components/workflow/audit-log/standalone.tsx` | Props accepted by the AuditLogBase standalone component. |
 | `AuditLogFilterEntry` | interface | `src/ui/components/workflow/audit-log/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `AuthBrandingDef` | interface | `src/ui/presets/types.ts` | Branding and background options for the auth page preset. |
-| `authPage` | function | `src/ui/presets/auth-page.ts` | Build a manifest page config for a common auth screen. |
-| `AuthPageOptions` | interface | `src/ui/presets/types.ts` | Options for the `authPage` preset factory. |
-| `authPresetConfigSchema` | variable | `src/ui/presets/schemas.ts` | Validate preset config for auth screens such as login, register, and password recovery. |
-| `AuthProviderConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `authProviderSchema` — defaulted fields are optional. |
-| `authProviderSchema` | variable | `src/ui/manifest/schema.ts` | Auth provider declaration schema. Declared at `manifest.auth.providers.<name>`. |
-| `AuthScreenConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `authScreenConfigSchema` — defaulted fields are optional. |
-| `authScreenConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the manifest auth screen and auth workflow configuration. |
-| `AutoForm` | function | `src/ui/components/forms/auto-form/component.tsx` | Config-driven form component with multi-column layout, conditional field visibility, and section grouping. Supports client-side validation, submission to an API endpoint, manifest-aware resource mutation (invalidation + optimistic handling), workflow lifecycle hooks (`beforeSubmit`, `afterSubmit`, `error`), and action chaining on success/error. Publishes form state to the page context when an `id` is configured. |
-| `AutoFormBase` | function | `src/ui/components/forms/auto-form/standalone.tsx` | Standalone AutoFormBase -- renders a config-driven form with fields, sections, validation, and submit/reset actions. No manifest context required. |
+| `AutoFormBase` | function | `src/ui/components/forms/auto-form/standalone.tsx` | Standalone AutoFormBase -- renders a schema-driven form with fields, sections, validation, and submit/reset actions. Works with plain React props. |
 | `AutoFormBaseProps` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Props accepted by the AutoFormBase standalone component. |
-| `AutoFormConfig` | typealias | `src/ui/components/forms/auto-form/types.ts` | Inferred type for the AutoForm component config. |
-| `autoFormConfigSchema` | variable | `src/ui/components/forms/auto-form/schema.ts` | Zod schema for the AutoForm component config. Defines a config-driven form that auto-generates fields from config or OpenAPI schema. Supports validation, submission, action chaining, multi-column layout, conditional field visibility, and field grouping. |
-| `AutoFormFieldConfig` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Manifest configuration type for auto form field config. |
-| `AutoFormSectionConfig` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Manifest configuration type for auto form section config. |
-| `AvatarBase` | function | `src/ui/components/data/avatar/standalone.tsx` | Standalone Avatar — image, initials, or icon fallback. No manifest context required. |
+| `AutoFormFieldConfig` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Configuration type for auto form field config. |
+| `AutoFormFieldOption` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `AutoFormFieldValidation` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `AutoFormSectionConfig` | interface | `src/ui/components/forms/auto-form/standalone.tsx` | Configuration type for auto form section config. |
+| `AvatarBase` | function | `src/ui/components/data/avatar/standalone.tsx` | Standalone Avatar — image, initials, or icon fallback. Works with plain React props. |
 | `AvatarBaseProps` | interface | `src/ui/components/data/avatar/standalone.tsx` | Props accepted by the AvatarBase standalone component. |
-| `AvatarGroup` | function | `src/ui/components/data/avatar-group/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `AvatarGroupBase` | function | `src/ui/components/data/avatar-group/standalone.tsx` | Standalone AvatarGroup — overlapping avatars with +N overflow. No manifest context required. |
+| `AvatarGroupBase` | function | `src/ui/components/data/avatar-group/standalone.tsx` | Standalone AvatarGroup — overlapping avatars with +N overflow. Works with plain React props. |
+| `AvatarGroupBaseAvatar` | interface | `src/ui/components/data/avatar-group/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `AvatarGroupBaseProps` | interface | `src/ui/components/data/avatar-group/standalone.tsx` | Props accepted by the AvatarGroupBase standalone component. |
-| `AvatarGroupConfig` | typealias | `src/ui/components/data/avatar-group/types.ts` | Inferred config type from the AvatarGroup Zod schema. |
-| `avatarGroupConfigSchema` | variable | `src/ui/components/data/avatar-group/schema.ts` | Zod config schema for the AvatarGroup component. Displays a row of overlapping avatars with an optional "+N" overflow count. Commonly used for showing team members, assignees, or participants. |
-| `BadgeBase` | function | `src/ui/components/data/badge/standalone.tsx` | Standalone Badge — a small label with color-coded variants. No manifest context required. |
+| `BadgeBase` | function | `src/ui/components/data/badge/standalone.tsx` | Standalone Badge — a small label with color-coded variants. Works with plain React props. |
 | `BadgeBaseProps` | interface | `src/ui/components/data/badge/standalone.tsx` | Props accepted by the BadgeBase standalone component. |
-| `BannerBase` | function | `src/ui/components/content/banner/standalone.tsx` | Standalone Banner — a full-width hero section with background, overlay, and content alignment. No manifest context required. |
+| `BannerBase` | function | `src/ui/components/content/banner/standalone.tsx` | Standalone Banner — a full-width hero section with background, overlay, and content alignment. Works with plain React props. |
 | `BannerBaseProps` | interface | `src/ui/components/content/banner/standalone.tsx` | Props accepted by the BannerBase standalone component. |
-| `BaseComponentConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `baseComponentConfigSchema` — defaulted fields are optional. |
-| `baseComponentConfigSchema` | variable | `src/ui/manifest/schema.ts` | Shared base schema applied to all manifest-driven components. |
-| `bootBuiltins` | function | `src/ui/manifest/boot-builtins.ts` | Register all built-in manifest registries exactly once. |
-| `BoxBase` | function | `src/ui/components/layout/box/standalone.tsx` | Standalone Box -- a generic container element with configurable HTML tag. No manifest context required. |
+| `BoxBase` | function | `src/ui/components/layout/box/standalone.tsx` | Standalone Box -- a generic container element with configurable HTML tag. Works with plain React props. |
 | `BoxBaseProps` | interface | `src/ui/components/layout/box/standalone.tsx` | Props accepted by the BoxBase standalone component. |
-| `BreadcrumbAutoConfig` | interface | `src/ui/manifest/breadcrumbs.ts` | Auto-breadcrumb configuration used to derive labels and optional home state from routes. |
-| `BreadcrumbBase` | function | `src/ui/components/navigation/breadcrumb/standalone.tsx` | Standalone Breadcrumb — a navigation trail rendered with plain React props. No manifest context required. |
+| `BreadcrumbBase` | function | `src/ui/components/navigation/breadcrumb/standalone.tsx` | Standalone Breadcrumb — a navigation trail rendered with plain React props. Works with plain React props. |
 | `BreadcrumbBaseItem` | interface | `src/ui/components/navigation/breadcrumb/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `BreadcrumbBaseProps` | interface | `src/ui/components/navigation/breadcrumb/standalone.tsx` | Props accepted by the BreadcrumbBase standalone component. |
-| `BreadcrumbItem` | interface | `src/ui/manifest/breadcrumbs.ts` | A single breadcrumb entry rendered from the matched route stack. |
 | `Breakpoint` | typealias | `src/ui/hooks/use-breakpoint.ts` | All breakpoint names including `"default"` (below `sm`). |
 | `buildEmojiMap` | function | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Builds a shortcode lookup map from an array of custom emojis. |
 | `buildRequestUrl` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
-| `BulkAction` | typealias | `src/ui/components/data/data-table/types.ts` | Inferred bulk action type. |
-| `bulkActionSchema` | variable | `src/ui/components/data/data-table/schema.ts` | Schema for a bulk action on selected rows. |
-| `Button` | function | `src/ui/components/forms/button/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ButtonBase` | function | `src/ui/components/forms/button/standalone.tsx` | Standalone ButtonBase -- a styled button that works with plain React props. No manifest context required. |
+| `ButtonBase` | function | `src/ui/components/forms/button/standalone.tsx` | Standalone ButtonBase -- a styled button that works with plain React props. Works with plain React props. |
 | `ButtonBaseProps` | interface | `src/ui/components/forms/button/standalone.tsx` | Props accepted by the ButtonBase standalone component. |
-| `ButtonConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `buttonConfigSchema` — defaulted fields are optional. |
-| `buttonConfigSchema` | variable | `src/ui/components/forms/button/schema.ts` | Zod schema for validating button config schema. |
-| `CalendarBase` | function | `src/ui/components/workflow/calendar/standalone.tsx` | Standalone CalendarBase — renders a month or week calendar grid with event pills, navigation controls, and optional week numbers. No manifest context required. |
+| `ButtonControl` | function | `src/ui/components/forms/button/control.tsx` | Low-level styled button element with surface resolution and accessibility attributes. Used internally by ButtonBase and other components that need a styled `<button>`. Works with plain React props. |
+| `ButtonControlProps` | interface | `src/ui/components/forms/button/types.ts` | Props accepted by the ButtonControl component. |
+| `CalendarBase` | function | `src/ui/components/workflow/calendar/standalone.tsx` | Standalone CalendarBase — renders a month or week calendar grid with event pills, navigation controls, and optional week numbers. Works with plain React props. |
 | `CalendarBaseProps` | interface | `src/ui/components/workflow/calendar/standalone.tsx` | Props accepted by the CalendarBase standalone component. |
 | `CalendarEventEntry` | interface | `src/ui/components/workflow/calendar/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `CaptureWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `Card` | function | `src/ui/components/layout/card/component.tsx` | Manifest adapter — resolves config refs, renders manifest children, delegates layout to CardBase. |
-| `CardBase` | function | `src/ui/components/layout/card/standalone.tsx` | Standalone Card — a styled container with optional title/subtitle and standard React children. No manifest context required. |
+| `CardBase` | function | `src/ui/components/layout/card/standalone.tsx` | Standalone Card — a styled container with optional title/subtitle and standard React children. Works with plain React props. |
 | `CardBaseProps` | interface | `src/ui/components/layout/card/standalone.tsx` | Props accepted by the CardBase standalone component. |
-| `CardConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `cardConfigSchema` — defaulted fields are optional. |
-| `cardConfigSchema` | variable | `src/ui/manifest/schema.ts` | Zod config schema for the Card component. Defines a card container with optional title, subtitle, children, gap, and suspense fallback. |
-| `CarouselBase` | function | `src/ui/components/media/carousel/standalone.tsx` | Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation, and dot indicators. Pauses on hover. No manifest context required. |
+| `CarouselBase` | function | `src/ui/components/media/carousel/standalone.tsx` | Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation, and dot indicators. Pauses on hover. Works with plain React props. |
 | `CarouselBaseProps` | interface | `src/ui/components/media/carousel/standalone.tsx` | Props accepted by the CarouselBase standalone component. |
-| `Chart` | function | `src/ui/components/data/chart/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ChartBase` | function | `src/ui/components/data/chart/standalone.tsx` | Standalone Chart — renders data-driven charts via recharts. No manifest context required. |
+| `ChartBase` | function | `src/ui/components/data/chart/standalone.tsx` | Standalone Chart — renders data-driven charts via recharts. Works with plain React props. |
 | `ChartBaseProps` | interface | `src/ui/components/data/chart/standalone.tsx` | Props accepted by the ChartBase standalone component. |
 | `ChartBaseSeries` | interface | `src/ui/components/data/chart/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `ChartConfig` | typealias | `src/ui/components/data/chart/types.ts` | Inferred type for the Chart component configuration. |
-| `ChartDef` | interface | `src/ui/presets/types.ts` | Chart section definition for dashboard-style presets. |
-| `chartSchema` | variable | `src/ui/components/data/chart/schema.ts` | Zod schema for the Chart component configuration. Renders a data visualization (bar, line, area, pie, donut) from an endpoint or from-ref. Uses Recharts under the hood. Colors default to `--sn-chart-1` through `--sn-chart-5` tokens. |
-| `ChatWindow` | function | `src/ui/components/communication/chat-window/component.tsx` | Manifest adapter — resolves config refs, composes manifest sub-components, delegates to ChatWindowBase. |
-| `ChatWindowBase` | function | `src/ui/components/communication/chat-window/standalone.tsx` | Standalone ChatWindow — composable chat container with header, message thread, typing indicator, and input slots. No manifest context required. |
+| `ChatWindowBase` | function | `src/ui/components/communication/chat-window/standalone.tsx` | Standalone ChatWindow — composable chat container with header, message thread, typing indicator, and input slots. Works with plain React props. |
 | `ChatWindowBaseProps` | interface | `src/ui/components/communication/chat-window/standalone.tsx` | Props accepted by the ChatWindowBase standalone component. |
-| `ChatWindowConfig` | typealias | `src/ui/components/communication/chat-window/types.ts` | Inferred config type from the ChatWindow Zod schema. |
-| `chatWindowConfigSchema` | variable | `src/ui/components/communication/chat-window/schema.ts` | Zod config schema for the ChatWindow component. A full chat interface composing a message thread, rich input, and typing indicator into a single component. |
 | `clearPersistedState` | function | `src/ui/state/persist.ts` | Remove a persisted state value from the selected browser storage area. |
-| `CloseModalAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `closeModalActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating close modal action schema. |
-| `Code` | function | `src/ui/components/content/code/component.tsx` | Manifest adapter — resolves config refs and delegates to CodeBase. |
-| `CodeBase` | function | `src/ui/components/content/code/standalone.tsx` | Standalone Code — an inline code element for displaying code snippets within flowing text. No manifest context required. |
+| `CodeBase` | function | `src/ui/components/content/code/standalone.tsx` | Standalone Code — an inline code element for displaying code snippets within flowing text. Works with plain React props. |
 | `CodeBaseProps` | interface | `src/ui/components/content/code/standalone.tsx` | Props accepted by the CodeBase standalone component. |
-| `CodeBlockBase` | function | `src/ui/components/content/code-block/standalone.tsx` | Standalone CodeBlock — displays code with syntax highlighting, optional line numbers, copy button, and title bar. No manifest context required. |
+| `CodeBlockBase` | function | `src/ui/components/content/code-block/standalone.tsx` | Standalone CodeBlock — displays code with syntax highlighting, optional line numbers, copy button, and title bar. Works with plain React props. |
 | `CodeBlockBaseProps` | interface | `src/ui/components/content/code-block/standalone.tsx` | Props accepted by the CodeBlockBase standalone component. |
-| `CodeConfig` | typealias | `src/ui/components/content/code/types.ts` | Inferred config type for the Code component. |
-| `codeConfigSchema` | variable | `src/ui/components/content/code/schema.ts` | Inline code primitive schema for manifest-rendered code snippets. |
-| `CollapsibleBase` | function | `src/ui/components/layout/collapsible/standalone.tsx` | Standalone Collapsible -- an animated expand/collapse container with an optional trigger. No manifest context required. |
+| `CollapsibleBase` | function | `src/ui/components/layout/collapsible/standalone.tsx` | Standalone Collapsible -- an animated expand/collapse container with an optional trigger. Works with plain React props. |
 | `CollapsibleBaseProps` | interface | `src/ui/components/layout/collapsible/standalone.tsx` | Props accepted by the CollapsibleBase standalone component. |
-| `ColorPicker` | function | `src/ui/components/forms/color-picker/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ColorPickerConfig` | typealias | `src/ui/components/forms/color-picker/types.ts` | Config for the manifest-driven color picker component. |
-| `colorPickerConfigSchema` | variable | `src/ui/components/forms/color-picker/schema.ts` | Schema for color picker components with optional swatches, alpha, and change actions. |
-| `ColorPickerField` | function | `src/ui/components/forms/color-picker/standalone.tsx` | Standalone ColorPickerField -- a color picker with optional swatches, alpha slider, and custom hex input. No manifest context required. |
+| `collectDependentResources` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `ColorPickerBase` | variable | `src/ui/components/forms/color-picker/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `ColorPickerBaseProps` | typealias | `src/ui/components/forms/color-picker/standalone.tsx` | Props accepted by the ColorPickerBase standalone component. |
+| `ColorPickerField` | function | `src/ui/components/forms/color-picker/standalone.tsx` | Standalone ColorPickerField -- a color picker with optional swatches, alpha slider, and custom hex input. Works with plain React props. |
 | `ColorPickerFieldProps` | interface | `src/ui/components/forms/color-picker/standalone.tsx` | Props accepted by the ColorPickerField component. |
 | `colorToOklch` | function | `src/ui/tokens/color.ts` | Convert any supported color string to OKLCH values. Supports: hex (#rgb, #rrggbb), oklch strings ("L C H"), and oklch() CSS function. |
-| `Column` | function | `src/ui/components/layout/column/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ColumnBase` | function | `src/ui/components/layout/column/standalone.tsx` | Standalone Column -- a vertical flex container. No manifest context required. |
+| `ColumnBase` | function | `src/ui/components/layout/column/standalone.tsx` | Standalone Column -- a vertical flex container. Works with plain React props. |
 | `ColumnBaseProps` | interface | `src/ui/components/layout/column/standalone.tsx` | Props accepted by the ColumnBase standalone component. |
-| `ColumnConfig` | typealias | `src/ui/components/data/data-table/types.ts` | Inferred column configuration type. |
-| `columnConfigSchema` | variable | `src/ui/components/data/data-table/schema.ts` | Schema for individual column configuration. |
-| `ColumnDef` | interface | `src/ui/presets/types.ts` | A single column definition for the CRUD page table. |
-| `CommandPalette` | function | `src/ui/components/overlay/command-palette/component.tsx` | CommandPalette — search-driven command palette that renders static groups or fetches remote results, then dispatches manifest actions for the selected command. |
-| `CommandPaletteBase` | function | `src/ui/components/overlay/command-palette/standalone.tsx` | Standalone CommandPalette — a search-driven command list with keyboard navigation. No manifest context required. |
+| `CommandPaletteBase` | function | `src/ui/components/overlay/command-palette/standalone.tsx` | Standalone CommandPalette — a search-driven command list with keyboard navigation. Works with plain React props. |
 | `CommandPaletteBaseGroup` | interface | `src/ui/components/overlay/command-palette/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `CommandPaletteBaseItem` | interface | `src/ui/components/overlay/command-palette/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `CommandPaletteBaseProps` | interface | `src/ui/components/overlay/command-palette/standalone.tsx` | Props accepted by the CommandPaletteBase standalone component. |
-| `CommandPaletteConfig` | typealias | `src/ui/components/overlay/command-palette/types.ts` | Inferred config type for the CommandPalette component. |
-| `commandPaletteConfigSchema` | variable | `src/ui/components/overlay/command-palette/schema.ts` | Zod config schema for the CommandPalette component. A keyboard-driven overlay that groups commands, supports search with remote endpoints, tracks recent items, and dispatches actions on selection. |
-| `CommentSection` | function | `src/ui/components/communication/comment-section/component.tsx` | Manifest adapter — resolves data endpoint, wires actions, delegates to CommentSectionBase. |
-| `CommentSectionBase` | function | `src/ui/components/communication/comment-section/standalone.tsx` | Standalone CommentSection — threaded comment list with avatars, timestamps, optional delete actions, and a composable input slot. No manifest context required. |
+| `CommentSectionBase` | function | `src/ui/components/communication/comment-section/standalone.tsx` | Standalone CommentSection — threaded comment list with avatars, timestamps, optional delete actions, and a composable input slot. Works with plain React props. |
 | `CommentSectionBaseProps` | interface | `src/ui/components/communication/comment-section/standalone.tsx` | Props accepted by the CommentSectionBase standalone component. |
-| `CommentSectionConfig` | typealias | `src/ui/components/communication/comment-section/types.ts` | Inferred config type from the CommentSection Zod schema. |
-| `commentSectionConfigSchema` | variable | `src/ui/components/communication/comment-section/schema.ts` | Zod config schema for the CommentSection component. Renders a comment list with nested replies and an embedded rich input for posting new comments. |
-| `CompareView` | function | `src/ui/components/content/compare-view/component.tsx` | Manifest adapter — resolves config refs and delegates to CompareViewBase. |
-| `CompareViewBase` | function | `src/ui/components/content/compare-view/standalone.tsx` | Standalone CompareView — a side-by-side diff viewer for comparing two text blocks. No manifest context required. |
+| `CompareViewBase` | function | `src/ui/components/content/compare-view/standalone.tsx` | Standalone CompareView — a side-by-side diff viewer for comparing two text blocks. Works with plain React props. |
 | `CompareViewBaseProps` | interface | `src/ui/components/content/compare-view/standalone.tsx` | Props accepted by the CompareViewBase standalone component. |
-| `CompareViewConfig` | typealias | `src/ui/components/content/compare-view/types.ts` | Inferred config type from the CompareView Zod schema. |
-| `compareViewConfigSchema` | variable | `src/ui/components/content/compare-view/schema.ts` | Zod config schema for the CompareView component. Defines all manifest-settable fields for a side-by-side content comparison view with diff highlighting. |
-| `CompiledManifest` | interface | `src/ui/manifest/types.ts` | Runtime manifest shape produced by `compileManifest()`. |
-| `CompiledRoute` | interface | `src/ui/manifest/types.ts` | Runtime route shape produced by `compileManifest()`. |
-| `compileManifest` | function | `src/ui/manifest/compiler.ts` | Parse and compile a manifest into the runtime shape. |
-| `ComponentConfig` | typealias | `src/ui/manifest/types.ts` | Runtime config union for manifest-renderable components. |
-| `componentConfigSchema` | variable | `src/ui/manifest/schema.ts` | Union schema covering every component config Snapshot can render from a manifest. |
 | `ComponentDataResult` | interface | `src/ui/components/_base/use-component-data.ts` | Result returned by `useComponentData`. Provides the fetched data, loading/error states, and a refetch function. |
-| `ComponentGroupBase` | function | `src/ui/components/_base/component-group/standalone.tsx` | Standalone ComponentGroup — a simple wrapper for pre-rendered group content. No manifest context required. |
+| `ComponentGroupBase` | function | `src/ui/components/_base/component-group/standalone.tsx` | Standalone ComponentGroup — a simple wrapper for pre-rendered group content. Works with plain React props. |
 | `ComponentGroupBaseProps` | interface | `src/ui/components/_base/component-group/standalone.tsx` | Props accepted by the ComponentGroupBase standalone component. |
-| `ComponentRenderer` | function | `src/ui/manifest/renderer.tsx` | Renders a single component from its manifest config. |
-| `ComponentRendererProps` | interface | `src/ui/manifest/renderer.tsx` | Props for the ComponentRenderer component. |
-| `componentsConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the top-level `components` section of a manifest. |
 | `ComponentTokens` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `componentTokensSchema` | variable | `../frontend-contract/src/tokens/schema.ts` | Zod schema for validating component tokens schema. |
-| `ConfigDrivenComponent` | typealias | `src/ui/manifest/types.ts` | React component type that can participate in the config-driven manifest runtime. |
-| `ConfirmAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `confirmActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating confirm action schema. |
 | `ConfirmDialog` | function | `src/ui/actions/confirm.tsx` | Render the global confirmation dialog for requests queued through `useConfirmManager`. |
-| `ConfirmDialogBase` | function | `src/ui/components/overlay/confirm-dialog/standalone.tsx` | Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props. No manifest context required. |
+| `ConfirmDialogBase` | function | `src/ui/components/overlay/confirm-dialog/standalone.tsx` | Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props. Works with plain React props. |
 | `ConfirmDialogBaseProps` | interface | `src/ui/components/overlay/confirm-dialog/standalone.tsx` | Props accepted by the ConfirmDialogBase standalone component. |
-| `ConfirmDialogComponent` | function | `src/ui/components/overlay/confirm-dialog/component.tsx` | Manifest-driven confirmation dialog adapter. Resolves primitive values and actions from manifest config, then delegates all rendering to `ConfirmDialogBase`. |
-| `ConfirmDialogConfig` | typealias | `src/ui/components/overlay/confirm-dialog/types.ts` | Input config type for the ConfirmDialog component. |
-| `confirmDialogConfigSchema` | variable | `src/ui/components/overlay/confirm-dialog/schema.ts` | Overlay alias schema for manifest-driven confirmation dialogs. |
-| `ConfirmManager` | interface | `src/ui/actions/confirm.tsx` | Imperative API for opening a confirmation dialog from manifest actions or custom UI. |
+| `ConfirmManager` | interface | `src/ui/actions/confirm.tsx` | Imperative API for opening a confirmation dialog from app actions or custom UI. |
 | `ConfirmOptions` | typealias | `src/ui/actions/confirm.tsx` | Options accepted when opening a confirmation dialog. |
 | `ConfirmRequest` | interface | `src/ui/actions/confirm.tsx` | Internal confirm-dialog request stored in the atom-backed manager queue. |
-| `ContainerBase` | function | `src/ui/components/layout/container/standalone.tsx` | Standalone Container -- a centered, max-width-constrained wrapper. No manifest context required. |
+| `ContainerBase` | function | `src/ui/components/layout/container/standalone.tsx` | Standalone Container -- a centered, max-width-constrained wrapper. Works with plain React props. |
 | `ContainerBaseProps` | interface | `src/ui/components/layout/container/standalone.tsx` | Props accepted by the ContainerBase standalone component. |
-| `ContextMenu` | function | `src/ui/components/overlay/context-menu/component.tsx` | Manifest-driven context menu adapter. Resolves primitive values and actions from manifest config, handles visibility and state publishing, then delegates all rendering to `ContextMenuBase`. |
-| `ContextMenuBase` | function | `src/ui/components/overlay/context-menu/standalone.tsx` | Standalone ContextMenu — a right-click context menu with plain React props. No manifest context required. |
+| `ContextMenuBase` | function | `src/ui/components/overlay/context-menu/standalone.tsx` | Standalone ContextMenu — a right-click context menu with plain React props. Works with plain React props. |
 | `ContextMenuBaseEntry` | typealias | `src/ui/components/overlay/context-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `ContextMenuBaseItem` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `ContextMenuBaseLabel` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `ContextMenuBaseProps` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` | Props accepted by the ContextMenuBase standalone component. |
-| `ContextMenuConfig` | typealias | `src/ui/components/overlay/context-menu/types.ts` | Inferred config type for the ContextMenu component. |
-| `contextMenuConfigSchema` | variable | `src/ui/components/overlay/context-menu/schema.ts` | Zod schema for the ContextMenu component. Defines a right-click menu with styleable trigger, panel, item, label, and separator surfaces. Visibility can be driven by a boolean or a binding reference. |
+| `ContextMenuBaseSeparator` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `contrastRatio` | function | `src/ui/tokens/color.ts` | Calculate the WCAG contrast ratio between two supported color values. |
-| `CopyAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `CopyToClipboardAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `copyToClipboardActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating copy to clipboard action schema. |
-| `crudPage` | function | `src/ui/presets/crud-page.ts` | Builds a manifest `PageConfig` for a standard CRUD page. Consumers drop the result into their manifest's `pages` record: ```ts const manifest = {   pages: {     "/users": crudPage({       title: "Users",       listEndpoint: "GET /api/users",       createEndpoint: "POST /api/users",       deleteEndpoint: "DELETE /api/users/{id}",       columns: [         { key: "name", label: "Name" },         { key: "email", label: "Email" },         { key: "role", label: "Role", badge: true },       ],       createForm: {         fields: [           { key: "name", type: "text", label: "Name", required: true },           { key: "email", type: "email", label: "Email", required: true },         ],       },     }),   }, }; ``` |
-| `CrudPageOptions` | interface | `src/ui/presets/types.ts` | Options for the `crudPage` preset factory. Produces a full CRUD page with a data table, create/edit modals, and row actions. |
-| `crudPresetConfigSchema` | variable | `src/ui/presets/schemas.ts` | Validate preset config for a CRUD page assembled from list/form primitives. |
 | `CUSTOM_EMOJI_CSS` | variable | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | CSS for custom emoji sizing. Custom emojis render as inline images sized to match surrounding text. |
-| `customComponentDeclarationSchema` | variable | `src/ui/manifest/schema.ts` | Schema for a custom component declaration under `components.custom`. |
-| `customComponentPropSchema` | variable | `src/ui/manifest/schema.ts` | Schema for a declared prop on a manifest custom component registration. |
 | `CustomEmoji` | interface | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Shape of a custom emoji entry. |
-| `dashboardPage` | function | `src/ui/presets/dashboard-page.ts` | Builds a manifest `PageConfig` for a dashboard page. Consumers drop the result into their manifest's `pages` record: ```ts const manifest = {   pages: {     "/dashboard": dashboardPage({       title: "Overview",       stats: [         { label: "Total Users", endpoint: "GET /api/stats/users", valueKey: "count" },         { label: "Revenue", endpoint: "GET /api/stats/revenue", valueKey: "total", format: "currency" },         { label: "Orders", endpoint: "GET /api/stats/orders", valueKey: "total", format: "number" },         { label: "Conversion", endpoint: "GET /api/stats/conversion", valueKey: "rate", format: "percent" },       ],       recentActivity: "GET /api/activity",     }),   }, }; ``` |
-| `DashboardPageOptions` | interface | `src/ui/presets/types.ts` | Options for the `dashboardPage` preset factory. Produces a dashboard with stat cards and an optional activity feed. |
-| `dashboardPresetConfigSchema` | variable | `src/ui/presets/schemas.ts` | Validate preset config for a dashboard page with stats, charts, and activity sections. |
 | `dataSourceSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating data source schema. |
-| `DataTable` | function | `src/ui/components/data/data-table/component.tsx` | Config-driven DataTable component. For simple tables (no drag-and-drop, virtual scroll, context menus, or expandable rows), delegates to the standalone DataTableBase. For advanced features, falls back to the full manifest-based rendering. |
-| `DataTableBase` | function | `src/ui/components/data/data-table/standalone.tsx` | Standalone DataTable — feature-rich data table with sorting, pagination, selection, and search. No manifest context required. |
+| `DataTableBase` | function | `src/ui/components/data/data-table/standalone.tsx` | Standalone DataTable — feature-rich data table with sorting, pagination, selection, and search. Works with plain React props. |
+| `DataTableBaseBulkAction` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DataTableBaseColumn` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `DataTableBasePagination` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DataTableBaseProps` | interface | `src/ui/components/data/data-table/standalone.tsx` | Props accepted by the DataTableBase standalone component. |
-| `DataTableConfig` | typealias | `src/ui/components/data/data-table/types.ts` | Inferred DataTable configuration type from the Zod schema. |
-| `dataTableConfigSchema` | variable | `src/ui/components/data/data-table/schema.ts` | Zod schema for the DataTable component configuration. Defines a config-driven data table with sorting, pagination, filtering, selection, search, row actions, and bulk actions. |
-| `DatePicker` | function | `src/ui/components/forms/date-picker/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `DatePickerConfig` | typealias | `src/ui/components/forms/date-picker/types.ts` | Config for the manifest-driven date picker component. |
-| `datePickerConfigSchema` | variable | `src/ui/components/forms/date-picker/schema.ts` | Schema for date picker components covering single, range, and multi-date selection. |
-| `DatePickerField` | function | `src/ui/components/forms/date-picker/standalone.tsx` | Standalone DatePickerField -- date picker supporting single, range, and multiple selection modes with presets and disabled dates. No manifest context required. |
+| `DataTableBaseRowAction` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `DataTableBaseSort` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `DatePickerBase` | variable | `src/ui/components/forms/date-picker/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `DatePickerBaseProps` | typealias | `src/ui/components/forms/date-picker/standalone.tsx` | Props accepted by the DatePickerBase standalone component. |
+| `DatePickerDisabledEntry` | interface | `src/ui/components/forms/date-picker/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `DatePickerField` | function | `src/ui/components/forms/date-picker/standalone.tsx` | Standalone DatePickerField -- date picker supporting single, range, and multiple selection modes with presets and disabled dates. Works with plain React props. |
 | `DatePickerFieldProps` | interface | `src/ui/components/forms/date-picker/standalone.tsx` | Props accepted by the DatePickerField component. |
+| `DatePickerPreset` | interface | `src/ui/components/forms/date-picker/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `debounceAction` | function | `src/ui/actions/timing.ts` | Debounce async or sync action execution by key and resolve all pending callers with the final invocation result. |
-| `DefaultErrorBase` | function | `src/ui/components/feedback/default-error/standalone.tsx` | Standalone DefaultError — renders an error feedback card with optional retry button. No manifest context required. |
+| `DefaultErrorBase` | function | `src/ui/components/feedback/default-error/standalone.tsx` | Standalone DefaultError — renders an error feedback card with optional retry button. Works with plain React props. |
 | `DefaultErrorBaseProps` | interface | `src/ui/components/feedback/default-error/standalone.tsx` | Props accepted by the DefaultErrorBase standalone component. |
-| `DefaultLoadingBase` | function | `src/ui/components/feedback/default-loading/standalone.tsx` | Standalone DefaultLoading — renders a loading spinner with label. No manifest context required. |
+| `DefaultLoadingBase` | function | `src/ui/components/feedback/default-loading/standalone.tsx` | Standalone DefaultLoading — renders a loading spinner with label. Works with plain React props. |
 | `DefaultLoadingBaseProps` | interface | `src/ui/components/feedback/default-loading/standalone.tsx` | Props accepted by the DefaultLoadingBase standalone component. |
-| `DefaultNotFoundBase` | function | `src/ui/components/feedback/default-not-found/standalone.tsx` | Standalone DefaultNotFound — renders a 404 page with title and description. No manifest context required. |
+| `DefaultNotFoundBase` | function | `src/ui/components/feedback/default-not-found/standalone.tsx` | Standalone DefaultNotFound — renders a 404 page with title and description. Works with plain React props. |
 | `DefaultNotFoundBaseProps` | interface | `src/ui/components/feedback/default-not-found/standalone.tsx` | Props accepted by the DefaultNotFoundBase standalone component. |
-| `DefaultOfflineBase` | function | `src/ui/components/feedback/default-offline/standalone.tsx` | Standalone DefaultOffline — renders an offline status banner. No manifest context required. |
+| `DefaultOfflineBase` | function | `src/ui/components/feedback/default-offline/standalone.tsx` | Standalone DefaultOffline — renders an offline status banner. Works with plain React props. |
 | `DefaultOfflineBaseProps` | interface | `src/ui/components/feedback/default-offline/standalone.tsx` | Props accepted by the DefaultOfflineBase standalone component. |
 | `defineFlavor` | function | `src/ui/tokens/flavors.ts` | Define and register a new flavor. If a flavor with the same name already exists, it is replaced. |
-| `defineManifest` | function | `src/ui/manifest/compiler.ts` | Define a manifest without compiling it. |
 | `deriveDarkVariant` | function | `src/ui/tokens/color.ts` | Derive a dark mode variant of a light color. Adjusts lightness and chroma for dark mode readability: - If the color is light (L > 0.5), reduce lightness moderately - If the color is dark (L <= 0.5), increase lightness for dark backgrounds - Boost chroma slightly for vibrancy in dark mode |
 | `deriveForeground` | function | `src/ui/tokens/color.ts` | Derive a foreground color that passes WCAG AA contrast (4.5:1) against the given background color. Returns a light or dark foreground. |
-| `DetailCard` | function | `src/ui/components/data/detail-card/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `DetailCardBase` | function | `src/ui/components/data/detail-card/standalone.tsx` | Standalone DetailCard — data-driven detail view with formatted fields and header actions. No manifest context required. |
+| `DetailCardBase` | function | `src/ui/components/data/detail-card/standalone.tsx` | Standalone DetailCard — data-driven detail view with formatted fields and header actions. Works with plain React props. |
 | `DetailCardBaseAction` | interface | `src/ui/components/data/detail-card/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DetailCardBaseField` | interface | `src/ui/components/data/detail-card/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DetailCardBaseProps` | interface | `src/ui/components/data/detail-card/standalone.tsx` | Props accepted by the DetailCardBase standalone component. |
-| `DetailCardConfig` | typealias | `src/ui/components/data/detail-card/schema.ts` | DetailCard configuration type inferred from the schema. |
-| `detailCardConfigSchema` | variable | `src/ui/components/data/detail-card/schema.ts` | Zod schema for DetailCard component configuration. The detail card displays a single record's fields in a key-value layout. Used in drawers, modals, and detail pages. |
 | `detectPlatform` | function | `src/ui/components/content/link-embed/platform.ts` | Detects the platform from a URL and extracts embed info. |
-| `DividerBase` | function | `src/ui/components/primitives/divider/standalone.tsx` | Standalone Divider — renders a horizontal or vertical separator line, optionally with a centered label. No manifest context required. |
+| `DividerBase` | function | `src/ui/components/primitives/divider/standalone.tsx` | Standalone Divider — renders a horizontal or vertical separator line, optionally with a centered label. Works with plain React props. |
 | `DividerBaseProps` | interface | `src/ui/components/primitives/divider/standalone.tsx` | Props accepted by the DividerBase standalone component. |
-| `DownloadAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `downloadActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating download action schema. |
-| `DrawerBase` | function | `src/ui/components/overlay/drawer/standalone.tsx` | Standalone Drawer — a sliding panel overlay with plain React props. No manifest context required. |
+| `DrawerBase` | function | `src/ui/components/overlay/drawer/standalone.tsx` | Standalone Drawer — a sliding panel overlay with plain React props. Works with plain React props. |
 | `DrawerBaseFooterAction` | interface | `src/ui/components/overlay/drawer/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DrawerBaseProps` | interface | `src/ui/components/overlay/drawer/standalone.tsx` | Props accepted by the DrawerBase standalone component. |
-| `DrawerComponent` | function | `src/ui/components/overlay/drawer/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `DrawerConfig` | typealias | `src/ui/components/overlay/drawer/schema.ts` | Inferred type for drawer config. |
-| `drawerConfigSchema` | variable | `src/ui/components/overlay/drawer/schema.ts` | Zod schema for drawer component config. Drawers are slide-in panels from the left or right edge of the screen. Like modals, they are opened/closed via the modal manager. |
-| `DropdownMenuBase` | function | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Standalone DropdownMenu — a button-triggered floating menu with plain React props. No manifest context required. |
+| `DropdownMenuBase` | function | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Standalone DropdownMenu — a button-triggered floating menu with plain React props. Works with plain React props. |
 | `DropdownMenuBaseEntry` | typealias | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DropdownMenuBaseItem` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
+| `DropdownMenuBaseLabel` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DropdownMenuBaseProps` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Props accepted by the DropdownMenuBase standalone component. |
+| `DropdownMenuBaseSeparator` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DropdownMenuBaseTrigger` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `EmbedBase` | function | `src/ui/components/media/embed/standalone.tsx` | Standalone Embed — a responsive iframe container for embedding external content. No manifest context required. |
+| `EmbedBase` | function | `src/ui/components/media/embed/standalone.tsx` | Standalone Embed — a responsive iframe container for embedding external content. Works with plain React props. |
 | `EmbedBaseProps` | interface | `src/ui/components/media/embed/standalone.tsx` | Props accepted by the EmbedBase standalone component. |
-| `EmojiPicker` | function | `src/ui/components/communication/emoji-picker/component.tsx` | Manifest adapter — resolves custom emoji data, wires actions/publish, delegates to EmojiPickerBase. |
-| `EmojiPickerBase` | function | `src/ui/components/communication/emoji-picker/standalone.tsx` | Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji support. No manifest context required. |
+| `EmojiPickerBase` | function | `src/ui/components/communication/emoji-picker/standalone.tsx` | Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji support. Works with plain React props. |
 | `EmojiPickerBaseProps` | interface | `src/ui/components/communication/emoji-picker/standalone.tsx` | Props accepted by the EmojiPickerBase standalone component. |
-| `EmojiPickerConfig` | typealias | `src/ui/components/communication/emoji-picker/types.ts` | Inferred config type from the EmojiPicker Zod schema. |
-| `emojiPickerConfigSchema` | variable | `src/ui/components/communication/emoji-picker/schema.ts` | Zod config schema for the EmojiPicker component. Renders a searchable grid of emojis organized by category. |
-| `EmptyStateBase` | function | `src/ui/components/data/empty-state/standalone.tsx` | Standalone EmptyState — a centered message with optional icon and action. No manifest context required. |
+| `EmptyStateBase` | function | `src/ui/components/data/empty-state/standalone.tsx` | Standalone EmptyState — a centered message with optional icon and action. Works with plain React props. |
 | `EmptyStateBaseProps` | interface | `src/ui/components/data/empty-state/standalone.tsx` | Props accepted by the EmptyStateBase standalone component. |
-| `EmptyStateDef` | interface | `src/ui/presets/types.ts` | Empty-state content shown by preset-generated pages. |
+| `EndpointTarget` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
 | `endpointTargetSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating endpoint target schema. |
-| `EntityPicker` | function | `src/ui/components/data/entity-picker/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `EntityPickerBase` | function | `src/ui/components/data/entity-picker/standalone.tsx` | Standalone EntityPicker — dropdown with search, single/multi select. No manifest context required. |
+| `EntityPickerBase` | function | `src/ui/components/data/entity-picker/standalone.tsx` | Standalone EntityPicker — dropdown with search, single/multi select. Works with plain React props. |
 | `EntityPickerBaseProps` | interface | `src/ui/components/data/entity-picker/standalone.tsx` | Props accepted by the EntityPickerBase standalone component. |
-| `EntityPickerConfig` | typealias | `src/ui/components/data/entity-picker/types.ts` | Inferred config type from the EntityPicker Zod schema. |
-| `entityPickerConfigSchema` | variable | `src/ui/components/data/entity-picker/schema.ts` | Zod config schema for the EntityPicker component. A searchable dropdown for selecting entities (users, documents, items) from an API endpoint. Supports single and multi-select. |
 | `EntityPickerEntity` | interface | `src/ui/components/data/entity-picker/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `expandPreset` | function | `src/ui/presets/expand.ts` | Validate a named preset config and expand it into the equivalent page config. |
 | `ExprRef` | interface | `../frontend-contract/src/refs/from.ts` | Type definition exported by the Snapshot UI runtime. |
-| `FavoriteButton` | function | `src/ui/components/data/favorite-button/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `FavoriteButtonBase` | function | `src/ui/components/data/favorite-button/standalone.tsx` | Standalone FavoriteButton — a toggle button with a star icon. No manifest context required. |
+| `extractResourceRefs` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `FavoriteButtonBase` | function | `src/ui/components/data/favorite-button/standalone.tsx` | Standalone FavoriteButton — a toggle button with a star icon. Works with plain React props. |
 | `FavoriteButtonBaseProps` | interface | `src/ui/components/data/favorite-button/standalone.tsx` | Props accepted by the FavoriteButtonBase standalone component. |
-| `FavoriteButtonConfig` | typealias | `src/ui/components/data/favorite-button/types.ts` | Inferred config type from the FavoriteButton Zod schema. |
-| `favoriteButtonConfigSchema` | variable | `src/ui/components/data/favorite-button/schema.ts` | Zod config schema for the FavoriteButton component. Defines all manifest-settable fields for a star toggle button used to mark items as favorites. |
-| `Feed` | function | `src/ui/components/data/feed/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `FeedBase` | function | `src/ui/components/data/feed/standalone.tsx` | Standalone Feed — feed/activity list with grouping, pagination, and live updates. No manifest context required. |
+| `FeedBase` | function | `src/ui/components/data/feed/standalone.tsx` | Standalone Feed — feed/activity list with grouping, pagination, and live updates. Works with plain React props. |
 | `FeedBaseItem` | interface | `src/ui/components/data/feed/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FeedBaseItemAction` | interface | `src/ui/components/data/feed/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FeedBaseProps` | interface | `src/ui/components/data/feed/standalone.tsx` | Props accepted by the FeedBase standalone component. |
-| `FeedConfig` | typealias | `src/ui/components/data/feed/types.ts` | Inferred type for the Feed component config (from Zod schema). |
-| `FeedItem` | interface | `src/ui/components/data/feed/types.ts` | A single resolved feed item for rendering. |
-| `feedSchema` | variable | `src/ui/components/data/feed/schema.ts` | Zod schema for the Feed component configuration. Renders a scrollable activity/event stream from an endpoint or from-ref. Supports avatar, title, description, timestamp, badge fields, pagination, and publishes the selected item to the page context when `id` is set. |
-| `FieldConfig` | typealias | `src/ui/components/forms/auto-form/types.ts` | Inferred type for a single field configuration. |
-| `fieldConfigSchema` | variable | `src/ui/components/forms/auto-form/schema.ts` | Schema for an individual field configuration. |
-| `FieldErrors` | typealias | `src/ui/components/forms/auto-form/types.ts` | Per-field validation error. |
-| `FileUploaderBase` | function | `src/ui/components/content/file-uploader/standalone.tsx` | Standalone FileUploader — a file upload component with dropzone, button, and compact variants. No manifest context required. |
+| `FileUploaderBase` | function | `src/ui/components/content/file-uploader/standalone.tsx` | Standalone FileUploader — a file upload component with dropzone, button, and compact variants. Works with plain React props. |
 | `FileUploaderBaseProps` | interface | `src/ui/components/content/file-uploader/standalone.tsx` | Props accepted by the FileUploaderBase standalone component. |
-| `FilterBar` | function | `src/ui/components/data/filter-bar/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `FilterBarBase` | function | `src/ui/components/data/filter-bar/standalone.tsx` | Standalone FilterBar — search + filter dropdowns + active pills. No manifest context required. |
+| `FilterBarBase` | function | `src/ui/components/data/filter-bar/standalone.tsx` | Standalone FilterBar — search + filter dropdowns + active pills. Works with plain React props. |
 | `FilterBarBaseProps` | interface | `src/ui/components/data/filter-bar/standalone.tsx` | Props accepted by the FilterBarBase standalone component. |
-| `FilterBarConfig` | typealias | `src/ui/components/data/filter-bar/types.ts` | Inferred config type for the FilterBar component. |
-| `filterBarConfigSchema` | variable | `src/ui/components/data/filter-bar/schema.ts` | Zod schema for validating filter bar config schema. |
 | `FilterBarFilter` | interface | `src/ui/components/data/filter-bar/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `FilterDef` | interface | `src/ui/presets/types.ts` | A filter definition for the CRUD page toolbar. |
-| `FilterOption` | interface | `src/ui/presets/types.ts` | A filter option entry. |
 | `Flavor` | interface | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `FloatingMenuBase` | function | `src/ui/components/primitives/floating-menu/standalone.tsx` | Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation, and pre-resolved items. No manifest context required. |
+| `FloatingMenuBase` | function | `src/ui/components/primitives/floating-menu/standalone.tsx` | Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation, and pre-resolved items. Works with plain React props. |
+| `FloatingMenuBaseEntry` | typealias | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseItem` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseLabel` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseProps` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Props accepted by the FloatingMenuBase standalone component. |
 | `FloatingMenuBaseSeparator` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `FontConfig` | typealias | `../frontend-contract/src/tokens/types.ts` | Manifest configuration type for font config. |
-| `fontSchema` | variable | `../frontend-contract/src/tokens/schema.ts` | Zod schema for validating font schema. |
-| `FormDef` | interface | `src/ui/presets/types.ts` | A form definition used in CRUD create/update modals and settings tabs. |
-| `FormFieldDef` | interface | `src/ui/presets/types.ts` | A single form field definition. |
-| `FormFieldOption` | interface | `src/ui/presets/types.ts` | An option entry for select/radio form fields. |
+| `FontConfig` | typealias | `../frontend-contract/src/tokens/types.ts` | Configuration type for font config. |
 | `FromRef` | interface | `../frontend-contract/src/refs/from.ts` | Type definition exported by the Snapshot UI runtime. |
-| `fromRefSchema` | variable | `../frontend-contract/src/refs/schema.ts` | Zod schema for validating from ref schema. |
-| `generateBreadcrumbs` | function | `src/ui/manifest/breadcrumbs.ts` | Generate breadcrumb items from the current matched route hierarchy. |
-| `generateJsonSchema` | function | `src/ui/manifest/json-schema.ts` | Generate a JSON Schema for snapshot manifests. The schema is intentionally conservative and focuses on the public top-level manifest contract so editors can provide autocomplete and inline validation without requiring Snapshot's full runtime schema registry at generation time. |
 | `getAllFlavors` | function | `src/ui/tokens/flavors.ts` | Get all registered flavors as a record. |
 | `getFlavor` | function | `src/ui/tokens/flavors.ts` | Retrieve a registered flavor by name. |
-| `getRegisteredClient` | function | `src/api/client.ts` | Look up a previously registered custom client factory. |
-| `getRegisteredGuards` | function | `src/ui/manifest/guard-registry.ts` | List the names of all currently registered route guards. |
-| `getRegisteredLayouts` | function | `src/ui/layouts/registry.tsx` | List the names of all currently registered manifest layouts. |
-| `getRegisteredSchemaTypes` | function | `src/ui/manifest/schema.ts` | Return every manifest component type with a registered config schema. |
-| `getRegisteredWorkflowAction` | function | `src/ui/workflows/registry.ts` | Retrieve a registered runtime handler for a custom workflow action type. |
+| `getResourceInvalidationTargets` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
 | `getSortableStyle` | function | `src/ui/hooks/use-drag-drop.ts` | CSS transform helper for sortable items. Converts the dnd-kit transform into a CSS transform string. |
-| `GifEntry` | interface | `src/ui/components/communication/gif-picker/types.ts` | Shape of a GIF entry. |
-| `GifPicker` | function | `src/ui/components/communication/gif-picker/component.tsx` | Manifest adapter — resolves config refs, wires actions/publish, delegates to GifPickerBase. |
-| `GifPickerBase` | function | `src/ui/components/communication/gif-picker/standalone.tsx` | Standalone GifPicker — searchable GIF grid with debounced search, loading states, and optional attribution. No manifest context required. |
+| `GifPickerBase` | function | `src/ui/components/communication/gif-picker/standalone.tsx` | Standalone GifPicker — searchable GIF grid with debounced search, loading states, and optional attribution. Works with plain React props. |
 | `GifPickerBaseProps` | interface | `src/ui/components/communication/gif-picker/standalone.tsx` | Props accepted by the GifPickerBase standalone component. |
-| `GifPickerConfig` | typealias | `src/ui/components/communication/gif-picker/types.ts` | Inferred config type from the GifPicker Zod schema. |
-| `gifPickerConfigSchema` | variable | `src/ui/components/communication/gif-picker/schema.ts` | Zod config schema for the GifPicker component. Searchable GIF picker that queries a GIF API (Giphy/Tenor) and displays results in a masonry-style grid. The component expects a backend proxy endpoint that handles the actual API key and returns GIF results. This avoids exposing API keys in the frontend. |
-| `GlobalConfig` | typealias | `src/ui/context/types.ts` | Global state definition from the manifest. This now aliases the shared state config used by the runtime. |
-| `GridBase` | function | `src/ui/components/layout/grid/standalone.tsx` | Standalone Grid -- a CSS grid container. No manifest context required. |
+| `GlobalConfig` | typealias | `src/ui/context/types.ts` | Global state definition for the UI context. This now aliases the shared state config used by the runtime. |
+| `GridBase` | function | `src/ui/components/layout/grid/standalone.tsx` | Standalone Grid -- a CSS grid container. Works with plain React props. |
 | `GridBaseProps` | interface | `src/ui/components/layout/grid/standalone.tsx` | Props accepted by the GridBase standalone component. |
-| `Heading` | function | `src/ui/components/content/heading/component.tsx` | Manifest adapter — resolves template text, locale, and route context, then delegates to HeadingBase. |
-| `HeadingBase` | function | `src/ui/components/content/heading/standalone.tsx` | Standalone Heading — a styled heading element (h1-h6) that works with plain React props. No manifest context required. |
+| `HeadingBase` | function | `src/ui/components/content/heading/standalone.tsx` | Standalone Heading — a styled heading element (h1-h6) that works with plain React props. Works with plain React props. |
 | `HeadingBaseProps` | interface | `src/ui/components/content/heading/standalone.tsx` | Props accepted by the HeadingBase standalone component. |
-| `HeadingConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `headingConfigSchema` — defaulted fields are optional. |
-| `headingConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the built-in `heading` component. |
 | `hexToOklch` | function | `src/ui/tokens/color.ts` | Convert a hex color string to OKLCH values. |
-| `HighlightedText` | function | `src/ui/components/data/highlighted-text/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `HighlightedTextBase` | function | `src/ui/components/data/highlighted-text/standalone.tsx` | Standalone HighlightedText — renders text with search query highlighting. No manifest context required. |
+| `HighlightedTextBase` | function | `src/ui/components/data/highlighted-text/standalone.tsx` | Standalone HighlightedText — renders text with search query highlighting. Works with plain React props. |
 | `HighlightedTextBaseProps` | interface | `src/ui/components/data/highlighted-text/standalone.tsx` | Props accepted by the HighlightedTextBase standalone component. |
-| `HighlightedTextConfig` | typealias | `src/ui/components/data/highlighted-text/types.ts` | Inferred config type from the HighlightedText Zod schema. |
-| `highlightedTextConfigSchema` | variable | `src/ui/components/data/highlighted-text/schema.ts` | Zod config schema for the HighlightedText component. Renders text with search query highlighting. Matching portions are wrapped in `<mark>` elements with a configurable highlight color. |
-| `HoverCardBase` | function | `src/ui/components/overlay/hover-card/standalone.tsx` | Standalone HoverCard — a floating panel that appears on hover with plain React props. No manifest context required. |
+| `HoverCardBase` | function | `src/ui/components/overlay/hover-card/standalone.tsx` | Standalone HoverCard — a floating panel that appears on hover with plain React props. Works with plain React props. |
 | `HoverCardBaseProps` | interface | `src/ui/components/overlay/hover-card/standalone.tsx` | Props accepted by the HoverCardBase standalone component. |
 | `hslToOklch` | function | `src/ui/tokens/color.ts` | Convert HSL values to OKLCH. |
+| `HttpMethod` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
 | `httpMethodSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating http method schema. |
 | `Icon` | function | `src/ui/icons/icon.tsx` | Render a Snapshot icon from the built-in icon registry. |
 | `ICON_PATHS` | variable | `src/ui/icons/paths.ts` | SVG inner content for Lucide icons. Each entry maps a kebab-case icon name to the SVG child elements (path, circle, line, rect, polyline, etc.) that belong inside a 24x24 `stroke="currentColor"` SVG container. Source: https://lucide.dev — MIT-licensed. |
-| `IconButtonBase` | function | `src/ui/components/forms/icon-button/standalone.tsx` | Standalone IconButtonBase -- an icon-only button with configurable shape, size, and variant. No manifest context required. |
+| `IconButtonBase` | function | `src/ui/components/forms/icon-button/standalone.tsx` | Standalone IconButtonBase -- an icon-only button with configurable shape, size, and variant. Works with plain React props. |
 | `IconButtonBaseProps` | interface | `src/ui/components/forms/icon-button/standalone.tsx` | Props accepted by the IconButtonBase standalone component. |
 | `IconProps` | interface | `src/ui/icons/icon.tsx` | Props for the {@link Icon} component. |
-| `IfWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `injectStyleSheet` | function | `src/ui/manifest/app.tsx` | Inject or update a stylesheet in the document head. |
-| `InlineEdit` | function | `src/ui/components/forms/inline-edit/component.tsx` | InlineEdit component — click-to-edit text field. Toggles between a display mode and an edit mode. Enter or blur saves the value; Escape reverts to the original value when `cancelOnEscape` is enabled. |
-| `InlineEditConfig` | typealias | `src/ui/components/forms/inline-edit/types.ts` | Inferred config type for the InlineEdit component. |
-| `inlineEditConfigSchema` | variable | `src/ui/components/forms/inline-edit/schema.ts` | Zod config schema for the InlineEdit component. A click-to-edit text field that toggles between display and edit modes. Publishes `{ value, editing }` to the page context. |
-| `InlineEditField` | function | `src/ui/components/forms/inline-edit/standalone.tsx` | Standalone InlineEditField -- a click-to-edit text field that toggles between display and input modes. No manifest context required. |
+| `InlineEditBase` | variable | `src/ui/components/forms/inline-edit/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `InlineEditBaseProps` | typealias | `src/ui/components/forms/inline-edit/standalone.tsx` | Props accepted by the InlineEditBase standalone component. |
+| `InlineEditField` | function | `src/ui/components/forms/inline-edit/standalone.tsx` | Standalone InlineEditField -- a click-to-edit text field that toggles between display and input modes. Works with plain React props. |
 | `InlineEditFieldProps` | interface | `src/ui/components/forms/inline-edit/standalone.tsx` | Props accepted by the InlineEditField component. |
-| `Input` | function | `src/ui/components/forms/input/component.tsx` | Manifest adapter — resolves config refs and actions, delegates to InputField. |
-| `InputConfig` | typealias | `src/ui/components/forms/input/types.ts` | Inferred config type from the Input Zod schema. |
-| `inputConfigSchema` | variable | `src/ui/components/forms/input/schema.ts` | Zod config schema for the Input component. Defines a standalone text input field with label, placeholder, validation, and optional icon. |
-| `InputField` | function | `src/ui/components/forms/input/standalone.tsx` | Standalone InputField — a complete form field (label + input + helper/error) that works with plain React props. No manifest context required. |
+| `InputBase` | variable | `src/ui/components/forms/input/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `InputBaseProps` | typealias | `src/ui/components/forms/input/standalone.tsx` | Props accepted by the InputBase standalone component. |
+| `InputControl` | function | `src/ui/components/forms/input/control.tsx` | Low-level styled input element with surface resolution and state management. Used internally by InputField and other components that need a styled `<input>`. Works with plain React props. |
+| `InputControlProps` | interface | `src/ui/components/forms/input/types.ts` | Props accepted by the InputControl component. |
+| `InputField` | function | `src/ui/components/forms/input/standalone.tsx` | Standalone InputField — a complete form field (label + input + helper/error) that works with plain React props. Works with plain React props. |
 | `InputFieldProps` | interface | `src/ui/components/forms/input/standalone.tsx` | Props accepted by the InputField component. |
 | `interpolate` | function | `src/ui/actions/interpolate.ts` | Replace `{key}` placeholders with values from context. Supports nested paths: `{user.name}`, `{result.id}`. Missing keys are preserved as-is: `{unknown}` stays `{unknown}`. |
 | `isFromRef` | variable | `src/ui/context/utils.ts` | Type guard for Snapshot binding references resolved from page, app, or resource state. |
+| `isOptimisticResourceTarget` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `isQueryKeyInvalidationTarget` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
 | `isResourceRef` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
-| `KanbanBase` | function | `src/ui/components/workflow/kanban/standalone.tsx` | Standalone KanbanBase — renders a multi-column board with cards, WIP limits, assignee avatars, priority indicators, and optional drag-and-drop reordering. No manifest context required. |
+| `KanbanBase` | function | `src/ui/components/workflow/kanban/standalone.tsx` | Standalone KanbanBase — renders a multi-column board with cards, WIP limits, assignee avatars, priority indicators, and optional drag-and-drop reordering. Works with plain React props. |
 | `KanbanBaseProps` | interface | `src/ui/components/workflow/kanban/standalone.tsx` | Props accepted by the KanbanBase standalone component. |
 | `KanbanColumnEntry` | interface | `src/ui/components/workflow/kanban/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `Layout` | function | `src/ui/components/layout/layout/component.tsx` | Manifest adapter — resolves registered custom layouts, then delegates to LayoutBase for built-in variants. |
-| `LayoutBase` | function | `src/ui/components/layout/layout/standalone.tsx` | Standalone Layout -- a layout shell component that wraps page content. Renders one of six layout variants without manifest context. |
+| `LayoutBase` | function | `src/ui/components/layout/layout/standalone.tsx` | Standalone Layout -- a layout shell component that wraps page content. Renders one of six layout variants with plain React props. |
 | `LayoutBaseProps` | interface | `src/ui/components/layout/layout/standalone.tsx` | Props accepted by the LayoutBase standalone component. |
 | `LayoutBaseSlots` | typealias | `src/ui/components/layout/layout/standalone.tsx` | Named slot content map for slot-aware layouts. |
 | `LayoutBaseVariant` | typealias | `src/ui/components/layout/layout/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `LayoutColumnConfig` | typealias | `src/ui/components/layout/column/types.ts` | Inferred config type for the Column layout component. |
-| `layoutColumnConfigSchema` | variable | `src/ui/components/layout/column/schema.ts` | Zod config schema for the Column layout component. Defines a vertical flex container with responsive gap, alignment, justify, overflow, and max-height options. |
-| `LayoutConfig` | typealias | `src/ui/components/layout/layout/schema.ts` | Inferred layout config type from the Zod schema. |
-| `layoutConfigSchema` | variable | `src/ui/components/layout/layout/schema.ts` | Zod schema for layout component configuration. Defines the layout shell that wraps page content. |
-| `LayoutProps` | interface | `src/ui/components/layout/layout/types.ts` | Props for the Layout component. |
-| `LayoutVariant` | typealias | `src/ui/components/layout/layout/types.ts` | Layout variant type extracted from the schema. |
-| `LinkBase` | function | `src/ui/components/primitives/link/standalone.tsx` | Standalone Link — renders a styled anchor element with optional icon and badge. No manifest context required. |
+| `LinkBase` | function | `src/ui/components/primitives/link/standalone.tsx` | Standalone Link — renders a styled anchor element with optional icon and badge. Works with plain React props. |
 | `LinkBaseProps` | interface | `src/ui/components/primitives/link/standalone.tsx` | Props accepted by the LinkBase standalone component. |
-| `LinkEmbed` | function | `src/ui/components/content/link-embed/component.tsx` | Manifest adapter — resolves config refs and delegates to LinkEmbedBase. |
-| `LinkEmbedBase` | function | `src/ui/components/content/link-embed/standalone.tsx` | Standalone LinkEmbed — renders rich link previews with platform-specific embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card. No manifest context required. |
+| `LinkEmbedBase` | function | `src/ui/components/content/link-embed/standalone.tsx` | Standalone LinkEmbed — renders rich link previews with platform-specific embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card. Works with plain React props. |
 | `LinkEmbedBaseProps` | interface | `src/ui/components/content/link-embed/standalone.tsx` | Props accepted by the LinkEmbedBase standalone component. |
-| `LinkEmbedConfig` | typealias | `src/ui/components/content/link-embed/types.ts` | Inferred config type from the LinkEmbed Zod schema. |
-| `linkEmbedConfigSchema` | variable | `src/ui/components/content/link-embed/schema.ts` | Zod config schema for the LinkEmbed component. Renders rich URL previews with platform-specific renderers for YouTube, Instagram, TikTok, Twitter/X, and generic Open Graph cards. Also supports inline GIF embeds. |
 | `LinkEmbedMeta` | interface | `src/ui/components/content/link-embed/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `ListBase` | function | `src/ui/components/data/list/standalone.tsx` | Standalone List — renders a vertical list of items with optional icons, descriptions, badges, and click actions. No manifest context required. |
+| `ListBase` | function | `src/ui/components/data/list/standalone.tsx` | Standalone List — renders a vertical list of items with optional icons, descriptions, badges, and click actions. Works with plain React props. |
 | `ListBaseItem` | interface | `src/ui/components/data/list/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `ListBaseProps` | interface | `src/ui/components/data/list/standalone.tsx` | Props accepted by the ListBase standalone component. |
-| `LocationInput` | function | `src/ui/components/forms/location-input/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `LocationInputConfig` | typealias | `src/ui/components/forms/location-input/types.ts` | Config for the manifest-driven location input component. |
-| `locationInputConfigSchema` | variable | `src/ui/components/forms/location-input/schema.ts` | Zod config schema for the LocationInput component. Geocode autocomplete input that searches a backend endpoint, displays matching locations in a dropdown, and extracts coordinates on selection. Publishes `{ name, lat, lng, address }`. |
-| `LocationInputField` | function | `src/ui/components/forms/location-input/standalone.tsx` | Standalone LocationInputField -- a location search input with results dropdown and optional Google Maps link. No manifest context required. |
+| `LocationInputBase` | variable | `src/ui/components/forms/location-input/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `LocationInputBaseProps` | typealias | `src/ui/components/forms/location-input/standalone.tsx` | Props accepted by the LocationInputBase standalone component. |
+| `LocationInputField` | function | `src/ui/components/forms/location-input/standalone.tsx` | Standalone LocationInputField -- a location search input with results dropdown and optional Google Maps link. Works with plain React props. |
 | `LocationInputFieldProps` | interface | `src/ui/components/forms/location-input/standalone.tsx` | Props accepted by the LocationInputField component. |
 | `LocationResult` | interface | `src/ui/components/forms/location-input/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `LogAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `ManifestApp` | function | `src/ui/manifest/app.tsx` | Render the manifest-driven application shell. |
-| `ManifestAppProps` | interface | `src/ui/manifest/types.ts` | Props accepted by the `ManifestApp` component. |
-| `ManifestConfig` | typealias | `src/ui/manifest/types.ts` | Raw manifest input shape accepted by `parseManifest()` before defaults are applied during compilation. |
-| `manifestConfigSchema` | variable | `src/ui/manifest/schema.ts` | Top-level schema for `snapshot.manifest.json`. |
-| `ManifestResourceLoader` | typealias | `src/ui/manifest/types.ts` | Function used to override loading for a manifest resource. |
-| `ManifestResourceLoaderContext` | interface | `src/ui/manifest/types.ts` | Context passed to a custom manifest resource loader. |
-| `ManifestRuntimeExtensions` | interface | `src/ui/manifest/types.ts` | Runtime-only extension hooks attached to a manifest before compilation. |
-| `ManifestRuntimeProvider` | function | `src/ui/manifest/runtime.tsx` | Provides manifest runtime state, resource cache state, and mutation helpers. |
-| `Markdown` | function | `src/ui/components/content/markdown/component.tsx` | Manifest adapter — resolves config refs and delegates to MarkdownBase. |
-| `MarkdownBase` | function | `src/ui/components/content/markdown/standalone.tsx` | Standalone Markdown — renders markdown content with syntax highlighting and Snapshot design tokens. No manifest context required. |
+| `MarkdownBase` | function | `src/ui/components/content/markdown/standalone.tsx` | Standalone Markdown — renders markdown content with syntax highlighting and Snapshot design tokens. Works with plain React props. |
 | `MarkdownBaseProps` | interface | `src/ui/components/content/markdown/standalone.tsx` | Props accepted by the MarkdownBase standalone component. |
-| `MarkdownConfig` | typealias | `src/ui/components/content/markdown/types.ts` | Inferred config type from the Markdown Zod schema. |
-| `markdownConfigSchema` | variable | `src/ui/components/content/markdown/schema.ts` | Zod config schema for the Markdown component. Renders markdown content with full GFM support and syntax highlighting. |
 | `meetsWcagAA` | function | `src/ui/tokens/color.ts` | Check whether two colors satisfy WCAG AA contrast for normal or large text. |
-| `MessageThread` | function | `src/ui/components/communication/message-thread/component.tsx` | Manifest adapter — resolves data endpoint, wires actions/publish, delegates to MessageThreadBase. |
-| `MessageThreadBase` | function | `src/ui/components/communication/message-thread/standalone.tsx` | Standalone MessageThread — scrollable message list with avatars, date separators, auto-scroll, embed rendering, and consecutive-message grouping. No manifest context required. |
+| `MessageThreadBase` | function | `src/ui/components/communication/message-thread/standalone.tsx` | Standalone MessageThread — scrollable message list with avatars, date separators, auto-scroll, embed rendering, and consecutive-message grouping. Works with plain React props. |
 | `MessageThreadBaseProps` | interface | `src/ui/components/communication/message-thread/standalone.tsx` | Props accepted by the MessageThreadBase standalone component. |
-| `MessageThreadConfig` | typealias | `src/ui/components/communication/message-thread/types.ts` | Inferred config type from the MessageThread Zod schema. |
-| `messageThreadConfigSchema` | variable | `src/ui/components/communication/message-thread/schema.ts` | Zod config schema for the MessageThread component. Renders a scrollable message list with avatars, timestamps, message grouping, date separators, and optional reactions/threading. |
-| `ModalBase` | function | `src/ui/components/overlay/modal/standalone.tsx` | Standalone Modal — a centered overlay dialog with plain React props. No manifest context required. |
+| `ModalBase` | function | `src/ui/components/overlay/modal/standalone.tsx` | Standalone Modal — a centered overlay dialog with plain React props. Works with plain React props. |
 | `ModalBaseFooterAction` | interface | `src/ui/components/overlay/modal/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `ModalBaseProps` | interface | `src/ui/components/overlay/modal/standalone.tsx` | Props accepted by the ModalBase standalone component. |
-| `ModalComponent` | function | `src/ui/components/overlay/modal/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ModalConfig` | typealias | `src/ui/components/overlay/modal/schema.ts` | Inferred type for modal config. |
-| `modalConfigSchema` | variable | `src/ui/components/overlay/modal/schema.ts` | Zod schema for modal component config. Modals are overlay dialogs that display child components. They are opened/closed via the modal manager (open-modal/close-modal actions). |
 | `ModalManager` | interface | `src/ui/actions/modal-manager.ts` | Return type of useModalManager. |
-| `MultiSelect` | function | `src/ui/components/forms/multi-select/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `MultiSelectConfig` | typealias | `src/ui/components/forms/multi-select/types.ts` | Inferred config type from the MultiSelect Zod schema. |
-| `multiSelectConfigSchema` | variable | `src/ui/components/forms/multi-select/schema.ts` | Zod config schema for the MultiSelect component. Defines a dropdown with checkboxes for selecting multiple values, with optional search filtering and pill display. |
-| `MultiSelectField` | function | `src/ui/components/forms/multi-select/standalone.tsx` | Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search, and configurable max selection. No manifest context required. |
+| `MultiSelectBase` | variable | `src/ui/components/forms/multi-select/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `MultiSelectBaseProps` | typealias | `src/ui/components/forms/multi-select/standalone.tsx` | Props accepted by the MultiSelectBase standalone component. |
+| `MultiSelectField` | function | `src/ui/components/forms/multi-select/standalone.tsx` | Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search, and configurable max selection. Works with plain React props. |
 | `MultiSelectFieldOption` | interface | `src/ui/components/forms/multi-select/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `MultiSelectFieldProps` | interface | `src/ui/components/forms/multi-select/standalone.tsx` | Props accepted by the MultiSelectField component. |
-| `Nav` | function | `src/ui/components/layout/nav/component.tsx` | Manifest adapter — resolves config refs, i18n, useNav state, and delegates rendering to `NavBase` while injecting manifest-aware sub-components (NavLink, NavDropdown, NavLogo, NavUserMenu) through render callbacks. |
-| `NavBase` | function | `src/ui/components/layout/nav/standalone.tsx` | Standalone Nav -- a navigation component with items, logo, and collapse support. No manifest context required. |
+| `NavBase` | function | `src/ui/components/layout/nav/standalone.tsx` | Standalone Nav -- a navigation component with items, logo, and collapse support. Works with plain React props. |
 | `NavBaseItem` | interface | `src/ui/components/layout/nav/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `NavBaseLogo` | interface | `src/ui/components/layout/nav/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `NavBaseProps` | interface | `src/ui/components/layout/nav/standalone.tsx` | Props accepted by the NavBase standalone component. |
 | `NavBaseUser` | interface | `src/ui/components/layout/nav/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `NavConfig` | typealias | `src/ui/components/layout/nav/schema.ts` | Runtime config type for the Nav component. |
-| `navConfigSchema` | variable | `src/ui/components/layout/nav/schema.ts` | Zod schema for the grouped Nav component. Supports either `items`-driven navigation or template composition, optional logo and user menu configuration, collapsible sidebar behavior, and canonical slot-based surface styling. |
-| `NavDropdownBase` | function | `src/ui/components/layout/nav-dropdown/standalone.tsx` | Standalone NavDropdown -- a navigation dropdown with floating panel. No manifest context required. |
+| `NavDropdownBase` | function | `src/ui/components/layout/nav-dropdown/standalone.tsx` | Standalone NavDropdown -- a navigation dropdown with floating panel. Works with plain React props. |
 | `NavDropdownBaseProps` | interface | `src/ui/components/layout/nav-dropdown/standalone.tsx` | Props accepted by the NavDropdownBase standalone component. |
-| `NavigateAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `navigateActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating navigate action schema. |
-| `NavigationConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `navigationConfigSchema` — defaulted fields are optional. |
-| `navigationConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the top-level manifest navigation configuration. |
-| `NavItem` | interface | `src/ui/manifest/types.ts` | Navigation item rendered by Snapshot navigation components. |
-| `NavItemConfig` | typealias | `src/ui/components/layout/nav/schema.ts` | Runtime config type for a grouped nav item, including optional child items and per-item slots. |
-| `navItemSchema` | variable | `src/ui/manifest/schema.ts` | Recursive schema for navigation items used by manifest navigation surfaces. |
-| `NavLinkBase` | function | `src/ui/components/layout/nav-link/standalone.tsx` | Standalone NavLink -- a navigation link with optional icon and badge. No manifest context required. |
+| `NavLinkBase` | function | `src/ui/components/layout/nav-link/standalone.tsx` | Standalone NavLink -- a navigation link with optional icon and badge. Works with plain React props. |
 | `NavLinkBaseProps` | interface | `src/ui/components/layout/nav-link/standalone.tsx` | Props accepted by the NavLinkBase standalone component. |
-| `NavLogoBase` | function | `src/ui/components/layout/nav-logo/standalone.tsx` | Standalone NavLogo -- a clickable brand logo/text element for navigation headers. No manifest context required. |
+| `NavLogoBase` | function | `src/ui/components/layout/nav-logo/standalone.tsx` | Standalone NavLogo -- a clickable brand logo/text element for navigation headers. Works with plain React props. |
 | `NavLogoBaseProps` | interface | `src/ui/components/layout/nav-logo/standalone.tsx` | Props accepted by the NavLogoBase standalone component. |
-| `NavSearchBase` | function | `src/ui/components/layout/nav-search/standalone.tsx` | Standalone NavSearch -- a search input with optional keyboard shortcut display. No manifest context required. |
+| `NavSearchBase` | function | `src/ui/components/layout/nav-search/standalone.tsx` | Standalone NavSearch -- a search input with optional keyboard shortcut display. Works with plain React props. |
 | `NavSearchBaseProps` | interface | `src/ui/components/layout/nav-search/standalone.tsx` | Props accepted by the NavSearchBase standalone component. |
-| `NavSectionBase` | function | `src/ui/components/layout/nav-section/standalone.tsx` | Standalone NavSection -- a labeled, optionally collapsible group within navigation. No manifest context required. |
+| `NavSectionBase` | function | `src/ui/components/layout/nav-section/standalone.tsx` | Standalone NavSection -- a labeled, optionally collapsible group within navigation. Works with plain React props. |
 | `NavSectionBaseProps` | interface | `src/ui/components/layout/nav-section/standalone.tsx` | Props accepted by the NavSectionBase standalone component. |
-| `NavUserMenuBase` | function | `src/ui/components/layout/nav-user-menu/standalone.tsx` | Standalone NavUserMenu -- a user menu dropdown with avatar trigger. No manifest context required. |
+| `NavUserMenuBase` | function | `src/ui/components/layout/nav-user-menu/standalone.tsx` | Standalone NavUserMenu -- a user menu dropdown with avatar trigger. Works with plain React props. |
 | `NavUserMenuBaseItem` | interface | `src/ui/components/layout/nav-user-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `NavUserMenuBaseProps` | interface | `src/ui/components/layout/nav-user-menu/standalone.tsx` | Props accepted by the NavUserMenuBase standalone component. |
-| `NotificationBell` | function | `src/ui/components/data/notification-bell/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `NotificationBellBase` | function | `src/ui/components/data/notification-bell/standalone.tsx` | Standalone NotificationBell — bell icon with unread count badge. No manifest context required. |
+| `NotificationBellBase` | function | `src/ui/components/data/notification-bell/standalone.tsx` | Standalone NotificationBell — bell icon with unread count badge. Works with plain React props. |
 | `NotificationBellBaseProps` | interface | `src/ui/components/data/notification-bell/standalone.tsx` | Props accepted by the NotificationBellBase standalone component. |
-| `NotificationBellConfig` | typealias | `src/ui/components/data/notification-bell/types.ts` | Inferred config type from the NotificationBell Zod schema. |
-| `notificationBellConfigSchema` | variable | `src/ui/components/data/notification-bell/schema.ts` | Zod config schema for the NotificationBell component. Defines all manifest-settable fields for a bell icon with an unread count badge. |
-| `NotificationFeedBase` | function | `src/ui/components/workflow/notification-feed/standalone.tsx` | Standalone NotificationFeedBase — renders a scrollable notification list with type icons, unread indicators, relative timestamps, and a mark-all-read action. No manifest context required. |
+| `NotificationFeedBase` | function | `src/ui/components/workflow/notification-feed/standalone.tsx` | Standalone NotificationFeedBase — renders a scrollable notification list with type icons, unread indicators, relative timestamps, and a mark-all-read action. Works with plain React props. |
 | `NotificationFeedBaseProps` | interface | `src/ui/components/workflow/notification-feed/standalone.tsx` | Props accepted by the NotificationFeedBase standalone component. |
-| `OAuthButtonsBase` | function | `src/ui/components/primitives/oauth-buttons/standalone.tsx` | Standalone OAuthButtons — renders OAuth provider buttons with optional heading and auto-redirect support. No manifest context required. |
+| `OAuthButtonsBase` | function | `src/ui/components/primitives/oauth-buttons/standalone.tsx` | Standalone OAuthButtons — renders OAuth provider buttons with optional heading and auto-redirect support. Works with plain React props. |
 | `OAuthButtonsBaseProps` | interface | `src/ui/components/primitives/oauth-buttons/standalone.tsx` | Props accepted by the OAuthButtonsBase standalone component. |
 | `OAuthProvider` | interface | `src/ui/components/primitives/oauth-buttons/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `oklchToHex` | function | `src/ui/tokens/color.ts` | Convert OKLCH values back to a hex color string. Used for serializing runtime overrides. |
 | `oklchToString` | function | `src/ui/tokens/color.ts` | Format OKLCH values as a CSS-compatible string (without the oklch() wrapper). Output format: "L C H" where L, C, H are rounded to 3 decimal places. |
-| `OpenModalAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `openModalActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating open modal action schema. |
-| `Outlet` | function | `src/ui/components/layout/outlet/component.tsx` | Layout outlet primitive used to render nested child routes from the compiled manifest route tree. |
-| `outletComponentSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the built-in `outlet` component used by route layouts. |
-| `OutletConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `outletComponentSchema` — defaulted fields are optional. |
-| `OverlayConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `overlayConfigSchema` — defaulted fields are optional. |
-| `overlayConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for named modal, drawer, and confirm-dialog overlay declarations. |
-| `OverlayRuntimeProvider` | function | `src/ui/manifest/runtime.tsx` | Provide the current overlay runtime payload and metadata. |
-| `PageConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `pageConfigSchema` — defaulted fields are optional. |
-| `pageConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for a manifest page definition. |
+| `OptimisticConfig` | typealias | `../frontend-contract/src/resources/index.ts` | Configuration type for optimistic config. |
+| `optimisticConfigSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating optimistic config schema. |
+| `OptimisticTarget` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
+| `optimisticTargetSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating optimistic target schema. |
+| `OutletBase` | function | `src/ui/components/layout/outlet/standalone.tsx` | Standalone OutletBase — a router-agnostic mount point for child routes or manually-supplied content. Works with plain React props. Pass router-rendered content as `children`. When children is empty, `fallback` is rendered instead. |
+| `OutletBaseProps` | interface | `src/ui/components/layout/outlet/standalone.tsx` | Props accepted by the OutletBase standalone component. |
 | `PageContextProvider` | function | `src/ui/context/providers.tsx` | Provides per-page state that is destroyed on route change. |
 | `PageContextProviderProps` | interface | `src/ui/context/types.ts` | Props for PageContextProvider. Wraps each page/route to provide per-page component state. |
-| `PageRenderer` | function | `src/ui/manifest/renderer.tsx` | Renders a page from its manifest config. |
-| `PageRendererProps` | interface | `src/ui/manifest/renderer.tsx` | Props for the PageRenderer component. |
-| `PaginationDef` | interface | `src/ui/presets/types.ts` | Pagination settings for preset-generated list surfaces. |
-| `PaginationState` | interface | `src/ui/components/data/data-table/types.ts` | Pagination state for the data table. |
-| `ParallelWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `parseManifest` | function | `src/ui/manifest/compiler.ts` | Parse an unknown value into a validated manifest. |
 | `parseOklchString` | function | `src/ui/tokens/color.ts` | Parse an oklch string (the CSS variable format "L C H") back to values. |
 | `parseShortcodes` | function | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Parses shortcodes in text and replaces them with `<img>` tags. |
-| `PasskeyButtonBase` | function | `src/ui/components/primitives/passkey-button/standalone.tsx` | Standalone PasskeyButton — renders a passkey authentication button. No manifest context required. |
+| `PasskeyButtonBase` | function | `src/ui/components/primitives/passkey-button/standalone.tsx` | Standalone PasskeyButton — renders a passkey authentication button. Works with plain React props. |
 | `PasskeyButtonBaseProps` | interface | `src/ui/components/primitives/passkey-button/standalone.tsx` | Props accepted by the PasskeyButtonBase standalone component. |
 | `Platform` | typealias | `src/ui/components/content/link-embed/platform.ts` | Platform detection and embed URL extraction. Identifies known platforms from URLs and extracts the embed-compatible URL or ID needed to render platform-specific iframes. |
 | `PLATFORM_COLORS` | variable | `src/ui/components/content/link-embed/platform.ts` | Platform accent colors. |
 | `PLATFORM_NAMES` | variable | `src/ui/components/content/link-embed/platform.ts` | Platform display names. |
 | `PlatformInfo` | interface | `src/ui/components/content/link-embed/platform.ts` | Resolved platform metadata used to render a platform-specific embedded preview. |
-| `Popover` | function | `src/ui/components/overlay/popover/component.tsx` | Manifest adapter — resolves config refs, publishes state, renders manifest children, delegates layout to PopoverBase. |
-| `PopoverBase` | function | `src/ui/components/overlay/popover/standalone.tsx` | Standalone Popover — a button-triggered floating panel with plain React props. No manifest context required. |
+| `PopoverBase` | function | `src/ui/components/overlay/popover/standalone.tsx` | Standalone Popover — a button-triggered floating panel with plain React props. Works with plain React props. |
 | `PopoverBaseProps` | interface | `src/ui/components/overlay/popover/standalone.tsx` | Props accepted by the PopoverBase standalone component. |
-| `PopoverConfig` | typealias | `src/ui/components/overlay/popover/types.ts` | Inferred config type for the Popover component. |
-| `popoverConfigSchema` | variable | `src/ui/components/overlay/popover/schema.ts` | Zod schema for the Popover component. Defines a trigger-driven floating panel with optional title, description, footer content, width, placement, and canonical slot-based styling for the trigger and panel sub-surfaces. |
-| `PrefetchLink` | function | `src/ui/components/navigation/prefetch-link/component.tsx` | Manifest adapter — wires the SSR prefetch route hook into PrefetchLinkBase. |
-| `PrefetchLinkBase` | function | `src/ui/components/navigation/prefetch-link/standalone.tsx` | Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback based on the configured strategy. No manifest or SSR context required. |
+| `PrefetchLinkBase` | function | `src/ui/components/navigation/prefetch-link/standalone.tsx` | Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback based on the configured strategy. Works without SSR context. |
 | `PrefetchLinkBaseProps` | interface | `src/ui/components/navigation/prefetch-link/standalone.tsx` | Props accepted by the PrefetchLinkBase standalone component. |
-| `PrefetchLinkConfig` | typealias | `src/ui/components/navigation/prefetch-link/schema.ts` | The output type of `prefetchLinkSchema` — all fields fully resolved with defaults applied. This is the type received by the component implementation. |
-| `prefetchLinkSchema` | variable | `src/ui/components/navigation/prefetch-link/schema.ts` | Zod schema for `<PrefetchLink>` config. `<PrefetchLink>` is a prefetch primitive that renders a plain `<a>` tag and automatically injects `<link rel="prefetch">` tags for the route's JS chunks and CSS files when the user hovers over the link or when it enters the viewport. It is not a router-aware component — consumers wire their own router. This avoids a peer dependency on TanStack Router. |
-| `PresenceIndicator` | function | `src/ui/components/communication/presence-indicator/component.tsx` | Manifest adapter — resolves config refs and delegates to PresenceIndicatorBase. |
-| `PresenceIndicatorBase` | function | `src/ui/components/communication/presence-indicator/standalone.tsx` | Standalone PresenceIndicator — displays online/offline/away/busy/dnd status with a colored dot and optional label. No manifest context required. |
+| `PresenceIndicatorBase` | function | `src/ui/components/communication/presence-indicator/standalone.tsx` | Standalone PresenceIndicator — displays online/offline/away/busy/dnd status with a colored dot and optional label. Works with plain React props. |
 | `PresenceIndicatorBaseProps` | interface | `src/ui/components/communication/presence-indicator/standalone.tsx` | Props accepted by the PresenceIndicatorBase standalone component. |
-| `PresenceIndicatorConfig` | typealias | `src/ui/components/communication/presence-indicator/types.ts` | Inferred config type from the PresenceIndicator Zod schema. |
-| `presenceIndicatorConfigSchema` | variable | `src/ui/components/communication/presence-indicator/schema.ts` | Zod config schema for the PresenceIndicator component. Displays an online/offline/away/busy/dnd status dot with optional label. |
 | `PricingFeatureEntry` | interface | `src/ui/components/commerce/pricing-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `PricingTableBase` | function | `src/ui/components/commerce/pricing-table/standalone.tsx` | Standalone PricingTableBase — renders a responsive pricing comparison as either a card grid or a feature-comparison table with CTA buttons per tier. No manifest context required. |
+| `PricingTableBase` | function | `src/ui/components/commerce/pricing-table/standalone.tsx` | Standalone PricingTableBase — renders a responsive pricing comparison as either a card grid or a feature-comparison table with CTA buttons per tier. Works with plain React props. |
 | `PricingTableBaseProps` | interface | `src/ui/components/commerce/pricing-table/standalone.tsx` | Props accepted by the PricingTableBase standalone component. |
 | `PricingTierEntry` | interface | `src/ui/components/commerce/pricing-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `ProgressBase` | function | `src/ui/components/data/progress/standalone.tsx` | Standalone Progress — bar or circular progress indicator. No manifest context required. |
+| `ProgressBase` | function | `src/ui/components/data/progress/standalone.tsx` | Standalone Progress — bar or circular progress indicator. Works with plain React props. |
 | `ProgressBaseProps` | interface | `src/ui/components/data/progress/standalone.tsx` | Props accepted by the ProgressBase standalone component. |
-| `PushConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `pushConfigSchema` — defaulted fields are optional. |
-| `pushConfigSchema` | variable | `src/ui/manifest/schema.ts` | Manifest push-notification runtime configuration. |
-| `QuickAdd` | function | `src/ui/components/forms/quick-add/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `QuickAddConfig` | typealias | `src/ui/components/forms/quick-add/types.ts` | Inferred config type from the QuickAdd Zod schema. |
-| `quickAddConfigSchema` | variable | `src/ui/components/forms/quick-add/schema.ts` | Zod config schema for the QuickAdd component. Defines all manifest-settable fields for an inline creation bar that allows quick item entry with a text input and submit button. |
-| `QuickAddField` | function | `src/ui/components/forms/quick-add/standalone.tsx` | Standalone QuickAddField -- a compact input with submit button for quickly adding items to a list. No manifest context required. |
+| `QuickAddBase` | variable | `src/ui/components/forms/quick-add/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `QuickAddBaseProps` | typealias | `src/ui/components/forms/quick-add/standalone.tsx` | Props accepted by the QuickAddBase standalone component. |
+| `QuickAddField` | function | `src/ui/components/forms/quick-add/standalone.tsx` | Standalone QuickAddField -- a compact input with submit button for quickly adding items to a list. Works with plain React props. |
 | `QuickAddFieldProps` | interface | `src/ui/components/forms/quick-add/standalone.tsx` | Props accepted by the QuickAddField component. |
 | `RadiusScale` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `radiusSchema` | variable | `../frontend-contract/src/tokens/schema.ts` | Zod schema for validating radius schema. |
-| `ReactionBar` | function | `src/ui/components/communication/reaction-bar/component.tsx` | Manifest adapter — wires actions/publish and delegates to ReactionBarBase. |
-| `ReactionBarBase` | function | `src/ui/components/communication/reaction-bar/standalone.tsx` | Standalone ReactionBar — row of emoji reaction pills with counts and an add-reaction button that opens an inline emoji picker. No manifest context required. |
+| `ReactionBarBase` | function | `src/ui/components/communication/reaction-bar/standalone.tsx` | Standalone ReactionBar — row of emoji reaction pills with counts and an add-reaction button that opens an inline emoji picker. Works with plain React props. |
 | `ReactionBarBaseProps` | interface | `src/ui/components/communication/reaction-bar/standalone.tsx` | Props accepted by the ReactionBarBase standalone component. |
-| `ReactionBarConfig` | typealias | `src/ui/components/communication/reaction-bar/types.ts` | Inferred config type from the ReactionBar Zod schema. |
-| `reactionBarConfigSchema` | variable | `src/ui/components/communication/reaction-bar/schema.ts` | Zod config schema for the ReactionBar component. Displays emoji reactions with counts and an add button. |
 | `ReactionEntry` | interface | `src/ui/components/communication/reaction-bar/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `readPersistedState` | function | `src/ui/state/persist.ts` | Read and JSON-decode a persisted state value, returning `undefined` on failure or absence. |
-| `RefreshAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `refreshActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating refresh action schema. |
-| `registerAnalyticsProvider` | function | `src/ui/analytics/registry.ts` | Register a custom analytics provider factory by name. |
-| `registerBuiltInComponents` | function | `src/ui/components/register.ts` | Register all built-in config-driven components with the manifest system. The function is idempotent so boot code can call it safely without worrying about duplicate registrations. |
-| `registerClient` | function | `src/api/client.ts` | Register a named custom client factory. |
-| `registerComponent` | function | `src/ui/manifest/component-registry.tsx` | Register a React component for a manifest component type string. Used by the framework for built-in components and by consumers for custom components. Emits a dev warning if overriding an existing registration. |
-| `registerComponentSchema` | function | `src/ui/manifest/schema.ts` | Register a Zod schema for a manifest component type. |
-| `registerGuard` | function | `src/ui/manifest/guard-registry.ts` | Register a named route guard implementation for manifest resolution. |
-| `registerLayout` | function | `src/ui/layouts/registry.tsx` | Register a named layout component for manifest layout resolution. |
-| `registerWorkflowAction` | function | `src/ui/workflows/registry.ts` | Register a runtime handler for a custom workflow action type. |
 | `relativeLuminance` | function | `src/ui/tokens/color.ts` | Compute relative luminance from OKLCH for WCAG contrast calculations. Uses sRGB relative luminance (rec. 709) from the linear RGB values. |
-| `resetBootBuiltins` | function | `src/ui/manifest/boot-builtins.ts` | Reset the boot flag so tests can re-run built-in registration deterministically. |
-| `resetBuiltInComponentRegistration` | function | `src/ui/components/register.ts` | Reset the built-in component registration guard so tests can rebuild the registry. |
-| `ResolvedColumn` | interface | `src/ui/components/data/data-table/types.ts` | Resolved column definition used internally by the hook and component. |
 | `ResolvedConfig` | typealias | `src/ui/context/types.ts` | Resolves a type where FromRef values are replaced with their resolved types. Used internally — consumers don't need to use this directly. |
-| `ResolvedNavItem` | interface | `src/ui/components/layout/nav/types.ts` | A nav item enriched with computed state: active detection, visibility based on role, and resolved badge value. |
+| `ResolvedRequest` | interface | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
 | `resolveEmojiRecords` | function | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Resolves emoji records from the API into CustomEmoji entries. Handles the `uploadKey` → `url` resolution using a URL prefix or field mapping. |
+| `resolveEndpointTarget` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
 | `resolveFrameworkStyles` | function | `src/ui/tokens/resolve.ts` | Returns a CSS string containing framework-level styles: 1. CSS reset (box-sizing, margin, padding, body defaults, font inherit) 2. Component polish CSS — data-attribute-driven styles for page layout,    data-table, stat-card, form, detail-card, and focus rings. All values are parameterized via `--sn-*` token custom properties so the output adapts to whatever theme tokens are active. |
-| `resolveGuard` | function | `src/ui/manifest/guard-registry.ts` | Resolve a previously registered route guard by name. |
-| `resolveLayout` | function | `src/ui/layouts/registry.tsx` | Resolve a previously registered layout by name. |
 | `resolveResponsiveValue` | function | `src/ui/hooks/use-breakpoint.ts` | Resolve a responsive value for a given breakpoint. Cascades down: if the active breakpoint isn't defined, falls back to the next smaller breakpoint, then `default`. For flat (non-object) values, returns the value directly. |
 | `resolveTokens` | function | `src/ui/tokens/resolve.ts` | Resolve a theme configuration into a complete CSS string. Pipeline: 1. Load base flavor (default: neutral) 2. Deep merge overrides onto flavor defaults 3. Convert all colors to oklch 4. Auto-derive foreground colors (contrast-aware) 5. Auto-derive dark mode colors if not provided 6. Map radius/spacing/font to CSS 7. Generate component-level tokens 8. Output CSS string with :root, .dark, and component selectors |
-| `ResourceConfigMap` | typealias | `src/ui/manifest/types.ts` | Named manifest resource map keyed by resource id. |
+| `ResourceConfig` | typealias | `../frontend-contract/src/resources/index.ts` | Configuration type for resource config. |
 | `resourceConfigSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource config schema. |
+| `ResourceInvalidationTarget` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
+| `resourceInvalidationTargetSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource invalidation target schema. |
+| `ResourceMap` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
+| `resourceParamSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource param schema. |
+| `ResourceRef` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
 | `resourceRefSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource ref schema. |
 | `Responsive` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `RetryWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `RichInput` | function | `src/ui/components/content/rich-input/component.tsx` | Manifest adapter — resolves config refs, wires actions, and delegates to RichInputBase. |
-| `RichInputBase` | function | `src/ui/components/content/rich-input/standalone.tsx` | Standalone RichInput — a rich text editor with formatting toolbar, powered by tiptap. No manifest context required. |
+| `RichInputBase` | variable | `src/ui/components/content/rich-input/standalone.tsx` | Standalone RichInput — a rich text editor with formatting toolbar, powered by tiptap. Works with plain React props. |
+| `RichInputBaseHandle` | interface | `src/ui/components/content/rich-input/standalone.tsx` | Imperative handle exposed via `ref`. Use this when an external surface (emoji picker, GIF picker, slash-command menu) needs to insert content at the user's current cursor position without going through the controlled-value path (which clobbers the cursor). |
 | `RichInputBaseProps` | interface | `src/ui/components/content/rich-input/standalone.tsx` | Props accepted by the RichInputBase standalone component. |
-| `RichInputConfig` | typealias | `src/ui/components/content/rich-input/types.ts` | Inferred config type from the RichInput Zod schema. |
-| `richInputConfigSchema` | variable | `src/ui/components/content/rich-input/schema.ts` | Zod config schema for the RichInput component. A TipTap-based WYSIWYG editor for chat messages, comments, and posts. Users see formatted text as they type (bold, italic, mentions, etc.) rather than raw markdown. |
-| `RichTextEditor` | function | `src/ui/components/content/rich-text-editor/component.tsx` | Manifest adapter — resolves config refs, wires publish, and delegates to RichTextEditorBase. |
-| `RichTextEditorBase` | function | `src/ui/components/content/rich-text-editor/standalone.tsx` | Standalone RichTextEditor — a markdown editor with live preview, powered by CodeMirror. No manifest context required. |
+| `RichTextEditorBase` | function | `src/ui/components/content/rich-text-editor/standalone.tsx` | Standalone RichTextEditor — a markdown editor with live preview, powered by CodeMirror. Works with plain React props. |
 | `RichTextEditorBaseProps` | interface | `src/ui/components/content/rich-text-editor/standalone.tsx` | Props accepted by the RichTextEditorBase standalone component. |
-| `RichTextEditorConfig` | typealias | `src/ui/components/content/rich-text-editor/types.ts` | Inferred config type from the RichTextEditor Zod schema. |
-| `richTextEditorConfigSchema` | variable | `src/ui/components/content/rich-text-editor/schema.ts` | Zod config schema for the RichTextEditor component. Defines all manifest-settable fields for a CodeMirror 6-based markdown editor with toolbar, preview pane, and split view support. |
-| `RouteConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `routeConfigSchema` — defaulted fields are optional. |
-| `routeConfigSchema` | variable | `src/ui/manifest/schema.ts` | Recursive schema for a manifest route tree node. |
-| `RouteGuard` | typealias | `src/ui/manifest/types.ts` | Input shape for `routeGuardSchema` — defaulted fields are optional. |
-| `RouteGuardConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `routeGuardConfigSchema` — defaulted fields are optional. |
-| `routeGuardConfigSchema` | variable | `src/ui/manifest/schema.ts` | Object-form route guard schema with auth, role, and policy controls. |
-| `routeGuardSchema` | variable | `src/ui/manifest/schema.ts` | Route guard schema, accepting either a named guard or inline guard config. |
-| `RouteMatch` | interface | `src/ui/manifest/types.ts` | Resolved route match for the current pathname. |
-| `RouteRuntimeProvider` | function | `src/ui/manifest/runtime.tsx` | Provide route runtime state to manifest-rendered components. |
-| `routeTransitionSchema` | variable | `src/ui/manifest/schema.ts` | Schema for route transition metadata. |
-| `RowAction` | typealias | `src/ui/components/data/data-table/types.ts` | Inferred row action type. |
-| `rowActionSchema` | variable | `src/ui/components/data/data-table/schema.ts` | Schema for a per-row action button. |
-| `RowBase` | function | `src/ui/components/layout/row/standalone.tsx` | Standalone Row -- a horizontal flex container. No manifest context required. |
+| `RowBase` | function | `src/ui/components/layout/row/standalone.tsx` | Standalone Row -- a horizontal flex container. Works with plain React props. |
 | `RowBaseProps` | interface | `src/ui/components/layout/row/standalone.tsx` | Props accepted by the RowBase standalone component. |
-| `RowConfig` | interface | `src/ui/manifest/types.ts` | Runtime config for the built-in `row` layout component. |
-| `rowConfigSchema` | variable | `src/ui/manifest/schema.ts` | Schema for the built-in `row` layout component. |
-| `RuntimeStateConfig` | typealias | `src/ui/state/types.ts` | Named state definition from the manifest. App-scope state persists for the app lifetime. Route-scope state is recreated whenever the active route changes. |
-| `runWorkflow` | function | `src/ui/workflows/engine.ts` | Execute a workflow definition against the supplied runtime hooks and mutable context. |
-| `RunWorkflowAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `runWorkflowActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating run workflow action schema. |
-| `SaveIndicator` | function | `src/ui/components/data/save-indicator/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `SaveIndicatorBase` | function | `src/ui/components/data/save-indicator/standalone.tsx` | Standalone SaveIndicator — shows saving/saved/error status. No manifest context required. |
+| `RuntimeStateConfig` | typealias | `src/ui/state/types.ts` | Named state definition. App-scope state persists for the app lifetime. Route-scope state is recreated whenever the active route changes. |
+| `SaveIndicatorBase` | function | `src/ui/components/data/save-indicator/standalone.tsx` | Standalone SaveIndicator — shows saving/saved/error status. Works with plain React props. |
 | `SaveIndicatorBaseProps` | interface | `src/ui/components/data/save-indicator/standalone.tsx` | Props accepted by the SaveIndicatorBase standalone component. |
-| `SaveIndicatorConfig` | typealias | `src/ui/components/data/save-indicator/types.ts` | Inferred config type from the SaveIndicator Zod schema. |
-| `saveIndicatorConfigSchema` | variable | `src/ui/components/data/save-indicator/schema.ts` | Zod config schema for the SaveIndicator component. Defines all manifest-settable fields for a save status indicator that shows idle, saving, saved, or error states. |
-| `ScrollArea` | function | `src/ui/components/data/scroll-area/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ScrollAreaBase` | function | `src/ui/components/data/scroll-area/standalone.tsx` | Standalone ScrollArea — a scrollable container with custom-styled thin scrollbars. No manifest context required. |
+| `ScrollAreaBase` | function | `src/ui/components/data/scroll-area/standalone.tsx` | Standalone ScrollArea — a scrollable container with custom-styled thin scrollbars. Works with plain React props. |
 | `ScrollAreaBaseProps` | interface | `src/ui/components/data/scroll-area/standalone.tsx` | Props accepted by the ScrollAreaBase standalone component. |
-| `ScrollAreaConfig` | typealias | `src/ui/components/data/scroll-area/types.ts` | Inferred config type for the ScrollArea component. |
-| `scrollAreaConfigSchema` | variable | `src/ui/components/data/scroll-area/schema.ts` | Zod config schema for the ScrollArea component. A scrollable container with custom-styled thin scrollbars that respect the design token system. |
-| `ScrollToAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `scrollToActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating scroll to action schema. |
-| `SectionBase` | function | `src/ui/components/layout/section/standalone.tsx` | Standalone Section -- a full-width vertical section with optional height and alignment. No manifest context required. |
+| `SectionBase` | function | `src/ui/components/layout/section/standalone.tsx` | Standalone Section -- a full-width vertical section with optional height and alignment. Works with plain React props. |
 | `SectionBaseProps` | interface | `src/ui/components/layout/section/standalone.tsx` | Props accepted by the SectionBase standalone component. |
-| `Select` | function | `src/ui/components/forms/select/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `SelectConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `selectConfigSchema` — defaulted fields are optional. |
-| `selectConfigSchema` | variable | `src/ui/components/forms/select/schema.ts` | Zod schema for validating select config schema. |
-| `SelectField` | function | `src/ui/components/forms/select/standalone.tsx` | Standalone SelectField -- a complete select form field with label, options, helper/error text, and required indicator. No manifest context required. |
+| `SelectBase` | variable | `src/ui/components/forms/select/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `SelectBaseProps` | typealias | `src/ui/components/forms/select/standalone.tsx` | Props accepted by the SelectBase standalone component. |
+| `SelectControl` | function | `src/ui/components/forms/select/control.tsx` | Low-level styled select element with surface resolution and state management. Used internally by SelectField and other components that need a styled `<select>`. Works with plain React props. |
+| `SelectControlProps` | interface | `src/ui/components/forms/select/types.ts` | Props accepted by the SelectControl component. |
+| `SelectField` | function | `src/ui/components/forms/select/standalone.tsx` | Standalone SelectField -- a complete select form field with label, options, helper/error text, and required indicator. Works with plain React props. |
 | `SelectFieldProps` | interface | `src/ui/components/forms/select/standalone.tsx` | Props accepted by the SelectField component. |
-| `Separator` | function | `src/ui/components/data/separator/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `SeparatorBase` | function | `src/ui/components/data/separator/standalone.tsx` | Standalone Separator — a horizontal or vertical line with optional label. No manifest context required. |
+| `SeparatorBase` | function | `src/ui/components/data/separator/standalone.tsx` | Standalone Separator — a horizontal or vertical line with optional label. Works with plain React props. |
 | `SeparatorBaseProps` | interface | `src/ui/components/data/separator/standalone.tsx` | Props accepted by the SeparatorBase standalone component. |
-| `SeparatorConfig` | typealias | `src/ui/components/data/separator/types.ts` | Inferred config type for the Separator component. |
-| `separatorConfigSchema` | variable | `src/ui/components/data/separator/schema.ts` | Zod config schema for the Separator component. A simple visual divider line, either horizontal or vertical. Optionally renders a centered label between the lines. |
-| `SeriesConfig` | typealias | `src/ui/components/data/chart/types.ts` | Inferred type for a single chart series config. |
-| `seriesConfigSchema` | variable | `src/ui/components/data/chart/schema.ts` | Schema for a single data series in the chart. |
-| `settingsPage` | function | `src/ui/presets/settings-page.ts` | Builds a manifest `PageConfig` for a settings page. Consumers drop the result into their manifest's `pages` record: ```ts const manifest = {   pages: {     "/settings": settingsPage({       title: "Settings",       sections: [         {           label: "Profile",           submitEndpoint: "PATCH /api/me/profile",           dataEndpoint: "GET /api/me/profile",           fields: [             { key: "name", type: "text", label: "Name", required: true },             { key: "bio", type: "textarea", label: "Bio" },           ],         },         {           label: "Password",           submitEndpoint: "POST /api/me/password",           fields: [             { key: "currentPassword", type: "password", label: "Current Password", required: true },             { key: "newPassword", type: "password", label: "New Password", required: true },           ],         },       ],     }),   }, }; ``` |
-| `SettingsPageOptions` | interface | `src/ui/presets/types.ts` | Options for the `settingsPage` preset factory. Produces a settings page with a tab per section, each containing an AutoForm. |
-| `settingsPresetConfigSchema` | variable | `src/ui/presets/schemas.ts` | Validate preset config for a settings page composed from one or more submitted sections. |
-| `SettingsSectionDef` | interface | `src/ui/presets/types.ts` | A single settings section (one tab in the settings page). |
-| `SetValueAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `setValueActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating set value action schema. |
 | `ShowToastOptions` | interface | `src/ui/actions/toast.tsx` | User-facing toast options accepted by the toast manager. |
-| `SkeletonBase` | function | `src/ui/components/data/skeleton/standalone.tsx` | Standalone Skeleton — a placeholder loading indicator. No manifest context required. |
+| `SkeletonBase` | function | `src/ui/components/data/skeleton/standalone.tsx` | Standalone Skeleton — a placeholder loading indicator. Works with plain React props. |
 | `SkeletonBaseProps` | interface | `src/ui/components/data/skeleton/standalone.tsx` | Props accepted by the SkeletonBase standalone component. |
-| `Slider` | function | `src/ui/components/forms/slider/component.tsx` | Render a manifest-driven slider input. |
-| `SliderConfig` | typealias | `src/ui/components/forms/slider/types.ts` | Config for the manifest-driven slider component. |
-| `sliderConfigSchema` | variable | `src/ui/components/forms/slider/schema.ts` | Schema for single-value and ranged slider controls with optional value display/actions. |
-| `SliderField` | function | `src/ui/components/forms/slider/standalone.tsx` | Standalone SliderField -- a range slider with optional label, value display, limit labels, and dual-thumb range mode. No manifest context required. |
+| `SliderBase` | variable | `src/ui/components/forms/slider/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `SliderBaseProps` | typealias | `src/ui/components/forms/slider/standalone.tsx` | Props accepted by the SliderBase standalone component. |
+| `SliderField` | function | `src/ui/components/forms/slider/standalone.tsx` | Standalone SliderField -- a range slider with optional label, value display, limit labels, and dual-thumb range mode. Works with plain React props. |
 | `SliderFieldProps` | interface | `src/ui/components/forms/slider/standalone.tsx` | Props accepted by the SliderField component. |
-| `SnapshotApiContext` | variable | `src/ui/actions/executor.ts` | Backward-compatible provider shim that writes the API client into Jotai state. |
-| `SnapshotImage` | function | `src/ui/components/media/image/component.tsx` | Manifest adapter — extracts config props and delegates to SnapshotImageBase. |
-| `SnapshotImageBase` | function | `src/ui/components/media/image/standalone.tsx` | Standalone SnapshotImage — an optimized image component with placeholder support. No manifest context required. |
+| `SnapshotApiProvider` | function | `src/ui/state/api.ts` | Backward-compatible provider shim for tests and external wrappers. This writes the client into the shared Jotai store instead of React context. |
+| `SnapshotImageBase` | function | `src/ui/components/media/image/standalone.tsx` | Standalone SnapshotImage — an optimized image component with placeholder support. Works with plain React props. |
 | `SnapshotImageBaseProps` | interface | `src/ui/components/media/image/standalone.tsx` | Props accepted by the SnapshotImageBase standalone component. |
-| `SnapshotImageConfig` | typealias | `src/ui/components/media/image/types.ts` | Inferred config type from the SnapshotImage Zod schema. This is the single source of truth for what props the `<SnapshotImage>` component accepts. Never define this type manually. |
-| `snapshotImageSchema` | variable | `src/ui/components/media/image/schema.ts` | Schema for optimized image components rendered through Snapshot's image route. |
-| `SortState` | interface | `src/ui/components/data/data-table/types.ts` | Sort state for the data table. |
-| `SpacerBase` | function | `src/ui/components/layout/spacer/standalone.tsx` | Standalone Spacer -- an empty element that takes up space along an axis. No manifest context required. |
+| `SpacerBase` | function | `src/ui/components/layout/spacer/standalone.tsx` | Standalone Spacer -- an empty element that takes up space along an axis. Works with plain React props. |
 | `SpacerBaseProps` | interface | `src/ui/components/layout/spacer/standalone.tsx` | Props accepted by the SpacerBase standalone component. |
 | `SpacingScale` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `spacingSchema` | variable | `../frontend-contract/src/tokens/schema.ts` | Zod schema for validating spacing schema. |
-| `SplitPaneBase` | function | `src/ui/components/layout/split-pane/standalone.tsx` | Standalone SplitPane -- a resizable two-pane layout with a draggable divider. No manifest context required. |
+| `SplitPaneBase` | function | `src/ui/components/layout/split-pane/standalone.tsx` | Standalone SplitPane -- a resizable two-pane layout with a draggable divider. Works with plain React props. |
 | `SplitPaneBaseProps` | interface | `src/ui/components/layout/split-pane/standalone.tsx` | Props accepted by the SplitPaneBase standalone component. |
-| `StackBase` | function | `src/ui/components/primitives/stack/standalone.tsx` | Standalone Stack — a flex-column layout container with token-based spacing. No manifest context required. |
+| `StackBase` | function | `src/ui/components/primitives/stack/standalone.tsx` | Standalone Stack — a flex-column layout container with token-based spacing. Works with plain React props. |
 | `StackBaseProps` | interface | `src/ui/components/primitives/stack/standalone.tsx` | Props accepted by the StackBase standalone component. |
-| `StatCard` | function | `src/ui/components/data/stat-card/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `StatCardBase` | function | `src/ui/components/data/stat-card/standalone.tsx` | Standalone StatCard — displays a single metric with optional trend indicator. No manifest context required. |
+| `StatCardBase` | function | `src/ui/components/data/stat-card/standalone.tsx` | Standalone StatCard — displays a single metric with optional trend indicator. Works with plain React props. |
 | `StatCardBaseProps` | interface | `src/ui/components/data/stat-card/standalone.tsx` | Props accepted by the StatCardBase standalone component. |
-| `StatCardConfig` | typealias | `src/ui/components/data/stat-card/types.ts` | Inferred config type from the StatCard Zod schema. |
-| `statCardConfigSchema` | variable | `src/ui/components/data/stat-card/schema.ts` | Zod config schema for the StatCard component. Defines all manifest-settable fields for a stat card that displays a single metric with optional trend indicator. |
 | `StatCardTrend` | interface | `src/ui/components/data/stat-card/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `StatDef` | interface | `src/ui/presets/types.ts` | A single stat card definition for the dashboard page. |
-| `StateConfig` | typealias | `src/ui/manifest/types.ts` | Named manifest state map keyed by state id. |
-| `StateConfigMap` | typealias | `src/ui/state/types.ts` | Map of named state definitions declared by the manifest runtime. |
+| `StateConfigMap` | typealias | `src/ui/state/types.ts` | Map of named state definitions. |
 | `StateHookScope` | typealias | `src/ui/state/hooks.ts` | Hook-level scope override that can force app, route, or auto-discovered state resolution. |
-| `StateProviderProps` | interface | `src/ui/state/types.ts` | Props accepted by the provider layer that wires manifest state into a React tree. |
+| `StateProviderProps` | interface | `src/ui/state/types.ts` | Props accepted by the provider layer that wires named state into a React tree. |
 | `StateScope` | typealias | `../frontend-contract/src/state/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `StateValueConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `stateValueConfigSchema` — defaulted fields are optional. |
-| `stateValueConfigSchema` | variable | `../frontend-contract/src/state/schema.ts` | Zod schema for validating state value config schema. |
-| `StepperBase` | function | `src/ui/components/navigation/stepper/standalone.tsx` | Standalone Stepper — a multi-step progress indicator with plain React props. No manifest context required. |
+| `StepperBase` | function | `src/ui/components/navigation/stepper/standalone.tsx` | Standalone Stepper — a multi-step progress indicator with plain React props. Works with plain React props. |
 | `StepperBaseProps` | interface | `src/ui/components/navigation/stepper/standalone.tsx` | Props accepted by the StepperBase standalone component. |
 | `StepperBaseStep` | interface | `src/ui/components/navigation/stepper/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `SwitchField` | function | `src/ui/components/forms/switch/standalone.tsx` | Standalone SwitchField -- a toggle switch with label, description, and configurable size and color. No manifest context required. |
+| `SwitchBase` | variable | `src/ui/components/forms/switch/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `SwitchBaseProps` | typealias | `src/ui/components/forms/switch/standalone.tsx` | Props accepted by the SwitchBase standalone component. |
+| `SwitchField` | function | `src/ui/components/forms/switch/standalone.tsx` | Standalone SwitchField -- a toggle switch with label, description, and configurable size and color. Works with plain React props. |
 | `SwitchFieldProps` | interface | `src/ui/components/forms/switch/standalone.tsx` | Props accepted by the SwitchField component. |
-| `TabConfig` | typealias | `src/ui/components/navigation/tabs/schema.ts` | Inferred type for a single tab config. |
-| `tabConfigSchema` | variable | `src/ui/components/navigation/tabs/schema.ts` | Schema for a single tab within the tabs component. |
-| `TabsBase` | function | `src/ui/components/navigation/tabs/standalone.tsx` | Standalone Tabs — tabbed navigation with plain React props. No manifest context required. |
+| `TabsBase` | function | `src/ui/components/navigation/tabs/standalone.tsx` | Standalone Tabs — tabbed navigation with plain React props. Works with plain React props. |
 | `TabsBaseProps` | interface | `src/ui/components/navigation/tabs/standalone.tsx` | Props accepted by the TabsBase standalone component. |
 | `TabsBaseTab` | interface | `src/ui/components/navigation/tabs/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `TabsComponent` | function | `src/ui/components/navigation/tabs/component.tsx` | Manifest adapter — resolves config refs via useTabs hook, renders manifest children in tab panels, delegates layout to TabsBase. |
-| `TabsConfig` | typealias | `src/ui/components/navigation/tabs/schema.ts` | Inferred type for tabs config. |
-| `tabsConfigSchema` | variable | `src/ui/components/navigation/tabs/schema.ts` | Zod schema for tabs component config. Tabs provide in-page navigation between content panels. Each tab's content is rendered via ComponentRenderer. |
-| `TagSelector` | function | `src/ui/components/forms/tag-selector/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `TagSelectorConfig` | typealias | `src/ui/components/forms/tag-selector/types.ts` | Inferred config type from the TagSelector Zod schema. |
-| `tagSelectorConfigSchema` | variable | `src/ui/components/forms/tag-selector/schema.ts` | Zod config schema for the TagSelector component. A tag input that allows selecting from predefined tags or creating new ones. Tags display as colored pills with remove buttons. |
-| `TagSelectorField` | function | `src/ui/components/forms/tag-selector/standalone.tsx` | Standalone TagSelectorField -- tag pills with dropdown selection, search filtering, and optional tag creation. No manifest context required. |
+| `TagSelectorBase` | variable | `src/ui/components/forms/tag-selector/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `TagSelectorBaseProps` | typealias | `src/ui/components/forms/tag-selector/standalone.tsx` | Props accepted by the TagSelectorBase standalone component. |
+| `TagSelectorField` | function | `src/ui/components/forms/tag-selector/standalone.tsx` | Standalone TagSelectorField -- tag pills with dropdown selection, search filtering, and optional tag creation. Works with plain React props. |
 | `TagSelectorFieldProps` | interface | `src/ui/components/forms/tag-selector/standalone.tsx` | Props accepted by the TagSelectorField component. |
 | `TagSelectorTag` | interface | `src/ui/components/forms/tag-selector/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `Textarea` | function | `src/ui/components/forms/textarea/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `TextareaConfig` | typealias | `src/ui/components/forms/textarea/types.ts` | Inferred config type from the Textarea Zod schema. |
-| `textareaConfigSchema` | variable | `src/ui/components/forms/textarea/schema.ts` | Zod config schema for the Textarea component. Defines a multi-line text input with label, character count, validation, and configurable resize behavior. |
-| `TextareaField` | function | `src/ui/components/forms/textarea/standalone.tsx` | Standalone TextareaField -- a complete textarea form field with label, character counter, validation, and helper/error text. No manifest context required. |
+| `TextareaBase` | variable | `src/ui/components/forms/textarea/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `TextareaBaseProps` | typealias | `src/ui/components/forms/textarea/standalone.tsx` | Props accepted by the TextareaBase standalone component. |
+| `TextareaControl` | function | `src/ui/components/forms/textarea/control.tsx` | Low-level styled textarea element with surface resolution and state management. Used internally by TextareaField and other components that need a styled `<textarea>`. Works with plain React props. |
+| `TextareaControlProps` | interface | `src/ui/components/forms/textarea/types.ts` | Props accepted by the TextareaControl component. |
+| `TextareaField` | function | `src/ui/components/forms/textarea/standalone.tsx` | Standalone TextareaField -- a complete textarea form field with label, character counter, validation, and helper/error text. Works with plain React props. |
 | `TextareaFieldProps` | interface | `src/ui/components/forms/textarea/standalone.tsx` | Props accepted by the TextareaField component. |
-| `TextBase` | function | `src/ui/components/primitives/text/standalone.tsx` | Standalone Text — renders a styled paragraph element with token-based typography. No manifest context required. |
+| `TextBase` | function | `src/ui/components/primitives/text/standalone.tsx` | Standalone Text — renders a styled paragraph element with token-based typography. Works with plain React props. |
 | `TextBaseProps` | interface | `src/ui/components/primitives/text/standalone.tsx` | Props accepted by the TextBase standalone component. |
 | `ThemeColors` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `themeColorsSchema` | variable | `../frontend-contract/src/tokens/schema.ts` | Zod schema for validating theme colors schema. |
-| `ThemeConfig` | typealias | `../frontend-contract/src/tokens/types.ts` | Manifest configuration type for theme config. |
-| `themeConfigSchema` | variable | `../frontend-contract/src/tokens/schema.ts` | Zod schema for validating theme config schema. |
+| `ThemeConfig` | typealias | `../frontend-contract/src/tokens/types.ts` | Configuration type for theme config. |
 | `throttleAction` | function | `src/ui/actions/timing.ts` | Throttle async or sync action execution by key and drop calls inside the active throttle window. |
-| `TimelineBase` | function | `src/ui/components/content/timeline/standalone.tsx` | Standalone Timeline — vertical event timeline with dot markers, connectors, date labels, and default/compact/alternating layout variants. No manifest context required. |
+| `TimelineBase` | function | `src/ui/components/content/timeline/standalone.tsx` | Standalone Timeline — vertical event timeline with dot markers, connectors, date labels, and default/compact/alternating layout variants. Works with plain React props. |
 | `TimelineBaseProps` | interface | `src/ui/components/content/timeline/standalone.tsx` | Props accepted by the TimelineBase standalone component. |
 | `TimelineItemEntry` | interface | `src/ui/components/content/timeline/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `ToastAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `toastActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating toast action schema. |
-| `ToastConfig` | typealias | `src/ui/manifest/types.ts` | Input shape for `toastConfigSchema` — defaulted fields are optional. |
-| `toastConfigSchema` | variable | `src/ui/manifest/schema.ts` | Manifest toast defaults used by the `toast` action runtime. |
-| `ToastContainer` | function | `src/ui/actions/toast.tsx` | Render the active toast queue using runtime-configured placement defaults. |
+| `ToastContainer` | function | `src/ui/actions/toast.tsx` | Render the active toast queue. |
 | `ToastItem` | interface | `src/ui/actions/toast.tsx` | Resolved toast entry stored in the runtime queue. |
 | `ToastManager` | interface | `src/ui/actions/toast.tsx` | Imperative API for enqueueing and dismissing transient toast messages. |
-| `Toggle` | function | `src/ui/components/forms/toggle/component.tsx` | Function exported by the Snapshot UI runtime. |
-| `ToggleConfig` | typealias | `src/ui/components/forms/toggle/types.ts` | Inferred config type from the Toggle Zod schema. |
-| `toggleConfigSchema` | variable | `src/ui/components/forms/toggle/schema.ts` | Zod config schema for the Toggle component. Defines a pressed/unpressed toggle button that publishes its state. Can display text, an icon, or both. |
-| `ToggleField` | function | `src/ui/components/forms/toggle/standalone.tsx` | Standalone ToggleField -- a pressable toggle button with optional icon and label. No manifest context required. |
+| `ToggleBase` | variable | `src/ui/components/forms/toggle/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
+| `ToggleBaseProps` | typealias | `src/ui/components/forms/toggle/standalone.tsx` | Props accepted by the ToggleBase standalone component. |
+| `ToggleField` | function | `src/ui/components/forms/toggle/standalone.tsx` | Standalone ToggleField -- a pressable toggle button with optional icon and label. Works with plain React props. |
 | `ToggleFieldProps` | interface | `src/ui/components/forms/toggle/standalone.tsx` | Props accepted by the ToggleField component. |
-| `ToggleGroupBase` | function | `src/ui/components/forms/toggle-group/standalone.tsx` | Standalone ToggleGroupBase -- a group of toggle buttons supporting single or multi-select modes. No manifest context required. |
+| `ToggleGroupBase` | function | `src/ui/components/forms/toggle-group/standalone.tsx` | Standalone ToggleGroupBase -- a group of toggle buttons supporting single or multi-select modes. Works with plain React props. |
 | `ToggleGroupBaseProps` | interface | `src/ui/components/forms/toggle-group/standalone.tsx` | Props accepted by the ToggleGroupBase standalone component. |
 | `ToggleGroupItem` | interface | `src/ui/components/forms/toggle-group/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `TokenEditor` | interface | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `TooltipBase` | function | `src/ui/components/data/tooltip/standalone.tsx` | Standalone Tooltip — wraps child content and shows informational text on hover with configurable placement and delay. No manifest context required. |
+| `TooltipBase` | function | `src/ui/components/data/tooltip/standalone.tsx` | Standalone Tooltip — wraps child content and shows informational text on hover with configurable placement and delay. Works with plain React props. |
 | `TooltipBaseProps` | interface | `src/ui/components/data/tooltip/standalone.tsx` | Props accepted by the TooltipBase standalone component. |
 | `toPersistedStateKey` | function | `src/ui/state/persist.ts` | Build the storage key used for persisted Snapshot state entries. |
-| `TouchedFields` | typealias | `src/ui/components/forms/auto-form/types.ts` | Tracks which fields have been interacted with. |
-| `TrackAction` | interface | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `trackActionSchema` | variable | `../frontend-contract/src/actions/types.ts` | Zod schema for validating track action schema. |
-| `TransitionWrapper` | function | `src/ui/manifest/transition-wrapper.tsx` | Apply enter transitions around routed content when a route transition config is present. |
-| `TreeViewBase` | function | `src/ui/components/navigation/tree-view/standalone.tsx` | Standalone TreeView — a hierarchical tree with expand/collapse and selection. No manifest context required. |
+| `TreeViewBase` | function | `src/ui/components/navigation/tree-view/standalone.tsx` | Standalone TreeView — a hierarchical tree with expand/collapse and selection. Works with plain React props. |
 | `TreeViewBaseItem` | interface | `src/ui/components/navigation/tree-view/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `TreeViewBaseProps` | interface | `src/ui/components/navigation/tree-view/standalone.tsx` | Props accepted by the TreeViewBase standalone component. |
-| `trendConfigSchema` | variable | `src/ui/components/data/stat-card/schema.ts` | Schema for the trend indicator configuration. |
-| `TryWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `TypingIndicator` | function | `src/ui/components/communication/typing-indicator/component.tsx` | Manifest adapter — resolves config refs and delegates to TypingIndicatorBase. |
-| `TypingIndicatorBase` | function | `src/ui/components/communication/typing-indicator/standalone.tsx` | Standalone TypingIndicator — shows animated bouncing dots with user names to indicate who is currently typing. No manifest context required. |
+| `TypingIndicatorBase` | function | `src/ui/components/communication/typing-indicator/standalone.tsx` | Standalone TypingIndicator — shows animated bouncing dots with user names to indicate who is currently typing. Works with plain React props. |
 | `TypingIndicatorBaseProps` | interface | `src/ui/components/communication/typing-indicator/standalone.tsx` | Props accepted by the TypingIndicatorBase standalone component. |
-| `TypingIndicatorConfig` | typealias | `src/ui/components/communication/typing-indicator/types.ts` | Inferred config type from the TypingIndicator Zod schema. |
-| `typingIndicatorConfigSchema` | variable | `src/ui/components/communication/typing-indicator/schema.ts` | Zod config schema for the TypingIndicator component. Displays an animated "User is typing..." indicator with bouncing dots. |
 | `TypingUser` | interface | `src/ui/components/communication/typing-indicator/standalone.tsx` | A user entry for the typing indicator. |
 | `UI_BREAKPOINTS` | variable | `src/ui/hooks/use-breakpoint.ts` | Breakpoint pixel thresholds (mobile-first, min-width). |
-| `useActionExecutor` | function | `src/ui/actions/executor.ts` | Return the action executor bound to the active runtime, registries, overlays, workflows, and optional API client. |
 | `useApiClient` | function | `src/ui/state/api.ts` | Read the active API client from the app-scope Jotai store. |
-| `useAutoBreadcrumbs` | function | `src/ui/hooks/use-auto-breadcrumbs.ts` | Resolve auto-generated breadcrumb items for the current route match. |
-| `useAutoForm` | function | `src/ui/components/forms/auto-form/hook.ts` | Headless hook for form state management. Tracks field values, validation errors, and touched state. Validates on blur (per-field) and on submit (all fields). |
-| `UseAutoFormResult` | interface | `src/ui/components/forms/auto-form/types.ts` | Return type for the useAutoForm headless hook. |
 | `useBreakpoint` | function | `src/ui/hooks/use-breakpoint.ts` | Returns the currently active breakpoint based on window width. Uses `matchMedia` for efficient, event-driven updates (no resize polling). Returns `"default"` during SSR. |
-| `useComponentData` | function | `src/ui/components/_base/use-component-data.ts` | Shared data-fetching hook for config-driven components. Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint, resolves any `FromRef` values in params via `useSubscribe`, and fetches data using the app-scope API client. When the API client is not available (e.g., in tests or before ManifestApp provides it), the hook returns a loading state without throwing. |
+| `useComponentData` | function | `src/ui/components/_base/use-component-data.ts` | Shared data-fetching hook for Snapshot UI components. Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint, resolves any `FromRef` values in params via `useSubscribe`, and fetches data using the app-scope API client. When the API client is not available (e.g., in tests or before a provider supplies it), the hook returns a loading state without throwing. |
 | `useConfirmManager` | function | `src/ui/actions/confirm.tsx` | Return the shared confirmation manager for the current Snapshot UI tree. |
-| `useDataTable` | function | `src/ui/components/data/data-table/hook.ts` | Headless hook for managing data table state. Provides sorting, pagination, filtering, selection, and search functionality without any rendering. Resolves `FromRef` values in the `data` and `params` fields via `useSubscribe`. |
-| `UseDataTableResult` | interface | `src/ui/components/data/data-table/types.ts` | Return type of the `useDataTable` headless hook. Provides all state and handlers needed to render a data table. |
-| `useDetailCard` | function | `src/ui/components/data/detail-card/hook.ts` | Hook that powers the DetailCard component. Resolves FromRefs, fetches data from endpoints, formats fields, and publishes the record data for other components to subscribe to. |
-| `UseDetailCardResult` | interface | `src/ui/components/data/detail-card/types.ts` | Return type of the useDetailCard hook. |
 | `useDndSensors` | function | `src/ui/hooks/use-drag-drop.ts` | Pre-configured sensor setup for pointer + keyboard DnD. Pointer requires 5px distance to activate (prevents click hijacking). Keyboard uses standard coordinates for arrow key navigation. |
-| `UseFeedResult` | interface | `src/ui/components/data/feed/types.ts` | Return type of the useFeed headless hook. |
 | `useInfiniteScroll` | function | `src/ui/hooks/use-infinite-scroll.ts` | Observe a sentinel element and load the next page when it enters the viewport. |
 | `UseInfiniteScrollOptions` | interface | `src/ui/hooks/use-infinite-scroll.ts` | Options for loading additional items when a sentinel approaches the viewport. |
-| `useManifestResourceCache` | function | `src/ui/manifest/runtime.tsx` | Access the manifest resource cache runtime for loads, invalidation, and resource-driven mutations. |
-| `useManifestResourceFocusRefetch` | function | `src/ui/manifest/runtime.tsx` | Invalidate a manifest resource when the window regains focus. |
-| `useManifestResourceMountRefetch` | function | `src/ui/manifest/runtime.tsx` | Invalidate a manifest resource on mount when the resource opts into it. |
-| `useManifestRuntime` | function | `src/ui/manifest/runtime.tsx` | Access the compiled manifest runtime. |
 | `useModalManager` | function | `src/ui/actions/modal-manager.ts` | Hook to manage modal open/close state via a Jotai atom stack. Provides open, close, isOpen, and the current stack. |
-| `useNav` | function | `src/ui/components/layout/nav/hook.ts` | Headless hook for nav component logic. Resolves nav items with active state, role-based visibility, badge resolution from FromRefs, and collapse toggle. |
-| `UseNavResult` | interface | `src/ui/components/layout/nav/types.ts` | Return type of the useNav headless hook. |
-| `useOverlayRuntime` | function | `src/ui/manifest/runtime.tsx` | Access the current overlay runtime state. |
 | `usePersistedAtom` | function | `src/ui/state/use-persisted-atom.ts` | Bind a primitive atom to browser storage so its value survives page reloads. |
 | `usePoll` | function | `src/ui/hooks/use-poll.ts` | Invoke a callback on an interval with optional document-visibility pausing. |
 | `UsePollOptions` | interface | `src/ui/hooks/use-poll.ts` | Options controlling interval-based polling from client components. |
 | `usePublish` | function | `src/ui/context/hooks.ts` | Registers a component in the page context and returns a setter function to publish values that other components can subscribe to via `{ from: "id" }`. |
-| `useResetStateValue` | function | `src/ui/state/hooks.ts` | Return a callback that resets a named manifest state entry to its configured default. |
+| `useResetStateValue` | function | `src/ui/state/hooks.ts` | Return a callback that resets a named state entry to its configured default. |
 | `useResolveFrom` | function | `src/ui/context/hooks.ts` | Resolves all `FromRef` values in a config object at once. |
+| `useResolveFromMany` | function | `src/ui/context/hooks.ts` | Resolves an array of values that may contain `FromRef`s. Stable across renders regardless of array length — use this when the number of items is dynamic (e.g., a list of nav items, params object) and a per-item `useSubscribe` would violate the rules of hooks. Internally uses a single subscription to the page registry store and re-evaluates when any subscribed atom changes. |
 | `useResponsiveValue` | function | `src/ui/hooks/use-breakpoint.ts` | Resolve a responsive value to the appropriate value for the current breakpoint. Accepts either a flat value (returned as-is) or a responsive map with breakpoint keys. Falls back to the next smaller defined breakpoint. |
-| `useRoutePrefetch` | function | `src/ui/manifest/use-route-prefetch.ts` | Prefetch route-scoped resources when a compiled route advertises eager endpoints. |
-| `useRouteRuntime` | function | `src/ui/manifest/runtime.tsx` | Access the current route runtime state. |
-| `useSetStateValue` | function | `src/ui/state/hooks.ts` | Return a setter that writes to a named manifest state entry in the resolved scope. |
-| `UseStatCardResult` | interface | `src/ui/components/data/stat-card/types.ts` | Result returned by the StatCard headless hook or internal logic. Provides all the data needed to render a stat card. |
-| `useStateValue` | function | `src/ui/state/hooks.ts` | Read the current value for a named manifest state entry. |
+| `useSetStateValue` | function | `src/ui/state/hooks.ts` | Return a setter that writes to a named state entry in the resolved scope. |
+| `useStateValue` | function | `src/ui/state/hooks.ts` | Read the current value for a named state entry. |
 | `useSubscribe` | function | `src/ui/context/hooks.ts` | Subscribes to a value from the shared binding/state registry system. |
-| `useToastManager` | function | `src/ui/actions/toast.tsx` | Return the toast manager bound to the active manifest runtime configuration. |
+| `useToastManager` | function | `src/ui/actions/toast.tsx` | Return the toast manager. |
 | `useTokenEditor` | function | `src/ui/tokens/editor.ts` | React hook for runtime token editing. Provides setToken/setFlavor/resetTokens/getTokens/subscribe for live theme customization. Changes are applied instantly via inline styles on document.documentElement. |
 | `useUrlSync` | function | `src/ui/hooks/use-url-sync.ts` | Keep a slice of local state synchronized with URL query parameters. |
-| `useVirtualList` | function | `src/ui/hooks/use-virtual-list.ts` | Compute the visible slice for a fixed-height virtualized list container. |
-| `useWizard` | function | `src/ui/components/forms/wizard/hook.ts` | Headless hook that manages multi-step wizard state including step navigation, per-step validation, field tracking, and final submission. Provides reactive state for the current step, accumulated data across steps, validation errors, and transition controls (next/prev/skip/reset). |
-| `UseWizardResult` | interface | `src/ui/components/forms/wizard/types.ts` | Return type of the useWizard headless hook. |
-| `validateContrast` | function | `src/ui/tokens/contrast-checker.ts` | Warn when manifest theme color pairs fail WCAG AA contrast. |
-| `VideoBase` | function | `src/ui/components/media/video/standalone.tsx` | Standalone Video — a styled video element that works with plain React props. No manifest context required. |
+| `validateContrast` | function | `src/ui/tokens/contrast-checker.ts` | Warn when theme color pairs fail WCAG AA contrast. |
+| `VideoBase` | function | `src/ui/components/media/video/standalone.tsx` | Standalone Video — a styled video element that works with plain React props. Works with plain React props. |
 | `VideoBaseProps` | interface | `src/ui/components/media/video/standalone.tsx` | Props accepted by the VideoBase standalone component. |
-| `VoteBase` | function | `src/ui/components/data/vote/standalone.tsx` | Standalone Vote — upvote/downvote toggle with count display. No manifest context required. |
+| `VoteBase` | function | `src/ui/components/data/vote/standalone.tsx` | Standalone Vote — upvote/downvote toggle with count display. Works with plain React props. |
 | `VoteBaseProps` | interface | `src/ui/components/data/vote/standalone.tsx` | Props accepted by the VoteBase standalone component. |
-| `WaitWorkflowNode` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `Wizard` | function | `src/ui/components/forms/wizard/component.tsx` | Render a multi-step form wizard with built-in validation, step state, and slot-aware styling. |
-| `WizardBase` | function | `src/ui/components/forms/wizard/standalone.tsx` | Standalone WizardBase -- a multi-step form wizard with progress indicator, step navigation, field validation, and completion state. No manifest context required. |
+| `WizardBase` | function | `src/ui/components/forms/wizard/standalone.tsx` | Standalone WizardBase -- a multi-step form wizard with progress indicator, step navigation, field validation, and completion state. Works with plain React props. |
 | `WizardBaseProps` | interface | `src/ui/components/forms/wizard/standalone.tsx` | Props accepted by the WizardBase standalone component. |
-| `WizardConfig` | typealias | `src/ui/components/forms/wizard/types.ts` | Inferred type for the Wizard component configuration. |
-| `WizardFieldConfig` | interface | `src/ui/components/forms/wizard/standalone.tsx` | Manifest configuration type for wizard field config. |
-| `wizardSchema` | variable | `src/ui/components/forms/wizard/schema.ts` | Zod schema for the Wizard component configuration. A multi-step form flow. Each step collects fields independently. On the final step, all accumulated data is submitted to `submitEndpoint` (if set) and published to the page context via `id`. |
+| `WizardFieldConfig` | interface | `src/ui/components/forms/wizard/standalone.tsx` | Configuration type for wizard field config. |
 | `WizardState` | interface | `src/ui/components/forms/wizard/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `WizardStepConfig` | typealias | `src/ui/components/forms/wizard/types.ts` | Inferred type for a single wizard step configuration. |
 | `WizardStepDef` | interface | `src/ui/components/forms/wizard/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `wizardStepSchema` | variable | `src/ui/components/forms/wizard/schema.ts` | Schema for a single wizard step. |
-| `WorkflowActionHandler` | typealias | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowCondition` | interface | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowConditionOperator` | typealias | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `workflowConditionSchema` | variable | `../frontend-contract/src/workflows/schema.ts` | Zod schema for validating workflow condition schema. |
-| `WorkflowDefinition` | typealias | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `workflowDefinitionSchema` | variable | `../frontend-contract/src/workflows/schema.ts` | Zod schema for validating workflow definition schema. |
-| `WorkflowMap` | typealias | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowNode` | typealias | `../frontend-contract/src/workflows/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `workflowNodeSchema` | variable | `../frontend-contract/src/workflows/schema.ts` | Zod schema for validating workflow node schema. |
 | `writePersistedState` | function | `src/ui/state/persist.ts` | Serialize and store a persisted state value, ignoring browser storage failures. |
 
 </details>
@@ -817,9 +493,6 @@ Generated from `src/ui.ts`.
 
 | Export | Kind | Description |
 |---|---|---|
-| `AnalyticsProvider` | interface | Analytics provider runtime contract. |
-| `AnalyticsProviderFactory` | typealias | Factory used to create analytics providers per snapshot instance. |
-| `AnalyticsProviderInitConfig` | interface | Analytics provider initialization payload. |
 | `colorToOklch` | function | Convert any supported color string to OKLCH values. Supports: hex (#rgb, #rrggbb), oklch strings ("L C H"), and oklch() CSS function. |
 | `contrastRatio` | function | Calculate the WCAG contrast ratio between two supported color values. |
 | `defineFlavor` | function | Define and register a new flavor. If a flavor with the same name already exists, it is replaced. |
@@ -833,12 +506,11 @@ Generated from `src/ui.ts`.
 | `oklchToHex` | function | Convert OKLCH values back to a hex color string. Used for serializing runtime overrides. |
 | `oklchToString` | function | Format OKLCH values as a CSS-compatible string (without the oklch() wrapper). Output format: "L C H" where L, C, H are rounded to 3 decimal places. |
 | `parseOklchString` | function | Parse an oklch string (the CSS variable format "L C H") back to values. |
-| `registerAnalyticsProvider` | function | Register a custom analytics provider factory by name. |
 | `relativeLuminance` | function | Compute relative luminance from OKLCH for WCAG contrast calculations. Uses sRGB relative luminance (rec. 709) from the linear RGB values. |
 | `resolveFrameworkStyles` | function | Returns a CSS string containing framework-level styles: 1. CSS reset (box-sizing, margin, padding, body defaults, font inherit) 2. Component polish CSS — data-attribute-driven styles for page layout,    data-table, stat-card, form, detail-card, and focus rings. All values are parameterized via `--sn-*` token custom properties so the output adapts to whatever theme tokens are active. |
 | `resolveTokens` | function | Resolve a theme configuration into a complete CSS string. Pipeline: 1. Load base flavor (default: neutral) 2. Deep merge overrides onto flavor defaults 3. Convert all colors to oklch 4. Auto-derive foreground colors (contrast-aware) 5. Auto-derive dark mode colors if not provided 6. Map radius/spacing/font to CSS 7. Generate component-level tokens 8. Output CSS string with :root, .dark, and component selectors |
 | `useTokenEditor` | function | React hook for runtime token editing. Provides setToken/setFlavor/resetTokens/getTokens/subscribe for live theme customization. Changes are applied instantly via inline styles on document.documentElement. |
-| `validateContrast` | function | Warn when manifest theme color pairs fail WCAG AA contrast. |
+| `validateContrast` | function | Warn when theme color pairs fail WCAG AA contrast. |
 
 ### Details
 
@@ -1018,19 +690,6 @@ Parse an oklch string (the CSS variable format "L C H") back to values.
 
 ---
 
-#### `registerAnalyticsProvider(name: string, factory: AnalyticsProviderFactory) => void`
-
-Register a custom analytics provider factory by name.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `name` | Provider identifier used in `manifest.analytics.providers.*.name` |
-| `factory` | Per-instance provider factory |
-
----
-
 #### `relativeLuminance(color: string) => number`
 
 Compute relative luminance from OKLCH for WCAG contrast calculations.
@@ -1051,7 +710,7 @@ output adapts to whatever theme tokens are active.
 
 ---
 
-#### `resolveTokens(config?: { mode?: "light" | "dark" | "system" | undefined; flavor?: string | undefined; flavors?: Record<string, { extends: string; colors?: { background?: string | undefined; input?: string | undefi...`
+#### `resolveTokens(config?: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: string | undefined; colors?: { input?: string | undefined; muted?: string | undefined; border?: strin...`
 
 Resolve a theme configuration into a complete CSS string.
 
@@ -1087,45 +746,9 @@ on document.documentElement.
 
 ---
 
-#### `validateContrast(theme: { mode?: "light" | "dark" | "system" | undefined; flavor?: string | undefined; flavors?: Record<string, { extends: string; colors?: { background?: string | undefined; input?: string | undefine...`
+#### `validateContrast(theme: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: string | undefined; colors?: { input?: string | undefined; muted?: string | undefined; border?: string ...`
 
-Warn when manifest theme color pairs fail WCAG AA contrast.
-
----
-
-## API Client
-
-| Export | Kind | Description |
-|---|---|---|
-| `getRegisteredClient` | function | Look up a previously registered custom client factory. |
-| `registerClient` | function | Register a named custom client factory. |
-
-### Details
-
-#### `getRegisteredClient(name: string) => ClientFactory | undefined`
-
-Look up a previously registered custom client factory.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `name` | Registered client factory name |
-
-**Returns:** The registered factory when found
-
----
-
-#### `registerClient(name: string, factory: ClientFactory) => void`
-
-Register a named custom client factory.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `name` | Manifest-facing client factory name |
-| `factory` | Factory that creates an ApiClient-like instance |
+Warn when theme color pairs fail WCAG AA contrast.
 
 ---
 
@@ -1133,15 +756,16 @@ Register a named custom client factory.
 
 | Export | Kind | Description |
 |---|---|---|
-| `AppContextProvider` | function | Provides persistent global state that survives route changes. Initializes globals from the manifest config. |
+| `AppContextProvider` | function | Provides persistent global state that survives route changes. Initializes globals from runtime config. |
 | `AppContextProviderProps` | interface | Props for AppContextProvider. Wraps the entire app to provide persistent global state. |
-| `GlobalConfig` | typealias | Global state definition from the manifest. This now aliases the shared state config used by the runtime. |
+| `GlobalConfig` | typealias | Global state definition for the UI context. This now aliases the shared state config used by the runtime. |
 | `isFromRef` | variable | Type guard for Snapshot binding references resolved from page, app, or resource state. |
 | `PageContextProvider` | function | Provides per-page state that is destroyed on route change. |
 | `PageContextProviderProps` | interface | Props for PageContextProvider. Wraps each page/route to provide per-page component state. |
 | `ResolvedConfig` | typealias | Resolves a type where FromRef values are replaced with their resolved types. Used internally — consumers don't need to use this directly. |
 | `usePublish` | function | Registers a component in the page context and returns a setter function to publish values that other components can subscribe to via `{ from: "id" }`. |
 | `useResolveFrom` | function | Resolves all `FromRef` values in a config object at once. |
+| `useResolveFromMany` | function | Resolves an array of values that may contain `FromRef`s. Stable across renders regardless of array length — use this when the number of items is dynamic (e.g., a list of nav items, params object) and a per-item `useSubscribe` would violate the rules of hooks. Internally uses a single subscription to the page registry store and re-evaluates when any subscribed atom changes. |
 | `useSubscribe` | function | Subscribes to a value from the shared binding/state registry system. |
 
 ### Details
@@ -1149,7 +773,7 @@ Register a named custom client factory.
 #### `AppContextProvider({ globals, resources, api, children, }: AppContextProviderProps) => Element`
 
 Provides persistent global state that survives route changes.
-Initializes globals from the manifest config.
+Initializes globals from runtime config.
 
 ---
 
@@ -1172,6 +796,18 @@ Resolves all `FromRef` values in a config object at once.
 
 ---
 
+#### `useResolveFromMany(values: readonly unknown[]) => unknown[]`
+
+Resolves an array of values that may contain `FromRef`s. Stable across
+renders regardless of array length — use this when the number of items
+is dynamic (e.g., a list of nav items, params object) and a per-item
+`useSubscribe` would violate the rules of hooks.
+
+Internally uses a single subscription to the page registry store and
+re-evaluates when any subscribed atom changes.
+
+---
+
 #### `useSubscribe(ref: unknown) => unknown`
 
 Subscribes to a value from the shared binding/state registry system.
@@ -1185,16 +821,17 @@ Subscribes to a value from the shared binding/state registry system.
 | `AtomRegistry` | interface | Registry of named state atoms. Backing store is shared per scope (app or route). |
 | `clearPersistedState` | function | Remove a persisted state value from the selected browser storage area. |
 | `readPersistedState` | function | Read and JSON-decode a persisted state value, returning `undefined` on failure or absence. |
-| `RuntimeStateConfig` | typealias | Named state definition from the manifest. App-scope state persists for the app lifetime. Route-scope state is recreated whenever the active route changes. |
-| `StateConfigMap` | typealias | Map of named state definitions declared by the manifest runtime. |
+| `RuntimeStateConfig` | typealias | Named state definition. App-scope state persists for the app lifetime. Route-scope state is recreated whenever the active route changes. |
+| `SnapshotApiProvider` | function | Backward-compatible provider shim for tests and external wrappers. This writes the client into the shared Jotai store instead of React context. |
+| `StateConfigMap` | typealias | Map of named state definitions. |
 | `StateHookScope` | typealias | Hook-level scope override that can force app, route, or auto-discovered state resolution. |
-| `StateProviderProps` | interface | Props accepted by the provider layer that wires manifest state into a React tree. |
+| `StateProviderProps` | interface | Props accepted by the provider layer that wires named state into a React tree. |
 | `toPersistedStateKey` | function | Build the storage key used for persisted Snapshot state entries. |
 | `useApiClient` | function | Read the active API client from the app-scope Jotai store. |
 | `usePersistedAtom` | function | Bind a primitive atom to browser storage so its value survives page reloads. |
-| `useResetStateValue` | function | Return a callback that resets a named manifest state entry to its configured default. |
-| `useSetStateValue` | function | Return a setter that writes to a named manifest state entry in the resolved scope. |
-| `useStateValue` | function | Read the current value for a named manifest state entry. |
+| `useResetStateValue` | function | Return a callback that resets a named state entry to its configured default. |
+| `useSetStateValue` | function | Return a setter that writes to a named state entry in the resolved scope. |
+| `useStateValue` | function | Read the current value for a named state entry. |
 | `writePersistedState` | function | Serialize and store a persisted state value, ignoring browser storage failures. |
 
 ### Details
@@ -1208,6 +845,13 @@ Remove a persisted state value from the selected browser storage area.
 #### `readPersistedState(key: string, storage: PersistStorage) => unknown`
 
 Read and JSON-decode a persisted state value, returning `undefined` on failure or absence.
+
+---
+
+#### `SnapshotApiProvider({ value, children, }: { value: ApiClient | null; children?: ReactNode; }) => FunctionComponentElement<FragmentProps>`
+
+Backward-compatible provider shim for tests and external wrappers.
+This writes the client into the shared Jotai store instead of React context.
 
 ---
 
@@ -1231,19 +875,19 @@ Bind a primitive atom to browser storage so its value survives page reloads.
 
 #### `useResetStateValue(id: string, options?: { scope?: StateHookScope | undefined; } | undefined) => () => void`
 
-Return a callback that resets a named manifest state entry to its configured default.
+Return a callback that resets a named state entry to its configured default.
 
 ---
 
 #### `useSetStateValue(id: string, options?: { scope?: StateHookScope | undefined; } | undefined) => (value: unknown) => void`
 
-Return a setter that writes to a named manifest state entry in the resolved scope.
+Return a setter that writes to a named state entry in the resolved scope.
 
 ---
 
 #### `useStateValue(id: string, options?: { scope?: StateHookScope | undefined; } | undefined) => unknown`
 
-Read the current value for a named manifest state entry.
+Read the current value for a named state entry.
 
 ---
 
@@ -1258,22 +902,20 @@ Serialize and store a persisted state value, ignoring browser storage failures.
 | Export | Kind | Description |
 |---|---|---|
 | `ConfirmDialog` | function | Render the global confirmation dialog for requests queued through `useConfirmManager`. |
-| `ConfirmManager` | interface | Imperative API for opening a confirmation dialog from manifest actions or custom UI. |
+| `ConfirmManager` | interface | Imperative API for opening a confirmation dialog from app actions or custom UI. |
 | `ConfirmOptions` | typealias | Options accepted when opening a confirmation dialog. |
 | `ConfirmRequest` | interface | Internal confirm-dialog request stored in the atom-backed manager queue. |
 | `debounceAction` | function | Debounce async or sync action execution by key and resolve all pending callers with the final invocation result. |
 | `interpolate` | function | Replace `{key}` placeholders with values from context. Supports nested paths: `{user.name}`, `{result.id}`. Missing keys are preserved as-is: `{unknown}` stays `{unknown}`. |
 | `ModalManager` | interface | Return type of useModalManager. |
 | `ShowToastOptions` | interface | User-facing toast options accepted by the toast manager. |
-| `SnapshotApiContext` | variable | Backward-compatible provider shim that writes the API client into Jotai state. |
 | `throttleAction` | function | Throttle async or sync action execution by key and drop calls inside the active throttle window. |
-| `ToastContainer` | function | Render the active toast queue using runtime-configured placement defaults. |
+| `ToastContainer` | function | Render the active toast queue. |
 | `ToastItem` | interface | Resolved toast entry stored in the runtime queue. |
 | `ToastManager` | interface | Imperative API for enqueueing and dismissing transient toast messages. |
-| `useActionExecutor` | function | Return the action executor bound to the active runtime, registries, overlays, workflows, and optional API client. |
 | `useConfirmManager` | function | Return the shared confirmation manager for the current Snapshot UI tree. |
 | `useModalManager` | function | Hook to manage modal open/close state via a Jotai atom stack. Provides open, close, isOpen, and the current stack. |
-| `useToastManager` | function | Return the toast manager bound to the active manifest runtime configuration. |
+| `useToastManager` | function | Return the toast manager. |
 
 ### Details
 
@@ -1324,14 +966,7 @@ active throttle window.
 
 #### `ToastContainer() => ReactNode`
 
-Render the active toast queue using runtime-configured placement defaults.
-
----
-
-#### `useActionExecutor() => ActionExecuteFn`
-
-Return the action executor bound to the active runtime, registries, overlays,
-workflows, and optional API client.
+Render the active toast queue.
 
 ---
 
@@ -1361,335 +996,7 @@ close() // closes topmost
 
 #### `useToastManager() => ToastManager`
 
-Return the toast manager bound to the active manifest runtime configuration.
-
----
-
-## Manifest & Rendering
-
-| Export | Kind | Description |
-|---|---|---|
-| `AnalyticsConfig` | typealias | Input shape for `analyticsConfigSchema` — defaulted fields are optional. |
-| `analyticsConfigSchema` | variable | Manifest analytics runtime configuration. |
-| `analyticsProviderSchema` | variable | Analytics provider declaration schema. |
-| `AppConfig` | typealias | Input shape for `appConfigSchema` — defaulted fields are optional. |
-| `appConfigSchema` | variable | Schema for the top-level manifest `app` section. |
-| `AuthProviderConfig` | typealias | Input shape for `authProviderSchema` — defaulted fields are optional. |
-| `authProviderSchema` | variable | Auth provider declaration schema. Declared at `manifest.auth.providers.<name>`. |
-| `AuthScreenConfig` | typealias | Input shape for `authScreenConfigSchema` — defaulted fields are optional. |
-| `authScreenConfigSchema` | variable | Schema for the manifest auth screen and auth workflow configuration. |
-| `BaseComponentConfig` | typealias | Input shape for `baseComponentConfigSchema` — defaulted fields are optional. |
-| `baseComponentConfigSchema` | variable | Shared base schema applied to all manifest-driven components. |
-| `bootBuiltins` | function | Register all built-in manifest registries exactly once. |
-| `BreadcrumbAutoConfig` | interface | Auto-breadcrumb configuration used to derive labels and optional home state from routes. |
-| `BreadcrumbItem` | interface | A single breadcrumb entry rendered from the matched route stack. |
-| `ButtonConfig` | typealias | Input shape for `buttonConfigSchema` — defaulted fields are optional. |
-| `CardConfig` | typealias | Input shape for `cardConfigSchema` — defaulted fields are optional. |
-| `cardConfigSchema` | variable | Zod config schema for the Card component. Defines a card container with optional title, subtitle, children, gap, and suspense fallback. |
-| `CompiledManifest` | interface | Runtime manifest shape produced by `compileManifest()`. |
-| `CompiledRoute` | interface | Runtime route shape produced by `compileManifest()`. |
-| `compileManifest` | function | Parse and compile a manifest into the runtime shape. |
-| `ComponentConfig` | typealias | Runtime config union for manifest-renderable components. |
-| `componentConfigSchema` | variable | Union schema covering every component config Snapshot can render from a manifest. |
-| `ComponentRenderer` | function | Renders a single component from its manifest config. |
-| `ComponentRendererProps` | interface | Props for the ComponentRenderer component. |
-| `componentsConfigSchema` | variable | Schema for the top-level `components` section of a manifest. |
-| `ConfigDrivenComponent` | typealias | React component type that can participate in the config-driven manifest runtime. |
-| `customComponentDeclarationSchema` | variable | Schema for a custom component declaration under `components.custom`. |
-| `customComponentPropSchema` | variable | Schema for a declared prop on a manifest custom component registration. |
-| `defineManifest` | function | Define a manifest without compiling it. |
-| `generateBreadcrumbs` | function | Generate breadcrumb items from the current matched route hierarchy. |
-| `generateJsonSchema` | function | Generate a JSON Schema for snapshot manifests. The schema is intentionally conservative and focuses on the public top-level manifest contract so editors can provide autocomplete and inline validation without requiring Snapshot's full runtime schema registry at generation time. |
-| `getRegisteredGuards` | function | List the names of all currently registered route guards. |
-| `getRegisteredSchemaTypes` | function | Return every manifest component type with a registered config schema. |
-| `HeadingConfig` | typealias | Input shape for `headingConfigSchema` — defaulted fields are optional. |
-| `headingConfigSchema` | variable | Schema for the built-in `heading` component. |
-| `injectStyleSheet` | function | Inject or update a stylesheet in the document head. |
-| `ManifestApp` | function | Render the manifest-driven application shell. |
-| `ManifestAppProps` | interface | Props accepted by the `ManifestApp` component. |
-| `ManifestConfig` | typealias | Raw manifest input shape accepted by `parseManifest()` before defaults are applied during compilation. |
-| `manifestConfigSchema` | variable | Top-level schema for `snapshot.manifest.json`. |
-| `ManifestResourceLoader` | typealias | Function used to override loading for a manifest resource. |
-| `ManifestResourceLoaderContext` | interface | Context passed to a custom manifest resource loader. |
-| `ManifestRuntimeExtensions` | interface | Runtime-only extension hooks attached to a manifest before compilation. |
-| `ManifestRuntimeProvider` | function | Provides manifest runtime state, resource cache state, and mutation helpers. |
-| `NavigationConfig` | typealias | Input shape for `navigationConfigSchema` — defaulted fields are optional. |
-| `navigationConfigSchema` | variable | Schema for the top-level manifest navigation configuration. |
-| `NavItem` | interface | Navigation item rendered by Snapshot navigation components. |
-| `navItemSchema` | variable | Recursive schema for navigation items used by manifest navigation surfaces. |
-| `outletComponentSchema` | variable | Schema for the built-in `outlet` component used by route layouts. |
-| `OutletConfig` | typealias | Input shape for `outletComponentSchema` — defaulted fields are optional. |
-| `OverlayConfig` | typealias | Input shape for `overlayConfigSchema` — defaulted fields are optional. |
-| `overlayConfigSchema` | variable | Schema for named modal, drawer, and confirm-dialog overlay declarations. |
-| `OverlayRuntimeProvider` | function | Provide the current overlay runtime payload and metadata. |
-| `PageConfig` | typealias | Input shape for `pageConfigSchema` — defaulted fields are optional. |
-| `pageConfigSchema` | variable | Schema for a manifest page definition. |
-| `PageRenderer` | function | Renders a page from its manifest config. |
-| `PageRendererProps` | interface | Props for the PageRenderer component. |
-| `parseManifest` | function | Parse an unknown value into a validated manifest. |
-| `PushConfig` | typealias | Input shape for `pushConfigSchema` — defaulted fields are optional. |
-| `pushConfigSchema` | variable | Manifest push-notification runtime configuration. |
-| `registerComponent` | function | Register a React component for a manifest component type string. Used by the framework for built-in components and by consumers for custom components. Emits a dev warning if overriding an existing registration. |
-| `registerComponentSchema` | function | Register a Zod schema for a manifest component type. |
-| `registerGuard` | function | Register a named route guard implementation for manifest resolution. |
-| `resetBootBuiltins` | function | Reset the boot flag so tests can re-run built-in registration deterministically. |
-| `resolveGuard` | function | Resolve a previously registered route guard by name. |
-| `ResourceConfigMap` | typealias | Named manifest resource map keyed by resource id. |
-| `RouteConfig` | typealias | Input shape for `routeConfigSchema` — defaulted fields are optional. |
-| `routeConfigSchema` | variable | Recursive schema for a manifest route tree node. |
-| `RouteGuard` | typealias | Input shape for `routeGuardSchema` — defaulted fields are optional. |
-| `RouteGuardConfig` | typealias | Input shape for `routeGuardConfigSchema` — defaulted fields are optional. |
-| `routeGuardConfigSchema` | variable | Object-form route guard schema with auth, role, and policy controls. |
-| `routeGuardSchema` | variable | Route guard schema, accepting either a named guard or inline guard config. |
-| `RouteMatch` | interface | Resolved route match for the current pathname. |
-| `RouteRuntimeProvider` | function | Provide route runtime state to manifest-rendered components. |
-| `routeTransitionSchema` | variable | Schema for route transition metadata. |
-| `RowConfig` | interface | Runtime config for the built-in `row` layout component. |
-| `rowConfigSchema` | variable | Schema for the built-in `row` layout component. |
-| `SelectConfig` | typealias | Input shape for `selectConfigSchema` — defaulted fields are optional. |
-| `StateConfig` | typealias | Named manifest state map keyed by state id. |
-| `StateValueConfig` | typealias | Input shape for `stateValueConfigSchema` — defaulted fields are optional. |
-| `ToastConfig` | typealias | Input shape for `toastConfigSchema` — defaulted fields are optional. |
-| `toastConfigSchema` | variable | Manifest toast defaults used by the `toast` action runtime. |
-| `TransitionWrapper` | function | Apply enter transitions around routed content when a route transition config is present. |
-| `useManifestResourceCache` | function | Access the manifest resource cache runtime for loads, invalidation, and resource-driven mutations. |
-| `useManifestResourceFocusRefetch` | function | Invalidate a manifest resource when the window regains focus. |
-| `useManifestResourceMountRefetch` | function | Invalidate a manifest resource on mount when the resource opts into it. |
-| `useManifestRuntime` | function | Access the compiled manifest runtime. |
-| `useOverlayRuntime` | function | Access the current overlay runtime state. |
-| `useRoutePrefetch` | function | Prefetch route-scoped resources when a compiled route advertises eager endpoints. |
-| `useRouteRuntime` | function | Access the current route runtime state. |
-
-### Details
-
-#### `bootBuiltins() => void`
-
-Register all built-in manifest registries exactly once.
-
-**Returns:** Nothing.
-
----
-
-#### `compileManifest(manifest: unknown) => CompiledManifest`
-
-Parse and compile a manifest into the runtime shape.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `manifest` | Manifest JSON or object |
-| `options` | Compile options |
-
-**Returns:** The compiled manifest runtime model
-
----
-
-#### `ComponentRenderer({ config }: ComponentRendererProps) => Element | null`
-
-Renders a single component from its manifest config.
-
----
-
-#### `defineManifest<TManifest extends ManifestConfig>(manifest: TManifest) => TManifest`
-
-Define a manifest without compiling it.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `manifest` | Manifest object to return unchanged |
-
-**Returns:** The same manifest object, typed as `ManifestConfig`
-
----
-
-#### `generateBreadcrumbs(match: RouteMatch, config: BreadcrumbAutoConfig) => BreadcrumbItem[]`
-
-Generate breadcrumb items from the current matched route hierarchy.
-
----
-
-#### `generateJsonSchema() => Record<string, unknown>`
-
-Generate a JSON Schema for snapshot manifests.
-
-The schema is intentionally conservative and focuses on the public top-level
-manifest contract so editors can provide autocomplete and inline validation
-without requiring Snapshot's full runtime schema registry at generation time.
-
----
-
-#### `getRegisteredGuards() => string[]`
-
-List the names of all currently registered route guards.
-
----
-
-#### `getRegisteredSchemaTypes() => string[]`
-
-Return every manifest component type with a registered config schema.
-
----
-
-#### `injectStyleSheet(id: string, css: string) => void`
-
-Inject or update a stylesheet in the document head.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `id` | Stable style element id |
-| `css` | CSS text to inject |
-
----
-
-#### `ManifestApp({ manifest, apiUrl, lazyComponents, }: ManifestAppProps) => Element | null`
-
-Render the manifest-driven application shell.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `props` | Manifest runtime props |
-
-**Returns:** A fully rendered manifest application
-
----
-
-#### `ManifestRuntimeProvider({ manifest, api, clients, children, }: { manifest: CompiledManifest; api?: ApiClientLike | undefined; clients?: Record<string, ApiClientLike> | undefined; children: ReactNode; }) => Element`
-
-Provides manifest runtime state, resource cache state, and mutation helpers.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `props` | Provider props containing compiled manifest and API clients |
-
----
-
-#### `OverlayRuntimeProvider({ value, children, }: { value: OverlayRuntimeValue; children: ReactNode; }) => Element`
-
-Provide the current overlay runtime payload and metadata.
-
----
-
-#### `PageRenderer({ page, routeId, state, resources, api, }: PageRendererProps) => Element`
-
-Renders a page from its manifest config.
-
----
-
-#### `parseManifest(manifest: unknown) => Record<string, any>`
-
-Parse an unknown value into a validated manifest.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `manifest` | Unknown input value |
-
-**Returns:** The parsed manifest
-
----
-
-#### `registerComponent(type: string, component: ConfigDrivenComponent) => void`
-
-Register a React component for a manifest component type string.
-Used by the framework for built-in components and by consumers for custom components.
-
-Emits a dev warning if overriding an existing registration.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `type` | The component type string (e.g. "row", "heading", "stat-card") |
-| `component` | The React component that renders this type |
-
----
-
-#### `registerComponentSchema(type: string, schema: ZodType<any, ZodTypeDef, any>) => void`
-
-Register a Zod schema for a manifest component type.
-
----
-
-#### `registerGuard(name: string, def: GuardDef) => void`
-
-Register a named route guard implementation for manifest resolution.
-
----
-
-#### `resetBootBuiltins() => void`
-
-Reset the boot flag so tests can re-run built-in registration deterministically.
-
----
-
-#### `resolveGuard(name: string) => GuardDef | undefined`
-
-Resolve a previously registered route guard by name.
-
----
-
-#### `RouteRuntimeProvider({ value, children, }: { value: RouteRuntimeValue; children: ReactNode; }) => Element`
-
-Provide route runtime state to manifest-rendered components.
-
----
-
-#### `TransitionWrapper({ config, routeKey, children, }: { config?: TransitionConfig | undefined; routeKey: string; children: ReactNode; }) => Element`
-
-Apply enter transitions around routed content when a route transition config is present.
-
----
-
-#### `useManifestResourceCache() => ManifestResourceCacheValue | null`
-
-Access the manifest resource cache runtime for loads, invalidation, and
-resource-driven mutations.
-
----
-
-#### `useManifestResourceFocusRefetch(resourceName?: string | undefined, enabled?: boolean) => void`
-
-Invalidate a manifest resource when the window regains focus.
-
----
-
-#### `useManifestResourceMountRefetch(resourceName?: string | undefined, enabled?: boolean) => void`
-
-Invalidate a manifest resource on mount when the resource opts into it.
-
----
-
-#### `useManifestRuntime() => CompiledManifest | null`
-
-Access the compiled manifest runtime.
-
----
-
-#### `useOverlayRuntime() => OverlayRuntimeValue | null`
-
-Access the current overlay runtime state.
-
----
-
-#### `useRoutePrefetch(endpoints: (string | { resource: string; params?: Record<string, unknown> | undefined; })[] | undefined) => void`
-
-Prefetch route-scoped resources when a compiled route advertises eager endpoints.
-
----
-
-#### `useRouteRuntime() => RouteRuntimeValue | null`
-
-Access the current route runtime state.
+Return the toast manager.
 
 ---
 
@@ -1697,122 +1004,66 @@ Access the current route runtime state.
 
 | Export | Kind | Description |
 |---|---|---|
-| `AlertBase` | function | Standalone Alert — a styled alert/notification box with optional icon, action button, and dismiss. No manifest context required. |
+| `AlertBase` | function | Standalone Alert — a styled alert/notification box with optional icon, action button, and dismiss. Works with plain React props. |
 | `AlertBaseProps` | interface | Props accepted by the AlertBase standalone component. |
-| `AvatarBase` | function | Standalone Avatar — image, initials, or icon fallback. No manifest context required. |
+| `AvatarBase` | function | Standalone Avatar — image, initials, or icon fallback. Works with plain React props. |
 | `AvatarBaseProps` | interface | Props accepted by the AvatarBase standalone component. |
-| `AvatarGroup` | function | Function exported by the Snapshot UI runtime. |
-| `AvatarGroupBase` | function | Standalone AvatarGroup — overlapping avatars with +N overflow. No manifest context required. |
+| `AvatarGroupBase` | function | Standalone AvatarGroup — overlapping avatars with +N overflow. Works with plain React props. |
+| `AvatarGroupBaseAvatar` | interface | Type definition exported by the Snapshot UI runtime. |
 | `AvatarGroupBaseProps` | interface | Props accepted by the AvatarGroupBase standalone component. |
-| `AvatarGroupConfig` | typealias | Inferred config type from the AvatarGroup Zod schema. |
-| `avatarGroupConfigSchema` | variable | Zod config schema for the AvatarGroup component. Displays a row of overlapping avatars with an optional "+N" overflow count. Commonly used for showing team members, assignees, or participants. |
-| `BadgeBase` | function | Standalone Badge — a small label with color-coded variants. No manifest context required. |
+| `BadgeBase` | function | Standalone Badge — a small label with color-coded variants. Works with plain React props. |
 | `BadgeBaseProps` | interface | Props accepted by the BadgeBase standalone component. |
-| `BulkAction` | typealias | Inferred bulk action type. |
-| `bulkActionSchema` | variable | Schema for a bulk action on selected rows. |
-| `Chart` | function | Function exported by the Snapshot UI runtime. |
-| `ChartBase` | function | Standalone Chart — renders data-driven charts via recharts. No manifest context required. |
+| `ChartBase` | function | Standalone Chart — renders data-driven charts via recharts. Works with plain React props. |
 | `ChartBaseProps` | interface | Props accepted by the ChartBase standalone component. |
 | `ChartBaseSeries` | interface | Type definition exported by the Snapshot UI runtime. |
-| `ChartConfig` | typealias | Inferred type for the Chart component configuration. |
-| `chartSchema` | variable | Zod schema for the Chart component configuration. Renders a data visualization (bar, line, area, pie, donut) from an endpoint or from-ref. Uses Recharts under the hood. Colors default to `--sn-chart-1` through `--sn-chart-5` tokens. |
-| `ColumnConfig` | typealias | Inferred column configuration type. |
-| `columnConfigSchema` | variable | Schema for individual column configuration. |
-| `DataTable` | function | Config-driven DataTable component. For simple tables (no drag-and-drop, virtual scroll, context menus, or expandable rows), delegates to the standalone DataTableBase. For advanced features, falls back to the full manifest-based rendering. |
-| `DataTableBase` | function | Standalone DataTable — feature-rich data table with sorting, pagination, selection, and search. No manifest context required. |
+| `DataTableBase` | function | Standalone DataTable — feature-rich data table with sorting, pagination, selection, and search. Works with plain React props. |
+| `DataTableBaseBulkAction` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DataTableBaseColumn` | interface | Type definition exported by the Snapshot UI runtime. |
+| `DataTableBasePagination` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DataTableBaseProps` | interface | Props accepted by the DataTableBase standalone component. |
-| `DataTableConfig` | typealias | Inferred DataTable configuration type from the Zod schema. |
-| `dataTableConfigSchema` | variable | Zod schema for the DataTable component configuration. Defines a config-driven data table with sorting, pagination, filtering, selection, search, row actions, and bulk actions. |
-| `DetailCard` | function | Function exported by the Snapshot UI runtime. |
-| `DetailCardBase` | function | Standalone DetailCard — data-driven detail view with formatted fields and header actions. No manifest context required. |
+| `DataTableBaseRowAction` | interface | Type definition exported by the Snapshot UI runtime. |
+| `DataTableBaseSort` | interface | Type definition exported by the Snapshot UI runtime. |
+| `DetailCardBase` | function | Standalone DetailCard — data-driven detail view with formatted fields and header actions. Works with plain React props. |
 | `DetailCardBaseAction` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DetailCardBaseField` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DetailCardBaseProps` | interface | Props accepted by the DetailCardBase standalone component. |
-| `DetailCardConfig` | typealias | DetailCard configuration type inferred from the schema. |
-| `detailCardConfigSchema` | variable | Zod schema for DetailCard component configuration. The detail card displays a single record's fields in a key-value layout. Used in drawers, modals, and detail pages. |
-| `EmptyStateBase` | function | Standalone EmptyState — a centered message with optional icon and action. No manifest context required. |
+| `EmptyStateBase` | function | Standalone EmptyState — a centered message with optional icon and action. Works with plain React props. |
 | `EmptyStateBaseProps` | interface | Props accepted by the EmptyStateBase standalone component. |
-| `EntityPicker` | function | Function exported by the Snapshot UI runtime. |
-| `EntityPickerBase` | function | Standalone EntityPicker — dropdown with search, single/multi select. No manifest context required. |
+| `EntityPickerBase` | function | Standalone EntityPicker — dropdown with search, single/multi select. Works with plain React props. |
 | `EntityPickerBaseProps` | interface | Props accepted by the EntityPickerBase standalone component. |
-| `EntityPickerConfig` | typealias | Inferred config type from the EntityPicker Zod schema. |
-| `entityPickerConfigSchema` | variable | Zod config schema for the EntityPicker component. A searchable dropdown for selecting entities (users, documents, items) from an API endpoint. Supports single and multi-select. |
 | `EntityPickerEntity` | interface | Type definition exported by the Snapshot UI runtime. |
-| `FavoriteButton` | function | Function exported by the Snapshot UI runtime. |
-| `FavoriteButtonBase` | function | Standalone FavoriteButton — a toggle button with a star icon. No manifest context required. |
+| `FavoriteButtonBase` | function | Standalone FavoriteButton — a toggle button with a star icon. Works with plain React props. |
 | `FavoriteButtonBaseProps` | interface | Props accepted by the FavoriteButtonBase standalone component. |
-| `FavoriteButtonConfig` | typealias | Inferred config type from the FavoriteButton Zod schema. |
-| `favoriteButtonConfigSchema` | variable | Zod config schema for the FavoriteButton component. Defines all manifest-settable fields for a star toggle button used to mark items as favorites. |
-| `Feed` | function | Function exported by the Snapshot UI runtime. |
-| `FeedBase` | function | Standalone Feed — feed/activity list with grouping, pagination, and live updates. No manifest context required. |
+| `FeedBase` | function | Standalone Feed — feed/activity list with grouping, pagination, and live updates. Works with plain React props. |
 | `FeedBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `FeedBaseItemAction` | interface | Type definition exported by the Snapshot UI runtime. |
 | `FeedBaseProps` | interface | Props accepted by the FeedBase standalone component. |
-| `FeedConfig` | typealias | Inferred type for the Feed component config (from Zod schema). |
-| `FeedItem` | interface | A single resolved feed item for rendering. |
-| `feedSchema` | variable | Zod schema for the Feed component configuration. Renders a scrollable activity/event stream from an endpoint or from-ref. Supports avatar, title, description, timestamp, badge fields, pagination, and publishes the selected item to the page context when `id` is set. |
-| `FilterBar` | function | Function exported by the Snapshot UI runtime. |
-| `FilterBarBase` | function | Standalone FilterBar — search + filter dropdowns + active pills. No manifest context required. |
+| `FilterBarBase` | function | Standalone FilterBar — search + filter dropdowns + active pills. Works with plain React props. |
 | `FilterBarBaseProps` | interface | Props accepted by the FilterBarBase standalone component. |
-| `FilterBarConfig` | typealias | Inferred config type for the FilterBar component. |
-| `filterBarConfigSchema` | variable | Zod schema for validating filter bar config schema. |
 | `FilterBarFilter` | interface | Type definition exported by the Snapshot UI runtime. |
-| `HighlightedText` | function | Function exported by the Snapshot UI runtime. |
-| `HighlightedTextBase` | function | Standalone HighlightedText — renders text with search query highlighting. No manifest context required. |
+| `HighlightedTextBase` | function | Standalone HighlightedText — renders text with search query highlighting. Works with plain React props. |
 | `HighlightedTextBaseProps` | interface | Props accepted by the HighlightedTextBase standalone component. |
-| `HighlightedTextConfig` | typealias | Inferred config type from the HighlightedText Zod schema. |
-| `highlightedTextConfigSchema` | variable | Zod config schema for the HighlightedText component. Renders text with search query highlighting. Matching portions are wrapped in `<mark>` elements with a configurable highlight color. |
-| `ListBase` | function | Standalone List — renders a vertical list of items with optional icons, descriptions, badges, and click actions. No manifest context required. |
+| `ListBase` | function | Standalone List — renders a vertical list of items with optional icons, descriptions, badges, and click actions. Works with plain React props. |
 | `ListBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `ListBaseProps` | interface | Props accepted by the ListBase standalone component. |
-| `NotificationBell` | function | Function exported by the Snapshot UI runtime. |
-| `NotificationBellBase` | function | Standalone NotificationBell — bell icon with unread count badge. No manifest context required. |
+| `NotificationBellBase` | function | Standalone NotificationBell — bell icon with unread count badge. Works with plain React props. |
 | `NotificationBellBaseProps` | interface | Props accepted by the NotificationBellBase standalone component. |
-| `NotificationBellConfig` | typealias | Inferred config type from the NotificationBell Zod schema. |
-| `notificationBellConfigSchema` | variable | Zod config schema for the NotificationBell component. Defines all manifest-settable fields for a bell icon with an unread count badge. |
-| `PaginationState` | interface | Pagination state for the data table. |
-| `ProgressBase` | function | Standalone Progress — bar or circular progress indicator. No manifest context required. |
+| `ProgressBase` | function | Standalone Progress — bar or circular progress indicator. Works with plain React props. |
 | `ProgressBaseProps` | interface | Props accepted by the ProgressBase standalone component. |
-| `ResolvedColumn` | interface | Resolved column definition used internally by the hook and component. |
-| `RowAction` | typealias | Inferred row action type. |
-| `rowActionSchema` | variable | Schema for a per-row action button. |
-| `SaveIndicator` | function | Function exported by the Snapshot UI runtime. |
-| `SaveIndicatorBase` | function | Standalone SaveIndicator — shows saving/saved/error status. No manifest context required. |
+| `SaveIndicatorBase` | function | Standalone SaveIndicator — shows saving/saved/error status. Works with plain React props. |
 | `SaveIndicatorBaseProps` | interface | Props accepted by the SaveIndicatorBase standalone component. |
-| `SaveIndicatorConfig` | typealias | Inferred config type from the SaveIndicator Zod schema. |
-| `saveIndicatorConfigSchema` | variable | Zod config schema for the SaveIndicator component. Defines all manifest-settable fields for a save status indicator that shows idle, saving, saved, or error states. |
-| `ScrollArea` | function | Function exported by the Snapshot UI runtime. |
-| `ScrollAreaBase` | function | Standalone ScrollArea — a scrollable container with custom-styled thin scrollbars. No manifest context required. |
+| `ScrollAreaBase` | function | Standalone ScrollArea — a scrollable container with custom-styled thin scrollbars. Works with plain React props. |
 | `ScrollAreaBaseProps` | interface | Props accepted by the ScrollAreaBase standalone component. |
-| `ScrollAreaConfig` | typealias | Inferred config type for the ScrollArea component. |
-| `scrollAreaConfigSchema` | variable | Zod config schema for the ScrollArea component. A scrollable container with custom-styled thin scrollbars that respect the design token system. |
-| `Separator` | function | Function exported by the Snapshot UI runtime. |
-| `SeparatorBase` | function | Standalone Separator — a horizontal or vertical line with optional label. No manifest context required. |
+| `SeparatorBase` | function | Standalone Separator — a horizontal or vertical line with optional label. Works with plain React props. |
 | `SeparatorBaseProps` | interface | Props accepted by the SeparatorBase standalone component. |
-| `SeparatorConfig` | typealias | Inferred config type for the Separator component. |
-| `separatorConfigSchema` | variable | Zod config schema for the Separator component. A simple visual divider line, either horizontal or vertical. Optionally renders a centered label between the lines. |
-| `SeriesConfig` | typealias | Inferred type for a single chart series config. |
-| `seriesConfigSchema` | variable | Schema for a single data series in the chart. |
-| `SkeletonBase` | function | Standalone Skeleton — a placeholder loading indicator. No manifest context required. |
+| `SkeletonBase` | function | Standalone Skeleton — a placeholder loading indicator. Works with plain React props. |
 | `SkeletonBaseProps` | interface | Props accepted by the SkeletonBase standalone component. |
-| `SortState` | interface | Sort state for the data table. |
-| `StatCard` | function | Function exported by the Snapshot UI runtime. |
-| `StatCardBase` | function | Standalone StatCard — displays a single metric with optional trend indicator. No manifest context required. |
+| `StatCardBase` | function | Standalone StatCard — displays a single metric with optional trend indicator. Works with plain React props. |
 | `StatCardBaseProps` | interface | Props accepted by the StatCardBase standalone component. |
-| `StatCardConfig` | typealias | Inferred config type from the StatCard Zod schema. |
-| `statCardConfigSchema` | variable | Zod config schema for the StatCard component. Defines all manifest-settable fields for a stat card that displays a single metric with optional trend indicator. |
 | `StatCardTrend` | interface | Type definition exported by the Snapshot UI runtime. |
-| `TooltipBase` | function | Standalone Tooltip — wraps child content and shows informational text on hover with configurable placement and delay. No manifest context required. |
+| `TooltipBase` | function | Standalone Tooltip — wraps child content and shows informational text on hover with configurable placement and delay. Works with plain React props. |
 | `TooltipBaseProps` | interface | Props accepted by the TooltipBase standalone component. |
-| `trendConfigSchema` | variable | Schema for the trend indicator configuration. |
-| `useDataTable` | function | Headless hook for managing data table state. Provides sorting, pagination, filtering, selection, and search functionality without any rendering. Resolves `FromRef` values in the `data` and `params` fields via `useSubscribe`. |
-| `UseDataTableResult` | interface | Return type of the `useDataTable` headless hook. Provides all state and handlers needed to render a data table. |
-| `useDetailCard` | function | Hook that powers the DetailCard component. Resolves FromRefs, fetches data from endpoints, formats fields, and publishes the record data for other components to subscribe to. |
-| `UseDetailCardResult` | interface | Return type of the useDetailCard hook. |
-| `UseFeedResult` | interface | Return type of the useFeed headless hook. |
-| `UseStatCardResult` | interface | Result returned by the StatCard headless hook or internal logic. Provides all the data needed to render a stat card. |
-| `VoteBase` | function | Standalone Vote — upvote/downvote toggle with count display. No manifest context required. |
+| `VoteBase` | function | Standalone Vote — upvote/downvote toggle with count display. Works with plain React props. |
 | `VoteBaseProps` | interface | Props accepted by the VoteBase standalone component. |
 
 ### Details
@@ -1820,7 +1071,7 @@ Access the current route runtime state.
 #### `AlertBase({ id, title, description, variant, icon: iconProp, dismissible, actionLabel, onAction, className, style, slots, children, }: AlertBaseProps) => Element | null`
 
 Standalone Alert — a styled alert/notification box with optional icon,
-action button, and dismiss. No manifest context required.
+action button, and dismiss. Works with plain React props.
 
 **Example:**
 
@@ -1840,7 +1091,7 @@ action button, and dismiss. No manifest context required.
 #### `AvatarBase({ id, src, name, alt, size, shape, color, icon, status, className, style, slots, }: AvatarBaseProps) => Element`
 
 Standalone Avatar — image, initials, or icon fallback.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -1856,16 +1107,10 @@ No manifest context required.
 
 ---
 
-#### `AvatarGroup({ config }: { config: { type: "avatar-group"; data?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `AvatarGroupBase({ id, avatars, size, max, overlap: overlapProp, className, style, slots, }: AvatarGroupBaseProps) => Element`
 
 Standalone AvatarGroup — overlapping avatars with +N overflow.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -1883,36 +1128,10 @@ No manifest context required.
 
 ---
 
-#### `avatarGroupConfigSchema` *(variable)*
-
-Zod config schema for the AvatarGroup component.
-
-Displays a row of overlapping avatars with an optional "+N" overflow
-count. Commonly used for showing team members, assignees, or participants.
-
-**Example:**
-
-```json
-{
-  "type": "avatar-group",
-  "avatars": [
-    { "name": "Alice", "src": "/avatars/alice.jpg" },
-    { "name": "Bob" },
-    { "name": "Charlie", "src": "/avatars/charlie.jpg" },
-    { "name": "Diana" },
-    { "name": "Eve" }
-  ],
-  "max": 3,
-  "size": "md"
-}
-```
-
----
-
 #### `BadgeBase({ id, text, color, variant, size, rounded, icon, className, style, slots, }: BadgeBaseProps) => Element`
 
 Standalone Badge — a small label with color-coded variants.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -1928,16 +1147,10 @@ No manifest context required.
 
 ---
 
-#### `Chart({ config }: { config: { data: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | "json" | ...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `ChartBase({ id, chartType, data: rows, xKey, series, height, aspectRatio, grid: showGrid, legend: showLegend, isLoading, error, emptyMessage, hideWhenEmpty, hasNewData, onRefresh, onPointClick, loadingContent,...`
 
 Standalone Chart — renders data-driven charts via recharts.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -1954,20 +1167,10 @@ No manifest context required.
 
 ---
 
-#### `DataTable({ config }: { config: Record<string, any>; }) => Element`
-
-Config-driven DataTable component.
-
-For simple tables (no drag-and-drop, virtual scroll, context menus,
-or expandable rows), delegates to the standalone DataTableBase.
-For advanced features, falls back to the full manifest-based rendering.
-
----
-
 #### `DataTableBase({ id, columns, rows, sort, onSortChange, pagination, onPageChange, selectable, selection, onToggleRow, onToggleAll, rowIdField, searchable, searchPlaceholder, search, onSearchChange, rowActions, bulk...`
 
 Standalone DataTable — feature-rich data table with sorting, pagination,
-selection, and search. No manifest context required.
+selection, and search. Works with plain React props.
 
 **Example:**
 
@@ -1986,43 +1189,10 @@ selection, and search. No manifest context required.
 
 ---
 
-#### `dataTableConfigSchema` *(variable)*
-
-Zod schema for the DataTable component configuration.
-
-Defines a config-driven data table with sorting, pagination, filtering,
-selection, search, row actions, and bulk actions.
-
-**Example:**
-
-```json
-{
-  "type": "data-table",
-  "id": "users-table",
-  "data": "GET /api/users",
-  "columns": [
-    { "field": "name", "sortable": true },
-    { "field": "email" },
-    { "field": "status", "format": "badge", "badgeColors": { "active": "success", "inactive": "muted" } }
-  ],
-  "pagination": { "type": "offset", "pageSize": 20 },
-  "selectable": true,
-  "searchable": true
-}
-```
-
----
-
-#### `DetailCard({ config }: { config: Record<string, any>; }) => Element`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `DetailCardBase({ id, data, fields, title, actions, isLoading, error, emptyMessage, loadingContent, className, style, slots, }: DetailCardBaseProps) => Element`
 
 Standalone DetailCard — data-driven detail view with formatted fields
-and header actions. No manifest context required.
+and header actions. Works with plain React props.
 
 **Example:**
 
@@ -2041,39 +1211,10 @@ and header actions. No manifest context required.
 
 ---
 
-#### `detailCardConfigSchema` *(variable)*
-
-Zod schema for DetailCard component configuration.
-
-The detail card displays a single record's fields in a key-value layout.
-Used in drawers, modals, and detail pages.
-
-**Example:**
-
-```json
-{
-  "type": "detail-card",
-  "id": "user-detail",
-  "data": { "from": "users-table.selected" },
-  "title": "User Details",
-  "fields": [
-    { "field": "name", "label": "Full Name" },
-    { "field": "email", "format": "email", "copyable": true },
-    { "field": "role", "format": "badge" },
-    { "field": "createdAt", "format": "date" }
-  ],
-  "actions": [
-    { "label": "Edit", "action": { "type": "open-modal", "modal": "edit-user" } }
-  ]
-}
-```
-
----
-
 #### `EmptyStateBase({ id, title, description, icon, iconColor, size, actionLabel, onAction, className, style, slots, }: EmptyStateBaseProps) => Element`
 
 Standalone EmptyState — a centered message with optional icon and action.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2089,16 +1230,10 @@ No manifest context required.
 
 ---
 
-#### `EntityPicker({ config }: { config: Record<string, any>; }) => Element | null`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `EntityPickerBase({ id, entities, value, label: triggerBaseLabel, multiple: isMultiple, searchable, maxHeight, isLoading, error, onChange, className, style, slots, }: EntityPickerBaseProps) => Element`
 
 Standalone EntityPicker — dropdown with search, single/multi select.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2117,41 +1252,10 @@ No manifest context required.
 
 ---
 
-#### `entityPickerConfigSchema` *(variable)*
-
-Zod config schema for the EntityPicker component.
-
-A searchable dropdown for selecting entities (users, documents, items)
-from an API endpoint. Supports single and multi-select.
-
-**Example:**
-
-```json
-{
-  "type": "entity-picker",
-  "id": "user-picker",
-  "label": "Assign to...",
-  "data": "GET /api/users",
-  "labelField": "name",
-  "valueField": "id",
-  "descriptionField": "email",
-  "avatarField": "avatar_url",
-  "multiple": true
-}
-```
-
----
-
-#### `FavoriteButton({ config }: { config: { type: "favorite-button"; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { ...;...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `FavoriteButtonBase({ id, active: activeProp, size: sizeProp, onToggle, className, style, slots, }: FavoriteButtonBaseProps) => Element`
 
 Standalone FavoriteButton — a toggle button with a star icon.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2165,36 +1269,10 @@ No manifest context required.
 
 ---
 
-#### `favoriteButtonConfigSchema` *(variable)*
-
-Zod config schema for the FavoriteButton component.
-
-Defines all manifest-settable fields for a star toggle button
-used to mark items as favorites.
-
-**Example:**
-
-```json
-{
-  "type": "favorite-button",
-  "active": false,
-  "size": "md",
-  "toggleAction": { "type": "api", "method": "POST", "endpoint": "/api/favorites" }
-}
-```
-
----
-
-#### `Feed({ config }: { config: Record<string, any>; }) => Element`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `FeedBase({ id, items, relativeTime, groupBy, pageSize, infinite, itemActions, isLoading, error, emptyMessage, hasNewData, onRefresh, onSelectItem, loadingContent, className, style, slots, }: FeedBaseProps) =>...`
 
 Standalone Feed — feed/activity list with grouping, pagination, and
-live updates. No manifest context required.
+live updates. Works with plain React props.
 
 **Example:**
 
@@ -2212,43 +1290,10 @@ live updates. No manifest context required.
 
 ---
 
-#### `feedSchema` *(variable)*
-
-Zod schema for the Feed component configuration.
-
-Renders a scrollable activity/event stream from an endpoint or from-ref.
-Supports avatar, title, description, timestamp, badge fields, pagination,
-and publishes the selected item to the page context when `id` is set.
-
-**Example:**
-
-```json
-{
-  "type": "feed",
-  "id": "activity-feed",
-  "data": "GET /api/activity",
-  "itemKey": "id",
-  "title": "message",
-  "description": "detail",
-  "timestamp": "createdAt",
-  "avatar": "avatarUrl",
-  "badge": { "field": "type", "colorMap": { "error": "destructive", "info": "info" } },
-  "pageSize": 10
-}
-```
-
----
-
-#### `FilterBar({ config }: { config: { type: "filter-bar"; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { image?: s...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `FilterBarBase({ id, filters, showSearch, searchPlaceholder, onChange, className, style, slots, }: FilterBarBaseProps) => Element`
 
 Standalone FilterBar — search + filter dropdowns + active pills.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2265,16 +1310,10 @@ No manifest context required.
 
 ---
 
-#### `HighlightedText({ config }: { config: { type: "highlighted-text"; text: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase"...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `HighlightedTextBase({ id, text, highlight, caseSensitive, highlightColor, className, style, slots, }: HighlightedTextBaseProps) => Element`
 
 Standalone HighlightedText — renders text with search query highlighting.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2288,29 +1327,10 @@ No manifest context required.
 
 ---
 
-#### `highlightedTextConfigSchema` *(variable)*
-
-Zod config schema for the HighlightedText component.
-
-Renders text with search query highlighting. Matching portions are
-wrapped in `<mark>` elements with a configurable highlight color.
-
-**Example:**
-
-```json
-{
-  "type": "highlighted-text",
-  "text": "The quick brown fox jumps over the lazy dog",
-  "highlight": "fox"
-}
-```
-
----
-
 #### `ListBase({ id, items, variant, selectable, divider: showDividerProp, limit, isLoading, error, emptyMessage, hasNewData, onRefresh, loadingContent, errorContent, emptyContent, className, style, slots, }: ListB...`
 
 Standalone List — renders a vertical list of items with optional icons,
-descriptions, badges, and click actions. No manifest context required.
+descriptions, badges, and click actions. Works with plain React props.
 
 **Example:**
 
@@ -2327,16 +1347,10 @@ descriptions, badges, and click actions. No manifest context required.
 
 ---
 
-#### `NotificationBell({ config, }: { config: { type: "notification-bell"; ariaLive: "off" | "polite" | "assertive"; max?: number | undefined; id?: string | undefined; color?: string | undefined; position?: "fixed" | "rela...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `NotificationBellBase({ id, count, size, max, onClick, ariaLive, className, style, slots, }: NotificationBellBaseProps) => Element`
 
 Standalone NotificationBell — bell icon with unread count badge.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2351,30 +1365,10 @@ No manifest context required.
 
 ---
 
-#### `notificationBellConfigSchema` *(variable)*
-
-Zod config schema for the NotificationBell component.
-
-Defines all manifest-settable fields for a bell icon with
-an unread count badge.
-
-**Example:**
-
-```json
-{
-  "type": "notification-bell",
-  "count": 5,
-  "max": 99,
-  "clickAction": { "type": "navigate", "to": "/notifications" }
-}
-```
-
----
-
 #### `ProgressBase({ id, value: resolvedValue, max, label, size, variant, showValue, color, segments, className, style, slots, }: ProgressBaseProps) => Element`
 
 Standalone Progress — bar or circular progress indicator.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2391,16 +1385,10 @@ No manifest context required.
 
 ---
 
-#### `SaveIndicator({ config }: { config: { status: "error" | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | ... 6 ...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `SaveIndicatorBase({ id, status, showIcon, savingText, savedText, errorText, className, style, slots, }: SaveIndicatorBaseProps) => Element | null`
 
 Standalone SaveIndicator — shows saving/saved/error status.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2415,36 +1403,10 @@ No manifest context required.
 
 ---
 
-#### `saveIndicatorConfigSchema` *(variable)*
-
-Zod config schema for the SaveIndicator component.
-
-Defines all manifest-settable fields for a save status indicator
-that shows idle, saving, saved, or error states.
-
-**Example:**
-
-```json
-{
-  "type": "save-indicator",
-  "status": { "from": "my-form.saveStatus" },
-  "savedText": "All changes saved",
-  "showIcon": true
-}
-```
-
----
-
-#### `ScrollArea({ config }: { config: { type: "scroll-area"; content?: Record<string, unknown>[] | undefined; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "stic...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `ScrollAreaBase({ id, orientation, maxHeight, maxWidth, showScrollbar, children, className, style, slots, }: ScrollAreaBaseProps) => Element`
 
 Standalone ScrollArea — a scrollable container with custom-styled thin
-scrollbars. No manifest context required.
+scrollbars. Works with plain React props.
 
 **Example:**
 
@@ -2460,39 +1422,10 @@ scrollbars. No manifest context required.
 
 ---
 
-#### `scrollAreaConfigSchema` *(variable)*
-
-Zod config schema for the ScrollArea component.
-
-A scrollable container with custom-styled thin scrollbars
-that respect the design token system.
-
-**Example:**
-
-```json
-{
-  "type": "scroll-area",
-  "maxHeight": "300px",
-  "orientation": "vertical",
-  "showScrollbar": "hover",
-  "content": [
-    { "type": "heading", "text": "Long list..." }
-  ]
-}
-```
-
----
-
-#### `Separator({ config }: { config: { type: "separator"; label?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | .....`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `SeparatorBase({ id, orientation, label, className, style, slots, }: SeparatorBaseProps) => Element`
 
 Standalone Separator — a horizontal or vertical line with optional label.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2505,29 +1438,10 @@ No manifest context required.
 
 ---
 
-#### `separatorConfigSchema` *(variable)*
-
-Zod config schema for the Separator component.
-
-A simple visual divider line, either horizontal or vertical.
-Optionally renders a centered label between the lines.
-
-**Example:**
-
-```json
-{
-  "type": "separator",
-  "orientation": "horizontal",
-  "label": "Or continue with"
-}
-```
-
----
-
 #### `SkeletonBase({ id, variant, animated, lines, width, height, className, style, slots, }: SkeletonBaseProps) => Element`
 
 Standalone Skeleton — a placeholder loading indicator.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2542,16 +1456,10 @@ No manifest context required.
 
 ---
 
-#### `StatCard({ config }: { config: { data: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | "json" | ...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `StatCardBase({ id, value, label, isLoading, error, icon, iconColor, loadingVariant, trend, onClick, emptyMessage, className, style, slots, }: StatCardBaseProps) => Element`
 
 Standalone StatCard — displays a single metric with optional trend indicator.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2567,32 +1475,10 @@ No manifest context required.
 
 ---
 
-#### `statCardConfigSchema` *(variable)*
-
-Zod config schema for the StatCard component.
-
-Defines all manifest-settable fields for a stat card that displays
-a single metric with optional trend indicator.
-
-**Example:**
-
-```json
-{
-  "type": "stat-card",
-  "data": "GET /api/stats/revenue",
-  "field": "total",
-  "label": "Revenue",
-  "format": "currency",
-  "trend": { "field": "previousTotal", "sentiment": "up-is-good" }
-}
-```
-
----
-
 #### `TooltipBase({ id, text, placement, delay, children, className, style, slots, }: TooltipBaseProps) => Element`
 
 Standalone Tooltip — wraps child content and shows informational text
-on hover with configurable placement and delay. No manifest context required.
+on hover with configurable placement and delay. Works with plain React props.
 
 **Example:**
 
@@ -2604,72 +1490,10 @@ on hover with configurable placement and delay. No manifest context required.
 
 ---
 
-#### `useDataTable(config: Record<string, any>) => UseDataTableResult`
-
-Headless hook for managing data table state.
-
-Provides sorting, pagination, filtering, selection, and search
-functionality without any rendering. Resolves `FromRef` values
-in the `data` and `params` fields via `useSubscribe`.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `config` | DataTable configuration (from Zod schema) |
-
-**Returns:** All state and handlers needed to render a data table
-
-**Example:**
-
-```tsx
-const table = useDataTable({
-  type: 'data-table',
-  data: 'GET /api/users',
-  columns: 'auto',
-  pagination: { type: 'offset', pageSize: 10 },
-  selectable: true,
-  searchable: true,
-})
-
-// table.rows — current page rows
-// table.sort — current sort state
-// table.setSortColumn('name') — toggle sort
-// table.selectedRows — selected row objects
-```
-
----
-
-#### `useDetailCard(config: Record<string, any>) => UseDetailCardResult`
-
-Hook that powers the DetailCard component.
-Resolves FromRefs, fetches data from endpoints, formats fields,
-and publishes the record data for other components to subscribe to.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `config` | The DetailCard configuration |
-
-**Returns:** Data, fields, title, loading/error state, and refetch function
-
-**Example:**
-
-```tsx
-const { data, fields, title, isLoading, error, refetch } = useDetailCard({
-  type: 'detail-card',
-  data: { from: 'users-table.selected' },
-  fields: 'auto',
-})
-```
-
----
-
 #### `VoteBase({ id, value, onUpvote, onDownvote, className, style, slots, }: VoteBaseProps) => Element`
 
 Standalone Vote — upvote/downvote toggle with count display.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2687,130 +1511,96 @@ No manifest context required.
 
 | Export | Kind | Description |
 |---|---|---|
-| `AutoForm` | function | Config-driven form component with multi-column layout, conditional field visibility, and section grouping. Supports client-side validation, submission to an API endpoint, manifest-aware resource mutation (invalidation + optimistic handling), workflow lifecycle hooks (`beforeSubmit`, `afterSubmit`, `error`), and action chaining on success/error. Publishes form state to the page context when an `id` is configured. |
-| `AutoFormBase` | function | Standalone AutoFormBase -- renders a config-driven form with fields, sections, validation, and submit/reset actions. No manifest context required. |
+| `AutoFormBase` | function | Standalone AutoFormBase -- renders a schema-driven form with fields, sections, validation, and submit/reset actions. Works with plain React props. |
 | `AutoFormBaseProps` | interface | Props accepted by the AutoFormBase standalone component. |
-| `AutoFormConfig` | typealias | Inferred type for the AutoForm component config. |
-| `autoFormConfigSchema` | variable | Zod schema for the AutoForm component config. Defines a config-driven form that auto-generates fields from config or OpenAPI schema. Supports validation, submission, action chaining, multi-column layout, conditional field visibility, and field grouping. |
-| `AutoFormFieldConfig` | interface | Manifest configuration type for auto form field config. |
-| `AutoFormSectionConfig` | interface | Manifest configuration type for auto form section config. |
-| `Button` | function | Function exported by the Snapshot UI runtime. |
-| `ButtonBase` | function | Standalone ButtonBase -- a styled button that works with plain React props. No manifest context required. |
+| `AutoFormFieldConfig` | interface | Configuration type for auto form field config. |
+| `AutoFormFieldOption` | interface | Type definition exported by the Snapshot UI runtime. |
+| `AutoFormFieldValidation` | interface | Type definition exported by the Snapshot UI runtime. |
+| `AutoFormSectionConfig` | interface | Configuration type for auto form section config. |
+| `ButtonBase` | function | Standalone ButtonBase -- a styled button that works with plain React props. Works with plain React props. |
 | `ButtonBaseProps` | interface | Props accepted by the ButtonBase standalone component. |
-| `buttonConfigSchema` | variable | Zod schema for validating button config schema. |
-| `ColorPicker` | function | Function exported by the Snapshot UI runtime. |
-| `ColorPickerConfig` | typealias | Config for the manifest-driven color picker component. |
-| `colorPickerConfigSchema` | variable | Schema for color picker components with optional swatches, alpha, and change actions. |
-| `ColorPickerField` | function | Standalone ColorPickerField -- a color picker with optional swatches, alpha slider, and custom hex input. No manifest context required. |
+| `ButtonControl` | function | Low-level styled button element with surface resolution and accessibility attributes. Used internally by ButtonBase and other components that need a styled `<button>`. Works with plain React props. |
+| `ButtonControlProps` | interface | Props accepted by the ButtonControl component. |
+| `ColorPickerBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `ColorPickerBaseProps` | typealias | Props accepted by the ColorPickerBase standalone component. |
+| `ColorPickerField` | function | Standalone ColorPickerField -- a color picker with optional swatches, alpha slider, and custom hex input. Works with plain React props. |
 | `ColorPickerFieldProps` | interface | Props accepted by the ColorPickerField component. |
-| `DatePicker` | function | Function exported by the Snapshot UI runtime. |
-| `DatePickerConfig` | typealias | Config for the manifest-driven date picker component. |
-| `datePickerConfigSchema` | variable | Schema for date picker components covering single, range, and multi-date selection. |
-| `DatePickerField` | function | Standalone DatePickerField -- date picker supporting single, range, and multiple selection modes with presets and disabled dates. No manifest context required. |
+| `DatePickerBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `DatePickerBaseProps` | typealias | Props accepted by the DatePickerBase standalone component. |
+| `DatePickerDisabledEntry` | interface | Type definition exported by the Snapshot UI runtime. |
+| `DatePickerField` | function | Standalone DatePickerField -- date picker supporting single, range, and multiple selection modes with presets and disabled dates. Works with plain React props. |
 | `DatePickerFieldProps` | interface | Props accepted by the DatePickerField component. |
-| `FieldConfig` | typealias | Inferred type for a single field configuration. |
-| `fieldConfigSchema` | variable | Schema for an individual field configuration. |
-| `FieldErrors` | typealias | Per-field validation error. |
-| `IconButtonBase` | function | Standalone IconButtonBase -- an icon-only button with configurable shape, size, and variant. No manifest context required. |
+| `DatePickerPreset` | interface | Type definition exported by the Snapshot UI runtime. |
+| `IconButtonBase` | function | Standalone IconButtonBase -- an icon-only button with configurable shape, size, and variant. Works with plain React props. |
 | `IconButtonBaseProps` | interface | Props accepted by the IconButtonBase standalone component. |
-| `InlineEdit` | function | InlineEdit component — click-to-edit text field. Toggles between a display mode and an edit mode. Enter or blur saves the value; Escape reverts to the original value when `cancelOnEscape` is enabled. |
-| `InlineEditConfig` | typealias | Inferred config type for the InlineEdit component. |
-| `inlineEditConfigSchema` | variable | Zod config schema for the InlineEdit component. A click-to-edit text field that toggles between display and edit modes. Publishes `{ value, editing }` to the page context. |
-| `InlineEditField` | function | Standalone InlineEditField -- a click-to-edit text field that toggles between display and input modes. No manifest context required. |
+| `InlineEditBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `InlineEditBaseProps` | typealias | Props accepted by the InlineEditBase standalone component. |
+| `InlineEditField` | function | Standalone InlineEditField -- a click-to-edit text field that toggles between display and input modes. Works with plain React props. |
 | `InlineEditFieldProps` | interface | Props accepted by the InlineEditField component. |
-| `Input` | function | Manifest adapter — resolves config refs and actions, delegates to InputField. |
-| `InputConfig` | typealias | Inferred config type from the Input Zod schema. |
-| `inputConfigSchema` | variable | Zod config schema for the Input component. Defines a standalone text input field with label, placeholder, validation, and optional icon. |
-| `InputField` | function | Standalone InputField — a complete form field (label + input + helper/error) that works with plain React props. No manifest context required. |
+| `InputBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `InputBaseProps` | typealias | Props accepted by the InputBase standalone component. |
+| `InputControl` | function | Low-level styled input element with surface resolution and state management. Used internally by InputField and other components that need a styled `<input>`. Works with plain React props. |
+| `InputControlProps` | interface | Props accepted by the InputControl component. |
+| `InputField` | function | Standalone InputField — a complete form field (label + input + helper/error) that works with plain React props. Works with plain React props. |
 | `InputFieldProps` | interface | Props accepted by the InputField component. |
-| `LocationInput` | function | Function exported by the Snapshot UI runtime. |
-| `LocationInputConfig` | typealias | Config for the manifest-driven location input component. |
-| `locationInputConfigSchema` | variable | Zod config schema for the LocationInput component. Geocode autocomplete input that searches a backend endpoint, displays matching locations in a dropdown, and extracts coordinates on selection. Publishes `{ name, lat, lng, address }`. |
-| `LocationInputField` | function | Standalone LocationInputField -- a location search input with results dropdown and optional Google Maps link. No manifest context required. |
+| `LocationInputBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `LocationInputBaseProps` | typealias | Props accepted by the LocationInputBase standalone component. |
+| `LocationInputField` | function | Standalone LocationInputField -- a location search input with results dropdown and optional Google Maps link. Works with plain React props. |
 | `LocationInputFieldProps` | interface | Props accepted by the LocationInputField component. |
 | `LocationResult` | interface | Type definition exported by the Snapshot UI runtime. |
-| `MultiSelect` | function | Function exported by the Snapshot UI runtime. |
-| `MultiSelectConfig` | typealias | Inferred config type from the MultiSelect Zod schema. |
-| `multiSelectConfigSchema` | variable | Zod config schema for the MultiSelect component. Defines a dropdown with checkboxes for selecting multiple values, with optional search filtering and pill display. |
-| `MultiSelectField` | function | Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search, and configurable max selection. No manifest context required. |
+| `MultiSelectBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `MultiSelectBaseProps` | typealias | Props accepted by the MultiSelectBase standalone component. |
+| `MultiSelectField` | function | Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search, and configurable max selection. Works with plain React props. |
 | `MultiSelectFieldOption` | interface | Type definition exported by the Snapshot UI runtime. |
 | `MultiSelectFieldProps` | interface | Props accepted by the MultiSelectField component. |
-| `QuickAdd` | function | Function exported by the Snapshot UI runtime. |
-| `QuickAddConfig` | typealias | Inferred config type from the QuickAdd Zod schema. |
-| `quickAddConfigSchema` | variable | Zod config schema for the QuickAdd component. Defines all manifest-settable fields for an inline creation bar that allows quick item entry with a text input and submit button. |
-| `QuickAddField` | function | Standalone QuickAddField -- a compact input with submit button for quickly adding items to a list. No manifest context required. |
+| `QuickAddBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `QuickAddBaseProps` | typealias | Props accepted by the QuickAddBase standalone component. |
+| `QuickAddField` | function | Standalone QuickAddField -- a compact input with submit button for quickly adding items to a list. Works with plain React props. |
 | `QuickAddFieldProps` | interface | Props accepted by the QuickAddField component. |
-| `Select` | function | Function exported by the Snapshot UI runtime. |
-| `selectConfigSchema` | variable | Zod schema for validating select config schema. |
-| `SelectField` | function | Standalone SelectField -- a complete select form field with label, options, helper/error text, and required indicator. No manifest context required. |
+| `SelectBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `SelectBaseProps` | typealias | Props accepted by the SelectBase standalone component. |
+| `SelectControl` | function | Low-level styled select element with surface resolution and state management. Used internally by SelectField and other components that need a styled `<select>`. Works with plain React props. |
+| `SelectControlProps` | interface | Props accepted by the SelectControl component. |
+| `SelectField` | function | Standalone SelectField -- a complete select form field with label, options, helper/error text, and required indicator. Works with plain React props. |
 | `SelectFieldProps` | interface | Props accepted by the SelectField component. |
-| `Slider` | function | Render a manifest-driven slider input. |
-| `SliderConfig` | typealias | Config for the manifest-driven slider component. |
-| `sliderConfigSchema` | variable | Schema for single-value and ranged slider controls with optional value display/actions. |
-| `SliderField` | function | Standalone SliderField -- a range slider with optional label, value display, limit labels, and dual-thumb range mode. No manifest context required. |
+| `SliderBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `SliderBaseProps` | typealias | Props accepted by the SliderBase standalone component. |
+| `SliderField` | function | Standalone SliderField -- a range slider with optional label, value display, limit labels, and dual-thumb range mode. Works with plain React props. |
 | `SliderFieldProps` | interface | Props accepted by the SliderField component. |
-| `SwitchField` | function | Standalone SwitchField -- a toggle switch with label, description, and configurable size and color. No manifest context required. |
+| `SwitchBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `SwitchBaseProps` | typealias | Props accepted by the SwitchBase standalone component. |
+| `SwitchField` | function | Standalone SwitchField -- a toggle switch with label, description, and configurable size and color. Works with plain React props. |
 | `SwitchFieldProps` | interface | Props accepted by the SwitchField component. |
-| `TagSelector` | function | Function exported by the Snapshot UI runtime. |
-| `TagSelectorConfig` | typealias | Inferred config type from the TagSelector Zod schema. |
-| `tagSelectorConfigSchema` | variable | Zod config schema for the TagSelector component. A tag input that allows selecting from predefined tags or creating new ones. Tags display as colored pills with remove buttons. |
-| `TagSelectorField` | function | Standalone TagSelectorField -- tag pills with dropdown selection, search filtering, and optional tag creation. No manifest context required. |
+| `TagSelectorBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `TagSelectorBaseProps` | typealias | Props accepted by the TagSelectorBase standalone component. |
+| `TagSelectorField` | function | Standalone TagSelectorField -- tag pills with dropdown selection, search filtering, and optional tag creation. Works with plain React props. |
 | `TagSelectorFieldProps` | interface | Props accepted by the TagSelectorField component. |
 | `TagSelectorTag` | interface | Type definition exported by the Snapshot UI runtime. |
-| `Textarea` | function | Function exported by the Snapshot UI runtime. |
-| `TextareaConfig` | typealias | Inferred config type from the Textarea Zod schema. |
-| `textareaConfigSchema` | variable | Zod config schema for the Textarea component. Defines a multi-line text input with label, character count, validation, and configurable resize behavior. |
-| `TextareaField` | function | Standalone TextareaField -- a complete textarea form field with label, character counter, validation, and helper/error text. No manifest context required. |
+| `TextareaBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `TextareaBaseProps` | typealias | Props accepted by the TextareaBase standalone component. |
+| `TextareaControl` | function | Low-level styled textarea element with surface resolution and state management. Used internally by TextareaField and other components that need a styled `<textarea>`. Works with plain React props. |
+| `TextareaControlProps` | interface | Props accepted by the TextareaControl component. |
+| `TextareaField` | function | Standalone TextareaField -- a complete textarea form field with label, character counter, validation, and helper/error text. Works with plain React props. |
 | `TextareaFieldProps` | interface | Props accepted by the TextareaField component. |
-| `Toggle` | function | Function exported by the Snapshot UI runtime. |
-| `ToggleConfig` | typealias | Inferred config type from the Toggle Zod schema. |
-| `toggleConfigSchema` | variable | Zod config schema for the Toggle component. Defines a pressed/unpressed toggle button that publishes its state. Can display text, an icon, or both. |
-| `ToggleField` | function | Standalone ToggleField -- a pressable toggle button with optional icon and label. No manifest context required. |
+| `ToggleBase` | variable | Exported variable from the Snapshot UI runtime. |
+| `ToggleBaseProps` | typealias | Props accepted by the ToggleBase standalone component. |
+| `ToggleField` | function | Standalone ToggleField -- a pressable toggle button with optional icon and label. Works with plain React props. |
 | `ToggleFieldProps` | interface | Props accepted by the ToggleField component. |
-| `ToggleGroupBase` | function | Standalone ToggleGroupBase -- a group of toggle buttons supporting single or multi-select modes. No manifest context required. |
+| `ToggleGroupBase` | function | Standalone ToggleGroupBase -- a group of toggle buttons supporting single or multi-select modes. Works with plain React props. |
 | `ToggleGroupBaseProps` | interface | Props accepted by the ToggleGroupBase standalone component. |
 | `ToggleGroupItem` | interface | Type definition exported by the Snapshot UI runtime. |
-| `TouchedFields` | typealias | Tracks which fields have been interacted with. |
-| `useAutoForm` | function | Headless hook for form state management. Tracks field values, validation errors, and touched state. Validates on blur (per-field) and on submit (all fields). |
-| `UseAutoFormResult` | interface | Return type for the useAutoForm headless hook. |
-| `useWizard` | function | Headless hook that manages multi-step wizard state including step navigation, per-step validation, field tracking, and final submission. Provides reactive state for the current step, accumulated data across steps, validation errors, and transition controls (next/prev/skip/reset). |
-| `UseWizardResult` | interface | Return type of the useWizard headless hook. |
-| `Wizard` | function | Render a multi-step form wizard with built-in validation, step state, and slot-aware styling. |
-| `WizardBase` | function | Standalone WizardBase -- a multi-step form wizard with progress indicator, step navigation, field validation, and completion state. No manifest context required. |
+| `WizardBase` | function | Standalone WizardBase -- a multi-step form wizard with progress indicator, step navigation, field validation, and completion state. Works with plain React props. |
 | `WizardBaseProps` | interface | Props accepted by the WizardBase standalone component. |
-| `WizardConfig` | typealias | Inferred type for the Wizard component configuration. |
-| `WizardFieldConfig` | interface | Manifest configuration type for wizard field config. |
-| `wizardSchema` | variable | Zod schema for the Wizard component configuration. A multi-step form flow. Each step collects fields independently. On the final step, all accumulated data is submitted to `submitEndpoint` (if set) and published to the page context via `id`. |
+| `WizardFieldConfig` | interface | Configuration type for wizard field config. |
 | `WizardState` | interface | Type definition exported by the Snapshot UI runtime. |
-| `WizardStepConfig` | typealias | Inferred type for a single wizard step configuration. |
 | `WizardStepDef` | interface | Type definition exported by the Snapshot UI runtime. |
-| `wizardStepSchema` | variable | Schema for a single wizard step. |
 
 ### Details
 
-#### `AutoForm({ config }: { config: Record<string, any>; }) => Element | null`
-
-Config-driven form component with multi-column layout, conditional
-field visibility, and section grouping.
-
-Supports client-side validation, submission to an API endpoint,
-manifest-aware resource mutation (invalidation + optimistic handling),
-workflow lifecycle hooks (`beforeSubmit`, `afterSubmit`, `error`),
-and action chaining on success/error. Publishes form state to the
-page context when an `id` is configured.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `props` | Component props containing the form config |
-
----
-
 #### `AutoFormBase({ id, fields, sections, values, errors, touched, isSubmitting, isDirty, isValid, submitLabel: submitLabelProp, submitLoadingLabel: submitLoadingLabelProp, resetLabel: resetLabelProp, showReset, layou...`
 
-Standalone AutoFormBase -- renders a config-driven form with fields, sections,
-validation, and submit/reset actions. No manifest context required.
+Standalone AutoFormBase -- renders a schema-driven form with fields, sections,
+validation, and submit/reset actions. Works with plain React props.
 
 **Example:**
 
@@ -2831,49 +1621,10 @@ validation, and submit/reset actions. No manifest context required.
 
 ---
 
-#### `autoFormConfigSchema` *(variable)*
-
-Zod schema for the AutoForm component config.
-
-Defines a config-driven form that auto-generates fields from config
-or OpenAPI schema. Supports validation, submission, action chaining,
-multi-column layout, conditional field visibility, and field grouping.
-
-**Example:**
-
-```json
-{
-  "type": "form",
-  "submit": "/api/users",
-  "method": "POST",
-  "columns": 2,
-  "fields": [
-    { "name": "firstName", "type": "text", "required": true, "span": 1 },
-    { "name": "lastName", "type": "text", "required": true, "span": 1 },
-    { "name": "email", "type": "email", "required": true },
-    { "name": "role", "type": "select", "options": [
-      { "label": "Admin", "value": "admin" },
-      { "label": "User", "value": "user" }
-    ]},
-    { "name": "notes", "type": "textarea", "dependsOn": { "field": "role", "value": "admin" } }
-  ],
-  "submitLabel": "Create User",
-  "onSuccess": { "type": "toast", "message": "User created!", "variant": "success" }
-}
-```
-
----
-
-#### `Button({ config }: { config: { action: ActionConfig | ActionConfig[]; type: "button"; label: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | ... 13 more ... | undefined; tr...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `ButtonBase({ id, label, icon, variant, size, disabled, fullWidth, onClick, type, ariaLabel, children, className, style, slots, }: ButtonBaseProps) => Element`
 
 Standalone ButtonBase -- a styled button that works with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -2888,16 +1639,26 @@ No manifest context required.
 
 ---
 
-#### `ColorPicker({ config }: { config: { type: "color-picker"; label?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" |...`
+#### `ButtonControl({ id, children, type, variant, size, disabled, fullWidth, onClick, onKeyDown, onFocus, onBlur, onPointerDown, onPointerUp, onPointerEnter, onPointerLeave, onTouchStart, onTouchEnd, className, style, ...`
 
-Function exported by the Snapshot UI runtime.
+Low-level styled button element with surface resolution and accessibility attributes.
+Used internally by ButtonBase and other components that need a styled `<button>`.
+Works with plain React props.
+
+**Example:**
+
+```tsx
+<ButtonControl variant="default" size="sm" onClick={handleClick}>
+  Save
+</ButtonControl>
+```
 
 ---
 
 #### `ColorPickerField({ id, label, defaultValue, format, showAlpha, allowCustom, swatches, onChange, className, style, slots, }: ColorPickerFieldProps) => Element`
 
 Standalone ColorPickerField -- a color picker with optional swatches, alpha slider,
-and custom hex input. No manifest context required.
+and custom hex input. Works with plain React props.
 
 **Example:**
 
@@ -2913,16 +1674,10 @@ and custom hex input. No manifest context required.
 
 ---
 
-#### `DatePicker({ config }: { config: { type: "date-picker"; label?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `DatePickerField({ id, label, placeholder, mode, format, valueFormat, min, max, presets, disabledDates, onChange, className, style, slots, }: DatePickerFieldProps) => Element`
 
 Standalone DatePickerField -- date picker supporting single, range, and multiple
-selection modes with presets and disabled dates. No manifest context required.
+selection modes with presets and disabled dates. Works with plain React props.
 
 **Example:**
 
@@ -2941,7 +1696,7 @@ selection modes with presets and disabled dates. No manifest context required.
 #### `IconButtonBase({ id, icon, ariaLabel, variant, size: sizeProp, shape, tooltip, disabled, onClick, className, style, slots, }: IconButtonBaseProps) => Element`
 
 Standalone IconButtonBase -- an icon-only button with configurable shape,
-size, and variant. No manifest context required.
+size, and variant. Works with plain React props.
 
 **Example:**
 
@@ -2957,40 +1712,10 @@ size, and variant. No manifest context required.
 
 ---
 
-#### `InlineEdit({ config }: { config: { type: "inline-edit"; value?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ...`
-
-InlineEdit component — click-to-edit text field.
-
-Toggles between a display mode and an edit mode. Enter or blur saves the
-value; Escape reverts to the original value when `cancelOnEscape` is enabled.
-
----
-
-#### `inlineEditConfigSchema` *(variable)*
-
-Zod config schema for the InlineEdit component.
-
-A click-to-edit text field that toggles between display and edit modes.
-Publishes `{ value, editing }` to the page context.
-
-**Example:**
-
-```json
-{
-  "type": "inline-edit",
-  "id": "title-edit",
-  "value": "My Title",
-  "placeholder": "Enter title",
-  "saveAction": { "type": "api", "method": "PUT", "endpoint": "/api/title", "body": { "from": "title-edit" } }
-}
-```
-
----
-
 #### `InlineEditField({ id, value: valueProp, placeholder: placeholderProp, inputType, cancelOnEscape: cancelOnEscapeProp, fontSize: fontSizeProp, onSave, className, style, slots, }: InlineEditFieldProps) => Element`
 
 Standalone InlineEditField -- a click-to-edit text field that toggles between
-display and input modes. No manifest context required.
+display and input modes. Works with plain React props.
 
 **Example:**
 
@@ -3004,31 +1729,21 @@ display and input modes. No manifest context required.
 
 ---
 
-#### `Input({ config }: { config: { type: "input"; value?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lower...`
+#### `InputControl({ inputRef, inputId, name, type, value, checked, placeholder, autoComplete, autoFocus, disabled, readOnly, accept, multiple, list, min, max, step, maxLength, pattern, required, ariaInvalid, ariaDescr...`
 
-Manifest adapter — resolves config refs and actions, delegates to InputField.
-
----
-
-#### `inputConfigSchema` *(variable)*
-
-Zod config schema for the Input component.
-
-Defines a standalone text input field with label, placeholder,
-validation, and optional icon.
+Low-level styled input element with surface resolution and state management.
+Used internally by InputField and other components that need a styled `<input>`.
+Works with plain React props.
 
 **Example:**
 
-```json
-{
-  "type": "input",
-  "id": "email-field",
-  "label": "Email",
-  "inputType": "email",
-  "placeholder": "you@example.com",
-  "required": true,
-  "helperText": "We'll never share your email"
-}
+```tsx
+<InputControl
+  surfaceId="email-input"
+  type="email"
+  placeholder="you@example.com"
+  onChangeText={(val) => setEmail(val)}
+/>
 ```
 
 ---
@@ -3036,7 +1751,7 @@ validation, and optional icon.
 #### `InputField({ id, label, placeholder, value: controlledValue, type, required, disabled, readOnly, maxLength, pattern, helperText, errorText, icon, onChange, onBlur, onFocus, onClick, onKeyDown, onMouseEnter, onM...`
 
 Standalone InputField — a complete form field (label + input + helper/error)
-that works with plain React props. No manifest context required.
+that works with plain React props. Works with plain React props.
 
 **Example:**
 
@@ -3054,55 +1769,10 @@ that works with plain React props. No manifest context required.
 
 ---
 
-#### `LocationInput({ config }: { config: { type: "location-input"; searchEndpoint: string | { resource: string; params?: Record<string, unknown> | undefined; }; value?: string | { from: string; transform?: "string" | ....`
-
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `locationInputConfigSchema` *(variable)*
-
-Zod config schema for the LocationInput component.
-
-Geocode autocomplete input that searches a backend endpoint,
-displays matching locations in a dropdown, and extracts
-coordinates on selection. Publishes `{ name, lat, lng, address }`.
-
-**Example:**
-
-```json
-{
-  "type": "location-input",
-  "id": "venue-location",
-  "label": "Venue",
-  "placeholder": "Search for a location...",
-  "searchEndpoint": "GET /api/geocode",
-  "changeAction": {
-    "type": "set-value",
-    "target": "map",
-    "value": { "from": "venue-location" }
-  }
-}
-```
-
-Expected API response format:
-```json
-[
-  {
-    "name": "Central Park",
-    "address": "New York, NY, USA",
-    "lat": 40.7829,
-    "lng": -73.9654
-  }
-]
-```
-
----
-
 #### `LocationInputField({ id, label, placeholder: placeholderProp, helperText, errorText: errorTextProp, required, disabled, value: valueProp, showMapLink, results: resultsProp, loading, onSearch, onSelect, className, style...`
 
 Standalone LocationInputField -- a location search input with results dropdown
-and optional Google Maps link. No manifest context required.
+and optional Google Maps link. Works with plain React props.
 
 **Example:**
 
@@ -3118,43 +1788,10 @@ and optional Google Maps link. No manifest context required.
 
 ---
 
-#### `MultiSelect({ config }: { config: Record<string, any>; }) => Element | null`
-
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `multiSelectConfigSchema` *(variable)*
-
-Zod config schema for the MultiSelect component.
-
-Defines a dropdown with checkboxes for selecting multiple values,
-with optional search filtering and pill display.
-
-**Example:**
-
-```json
-{
-  "type": "multi-select",
-  "id": "tags",
-  "label": "Tags",
-  "placeholder": "Select tags...",
-  "options": [
-    { "label": "Bug", "value": "bug", "icon": "bug" },
-    { "label": "Feature", "value": "feature", "icon": "star" },
-    { "label": "Docs", "value": "docs", "icon": "file-text" }
-  ],
-  "maxSelected": 5,
-  "searchable": true
-}
-```
-
----
-
 #### `MultiSelectField({ id, label, placeholder: placeholderProp, options: optionsProp, value: controlledValue, defaultValue, disabled, searchable, maxSelected, loading, error: errorProp, onRetry, onChange, className, styl...`
 
 Standalone MultiSelectField -- multi-select dropdown with pill tags, inline search,
-and configurable max selection. No manifest context required.
+and configurable max selection. Works with plain React props.
 
 **Example:**
 
@@ -3173,36 +1810,10 @@ and configurable max selection. No manifest context required.
 
 ---
 
-#### `QuickAdd({ config }: { config: { type: "quick-add"; icon?: string | undefined; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; backgro...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `quickAddConfigSchema` *(variable)*
-
-Zod config schema for the QuickAdd component.
-
-Defines all manifest-settable fields for an inline creation bar
-that allows quick item entry with a text input and submit button.
-
-**Example:**
-
-```json
-{
-  "type": "quick-add",
-  "placeholder": "Add a task...",
-  "submitAction": { "type": "api", "method": "POST", "endpoint": "/api/tasks" },
-  "clearOnSubmit": true
-}
-```
-
----
-
 #### `QuickAddField({ id, placeholder: placeholderProp, icon: iconProp, submitOnEnter: submitOnEnterProp, showButton: showButtonProp, buttonText: buttonTextProp, clearOnSubmit: clearOnSubmitProp, onSubmit, className, st...`
 
 Standalone QuickAddField -- a compact input with submit button for quickly
-adding items to a list. No manifest context required.
+adding items to a list. Works with plain React props.
 
 **Example:**
 
@@ -3217,16 +1828,27 @@ adding items to a list. No manifest context required.
 
 ---
 
-#### `Select({ config }: { config: { options: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | ... 6 ...`
+#### `SelectControl({ selectRef, selectId, name, value, disabled, required, ariaInvalid, ariaDescribedBy, ariaLabel, onChangeValue, onBlur, onFocus, onClick, onKeyDown, onMouseEnter, onMouseLeave, onPointerDown, onPoint...`
 
-Function exported by the Snapshot UI runtime.
+Low-level styled select element with surface resolution and state management.
+Used internally by SelectField and other components that need a styled `<select>`.
+Works with plain React props.
+
+**Example:**
+
+```tsx
+<SelectControl surfaceId="role-select" value={role} onChangeValue={setRole}>
+  <option value="admin">Admin</option>
+  <option value="member">Member</option>
+</SelectControl>
+```
 
 ---
 
 #### `SelectField({ id, label, placeholder, value: controlledValue, defaultValue, required, disabled, helperText, errorText, options, loading, onChange, onBlur, onFocus, onClick, onKeyDown, className, style, slots, }:...`
 
 Standalone SelectField -- a complete select form field with label, options,
-helper/error text, and required indicator. No manifest context required.
+helper/error text, and required indicator. Works with plain React props.
 
 **Example:**
 
@@ -3241,16 +1863,10 @@ helper/error text, and required indicator. No manifest context required.
 
 ---
 
-#### `Slider({ config }: { config: { type: "slider"; label?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowe...`
-
-Render a manifest-driven slider input.
-
----
-
 #### `SliderField({ id, label, min: minProp, max: maxProp, step, defaultValue, range, showValue, showLimits, suffix, disabled, onChange, className, style, slots, }: SliderFieldProps) => Element`
 
 Standalone SliderField -- a range slider with optional label, value display,
-limit labels, and dual-thumb range mode. No manifest context required.
+limit labels, and dual-thumb range mode. Works with plain React props.
 
 **Example:**
 
@@ -3270,7 +1886,7 @@ limit labels, and dual-thumb range mode. No manifest context required.
 #### `SwitchField({ id, label, description, checked: controlledChecked, defaultChecked, disabled, size: sizeProp, color, onChange, className, style, slots, }: SwitchFieldProps) => Element`
 
 Standalone SwitchField -- a toggle switch with label, description, and
-configurable size and color. No manifest context required.
+configurable size and color. Works with plain React props.
 
 **Example:**
 
@@ -3285,41 +1901,10 @@ configurable size and color. No manifest context required.
 
 ---
 
-#### `TagSelector({ config }: { config: { type: "tag-selector"; data?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `tagSelectorConfigSchema` *(variable)*
-
-Zod config schema for the TagSelector component.
-
-A tag input that allows selecting from predefined tags or creating new ones.
-Tags display as colored pills with remove buttons.
-
-**Example:**
-
-```json
-{
-  "type": "tag-selector",
-  "id": "topic-tags",
-  "label": "Topics",
-  "tags": [
-    { "label": "React", "value": "react", "color": "#61dafb" },
-    { "label": "TypeScript", "value": "ts", "color": "#3178c6" }
-  ],
-  "allowCreate": true,
-  "maxTags": 5
-}
-```
-
----
-
 #### `TagSelectorField({ id, label, tags: tagsProp, value: controlledValue, defaultValue, allowCreate, maxTags, onChange, onCreate, className, style, slots, }: TagSelectorFieldProps) => Element`
 
 Standalone TagSelectorField -- tag pills with dropdown selection, search filtering,
-and optional tag creation. No manifest context required.
+and optional tag creation. Works with plain React props.
 
 **Example:**
 
@@ -3337,31 +1922,21 @@ and optional tag creation. No manifest context required.
 
 ---
 
-#### `Textarea({ config }: { config: { type: "textarea"; value?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ......`
+#### `TextareaControl({ textareaRef, textareaId, name, value, rows, placeholder, disabled, readOnly, maxLength, required, resize, ariaInvalid, ariaDescribedBy, ariaLabel, onChangeText, onBlur, onFocus, onClick, onKeyDown,...`
 
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `textareaConfigSchema` *(variable)*
-
-Zod config schema for the Textarea component.
-
-Defines a multi-line text input with label, character count,
-validation, and configurable resize behavior.
+Low-level styled textarea element with surface resolution and state management.
+Used internally by TextareaField and other components that need a styled `<textarea>`.
+Works with plain React props.
 
 **Example:**
 
-```json
-{
-  "type": "textarea",
-  "id": "bio-field",
-  "label": "Bio",
-  "placeholder": "Tell us about yourself...",
-  "rows": 5,
-  "maxLength": 500,
-  "resize": "vertical"
-}
+```tsx
+<TextareaControl
+  surfaceId="bio-textarea"
+  rows={4}
+  placeholder="Tell us about yourself"
+  onChangeText={(val) => setBio(val)}
+/>
 ```
 
 ---
@@ -3369,7 +1944,7 @@ validation, and configurable resize behavior.
 #### `TextareaField({ id, label, placeholder, value: controlledValue, required, disabled, readOnly, maxLength, rows, resize, helperText, errorText, onChange, onBlur, onFocus, onClick, onKeyDown, className, style, slots,...`
 
 Standalone TextareaField -- a complete textarea form field with label,
-character counter, validation, and helper/error text. No manifest context required.
+character counter, validation, and helper/error text. Works with plain React props.
 
 **Example:**
 
@@ -3385,38 +1960,10 @@ character counter, validation, and helper/error text. No manifest context requir
 
 ---
 
-#### `Toggle({ config }: { config: { type: "toggle"; label?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowe...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `toggleConfigSchema` *(variable)*
-
-Zod config schema for the Toggle component.
-
-Defines a pressed/unpressed toggle button that publishes its state.
-Can display text, an icon, or both.
-
-**Example:**
-
-```json
-{
-  "type": "toggle",
-  "id": "bold-toggle",
-  "icon": "bold",
-  "label": "Bold",
-  "variant": "outline",
-  "size": "sm"
-}
-```
-
----
-
 #### `ToggleField({ id, label, icon, variant: variantProp, size: sizeProp, pressed: controlledPressed, defaultPressed, disabled, onChange, className, style, slots, }: ToggleFieldProps) => Element`
 
 Standalone ToggleField -- a pressable toggle button with optional icon and label.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -3435,7 +1982,7 @@ No manifest context required.
 #### `ToggleGroupBase({ id, items, mode, value: controlledValue, defaultValue, variant, size, onChange, className, style, slots, }: ToggleGroupBaseProps) => Element`
 
 Standalone ToggleGroupBase -- a group of toggle buttons supporting single
-or multi-select modes. No manifest context required.
+or multi-select modes. Works with plain React props.
 
 **Example:**
 
@@ -3454,90 +2001,10 @@ or multi-select modes. No manifest context required.
 
 ---
 
-#### `useAutoForm(fields: { name: string; type: "number" | "select" | "date" | "email" | "datetime" | "time" | "color" | "password" | "text" | "textarea" | "multi-select" | "checkbox" | "file" | "radio-group" | "switc...`
-
-Headless hook for form state management.
-
-Tracks field values, validation errors, and touched state.
-Validates on blur (per-field) and on submit (all fields).
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `fields` | Array of field configurations |
-| `onSubmit` | Async callback invoked with form values when validation passes |
-
-**Returns:** Form state and handlers
-
-**Example:**
-
-```tsx
-const form = useAutoForm(fields, async (values) => {
-  await api.post('/api/users', values)
-})
-
-return (
-  <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit(); }}>
-    <input
-      value={form.values.name as string}
-      onChange={(e) => form.setValue('name', e.target.value)}
-      onBlur={() => form.touchField('name')}
-    />
-    {form.touched.name && form.errors.name && <span>{form.errors.name}</span>}
-    <button disabled={form.isSubmitting}>Submit</button>
-  </form>
-)
-```
-
----
-
-#### `useWizard(config: Record<string, any>) => UseWizardResult`
-
-Headless hook that manages multi-step wizard state including step navigation,
-per-step validation, field tracking, and final submission.
-
-Provides reactive state for the current step, accumulated data across steps,
-validation errors, and transition controls (next/prev/skip/reset).
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `config` | Wizard configuration from the manifest, including steps, validation rules, submit action, and transition settings. |
-
-**Returns:** Wizard state and step-navigation controls.
-
-**Example:**
-
-```tsx
-const wizard = useWizard(wizardConfig);
-
-return (
-  <div>
-    <p>Step {wizard.currentStep + 1} of {wizard.totalSteps}</p>
-    {wizard.isSubmitting && <Spinner />}
-    {wizard.submitError && <p>{wizard.submitError.message}</p>}
-    <button onClick={wizard.prevStep} disabled={wizard.isFirstStep}>Back</button>
-    <button onClick={wizard.nextStep}>
-      {wizard.isLastStep ? "Submit" : "Next"}
-    </button>
-  </div>
-);
-```
-
----
-
-#### `Wizard({ config }: { config: Record<string, any>; }) => Element`
-
-Render a multi-step form wizard with built-in validation, step state, and slot-aware styling.
-
----
-
 #### `WizardBase({ id, steps, state: wizard, submitLabel: submitLabelProp, className, style, slots, }: WizardBaseProps) => Element`
 
 Standalone WizardBase -- a multi-step form wizard with progress indicator,
-step navigation, field validation, and completion state. No manifest context required.
+step navigation, field validation, and completion state. Works with plain React props.
 
 **Example:**
 
@@ -3559,52 +2026,27 @@ step navigation, field validation, and completion state. No manifest context req
 | Export | Kind | Description |
 |---|---|---|
 | `buildEmojiMap` | function | Builds a shortcode lookup map from an array of custom emojis. |
-| `ChatWindow` | function | Manifest adapter — resolves config refs, composes manifest sub-components, delegates to ChatWindowBase. |
-| `ChatWindowBase` | function | Standalone ChatWindow — composable chat container with header, message thread, typing indicator, and input slots. No manifest context required. |
+| `ChatWindowBase` | function | Standalone ChatWindow — composable chat container with header, message thread, typing indicator, and input slots. Works with plain React props. |
 | `ChatWindowBaseProps` | interface | Props accepted by the ChatWindowBase standalone component. |
-| `ChatWindowConfig` | typealias | Inferred config type from the ChatWindow Zod schema. |
-| `chatWindowConfigSchema` | variable | Zod config schema for the ChatWindow component. A full chat interface composing a message thread, rich input, and typing indicator into a single component. |
-| `CommentSection` | function | Manifest adapter — resolves data endpoint, wires actions, delegates to CommentSectionBase. |
-| `CommentSectionBase` | function | Standalone CommentSection — threaded comment list with avatars, timestamps, optional delete actions, and a composable input slot. No manifest context required. |
+| `CommentSectionBase` | function | Standalone CommentSection — threaded comment list with avatars, timestamps, optional delete actions, and a composable input slot. Works with plain React props. |
 | `CommentSectionBaseProps` | interface | Props accepted by the CommentSectionBase standalone component. |
-| `CommentSectionConfig` | typealias | Inferred config type from the CommentSection Zod schema. |
-| `commentSectionConfigSchema` | variable | Zod config schema for the CommentSection component. Renders a comment list with nested replies and an embedded rich input for posting new comments. |
 | `CUSTOM_EMOJI_CSS` | variable | CSS for custom emoji sizing. Custom emojis render as inline images sized to match surrounding text. |
 | `CustomEmoji` | interface | Shape of a custom emoji entry. |
-| `EmojiPicker` | function | Manifest adapter — resolves custom emoji data, wires actions/publish, delegates to EmojiPickerBase. |
-| `EmojiPickerBase` | function | Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji support. No manifest context required. |
+| `EmojiPickerBase` | function | Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji support. Works with plain React props. |
 | `EmojiPickerBaseProps` | interface | Props accepted by the EmojiPickerBase standalone component. |
-| `EmojiPickerConfig` | typealias | Inferred config type from the EmojiPicker Zod schema. |
-| `emojiPickerConfigSchema` | variable | Zod config schema for the EmojiPicker component. Renders a searchable grid of emojis organized by category. |
-| `GifEntry` | interface | Shape of a GIF entry. |
-| `GifPicker` | function | Manifest adapter — resolves config refs, wires actions/publish, delegates to GifPickerBase. |
-| `GifPickerBase` | function | Standalone GifPicker — searchable GIF grid with debounced search, loading states, and optional attribution. No manifest context required. |
+| `GifPickerBase` | function | Standalone GifPicker — searchable GIF grid with debounced search, loading states, and optional attribution. Works with plain React props. |
 | `GifPickerBaseProps` | interface | Props accepted by the GifPickerBase standalone component. |
-| `GifPickerConfig` | typealias | Inferred config type from the GifPicker Zod schema. |
-| `gifPickerConfigSchema` | variable | Zod config schema for the GifPicker component. Searchable GIF picker that queries a GIF API (Giphy/Tenor) and displays results in a masonry-style grid. The component expects a backend proxy endpoint that handles the actual API key and returns GIF results. This avoids exposing API keys in the frontend. |
-| `MessageThread` | function | Manifest adapter — resolves data endpoint, wires actions/publish, delegates to MessageThreadBase. |
-| `MessageThreadBase` | function | Standalone MessageThread — scrollable message list with avatars, date separators, auto-scroll, embed rendering, and consecutive-message grouping. No manifest context required. |
+| `MessageThreadBase` | function | Standalone MessageThread — scrollable message list with avatars, date separators, auto-scroll, embed rendering, and consecutive-message grouping. Works with plain React props. |
 | `MessageThreadBaseProps` | interface | Props accepted by the MessageThreadBase standalone component. |
-| `MessageThreadConfig` | typealias | Inferred config type from the MessageThread Zod schema. |
-| `messageThreadConfigSchema` | variable | Zod config schema for the MessageThread component. Renders a scrollable message list with avatars, timestamps, message grouping, date separators, and optional reactions/threading. |
 | `parseShortcodes` | function | Parses shortcodes in text and replaces them with `<img>` tags. |
-| `PresenceIndicator` | function | Manifest adapter — resolves config refs and delegates to PresenceIndicatorBase. |
-| `PresenceIndicatorBase` | function | Standalone PresenceIndicator — displays online/offline/away/busy/dnd status with a colored dot and optional label. No manifest context required. |
+| `PresenceIndicatorBase` | function | Standalone PresenceIndicator — displays online/offline/away/busy/dnd status with a colored dot and optional label. Works with plain React props. |
 | `PresenceIndicatorBaseProps` | interface | Props accepted by the PresenceIndicatorBase standalone component. |
-| `PresenceIndicatorConfig` | typealias | Inferred config type from the PresenceIndicator Zod schema. |
-| `presenceIndicatorConfigSchema` | variable | Zod config schema for the PresenceIndicator component. Displays an online/offline/away/busy/dnd status dot with optional label. |
-| `ReactionBar` | function | Manifest adapter — wires actions/publish and delegates to ReactionBarBase. |
-| `ReactionBarBase` | function | Standalone ReactionBar — row of emoji reaction pills with counts and an add-reaction button that opens an inline emoji picker. No manifest context required. |
+| `ReactionBarBase` | function | Standalone ReactionBar — row of emoji reaction pills with counts and an add-reaction button that opens an inline emoji picker. Works with plain React props. |
 | `ReactionBarBaseProps` | interface | Props accepted by the ReactionBarBase standalone component. |
-| `ReactionBarConfig` | typealias | Inferred config type from the ReactionBar Zod schema. |
-| `reactionBarConfigSchema` | variable | Zod config schema for the ReactionBar component. Displays emoji reactions with counts and an add button. |
 | `ReactionEntry` | interface | Type definition exported by the Snapshot UI runtime. |
 | `resolveEmojiRecords` | function | Resolves emoji records from the API into CustomEmoji entries. Handles the `uploadKey` → `url` resolution using a URL prefix or field mapping. |
-| `TypingIndicator` | function | Manifest adapter — resolves config refs and delegates to TypingIndicatorBase. |
-| `TypingIndicatorBase` | function | Standalone TypingIndicator — shows animated bouncing dots with user names to indicate who is currently typing. No manifest context required. |
+| `TypingIndicatorBase` | function | Standalone TypingIndicator — shows animated bouncing dots with user names to indicate who is currently typing. Works with plain React props. |
 | `TypingIndicatorBaseProps` | interface | Props accepted by the TypingIndicatorBase standalone component. |
-| `TypingIndicatorConfig` | typealias | Inferred config type from the TypingIndicator Zod schema. |
-| `typingIndicatorConfigSchema` | variable | Zod config schema for the TypingIndicator component. Displays an animated "User is typing..." indicator with bouncing dots. |
 | `TypingUser` | interface | A user entry for the typing indicator. |
 
 ### Details
@@ -3615,16 +2057,10 @@ Builds a shortcode lookup map from an array of custom emojis.
 
 ---
 
-#### `ChatWindow({ config }: { config: { type: "chat-window"; data?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ....`
-
-Manifest adapter — resolves config refs, composes manifest sub-components, delegates to ChatWindowBase.
-
----
-
 #### `ChatWindowBase({ id, title, subtitle, showHeader, height, threadSlot, typingSlot, inputSlot, showTypingIndicator, className, style, slots, }: ChatWindowBaseProps) => Element`
 
 Standalone ChatWindow — composable chat container with header, message thread,
-typing indicator, and input slots. No manifest context required.
+typing indicator, and input slots. Works with plain React props.
 
 **Example:**
 
@@ -3638,41 +2074,10 @@ typing indicator, and input slots. No manifest context required.
 
 ---
 
-#### `chatWindowConfigSchema` *(variable)*
-
-Zod config schema for the ChatWindow component.
-
-A full chat interface composing a message thread, rich input,
-and typing indicator into a single component.
-
-**Example:**
-
-```json
-{
-  "type": "chat-window",
-  "title": "#general",
-  "data": "GET /api/channels/general/messages",
-  "sendAction": {
-    "type": "api",
-    "method": "POST",
-    "endpoint": "/api/channels/general/messages"
-  },
-  "height": "600px"
-}
-```
-
----
-
-#### `CommentSection({ config }: { config: Record<string, any>; }) => Element | null`
-
-Manifest adapter — resolves data endpoint, wires actions, delegates to CommentSectionBase.
-
----
-
 #### `CommentSectionBase({ id, comments, loading, error, emptyText, authorNameField, authorAvatarField, contentField, timestampField, sortOrder, showDelete, onDelete, inputSlot, className, style, slots, }: CommentSectionBase...`
 
 Standalone CommentSection — threaded comment list with avatars, timestamps,
-optional delete actions, and a composable input slot. No manifest context required.
+optional delete actions, and a composable input slot. Works with plain React props.
 
 **Example:**
 
@@ -3687,40 +2092,10 @@ optional delete actions, and a composable input slot. No manifest context requir
 
 ---
 
-#### `commentSectionConfigSchema` *(variable)*
-
-Zod config schema for the CommentSection component.
-
-Renders a comment list with nested replies and an embedded rich input
-for posting new comments.
-
-**Example:**
-
-```json
-{
-  "type": "comment-section",
-  "data": "GET /api/posts/123/comments",
-  "inputPlaceholder": "Write a comment...",
-  "submitAction": {
-    "type": "api",
-    "method": "POST",
-    "endpoint": "/api/posts/123/comments"
-  }
-}
-```
-
----
-
-#### `EmojiPicker({ config }: { config: { type: "emoji-picker"; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { image?:...`
-
-Manifest adapter — resolves custom emoji data, wires actions/publish, delegates to EmojiPickerBase.
-
----
-
 #### `EmojiPickerBase({ id, perRow, maxHeight, categories: allowedCategories, customEmojis, onSelect, className, style, slots, }: EmojiPickerBaseProps) => Element`
 
 Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji
-support. No manifest context required.
+support. Works with plain React props.
 
 **Example:**
 
@@ -3733,35 +2108,10 @@ support. No manifest context required.
 
 ---
 
-#### `emojiPickerConfigSchema` *(variable)*
-
-Zod config schema for the EmojiPicker component.
-
-Renders a searchable grid of emojis organized by category.
-
-**Example:**
-
-```json
-{
-  "type": "emoji-picker",
-  "id": "emoji",
-  "perRow": 8,
-  "maxHeight": "300px"
-}
-```
-
----
-
-#### `GifPicker({ config }: { config: { type: "gif-picker"; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { image?: s...`
-
-Manifest adapter — resolves config refs, wires actions/publish, delegates to GifPickerBase.
-
----
-
 #### `GifPickerBase({ id, columns, maxHeight, placeholder, attribution, gifs, loading, onSelect, onSearchChange, className, style, slots, }: GifPickerBaseProps) => Element`
 
 Standalone GifPicker — searchable GIF grid with debounced search, loading states,
-and optional attribution. No manifest context required.
+and optional attribution. Works with plain React props.
 
 **Example:**
 
@@ -3776,59 +2126,10 @@ and optional attribution. No manifest context required.
 
 ---
 
-#### `gifPickerConfigSchema` *(variable)*
-
-Zod config schema for the GifPicker component.
-
-Searchable GIF picker that queries a GIF API (Giphy/Tenor) and
-displays results in a masonry-style grid.
-
-The component expects a backend proxy endpoint that handles the
-actual API key and returns GIF results. This avoids exposing
-API keys in the frontend.
-
-**Example:**
-
-```json
-{
-  "type": "gif-picker",
-  "searchEndpoint": "GET /api/gifs/search",
-  "trendingEndpoint": "GET /api/gifs/trending",
-  "selectAction": {
-    "type": "toast",
-    "message": "GIF selected!"
-  }
-}
-```
-
-Expected API response format:
-```json
-{
-  "results": [
-    {
-      "id": "abc123",
-      "url": "https://media.giphy.com/media/abc123/giphy.gif",
-      "preview": "https://media.giphy.com/media/abc123/200w.gif",
-      "width": 480,
-      "height": 270,
-      "title": "Funny cat"
-    }
-  ]
-}
-```
-
----
-
-#### `MessageThread({ config }: { config: { type: "message-thread"; data?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" ...`
-
-Manifest adapter — resolves data endpoint, wires actions/publish, delegates to MessageThreadBase.
-
----
-
 #### `MessageThreadBase({ id, messages, loading, error, emptyText, contentField, authorNameField, authorAvatarField, timestampField, showTimestamps, embedsField, showEmbeds, groupByDate, maxHeight, onMessageClick, renderEmb...`
 
 Standalone MessageThread — scrollable message list with avatars, date separators,
-auto-scroll, embed rendering, and consecutive-message grouping. No manifest context required.
+auto-scroll, embed rendering, and consecutive-message grouping. Works with plain React props.
 
 **Example:**
 
@@ -3841,26 +2142,6 @@ auto-scroll, embed rendering, and consecutive-message grouping. No manifest cont
   showTimestamps
   groupByDate
 />
-```
-
----
-
-#### `messageThreadConfigSchema` *(variable)*
-
-Zod config schema for the MessageThread component.
-
-Renders a scrollable message list with avatars, timestamps,
-message grouping, date separators, and optional reactions/threading.
-
-**Example:**
-
-```json
-{
-  "type": "message-thread",
-  "data": "GET /api/channels/general/messages",
-  "groupByDate": true,
-  "maxHeight": "500px"
-}
 ```
 
 ---
@@ -3888,16 +2169,10 @@ parseShortcodes("Hello :wave:", emojis);
 
 ---
 
-#### `PresenceIndicator({ config, }: { config: { status: { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | "json" | "first...`
-
-Manifest adapter — resolves config refs and delegates to PresenceIndicatorBase.
-
----
-
 #### `PresenceIndicatorBase({ id, status, label, showDot, showLabel, size, className, style, slots, }: PresenceIndicatorBaseProps) => Element`
 
 Standalone PresenceIndicator — displays online/offline/away/busy/dnd status
-with a colored dot and optional label. No manifest context required.
+with a colored dot and optional label. Works with plain React props.
 
 **Example:**
 
@@ -3907,35 +2182,10 @@ with a colored dot and optional label. No manifest context required.
 
 ---
 
-#### `presenceIndicatorConfigSchema` *(variable)*
-
-Zod config schema for the PresenceIndicator component.
-
-Displays an online/offline/away/busy/dnd status dot with optional label.
-
-**Example:**
-
-```json
-{
-  "type": "presence-indicator",
-  "status": "online",
-  "label": "John Doe",
-  "size": "md"
-}
-```
-
----
-
-#### `ReactionBar({ config }: { config: { type: "reaction-bar"; data?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ...`
-
-Manifest adapter — wires actions/publish and delegates to ReactionBarBase.
-
----
-
 #### `ReactionBarBase({ id, reactions, showAddButton, onReactionClick, onEmojiSelect, EmojiPickerComponent, className, style, slots, }: ReactionBarBaseProps) => Element`
 
 Standalone ReactionBar — row of emoji reaction pills with counts and an
-add-reaction button that opens an inline emoji picker. No manifest context required.
+add-reaction button that opens an inline emoji picker. Works with plain React props.
 
 **Example:**
 
@@ -3948,27 +2198,6 @@ add-reaction button that opens an inline emoji picker. No manifest context requi
   onReactionClick={(emoji, wasActive) => toggleReaction(emoji)}
   onEmojiSelect={({ emoji }) => addReaction(emoji)}
 />
-```
-
----
-
-#### `reactionBarConfigSchema` *(variable)*
-
-Zod config schema for the ReactionBar component.
-
-Displays emoji reactions with counts and an add button.
-
-**Example:**
-
-```json
-{
-  "type": "reaction-bar",
-  "reactions": [
-    { "emoji": "\ud83d\udc4d", "count": 5, "active": true },
-    { "emoji": "\u2764\ufe0f", "count": 3 },
-    { "emoji": "\ud83d\ude02", "count": 2 }
-  ]
-}
 ```
 
 ---
@@ -3988,16 +2217,10 @@ Handles the `uploadKey` → `url` resolution using a URL prefix or field mapping
 
 ---
 
-#### `TypingIndicator({ config }: { config: { type: "typing-indicator"; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { ......`
-
-Manifest adapter — resolves config refs and delegates to TypingIndicatorBase.
-
----
-
 #### `TypingIndicatorBase({ id, users, maxDisplay, className, style, slots, }: TypingIndicatorBaseProps) => Element | null`
 
 Standalone TypingIndicator — shows animated bouncing dots with user names
-to indicate who is currently typing. No manifest context required.
+to indicate who is currently typing. Works with plain React props.
 
 **Example:**
 
@@ -4007,73 +2230,38 @@ to indicate who is currently typing. No manifest context required.
 
 ---
 
-#### `typingIndicatorConfigSchema` *(variable)*
-
-Zod config schema for the TypingIndicator component.
-
-Displays an animated "User is typing..." indicator with bouncing dots.
-
-**Example:**
-
-```json
-{
-  "type": "typing-indicator",
-  "users": [{ "name": "Alice" }, { "name": "Bob" }]
-}
-```
-
----
-
 ## Components — Content
 
 | Export | Kind | Description |
 |---|---|---|
-| `BannerBase` | function | Standalone Banner — a full-width hero section with background, overlay, and content alignment. No manifest context required. |
+| `BannerBase` | function | Standalone Banner — a full-width hero section with background, overlay, and content alignment. Works with plain React props. |
 | `BannerBaseProps` | interface | Props accepted by the BannerBase standalone component. |
-| `Code` | function | Manifest adapter — resolves config refs and delegates to CodeBase. |
-| `CodeBase` | function | Standalone Code — an inline code element for displaying code snippets within flowing text. No manifest context required. |
+| `CodeBase` | function | Standalone Code — an inline code element for displaying code snippets within flowing text. Works with plain React props. |
 | `CodeBaseProps` | interface | Props accepted by the CodeBase standalone component. |
-| `CodeBlockBase` | function | Standalone CodeBlock — displays code with syntax highlighting, optional line numbers, copy button, and title bar. No manifest context required. |
+| `CodeBlockBase` | function | Standalone CodeBlock — displays code with syntax highlighting, optional line numbers, copy button, and title bar. Works with plain React props. |
 | `CodeBlockBaseProps` | interface | Props accepted by the CodeBlockBase standalone component. |
-| `CodeConfig` | typealias | Inferred config type for the Code component. |
-| `codeConfigSchema` | variable | Inline code primitive schema for manifest-rendered code snippets. |
-| `CompareView` | function | Manifest adapter — resolves config refs and delegates to CompareViewBase. |
-| `CompareViewBase` | function | Standalone CompareView — a side-by-side diff viewer for comparing two text blocks. No manifest context required. |
+| `CompareViewBase` | function | Standalone CompareView — a side-by-side diff viewer for comparing two text blocks. Works with plain React props. |
 | `CompareViewBaseProps` | interface | Props accepted by the CompareViewBase standalone component. |
-| `CompareViewConfig` | typealias | Inferred config type from the CompareView Zod schema. |
-| `compareViewConfigSchema` | variable | Zod config schema for the CompareView component. Defines all manifest-settable fields for a side-by-side content comparison view with diff highlighting. |
 | `detectPlatform` | function | Detects the platform from a URL and extracts embed info. |
-| `FileUploaderBase` | function | Standalone FileUploader — a file upload component with dropzone, button, and compact variants. No manifest context required. |
+| `FileUploaderBase` | function | Standalone FileUploader — a file upload component with dropzone, button, and compact variants. Works with plain React props. |
 | `FileUploaderBaseProps` | interface | Props accepted by the FileUploaderBase standalone component. |
-| `Heading` | function | Manifest adapter — resolves template text, locale, and route context, then delegates to HeadingBase. |
-| `HeadingBase` | function | Standalone Heading — a styled heading element (h1-h6) that works with plain React props. No manifest context required. |
+| `HeadingBase` | function | Standalone Heading — a styled heading element (h1-h6) that works with plain React props. Works with plain React props. |
 | `HeadingBaseProps` | interface | Props accepted by the HeadingBase standalone component. |
-| `LinkEmbed` | function | Manifest adapter — resolves config refs and delegates to LinkEmbedBase. |
-| `LinkEmbedBase` | function | Standalone LinkEmbed — renders rich link previews with platform-specific embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card. No manifest context required. |
+| `LinkEmbedBase` | function | Standalone LinkEmbed — renders rich link previews with platform-specific embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card. Works with plain React props. |
 | `LinkEmbedBaseProps` | interface | Props accepted by the LinkEmbedBase standalone component. |
-| `LinkEmbedConfig` | typealias | Inferred config type from the LinkEmbed Zod schema. |
-| `linkEmbedConfigSchema` | variable | Zod config schema for the LinkEmbed component. Renders rich URL previews with platform-specific renderers for YouTube, Instagram, TikTok, Twitter/X, and generic Open Graph cards. Also supports inline GIF embeds. |
 | `LinkEmbedMeta` | interface | Type definition exported by the Snapshot UI runtime. |
-| `Markdown` | function | Manifest adapter — resolves config refs and delegates to MarkdownBase. |
-| `MarkdownBase` | function | Standalone Markdown — renders markdown content with syntax highlighting and Snapshot design tokens. No manifest context required. |
+| `MarkdownBase` | function | Standalone Markdown — renders markdown content with syntax highlighting and Snapshot design tokens. Works with plain React props. |
 | `MarkdownBaseProps` | interface | Props accepted by the MarkdownBase standalone component. |
-| `MarkdownConfig` | typealias | Inferred config type from the Markdown Zod schema. |
-| `markdownConfigSchema` | variable | Zod config schema for the Markdown component. Renders markdown content with full GFM support and syntax highlighting. |
 | `Platform` | typealias | Platform detection and embed URL extraction. Identifies known platforms from URLs and extracts the embed-compatible URL or ID needed to render platform-specific iframes. |
 | `PLATFORM_COLORS` | variable | Platform accent colors. |
 | `PLATFORM_NAMES` | variable | Platform display names. |
 | `PlatformInfo` | interface | Resolved platform metadata used to render a platform-specific embedded preview. |
-| `RichInput` | function | Manifest adapter — resolves config refs, wires actions, and delegates to RichInputBase. |
-| `RichInputBase` | function | Standalone RichInput — a rich text editor with formatting toolbar, powered by tiptap. No manifest context required. |
+| `RichInputBase` | variable | Standalone RichInput — a rich text editor with formatting toolbar, powered by tiptap. Works with plain React props. |
+| `RichInputBaseHandle` | interface | Imperative handle exposed via `ref`. Use this when an external surface (emoji picker, GIF picker, slash-command menu) needs to insert content at the user's current cursor position without going through the controlled-value path (which clobbers the cursor). |
 | `RichInputBaseProps` | interface | Props accepted by the RichInputBase standalone component. |
-| `RichInputConfig` | typealias | Inferred config type from the RichInput Zod schema. |
-| `richInputConfigSchema` | variable | Zod config schema for the RichInput component. A TipTap-based WYSIWYG editor for chat messages, comments, and posts. Users see formatted text as they type (bold, italic, mentions, etc.) rather than raw markdown. |
-| `RichTextEditor` | function | Manifest adapter — resolves config refs, wires publish, and delegates to RichTextEditorBase. |
-| `RichTextEditorBase` | function | Standalone RichTextEditor — a markdown editor with live preview, powered by CodeMirror. No manifest context required. |
+| `RichTextEditorBase` | function | Standalone RichTextEditor — a markdown editor with live preview, powered by CodeMirror. Works with plain React props. |
 | `RichTextEditorBaseProps` | interface | Props accepted by the RichTextEditorBase standalone component. |
-| `RichTextEditorConfig` | typealias | Inferred config type from the RichTextEditor Zod schema. |
-| `richTextEditorConfigSchema` | variable | Zod config schema for the RichTextEditor component. Defines all manifest-settable fields for a CodeMirror 6-based markdown editor with toolbar, preview pane, and split view support. |
-| `TimelineBase` | function | Standalone Timeline — vertical event timeline with dot markers, connectors, date labels, and default/compact/alternating layout variants. No manifest context required. |
+| `TimelineBase` | function | Standalone Timeline — vertical event timeline with dot markers, connectors, date labels, and default/compact/alternating layout variants. Works with plain React props. |
 | `TimelineBaseProps` | interface | Props accepted by the TimelineBase standalone component. |
 | `TimelineItemEntry` | interface | Type definition exported by the Snapshot UI runtime. |
 
@@ -4082,7 +2270,7 @@ Displays an animated "User is typing..." indicator with bouncing dots.
 #### `BannerBase({ id, height, align, background, className, style, slots, children, }: BannerBaseProps) => Element`
 
 Standalone Banner — a full-width hero section with background, overlay,
-and content alignment. No manifest context required.
+and content alignment. Works with plain React props.
 
 **Example:**
 
@@ -4095,16 +2283,10 @@ and content alignment. No manifest context required.
 
 ---
 
-#### `Code({ config }: { config: { value: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | "json" |...`
-
-Manifest adapter — resolves config refs and delegates to CodeBase.
-
----
-
 #### `CodeBase({ id, value, fallback, className, style, slots, }: CodeBaseProps) => Element`
 
 Standalone Code — an inline code element for displaying code snippets
-within flowing text. No manifest context required.
+within flowing text. Works with plain React props.
 
 **Example:**
 
@@ -4118,7 +2300,7 @@ within flowing text. No manifest context required.
 
 Standalone CodeBlock — displays code with syntax highlighting,
 optional line numbers, copy button, and title bar.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4128,42 +2310,15 @@ No manifest context required.
 
 ---
 
-#### `CompareView({ config }: { config: { type: "compare-view"; left: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ....`
-
-Manifest adapter — resolves config refs and delegates to CompareViewBase.
-
----
-
 #### `CompareViewBase({ id, left, right, leftLabel, rightLabel, maxHeight, showLineNumbers, className, style, slots, }: CompareViewBaseProps) => Element`
 
 Standalone CompareView — a side-by-side diff viewer for comparing two
-text blocks. No manifest context required.
+text blocks. Works with plain React props.
 
 **Example:**
 
 ```tsx
 <CompareViewBase left="original text" right="modified text" leftLabel="Before" rightLabel="After" />
-```
-
----
-
-#### `compareViewConfigSchema` *(variable)*
-
-Zod config schema for the CompareView component.
-
-Defines all manifest-settable fields for a side-by-side content
-comparison view with diff highlighting.
-
-**Example:**
-
-```json
-{
-  "type": "compare-view",
-  "left": "Original text content",
-  "right": "Modified text content",
-  "leftLabel": "Before",
-  "rightLabel": "After"
-}
 ```
 
 ---
@@ -4185,7 +2340,7 @@ Detects the platform from a URL and extracts embed info.
 #### `FileUploaderBase({ id, variant, label, description, maxFiles, maxSize, accept, onFilesAdded, onFileRemoved, onUpload: _onUpload, onProgress: _onProgress, onError: _onError, onComplete: _onComplete, files: controlledF...`
 
 Standalone FileUploader — a file upload component with dropzone, button,
-and compact variants. No manifest context required.
+and compact variants. Works with plain React props.
 
 **Example:**
 
@@ -4201,17 +2356,10 @@ and compact variants. No manifest context required.
 
 ---
 
-#### `Heading({ config }: { config: { type: "heading"; text: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lower...`
-
-Manifest adapter — resolves template text, locale, and route context,
-then delegates to HeadingBase.
-
----
-
 #### `HeadingBase({ id, text, level, align, className, style, slots, }: HeadingBaseProps) => Element`
 
 Standalone Heading — a styled heading element (h1-h6) that works with plain
-React props. No manifest context required.
+React props. Works with plain React props.
 
 **Example:**
 
@@ -4221,17 +2369,11 @@ React props. No manifest context required.
 
 ---
 
-#### `LinkEmbed({ config }: { config: { url: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowercase" | "json" | ....`
-
-Manifest adapter — resolves config refs and delegates to LinkEmbedBase.
-
----
-
 #### `LinkEmbedBase({ id, url, meta, allowIframe, aspectRatio, maxWidth, className, style, slots, }: LinkEmbedBaseProps) => Element | null`
 
 Standalone LinkEmbed — renders rich link previews with platform-specific
 embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4241,44 +2383,10 @@ No manifest context required.
 
 ---
 
-#### `linkEmbedConfigSchema` *(variable)*
-
-Zod config schema for the LinkEmbed component.
-
-Renders rich URL previews with platform-specific renderers for
-YouTube, Instagram, TikTok, Twitter/X, and generic Open Graph cards.
-Also supports inline GIF embeds.
-
-**Example:**
-
-```json
-{
-  "type": "link-embed",
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-```
-
-**Example:**
-
-```json
-{
-  "type": "link-embed",
-  "url": "https://twitter.com/user/status/123",
-  "meta": {
-    "title": "Tweet by
-
----
-
-#### `Markdown({ config }: { config: Record<string, any>; }) => Element | null`
-
-Manifest adapter — resolves config refs and delegates to MarkdownBase.
-
----
-
 #### `MarkdownBase({ id, content, maxHeight, className, style, slots, }: MarkdownBaseProps) => Element`
 
 Standalone Markdown — renders markdown content with syntax highlighting
-and Snapshot design tokens. No manifest context required.
+and Snapshot design tokens. Works with plain React props.
 
 **Example:**
 
@@ -4288,33 +2396,10 @@ and Snapshot design tokens. No manifest context required.
 
 ---
 
-#### `markdownConfigSchema` *(variable)*
-
-Zod config schema for the Markdown component.
-
-Renders markdown content with full GFM support and syntax highlighting.
-
-**Example:**
-
-```json
-{
-  "type": "markdown",
-  "content": "# Hello\n\nSome **bold** text and a [link](https://example.com)."
-}
-```
-
----
-
-#### `RichInput({ config }: { config: { type: "rich-input"; value?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ....`
-
-Manifest adapter — resolves config refs, wires actions, and delegates to RichInputBase.
-
----
-
-#### `RichInputBase({ id, placeholder, defaultValue, value, readonly, features, sendOnEnter, maxLength, minHeight, maxHeight, showSendButton, onSend, onChange, className, style, slots, }: RichInputBaseProps) => Element`
+#### `RichInputBase` *(variable)*
 
 Standalone RichInput — a rich text editor with formatting toolbar,
-powered by tiptap. No manifest context required.
+powered by tiptap. Works with plain React props.
 
 **Example:**
 
@@ -4328,44 +2413,27 @@ powered by tiptap. No manifest context required.
 
 ---
 
-#### `richInputConfigSchema` *(variable)*
+#### `RichInputBaseHandle` *(interface)*
 
-Zod config schema for the RichInput component.
-
-A TipTap-based WYSIWYG editor for chat messages, comments, and posts.
-Users see formatted text as they type (bold, italic, mentions, etc.)
-rather than raw markdown.
+Imperative handle exposed via `ref`. Use this when an external surface
+(emoji picker, GIF picker, slash-command menu) needs to insert content
+at the user's current cursor position without going through the
+controlled-value path (which clobbers the cursor).
 
 **Example:**
 
-```json
-{
-  "type": "rich-input",
-  "id": "chat-input",
-  "placeholder": "Type a message...",
-  "sendOnEnter": true,
-  "features": ["bold", "italic", "mention", "emoji", "code"],
-  "sendAction": {
-    "type": "api",
-    "method": "POST",
-    "endpoint": "/api/channels/general/messages",
-    "body": { "from": "chat-input" }
-  }
-}
+```tsx
+const editorRef = useRef<RichInputBaseHandle>(null);
+<RichInputBase ref={editorRef} ... />
+<button onClick={() => editorRef.current?.insertText('👍')}>👍</button>
 ```
-
----
-
-#### `RichTextEditor({ config }: { config: { type: "rich-text-editor"; content?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "upperc...`
-
-Manifest adapter — resolves config refs, wires publish, and delegates to RichTextEditorBase.
 
 ---
 
 #### `RichTextEditorBase({ id, content: initialContent, placeholder: placeholderText, readonly, mode: initialMode, toolbar, minHeight, maxHeight, onChange, renderPreview, className, style, slots, }: RichTextEditorBaseProps) ...`
 
 Standalone RichTextEditor — a markdown editor with live preview,
-powered by CodeMirror. No manifest context required.
+powered by CodeMirror. Works with plain React props.
 
 **Example:**
 
@@ -4375,31 +2443,10 @@ powered by CodeMirror. No manifest context required.
 
 ---
 
-#### `richTextEditorConfigSchema` *(variable)*
-
-Zod config schema for the RichTextEditor component.
-
-Defines all manifest-settable fields for a CodeMirror 6-based markdown editor
-with toolbar, preview pane, and split view support.
-
-**Example:**
-
-```json
-{
-  "type": "rich-text-editor",
-  "id": "content-editor",
-  "content": "# Hello\n\nStart writing...",
-  "mode": "split",
-  "toolbar": ["bold", "italic", "h1", "h2", "separator", "code", "link"]
-}
-```
-
----
-
 #### `TimelineBase({ id, items, variant, showConnector, loading, error, emptyText, onItemClick, className, style, slots, }: TimelineBaseProps) => Element`
 
 Standalone Timeline — vertical event timeline with dot markers, connectors,
-date labels, and default/compact/alternating layout variants. No manifest context required.
+date labels, and default/compact/alternating layout variants. Works with plain React props.
 
 **Example:**
 
@@ -4420,62 +2467,42 @@ date labels, and default/compact/alternating layout variants. No manifest contex
 
 | Export | Kind | Description |
 |---|---|---|
-| `CommandPalette` | function | CommandPalette — search-driven command palette that renders static groups or fetches remote results, then dispatches manifest actions for the selected command. |
-| `CommandPaletteBase` | function | Standalone CommandPalette — a search-driven command list with keyboard navigation. No manifest context required. |
+| `CommandPaletteBase` | function | Standalone CommandPalette — a search-driven command list with keyboard navigation. Works with plain React props. |
 | `CommandPaletteBaseGroup` | interface | Type definition exported by the Snapshot UI runtime. |
 | `CommandPaletteBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `CommandPaletteBaseProps` | interface | Props accepted by the CommandPaletteBase standalone component. |
-| `CommandPaletteConfig` | typealias | Inferred config type for the CommandPalette component. |
-| `commandPaletteConfigSchema` | variable | Zod config schema for the CommandPalette component. A keyboard-driven overlay that groups commands, supports search with remote endpoints, tracks recent items, and dispatches actions on selection. |
-| `ConfirmDialogBase` | function | Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props. No manifest context required. |
+| `ConfirmDialogBase` | function | Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props. Works with plain React props. |
 | `ConfirmDialogBaseProps` | interface | Props accepted by the ConfirmDialogBase standalone component. |
-| `ConfirmDialogComponent` | function | Manifest-driven confirmation dialog adapter. Resolves primitive values and actions from manifest config, then delegates all rendering to `ConfirmDialogBase`. |
-| `ConfirmDialogConfig` | typealias | Input config type for the ConfirmDialog component. |
-| `confirmDialogConfigSchema` | variable | Overlay alias schema for manifest-driven confirmation dialogs. |
-| `ContextMenu` | function | Manifest-driven context menu adapter. Resolves primitive values and actions from manifest config, handles visibility and state publishing, then delegates all rendering to `ContextMenuBase`. |
-| `ContextMenuBase` | function | Standalone ContextMenu — a right-click context menu with plain React props. No manifest context required. |
+| `ContextMenuBase` | function | Standalone ContextMenu — a right-click context menu with plain React props. Works with plain React props. |
 | `ContextMenuBaseEntry` | typealias | Type definition exported by the Snapshot UI runtime. |
 | `ContextMenuBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
+| `ContextMenuBaseLabel` | interface | Type definition exported by the Snapshot UI runtime. |
 | `ContextMenuBaseProps` | interface | Props accepted by the ContextMenuBase standalone component. |
-| `ContextMenuConfig` | typealias | Inferred config type for the ContextMenu component. |
-| `contextMenuConfigSchema` | variable | Zod schema for the ContextMenu component. Defines a right-click menu with styleable trigger, panel, item, label, and separator surfaces. Visibility can be driven by a boolean or a binding reference. |
-| `DrawerBase` | function | Standalone Drawer — a sliding panel overlay with plain React props. No manifest context required. |
+| `ContextMenuBaseSeparator` | interface | Type definition exported by the Snapshot UI runtime. |
+| `DrawerBase` | function | Standalone Drawer — a sliding panel overlay with plain React props. Works with plain React props. |
 | `DrawerBaseFooterAction` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DrawerBaseProps` | interface | Props accepted by the DrawerBase standalone component. |
-| `DrawerComponent` | function | Function exported by the Snapshot UI runtime. |
-| `DrawerConfig` | typealias | Inferred type for drawer config. |
-| `drawerConfigSchema` | variable | Zod schema for drawer component config. Drawers are slide-in panels from the left or right edge of the screen. Like modals, they are opened/closed via the modal manager. |
-| `DropdownMenuBase` | function | Standalone DropdownMenu — a button-triggered floating menu with plain React props. No manifest context required. |
+| `DropdownMenuBase` | function | Standalone DropdownMenu — a button-triggered floating menu with plain React props. Works with plain React props. |
 | `DropdownMenuBaseEntry` | typealias | Type definition exported by the Snapshot UI runtime. |
 | `DropdownMenuBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
+| `DropdownMenuBaseLabel` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DropdownMenuBaseProps` | interface | Props accepted by the DropdownMenuBase standalone component. |
+| `DropdownMenuBaseSeparator` | interface | Type definition exported by the Snapshot UI runtime. |
 | `DropdownMenuBaseTrigger` | interface | Type definition exported by the Snapshot UI runtime. |
-| `HoverCardBase` | function | Standalone HoverCard — a floating panel that appears on hover with plain React props. No manifest context required. |
+| `HoverCardBase` | function | Standalone HoverCard — a floating panel that appears on hover with plain React props. Works with plain React props. |
 | `HoverCardBaseProps` | interface | Props accepted by the HoverCardBase standalone component. |
-| `ModalBase` | function | Standalone Modal — a centered overlay dialog with plain React props. No manifest context required. |
+| `ModalBase` | function | Standalone Modal — a centered overlay dialog with plain React props. Works with plain React props. |
 | `ModalBaseFooterAction` | interface | Type definition exported by the Snapshot UI runtime. |
 | `ModalBaseProps` | interface | Props accepted by the ModalBase standalone component. |
-| `ModalComponent` | function | Function exported by the Snapshot UI runtime. |
-| `ModalConfig` | typealias | Inferred type for modal config. |
-| `modalConfigSchema` | variable | Zod schema for modal component config. Modals are overlay dialogs that display child components. They are opened/closed via the modal manager (open-modal/close-modal actions). |
-| `Popover` | function | Manifest adapter — resolves config refs, publishes state, renders manifest children, delegates layout to PopoverBase. |
-| `PopoverBase` | function | Standalone Popover — a button-triggered floating panel with plain React props. No manifest context required. |
+| `PopoverBase` | function | Standalone Popover — a button-triggered floating panel with plain React props. Works with plain React props. |
 | `PopoverBaseProps` | interface | Props accepted by the PopoverBase standalone component. |
-| `PopoverConfig` | typealias | Inferred config type for the Popover component. |
-| `popoverConfigSchema` | variable | Zod schema for the Popover component. Defines a trigger-driven floating panel with optional title, description, footer content, width, placement, and canonical slot-based styling for the trigger and panel sub-surfaces. |
 
 ### Details
-
-#### `CommandPalette({ config }: { config: { type: "command-palette"; data?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase"...`
-
-CommandPalette — search-driven command palette that renders static groups or fetches remote results, then dispatches manifest actions for the selected command.
-
----
 
 #### `CommandPaletteBase({ id, open, onClose, onSelect, groups, placeholder, emptyMessage, maxHeight, query: controlledQuery, onQueryChange, shortcutHint, className, style, slots, }: CommandPaletteBaseProps) => Element | nul...`
 
 Standalone CommandPalette — a search-driven command list with keyboard
-navigation. No manifest context required.
+navigation. Works with plain React props.
 
 **Example:**
 
@@ -4493,7 +2520,7 @@ navigation. No manifest context required.
 #### `ConfirmDialogBase({ id, title, description, confirmLabel, cancelLabel, confirmVariant, cancelVariant, open, onClose, onConfirm, onCancel, size, className, style, slots, }: ConfirmDialogBaseProps) => Element`
 
 Standalone ConfirmDialog — a confirmation dialog built on ModalBase with
-plain React props. No manifest context required.
+plain React props. Works with plain React props.
 
 **Example:**
 
@@ -4509,29 +2536,10 @@ plain React props. No manifest context required.
 
 ---
 
-#### `ConfirmDialogComponent({ config, }: { config: { type: "confirm-dialog"; description?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "upp...`
-
-Manifest-driven confirmation dialog adapter.
-
-Resolves primitive values and actions from manifest config, then delegates
-all rendering to `ConfirmDialogBase`.
-
----
-
-#### `ContextMenu({ config }: { config: Record<string, any>; }) => Element | null`
-
-Manifest-driven context menu adapter.
-
-Resolves primitive values and actions from manifest config, handles
-visibility and state publishing, then delegates all rendering to
-`ContextMenuBase`.
-
----
-
 #### `ContextMenuBase({ id, items, onSelect, onOpenChange, children, className, style, slots, }: ContextMenuBaseProps) => Element`
 
 Standalone ContextMenu — a right-click context menu with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4553,7 +2561,7 @@ No manifest context required.
 #### `DrawerBase({ id, title, side, size, open, onClose, trapFocus, initialFocus, returnFocus, footer, footerAlign, onOpen, className, style, slots, children, }: DrawerBaseProps) => Element | null`
 
 Standalone Drawer — a sliding panel overlay with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4570,16 +2578,10 @@ No manifest context required.
 
 ---
 
-#### `DrawerComponent({ config }: { config: { type: "drawer"; content: Record<string, unknown>[]; title?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "tri...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `DropdownMenuBase({ id, trigger, items, onSelect, align, side, className, style, slots, }: DropdownMenuBaseProps) => Element`
 
 Standalone DropdownMenu — a button-triggered floating menu with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4600,7 +2602,7 @@ No manifest context required.
 #### `HoverCardBase({ id, trigger, children, openDelay, closeDelay, side, align, width, className, style, slots, }: HoverCardBaseProps) => Element`
 
 Standalone HoverCard — a floating panel that appears on hover with plain
-React props. No manifest context required.
+React props. Works with plain React props.
 
 **Example:**
 
@@ -4618,7 +2620,7 @@ React props. No manifest context required.
 #### `ModalBase({ id, title, size, open, onClose, trapFocus, initialFocus, returnFocus, footer, footerAlign, onOpen, className, style, slots, children, }: ModalBaseProps) => Element | null`
 
 Standalone Modal — a centered overlay dialog with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4638,23 +2640,10 @@ No manifest context required.
 
 ---
 
-#### `ModalComponent({ config }: { config: { type: "modal"; content: Record<string, unknown>[]; title?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim...`
-
-Function exported by the Snapshot UI runtime.
-
----
-
-#### `Popover({ config }: { config: { type: "popover"; trigger: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | ......`
-
-Manifest adapter — resolves config refs, publishes state, renders manifest
-children, delegates layout to PopoverBase.
-
----
-
 #### `PopoverBase({ id, triggerLabel, triggerIcon, triggerVariant, title, description, placement, width, onOpenChange, footer, className, style, slots, children, }: PopoverBaseProps) => Element`
 
 Standalone Popover — a button-triggered floating panel with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4674,29 +2663,21 @@ No manifest context required.
 
 | Export | Kind | Description |
 |---|---|---|
-| `AccordionBase` | function | Standalone Accordion — an expandable/collapsible panel list with plain React children. No manifest context required. |
+| `AccordionBase` | function | Standalone Accordion — an expandable/collapsible panel list with plain React children. Works with plain React props. |
 | `AccordionBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `AccordionBaseProps` | interface | Props accepted by the AccordionBase standalone component. |
-| `BreadcrumbBase` | function | Standalone Breadcrumb — a navigation trail rendered with plain React props. No manifest context required. |
+| `BreadcrumbBase` | function | Standalone Breadcrumb — a navigation trail rendered with plain React props. Works with plain React props. |
 | `BreadcrumbBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `BreadcrumbBaseProps` | interface | Props accepted by the BreadcrumbBase standalone component. |
-| `PrefetchLink` | function | Manifest adapter — wires the SSR prefetch route hook into PrefetchLinkBase. |
-| `PrefetchLinkBase` | function | Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback based on the configured strategy. No manifest or SSR context required. |
+| `PrefetchLinkBase` | function | Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback based on the configured strategy. Works without SSR context. |
 | `PrefetchLinkBaseProps` | interface | Props accepted by the PrefetchLinkBase standalone component. |
-| `PrefetchLinkConfig` | typealias | The output type of `prefetchLinkSchema` — all fields fully resolved with defaults applied. This is the type received by the component implementation. |
-| `prefetchLinkSchema` | variable | Zod schema for `<PrefetchLink>` config. `<PrefetchLink>` is a prefetch primitive that renders a plain `<a>` tag and automatically injects `<link rel="prefetch">` tags for the route's JS chunks and CSS files when the user hovers over the link or when it enters the viewport. It is not a router-aware component — consumers wire their own router. This avoids a peer dependency on TanStack Router. |
-| `StepperBase` | function | Standalone Stepper — a multi-step progress indicator with plain React props. No manifest context required. |
+| `StepperBase` | function | Standalone Stepper — a multi-step progress indicator with plain React props. Works with plain React props. |
 | `StepperBaseProps` | interface | Props accepted by the StepperBase standalone component. |
 | `StepperBaseStep` | interface | Type definition exported by the Snapshot UI runtime. |
-| `TabConfig` | typealias | Inferred type for a single tab config. |
-| `tabConfigSchema` | variable | Schema for a single tab within the tabs component. |
-| `TabsBase` | function | Standalone Tabs — tabbed navigation with plain React props. No manifest context required. |
+| `TabsBase` | function | Standalone Tabs — tabbed navigation with plain React props. Works with plain React props. |
 | `TabsBaseProps` | interface | Props accepted by the TabsBase standalone component. |
 | `TabsBaseTab` | interface | Type definition exported by the Snapshot UI runtime. |
-| `TabsComponent` | function | Manifest adapter — resolves config refs via useTabs hook, renders manifest children in tab panels, delegates layout to TabsBase. |
-| `TabsConfig` | typealias | Inferred type for tabs config. |
-| `tabsConfigSchema` | variable | Zod schema for tabs component config. Tabs provide in-page navigation between content panels. Each tab's content is rendered via ComponentRenderer. |
-| `TreeViewBase` | function | Standalone TreeView — a hierarchical tree with expand/collapse and selection. No manifest context required. |
+| `TreeViewBase` | function | Standalone TreeView — a hierarchical tree with expand/collapse and selection. Works with plain React props. |
 | `TreeViewBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `TreeViewBaseProps` | interface | Props accepted by the TreeViewBase standalone component. |
 
@@ -4705,7 +2686,7 @@ No manifest context required.
 #### `AccordionBase({ id, items, mode, variant, iconPosition, defaultOpen, className, style, slots, }: AccordionBaseProps) => Element`
 
 Standalone Accordion — an expandable/collapsible panel list with plain React
-children. No manifest context required.
+children. Works with plain React props.
 
 **Example:**
 
@@ -4723,7 +2704,7 @@ children. No manifest context required.
 #### `BreadcrumbBase({ id, items, separator: separatorProp, maxItems, onNavigate, className, style, slots, }: BreadcrumbBaseProps) => Element`
 
 Standalone Breadcrumb — a navigation trail rendered with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4739,16 +2720,10 @@ No manifest context required.
 
 ---
 
-#### `PrefetchLink(config: { to: string; target?: string | undefined; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { .....`
-
-Manifest adapter — wires the SSR prefetch route hook into PrefetchLinkBase.
-
----
-
 #### `PrefetchLinkBase({ id, to, prefetch, children, target, rel, onPrefetch, className, style, slots, }: PrefetchLinkBaseProps) => Element`
 
 Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback
-based on the configured strategy. No manifest or SSR context required.
+based on the configured strategy. Works without SSR context.
 
 **Example:**
 
@@ -4766,7 +2741,7 @@ based on the configured strategy. No manifest or SSR context required.
 #### `StepperBase({ id, steps, activeStep: controlledStep, orientation, variant, clickable, onStepChange, className, style, slots, }: StepperBaseProps) => Element`
 
 Standalone Stepper — a multi-step progress indicator with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4786,7 +2761,7 @@ No manifest context required.
 #### `TabsBase({ id, tabs, defaultTab, variant, onTabChange, className, style, slots, }: TabsBaseProps) => Element`
 
 Standalone Tabs — tabbed navigation with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4801,17 +2776,10 @@ No manifest context required.
 
 ---
 
-#### `TabsComponent({ config }: { config: { type: "tabs"; children: { label: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase...`
-
-Manifest adapter — resolves config refs via useTabs hook, renders manifest
-children in tab panels, delegates layout to TabsBase.
-
----
-
 #### `TreeViewBase({ id, items, selectable, multiSelect, showIcon, showConnectors, onSelect: onSelectProp, emptyMessage, isLoading, error, onRetry, className, style, slots, }: TreeViewBaseProps) => Element`
 
 Standalone TreeView — a hierarchical tree with expand/collapse and selection.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4833,72 +2801,57 @@ No manifest context required.
 
 | Export | Kind | Description |
 |---|---|---|
-| `BoxBase` | function | Standalone Box -- a generic container element with configurable HTML tag. No manifest context required. |
+| `BoxBase` | function | Standalone Box -- a generic container element with configurable HTML tag. Works with plain React props. |
 | `BoxBaseProps` | interface | Props accepted by the BoxBase standalone component. |
-| `Card` | function | Manifest adapter — resolves config refs, renders manifest children, delegates layout to CardBase. |
-| `CardBase` | function | Standalone Card — a styled container with optional title/subtitle and standard React children. No manifest context required. |
+| `CardBase` | function | Standalone Card — a styled container with optional title/subtitle and standard React children. Works with plain React props. |
 | `CardBaseProps` | interface | Props accepted by the CardBase standalone component. |
-| `CollapsibleBase` | function | Standalone Collapsible -- an animated expand/collapse container with an optional trigger. No manifest context required. |
+| `CollapsibleBase` | function | Standalone Collapsible -- an animated expand/collapse container with an optional trigger. Works with plain React props. |
 | `CollapsibleBaseProps` | interface | Props accepted by the CollapsibleBase standalone component. |
-| `Column` | function | Function exported by the Snapshot UI runtime. |
-| `ColumnBase` | function | Standalone Column -- a vertical flex container. No manifest context required. |
+| `ColumnBase` | function | Standalone Column -- a vertical flex container. Works with plain React props. |
 | `ColumnBaseProps` | interface | Props accepted by the ColumnBase standalone component. |
-| `ContainerBase` | function | Standalone Container -- a centered, max-width-constrained wrapper. No manifest context required. |
+| `ContainerBase` | function | Standalone Container -- a centered, max-width-constrained wrapper. Works with plain React props. |
 | `ContainerBaseProps` | interface | Props accepted by the ContainerBase standalone component. |
-| `GridBase` | function | Standalone Grid -- a CSS grid container. No manifest context required. |
+| `GridBase` | function | Standalone Grid -- a CSS grid container. Works with plain React props. |
 | `GridBaseProps` | interface | Props accepted by the GridBase standalone component. |
-| `Layout` | function | Manifest adapter — resolves registered custom layouts, then delegates to LayoutBase for built-in variants. |
-| `LayoutBase` | function | Standalone Layout -- a layout shell component that wraps page content. Renders one of six layout variants without manifest context. |
+| `LayoutBase` | function | Standalone Layout -- a layout shell component that wraps page content. Renders one of six layout variants with plain React props. |
 | `LayoutBaseProps` | interface | Props accepted by the LayoutBase standalone component. |
 | `LayoutBaseSlots` | typealias | Named slot content map for slot-aware layouts. |
 | `LayoutBaseVariant` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `LayoutColumnConfig` | typealias | Inferred config type for the Column layout component. |
-| `layoutColumnConfigSchema` | variable | Zod config schema for the Column layout component. Defines a vertical flex container with responsive gap, alignment, justify, overflow, and max-height options. |
-| `LayoutConfig` | typealias | Inferred layout config type from the Zod schema. |
-| `layoutConfigSchema` | variable | Zod schema for layout component configuration. Defines the layout shell that wraps page content. |
-| `LayoutProps` | interface | Props for the Layout component. |
-| `LayoutVariant` | typealias | Layout variant type extracted from the schema. |
-| `Nav` | function | Manifest adapter — resolves config refs, i18n, useNav state, and delegates rendering to `NavBase` while injecting manifest-aware sub-components (NavLink, NavDropdown, NavLogo, NavUserMenu) through render callbacks. |
-| `NavBase` | function | Standalone Nav -- a navigation component with items, logo, and collapse support. No manifest context required. |
+| `NavBase` | function | Standalone Nav -- a navigation component with items, logo, and collapse support. Works with plain React props. |
 | `NavBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `NavBaseLogo` | interface | Type definition exported by the Snapshot UI runtime. |
 | `NavBaseProps` | interface | Props accepted by the NavBase standalone component. |
 | `NavBaseUser` | interface | Type definition exported by the Snapshot UI runtime. |
-| `NavConfig` | typealias | Runtime config type for the Nav component. |
-| `navConfigSchema` | variable | Zod schema for the grouped Nav component. Supports either `items`-driven navigation or template composition, optional logo and user menu configuration, collapsible sidebar behavior, and canonical slot-based surface styling. |
-| `NavDropdownBase` | function | Standalone NavDropdown -- a navigation dropdown with floating panel. No manifest context required. |
+| `NavDropdownBase` | function | Standalone NavDropdown -- a navigation dropdown with floating panel. Works with plain React props. |
 | `NavDropdownBaseProps` | interface | Props accepted by the NavDropdownBase standalone component. |
-| `NavItemConfig` | typealias | Runtime config type for a grouped nav item, including optional child items and per-item slots. |
-| `NavLinkBase` | function | Standalone NavLink -- a navigation link with optional icon and badge. No manifest context required. |
+| `NavLinkBase` | function | Standalone NavLink -- a navigation link with optional icon and badge. Works with plain React props. |
 | `NavLinkBaseProps` | interface | Props accepted by the NavLinkBase standalone component. |
-| `NavLogoBase` | function | Standalone NavLogo -- a clickable brand logo/text element for navigation headers. No manifest context required. |
+| `NavLogoBase` | function | Standalone NavLogo -- a clickable brand logo/text element for navigation headers. Works with plain React props. |
 | `NavLogoBaseProps` | interface | Props accepted by the NavLogoBase standalone component. |
-| `NavSearchBase` | function | Standalone NavSearch -- a search input with optional keyboard shortcut display. No manifest context required. |
+| `NavSearchBase` | function | Standalone NavSearch -- a search input with optional keyboard shortcut display. Works with plain React props. |
 | `NavSearchBaseProps` | interface | Props accepted by the NavSearchBase standalone component. |
-| `NavSectionBase` | function | Standalone NavSection -- a labeled, optionally collapsible group within navigation. No manifest context required. |
+| `NavSectionBase` | function | Standalone NavSection -- a labeled, optionally collapsible group within navigation. Works with plain React props. |
 | `NavSectionBaseProps` | interface | Props accepted by the NavSectionBase standalone component. |
-| `NavUserMenuBase` | function | Standalone NavUserMenu -- a user menu dropdown with avatar trigger. No manifest context required. |
+| `NavUserMenuBase` | function | Standalone NavUserMenu -- a user menu dropdown with avatar trigger. Works with plain React props. |
 | `NavUserMenuBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `NavUserMenuBaseProps` | interface | Props accepted by the NavUserMenuBase standalone component. |
-| `Outlet` | function | Layout outlet primitive used to render nested child routes from the compiled manifest route tree. |
-| `ResolvedNavItem` | interface | A nav item enriched with computed state: active detection, visibility based on role, and resolved badge value. |
-| `RowBase` | function | Standalone Row -- a horizontal flex container. No manifest context required. |
+| `OutletBase` | function | Standalone OutletBase — a router-agnostic mount point for child routes or manually-supplied content. Works with plain React props. Pass router-rendered content as `children`. When children is empty, `fallback` is rendered instead. |
+| `OutletBaseProps` | interface | Props accepted by the OutletBase standalone component. |
+| `RowBase` | function | Standalone Row -- a horizontal flex container. Works with plain React props. |
 | `RowBaseProps` | interface | Props accepted by the RowBase standalone component. |
-| `SectionBase` | function | Standalone Section -- a full-width vertical section with optional height and alignment. No manifest context required. |
+| `SectionBase` | function | Standalone Section -- a full-width vertical section with optional height and alignment. Works with plain React props. |
 | `SectionBaseProps` | interface | Props accepted by the SectionBase standalone component. |
-| `SpacerBase` | function | Standalone Spacer -- an empty element that takes up space along an axis. No manifest context required. |
+| `SpacerBase` | function | Standalone Spacer -- an empty element that takes up space along an axis. Works with plain React props. |
 | `SpacerBaseProps` | interface | Props accepted by the SpacerBase standalone component. |
-| `SplitPaneBase` | function | Standalone SplitPane -- a resizable two-pane layout with a draggable divider. No manifest context required. |
+| `SplitPaneBase` | function | Standalone SplitPane -- a resizable two-pane layout with a draggable divider. Works with plain React props. |
 | `SplitPaneBaseProps` | interface | Props accepted by the SplitPaneBase standalone component. |
-| `useNav` | function | Headless hook for nav component logic. Resolves nav items with active state, role-based visibility, badge resolution from FromRefs, and collapse toggle. |
-| `UseNavResult` | interface | Return type of the useNav headless hook. |
 
 ### Details
 
 #### `BoxBase({ id, as, className, style, slots, children, }: BoxBaseProps) => Element`
 
 Standalone Box -- a generic container element with configurable HTML tag.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4910,17 +2863,10 @@ No manifest context required.
 
 ---
 
-#### `Card({ config }: { config: { type: "card"; title?: string | { from: string; transform?: "string" | "number" | "boolean" | "length" | "join" | "keys" | "values" | "trim" | "default" | "uppercase" | "lowerc...`
-
-Manifest adapter — resolves config refs, renders manifest children,
-delegates layout to CardBase.
-
----
-
 #### `CardBase({ id, title, subtitle, gap: gapProp, background, staggerDelay, className, style, slots, children, }: CardBaseProps) => Element`
 
 Standalone Card — a styled container with optional title/subtitle and
-standard React children. No manifest context required.
+standard React children. Works with plain React props.
 
 **Example:**
 
@@ -4936,7 +2882,7 @@ standard React children. No manifest context required.
 #### `CollapsibleBase({ id, open: controlledOpen, defaultOpen, duration: durationProp, onOpenChange, className, style, slots, trigger, children, }: CollapsibleBaseProps) => Element`
 
 Standalone Collapsible -- an animated expand/collapse container with an optional trigger.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4952,16 +2898,10 @@ No manifest context required.
 
 ---
 
-#### `Column({ config }: { config: { type: "column"; children: ComponentConfigInput[]; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; ......`
-
-Function exported by the Snapshot UI runtime.
-
----
-
 #### `ColumnBase({ id, gap: gapProp, align, justify, overflow, maxHeight, className, style, slots, children, }: ColumnBaseProps) => Element`
 
 Standalone Column -- a vertical flex container.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4977,7 +2917,7 @@ No manifest context required.
 #### `ContainerBase({ id, maxWidth, padding, center, className, style, slots, children, }: ContainerBaseProps) => Element`
 
 Standalone Container -- a centered, max-width-constrained wrapper.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -4992,7 +2932,7 @@ No manifest context required.
 #### `GridBase({ id, areas, columns, rows, gap: gapProp, className, style, slots, children, }: GridBaseProps) => Element`
 
 Standalone Grid -- a CSS grid container.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5006,17 +2946,10 @@ No manifest context required.
 
 ---
 
-#### `Layout({ config, nav, slots, children }: LayoutProps) => Element`
-
-Manifest adapter — resolves registered custom layouts, then delegates
-to LayoutBase for built-in variants.
-
----
-
 #### `LayoutBase({ variant, className, style, nav, layoutSlots, children, }: LayoutBaseProps) => Element`
 
 Standalone Layout -- a layout shell component that wraps page content.
-Renders one of six layout variants without manifest context.
+Renders one of six layout variants with plain React props.
 
 **Example:**
 
@@ -5028,18 +2961,10 @@ Renders one of six layout variants without manifest context.
 
 ---
 
-#### `Nav({ config, pathname, onNavigate, variant, }: NavComponentProps) => Element`
-
-Manifest adapter — resolves config refs, i18n, useNav state, and delegates
-rendering to `NavBase` while injecting manifest-aware sub-components
-(NavLink, NavDropdown, NavLogo, NavUserMenu) through render callbacks.
-
----
-
 #### `NavBase({ id, variant, items, logo, collapsible, pathname, onNavigate, className, style, slots, children, renderItem, renderLogo, footer, collapsed, onToggleCollapse, }: NavBaseProps) => Element`
 
 Standalone Nav -- a navigation component with items, logo, and collapse support.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5060,7 +2985,7 @@ No manifest context required.
 #### `NavDropdownBase({ id, label, icon, current, disabled, align, trigger: triggerMode, width, className, style, slots, children, }: NavDropdownBaseProps) => Element`
 
 Standalone NavDropdown -- a navigation dropdown with floating panel.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5076,7 +3001,7 @@ No manifest context required.
 #### `NavLinkBase({ id, label, path, icon, badge, disabled, active, onNavigate, className, style, slots, }: NavLinkBaseProps) => Element`
 
 Standalone NavLink -- a navigation link with optional icon and badge.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5095,7 +3020,7 @@ No manifest context required.
 #### `NavLogoBase({ id, text, src, path, logoHeight, onNavigate, className, style, slots, }: NavLogoBaseProps) => Element`
 
 Standalone NavLogo -- a clickable brand logo/text element for navigation headers.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5113,7 +3038,7 @@ No manifest context required.
 #### `NavSearchBase({ id, placeholder, shortcut, onSearch, onValueChange, className, style, slots, }: NavSearchBaseProps) => Element`
 
 Standalone NavSearch -- a search input with optional keyboard shortcut display.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5130,7 +3055,7 @@ No manifest context required.
 #### `NavSectionBase({ id, label, collapsible, defaultCollapsed, className, style, slots, children, }: NavSectionBaseProps) => Element`
 
 Standalone NavSection -- a labeled, optionally collapsible group within navigation.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5146,7 +3071,7 @@ No manifest context required.
 #### `NavUserMenuBase({ id, mode, showAvatar, showName, showEmail, userName, userEmail, userAvatar, items, className, style, slots, }: NavUserMenuBaseProps) => Element`
 
 Standalone NavUserMenu -- a user menu dropdown with avatar trigger.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5166,17 +3091,28 @@ No manifest context required.
 
 ---
 
-#### `Outlet({ config }: { config: { type: "outlet"; id?: string | undefined; color?: string | undefined; position?: "fixed" | "relative" | "absolute" | "sticky" | undefined; background?: string | { image?: strin...`
+#### `OutletBase({ id, children, fallback, className, style, slots, }: OutletBaseProps) => Element`
 
-Layout outlet primitive used to render nested child routes from the compiled
-manifest route tree.
+Standalone OutletBase — a router-agnostic mount point for child routes or
+manually-supplied content. Works with plain React props.
+
+Pass router-rendered content as `children`. When children is empty,
+`fallback` is rendered instead.
+
+**Example:**
+
+```tsx
+<OutletBase fallback={<EmptyState title="Pick a section" />}>
+  {currentRouteContent}
+</OutletBase>
+```
 
 ---
 
 #### `RowBase({ id, gap: gapProp, align, justify, wrap, overflow, maxHeight, className, style, slots, children, }: RowBaseProps) => Element`
 
 Standalone Row -- a horizontal flex container.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5192,7 +3128,7 @@ No manifest context required.
 #### `SectionBase({ id, height, align, justify, bleed, className, style, slots, children, }: SectionBaseProps) => Element`
 
 Standalone Section -- a full-width vertical section with optional height and alignment.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5207,7 +3143,7 @@ No manifest context required.
 #### `SpacerBase({ id, size: sizeProp, axis, flex, className, style, slots, }: SpacerBaseProps) => Element`
 
 Standalone Spacer -- an empty element that takes up space along an axis.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5221,7 +3157,7 @@ No manifest context required.
 #### `SplitPaneBase({ id, direction, defaultSplit, minSize, className, style, slots, first, second, }: SplitPaneBaseProps) => Element`
 
 Standalone SplitPane -- a resizable two-pane layout with a draggable divider.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5236,58 +3172,17 @@ No manifest context required.
 
 ---
 
-#### `useNav(config: Record<string, any>, pathname: string) => UseNavResult`
-
-Headless hook for nav component logic.
-Resolves nav items with active state, role-based visibility,
-badge resolution from FromRefs, and collapse toggle.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `config` | Nav component configuration from the manifest |
-| `pathname` | Current URL pathname for active route detection |
-
-**Returns:** Resolved nav items, active item, collapse state, and user info
-
-**Example:**
-
-```tsx
-const nav = useNav(navConfig, window.location.pathname);
-
-return (
-  <aside>
-    <button onClick={nav.toggleCollapse}>
-      {nav.isCollapsed ? "Expand" : "Collapse"}
-    </button>
-    <ul>
-      {nav.items.map((item) => (
-        <li key={item.id} aria-current={item.isActive ? "page" : undefined}>
-          <a href={item.href}>{item.label}</a>
-        </li>
-      ))}
-    </ul>
-  </aside>
-);
-```
-
----
-
 ## Components — Media
 
 | Export | Kind | Description |
 |---|---|---|
-| `CarouselBase` | function | Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation, and dot indicators. Pauses on hover. No manifest context required. |
+| `CarouselBase` | function | Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation, and dot indicators. Pauses on hover. Works with plain React props. |
 | `CarouselBaseProps` | interface | Props accepted by the CarouselBase standalone component. |
-| `EmbedBase` | function | Standalone Embed — a responsive iframe container for embedding external content. No manifest context required. |
+| `EmbedBase` | function | Standalone Embed — a responsive iframe container for embedding external content. Works with plain React props. |
 | `EmbedBaseProps` | interface | Props accepted by the EmbedBase standalone component. |
-| `SnapshotImage` | function | Manifest adapter — extracts config props and delegates to SnapshotImageBase. |
-| `SnapshotImageBase` | function | Standalone SnapshotImage — an optimized image component with placeholder support. No manifest context required. |
+| `SnapshotImageBase` | function | Standalone SnapshotImage — an optimized image component with placeholder support. Works with plain React props. |
 | `SnapshotImageBaseProps` | interface | Props accepted by the SnapshotImageBase standalone component. |
-| `SnapshotImageConfig` | typealias | Inferred config type from the SnapshotImage Zod schema. This is the single source of truth for what props the `<SnapshotImage>` component accepts. Never define this type manually. |
-| `snapshotImageSchema` | variable | Schema for optimized image components rendered through Snapshot's image route. |
-| `VideoBase` | function | Standalone Video — a styled video element that works with plain React props. No manifest context required. |
+| `VideoBase` | function | Standalone Video — a styled video element that works with plain React props. Works with plain React props. |
 | `VideoBaseProps` | interface | Props accepted by the VideoBase standalone component. |
 
 ### Details
@@ -5295,7 +3190,7 @@ return (
 #### `CarouselBase({ id, children, autoPlay, interval: intervalMs, showArrows, showDots, className, style, slots, }: CarouselBaseProps) => Element | null`
 
 Standalone CarouselBase — renders a slide carousel with auto-play, arrow navigation,
-and dot indicators. Pauses on hover. No manifest context required.
+and dot indicators. Pauses on hover. Works with plain React props.
 
 **Example:**
 
@@ -5312,7 +3207,7 @@ and dot indicators. Pauses on hover. No manifest context required.
 #### `EmbedBase({ id, url, aspectRatio, title, className, style, slots, }: EmbedBaseProps) => Element`
 
 Standalone Embed — a responsive iframe container for embedding external
-content. No manifest context required.
+content. Works with plain React props.
 
 **Example:**
 
@@ -5322,16 +3217,10 @@ content. No manifest context required.
 
 ---
 
-#### `SnapshotImage({ config }: { config: { type: "image"; placeholder: "skeleton" | "empty" | "blur"; width: number; src: string; format: "avif" | "webp" | "jpeg" | "png" | "original"; quality: number; priority: boolea...`
-
-Manifest adapter — extracts config props and delegates to SnapshotImageBase.
-
----
-
 #### `SnapshotImageBase({ id, src, alt, width, height, quality, format, sizes, priority, placeholder, loading: loadingProp, aspectRatio, className, style, slots, }: SnapshotImageBaseProps) => Element`
 
 Standalone SnapshotImage — an optimized image component with placeholder
-support. No manifest context required.
+support. Works with plain React props.
 
 **Example:**
 
@@ -5344,7 +3233,7 @@ support. No manifest context required.
 #### `VideoBase({ id, src, poster, controls, autoPlay, loop, muted, className, style, slots, }: VideoBaseProps) => Element`
 
 Standalone Video — a styled video element that works with plain React props.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5358,23 +3247,24 @@ No manifest context required.
 
 | Export | Kind | Description |
 |---|---|---|
-| `DividerBase` | function | Standalone Divider — renders a horizontal or vertical separator line, optionally with a centered label. No manifest context required. |
+| `DividerBase` | function | Standalone Divider — renders a horizontal or vertical separator line, optionally with a centered label. Works with plain React props. |
 | `DividerBaseProps` | interface | Props accepted by the DividerBase standalone component. |
-| `FloatingMenuBase` | function | Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation, and pre-resolved items. No manifest context required. |
+| `FloatingMenuBase` | function | Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation, and pre-resolved items. Works with plain React props. |
+| `FloatingMenuBaseEntry` | typealias | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseItem` | interface | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseLabel` | interface | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseProps` | interface | Props accepted by the FloatingMenuBase standalone component. |
 | `FloatingMenuBaseSeparator` | interface | Type definition exported by the Snapshot UI runtime. |
-| `LinkBase` | function | Standalone Link — renders a styled anchor element with optional icon and badge. No manifest context required. |
+| `LinkBase` | function | Standalone Link — renders a styled anchor element with optional icon and badge. Works with plain React props. |
 | `LinkBaseProps` | interface | Props accepted by the LinkBase standalone component. |
-| `OAuthButtonsBase` | function | Standalone OAuthButtons — renders OAuth provider buttons with optional heading and auto-redirect support. No manifest context required. |
+| `OAuthButtonsBase` | function | Standalone OAuthButtons — renders OAuth provider buttons with optional heading and auto-redirect support. Works with plain React props. |
 | `OAuthButtonsBaseProps` | interface | Props accepted by the OAuthButtonsBase standalone component. |
 | `OAuthProvider` | interface | Type definition exported by the Snapshot UI runtime. |
-| `PasskeyButtonBase` | function | Standalone PasskeyButton — renders a passkey authentication button. No manifest context required. |
+| `PasskeyButtonBase` | function | Standalone PasskeyButton — renders a passkey authentication button. Works with plain React props. |
 | `PasskeyButtonBaseProps` | interface | Props accepted by the PasskeyButtonBase standalone component. |
-| `StackBase` | function | Standalone Stack — a flex-column layout container with token-based spacing. No manifest context required. |
+| `StackBase` | function | Standalone Stack — a flex-column layout container with token-based spacing. Works with plain React props. |
 | `StackBaseProps` | interface | Props accepted by the StackBase standalone component. |
-| `TextBase` | function | Standalone Text — renders a styled paragraph element with token-based typography. No manifest context required. |
+| `TextBase` | function | Standalone Text — renders a styled paragraph element with token-based typography. Works with plain React props. |
 | `TextBaseProps` | interface | Props accepted by the TextBase standalone component. |
 
 ### Details
@@ -5382,7 +3272,7 @@ No manifest context required.
 #### `DividerBase({ label, orientation, id, className, style, slots, }: DividerBaseProps) => Element`
 
 Standalone Divider — renders a horizontal or vertical separator line,
-optionally with a centered label. No manifest context required.
+optionally with a centered label. Works with plain React props.
 
 **Example:**
 
@@ -5395,7 +3285,7 @@ optionally with a centered label. No manifest context required.
 #### `FloatingMenuBase({ triggerLabel, triggerIcon, items, open: controlledOpen, align, side, id, className, style, slots, }: FloatingMenuBaseProps) => Element`
 
 Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation,
-and pre-resolved items. No manifest context required.
+and pre-resolved items. Works with plain React props.
 
 **Example:**
 
@@ -5415,7 +3305,7 @@ and pre-resolved items. No manifest context required.
 #### `LinkBase({ text, to, icon, badge, external, disabled, current, align, variant, onNavigate, id, className, style, slots, }: LinkBaseProps) => Element`
 
 Standalone Link — renders a styled anchor element with optional icon and
-badge. No manifest context required.
+badge. Works with plain React props.
 
 **Example:**
 
@@ -5428,7 +3318,7 @@ badge. No manifest context required.
 #### `OAuthButtonsBase({ heading, providers, providerMode, onProviderClick, id, className, style, slots, }: OAuthButtonsBaseProps) => Element | null`
 
 Standalone OAuthButtons — renders OAuth provider buttons with optional
-heading and auto-redirect support. No manifest context required.
+heading and auto-redirect support. Works with plain React props.
 
 **Example:**
 
@@ -5447,7 +3337,7 @@ heading and auto-redirect support. No manifest context required.
 #### `PasskeyButtonBase({ label, loadingLabel, loading, visible, autoPrompt, onClick, id, className, style, slots, }: PasskeyButtonBaseProps) => Element | null`
 
 Standalone PasskeyButton — renders a passkey authentication button.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5460,7 +3350,7 @@ No manifest context required.
 #### `StackBase({ gap, align, justify, maxWidth, overflow, maxHeight, padding, staggerDelay, id, className, style, slots, children, }: StackBaseProps) => Element`
 
 Standalone Stack — a flex-column layout container with token-based spacing.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5476,7 +3366,7 @@ No manifest context required.
 #### `TextBase({ value, variant, size, weight, align, id, className, style, slots, }: TextBaseProps) => Element`
 
 Standalone Text — renders a styled paragraph element with token-based
-typography. No manifest context required.
+typography. Works with plain React props.
 
 **Example:**
 
@@ -5491,16 +3381,16 @@ typography. No manifest context required.
 | Export | Kind | Description |
 |---|---|---|
 | `ComponentDataResult` | interface | Result returned by `useComponentData`. Provides the fetched data, loading/error states, and a refetch function. |
-| `ComponentGroupBase` | function | Standalone ComponentGroup — a simple wrapper for pre-rendered group content. No manifest context required. |
+| `ComponentGroupBase` | function | Standalone ComponentGroup — a simple wrapper for pre-rendered group content. Works with plain React props. |
 | `ComponentGroupBaseProps` | interface | Props accepted by the ComponentGroupBase standalone component. |
-| `useComponentData` | function | Shared data-fetching hook for config-driven components. Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint, resolves any `FromRef` values in params via `useSubscribe`, and fetches data using the app-scope API client. When the API client is not available (e.g., in tests or before ManifestApp provides it), the hook returns a loading state without throwing. |
+| `useComponentData` | function | Shared data-fetching hook for Snapshot UI components. Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint, resolves any `FromRef` values in params via `useSubscribe`, and fetches data using the app-scope API client. When the API client is not available (e.g., in tests or before a provider supplies it), the hook returns a loading state without throwing. |
 
 ### Details
 
 #### `ComponentGroupBase({ id, className, style, slots, children, }: ComponentGroupBaseProps) => Element`
 
 Standalone ComponentGroup — a simple wrapper for pre-rendered group content.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -5515,13 +3405,13 @@ No manifest context required.
 
 #### `useComponentData(dataConfig: string | FromRef | { resource: string; params?: Record<string, unknown> | undefined; }, params?: Record<string, unknown> | undefined, options?: ComponentDataOptions | undefined) => Compon...`
 
-Shared data-fetching hook for config-driven components.
+Shared data-fetching hook for Snapshot UI components.
 
 Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint,
 resolves any `FromRef` values in params via `useSubscribe`, and fetches data
 using the app-scope API client.
 
-When the API client is not available (e.g., in tests or before ManifestApp provides it),
+When the API client is not available (e.g., in tests or before a provider supplies it),
 the hook returns a loading state without throwing.
 
 **Parameters:**
@@ -5535,239 +3425,6 @@ the hook returns a loading state without throwing.
 
 ---
 
-## Page Presets
-
-| Export | Kind | Description |
-|---|---|---|
-| `ActivityFeedDef` | interface | Feed section definition for dashboard-style presets. |
-| `AuthBrandingDef` | interface | Branding and background options for the auth page preset. |
-| `authPage` | function | Build a manifest page config for a common auth screen. |
-| `AuthPageOptions` | interface | Options for the `authPage` preset factory. |
-| `authPresetConfigSchema` | variable | Validate preset config for auth screens such as login, register, and password recovery. |
-| `ChartDef` | interface | Chart section definition for dashboard-style presets. |
-| `ColumnDef` | interface | A single column definition for the CRUD page table. |
-| `crudPage` | function | Builds a manifest `PageConfig` for a standard CRUD page. Consumers drop the result into their manifest's `pages` record: ```ts const manifest = {   pages: {     "/users": crudPage({       title: "Users",       listEndpoint: "GET /api/users",       createEndpoint: "POST /api/users",       deleteEndpoint: "DELETE /api/users/{id}",       columns: [         { key: "name", label: "Name" },         { key: "email", label: "Email" },         { key: "role", label: "Role", badge: true },       ],       createForm: {         fields: [           { key: "name", type: "text", label: "Name", required: true },           { key: "email", type: "email", label: "Email", required: true },         ],       },     }),   }, }; ``` |
-| `CrudPageOptions` | interface | Options for the `crudPage` preset factory. Produces a full CRUD page with a data table, create/edit modals, and row actions. |
-| `crudPresetConfigSchema` | variable | Validate preset config for a CRUD page assembled from list/form primitives. |
-| `dashboardPage` | function | Builds a manifest `PageConfig` for a dashboard page. Consumers drop the result into their manifest's `pages` record: ```ts const manifest = {   pages: {     "/dashboard": dashboardPage({       title: "Overview",       stats: [         { label: "Total Users", endpoint: "GET /api/stats/users", valueKey: "count" },         { label: "Revenue", endpoint: "GET /api/stats/revenue", valueKey: "total", format: "currency" },         { label: "Orders", endpoint: "GET /api/stats/orders", valueKey: "total", format: "number" },         { label: "Conversion", endpoint: "GET /api/stats/conversion", valueKey: "rate", format: "percent" },       ],       recentActivity: "GET /api/activity",     }),   }, }; ``` |
-| `DashboardPageOptions` | interface | Options for the `dashboardPage` preset factory. Produces a dashboard with stat cards and an optional activity feed. |
-| `dashboardPresetConfigSchema` | variable | Validate preset config for a dashboard page with stats, charts, and activity sections. |
-| `EmptyStateDef` | interface | Empty-state content shown by preset-generated pages. |
-| `expandPreset` | function | Validate a named preset config and expand it into the equivalent page config. |
-| `FilterDef` | interface | A filter definition for the CRUD page toolbar. |
-| `FilterOption` | interface | A filter option entry. |
-| `FormDef` | interface | A form definition used in CRUD create/update modals and settings tabs. |
-| `FormFieldDef` | interface | A single form field definition. |
-| `FormFieldOption` | interface | An option entry for select/radio form fields. |
-| `PaginationDef` | interface | Pagination settings for preset-generated list surfaces. |
-| `settingsPage` | function | Builds a manifest `PageConfig` for a settings page. Consumers drop the result into their manifest's `pages` record: ```ts const manifest = {   pages: {     "/settings": settingsPage({       title: "Settings",       sections: [         {           label: "Profile",           submitEndpoint: "PATCH /api/me/profile",           dataEndpoint: "GET /api/me/profile",           fields: [             { key: "name", type: "text", label: "Name", required: true },             { key: "bio", type: "textarea", label: "Bio" },           ],         },         {           label: "Password",           submitEndpoint: "POST /api/me/password",           fields: [             { key: "currentPassword", type: "password", label: "Current Password", required: true },             { key: "newPassword", type: "password", label: "New Password", required: true },           ],         },       ],     }),   }, }; ``` |
-| `SettingsPageOptions` | interface | Options for the `settingsPage` preset factory. Produces a settings page with a tab per section, each containing an AutoForm. |
-| `settingsPresetConfigSchema` | variable | Validate preset config for a settings page composed from one or more submitted sections. |
-| `SettingsSectionDef` | interface | A single settings section (one tab in the settings page). |
-| `StatDef` | interface | A single stat card definition for the dashboard page. |
-
-### Details
-
-#### `authPage(options: AuthPageOptions) => { content: { type: string; id?: string | undefined; }[]; title?: string | undefined; roles?: string[] | undefined; breadcrumb?: string | undefined; }`
-
-Build a manifest page config for a common auth screen.
-
----
-
-#### `crudPage(options: CrudPageOptions) => { content: { type: string; id?: string | undefined; }[]; title?: string | undefined; roles?: string[] | undefined; breadcrumb?: string | undefined; }`
-
-Builds a manifest `PageConfig` for a standard CRUD page.
-
-Consumers drop the result into their manifest's `pages` record:
-
-```ts
-const manifest = {
-  pages: {
-    "/users": crudPage({
-      title: "Users",
-      listEndpoint: "GET /api/users",
-      createEndpoint: "POST /api/users",
-      deleteEndpoint: "DELETE /api/users/{id}",
-      columns: [
-        { key: "name", label: "Name" },
-        { key: "email", label: "Email" },
-        { key: "role", label: "Role", badge: true },
-      ],
-      createForm: {
-        fields: [
-          { key: "name", type: "text", label: "Name", required: true },
-          { key: "email", type: "email", label: "Email", required: true },
-        ],
-      },
-    }),
-  },
-};
-```
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `options` | High-level CRUD page options |
-
-**Returns:** A valid manifest `PageConfig`
-
----
-
-#### `CrudPageOptions` *(interface)*
-
-Options for the `crudPage` preset factory.
-
-Produces a full CRUD page with a data table, create/edit modals, and row actions.
-
-**Example:**
-
-```ts
-const usersPage = crudPage({
-  title: "Users",
-  listEndpoint: "GET /api/users",
-  createEndpoint: "POST /api/users",
-  deleteEndpoint: "DELETE /api/users/{id}",
-  columns: [
-    { key: "name", label: "Name" },
-    { key: "email", label: "Email" },
-    { key: "role", label: "Role", badge: true },
-  ],
-});
-```
-
----
-
-#### `dashboardPage(options: DashboardPageOptions) => { content: { type: string; id?: string | undefined; }[]; title?: string | undefined; roles?: string[] | undefined; breadcrumb?: string | undefined; }`
-
-Builds a manifest `PageConfig` for a dashboard page.
-
-Consumers drop the result into their manifest's `pages` record:
-
-```ts
-const manifest = {
-  pages: {
-    "/dashboard": dashboardPage({
-      title: "Overview",
-      stats: [
-        { label: "Total Users", endpoint: "GET /api/stats/users", valueKey: "count" },
-        { label: "Revenue", endpoint: "GET /api/stats/revenue", valueKey: "total", format: "currency" },
-        { label: "Orders", endpoint: "GET /api/stats/orders", valueKey: "total", format: "number" },
-        { label: "Conversion", endpoint: "GET /api/stats/conversion", valueKey: "rate", format: "percent" },
-      ],
-      recentActivity: "GET /api/activity",
-    }),
-  },
-};
-```
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `options` | High-level dashboard page options |
-
-**Returns:** A valid manifest `PageConfig`
-
----
-
-#### `DashboardPageOptions` *(interface)*
-
-Options for the `dashboardPage` preset factory.
-
-Produces a dashboard with stat cards and an optional activity feed.
-
-**Example:**
-
-```ts
-const myDashboard = dashboardPage({
-  title: "Overview",
-  stats: [
-    { label: "Total Users", endpoint: "GET /api/stats/users", valueKey: "count" },
-    { label: "Revenue", endpoint: "GET /api/stats/revenue", valueKey: "total", format: "currency" },
-  ],
-});
-```
-
----
-
-#### `expandPreset(preset: string, presetConfig: unknown) => { content: { type: string; id?: string | undefined; }[]; title?: string | undefined; roles?: string[] | undefined; breadcrumb?: string | undefined; }`
-
-Validate a named preset config and expand it into the equivalent page config.
-
----
-
-#### `settingsPage(options: SettingsPageOptions) => { content: { type: string; id?: string | undefined; }[]; title?: string | undefined; roles?: string[] | undefined; breadcrumb?: string | undefined; }`
-
-Builds a manifest `PageConfig` for a settings page.
-
-Consumers drop the result into their manifest's `pages` record:
-
-```ts
-const manifest = {
-  pages: {
-    "/settings": settingsPage({
-      title: "Settings",
-      sections: [
-        {
-          label: "Profile",
-          submitEndpoint: "PATCH /api/me/profile",
-          dataEndpoint: "GET /api/me/profile",
-          fields: [
-            { key: "name", type: "text", label: "Name", required: true },
-            { key: "bio", type: "textarea", label: "Bio" },
-          ],
-        },
-        {
-          label: "Password",
-          submitEndpoint: "POST /api/me/password",
-          fields: [
-            { key: "currentPassword", type: "password", label: "Current Password", required: true },
-            { key: "newPassword", type: "password", label: "New Password", required: true },
-          ],
-        },
-      ],
-    }),
-  },
-};
-```
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `options` | High-level settings page options |
-
-**Returns:** A valid manifest `PageConfig`
-
----
-
-#### `SettingsPageOptions` *(interface)*
-
-Options for the `settingsPage` preset factory.
-
-Produces a settings page with a tab per section, each containing an AutoForm.
-
-**Example:**
-
-```ts
-const mySettings = settingsPage({
-  title: "Settings",
-  sections: [
-    {
-      label: "Profile",
-      submitEndpoint: "PATCH /api/me/profile",
-      fields: [
-        { key: "name", type: "text", label: "Name", required: true },
-        { key: "email", type: "email", label: "Email", required: true },
-      ],
-    },
-  ],
-});
-```
-
----
-
 ## Hooks & Utilities
 
 | Export | Kind | Description |
@@ -5776,7 +3433,6 @@ const mySettings = settingsPage({
 | `getSortableStyle` | function | CSS transform helper for sortable items. Converts the dnd-kit transform into a CSS transform string. |
 | `resolveResponsiveValue` | function | Resolve a responsive value for a given breakpoint. Cascades down: if the active breakpoint isn't defined, falls back to the next smaller breakpoint, then `default`. For flat (non-object) values, returns the value directly. |
 | `UI_BREAKPOINTS` | variable | Breakpoint pixel thresholds (mobile-first, min-width). |
-| `useAutoBreadcrumbs` | function | Resolve auto-generated breadcrumb items for the current route match. |
 | `useBreakpoint` | function | Returns the currently active breakpoint based on window width. Uses `matchMedia` for efficient, event-driven updates (no resize polling). Returns `"default"` during SSR. |
 | `useDndSensors` | function | Pre-configured sensor setup for pointer + keyboard DnD. Pointer requires 5px distance to activate (prevents click hijacking). Keyboard uses standard coordinates for arrow key navigation. |
 | `useInfiniteScroll` | function | Observe a sentinel element and load the next page when it enters the viewport. |
@@ -5785,7 +3441,6 @@ const mySettings = settingsPage({
 | `UsePollOptions` | interface | Options controlling interval-based polling from client components. |
 | `useResponsiveValue` | function | Resolve a responsive value to the appropriate value for the current breakpoint. Accepts either a flat value (returned as-is) or a responsive map with breakpoint keys. Falls back to the next smaller defined breakpoint. |
 | `useUrlSync` | function | Keep a slice of local state synchronized with URL query parameters. |
-| `useVirtualList` | function | Compute the visible slice for a fixed-height virtualized list container. |
 
 ### Details
 
@@ -5812,12 +3467,6 @@ returns the value directly.
 | `breakpoint` | The active breakpoint to resolve for |
 
 **Returns:** The resolved value for the given breakpoint
-
----
-
-#### `useAutoBreadcrumbs(config?: BreadcrumbAutoConfig | undefined) => BreadcrumbItem[]`
-
-Resolve auto-generated breadcrumb items for the current route match.
 
 ---
 
@@ -5873,12 +3522,6 @@ Keep a slice of local state synchronized with URL query parameters.
 
 ---
 
-#### `useVirtualList({ totalCount, itemHeight, overscan, }: UseVirtualListOptions) => UseVirtualListResult`
-
-Compute the visible slice for a fixed-height virtualized list container.
-
----
-
 ## Icons
 
 | Export | Kind | Description |
@@ -5895,163 +3538,80 @@ Render a Snapshot icon from the built-in icon registry.
 
 ---
 
-## Workflows
-
-| Export | Kind | Description |
-|---|---|---|
-| `getRegisteredWorkflowAction` | function | Retrieve a registered runtime handler for a custom workflow action type. |
-| `registerWorkflowAction` | function | Register a runtime handler for a custom workflow action type. |
-| `runWorkflow` | function | Execute a workflow definition against the supplied runtime hooks and mutable context. |
-
-### Details
-
-#### `getRegisteredWorkflowAction(type: string) => WorkflowActionHandler | undefined`
-
-Retrieve a registered runtime handler for a custom workflow action type.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `type` | Custom workflow action type name |
-
-**Returns:** The registered handler when available
-
----
-
-#### `registerWorkflowAction(type: string, handler: WorkflowActionHandler) => void`
-
-Register a runtime handler for a custom workflow action type.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `type` | Custom workflow action type name |
-| `handler` | Runtime handler invoked by the workflow engine |
-
----
-
-#### `runWorkflow(definition: WorkflowDefinition, options: { workflows?: WorkflowMap | undefined; context?: Record<string, unknown> | undefined; resolveValue: (value: unknown, context: Record<...>) => unknown; execute...`
-
-Execute a workflow definition against the supplied runtime hooks and mutable context.
-
----
-
 ## Other
 
 | Export | Kind | Description |
 |---|---|---|
-| `ActionBase` | interface | Type definition exported by the Snapshot UI runtime. |
-| `ActionConfig` | typealias | Manifest configuration type for action config. |
+| `ActionConfig` | typealias | Configuration type for action config. |
 | `ActionExecuteFn` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `actionSchema` | variable | Zod schema for validating action schema. |
-| `ApiAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `apiActionSchema` | variable | Zod schema for validating api action schema. |
-| `AssignWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
-| `AuditLogBase` | function | Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries with user avatars, relative timestamps, and expandable detail panels. No manifest context required. |
+| `AuditLogBase` | function | Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries with user avatars, relative timestamps, and expandable detail panels. Works with plain React props. |
 | `AuditLogBaseProps` | interface | Props accepted by the AuditLogBase standalone component. |
 | `AuditLogFilterEntry` | interface | Type definition exported by the Snapshot UI runtime. |
 | `buildRequestUrl` | function | Function exported by the Snapshot UI runtime. |
-| `CalendarBase` | function | Standalone CalendarBase — renders a month or week calendar grid with event pills, navigation controls, and optional week numbers. No manifest context required. |
+| `CalendarBase` | function | Standalone CalendarBase — renders a month or week calendar grid with event pills, navigation controls, and optional week numbers. Works with plain React props. |
 | `CalendarBaseProps` | interface | Props accepted by the CalendarBase standalone component. |
 | `CalendarEventEntry` | interface | Type definition exported by the Snapshot UI runtime. |
-| `CaptureWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
-| `CloseModalAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `closeModalActionSchema` | variable | Zod schema for validating close modal action schema. |
+| `collectDependentResources` | function | Function exported by the Snapshot UI runtime. |
 | `ComponentTokens` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `componentTokensSchema` | variable | Zod schema for validating component tokens schema. |
-| `ConfirmAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `confirmActionSchema` | variable | Zod schema for validating confirm action schema. |
-| `CopyAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `CopyToClipboardAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `copyToClipboardActionSchema` | variable | Zod schema for validating copy to clipboard action schema. |
 | `dataSourceSchema` | variable | Zod schema for validating data source schema. |
-| `DefaultErrorBase` | function | Standalone DefaultError — renders an error feedback card with optional retry button. No manifest context required. |
+| `DefaultErrorBase` | function | Standalone DefaultError — renders an error feedback card with optional retry button. Works with plain React props. |
 | `DefaultErrorBaseProps` | interface | Props accepted by the DefaultErrorBase standalone component. |
-| `DefaultLoadingBase` | function | Standalone DefaultLoading — renders a loading spinner with label. No manifest context required. |
+| `DefaultLoadingBase` | function | Standalone DefaultLoading — renders a loading spinner with label. Works with plain React props. |
 | `DefaultLoadingBaseProps` | interface | Props accepted by the DefaultLoadingBase standalone component. |
-| `DefaultNotFoundBase` | function | Standalone DefaultNotFound — renders a 404 page with title and description. No manifest context required. |
+| `DefaultNotFoundBase` | function | Standalone DefaultNotFound — renders a 404 page with title and description. Works with plain React props. |
 | `DefaultNotFoundBaseProps` | interface | Props accepted by the DefaultNotFoundBase standalone component. |
-| `DefaultOfflineBase` | function | Standalone DefaultOffline — renders an offline status banner. No manifest context required. |
+| `DefaultOfflineBase` | function | Standalone DefaultOffline — renders an offline status banner. Works with plain React props. |
 | `DefaultOfflineBaseProps` | interface | Props accepted by the DefaultOfflineBase standalone component. |
-| `DownloadAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `downloadActionSchema` | variable | Zod schema for validating download action schema. |
+| `EndpointTarget` | typealias | Type definition exported by the Snapshot UI runtime. |
 | `endpointTargetSchema` | variable | Zod schema for validating endpoint target schema. |
 | `ExprRef` | interface | Type definition exported by the Snapshot UI runtime. |
+| `extractResourceRefs` | function | Function exported by the Snapshot UI runtime. |
 | `Flavor` | interface | Type definition exported by the Snapshot UI runtime. |
-| `FontConfig` | typealias | Manifest configuration type for font config. |
-| `fontSchema` | variable | Zod schema for validating font schema. |
+| `FontConfig` | typealias | Configuration type for font config. |
 | `FromRef` | interface | Type definition exported by the Snapshot UI runtime. |
-| `fromRefSchema` | variable | Zod schema for validating from ref schema. |
-| `getRegisteredLayouts` | function | List the names of all currently registered manifest layouts. |
+| `getResourceInvalidationTargets` | function | Function exported by the Snapshot UI runtime. |
+| `HttpMethod` | typealias | Type definition exported by the Snapshot UI runtime. |
 | `httpMethodSchema` | variable | Zod schema for validating http method schema. |
-| `IfWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
+| `isOptimisticResourceTarget` | function | Function exported by the Snapshot UI runtime. |
+| `isQueryKeyInvalidationTarget` | function | Function exported by the Snapshot UI runtime. |
 | `isResourceRef` | function | Function exported by the Snapshot UI runtime. |
-| `KanbanBase` | function | Standalone KanbanBase — renders a multi-column board with cards, WIP limits, assignee avatars, priority indicators, and optional drag-and-drop reordering. No manifest context required. |
+| `KanbanBase` | function | Standalone KanbanBase — renders a multi-column board with cards, WIP limits, assignee avatars, priority indicators, and optional drag-and-drop reordering. Works with plain React props. |
 | `KanbanBaseProps` | interface | Props accepted by the KanbanBase standalone component. |
 | `KanbanColumnEntry` | interface | Type definition exported by the Snapshot UI runtime. |
-| `LogAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `NavigateAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `navigateActionSchema` | variable | Zod schema for validating navigate action schema. |
-| `NotificationFeedBase` | function | Standalone NotificationFeedBase — renders a scrollable notification list with type icons, unread indicators, relative timestamps, and a mark-all-read action. No manifest context required. |
+| `NotificationFeedBase` | function | Standalone NotificationFeedBase — renders a scrollable notification list with type icons, unread indicators, relative timestamps, and a mark-all-read action. Works with plain React props. |
 | `NotificationFeedBaseProps` | interface | Props accepted by the NotificationFeedBase standalone component. |
-| `OpenModalAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `openModalActionSchema` | variable | Zod schema for validating open modal action schema. |
-| `ParallelWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
+| `OptimisticConfig` | typealias | Configuration type for optimistic config. |
+| `optimisticConfigSchema` | variable | Zod schema for validating optimistic config schema. |
+| `OptimisticTarget` | typealias | Type definition exported by the Snapshot UI runtime. |
+| `optimisticTargetSchema` | variable | Zod schema for validating optimistic target schema. |
 | `PricingFeatureEntry` | interface | Type definition exported by the Snapshot UI runtime. |
-| `PricingTableBase` | function | Standalone PricingTableBase — renders a responsive pricing comparison as either a card grid or a feature-comparison table with CTA buttons per tier. No manifest context required. |
+| `PricingTableBase` | function | Standalone PricingTableBase — renders a responsive pricing comparison as either a card grid or a feature-comparison table with CTA buttons per tier. Works with plain React props. |
 | `PricingTableBaseProps` | interface | Props accepted by the PricingTableBase standalone component. |
 | `PricingTierEntry` | interface | Type definition exported by the Snapshot UI runtime. |
 | `RadiusScale` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `radiusSchema` | variable | Zod schema for validating radius schema. |
-| `RefreshAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `refreshActionSchema` | variable | Zod schema for validating refresh action schema. |
-| `registerBuiltInComponents` | function | Register all built-in config-driven components with the manifest system. The function is idempotent so boot code can call it safely without worrying about duplicate registrations. |
-| `registerLayout` | function | Register a named layout component for manifest layout resolution. |
-| `resetBuiltInComponentRegistration` | function | Reset the built-in component registration guard so tests can rebuild the registry. |
-| `resolveLayout` | function | Resolve a previously registered layout by name. |
+| `ResolvedRequest` | interface | Type definition exported by the Snapshot UI runtime. |
+| `resolveEndpointTarget` | function | Function exported by the Snapshot UI runtime. |
+| `ResourceConfig` | typealias | Configuration type for resource config. |
 | `resourceConfigSchema` | variable | Zod schema for validating resource config schema. |
+| `ResourceInvalidationTarget` | typealias | Type definition exported by the Snapshot UI runtime. |
+| `resourceInvalidationTargetSchema` | variable | Zod schema for validating resource invalidation target schema. |
+| `ResourceMap` | typealias | Type definition exported by the Snapshot UI runtime. |
+| `resourceParamSchema` | variable | Zod schema for validating resource param schema. |
+| `ResourceRef` | typealias | Type definition exported by the Snapshot UI runtime. |
 | `resourceRefSchema` | variable | Zod schema for validating resource ref schema. |
 | `Responsive` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `RetryWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
-| `RunWorkflowAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `runWorkflowActionSchema` | variable | Zod schema for validating run workflow action schema. |
-| `ScrollToAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `scrollToActionSchema` | variable | Zod schema for validating scroll to action schema. |
-| `SetValueAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `setValueActionSchema` | variable | Zod schema for validating set value action schema. |
 | `SpacingScale` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `spacingSchema` | variable | Zod schema for validating spacing schema. |
 | `StateScope` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `stateValueConfigSchema` | variable | Zod schema for validating state value config schema. |
 | `ThemeColors` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `themeColorsSchema` | variable | Zod schema for validating theme colors schema. |
-| `ThemeConfig` | typealias | Manifest configuration type for theme config. |
-| `themeConfigSchema` | variable | Zod schema for validating theme config schema. |
-| `ToastAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `toastActionSchema` | variable | Zod schema for validating toast action schema. |
+| `ThemeConfig` | typealias | Configuration type for theme config. |
 | `TokenEditor` | interface | Type definition exported by the Snapshot UI runtime. |
-| `TrackAction` | interface | Type definition exported by the Snapshot UI runtime. |
-| `trackActionSchema` | variable | Zod schema for validating track action schema. |
-| `TryWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
-| `WaitWorkflowNode` | interface | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowActionHandler` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowCondition` | interface | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowConditionOperator` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `workflowConditionSchema` | variable | Zod schema for validating workflow condition schema. |
-| `WorkflowDefinition` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `workflowDefinitionSchema` | variable | Zod schema for validating workflow definition schema. |
-| `WorkflowMap` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `WorkflowNode` | typealias | Type definition exported by the Snapshot UI runtime. |
-| `workflowNodeSchema` | variable | Zod schema for validating workflow node schema. |
 
 ### Details
 
 #### `AuditLogBase({ id, items: allItems, loading, error, userField, actionField, timestampField, detailsField, filters, pagination, className, style, slots, }: AuditLogBaseProps) => Element`
 
 Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries
-with user avatars, relative timestamps, and expandable detail panels. No manifest context required.
+with user avatars, relative timestamps, and expandable detail panels. Works with plain React props.
 
 **Example:**
 
@@ -6075,7 +3635,7 @@ Function exported by the Snapshot UI runtime.
 #### `CalendarBase({ id, view, events, initialDate, loading, error, todayLabel, showWeekNumbers, onDateClick, onEventClick, className, style, slots, }: CalendarBaseProps) => Element`
 
 Standalone CalendarBase — renders a month or week calendar grid with event pills,
-navigation controls, and optional week numbers. No manifest context required.
+navigation controls, and optional week numbers. Works with plain React props.
 
 **Example:**
 
@@ -6091,10 +3651,16 @@ navigation controls, and optional week numbers. No manifest context required.
 
 ---
 
+#### `collectDependentResources(resourceName: string, resources?: ResourceMap | undefined, visited?: Set<string>) => string[]`
+
+Function exported by the Snapshot UI runtime.
+
+---
+
 #### `DefaultErrorBase({ title, description, showRetry, retryLabel, onRetry, id, className, style, slots, }: DefaultErrorBaseProps) => Element`
 
 Standalone DefaultError — renders an error feedback card with optional
-retry button. No manifest context required.
+retry button. Works with plain React props.
 
 **Example:**
 
@@ -6112,7 +3678,7 @@ retry button. No manifest context required.
 #### `DefaultLoadingBase({ label, size, id, className, style, slots, }: DefaultLoadingBaseProps) => Element`
 
 Standalone DefaultLoading — renders a loading spinner with label.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -6125,7 +3691,7 @@ No manifest context required.
 #### `DefaultNotFoundBase({ title, description, id, className, style, slots, }: DefaultNotFoundBaseProps) => Element`
 
 Standalone DefaultNotFound — renders a 404 page with title and description.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -6141,7 +3707,7 @@ No manifest context required.
 #### `DefaultOfflineBase({ title, description, id, className, style, slots, }: DefaultOfflineBaseProps) => Element`
 
 Standalone DefaultOffline — renders an offline status banner.
-No manifest context required.
+Works with plain React props.
 
 **Example:**
 
@@ -6154,9 +3720,27 @@ No manifest context required.
 
 ---
 
-#### `getRegisteredLayouts() => string[]`
+#### `extractResourceRefs(value: unknown, results?: { resource: string; params?: Record<string, unknown> | undefined; }[]) => { resource: string; params?: Record<string, unknown> | undefined; }[]`
 
-List the names of all currently registered manifest layouts.
+Function exported by the Snapshot UI runtime.
+
+---
+
+#### `getResourceInvalidationTargets(resourceName: string, resources?: ResourceMap | undefined) => string[]`
+
+Function exported by the Snapshot UI runtime.
+
+---
+
+#### `isOptimisticResourceTarget(value: string | { resource: string; params?: Record<string, unknown> | undefined; }) => value is { resource: string; params?: Record<string, unknown> | undefined; }`
+
+Function exported by the Snapshot UI runtime.
+
+---
+
+#### `isQueryKeyInvalidationTarget(value: string | { key: string[]; }) => value is { key: string[]; }`
+
+Function exported by the Snapshot UI runtime.
 
 ---
 
@@ -6169,7 +3753,7 @@ Function exported by the Snapshot UI runtime.
 #### `KanbanBase({ id, columns, items: rawItems, loading, error, columnField, titleField, descriptionField, assigneeField, priorityField, sortable, emptyMessage, onCardClick, onReorder, onDndChange, className, style,...`
 
 Standalone KanbanBase — renders a multi-column board with cards, WIP limits,
-assignee avatars, priority indicators, and optional drag-and-drop reordering. No manifest context required.
+assignee avatars, priority indicators, and optional drag-and-drop reordering. Works with plain React props.
 
 **Example:**
 
@@ -6191,7 +3775,7 @@ assignee avatars, priority indicators, and optional drag-and-drop reordering. No
 #### `NotificationFeedBase({ id, items, loading, error, titleField, messageField, timestampField, readField, typeField, showMarkAllRead, maxHeight, emptyMessage, clickable, onItemClick, onMarkAllRead, className, style, slots, ...`
 
 Standalone NotificationFeedBase — renders a scrollable notification list with type icons,
-unread indicators, relative timestamps, and a mark-all-read action. No manifest context required.
+unread indicators, relative timestamps, and a mark-all-read action. Works with plain React props.
 
 **Example:**
 
@@ -6212,7 +3796,7 @@ unread indicators, relative timestamps, and a mark-all-read action. No manifest 
 #### `PricingTableBase({ id, tiers, variant, currency, columns, className, style, slots, }: PricingTableBaseProps) => Element`
 
 Standalone PricingTableBase — renders a responsive pricing comparison as either
-a card grid or a feature-comparison table with CTA buttons per tier. No manifest context required.
+a card grid or a feature-comparison table with CTA buttons per tier. Works with plain React props.
 
 **Example:**
 
@@ -6229,29 +3813,8 @@ a card grid or a feature-comparison table with CTA buttons per tier. No manifest
 
 ---
 
-#### `registerBuiltInComponents(force?: boolean) => void`
+#### `resolveEndpointTarget(target: string | { resource: string; params?: Record<string, unknown> | undefined; }, resources?: ResourceMap | undefined, params?: Record<string, unknown> | undefined, fallbackMethod?: "GET" | ... 3...`
 
-Register all built-in config-driven components with the manifest system.
-
-The function is idempotent so boot code can call it safely without worrying
-about duplicate registrations.
-
----
-
-#### `registerLayout(name: string, layout: RegisteredLayout) => void`
-
-Register a named layout component for manifest layout resolution.
-
----
-
-#### `resetBuiltInComponentRegistration() => void`
-
-Reset the built-in component registration guard so tests can rebuild the registry.
-
----
-
-#### `resolveLayout(name: string) => RegisteredLayout | undefined`
-
-Resolve a previously registered layout by name.
+Function exported by the Snapshot UI runtime.
 
 ---

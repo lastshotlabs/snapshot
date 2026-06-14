@@ -5,7 +5,7 @@ const analyticsProviderRegistry = new Map<string, AnalyticsProviderFactory>();
 /**
  * Register a custom analytics provider factory by name.
  *
- * @param name - Provider identifier used in `manifest.analytics.providers.*.name`
+ * @param name - Provider identifier used by app analytics configuration
  * @param factory - Per-instance provider factory
  */
 export function registerAnalyticsProvider(

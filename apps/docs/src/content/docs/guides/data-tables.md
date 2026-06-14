@@ -10,7 +10,7 @@ import { DataTableBase } from "@lastshotlabs/snapshot/ui";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-const snap = createSnapshot({ apiUrl: "/api", manifest: {} });
+const snap = createSnapshot({ apiUrl: "/api" });
 
 function UsersTable() {
   const { data: users, isLoading, error } = useQuery<User[]>({

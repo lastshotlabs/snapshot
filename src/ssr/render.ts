@@ -88,7 +88,7 @@ const POSTAMBLE = "\n</div>\n</body>\n</html>";
  * @param responseInit - Optional response overrides (status/headers).
  * @returns A streaming `Response` with `Content-Type: text/html; charset=utf-8`.
  *
- * @internal — called by `createReactRenderer` and `createManifestRenderer`.
+ * @internal — called by `createReactRenderer`.
  */
 export function renderPage(
   element: React.ReactElement,

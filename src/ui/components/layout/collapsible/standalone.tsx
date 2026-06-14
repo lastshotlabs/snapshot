@@ -44,7 +44,7 @@ export interface CollapsibleBaseProps {
 
 /**
  * Standalone Collapsible -- an animated expand/collapse container with an optional trigger.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

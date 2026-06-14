@@ -7,12 +7,15 @@ draft: false
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
 
-const snap = createSnapshot({ apiUrl: "/api", manifest: {
-  realtime: {
-    ws: { url: "wss://api.example.com/ws" },
-    sse: { endpoints: { notifications: { url: "/api/sse/notifications" } } },
+const snap = createSnapshot({
+  apiUrl: "/api",
+  ws: { url: "wss://api.example.com/ws" },
+  sse: {
+    endpoints: {
+      notifications: { url: "/api/sse/notifications" },
+    },
   },
-}});
+});
 
 function LiveDashboard() {
   snap.useRoom("dashboard");
@@ -151,27 +154,23 @@ function NotificationSettings() {
 }
 ```
 
-## Manifest realtime config
+## Realtime config
 
-Configure WebSocket and SSE endpoints in your manifest:
+Configure WebSocket and SSE endpoints directly on the snapshot runtime:
 
 ```tsx
 const snap = createSnapshot({
   apiUrl: "/api",
-  manifest: {
-    realtime: {
-      ws: {
-        url: "wss://api.example.com/ws",
+  ws: {
+    url: "wss://api.example.com/ws",
+  },
+  sse: {
+    endpoints: {
+      notifications: {
+        url: "/api/sse/notifications",
       },
-      sse: {
-        endpoints: {
-          notifications: {
-            url: "/api/sse/notifications",
-          },
-          activity: {
-            url: "/api/sse/activity",
-          },
-        },
+      activity: {
+        url: "/api/sse/activity",
       },
     },
   },

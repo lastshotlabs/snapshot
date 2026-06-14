@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Provider as JotaiProvider, createStore } from "jotai";
 import {
-  bootBuiltins,
   resolveTokens,
   ToastContainer,
   ConfirmDialog,
@@ -38,7 +37,6 @@ import {
 } from "./api/system";
 import { TokenEditorSidebar } from "./token-editor";
 
-bootBuiltins();
 const initialCss = resolveTokens({ flavor: "neutral" });
 const style = document.createElement("style");
 style.id = "snapshot-tokens";

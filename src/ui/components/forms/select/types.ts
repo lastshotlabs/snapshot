@@ -7,12 +7,10 @@ import type {
   ReactNode,
   TouchEventHandler,
 } from "react";
-import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
-import type { selectConfigSchema } from "./schema";
 
-export type SelectConfig = z.input<typeof selectConfigSchema>;
+export type SelectConfig = Record<string, unknown>;
 
 export interface SelectControlProps {
   /** Ref callback for the underlying element. */

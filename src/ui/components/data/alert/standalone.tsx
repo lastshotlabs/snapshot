@@ -65,7 +65,7 @@ export interface AlertBaseProps {
 
 /**
  * Standalone Alert — a styled alert/notification box with optional icon,
- * action button, and dismiss. No manifest context required.
+ * action button, and dismiss. Works with plain React props.
  *
  * @example
  * ```tsx

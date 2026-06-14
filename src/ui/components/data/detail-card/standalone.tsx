@@ -430,7 +430,7 @@ function DetailCardSkeleton({
 
 /**
  * Standalone DetailCard — data-driven detail view with formatted fields
- * and header actions. No manifest context required.
+ * and header actions. Works with plain React props.
  *
  * @example
  * ```tsx

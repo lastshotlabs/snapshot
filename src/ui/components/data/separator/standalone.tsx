@@ -28,7 +28,7 @@ export interface SeparatorBaseProps {
 
 /**
  * Standalone Separator — a horizontal or vertical line with optional label.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

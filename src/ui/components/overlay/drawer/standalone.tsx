@@ -81,7 +81,7 @@ const ALIGN_MAP: Record<string, string> = {
 
 /**
  * Standalone Drawer — a sliding panel overlay with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

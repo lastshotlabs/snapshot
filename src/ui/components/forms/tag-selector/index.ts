@@ -1,5 +1,2 @@
-export { tagSelectorConfigSchema } from "./schema";
-export { TagSelector } from "./component";
-export { TagSelectorField, TagSelectorBase } from "./standalone";
-export type { TagSelectorFieldProps, TagSelectorTag } from "./standalone";
-export type { TagSelectorConfig } from "./types";
+export * from "./standalone";
+export type * from "./types";

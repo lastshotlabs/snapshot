@@ -238,7 +238,7 @@ export interface FileUploaderBaseProps {
 
 /**
  * Standalone FileUploader — a file upload component with dropzone, button,
- * and compact variants. No manifest context required.
+ * and compact variants. Works with plain React props.
  *
  * @example
  * ```tsx

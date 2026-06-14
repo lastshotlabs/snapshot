@@ -1,18 +1,18 @@
 import type {
   CSSProperties,
   FocusEventHandler,
+  HTMLInputTypeAttribute,
   KeyboardEventHandler,
   MouseEventHandler,
   PointerEventHandler,
   TouchEventHandler,
 } from "react";
-import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
-import type { inputConfigSchema } from "./schema";
 
-/** Inferred config type from the Input Zod schema. */
-export type InputConfig = z.input<typeof inputConfigSchema>;
+export interface InputConfig extends Record<string, unknown> {
+  inputType?: HTMLInputTypeAttribute;
+}
 
 export interface InputControlProps {
   /** Ref callback for the underlying element. */

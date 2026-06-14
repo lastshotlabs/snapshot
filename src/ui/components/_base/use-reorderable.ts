@@ -150,7 +150,7 @@ function buildEntries<T>(
 }
 
 /**
- * Shared sortable state for manifest-driven components that support local reordering
+ * Shared sortable state for sortable components that support local reordering
  * and cross-component drag-and-drop.
  */
 export function useReorderable<T>({

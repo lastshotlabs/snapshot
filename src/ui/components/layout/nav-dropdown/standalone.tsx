@@ -44,7 +44,7 @@ export interface NavDropdownBaseProps {
 
 /**
  * Standalone NavDropdown -- a navigation dropdown with floating panel.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

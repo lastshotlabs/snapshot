@@ -24,7 +24,7 @@ export interface ComponentGroupBaseProps {
 
 /**
  * Standalone ComponentGroup — a simple wrapper for pre-rendered group content.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

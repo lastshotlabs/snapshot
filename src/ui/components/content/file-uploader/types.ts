@@ -1,8 +1,6 @@
-import type { z } from "zod";
-import type { fileUploaderConfigSchema } from "./schema";
 
 /** Inferred config type from the FileUploader Zod schema. */
-export type FileUploaderConfig = z.input<typeof fileUploaderConfigSchema>;
+export type FileUploaderConfig = Record<string, unknown>;
 
 /** Internal state for a file in the upload queue. */
 export interface UploadFileEntry {

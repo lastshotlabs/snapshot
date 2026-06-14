@@ -6,14 +6,7 @@ import {
   isResourceRef,
   resolveEndpointTarget,
   type ResourceRef,
-} from "../../manifest/resources";
-import {
-  useManifestResourceMountRefetch,
-  useManifestResourceFocusRefetch,
-  useManifestResourceCache,
-  useManifestResourcePolling,
-  useManifestRuntime,
-} from "../../manifest/runtime";
+} from "../../resources";
 import { usePoll } from "../../hooks/use-poll";
 import { useApiClient } from "../../state";
 
@@ -62,13 +55,13 @@ function getInitialInlineData(
 }
 
 /**
- * Shared data-fetching hook for config-driven components.
+ * Shared data-fetching hook for Snapshot UI components.
  *
  * Parses a data config string like `"GET /api/stats/revenue"` into method + endpoint,
  * resolves any `FromRef` values in params via `useSubscribe`, and fetches data
  * using the app-scope API client.
  *
- * When the API client is not available (e.g., in tests or before ManifestApp provides it),
+ * When the API client is not available (e.g., in tests or before a provider supplies it),
  * the hook returns a loading state without throwing.
  *
  * @param dataConfig - Endpoint string or FromRef. Example: `"GET /api/stats/revenue"`
@@ -82,8 +75,6 @@ export function useComponentData(
 ): ComponentDataResult {
   const resolvedData = useSubscribe(dataConfig);
   const api = useApiClient();
-  const runtime = useManifestRuntime();
-  const resourceCache = useManifestResourceCache();
 
   // Resolve params that may be FromRef in a single hook call regardless of
   // how many params are present.
@@ -102,12 +93,6 @@ export function useComponentData(
   const dataString =
     typeof resolvedData === "string" ? resolvedData : undefined;
   const resourceTarget = isResourceRef(resolvedData) ? resolvedData : undefined;
-  const resourceVersion = resourceTarget
-    ? (resourceCache?.getResourceVersion(resourceTarget.resource) ?? 0)
-    : 0;
-  useManifestResourceMountRefetch(resourceTarget?.resource, true);
-  useManifestResourcePolling(resourceTarget?.resource, true);
-  useManifestResourceFocusRefetch(resourceTarget?.resource, true);
 
   // Handle inline data (arrays/objects passed directly instead of an endpoint string)
   const isInlineData =
@@ -153,32 +138,22 @@ export function useComponentData(
 
     try {
       const target = resourceTarget ?? dataString!;
-      const cachedData = resourceCache?.getData(target, resolvedParams);
-      const result =
-        cachedData !== undefined
-          ? cachedData
-          : resourceCache
-            ? await resourceCache.loadTarget(target, resolvedParams)
-            : await (async () => {
-                const request = resolveEndpointTarget(
-                  target,
-                  runtime?.resources,
-                  resolvedParams,
-                );
-                const url = buildRequestUrl(request.endpoint, request.params);
-                switch (request.method) {
-                  case "POST":
-                    return api.post(url, undefined);
-                  case "PUT":
-                    return api.put(url, undefined);
-                  case "PATCH":
-                    return api.patch(url, undefined);
-                  case "DELETE":
-                    return api.delete(url);
-                  default:
-                    return api.get(url);
-                }
-              })();
+      const request = resolveEndpointTarget(target, undefined, resolvedParams);
+      const url = buildRequestUrl(request.endpoint, request.params);
+      const result = await (async () => {
+        switch (request.method) {
+          case "POST":
+            return api.post(url, undefined);
+          case "PUT":
+            return api.put(url, undefined);
+          case "PATCH":
+            return api.patch(url, undefined);
+          case "DELETE":
+            return api.delete(url);
+          default:
+            return api.get(url);
+        }
+      })();
 
       setData(result as Record<string, unknown>);
     } catch (err) {
@@ -192,12 +167,9 @@ export function useComponentData(
     dataString,
     resourceTarget,
     api,
-    runtime?.resources,
-    resourceCache,
     fetchCount,
     isInlineData,
     resolvedData,
-    resourceVersion,
     JSON.stringify(resolvedParams),
   ]);
 

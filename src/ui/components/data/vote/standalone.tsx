@@ -32,7 +32,7 @@ export interface VoteBaseProps {
 
 /**
  * Standalone Vote — upvote/downvote toggle with count display.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

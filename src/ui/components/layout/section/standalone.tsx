@@ -49,7 +49,7 @@ export interface SectionBaseProps {
 
 /**
  * Standalone Section -- a full-width vertical section with optional height and alignment.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

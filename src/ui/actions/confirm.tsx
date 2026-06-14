@@ -24,7 +24,7 @@ export type ConfirmOptions = Omit<ConfirmRequest, "resolve">;
 
 export const confirmAtom = atom<ConfirmRequest | null>(null);
 
-/** Imperative API for opening a confirmation dialog from manifest actions or custom UI. */
+/** Imperative API for opening a confirmation dialog from app actions or custom UI. */
 export interface ConfirmManager {
   show: (options: ConfirmOptions) => Promise<boolean>;
 }

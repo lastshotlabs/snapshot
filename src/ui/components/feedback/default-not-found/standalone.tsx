@@ -28,7 +28,7 @@ export interface DefaultNotFoundBaseProps {
 
 /**
  * Standalone DefaultNotFound — renders a 404 page with title and description.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

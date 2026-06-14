@@ -14,7 +14,7 @@ import { ComponentName } from '@lastshotlabs/snapshot/ui'
 
 **`*Base` components** — pure React, plain props, no context required. Use these for most work.
 
-**Config-driven components** (e.g. `StatCard`, `DataTable`) — take a single `config` prop typed from a Zod schema, require `PageContextProvider`. Use these when you want the manifest-style `id`/`from` cross-component binding.
+**Feature components** (e.g. `StatCardBase`, `DataTableBase`) — take focused props for app-owned data, callbacks, loading state, slots, and styling. Use these when you want richer UI without handing control to a generated runtime.
 
 ### Token setup (call once at app root)
 
@@ -191,8 +191,10 @@ interface CollapsibleBaseProps {
   {children}
 </CardBase>
 
-// Card: config-driven (needs PageContextProvider)
-<Card config={{ title: 'Match', gap: 'md', children: [...] }} />
+// CardBase with slots for targeted styling
+<CardBase title="Match" slots={{ root: { className: "match-card" } }}>
+  {children}
+</CardBase>
 ```
 
 ### `Layout` (page shell)
@@ -1798,71 +1800,6 @@ function SortableList({ items, onReorder }) {
   )
 }
 ```
-
----
-
-## Page Presets
-
-Programmatic page config generators — useful for quickly scaffolding standard pages.
-
-```tsx
-import { crudPage, dashboardPage, settingsPage, authPage, expandPreset } from '@lastshotlabs/snapshot/ui'
-
-// CRUD page (list + create/edit/delete modal)
-const matchesPage = crudPage({
-  title: 'Matches',
-  endpoint: '/api/matches',
-  columns: [
-    { key: 'title', label: 'Title' },
-    { key: 'status', label: 'Status', badge: true },
-    { key: 'createdAt', label: 'Created', format: 'date' },
-  ],
-  createForm: {
-    fields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
-      { key: 'visibility', label: 'Visibility', type: 'select', options: [
-        { label: 'Private', value: 'private' }, { label: 'Public', value: 'public' }
-      ]},
-    ],
-  },
-  filters: [{ key: 'status', label: 'Status', type: 'select', options: [
-    { label: 'Active', value: 'active' }, { label: 'Draft', value: 'draft' }
-  ]}],
-})
-
-// Dashboard page (stats + charts + recent activity)
-const dashboardPage_ = dashboardPage({
-  title: 'Dashboard',
-  stats: [
-    { label: 'Active Matches', endpoint: '/api/matches', valueKey: 'activeCount', icon: 'trophy' },
-    { label: 'Total Players', endpoint: '/api/matches', valueKey: 'totalPlayers', icon: 'users' },
-  ],
-  charts: [
-    { title: 'Matches Over Time', endpoint: '/api/matches', chartType: 'line', xKey: 'date', series: [{ key: 'count', label: 'Matches' }] },
-  ],
-  activityFeed: { endpoint: '/api/matches', titleField: 'title', timestampField: 'createdAt' },
-})
-
-// Settings page (sections with forms)
-const settingsPage_ = settingsPage({
-  title: 'Settings',
-  sections: [
-    {
-      key: 'general', label: 'General',
-      endpoint: '/api/settings/general',
-      fields: [
-        { key: 'displayName', label: 'Display Name', type: 'text' },
-        { key: 'theme', label: 'Theme', type: 'select', options: [{ label: 'Light', value: 'light' }, { label: 'Dark', value: 'dark' }] },
-      ],
-    },
-  ],
-})
-
-// Expand a preset into a full PageConfig:
-const pageConfig = expandPreset(matchesPage)
-```
-
----
 
 ---
 

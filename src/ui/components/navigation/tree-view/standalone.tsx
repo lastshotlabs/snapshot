@@ -493,7 +493,7 @@ function TreeNode({
 
 /**
  * Standalone TreeView — a hierarchical tree with expand/collapse and selection.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

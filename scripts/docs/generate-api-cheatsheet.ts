@@ -218,7 +218,6 @@ const uiRules: [string, (e: ExportEntry) => boolean][] = [
   ["Context & Data Binding", (e) => e.source.startsWith("src/ui/context/")],
   ["State Runtime", (e) => e.source.startsWith("src/ui/state/")],
   ["Actions", (e) => e.source.startsWith("src/ui/actions/")],
-  ["Manifest & Rendering", (e) => e.source.startsWith("src/ui/manifest/")],
   ["Data Components", (e) => e.source.startsWith("src/ui/components/data/")],
   ["Form Components", (e) => e.source.startsWith("src/ui/components/forms/")],
   ["Communication Components", (e) => e.source.startsWith("src/ui/components/communication/")],
@@ -227,7 +226,6 @@ const uiRules: [string, (e: ExportEntry) => boolean][] = [
   ["Navigation Components", (e) => e.source.startsWith("src/ui/components/navigation/")],
   ["Layout Components", (e) => e.source.startsWith("src/ui/components/layout/")],
   ["Media Components", (e) => e.source.startsWith("src/ui/components/media/")],
-  ["Page Presets", (e) => e.source.startsWith("src/ui/presets/")],
   ["Hooks & Utilities", (e) => e.source.startsWith("src/ui/hooks/") || e.source.startsWith("src/ui/components/_base/")],
   ["Icons", (e) => e.source.startsWith("src/ui/icons/")],
   ["Workflows", (e) => e.source.startsWith("src/ui/workflows/")],
@@ -298,8 +296,8 @@ export function generateApiCheatsheet(): void {
       "useUpdateWebhookEndpoint", "useDeleteWebhookEndpoint",
       "useWebhookDeliveries", "useWebhookDelivery", "useTestWebhookEndpoint",
     ]],
-    ["Infrastructure", ["api", "tokenStorage", "queryClient", "useWebSocketManager", "bootstrap", "ManifestApp"]],
-    ["Routing", ["protectedBeforeLoad", "guestBeforeLoad"]],
+    ["Infrastructure", ["api", "tokenStorage", "queryClient", "useWebSocketManager", "bootstrap"]],
+    ["Routing", ["protectedBeforeLoad", "guestBeforeLoad", "protect", "guest", "setNavigator"]],
     ["Scaffold", ["QueryProvider"]],
   ];
 

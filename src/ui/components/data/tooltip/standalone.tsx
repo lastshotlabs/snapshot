@@ -109,7 +109,7 @@ export interface TooltipBaseProps {
 
 /**
  * Standalone Tooltip — wraps child content and shows informational text
- * on hover with configurable placement and delay. No manifest context required.
+ * on hover with configurable placement and delay. Works with plain React props.
  *
  * @example
  * ```tsx

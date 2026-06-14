@@ -3,7 +3,6 @@ export {
   generateTsConfig,
   generateViteConfig,
   generateEnvFile,
-  generateSnapshotConfig,
   generateGitignore,
 } from "./config";
 

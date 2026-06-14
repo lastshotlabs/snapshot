@@ -57,7 +57,7 @@ export interface FilterBarBaseProps {
 
 /**
  * Standalone FilterBar — search + filter dropdowns + active pills.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

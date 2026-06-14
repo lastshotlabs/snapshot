@@ -1,8 +1,3 @@
-import type { z } from "zod";
-import type {
-  floatingMenuConfigSchema,
-  floatingMenuEntrySchema,
-} from "./schema";
 
-export type FloatingMenuConfig = z.input<typeof floatingMenuConfigSchema>;
-export type FloatingMenuEntry = z.input<typeof floatingMenuEntrySchema>;
+export type FloatingMenuConfig = Record<string, unknown>;
+export type FloatingMenuEntry = Record<string, unknown>;

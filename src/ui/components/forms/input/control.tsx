@@ -8,7 +8,7 @@ import type { InputControlProps } from "./types";
 /**
  * Low-level styled input element with surface resolution and state management.
  * Used internally by InputField and other components that need a styled `<input>`.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

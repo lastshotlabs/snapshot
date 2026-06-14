@@ -119,12 +119,14 @@ describe("sidebar root layout", () => {
 describe("scaffold favicon", () => {
   it("writes public/vite.svg", async () => {
     const writtenPaths: string[] = [];
+    const writtenFiles = new Map<string, string>();
 
     vi.doMock("node:fs/promises", () => ({
       default: {
         mkdir: vi.fn().mockResolvedValue(undefined),
-        writeFile: vi.fn().mockImplementation((p: string) => {
+        writeFile: vi.fn().mockImplementation((p: string, content: string) => {
           writtenPaths.push(String(p));
+          writtenFiles.set(String(p).replace(/\\/g, "/"), String(content));
           return Promise.resolve();
         }),
         readdir: vi.fn().mockResolvedValue([]),
@@ -132,8 +134,9 @@ describe("scaffold favicon", () => {
         access: vi.fn().mockRejectedValue(new Error("ENOENT")),
       },
       mkdir: vi.fn().mockResolvedValue(undefined),
-      writeFile: vi.fn().mockImplementation((p: string) => {
+      writeFile: vi.fn().mockImplementation((p: string, content: string) => {
         writtenPaths.push(String(p));
+        writtenFiles.set(String(p).replace(/\\/g, "/"), String(content));
         return Promise.resolve();
       }),
       readdir: vi.fn().mockResolvedValue([]),
@@ -177,5 +180,25 @@ describe("scaffold favicon", () => {
         p.replace(/\\/g, "/").includes("public/vite.svg"),
       ),
     ).toBe(true);
+    const removedSyncConfigFile = ["snapshot", "config", "json"].join(".");
+    expect(
+      writtenPaths.some((p) =>
+        p.replace(/\\/g, "/").includes(removedSyncConfigFile),
+      ),
+    ).toBe(false);
+
+    const packageJsonPath = [...writtenFiles.keys()].find((p) =>
+      p.endsWith("/package.json"),
+    );
+    expect(packageJsonPath).toBeDefined();
+    const packageJson = JSON.parse(writtenFiles.get(packageJsonPath!)!) as {
+      snapshot?: Record<string, string>;
+    };
+    expect(packageJson.snapshot).toEqual({
+      apiDir: "src/api",
+      hooksDir: "src/hooks/api",
+      typesPath: "src/types/api.ts",
+      snapshotImport: "@lib/snapshot",
+    });
   });
 });

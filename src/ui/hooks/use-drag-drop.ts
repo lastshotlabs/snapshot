@@ -2,7 +2,7 @@
  * Shared drag-and-drop utilities built on @dnd-kit.
  *
  * Provides reusable DnD context, sortable items, and drag overlay
- * for config-driven components that support reordering (kanban, list, tree-view).
+ * for components that support reordering (kanban, list, tree-view).
  */
 
 import {

@@ -41,7 +41,7 @@ export interface HeadingBaseProps {
 
 /**
  * Standalone Heading — a styled heading element (h1-h6) that works with plain
- * React props. No manifest context required.
+ * React props. Works with plain React props.
  *
  * @example
  * ```tsx

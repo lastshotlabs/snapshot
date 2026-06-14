@@ -109,7 +109,7 @@ function devWarn(message: string): void {
 /**
  * Resolve the active locale according to ordered `i18n.detect` strategies.
  *
- * @param i18n - Manifest i18n config
+ * @param i18n - Runtime i18n config
  * @param options - Candidate locale sources
  * @returns The first matching locale, or the i18n default when configured
  */
@@ -164,7 +164,7 @@ export function resolveDetectedLocale(
 
 /**
  * Resolve the active runtime locale from state when present, otherwise fall
- * back to the manifest default locale.
+ * back to the configured default locale.
  */
 export function resolveRuntimeLocale(
   i18n: I18nConfig | undefined,
@@ -191,7 +191,7 @@ export function resolveRuntimeLocale(
  *
  * @param ref - Translation reference
  * @param locale - Active locale
- * @param i18n - Manifest i18n config
+ * @param i18n - Runtime i18n config
  * @returns Resolved localized string
  */
 export function resolveTRef(
@@ -223,7 +223,7 @@ export function resolveTRef(
 }
 
 /**
- * Recursively resolve all `{ t: "..." }` references in a manifest value.
+ * Recursively resolve all `{ t: "..." }` references in a runtime value.
  *
  * @param value - Input value
  * @param options - Locale + i18n config

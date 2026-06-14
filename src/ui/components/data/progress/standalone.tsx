@@ -48,7 +48,7 @@ export interface ProgressBaseProps {
 
 /**
  * Standalone Progress — bar or circular progress indicator.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

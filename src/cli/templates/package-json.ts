@@ -37,6 +37,12 @@ export function generatePackageJson(config: ScaffoldConfig): string {
       typecheck: "tsc -b",
       sync: "bunx snapshot sync",
     },
+    snapshot: {
+      apiDir: "src/api",
+      hooksDir: "src/hooks/api",
+      typesPath: "src/types/api.ts",
+      snapshotImport: "@lib/snapshot",
+    },
     dependencies,
     devDependencies: {
       "@tailwindcss/vite": "^4.0.0",

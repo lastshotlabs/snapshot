@@ -42,7 +42,7 @@ export interface GifPickerBaseProps {
 
 /**
  * Standalone GifPicker — searchable GIF grid with debounced search, loading states,
- * and optional attribution. No manifest context required.
+ * and optional attribution. Works with plain React props.
  *
  * @example
  * ```tsx

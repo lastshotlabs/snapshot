@@ -1,5 +1,2 @@
-export { locationInputConfigSchema } from "./schema";
-export { LocationInput } from "./component";
-export { LocationInputField, LocationInputBase } from "./standalone";
-export type { LocationInputFieldProps, LocationResult } from "./standalone";
-export type { LocationInputConfig } from "./types";
+export * from "./standalone";
+export type * from "./types";

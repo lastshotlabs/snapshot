@@ -40,7 +40,7 @@ export interface QuickAddFieldProps {
 
 /**
  * Standalone QuickAddField -- a compact input with submit button for quickly
- * adding items to a list. No manifest context required.
+ * adding items to a list. Works with plain React props.
  *
  * @example
  * ```tsx

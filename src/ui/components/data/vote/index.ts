@@ -1,4 +1,2 @@
-export { voteConfigSchema } from "./schema";
-export { Vote } from "./component";
-export type { VoteConfig } from "./types";
-export { VoteBase, type VoteBaseProps } from "./standalone";
+export * from "./standalone";
+export type * from "./types";

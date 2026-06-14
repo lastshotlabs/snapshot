@@ -98,7 +98,7 @@ function getTargetContainerId(
 }
 
 /**
- * Shared DnD provider for manifest-driven sortable components.
+ * Shared DnD provider for sortable components.
  * Centralizes drag/drop so list and data-table can reorder locally and
  * transfer items across matching drag groups without each mounting its own
  * disconnected DndContext.

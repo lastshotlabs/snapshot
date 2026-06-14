@@ -18,18 +18,21 @@ import { useState, useEffect } from "react";
 
 const snap = createSnapshot({
   apiUrl: "/api",
-  manifest: {
-    app: {
-      auth: {
-        loginPath: "/login",
-        homePath: "/",
-        oauth: {
-          providers: {
-            google: { clientId: "YOUR_GOOGLE_CLIENT_ID", scopes: ["email", "profile"] },
-            github: { clientId: "YOUR_GITHUB_CLIENT_ID", scopes: ["user:email"] },
-          },
-          redirectUri: "/auth/callback",
-        },
+  loginPath: "/login",
+  homePath: "/",
+  auth: {
+    providers: {
+      google: {
+        type: "google",
+        clientId: "YOUR_GOOGLE_CLIENT_ID",
+        scopes: ["email", "profile"],
+        callbackPath: "/auth/callback",
+      },
+      github: {
+        type: "github",
+        clientId: "YOUR_GITHUB_CLIENT_ID",
+        scopes: ["user:email"],
+        callbackPath: "/auth/callback",
       },
     },
   },
@@ -319,7 +322,7 @@ function Divider() {
 
 ## Adding the OAuth callback route
 
-Mount `OAuthCallbackPage` at whatever path you set for `redirectUri` in your manifest. With TanStack Router:
+Mount `OAuthCallbackPage` at whatever path you set for the provider `callbackPath`. With TanStack Router:
 
 ```tsx
 // routes/auth/callback.tsx

@@ -5,24 +5,24 @@ Snapshot is the frontend framework for bunshot-powered backends.
 It ships five contributor-facing surfaces:
 
 - SDK runtime in `src/index.ts` and `src/create-snapshot.tsx`
-- config-driven UI runtime in `src/ui.ts` and `src/ui/**`
+- code-first UI runtime in `src/ui.ts` and `src/ui/**`
 - SSR and Vite integration in `src/ssr/**` and `src/vite/**`
 - CLI and scaffold/sync tooling in `src/cli/**`
 - docs and canonical examples in `apps/docs/**` and `playground/**`
 
 ## What Snapshot Supports On `main`
 
-Snapshot is no longer just an in-progress manifest experiment.
+Snapshot is a code-first frontend framework for bunshot-powered backends.
 
 It currently supports:
 
-- manifest-driven app assembly with routes, resources, workflows, overlays, navigation, tokens, slots, and presets
-- SDK-driven apps with `createSnapshot`, auth, MFA, passkeys, OAuth, community, webhooks, websocket, SSE, and push primitives
-- plugin-driven extension through `definePlugin`, custom components, component groups, and manifest schema generation
-- SSR, manifest rendering, RSC-aware rendering, prefetch manifests, PPR, and SSG-oriented Vite integration
-- a large config-addressable UI catalog across data, forms, layout, navigation, overlays, content, media, communication, commerce, and workflow
+- code-first apps with `createSnapshot`, auth, MFA, passkeys, OAuth, community, webhooks, websocket, SSE, and push primitives
+- standalone React UI components with typed props, slots, design tokens, actions, state/context helpers, and hooks
+- plugin-driven extension through `definePlugin` and custom SDK integrations
+- SSR, RSC-aware rendering, prefetch manifests, PPR, and SSG-oriented Vite integration
+- a large standalone UI catalog across data, forms, layout, navigation, overlays, content, media, communication, commerce, and workflow
 
-Manifest-first is a first-class path. Custom React and SSR integration are also first-class paths. Do not force everything through one model when the public API already supports several.
+Code-first is the product path. Keep authoring explicit: TypeScript config, React composition, typed props, and source-backed docs.
 
 ## Read Order For Contributors
 
@@ -34,7 +34,7 @@ Before changing Snapshot, contributors and implementation agents must read:
 4. the nearest surface `CLAUDE.md`
 5. `apps/docs/src/content/docs/contribute/testing.md`
 6. the relevant public entrypoint
-7. the relevant schema, runtime, registry, example, and nearest test files
+7. the relevant component, runtime, registry, example, and nearest test files
 
 Surface guides:
 
@@ -44,19 +44,19 @@ Surface guides:
 - `playground/CLAUDE.md`
 - `apps/docs/CLAUDE.md`
 
-## Read Order For App Builders
+## Read Order For App Authors
 
-App-building agents should not scan the repo.
+App-authoring agents should not scan the repo.
 
 Use this order:
 
 1. `apps/docs/src/content/docs/index.md`
 2. `apps/docs/src/content/docs/start-here/index.md`
 3. the guide for the job:
-   - Code-first: `apps/docs/src/content/docs/guides/authentication.md` and the relevant guide under `apps/docs/src/content/docs/guides/`
-   - Manifest-first: `apps/docs/src/content/docs/manifest/quick-start.md`
+   - SDK/runtime: `apps/docs/src/content/docs/guides/authentication.md` and the relevant guide under `apps/docs/src/content/docs/guides/`
+   - UI: `apps/docs/src/content/docs/build/component-library.md`, `apps/docs/src/content/docs/build/styling-and-slots.md`, and `apps/docs/src/content/docs/reference/components.md`
    - SSR: `apps/docs/src/content/docs/server/ssr-rsc.md`
-4. `docs/api-cheatsheet.md` — auto-generated single-file API surface (all exports, hook signatures, grouped by domain)
+4. `docs/api-cheatsheet.md` — single-file public API quick reference
 5. generated reference for the relevant surface
 6. `apps/docs/src/content/docs/examples/index.md`
 7. only then lower-level source
@@ -70,7 +70,7 @@ Use this order:
   - `apps/docs/src/content/docs/start-here/index.md`
   - `apps/docs/src/content/docs/start-here/installation.md`
   - `apps/docs/src/content/docs/examples/index.md`
-- If a change affects app-builder discovery, update the persona guide that should send readers to it.
+- If a change affects app-author discovery, update the persona guide that should send readers to it.
 - `bun run docs:ci` is the default docs validation path for contributor work.
 
 ## Writing Specs

@@ -1,513 +1,271 @@
 # Customization
 
-This guide covers how to customize the appearance and behavior of the config-driven UI
-layer: flavors, token overrides, component tokens, runtime editing, custom components,
-and responsive values.
+Snapshot UI is customized in React and CSS. Import standalone components,
+pass normal props, and use token helpers when you want Snapshot's design
+variables generated from a shared theme object.
 
-## Flavors
+## Component Props
 
-A flavor is a named theme preset that provides a complete set of design tokens: colors
-(light and dark), border radius, spacing density, and font configuration.
+Standalone components are plain React components.
 
-### Built-in Flavors
+```tsx
+import { ButtonBase, CardBase, RichInputBase } from "@lastshotlabs/snapshot/ui";
 
-| Flavor     | Description                   | Radius | Spacing   |
-| ---------- | ----------------------------- | ------ | --------- |
-| `neutral`  | Clean, professional (default) | `lg`   | `default` |
-| `slate`    | Softer neutral, slate tones   | `sm`   | `default` |
-| `midnight` | Dark-first, deep backgrounds  | `md`   | `default` |
-| `violet`   | Vibrant purple                | `lg`   | `default` |
-| `rose`     | Warm pink-red tones           | `lg`   | `default` |
-| `emerald`  | Nature-inspired greens        | `md`   | `default` |
-| `ocean`    | Deep blues with teal accents  | `md`   | `default` |
-| `sunset`   | Warm orange-amber tones       | `lg`   | `default` |
-
-Set a flavor in the manifest:
-
-```json
-{
-  "theme": {
-    "flavor": "midnight"
-  }
+export function ReplyComposer() {
+  return (
+    <CardBase className="reply-card">
+      <RichInputBase
+        placeholder="Write a reply"
+        minHeight="8rem"
+        emitMarkdown
+        onSend={({ markdown, text }) => {
+          console.log(markdown ?? text);
+        }}
+      />
+      <ButtonBase label="Send" icon="send" />
+    </CardBase>
+  );
 }
 ```
 
-### Manifest-Declared Flavors
+Common styling props:
 
-Define custom flavors directly in the manifest by extending an existing flavor:
+| Prop | Purpose |
+| --- | --- |
+| `className` | Add a class to the component root |
+| `style` | Add inline root styles |
+| `slots` | Target named internal pieces when the component supports slots |
+| `id` | Stabilize generated surface IDs for scoped styles |
 
-```json
-{
-  "theme": {
-    "flavor": "my-brand",
-    "flavors": {
-      "my-brand": {
-        "extends": "neutral",
-        "displayName": "My Brand",
-        "colors": {
-          "primary": "0.55 0.18 25",
-          "accent": "0.60 0.15 280"
-        }
-      }
-    }
-  }
+## Slots
+
+Slots let you style sub-elements without replacing the component.
+
+```tsx
+import { ButtonBase } from "@lastshotlabs/snapshot/ui";
+
+export function PrimaryAction() {
+  return (
+    <ButtonBase
+      id="publish-button"
+      label="Publish"
+      icon="send"
+      slots={{
+        root: {
+          className: "publish-button",
+        },
+        icon: {
+          style: { color: "var(--sn-color-primary)" },
+        },
+        label: {
+          className: "publish-button-label",
+        },
+      }}
+    />
+  );
 }
 ```
 
-`extends` can reference built-in flavors or other manifest-declared flavors.
-If you override a light color without a corresponding dark override, Snapshot derives
-the dark variant automatically.
+Slot names are component-specific. Check the exported prop type for the
+component you are using.
 
-Code-side `defineFlavor()` is still supported when you want registration in TypeScript,
-but it is no longer required just to declare a new flavor.
+## Tokens
 
-If `darkColors` is omitted, dark mode variants are automatically derived from the light
-colors with adjusted lightness and chroma.
+`resolveTokens()` turns a theme object into CSS custom properties used by
+Snapshot UI.
 
-Color values can be specified as:
-
-- Hex: `"#1d4ed8"`
-- OKLCH string: `"0.488 0.243 264.376"`
-- OKLCH CSS function: `"oklch(0.488 0.243 264.376)"`
-
-## Token System
-
-### Color Tokens
-
-Semantic colors that generate CSS custom properties:
-
-| Token         | CSS Variables                               | Purpose            |
-| ------------- | ------------------------------------------- | ------------------ |
-| `primary`     | `--primary`, `--primary-foreground`         | Brand color        |
-| `secondary`   | `--secondary`, `--secondary-foreground`     | Secondary color    |
-| `muted`       | `--muted`, `--muted-foreground`             | Subtle backgrounds |
-| `accent`      | `--accent`, `--accent-foreground`           | Highlight color    |
-| `destructive` | `--destructive`, `--destructive-foreground` | Danger/error       |
-| `success`     | `--success`, `--success-foreground`         | Success state      |
-| `warning`     | `--warning`, `--warning-foreground`         | Warning state      |
-| `info`        | `--info`, `--info-foreground`               | Info state         |
-| `background`  | `--background`, `--foreground`              | Page background    |
-| `card`        | `--card`, `--card-foreground`               | Card surfaces      |
-| `popover`     | `--popover`, `--popover-foreground`         | Popover surfaces   |
-| `sidebar`     | `--sidebar`, `--sidebar-foreground`         | Sidebar surfaces   |
-| `border`      | `--border`                                  | Border color       |
-| `input`       | `--input`                                   | Input border color |
-| `ring`        | `--ring`                                    | Focus ring color   |
-| `chart`       | `--chart-1` through `--chart-5`             | Chart palette      |
-
-Foreground colors are automatically derived to pass WCAG AA contrast (4.5:1 ratio).
-
-### Radius Scale
-
-| Value  | CSS Output |
-| ------ | ---------- |
-| `none` | `0`        |
-| `xs`   | `0.125rem` |
-| `sm`   | `0.25rem`  |
-| `md`   | `0.5rem`   |
-| `lg`   | `0.75rem`  |
-| `xl`   | `1rem`     |
-| `full` | `9999px`   |
-
-### Spacing Scale
-
-Controls global padding, gaps, and margins via a multiplier.
-
-| Value         | Multiplier |
-| ------------- | ---------- |
-| `compact`     | `0.75`     |
-| `default`     | `1`        |
-| `comfortable` | `1.25`     |
-| `spacious`    | `1.5`      |
-
-### Font Configuration
-
-| Field      | Type     | Description                 |
-| ---------- | -------- | --------------------------- |
-| `sans`     | `string` | Sans-serif font family      |
-| `mono`     | `string` | Monospace font family       |
-| `display`  | `string` | Display/heading font family |
-| `baseSize` | `number` | Base font size in pixels    |
-| `scale`    | `number` | Type scale multiplier       |
-
-## Theme Overrides
-
-Override specific tokens on top of a flavor. Overrides only replace what they specify;
-everything else cascades from the flavor.
-
-```json
-{
-  "theme": {
-    "flavor": "violet",
-    "overrides": {
-      "colors": {
-        "primary": "#e11d48"
-      },
-      "radius": "lg",
-      "spacing": "comfortable",
-      "font": {
-        "sans": "Inter",
-        "baseSize": 16
-      }
-    },
-    "mode": "system"
-  }
-}
-```
-
-The `mode` field controls the initial color scheme: `"light"`, `"dark"`, or `"system"`
-(follows OS preference).
-
-## resolveTokens()
-
-Generates a complete CSS string from a theme configuration. The output contains `:root`
-(light mode) and `.dark` blocks with all CSS custom properties.
-
-```ts
+```tsx
 import { resolveTokens } from "@lastshotlabs/snapshot/ui";
 
-const css = resolveTokens({
-  flavor: "midnight",
+const snapshotCss = resolveTokens({
+  flavor: "neutral",
   overrides: {
-    radius: "lg",
-    spacing: "comfortable",
+    colors: {
+      background: "#ffffff",
+      primary: "#2563eb",
+      accent: "#14b8a6",
+      destructive: "#dc2626",
+    },
+    radius: "md",
+    spacing: "default",
+    font: {
+      sans: "Inter",
+    },
   },
 });
 
-// Write to a file during build
-fs.writeFileSync("src/theme.css", css);
-
-// Or inject at runtime
-const style = document.createElement("style");
-style.textContent = css;
-document.head.appendChild(style);
-```
-
-Resolution order:
-
-1. Flavor defaults (base tokens from the named flavor)
-2. Config overrides (`overrides` in the theme config)
-3. Runtime `setToken()` calls (inline styles, see below)
-
-## useTokenEditor()
-
-Runtime hook for live theme editing. Changes are applied instantly via CSS custom
-properties on the document root. Useful for theme editors, user preferences, and
-whitelabel customization.
-
-```tsx
-import { useTokenEditor } from "@lastshotlabs/snapshot/ui";
-
-function ThemeEditor() {
-  const {
-    setToken,
-    setFlavor,
-    resetTokens,
-    getTokens,
-    currentFlavor,
-    subscribe,
-  } = useTokenEditor();
-
-  // Change individual tokens
-  setToken("colors.primary", "#e11d48");
-  setToken("radius", "full");
-  setToken("spacing", "compact");
-
-  // Switch entire flavor (resets all overrides)
-  setFlavor("midnight");
-
-  // Get current overrides for persistence
-  const overrides = getTokens();
-  localStorage.setItem("theme-overrides", JSON.stringify(overrides));
-
-  // Get active flavor name
-  const name = currentFlavor(); // "midnight"
-
-  // Subscribe to changes
-  const unsubscribe = subscribe((overrides) => {
-    console.log("Theme changed:", overrides);
-  });
-
-  // Reset all runtime overrides
-  resetTokens();
+export function SnapshotStyles() {
+  return <style>{snapshotCss}</style>;
 }
 ```
 
-## Component Tokens
+The generated CSS includes `:root`, `.dark`, and component-level custom
+properties. Components read variables such as:
 
-Per-component styling knobs applied via `[data-snapshot-component]` CSS selectors. Set
-them in the theme config under `overrides.components`.
+- `--sn-color-background`
+- `--sn-color-foreground`
+- `--sn-color-primary`
+- `--sn-color-primary-foreground`
+- `--sn-color-border`
+- `--sn-radius-md`
+- `--sn-spacing-md`
+- `--sn-shadow-md`
 
-```json
-{
-  "theme": {
-    "flavor": "neutral",
-    "overrides": {
-      "components": {
-        "card": {
-          "shadow": "md",
-          "padding": "comfortable",
-          "border": true
-        },
-        "table": {
-          "striped": true,
-          "density": "compact",
-          "hoverRow": true,
-          "headerBackground": true,
-          "borderStyle": "horizontal"
-        },
-        "button": {
-          "weight": "bold",
-          "uppercase": true,
-          "iconSize": "md"
-        },
-        "input": {
-          "size": "lg",
-          "variant": "filled"
-        },
-        "modal": {
-          "overlay": "blur",
-          "animation": "slide-up"
-        },
-        "nav": {
-          "variant": "bordered",
-          "activeIndicator": "border-left"
-        },
-        "badge": {
-          "variant": "soft",
-          "rounded": true
-        },
-        "toast": {
-          "position": "top-center",
-          "animation": "pop"
-        }
-      }
-    }
-  }
-}
-```
+## Flavors
 
-### Card tokens
-
-| Token     | Type      | Values                                                  | Description      |
-| --------- | --------- | ------------------------------------------------------- | ---------------- |
-| `shadow`  | `string`  | `"none"`, `"sm"`, `"md"`, `"lg"`, `"xl"`                | Shadow depth     |
-| `padding` | `string`  | `"compact"`, `"default"`, `"comfortable"`, `"spacious"` | Internal padding |
-| `border`  | `boolean` | --                                                      | Show border      |
-
-### Table tokens
-
-| Token              | Type      | Values                                    | Description            |
-| ------------------ | --------- | ----------------------------------------- | ---------------------- |
-| `striped`          | `boolean` | --                                        | Alternate row striping |
-| `density`          | `string`  | `"compact"`, `"default"`, `"comfortable"` | Row padding            |
-| `hoverRow`         | `boolean` | --                                        | Highlight row on hover |
-| `headerBackground` | `boolean` | --                                        | Show header background |
-| `borderStyle`      | `string`  | `"none"`, `"horizontal"`, `"grid"`        | Cell border style      |
-
-### Button tokens
-
-| Token       | Type      | Values                          | Description              |
-| ----------- | --------- | ------------------------------- | ------------------------ |
-| `weight`    | `string`  | `"light"`, `"medium"`, `"bold"` | Font weight              |
-| `uppercase` | `boolean` | --                              | Uppercase text transform |
-| `iconSize`  | `string`  | `"sm"`, `"md"`, `"lg"`          | Icon dimensions          |
-
-### Input tokens
-
-| Token     | Type     | Values                                 | Description  |
-| --------- | -------- | -------------------------------------- | ------------ |
-| `size`    | `string` | `"sm"`, `"md"`, `"lg"`                 | Input height |
-| `variant` | `string` | `"outline"`, `"filled"`, `"underline"` | Input style  |
-
-### Modal tokens
-
-| Token       | Type     | Values                                      | Description    |
-| ----------- | -------- | ------------------------------------------- | -------------- |
-| `overlay`   | `string` | `"light"`, `"dark"`, `"blur"`               | Overlay style  |
-| `animation` | `string` | `"fade"`, `"scale"`, `"slide-up"`, `"none"` | Open animation |
-
-### Nav tokens
-
-| Token             | Type     | Values                                                      | Description           |
-| ----------------- | -------- | ----------------------------------------------------------- | --------------------- |
-| `variant`         | `string` | `"minimal"`, `"bordered"`, `"filled"`                       | Nav style             |
-| `activeIndicator` | `string` | `"background"`, `"border-left"`, `"border-bottom"`, `"dot"` | Active item indicator |
-
-### Badge tokens
-
-| Token     | Type      | Values                           | Description        |
-| --------- | --------- | -------------------------------- | ------------------ |
-| `variant` | `string`  | `"solid"`, `"outline"`, `"soft"` | Badge style        |
-| `rounded` | `boolean` | --                               | Full border radius |
-
-### Toast tokens
-
-| Token       | Type     | Values                                                             | Description        |
-| ----------- | -------- | ------------------------------------------------------------------ | ------------------ |
-| `position`  | `string` | `"top-right"`, `"top-center"`, `"bottom-right"`, `"bottom-center"` | Screen position    |
-| `animation` | `string` | `"slide"`, `"pop"`, `"fade"`                                       | Entrance animation |
-
-## Component Overrides (registerComponent)
-
-Replace the rendering of any built-in component type while keeping the same config
-contract. The framework still validates the config against the schema, manages data
-fetching, and wires up the context system.
+Use a built-in flavor or register your own in code.
 
 ```tsx
-import { registerComponent } from "@lastshotlabs/snapshot/ui";
-import type { StatCardConfig } from "@lastshotlabs/snapshot/ui";
+import { defineFlavor, resolveTokens } from "@lastshotlabs/snapshot/ui";
 
-registerComponent("stat-card", function MyStatCard({ config }) {
-  const typedConfig = config as unknown as StatCardConfig;
-  return (
-    <div className="my-custom-stat-card">
-      <span>{typedConfig.label}</span>
-      <strong>{typedConfig.field}</strong>
-    </div>
-  );
+defineFlavor("brand", {
+  displayName: "Brand",
+  colors: {
+    background: "#ffffff",
+    primary: "#0f766e",
+    accent: "#7c3aed",
+  },
+  radius: "md",
+  spacing: "default",
+  font: {
+    sans: "Inter",
+  },
 });
+
+const css = resolveTokens({ flavor: "brand" });
 ```
 
-The manifest stays unchanged. Only the rendering changes. A dev warning is emitted when
-overriding an existing registration.
-
-## Custom Components (Manifest Declaration)
-
-Custom components are still the escape hatch, but the manifest now declares their
-props schema so the validator can understand them before the runtime loads any code.
-
-Declare the custom type in the manifest:
-
-```json
-{
-  "components": {
-    "custom": {
-      "my-chart": {
-        "props": {
-          "chartType": { "type": "string", "required": true },
-          "height": { "type": "number", "required": false, "default": 300 }
-        }
-      }
-    }
-  }
-}
-```
-
-Reference the custom type directly in page content:
-
-```json
-{
-  "type": "my-chart",
-  "chartType": "bar",
-  "height": 300
-}
-```
-
-Register the implementation in code:
-
-```tsx
-import { registerComponent } from "@lastshotlabs/snapshot/ui";
-
-function MyChart({ config }: { config: Record<string, unknown> }) {
-  return <canvas data-chart-type={config.chartType as string} />;
-}
-
-registerComponent("my-chart", MyChart);
-```
-
-The manifest declaration is what makes the component valid. The runtime
-registration only supplies the React implementation.
-
-## Custom Workflow Actions (Manifest Declaration)
-
-Custom workflow actions are declared in the manifest so workflow configs can be
-validated without loading runtime handlers.
-
-```json
-{
-  "workflows": {
-    "actions": {
-      "custom": {
-        "send-to-slack": {
-          "input": {
-            "channel": { "type": "string", "required": true },
-            "message": { "type": "string", "required": true }
-          }
-        }
-      }
-    },
-    "notify-slack": [
-      {
-        "type": "send-to-slack",
-        "channel": "#alerts",
-        "message": "Deploy completed"
-      }
-    ]
-  }
-}
-```
-
-Register the runtime handler in code:
+You can inspect available flavors with:
 
 ```ts
-import { registerWorkflowAction } from "@lastshotlabs/snapshot/ui";
+import { getAllFlavors, getFlavor } from "@lastshotlabs/snapshot/ui";
 
-registerWorkflowAction("send-to-slack", async (node, runtime) => {
-  // node.channel and node.message are validated by the manifest declaration
-});
+const all = getAllFlavors();
+const neutral = getFlavor("neutral");
 ```
-
-## Responsive Values
-
-Many config fields accept responsive breakpoint maps in addition to flat values.
-
-Flat value (applies at all sizes):
-
-```json
-{ "span": 6 }
-```
-
-Responsive value (per breakpoint):
-
-```json
-{
-  "span": { "default": 12, "md": 6, "lg": 4 }
-}
-```
-
-Breakpoints follow standard Tailwind sizes:
-
-| Breakpoint | Min width     |
-| ---------- | ------------- |
-| `default`  | 0 (all sizes) |
-| `sm`       | 640px         |
-| `md`       | 768px         |
-| `lg`       | 1024px        |
-| `xl`       | 1280px        |
-| `2xl`      | 1536px        |
-
-Fields that support responsive values: `span`, `gap`, `visible`.
 
 ## Dark Mode
 
-Dark mode is controlled by the `theme.mode` setting:
+Snapshot generates dark color variables automatically when explicit dark
+overrides are not supplied. To control dark mode yourself, provide
+`overrides.darkColors`.
 
-| Value    | Behavior                       |
-| -------- | ------------------------------ |
-| `light`  | Always light mode              |
-| `dark`   | Always dark mode               |
-| `system` | Follow OS preference (default) |
+```ts
+const css = resolveTokens({
+  flavor: "neutral",
+  overrides: {
+    colors: {
+      background: "#ffffff",
+      primary: "#2563eb",
+    },
+    darkColors: {
+      background: "#0b1020",
+      primary: "#60a5fa",
+    },
+  },
+});
+```
 
-The token system generates `:root { ... }` (light) and `.dark { ... }` blocks. The
-`useTheme()` hook toggles the `dark` class on `<html>`. All semantic tokens have both
-light and dark variants; switching modes is a class toggle, not a re-render.
+Toggle dark mode by adding or removing the `dark` class on the document root.
+The runtime also exposes `snapshot.useTheme()` for light/dark state.
 
-```json
-{
-  "theme": {
-    "flavor": "midnight",
-    "mode": "system"
-  }
+```tsx
+function ThemeToggle() {
+  const { theme, toggle } = snapshot.useTheme();
+
+  return (
+    <button onClick={toggle}>
+      {theme === "dark" ? "Light" : "Dark"}
+    </button>
+  );
 }
 ```
+
+## Tailwind
+
+Snapshot components work with Tailwind classes through `className` and `slots`.
+When you want Tailwind utilities backed by Snapshot tokens, generate a bridge:
+
+```ts
+import { generateTailwindBridge, resolveTokens } from "@lastshotlabs/snapshot/ui";
+
+const theme = {
+  flavor: "neutral",
+  overrides: {
+    colors: {
+      primary: "#2563eb",
+    },
+  },
+};
+
+export const snapshotCss = resolveTokens(theme);
+export const tailwindBridge = generateTailwindBridge();
+```
+
+## Focused Bundles
+
+For heavier UI, import the focused bundle when you only need one surface.
+
+```ts
+import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
+import { EmojiPickerBase } from "@lastshotlabs/snapshot/ui/emoji-picker";
+import { GifPickerBase } from "@lastshotlabs/snapshot/ui/gif-picker";
+```
+
+The full `@lastshotlabs/snapshot/ui` barrel is convenient for app code. Focused
+subpaths are better for libraries and routes that need tight bundle boundaries.
+
+## Composing Your Own Components
+
+Use Snapshot primitives as building blocks and keep the app-specific behavior in
+your component.
+
+```tsx
+import {
+  ButtonBase,
+  ConfirmDialog,
+  ToastContainer,
+  useConfirmManager,
+  useToastManager,
+} from "@lastshotlabs/snapshot/ui";
+
+export function DangerZone() {
+  const confirm = useConfirmManager();
+  const toast = useToastManager();
+  const deleteAccount = snapshot.useDeleteAccount();
+
+  async function onDelete() {
+    const ok = await confirm.show({
+      title: "Delete account",
+      message: "This cannot be undone.",
+      confirmLabel: "Delete",
+      variant: "destructive",
+      requireInput: "DELETE",
+    });
+
+    if (!ok) return;
+    await deleteAccount.mutateAsync();
+    toast.show({ message: "Account deleted", variant: "success" });
+  }
+
+  return (
+    <>
+      <ButtonBase
+        label="Delete account"
+        variant="destructive"
+        onClick={() => void onDelete()}
+      />
+      <ToastContainer />
+      <ConfirmDialog />
+    </>
+  );
+}
+```
+
+## Runtime Styling Rules
+
+- Prefer `className` for app-level layout and spacing.
+- Prefer tokens for colors, radius, font, and repeated theme decisions.
+- Prefer `slots` when a nested element needs targeted styling.
+- Keep one `ToastContainer` and one `ConfirmDialog` at the app shell level.
+- Use focused UI subpaths for bundle-sensitive routes.

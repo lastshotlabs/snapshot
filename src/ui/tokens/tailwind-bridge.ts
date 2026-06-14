@@ -2,8 +2,8 @@
  * Generate a CSS string that bridges Snapshot's --sn-* design tokens
  * to Tailwind CSS v4 @theme variables.
  *
- * This allows manifest apps to use className: "bg-primary text-foreground"
- * etc. in their manifest JSON, with values driven by the token system.
+ * This allows app code to use className: "bg-primary text-foreground"
+ * with values driven by the token system.
  */
 export function generateTailwindBridge(): string {
   return `@import "tailwindcss";

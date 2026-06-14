@@ -1,111 +1,75 @@
 ---
 title: Vite Plugin
-description: Snapshot Vite plugins for app bootstrapping, sync, and SSR build integration.
+description: Snapshot Vite plugins for OpenAPI sync and SSR build integration.
 draft: false
 ---
 
-Snapshot ships three Vite plugins for different integration needs.
-
-## snapshotApp
-
-Boot a Snapshot app directly from a manifest file:
-
-```tsx
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { snapshotApp } from "@lastshotlabs/snapshot/vite";
-
-export default defineConfig({
-  plugins: [
-    react(),
-    snapshotApp({
-      manifest: "./snapshot.manifest.json",
-      apiUrl: "/api",
-    }),
-  ],
-});
-```
-
-This plugin:
-- Loads and validates the manifest at build time
-- Generates the app entry point
-- Sets up hot-reload for manifest changes in development
+Snapshot exposes Vite helpers from `@lastshotlabs/snapshot/vite`.
 
 ## snapshotSync
 
-Keep generated client output aligned with Bunshot API contracts:
+Run OpenAPI sync during Vite startup/build:
 
 ```tsx
-// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import { snapshotSync } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
   plugins: [
     react(),
-    snapshotSync({
-      contractUrl: "http://localhost:3000/api/contract",
-      outputDir: "./src/generated",
-    }),
+    snapshotSync({ file: "./schema.json", zod: true }),
   ],
 });
 ```
 
-This plugin:
-- Fetches the OpenAPI contract from the Bunshot server
-- Generates TypeScript types, API client, TanStack Query hooks, and Zod schemas
-- Watches for contract changes in development
+Use the CLI for live API polling:
 
-Equivalent to running `bunx snapshot sync` manually.
+```sh
+snapshot sync --api http://localhost:3000 --watch
+```
 
 ## snapshotSsr
 
-Build integration for SSR, RSC, prefetch, PPR, and SSG:
+Add Snapshot SSR build helpers:
 
 ```tsx
-// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import { snapshotSsr } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
   plugins: [
     react(),
-    snapshotSsr({
-      ssr: true,
+    ...snapshotSsr({
       rsc: true,
-      prefetch: true,
+      ppr: true,
     }),
   ],
 });
 ```
 
-This plugin:
-- Configures Vite for server-side rendering
-- Sets up RSC transform when enabled
-- Generates prefetch manifests at build time
-- Handles PPR shell extraction and caching
+`snapshotSsr()` configures client/server build output and can generate route
+prefetch metadata, static route metadata, RSC metadata, and PPR route metadata.
 
-## Combined setup
-
-A typical production setup uses all three:
+## Combined Setup
 
 ```tsx
-// vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { snapshotApp, snapshotSync, snapshotSsr } from "@lastshotlabs/snapshot/vite";
+import { snapshotSync, snapshotSsr } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
   plugins: [
     react(),
-    snapshotApp({ manifest: "./snapshot.manifest.json", apiUrl: "/api" }),
-    snapshotSync({ contractUrl: "http://localhost:3000/api/contract", outputDir: "./src/generated" }),
-    snapshotSsr({ ssr: true, prefetch: true }),
+    snapshotSync({ file: "./schema.json" }),
+    ...snapshotSsr({ rsc: true }),
   ],
 });
 ```
 
-## Next steps
+## Next Steps
 
-- [SSR and RSC](/server/ssr-rsc/) -- server rendering guide
-- [Vite Reference](/reference/vite/) -- complete plugin API reference
-- [Quick Start](/start-here/) -- getting started with Snapshot
+- [SSR and RSC](/server/ssr-rsc/)
+- [Vite Reference](/reference/vite/)
+- [Quick Start](/start-here/)

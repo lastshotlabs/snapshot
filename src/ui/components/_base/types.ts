@@ -7,7 +7,7 @@ import {
   dataSourceSchema,
   endpointTargetSchema,
   resourceRefSchema,
-} from "../../manifest/resources";
+} from "../../resources";
 import {
   componentAnimationSchema,
   componentBackgroundSchema,
@@ -61,26 +61,17 @@ export const pollConfigSchema = z
   })
   .strict();
 
-export type ComponentZIndex = z.infer<typeof componentZIndexSchema>;
-export type ComponentAnimationConfig = z.infer<typeof componentAnimationSchema>;
-export type ComponentBackgroundConfig = z.infer<
-  typeof componentBackgroundSchema
->;
-export type ComponentTransitionConfig = z.infer<
-  typeof componentTransitionSchema
->;
-export type HoverConfig = z.infer<typeof hoverConfigSchema>;
-export type FocusConfig = z.infer<typeof focusConfigSchema>;
-export type ActiveConfig = z.infer<typeof activeConfigSchema>;
-export type ExitAnimationConfig = z.infer<typeof exitAnimationSchema>;
+export type ComponentZIndex = Record<string, unknown>;
+export type ComponentAnimationConfig = Record<string, unknown>;
+export type ComponentBackgroundConfig = Record<string, unknown>;
+export type ComponentTransitionConfig = Record<string, unknown>;
+export type HoverConfig = Record<string, unknown>;
+export type FocusConfig = Record<string, unknown>;
+export type ActiveConfig = Record<string, unknown>;
+export type ExitAnimationConfig = Record<string, unknown>;
 
 /**
- * Base config fields shared by all config-driven components.
- * Every component schema should extend this via `.merge()` or `.extend()`.
- *
- * Mirrors the surface fields from `_base/schema.ts/extendedBaseComponentSchema`
- * and `manifest/schema.ts/baseComponentConfigSchema`. Keep these three in sync
- * when adding a new universally-applicable field.
+ * Base style fields shared by code-first components.
  */
 export const baseComponentConfigSchema = z.object({
   id: z.string().optional(),
@@ -119,7 +110,7 @@ export const baseComponentConfigSchema = z.object({
 });
 
 /** Base config type inferred from the schema. */
-export type BaseComponentConfig = z.infer<typeof baseComponentConfigSchema>;
+export type BaseComponentConfig = Record<string, unknown>;
 
 /**
  * Typed slot override map. Use the slot-name union as the type parameter for

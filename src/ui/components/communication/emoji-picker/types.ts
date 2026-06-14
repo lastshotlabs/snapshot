@@ -1,8 +1,6 @@
-import type { z } from "zod";
-import type { emojiPickerConfigSchema } from "./schema";
 
 /** Inferred config type from the EmojiPicker Zod schema. */
-export type EmojiPickerConfig = z.input<typeof emojiPickerConfigSchema>;
+export type EmojiPickerConfig = Record<string, unknown>;
 
 /** Shape of a single emoji entry. */
 export interface EmojiEntry {

@@ -54,7 +54,7 @@ export interface TimelineBaseProps {
 
 /**
  * Standalone Timeline — vertical event timeline with dot markers, connectors,
- * date labels, and default/compact/alternating layout variants. No manifest context required.
+ * date labels, and default/compact/alternating layout variants. Works with plain React props.
  *
  * @example
  * ```tsx

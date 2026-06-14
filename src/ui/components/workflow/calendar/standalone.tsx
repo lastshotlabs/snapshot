@@ -181,7 +181,7 @@ function EventPill({
 
 /**
  * Standalone CalendarBase — renders a month or week calendar grid with event pills,
- * navigation controls, and optional week numbers. No manifest context required.
+ * navigation controls, and optional week numbers. Works with plain React props.
  *
  * @example
  * ```tsx

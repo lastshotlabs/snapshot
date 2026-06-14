@@ -342,7 +342,7 @@ function ListItem({
 
 /**
  * Standalone List — renders a vertical list of items with optional icons,
- * descriptions, badges, and click actions. No manifest context required.
+ * descriptions, badges, and click actions. Works with plain React props.
  *
  * @example
  * ```tsx

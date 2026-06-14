@@ -7,7 +7,7 @@ export default defineConfig({
     starlight({
       title: "Snapshot Docs",
       description:
-        "Source-backed documentation for Snapshot's SDK, manifest UI, SSR, Vite, CLI, and contributor workflows.",
+        "Source-backed documentation for Snapshot's SDK, UI, SSR, Vite, CLI, and contributor workflows.",
       disable404Route: true,
       social: [
         {
@@ -62,26 +62,10 @@ export default defineConfig({
           ],
         },
         {
-          label: "Manifest Mode",
+          label: "Examples",
           items: [
-            {
-              label: "Manifest Quick Start",
-              link: "/manifest/quick-start/",
-            },
-            { label: "Manifest Examples", link: "/manifest/examples/" },
-            { label: "Presets", link: "/manifest/presets/" },
-            {
-              label: "Manifest App Patterns",
-              link: "/build/manifest-apps/",
-            },
-            {
-              label: "Full App Examples",
-              link: "/examples/",
-            },
-            {
-              label: "Styling and Slots",
-              link: "/build/styling-and-slots/",
-            },
+            { label: "Full App Examples", link: "/examples/" },
+            { label: "Styling and Slots", link: "/build/styling-and-slots/" },
           ],
         },
         {
@@ -100,7 +84,6 @@ export default defineConfig({
             { label: "UI", link: "/reference/ui/" },
             { label: "SSR", link: "/reference/ssr/" },
             { label: "Vite", link: "/reference/vite/" },
-            { label: "Manifest", link: "/reference/manifest/" },
             { label: "CLI", link: "/reference/cli/" },
           ],
         },

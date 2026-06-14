@@ -59,7 +59,7 @@ export interface RichTextEditorBaseProps {
 
 /**
  * Standalone RichTextEditor — a markdown editor with live preview,
- * powered by CodeMirror. No manifest context required.
+ * powered by CodeMirror. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -1,77 +1,22 @@
 /**
  * Generates the comprehensive component reference page.
  *
- * Uses the component inventory to find all components, then imports
- * each component's schema.ts at runtime for Zod introspection to
- * extract component-specific fields, types, defaults, and slot names.
+ * The UI package is code-first: component docs are derived from the exported
+ * React component functions, prop types, and helper exports in each component
+ * directory.
  */
 
-import { readFileSync, statSync } from "node:fs";
 import path from "node:path";
-import { markdownPage, writeDoc } from "./_common.ts";
+import { statSync } from "node:fs";
+import * as ts from "typescript";
+import { collectComponentDirectories } from "./component-inventory.ts";
 import {
-  collectComponentDirectories,
-  collectRegisteredManifestComponents,
-} from "./component-inventory.ts";
-import {
-  extractFields,
-  fieldsToMarkdownTable,
-  registerKnownSchema,
-  type SchemaField,
-} from "./_zod-introspect.ts";
-
-import {
-  baseComponentConfigSchema,
-  fromRefSchema,
-  policyExprSchema,
-  policyRefSchema,
-  exprSchema,
-} from "../../src/ui/manifest/schema.ts";
-import { envRefSchema } from "../../src/ui/manifest/env.ts";
-import { tRefSchema } from "../../src/ui/i18n/schema.ts";
-import { themeConfigSchema } from "../../src/ui/tokens/schema.ts";
-import {
-  dataSourceSchema,
-  endpointTargetSchema,
-} from "../../src/ui/manifest/resources.ts";
-import {
-  statefulElementSchema,
-  styleableElementSchema,
-  extendedBaseComponentSchema,
-} from "../../src/ui/components/_base/schema.ts";
-import { fromRefSchema as baseFromRefSchema } from "../../src/ui/components/_base/types.ts";
-
-// ── Register known schemas ───────────────────────────────────────────────────
-
-registerKnownSchema(fromRefSchema, "FromRef");
-registerKnownSchema(baseFromRefSchema, "FromRef");
-registerKnownSchema(envRefSchema, "EnvRef");
-registerKnownSchema(tRefSchema, "TRef");
-registerKnownSchema(dataSourceSchema, "DataSource");
-registerKnownSchema(endpointTargetSchema, "EndpointTarget");
-registerKnownSchema(policyExprSchema, "PolicyExpr");
-registerKnownSchema(policyRefSchema, "PolicyRef");
-registerKnownSchema(exprSchema, "Expr");
-registerKnownSchema(baseComponentConfigSchema, "BaseComponentConfig");
-registerKnownSchema(themeConfigSchema, "ThemeConfig");
-registerKnownSchema(statefulElementSchema, "SlotStyle");
-registerKnownSchema(styleableElementSchema, "SlotStyle");
-
-// ── Collect base field names to exclude from component-specific tables ──────
-
-const baseFieldNames = new Set(Object.keys(baseComponentConfigSchema.shape));
-
-let extendedBaseFieldNames: Set<string>;
-try {
-  const extShape = extendedBaseComponentSchema.shape ?? {};
-  extendedBaseFieldNames = new Set(Object.keys(extShape));
-} catch {
-  extendedBaseFieldNames = baseFieldNames;
-}
-
-const excludeFields = new Set([...baseFieldNames, ...extendedBaseFieldNames]);
-
-// ── Domain display names and order ───────────────────────────────────────────
+  escapeCell,
+  markdownPage,
+  relToRepo,
+  repoPath,
+  writeDoc,
+} from "./_common.ts";
 
 const DOMAIN_ORDER = [
   "layout",
@@ -86,6 +31,7 @@ const DOMAIN_ORDER = [
   "commerce",
   "feedback",
   "primitives",
+  "_base",
 ];
 
 const DOMAIN_LABELS: Record<string, string> = {
@@ -101,250 +47,335 @@ const DOMAIN_LABELS: Record<string, string> = {
   commerce: "Commerce",
   feedback: "Feedback States",
   primitives: "Primitives",
+  _base: "Base Utilities",
 };
 
-// ── Schema extraction helpers ────────────────────────────────────────────────
+interface ExportSummary {
+  name: string;
+  kind: string;
+  source: string;
+  doc: string;
+  symbol: ts.Symbol;
+}
+
+interface PropInfo {
+  name: string;
+  type: string;
+  required: boolean;
+  doc: string;
+}
 
 interface ComponentInfo {
   name: string;
   domain: string;
   relativeDir: string;
-  manifestTypes: string[];
-  fields: SchemaField[];
-  slotNames: string[];
-  jsDoc: string;
+  description: string;
+  componentExports: ExportSummary[];
+  typeExports: ExportSummary[];
+  helperExports: ExportSummary[];
+  props: PropInfo[];
 }
 
-function findConfigSchema(
-  mod: Record<string, unknown>,
-  componentName: string,
-): import("zod").ZodType | null {
-  const exports = Object.keys(mod);
-  const camelName = componentName.replace(/-([a-z])/g, (_, c: string) =>
-    c.toUpperCase(),
+function getProgram(): ts.Program {
+  const configPath = ts.findConfigFile(
+    repoPath(),
+    ts.sys.fileExists,
+    "tsconfig.json",
+  );
+  if (!configPath) throw new Error("Could not locate tsconfig.json");
+
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+  const parsed = ts.parseJsonConfigFileContent(
+    configFile.config,
+    ts.sys,
+    path.dirname(configPath),
   );
 
-  // Standard: e.g. "buttonConfigSchema"
-  const exactKey = `${camelName}ConfigSchema`;
-  if (exports.includes(exactKey) && mod[exactKey]) {
-    return mod[exactKey] as import("zod").ZodType;
-  }
-
-  // Snapshot prefix: e.g. "snapshotImageSchema"
-  const snapshotKey = `snapshot${camelName.charAt(0).toUpperCase() + camelName.slice(1)}Schema`;
-  if (exports.includes(snapshotKey) && mod[snapshotKey]) {
-    return mod[snapshotKey] as import("zod").ZodType;
-  }
-
-  // Plain name: e.g. "feedSchema", "wizardSchema", "prefetchLinkSchema"
-  const plainKey = `${camelName}Schema`;
-  if (exports.includes(plainKey) && mod[plainKey]) {
-    return mod[plainKey] as import("zod").ZodType;
-  }
-
-  // Component-specific variant: e.g. "outletComponentSchema"
-  const componentKey = `${camelName}ComponentSchema`;
-  if (exports.includes(componentKey) && mod[componentKey]) {
-    return mod[componentKey] as import("zod").ZodType;
-  }
-
-  // Any export ending in ConfigSchema (excluding sub-schemas)
-  const subSchemaPatterns =
-    /column|Column|item|Item|step|Step|entry|Entry|filter|Filter|event|Event|field|Field|action|Action|validation|Validation|section|Section|slot|Slot/;
-  const configKey = exports.find(
-    (k) =>
-      (k.endsWith("ConfigSchema") || k.endsWith("configSchema")) &&
-      !subSchemaPatterns.test(k),
-  );
-  if (configKey && mod[configKey]) {
-    return mod[configKey] as import("zod").ZodType;
-  }
-
-  return null;
+  return ts.createProgram({
+    rootNames: parsed.fileNames,
+    options: parsed.options,
+  });
 }
 
-function findSlotNames(mod: Record<string, unknown>): string[] {
-  const exports = Object.keys(mod);
-  const slotKey = exports.find(
-    (k) =>
-      (k.endsWith("SlotNames") || k.endsWith("slotNames")) &&
-      !k.includes("Column") &&
-      !k.includes("column") &&
-      !k.includes("Row") &&
-      !k.includes("row"),
-  );
-  if (slotKey && Array.isArray(mod[slotKey])) {
-    return mod[slotKey] as string[];
-  }
-  return [];
+function resolveSymbol(symbol: ts.Symbol, checker: ts.TypeChecker): ts.Symbol {
+  return symbol.flags & ts.SymbolFlags.Alias
+    ? checker.getAliasedSymbol(symbol)
+    : symbol;
 }
 
-function extractJsDoc(schemaPath: string, componentName: string): string {
+function sourcePath(symbol: ts.Symbol, checker: ts.TypeChecker): string {
+  const target = resolveSymbol(symbol, checker);
+  const declaration = target.declarations?.[0];
+  return declaration ? relToRepo(declaration.getSourceFile().fileName) : "";
+}
+
+function kindOf(symbol: ts.Symbol, checker: ts.TypeChecker): string {
+  const target = resolveSymbol(symbol, checker);
+  const declaration = target.declarations?.[0];
+  if (!declaration) return "export";
+
+  if (ts.isFunctionDeclaration(declaration)) return "component";
+  if (ts.isVariableDeclaration(declaration)) return "value";
+  if (ts.isInterfaceDeclaration(declaration)) return "interface";
+  if (ts.isTypeAliasDeclaration(declaration)) return "type";
+  if (ts.isClassDeclaration(declaration)) return "class";
+
+  return (ts.SyntaxKind[declaration.kind] ?? "export")
+    .replace(/Declaration$/, "")
+    .replace(/Signature$/, "")
+    .toLowerCase();
+}
+
+function docOf(symbol: ts.Symbol, checker: ts.TypeChecker): string {
+  const target = resolveSymbol(symbol, checker);
+  return ts.displayPartsToString(target.getDocumentationComment(checker)).trim();
+}
+
+function getExports(
+  program: ts.Program,
+  checker: ts.TypeChecker,
+  indexPath: string,
+): ExportSummary[] {
+  const sourceFile = program.getSourceFile(indexPath);
+  if (!sourceFile) return [];
+
+  const moduleSymbol = checker.getSymbolAtLocation(sourceFile);
+  if (!moduleSymbol) return [];
+
+  return checker
+    .getExportsOfModule(moduleSymbol)
+    .filter((symbol) => symbol.getName() !== "default")
+    .map((symbol) => {
+      const target = resolveSymbol(symbol, checker);
+      return {
+        name: symbol.getName(),
+        kind: kindOf(target, checker),
+        source: sourcePath(target, checker),
+        doc: docOf(target, checker),
+        symbol: target,
+      };
+    })
+    .filter((entry) => entry.source && !entry.source.includes("node_modules"))
+    .sort((left, right) => left.name.localeCompare(right.name));
+}
+
+function isReactComponentExport(entry: ExportSummary): boolean {
+  if (!/^[A-Z]/.test(entry.name)) return false;
+  if (entry.kind !== "component" && entry.kind !== "value") return false;
+  return entry.source.endsWith("standalone.tsx") || entry.source.endsWith("control.tsx");
+}
+
+function typeToString(
+  checker: ts.TypeChecker,
+  type: ts.Type,
+  node?: ts.Node,
+): string {
+  return checker.typeToString(
+    type,
+    node,
+    ts.TypeFormatFlags.NoTruncation |
+      ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+  );
+}
+
+function getPropsForComponent(
+  checker: ts.TypeChecker,
+  entry: ExportSummary,
+): PropInfo[] {
+  const declaration = entry.symbol.declarations?.[0];
+  if (!declaration) return [];
+
+  const componentType = checker.getTypeOfSymbolAtLocation(
+    entry.symbol,
+    declaration,
+  );
+  const signature = componentType.getCallSignatures()[0];
+  const propsParam = signature?.parameters[0];
+  if (!propsParam) return [];
+
+  const propsDeclaration = propsParam.valueDeclaration ?? declaration;
+  const propsType = checker.getTypeOfSymbolAtLocation(
+    propsParam,
+    propsDeclaration,
+  );
+
+  return propsType
+    .getProperties()
+    .map((prop) => {
+      const propDeclaration = prop.valueDeclaration ?? propsDeclaration;
+      const propType = checker.getTypeOfSymbolAtLocation(prop, propDeclaration);
+
+      return {
+        name: prop.getName(),
+        type: typeToString(checker, propType, propDeclaration),
+        required: !(prop.flags & ts.SymbolFlags.Optional),
+        doc: ts
+          .displayPartsToString(prop.getDocumentationComment(checker))
+          .trim(),
+      };
+    })
+    .sort((left, right) => {
+      if (left.required !== right.required) return left.required ? -1 : 1;
+      return left.name.localeCompare(right.name);
+    });
+}
+
+function fallbackDescription(relativeDir: string): string {
+  return `${titleCase(relativeDir)} is a code-first Snapshot UI component exported from the UI package.`;
+}
+
+function titleCase(value: string): string {
+  return value
+    .split(/[/-]/g)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function fileExists(filePath: string): boolean {
   try {
-    const source = readFileSync(schemaPath, "utf8");
-    const camelName = componentName.replace(/-([a-z])/g, (_, c: string) =>
-      c.toUpperCase(),
+    return statSync(filePath).isFile();
+  } catch {
+    return false;
+  }
+}
+
+function extractComponentInfo(
+  program: ts.Program,
+  checker: ts.TypeChecker,
+  entry: ReturnType<typeof collectComponentDirectories>[number],
+): ComponentInfo | null {
+  const indexPath = path.join(entry.absoluteDir, "index.ts");
+  const indexTsxPath = path.join(entry.absoluteDir, "index.tsx");
+  const resolvedIndexPath = fileExists(indexPath) ? indexPath : indexTsxPath;
+  if (!fileExists(resolvedIndexPath)) return null;
+
+  const exports = getExports(program, checker, resolvedIndexPath);
+  const componentExports = exports.filter(isReactComponentExport);
+  const typeExports = exports.filter(
+    (summary) => summary.kind === "interface" || summary.kind === "type",
+  );
+  const helperExports = exports.filter(
+    (summary) =>
+      !componentExports.includes(summary) && !typeExports.includes(summary),
+  );
+  const primaryComponent =
+    componentExports.find((summary) => summary.name.endsWith("Base")) ??
+    componentExports[0];
+
+  if (!primaryComponent && exports.length === 0) return null;
+
+  return {
+    name: entry.componentName,
+    domain: entry.domain,
+    relativeDir: entry.relativeDir,
+    description:
+      primaryComponent?.doc ||
+      typeExports.find((summary) => summary.name.endsWith("Props"))?.doc ||
+      fallbackDescription(entry.relativeDir),
+    componentExports,
+    typeExports,
+    helperExports,
+    props: primaryComponent
+      ? getPropsForComponent(checker, primaryComponent)
+      : [],
+  };
+}
+
+function renderExportsTable(exports: ExportSummary[]): string {
+  if (exports.length === 0) return "";
+
+  const lines = ["| Export | Kind | Source | Summary |", "| --- | --- | --- | --- |"];
+  for (const summary of exports) {
+    lines.push(
+      `| \`${escapeCell(summary.name)}\` | ${escapeCell(summary.kind)} | \`${escapeCell(summary.source)}\` | ${escapeCell(summary.doc)} |`,
     );
-    // Match a JSDoc comment immediately before (within 2 lines) the target export.
-    // The (?:^[ \t]*\n){0,2} allows 0-2 blank lines between the comment close and the export.
-    const targets = [
-      `${camelName}ConfigSchema`,
-      `snapshot${camelName.charAt(0).toUpperCase() + camelName.slice(1)}Schema`,
-      `${camelName}Schema`,
-    ];
-
-    for (const target of targets) {
-      const pattern = new RegExp(
-        `/\\*\\*\\s*\\n([\\s\\S]*?)\\*/\\s*\\n(?:\\s*\\n){0,2}export\\s+const\\s+${target}`,
-      );
-      const match = source.match(pattern);
-      if (match?.[1]) {
-        const cleaned = match[1]
-          .replace(/^\s*\*\s?/gm, "")
-          .replace(/@\w+.*$/gm, "")
-          .trim();
-        if (cleaned.length > 0 && !cleaned.includes("export const")) {
-          return cleaned;
-        }
-      }
-    }
-  } catch {
-    // Ignore read errors
   }
-  return "";
+
+  return lines.join("\n");
 }
 
-async function extractComponentInfo(
-  domain: string,
-  componentName: string,
-  relativeDir: string,
-  absoluteDir: string,
-): Promise<ComponentInfo | null> {
-  const schemaPath = path.join(absoluteDir, "schema.ts");
-  try {
-    statSync(schemaPath);
-  } catch {
-    return null;
+function renderPropsTable(props: PropInfo[]): string {
+  if (props.length === 0) {
+    return "This component does not expose a documented standalone prop object.";
   }
 
-  try {
-    const mod = (await import(schemaPath)) as Record<string, unknown>;
-    const configSchema = findConfigSchema(mod, componentName);
-    if (!configSchema) return null;
-
-    const fields = extractFields(configSchema, 0, excludeFields);
-    const slotNames = findSlotNames(mod);
-    const jsDoc = extractJsDoc(schemaPath, componentName);
-
-    return {
-      name: componentName,
-      domain,
-      relativeDir,
-      manifestTypes: [],
-      fields,
-      slotNames,
-      jsDoc,
-    };
-  } catch (err) {
-    console.warn(`  Warning: Could not process ${componentName}: ${err}`);
-    return null;
+  const lines = ["| Prop | Type | Required | Summary |", "| --- | --- | --- | --- |"];
+  for (const prop of props) {
+    lines.push(
+      `| \`${escapeCell(prop.name)}\` | \`${escapeCell(prop.type)}\` | ${prop.required ? "Yes" : "No"} | ${escapeCell(prop.doc)} |`,
+    );
   }
+
+  return lines.join("\n");
 }
-
-// ── Generate output ──────────────────────────────────────────────────────────
 
 export async function generateComponentReference(): Promise<void> {
+  const program = getProgram();
+  const checker = program.getTypeChecker();
   const directories = collectComponentDirectories();
-  const registeredComponents = collectRegisteredManifestComponents();
-  const components: ComponentInfo[] = [];
-  const manifestTypesByDir = new Map<string, string[]>();
+  const components = directories
+    .map((entry) => extractComponentInfo(program, checker, entry))
+    .filter((entry): entry is ComponentInfo => Boolean(entry));
 
-  for (const component of registeredComponents) {
-    const list = manifestTypesByDir.get(component.relativeDir) ?? [];
-    list.push(component.type);
-    manifestTypesByDir.set(component.relativeDir, list);
-  }
-
-  for (const entry of directories) {
-    if (!entry.hasSchema) continue;
-
-    const info = await extractComponentInfo(
-      entry.domain,
-      entry.componentName,
-      entry.relativeDir,
-      entry.absoluteDir,
-    );
-    if (info) {
-      info.manifestTypes = (manifestTypesByDir.get(entry.relativeDir) ?? []).sort();
-      components.push(info);
-    }
-  }
-
-  // Group by domain
   const byDomain = new Map<string, ComponentInfo[]>();
-  for (const comp of components) {
-    const list = byDomain.get(comp.domain) ?? [];
-    list.push(comp);
-    byDomain.set(comp.domain, list);
+  for (const component of components) {
+    const list = byDomain.get(component.domain) ?? [];
+    list.push(component);
+    byDomain.set(component.domain, list);
   }
 
   for (const list of byDomain.values()) {
-    list.sort((a, b) => a.name.localeCompare(b.name));
+    list.sort((left, right) => left.relativeDir.localeCompare(right.relativeDir));
   }
 
-  // Build TOC and sections
+  const orderedDomains = DOMAIN_ORDER.filter((domain) => byDomain.has(domain));
+  for (const domain of byDomain.keys()) {
+    if (!orderedDomains.includes(domain)) orderedDomains.push(domain);
+  }
+
   const toc: string[] = [];
   const sections: string[] = [];
   let totalComponents = 0;
 
-  const orderedDomains = DOMAIN_ORDER.filter((d) => byDomain.has(d));
-  for (const d of byDomain.keys()) {
-    if (!orderedDomains.includes(d)) orderedDomains.push(d);
-  }
-
   for (const domain of orderedDomains) {
-    const comps = byDomain.get(domain);
-    if (!comps?.length) continue;
+    const domainComponents = byDomain.get(domain);
+    if (!domainComponents?.length) continue;
 
-    const label = DOMAIN_LABELS[domain] ?? domain;
-    const anchor = domain.toLowerCase().replace(/\s+/g, "-");
-    toc.push(`- [${label}](#${anchor}) (${comps.length})`);
-    totalComponents += comps.length;
+    const label = DOMAIN_LABELS[domain] ?? titleCase(domain);
+    toc.push(`- [${label}](#${label.toLowerCase().replace(/\s+/g, "-")}) (${domainComponents.length})`);
+    totalComponents += domainComponents.length;
 
-    const sectionLines: string[] = [];
-    sectionLines.push(`## ${label}`);
-    sectionLines.push("");
-
-    for (const comp of comps) {
-      sectionLines.push(`### \`${comp.name}\``);
+    const sectionLines = [`## ${label}`, ""];
+    for (const component of domainComponents) {
+      sectionLines.push(`### \`${component.relativeDir}\``);
+      sectionLines.push("");
+      sectionLines.push(component.description);
       sectionLines.push("");
 
-      if (comp.jsDoc) {
-        sectionLines.push(comp.jsDoc);
+      if (component.componentExports.length > 0) {
+        sectionLines.push("#### Components");
+        sectionLines.push("");
+        sectionLines.push(renderExportsTable(component.componentExports));
         sectionLines.push("");
       }
 
-      if (comp.manifestTypes.length > 0) {
-        sectionLines.push(
-          `**Manifest ${comp.manifestTypes.length === 1 ? "type" : "types"}:** ${comp.manifestTypes.map((type) => `\`${type}\``).join(", ")}`,
-        );
+      sectionLines.push("#### Props");
+      sectionLines.push("");
+      sectionLines.push(renderPropsTable(component.props));
+      sectionLines.push("");
+
+      if (component.typeExports.length > 0) {
+        sectionLines.push("#### Types");
+        sectionLines.push("");
+        sectionLines.push(renderExportsTable(component.typeExports));
         sectionLines.push("");
       }
 
-      if (comp.fields.length > 0) {
-        sectionLines.push(fieldsToMarkdownTable(comp.fields));
+      if (component.helperExports.length > 0) {
+        sectionLines.push("#### Helpers");
         sectionLines.push("");
-      } else {
-        sectionLines.push(
-          "*No component-specific fields beyond base component fields.*",
-        );
-        sectionLines.push("");
-      }
-
-      if (comp.slotNames.length > 0) {
-        sectionLines.push(
-          `**Slots:** ${comp.slotNames.map((s) => `\`${s}\``).join(", ")}`,
-        );
+        sectionLines.push(renderExportsTable(component.helperExports));
         sectionLines.push("");
       }
 
@@ -356,10 +387,8 @@ export async function generateComponentReference(): Promise<void> {
   }
 
   const body = `
-This reference is auto-generated from the Zod schemas in each component's \`schema.ts\` file.
-It documents every component-specific config field, default, available slots, and manifest type alias.
-
-All components also accept the [base component fields](/reference/manifest#base-component-fields) (60 fields including \`id\`, \`tokens\`, \`visible\`, \`className\`, \`style\`, \`padding\`, \`margin\`, \`gap\`, layout, typography, and interactive states).
+This reference is auto-generated from the code-first component exports under \`src/ui/components\`.
+It documents the React component exports, standalone prop surfaces, related types, and helper exports for each component directory.
 
 Total components: **${totalComponents}** across ${orderedDomains.length} domains.
 
@@ -376,7 +405,7 @@ ${sections.join("\n")}
     "reference/components.md",
     markdownPage(
       "Component Reference",
-      "Complete auto-generated reference for all Snapshot UI components — config fields, types, defaults, and slots.",
+      "Complete auto-generated reference for Snapshot UI components, props, types, and helpers.",
       body,
     ),
   );

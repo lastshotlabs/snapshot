@@ -44,7 +44,7 @@ export interface PrefetchLinkBaseProps {
 
 /**
  * Standalone PrefetchLink — a plain `<a>` anchor that fires a prefetch callback
- * based on the configured strategy. No manifest or SSR context required.
+ * based on the configured strategy. Works without SSR context.
  *
  * @example
  * ```tsx

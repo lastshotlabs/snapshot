@@ -51,7 +51,7 @@ export interface ColumnBaseProps {
 
 /**
  * Standalone Column -- a vertical flex container.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

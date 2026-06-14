@@ -194,7 +194,7 @@ function StandaloneLocationResultRow({
 
 /**
  * Standalone LocationInputField -- a location search input with results dropdown
- * and optional Google Maps link. No manifest context required.
+ * and optional Google Maps link. Works with plain React props.
  *
  * @example
  * ```tsx

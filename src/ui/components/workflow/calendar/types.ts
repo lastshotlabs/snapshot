@@ -1,11 +1,9 @@
-import type { z } from "zod";
-import type { calendarConfigSchema, calendarEventSchema } from "./schema";
 
 /** Inferred config type from the Calendar Zod schema. */
-export type CalendarConfig = z.input<typeof calendarConfigSchema>;
+export type CalendarConfig = Record<string, unknown>;
 
 /** Inferred static event type. */
-export type CalendarEventConfig = z.infer<typeof calendarEventSchema>;
+export type CalendarEventConfig = Record<string, unknown>;
 
 /** Internal resolved event used for rendering. */
 export interface ResolvedEvent {

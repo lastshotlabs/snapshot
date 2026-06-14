@@ -14,7 +14,13 @@
     "src/ui.ts",
     "src/ui/rich-input.ts",
     "src/ui/emoji-picker.ts",
-    "src/ui/gif-picker.ts"
+    "src/ui/gif-picker.ts",
+    "src/ui/markdown.ts",
+    "src/ui/link-embed.ts",
+    "src/ui/button.ts",
+    "src/ui/card.ts",
+    "src/ui/input.ts",
+    "src/ui/icon.ts"
   ],
   "exclude": ["node_modules", "dist", "dist-types"]
 }

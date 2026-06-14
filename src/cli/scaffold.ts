@@ -20,7 +20,6 @@ import { generateMain } from "./templates/main";
 import { generateTypesApi } from "./templates/types-api";
 import { generateStoreUi } from "./templates/store-ui";
 import { UTILS_CONTENT } from "./templates/utils-ts";
-import { generateSnapshotConfig } from "./templates/snapshot-config";
 import { generateRootRoute } from "./templates/routes/root";
 import { generateIndexRoute } from "./templates/routes/index";
 import { generateAuthenticatedRoute } from "./templates/routes/authenticated";
@@ -111,7 +110,6 @@ export async function scaffold(config: ScaffoldConfig): Promise<void> {
   await write("tsconfig.node.json", generateTsConfigNode());
   await write("vite.config.ts", generateViteConfig());
   await write("components.json", generateComponentsJson(config));
-  await write("snapshot.config.json", generateSnapshotConfig());
   await write(".env", generateEnv(config));
   await write(".gitignore", GITIGNORE_CONTENT);
   await write("index.html", generateIndexHtml(config));

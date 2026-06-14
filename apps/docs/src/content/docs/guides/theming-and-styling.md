@@ -5,21 +5,21 @@ draft: false
 ---
 
 ```tsx
-import { createSnapshot } from "@lastshotlabs/snapshot";
-import { ButtonBase, CardBase } from "@lastshotlabs/snapshot/ui";
+import { ButtonBase, CardBase, resolveTokens } from "@lastshotlabs/snapshot/ui";
 
-const snap = createSnapshot({
-  apiUrl: "/api",
-  manifest: {
-    theme: {
-      colors: { primary: "#3b82f6", accent: "#8b5cf6" },
-      radius: { default: "0.5rem" },
-      fonts: { sans: "Inter" },
+const snapshotCss = resolveTokens({
+  flavor: "neutral",
+  overrides: {
+    colors: {
+      primary: "#3b82f6",
+      accent: "#8b5cf6",
     },
+    radius: "md",
+    font: { sans: "Inter" },
   },
 });
 
-// Every component automatically uses the theme tokens
+// Inject <style>{snapshotCss}</style> once near the app root.
 <ButtonBase label="Themed button" variant="default" />
 
 // Customize individual components with slots
@@ -36,13 +36,13 @@ const snap = createSnapshot({
 
 ## Design tokens
 
-Tokens are set in the manifest `theme` and compiled to CSS custom properties on `:root` and `.dark`.
+Tokens are resolved from code with `resolveTokens()` and compiled to CSS custom properties on `:root` and `.dark`.
 
 ### Colors
 
 ```tsx
-manifest: {
-  theme: {
+resolveTokens({
+  overrides: {
     colors: {
       primary: "#3b82f6",      // --sn-color-primary
       accent: "#8b5cf6",       // --sn-color-accent
@@ -55,7 +55,7 @@ manifest: {
       error: "#ef4444",        // --sn-color-error
     },
   },
-}
+});
 ```
 
 Each color automatically generates a foreground pair (`--sn-color-primary-foreground`) computed for contrast.
@@ -77,26 +77,25 @@ Spacing tokens are used by `gap`, `padding`, and spacing props throughout all co
 ### Border radius
 
 ```tsx
-theme: {
-  radius: {
-    default: "0.5rem",  // --sn-radius-default
-    sm: "0.25rem",      // --sn-radius-sm
-    lg: "1rem",         // --sn-radius-lg
-    full: "9999px",     // --sn-radius-full
+resolveTokens({
+  overrides: {
+    radius: "md",
   },
-}
+});
 ```
 
 ### Fonts
 
 ```tsx
-theme: {
-  fonts: {
-    sans: "Inter",                          // --sn-font-sans
-    mono: "JetBrains Mono",                 // --sn-font-mono
-    display: { family: "Outfit", weights: [400, 700] }, // --sn-font-display
+resolveTokens({
+  overrides: {
+    font: {
+      sans: "Inter",                          // --sn-font-sans
+      mono: "JetBrains Mono",                 // --sn-font-mono
+      display: { family: "Outfit", weights: [400, 700] }, // --sn-font-display
+    },
   },
-}
+});
 ```
 
 Google Fonts are auto-loaded when recognized (Inter, Roboto, Open Sans, Poppins, Montserrat, etc.).
@@ -246,21 +245,21 @@ useEffect(() => {
 
 ### Dark-mode token overrides
 
-Colors set in `theme.colors` automatically derive dark variants using OKLCH color space. You can also set explicit dark overrides in the manifest:
+Colors set in `overrides.colors` automatically derive dark variants using OKLCH color space. You can also set explicit dark overrides:
 
 ```tsx
-theme: {
-  colors: {
-    background: "#ffffff",
-    surface: "#f8fafc",
-  },
-  dark: {
+resolveTokens({
+  overrides: {
     colors: {
+      background: "#ffffff",
+      card: "#f8fafc",
+    },
+    darkColors: {
       background: "#0f172a",
-      surface: "#1e293b",
+      card: "#1e293b",
     },
   },
-}
+});
 ```
 
 ## Applying styles to components
@@ -297,4 +296,4 @@ Use CSS media queries via className or inline styles:
 
 - [Layout and Navigation](/guides/layout-and-navigation/) -- themed app shells
 - [Forms and Validation](/guides/forms/) -- styled form components
-- [Component Library reference](/reference/components/) -- all 113 components
+- [Component Library reference](/reference/components/) -- all 114 components

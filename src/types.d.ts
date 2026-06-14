@@ -2,10 +2,10 @@ import type { UseMutationResult, QueryClient } from "@tanstack/react-query";
 import type React from "react";
 import type { ApiClient } from "./api/client";
 import type { ApiError } from "./api/error";
+import type { AuthContractConfig } from "./auth/contract";
 import type { TokenStorage } from "./auth/storage";
 import type { WebSocketManager } from "./ws/manager";
 import type { SseConnectionStatus } from "./sse/manager";
-import type { ManifestConfig } from "./ui/manifest/types";
 import type { CommunityHooks } from "./community/hooks";
 import type { WebhookHooks } from "./webhooks/hooks";
 /**
@@ -307,6 +307,7 @@ export interface SseEndpointConfig {
     onConnected?: () => void;
     onError?: (e: Event) => void;
     onClosed?: () => void;
+    events?: Record<string, (payload: unknown) => void>;
 }
 /**
  * SSE configuration. Each key is an endpoint path that must start with `/__sse/`.
@@ -317,6 +318,68 @@ export interface SseEndpointConfig {
 export interface SseConfig {
     endpoints: Record<string, SseEndpointConfig>;
     reconnectOnLogin?: boolean;
+}
+export interface SnapshotCacheConfig {
+    staleTime?: number;
+    gcTime?: number;
+    retry?: number;
+}
+export interface SnapshotSessionConfig {
+    mode?: "cookie" | "token";
+    storage?: "localStorage" | "sessionStorage" | "memory";
+    key?: string;
+}
+export interface SnapshotOAuthProviderConfig {
+    type: "google" | "github" | "microsoft" | "apple" | "facebook" | "discord" | "custom";
+    clientId?: string;
+    scopes?: string[];
+    callbackPath?: string;
+    name?: string;
+}
+export interface SnapshotMfaConfig {
+    issuer?: string;
+    period?: number;
+    methods?: Array<"totp" | "email" | "sms" | "webauthn">;
+}
+export interface SnapshotWebAuthnConfig {
+    rpId?: string;
+    rpName?: string;
+    attestation?: "none" | "indirect" | "direct";
+}
+export interface SnapshotAuthConfig {
+    session?: SnapshotSessionConfig;
+    contract?: AuthContractConfig;
+    providers?: Record<string, SnapshotOAuthProviderConfig>;
+    mfa?: SnapshotMfaConfig;
+    webauthn?: SnapshotWebAuthnConfig;
+    on?: {
+        unauthenticated?: () => void;
+        forbidden?: () => void;
+        logout?: () => void;
+    };
+}
+export interface SnapshotWebSocketConfig {
+    url?: string;
+    autoReconnect?: boolean;
+    reconnectOnLogin?: boolean;
+    reconnectOnFocus?: boolean;
+    maxReconnectAttempts?: number;
+    reconnectBaseDelay?: number;
+    reconnectMaxDelay?: number;
+    auth?: {
+        strategy: "query-param" | "first-message";
+        paramName?: string;
+    };
+    heartbeat?: {
+        enabled?: boolean;
+        interval?: number;
+        message?: string;
+    };
+    onConnected?: () => void;
+    onDisconnected?: () => void;
+    onReconnecting?: (attempt: number) => void;
+    onReconnectFailed?: () => void;
+    events?: Record<string, (payload: unknown) => void>;
 }
 /** Return type of useSSE(endpoint) */
 export interface SseHookResult {
@@ -389,48 +452,42 @@ export interface UseCommunityNotificationsResult {
 }
 /**
  * Bootstrap configuration for `createSnapshot()`.
- */
-/**
- * Bootstrap configuration for `createSnapshot()`.
  *
  * @example
  * ```ts
  * const snap = createSnapshot({
  *   apiUrl: 'https://api.example.com',
- *   manifest: myManifest,
  * });
  * ```
  */
 export interface SnapshotConfig {
     /** API base URL for this snapshot instance. */
     apiUrl: string;
-    /** Optional environment source used to resolve `{ env: "..." }` manifest refs. */
-    env?: Record<string, string | undefined>;
     /**
      * Static API credential. Not a user session token. Do not use in browser
      * deployments - emits a runtime warning in browser contexts.
      */
     bearerToken?: string;
-    /** The frontend manifest for the running app. Optional — code-driven apps that never render `<ManifestApp>` can omit it. */
-    manifest?: ManifestConfig;
-    /** Opt-in to running `bootBuiltins()` at createSnapshot time. Defaults to false. Does not currently affect bundle weight (pending upstream refactor). */
-    useManifestUI?: boolean;
-    /** Optional plugins to register custom components, groups, and setup hooks. */
-    plugins?: import("./plugin").SnapshotPlugin[];
+    /** Auth contract, session, OAuth, MFA, and WebAuthn settings. */
+    auth?: SnapshotAuthConfig;
+    /** Query cache defaults used by Snapshot's built-in hooks. */
+    cache?: SnapshotCacheConfig;
+    /** WebSocket settings for `useSocket`, `useRoom`, and `useRoomEvent`. */
+    ws?: SnapshotWebSocketConfig;
+    /** Server-sent event settings for `useSSE` and `useSseEvent`. */
+    sse?: SseConfig;
     /**
      * Path the `protectedBeforeLoad` guard redirects to when the user is
-     * unauthenticated. Use this when your app does not configure auth screens
-     * through the manifest. When both this and `manifest.auth.redirects.unauthenticated`
-     * are set, the manifest entry wins.
+     * unauthenticated.
      */
     loginPath?: string;
     /**
      * Path the `guestBeforeLoad` guard redirects to when an authenticated user
-     * lands on a guest-only screen. Use this when your app does not configure
-     * auth screens through the manifest. When both this and the manifest's
-     * `auth.redirects.authenticated` are set, the manifest entry wins.
+     * lands on a guest-only screen.
      */
     homePath?: string;
+    /** Path used when a login or passkey flow requires MFA. */
+    mfaPath?: string;
 }
 /**
  * Runtime surface returned by `createSnapshot()`.
@@ -438,7 +495,6 @@ export interface SnapshotConfig {
 export interface SnapshotInstance<TWSEvents extends Record<string, unknown> = Record<string, unknown>> {
     /** Bootstrap values used to create this snapshot instance. */
     bootstrap: {
-        env?: Record<string, string | undefined>;
         bearerToken?: string;
     };
     /** Fetch the current authenticated user. Returns null when logged out. */
@@ -744,6 +800,4 @@ export interface SnapshotInstance<TWSEvents extends Record<string, unknown> = Re
     QueryProvider: React.FC<{
         children: React.ReactNode;
     }>;
-    /** Config-driven ManifestApp component, available when `manifest` is provided in config. */
-    ManifestApp?: React.ComponentType;
 }

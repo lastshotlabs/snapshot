@@ -58,7 +58,7 @@ export interface OAuthButtonsBaseProps {
 
 /**
  * Standalone OAuthButtons — renders OAuth provider buttons with optional
- * heading and auto-redirect support. No manifest context required.
+ * heading and auto-redirect support. Works with plain React props.
  *
  * @example
  * ```tsx

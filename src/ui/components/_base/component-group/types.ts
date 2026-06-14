@@ -1,4 +1,2 @@
-import type { z } from "zod";
-import type { componentGroupConfigSchema } from "./schema";
 
-export type ComponentGroupConfig = z.input<typeof componentGroupConfigSchema>;
+export type ComponentGroupConfig = Record<string, unknown>;

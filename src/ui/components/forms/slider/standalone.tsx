@@ -64,7 +64,7 @@ const rangeInputStyle: React.CSSProperties = {
 
 /**
  * Standalone SliderField -- a range slider with optional label, value display,
- * limit labels, and dual-thumb range mode. No manifest context required.
+ * limit labels, and dual-thumb range mode. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -33,7 +33,7 @@ export interface DefaultErrorBaseProps {
 
 /**
  * Standalone DefaultError — renders an error feedback card with optional
- * retry button. No manifest context required.
+ * retry button. Works with plain React props.
  *
  * @example
  * ```tsx

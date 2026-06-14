@@ -1,7 +1,22 @@
 import type { FromRef } from "../context/types";
 import { isFromRef } from "../context/utils";
-import { isEnvRef, resolveEnvRef } from "../manifest/env";
 import type { PolicyExpr, PolicyMap, PolicyRefOrLiteral } from "./types";
+
+function isEnvRef(value: unknown): value is { env: string; default?: string } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "env" in value &&
+    typeof (value as { env?: unknown }).env === "string"
+  );
+}
+
+function resolveEnvRef(
+  value: { env: string; default?: string },
+  env: Record<string, string | undefined>,
+): string | undefined {
+  return env[value.env] ?? value.default;
+}
 
 /**
  * Runtime policy evaluation context.
@@ -43,7 +58,7 @@ function evaluatePolicyExpression(
       context.policies?.[expression] ?? context.parentPolicies?.[expression];
     if (!nested) {
       throw new Error(
-        `Policy "${name}" references missing policy "${expression}". Add it to manifest.policies.`,
+        `Policy "${name}" references missing policy "${expression}".`,
       );
     }
 

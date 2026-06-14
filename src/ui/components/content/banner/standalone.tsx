@@ -40,7 +40,7 @@ export interface BannerBaseProps {
 
 /**
  * Standalone Banner — a full-width hero section with background, overlay,
- * and content alignment. No manifest context required.
+ * and content alignment. Works with plain React props.
  *
  * @example
  * ```tsx

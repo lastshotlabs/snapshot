@@ -9,11 +9,11 @@ Snapshot is organized around a small set of public surfaces and a larger set of 
 - `src/index.ts`
   - SDK runtime, auth/realtime/community/webhook contracts, plugin helpers, schema generation
 - `src/ui.ts`
-  - config-driven UI runtime, manifest assembly, components, tokens, actions, workflows, presets, hooks
+  - standalone UI components, tokens, actions, hooks, icons, context, and state helpers
 - `src/ssr/index.ts`
-  - server rendering, manifest rendering, RSC, cache, PPR, prefetch helpers
+  - server rendering, RSC, cache, PPR, prefetch helpers
 - `src/vite/index.ts`
-  - Vite plugins for manifest apps, sync, SSR, RSC, prefetch, PPR, SSG
+  - Vite plugins for sync, SSR, RSC, prefetch, PPR, SSG
 - `src/cli/index.ts`
   - `snapshot` CLI and command tree
 
@@ -40,7 +40,6 @@ Snapshot is organized around a small set of public surfaces and a larger set of 
 - `i18n`
 - `icons`
 - `layouts`
-- `manifest`
 - `policies`
 - `presets`
 - `shortcuts`
@@ -70,7 +69,7 @@ Components are grouped by domain under `src/ui/components`:
 
 1. Public API is declared intentionally from the four package entrypoints plus the CLI binary. Keep those entrypoints readable and source-backed.
 2. SDK code must not depend on UI-only internals unless that dependency is explicitly part of the supported bootstrap/runtime relationship.
-3. UI runtime code lives in `src/ui/**`. Do not leak config-driven rendering logic into unrelated top-level folders.
+3. UI runtime code lives in `src/ui/**`. Do not leak UI-only logic into unrelated top-level folders.
 4. SSR/Vite integration lives in `src/ssr/**` and `src/vite/**`. Do not mix browser-only assumptions into server paths.
 5. CLI code must remain shell-safe and template-driven. Generated files are product surface, not throwaway scaffolding.
 
@@ -81,21 +80,19 @@ Components are grouped by domain under `src/ui/components`:
 3. No `any` without a deliberate opaque boundary. Prefer real types over casts.
 4. Keep canonical public exports in the entrypoints. Internal `index.ts` files inside folders are allowed, but do not quietly widen public API through accidental re-export sprawl.
 5. Shared public shapes belong in the real type modules, not duplicated ad hoc across files.
-6. Contract-driven integration stays explicit. Auth, community, webhook, manifest, and Vite option shapes should be readable from source and JSDoc.
+6. Contract-driven integration stays explicit. Auth, community, webhook, UI, and Vite option shapes should be readable from source and JSDoc.
 
-## Manifest And UI Rules
+## UI Rules
 
 ### Platform rules
 
-1. One code path per concept. If the repo has two different ways to resolve the same manifest concern, one of them is probably drift.
+1. One code path per concept. If the repo has two different ways to resolve the same UI concern, one of them is probably drift.
 2. Use registries, not switches, for extensible surfaces such as components, layouts, guards, analytics providers, and workflow actions.
-3. Manifest defaults must render presentably. A minimal manifest should still produce a coherent app shell.
-4. Source of truth lives in the schema and runtime:
-   - manifest contract: `src/ui/manifest/schema.ts`
-   - manifest runtime: `src/ui/manifest/**`
+3. Component defaults must render presentably.
+4. Source of truth lives in the schema, component, and runtime helpers:
    - component contracts: `src/ui/components/**/schema.ts`
    - component styling model: `src/ui/components/_base/schema.ts` and `src/ui/components/_base/style-surfaces.ts`
-5. If a consumer needs bespoke code for a common use case that should be declarative, the framework is incomplete. Improve the platform rather than normalizing ad hoc escape hatches.
+5. If a consumer needs bespoke code for a common reusable UI concern, improve the component surface rather than normalizing ad hoc copies.
 
 ### Component file conventions
 
@@ -104,7 +101,7 @@ Every component directory should follow the normal structure unless there is a s
 ```text
 src/ui/components/{group}/{component-name}/
   schema.ts
-  component.tsx
+  standalone.tsx
   types.ts
   index.ts
   __tests__/
@@ -114,21 +111,17 @@ src/ui/components/{group}/{component-name}/
 
 ### Component implementation rules
 
-- Config schema is the contract. Read the schema before changing docs or examples.
-- Prefer a single `config` prop for config-driven components.
-- Components are responsible for their own data/runtime integration through the shared UI runtime patterns.
+- Component props and schemas are the contract. Read both before changing docs or examples.
+- Prefer typed props and normal React event handlers for code-first components.
+- Components are responsible for their own data/runtime integration through shared UI patterns.
 - Use shared wrappers and base utilities instead of rebuilding error, loading, slot, or publish/subscribe behavior per component.
 - Use semantic Snapshot tokens. If a needed token does not exist, add it properly instead of hardcoding raw values.
 - Visible component behavior must be represented in the playground when practical.
 
 ### Canonical pattern files
 
-When implementing or reviewing manifest UI, start with:
+When implementing or reviewing UI, start with:
 
-- `src/ui/manifest/schema.ts`
-- `src/ui/manifest/index.ts`
-- `src/ui/manifest/runtime.tsx`
-- `src/ui/manifest/component-registry.tsx`
 - `src/ui/components/_base/schema.ts`
 - `src/ui/components/_base/style-surfaces.ts`
 - `playground/src/showcase.tsx`
@@ -149,7 +142,7 @@ When implementing or reviewing manifest UI, start with:
 ## Testing Rules
 
 - Test the contract, not framework implementation trivia.
-- Schema tests are mandatory for public config changes.
+- Schema or prop-level tests are mandatory for public component contract changes.
 - Reuse the nearest existing wrapper/provider pattern instead of inventing new test harnesses.
 - Use `renderToStaticMarkup` when changing SSR-sensitive component surfaces.
 - No live network calls in tests. Use fixtures and mocks.

@@ -1,508 +1,143 @@
 # Getting Started
 
-This guide covers the config-driven UI system in `@lastshotlabs/snapshot/ui`. You describe
-your application as a JSON manifest; Snapshot renders it as a fully interactive React app
-with routing, data fetching, theming, and inter-component communication.
+Snapshot apps start in TypeScript. Create one runtime with `createSnapshot`,
+wrap your React tree with its `QueryProvider`, then use the returned hooks and
+helpers anywhere inside the app.
 
-## Installation
+## Install
 
-```bash
-npm install @lastshotlabs/snapshot
-# peer deps
-npm install react react-dom @tanstack/react-query jotai zod
+```sh
+bun add @lastshotlabs/snapshot @tanstack/react-query @tanstack/react-router jotai react react-dom
 ```
 
-## Manifest Structure
+## Create A Runtime
 
-A snapshot manifest is a JSON file (`snapshot.manifest.json`) with four top-level sections:
-
-```json
-{
-  "$schema": "https://lastshotlabs.dev/schemas/manifest.json",
-  "theme": { ... },
-  "globals": { ... },
-  "nav": [ ... ],
-  "pages": { ... }
-}
-```
-
-| Section   | Purpose                                                                 |
-| --------- | ----------------------------------------------------------------------- |
-| `theme`   | Design tokens: flavor, colors, radius, spacing, fonts, component tokens |
-| `globals` | App-wide reactive state (persists across routes)                        |
-| `nav`     | Sidebar / top-nav items with icons, badges, and role-based visibility   |
-| `pages`   | Route-keyed page definitions containing component trees                 |
-
-## Create a Manifest
-
-Use the CLI or write one by hand:
-
-```bash
-npx snapshot manifest init
-```
-
-## Environment Values
-
-Manifest fields that depend on deployment-specific values can use an environment
-reference instead of a literal string:
-
-```json
-{ "env": "API_URL" }
-```
-
-Snapshot resolves these references at compile time. The default env source reads
-`import.meta.env` first and then falls back to `process.env`. If the variable is
-missing, you can provide a `default` value in the manifest reference.
-
-See [bootstrap and env refs](./manifest/bootstrap.md) for the bootstrap contract
-and the resolution rules.
-
-Auth-specific bootstrap overrides now live in the manifest too. See
-[manifest auth](./manifest/auth.md) for session, contract, redirect, and
-workflow-handler settings.
-
-Realtime connection settings also live in the manifest. See
-[manifest realtime](./manifest/realtime.md) for WebSocket and SSE setup,
-including env-driven URLs and lifecycle workflows.
-
-### Complete Example
-
-```json
-{
-  "theme": {
-    "flavor": "midnight",
-    "overrides": {
-      "radius": "lg",
-      "spacing": "comfortable",
-      "font": { "sans": "Inter" }
-    }
-  },
-  "globals": {
-    "cart": { "data": "GET /api/cart", "default": { "items": [] } }
-  },
-  "nav": [
-    { "label": "Dashboard", "path": "/", "icon": "LayoutDashboard" },
-    { "label": "Users", "path": "/users", "icon": "Users" },
-    {
-      "label": "Settings",
-      "path": "/settings",
-      "icon": "Settings",
-      "roles": ["admin"]
-    },
-    {
-      "label": "Cart",
-      "path": "/cart",
-      "icon": "ShoppingCart",
-      "badge": { "from": "global.cart.items.length" }
-    }
-  ],
-  "pages": {
-    "/": {
-      "layout": "sidebar",
-      "title": "Dashboard",
-      "content": [
-        {
-          "type": "row",
-          "gap": "md",
-          "children": [
-            {
-              "type": "stat-card",
-              "data": "GET /api/stats/revenue",
-              "field": "total",
-              "label": "Revenue",
-              "format": "currency",
-              "icon": "DollarSign",
-              "trend": { "field": "previousTotal", "sentiment": "up-is-good" },
-              "span": 4
-            },
-            {
-              "type": "stat-card",
-              "data": "GET /api/stats/users",
-              "field": "count",
-              "label": "Active Users",
-              "format": "number",
-              "icon": "Users",
-              "span": 4
-            },
-            {
-              "type": "stat-card",
-              "data": "GET /api/stats/orders",
-              "field": "count",
-              "label": "Orders",
-              "format": "number",
-              "icon": "Package",
-              "span": 4
-            }
-          ]
-        },
-        {
-          "type": "data-table",
-          "id": "recent-orders",
-          "data": "GET /api/orders",
-          "columns": [
-            { "field": "id", "label": "#", "width": "80px" },
-            { "field": "customer", "sortable": true },
-            { "field": "total", "format": "currency", "sortable": true },
-            {
-              "field": "status",
-              "format": "badge",
-              "badgeColors": {
-                "completed": "success",
-                "pending": "warning",
-                "cancelled": "destructive"
-              }
-            }
-          ],
-          "pagination": { "type": "offset", "pageSize": 10 },
-          "searchable": true,
-          "actions": [
-            {
-              "label": "View",
-              "icon": "Eye",
-              "action": { "type": "navigate", "to": "/orders/{id}" }
-            }
-          ]
-        }
-      ]
-    },
-    "/users": {
-      "layout": "sidebar",
-      "title": "Users",
-      "content": [
-        {
-          "type": "row",
-          "justify": "end",
-          "children": [
-            {
-              "type": "button",
-              "label": "Add User",
-              "icon": "Plus",
-              "action": { "type": "open-modal", "modal": "create-user" }
-            }
-          ]
-        },
-        {
-          "type": "data-table",
-          "id": "users-table",
-          "data": "GET /api/users",
-          "columns": [
-            { "field": "name", "sortable": true },
-            { "field": "email" },
-            {
-              "field": "role",
-              "format": "badge",
-              "filter": { "type": "select", "options": "auto" }
-            },
-            { "field": "createdAt", "format": "date", "sortable": true }
-          ],
-          "selectable": true,
-          "searchable": { "placeholder": "Search users..." },
-          "actions": [
-            {
-              "label": "Edit",
-              "icon": "Pencil",
-              "action": { "type": "open-modal", "modal": "edit-user" }
-            },
-            {
-              "label": "Delete",
-              "icon": "Trash2",
-              "action": [
-                {
-                  "type": "confirm",
-                  "message": "Delete {name}?",
-                  "variant": "destructive"
-                },
-                {
-                  "type": "api",
-                  "method": "DELETE",
-                  "endpoint": "/api/users/{id}"
-                },
-                { "type": "refresh", "target": "users-table" },
-                {
-                  "type": "toast",
-                  "message": "User deleted",
-                  "variant": "success"
-                }
-              ]
-            }
-          ],
-          "bulkActions": [
-            {
-              "label": "Delete {count} users",
-              "action": [
-                { "type": "confirm", "message": "Delete {count} users?" },
-                {
-                  "type": "api",
-                  "method": "POST",
-                  "endpoint": "/api/users/bulk-delete"
-                },
-                { "type": "refresh", "target": "users-table" }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "drawer",
-          "id": "user-detail",
-          "trigger": { "from": "users-table.selected" },
-          "title": { "from": "users-table.selected.name" },
-          "size": "md",
-          "side": "right",
-          "content": [
-            {
-              "type": "detail-card",
-              "data": { "from": "users-table.selected" },
-              "fields": [
-                { "field": "name", "label": "Full Name" },
-                { "field": "email", "format": "email", "copyable": true },
-                { "field": "role", "format": "badge" },
-                { "field": "createdAt", "format": "date" }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "modal",
-          "id": "create-user",
-          "title": "Create User",
-          "size": "md",
-          "content": [
-            {
-              "type": "form",
-              "submit": "/api/users",
-              "method": "POST",
-              "fields": [
-                {
-                  "name": "name",
-                  "type": "text",
-                  "label": "Full Name",
-                  "required": true
-                },
-                { "name": "email", "type": "email", "required": true },
-                {
-                  "name": "role",
-                  "type": "select",
-                  "options": [
-                    { "label": "User", "value": "user" },
-                    { "label": "Admin", "value": "admin" }
-                  ]
-                }
-              ],
-              "submitLabel": "Create",
-              "onSuccess": [
-                { "type": "close-modal" },
-                { "type": "refresh", "target": "users-table" },
-                {
-                  "type": "toast",
-                  "message": "User created",
-                  "variant": "success"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  }
-}
-```
-
-## Running the App
-
-### Option A: ManifestApp (zero custom code)
-
-```tsx
-import { ManifestApp } from "@lastshotlabs/snapshot/ui";
-import manifest from "./snapshot.manifest.json";
-
-function App() {
-  return <ManifestApp manifest={manifest} apiUrl="https://api.example.com" />;
-}
-```
-
-`ManifestApp` handles everything: creates the SDK instance, generates theme CSS, sets up
-providers, renders nav and pages, registers all built-in components.
-
-### Option B: Compose from parts
-
-```tsx
-import {
-  resolveTokens,
-  injectStyleSheet,
-  PageRenderer,
-  AppContextProvider,
-  PageContextProvider,
-  ToastContainer,
-  ConfirmDialog,
-} from "@lastshotlabs/snapshot/ui";
+```ts
+// src/snapshot.ts
 import { createSnapshot } from "@lastshotlabs/snapshot";
 
-const snapshot = createSnapshot({
-  apiUrl: "https://api.example.com",
-  manifest,
+export const snapshot = createSnapshot({
+  apiUrl: import.meta.env.VITE_API_URL,
+  auth: {
+    session: { mode: "cookie" },
+  },
+  loginPath: "/login",
+  homePath: "/",
+  mfaPath: "/mfa",
 });
-const css = resolveTokens(manifest.theme);
-injectStyleSheet(css);
-
-function UsersPage() {
-  return (
-    <PageContextProvider>
-      <PageRenderer config={manifest.pages["/users"]} />
-    </PageContextProvider>
-  );
-}
 ```
 
-### Option C: CLI sync (generates routes and theme)
-
-```bash
-npx snapshot sync --server https://api.example.com
-```
-
-This reads the backend OpenAPI spec and generates:
-
-- Typed API client + hooks
-- Theme CSS from `snapshot.manifest.json`
-- Route definitions from manifest pages
-
-### Option D: Entity-driven SSR with bunshot
-
-If your backend uses bunshot manifest-declared entities and pages, Snapshot can render those
-pages without duplicating them in a frontend manifest. Bunshot resolves the request and
-loads entity data; Snapshot's SSR renderer maps that result into the existing manifest
-component system.
-
-Typical flow:
-
-1. Define entities and pages in bunshot's `app.manifest.json`.
-2. Configure bunshot SSR with Snapshot's `createReactRenderer()` or
-   `createManifestRenderer()`.
-3. Let bunshot call `renderer.renderPage(...)` for entity pages.
-
-See [SSR entity pages](./ssr/entity-pages.md) for the renderer-side details and component
-mapping behavior.
-
-## Consumption Levels
-
-The config-driven UI supports three levels of usage, from pure config to full custom code.
-
-### Level 1: Pure Config
-
-Everything lives in the manifest JSON. No React code needed. Use `ManifestApp` to render.
-
-```json
-{
-  "type": "data-table",
-  "data": "GET /api/users",
-  "columns": "auto",
-  "searchable": true
-}
-```
-
-### Level 2: Mix Config + Custom React
-
-Use config-driven components alongside your own React code. Import `useActionExecutor`,
-`useSubscribe`, and other hooks to interact with the config system from custom components.
+## Add The Provider
 
 ```tsx
-import { useActionExecutor, useSubscribe } from "@lastshotlabs/snapshot/ui";
+// src/main.tsx
+import { createRoot } from "react-dom/client";
+import { snapshot } from "./snapshot";
+import { App } from "./App";
 
-function CustomHeader() {
-  const userName = useSubscribe({ from: "global.user.name" });
-  const execute = useActionExecutor();
+createRoot(document.getElementById("root")!).render(
+  <snapshot.QueryProvider>
+    <App />
+  </snapshot.QueryProvider>,
+);
+```
+
+## Use Hooks
+
+```tsx
+import { isMfaChallenge } from "@lastshotlabs/snapshot";
+import { snapshot } from "./snapshot";
+
+export function LoginForm() {
+  const login = snapshot.useLogin();
+
+  async function submit(email: string, password: string) {
+    const result = await login.mutateAsync({ email, password });
+
+    if (isMfaChallenge(result)) {
+      window.location.assign("/mfa");
+      return;
+    }
+
+    window.location.assign("/");
+  }
 
   return (
-    <header>
-      <h1>Welcome, {userName}</h1>
-      <button onClick={() => execute({ type: "navigate", to: "/settings" })}>
-        Settings
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        void submit(String(form.get("email")), String(form.get("password")));
+      }}
+    >
+      <input name="email" type="email" autoComplete="email" />
+      <input name="password" type="password" autoComplete="current-password" />
+      <button type="submit" disabled={login.isPending}>
+        Sign in
       </button>
-    </header>
+    </form>
   );
 }
 ```
 
-Register custom components so they can be referenced in manifests:
+## Protect Routes
 
 ```tsx
-import { registerComponent } from "@lastshotlabs/snapshot/ui";
+import { createFileRoute } from "@tanstack/react-router";
+import { snapshot } from "../snapshot";
 
-registerComponent("custom-header", CustomHeader);
-```
-
-Then in the manifest:
-
-```json
-{ "type": "custom", "component": "custom-header" }
-```
-
-### Level 3: Headless Hooks
-
-Use the component logic without the framework's rendering. Headless hooks return data,
-state, and handlers with no JSX.
-
-```tsx
-import { useDataTable, useAutoForm } from "@lastshotlabs/snapshot/ui";
-
-function MyTable() {
-  const { rows, sort, setSort, page, setPage, isLoading } = useDataTable({
-    type: "data-table",
-    data: "GET /api/users",
-    columns: "auto",
-    pagination: { type: "offset", pageSize: 20 },
-  });
-
-  // Render with your own UI library
-  return <MyCustomTable data={rows} loading={isLoading} />;
-}
-```
-
-### Level 3b: Component Overrides
-
-Override the rendering of any built-in component type while keeping its config contract:
-
-```tsx
-import { registerComponent } from "@lastshotlabs/snapshot/ui";
-
-// Replace the built-in stat-card with your own implementation
-registerComponent("stat-card", function MyStatCard({ config }) {
-  // `config` has the same shape as the built-in stat-card schema
-  return (
-    <div className="my-stat">
-      {config.label}: {config.field}
-    </div>
-  );
+export const Route = createFileRoute("/settings")({
+  ...snapshot.protect(),
+  component: SettingsPage,
 });
 ```
 
-The manifest stays the same. Only the rendering changes.
+Use `snapshot.guest()` for login and registration routes.
 
-## Key Concepts
+## Sync Your Backend Schema
 
-### Data Binding
-
-Components communicate through the `id` / `from` ref system. A component with an `id`
-publishes its state; other components subscribe with `{ "from": "that-id" }`. See
-[data-binding.md](./data-binding.md).
-
-### Actions
-
-User interactions are expressed as a fixed action vocabulary: `navigate`, `api`,
-`open-modal`, `close-modal`, `refresh`, `set-value`, `download`, `confirm`, `toast`.
-Actions compose into sequential chains. See [actions.md](./actions.md).
-
-### Tokens and Flavors
-
-The theme system uses named flavors (presets) with per-token overrides. Eight built-in
-flavors; define your own with `defineFlavor()`. See [tokens.md](./tokens.md) and
-[customization.md](./customization.md).
-
-### Responsive Values
-
-Many config fields accept responsive breakpoint maps:
-
-```json
-{ "default": 4, "md": 6, "lg": 12 }
+```sh
+snapshot sync --api http://localhost:3000
+snapshot sync --file ./schema.json --zod
+snapshot sync --api http://localhost:3000 --watch
 ```
 
-Breakpoints: `sm`, `md`, `lg`, `xl`, `2xl`. Flat values apply at all sizes.
+Generated hooks and types are project code. Keep app behavior in React and call
+those generated hooks from your components.
+
+## Add UI Components
+
+```tsx
+import { ButtonBase, CardBase, RichInputBase } from "@lastshotlabs/snapshot/ui";
+
+export function ReplyComposer() {
+  return (
+    <CardBase>
+      <RichInputBase
+        placeholder="Write a reply"
+        emitMarkdown
+        onSend={({ markdown, text }) => {
+          console.log(markdown ?? text);
+        }}
+      />
+      <ButtonBase label="Send" icon="send" />
+    </CardBase>
+  );
+}
+```
+
+For heavier components, import focused subpaths:
+
+```ts
+import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
+import { EmojiPickerBase } from "@lastshotlabs/snapshot/ui/emoji-picker";
+import { GifPickerBase } from "@lastshotlabs/snapshot/ui/gif-picker";
+```
+
+## Next Steps
+
+- [API cheatsheet](./api-cheatsheet.md)
+- [Actions](./actions.md)
+- [Customization](./customization.md)
+- [Tokens](./tokens.md)
+- [CLI](./cli.md)

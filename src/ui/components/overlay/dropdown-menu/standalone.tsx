@@ -89,7 +89,7 @@ export interface DropdownMenuBaseProps {
 
 /**
  * Standalone DropdownMenu — a button-triggered floating menu with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

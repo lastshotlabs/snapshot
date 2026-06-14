@@ -13,7 +13,7 @@ function requireSsrContext(
   const ssr = ctx.input?.ssr;
   if (!ssr) {
     throw new Error(
-      `Action "${actionName}" requires SSR context. It can only be called from manifest.ssr.middleware workflows.`,
+      `Action "${actionName}" requires SSR context. It can only be called from server middleware workflows.`,
     );
   }
 

@@ -48,7 +48,7 @@ const SIZE_MAP = {
 
 /**
  * Standalone IconButtonBase -- an icon-only button with configurable shape,
- * size, and variant. No manifest context required.
+ * size, and variant. Works with plain React props.
  *
  * @example
  * ```tsx

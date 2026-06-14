@@ -59,7 +59,7 @@ export interface SelectFieldProps {
 
 /**
  * Standalone SelectField -- a complete select form field with label, options,
- * helper/error text, and required indicator. No manifest context required.
+ * helper/error text, and required indicator. Works with plain React props.
  *
  * @example
  * ```tsx

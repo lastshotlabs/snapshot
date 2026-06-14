@@ -46,7 +46,7 @@ const SIZE_MAP = {
 
 /**
  * Standalone ToggleField -- a pressable toggle button with optional icon and label.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

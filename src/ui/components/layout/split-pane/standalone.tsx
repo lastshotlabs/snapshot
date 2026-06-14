@@ -36,7 +36,7 @@ export interface SplitPaneBaseProps {
 
 /**
  * Standalone SplitPane -- a resizable two-pane layout with a draggable divider.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

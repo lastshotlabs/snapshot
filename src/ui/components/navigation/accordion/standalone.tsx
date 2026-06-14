@@ -88,7 +88,7 @@ function Chevron({ open }: { open: boolean }) {
 
 /**
  * Standalone Accordion — an expandable/collapsible panel list with plain React
- * children. No manifest context required.
+ * children. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -275,7 +275,7 @@ function ComparePane({
 
 /**
  * Standalone CompareView — a side-by-side diff viewer for comparing two
- * text blocks. No manifest context required.
+ * text blocks. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { fromRefSchema, type FromRef as SharedFromRef } from "@lastshotlabs/frontend-contract/refs";
-import { dataSourceSchema, endpointTargetSchema, resourceRefSchema } from "../../manifest/resources";
+import { dataSourceSchema, endpointTargetSchema, resourceRefSchema } from "../../resources";
 import { componentAnimationSchema, componentBackgroundSchema, componentTransitionSchema, componentZIndexSchema, hoverConfigSchema, focusConfigSchema, activeConfigSchema, exitAnimationSchema } from "./schema";
 /**
  * Schema for a FromRef value — a reference to another component's published data.
@@ -40,7 +40,7 @@ export type FocusConfig = z.infer<typeof focusConfigSchema>;
 export type ActiveConfig = z.infer<typeof activeConfigSchema>;
 export type ExitAnimationConfig = z.infer<typeof exitAnimationSchema>;
 /**
- * Base config fields shared by all config-driven components.
+ * Base config fields shared by Snapshot UI components.
  * Every component schema should extend this via `.merge()` or `.extend()`.
  */
 export declare const baseComponentConfigSchema: z.ZodObject<{

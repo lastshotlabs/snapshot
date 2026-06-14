@@ -52,7 +52,7 @@ export interface ContainerBaseProps {
 
 /**
  * Standalone Container -- a centered, max-width-constrained wrapper.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

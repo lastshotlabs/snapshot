@@ -68,7 +68,7 @@ export interface NotificationBellBaseProps {
 
 /**
  * Standalone NotificationBell — bell icon with unread count badge.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

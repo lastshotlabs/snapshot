@@ -8,7 +8,7 @@ import type { SelectControlProps } from "./types";
 /**
  * Low-level styled select element with surface resolution and state management.
  * Used internally by SelectField and other components that need a styled `<select>`.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

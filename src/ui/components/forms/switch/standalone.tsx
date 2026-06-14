@@ -45,7 +45,7 @@ const SIZE_MAP = {
 
 /**
  * Standalone SwitchField -- a toggle switch with label, description, and
- * configurable size and color. No manifest context required.
+ * configurable size and color. Works with plain React props.
  *
  * @example
  * ```tsx

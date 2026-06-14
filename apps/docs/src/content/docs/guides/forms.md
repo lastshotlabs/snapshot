@@ -12,7 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const snap = createSnapshot({ apiUrl: "/api", manifest: {} });
+const snap = createSnapshot({ apiUrl: "/api" });
 
 function CreateProjectForm() {
   const queryClient = useQueryClient();
@@ -415,7 +415,7 @@ import { WizardBase } from "@lastshotlabs/snapshot/ui";
 />
 ```
 
-WizardBase uses field configs (same shape as AutoFormBase fields) rather than custom React content per step. Each step manages its own values, validation, and touched state through the `state` prop. In manifest mode, `useWizard(config)` provides this state automatically.
+WizardBase uses field configs (same shape as AutoFormBase fields) rather than custom React content per step. Each step receives its values, validation, and touched state through the `state` prop, so you can keep wizard state in React state, a form library, or a route loader.
 
 ## Complete form patterns
 

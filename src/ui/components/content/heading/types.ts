@@ -1,3 +1,2 @@
-import type { HeadingConfig as ManifestHeadingConfig } from "../../../manifest/types";
 
-export type HeadingConfig = ManifestHeadingConfig;
+export type HeadingConfig = Record<string, unknown>;

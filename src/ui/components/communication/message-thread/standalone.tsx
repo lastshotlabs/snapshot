@@ -75,7 +75,7 @@ function MessageSkeleton({ rootId, index, slots }: { rootId: string; index: numb
 
 /**
  * Standalone MessageThread — scrollable message list with avatars, date separators,
- * auto-scroll, embed rendering, and consecutive-message grouping. No manifest context required.
+ * auto-scroll, embed rendering, and consecutive-message grouping. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -38,7 +38,7 @@ export interface ScrollAreaBaseProps {
 
 /**
  * Standalone ScrollArea — a scrollable container with custom-styled thin
- * scrollbars. No manifest context required.
+ * scrollbars. Works with plain React props.
  *
  * @example
  * ```tsx

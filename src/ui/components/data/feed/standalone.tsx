@@ -465,7 +465,7 @@ function FeedItemRow({
 
 /**
  * Standalone Feed — feed/activity list with grouping, pagination, and
- * live updates. No manifest context required.
+ * live updates. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -47,7 +47,7 @@ export interface ButtonBaseProps {
 
 /**
  * Standalone ButtonBase -- a styled button that works with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

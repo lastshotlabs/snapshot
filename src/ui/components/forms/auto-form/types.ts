@@ -1,24 +1,18 @@
-import type { z } from "zod";
-import type {
-  autoFormConfigSchema,
-  fieldConfigSchema,
-  fieldSectionSchema,
-} from "./schema";
 
 /**
  * Inferred type for a single field configuration.
  */
-export type FieldConfig = z.input<typeof fieldConfigSchema>;
+export type FieldConfig = Record<string, unknown>;
 
 /**
  * Inferred type for the AutoForm component config.
  */
-export type AutoFormConfig = z.input<typeof autoFormConfigSchema>;
+export type AutoFormConfig = Record<string, unknown>;
 
 /**
  * Inferred type for a field section configuration.
  */
-export type FieldSectionConfig = z.input<typeof fieldSectionSchema>;
+export type FieldSectionConfig = Record<string, unknown>;
 
 /**
  * Per-field validation error.

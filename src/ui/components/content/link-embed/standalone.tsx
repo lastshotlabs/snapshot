@@ -234,7 +234,7 @@ export interface LinkEmbedBaseProps {
 /**
  * Standalone LinkEmbed — renders rich link previews with platform-specific
  * embeds (YouTube, Instagram, TikTok, Twitter, GIF) or a generic card.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

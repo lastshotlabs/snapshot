@@ -108,7 +108,7 @@ export interface LinkBaseProps {
 
 /**
  * Standalone Link — renders a styled anchor element with optional icon and
- * badge. No manifest context required.
+ * badge. Works with plain React props.
  *
  * @example
  * ```tsx

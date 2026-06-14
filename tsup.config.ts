@@ -27,7 +27,7 @@ export default defineConfig([
       copyFileSync("src/push/sw.js", "dist/sw.js");
     },
   },
-  // UI entry point (config-driven components, tokens, manifest).
+  // UI entry point (standalone components and tokens).
   //
   // The main `./ui` barrel re-exports every component. Subpath entries
   // below (`./ui/rich-input`, `./ui/emoji-picker`, `./ui/gif-picker`)
@@ -40,6 +40,12 @@ export default defineConfig([
       "ui/rich-input": "src/ui/rich-input.ts",
       "ui/emoji-picker": "src/ui/emoji-picker.ts",
       "ui/gif-picker": "src/ui/gif-picker.ts",
+      "ui/markdown": "src/ui/markdown.ts",
+      "ui/link-embed": "src/ui/link-embed.ts",
+      "ui/button": "src/ui/button.ts",
+      "ui/card": "src/ui/card.ts",
+      "ui/input": "src/ui/input.ts",
+      "ui/icon": "src/ui/icon.ts",
     },
     format: ["esm", "cjs"],
     dts: false,
@@ -95,8 +101,6 @@ export default defineConfig([
     entry: {
       "cli/commands/init": "src/cli/commands/init.ts",
       "cli/commands/sync": "src/cli/commands/sync.ts",
-      "cli/commands/manifest/init": "src/cli/commands/manifest/init.ts",
-      "cli/commands/manifest/validate": "src/cli/commands/manifest/validate.ts",
     },
     format: ["esm"],
     dts: false,

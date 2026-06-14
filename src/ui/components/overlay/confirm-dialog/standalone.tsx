@@ -45,7 +45,7 @@ export interface ConfirmDialogBaseProps {
 
 /**
  * Standalone ConfirmDialog — a confirmation dialog built on ModalBase with
- * plain React props. No manifest context required.
+ * plain React props. Works with plain React props.
  *
  * @example
  * ```tsx

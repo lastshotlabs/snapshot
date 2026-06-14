@@ -53,7 +53,7 @@ export interface RowBaseProps {
 
 /**
  * Standalone Row -- a horizontal flex container.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

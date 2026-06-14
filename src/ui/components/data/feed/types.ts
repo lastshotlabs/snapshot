@@ -1,10 +1,8 @@
-import type { z } from "zod";
-import type { feedSchema } from "./schema";
 
 /**
  * Inferred type for the Feed component config (from Zod schema).
  */
-export type FeedConfig = z.input<typeof feedSchema>;
+export type FeedConfig = Record<string, unknown>;
 
 /**
  * A single resolved feed item for rendering.

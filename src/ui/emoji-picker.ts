@@ -1,19 +1,13 @@
 // Subpath entry: `@lastshotlabs/snapshot/ui/emoji-picker`.
-//
-// Pulls in the bundled emoji dataset (~100 KB) and the picker UI
-// without forcing the rest of `./ui`. Use this when a Composer or
-// reaction surface needs the picker but nothing else.
+// Standalone, code-first emoji picker exports only.
 export {
-  EmojiPicker,
   EmojiPickerBase,
-  emojiPickerConfigSchema,
+} from "./components/communication/emoji-picker/standalone";
+export {
   parseShortcodes,
   buildEmojiMap,
   resolveEmojiRecords,
   CUSTOM_EMOJI_CSS,
-} from "./components/communication/emoji-picker/index";
-export type {
-  EmojiPickerConfig,
-  EmojiPickerBaseProps,
-  CustomEmoji,
-} from "./components/communication/emoji-picker/index";
+} from "./components/communication/emoji-picker/custom-emoji";
+export type { EmojiPickerBaseProps } from "./components/communication/emoji-picker/standalone";
+export type { CustomEmoji } from "./components/communication/emoji-picker/custom-emoji";

@@ -43,8 +43,8 @@ When a change affects what users or agents should discover at a high level, revi
 If you changed any public behavior and skipped one of these layers, the work is incomplete:
 
 - exported SDK, UI, SSR, or Vite surfaces
-- manifest schema or runtime behavior
-- component schema or component runtime behavior
+- code-first bootstrap or runtime behavior
+- component props or component runtime behavior
 - CLI scaffold or sync behavior
 - top-level discovery pages for a changed capability
 - examples or showcase coverage for a visible surface

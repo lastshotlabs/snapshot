@@ -125,7 +125,7 @@ function formatDisplayValue(value: string, format?: string): string {
 
 /**
  * Standalone DatePickerField -- date picker supporting single, range, and multiple
- * selection modes with presets and disabled dates. No manifest context required.
+ * selection modes with presets and disabled dates. Works with plain React props.
  *
  * @example
  * ```tsx

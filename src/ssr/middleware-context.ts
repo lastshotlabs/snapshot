@@ -1,5 +1,5 @@
 /**
- * Request/response context available to manifest SSR middleware workflows.
+ * Request/response context available to SSR middleware workflows.
  */
 export interface SSRMiddlewareContext {
   /** Read-only request information exposed to middleware workflows. */

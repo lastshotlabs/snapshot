@@ -1,22 +1,15 @@
-import type { z } from "zod";
-import type {
-  dataTableConfigSchema,
-  columnConfigSchema,
-  rowActionSchema,
-  bulkActionSchema,
-} from "./schema";
 
 /** Inferred DataTable configuration type from the Zod schema. */
-export type DataTableConfig = z.infer<typeof dataTableConfigSchema>;
+export type DataTableConfig = Record<string, unknown>;
 
 /** Inferred column configuration type. */
-export type ColumnConfig = z.infer<typeof columnConfigSchema>;
+export type ColumnConfig = Record<string, unknown>;
 
 /** Inferred row action type. */
-export type RowAction = z.infer<typeof rowActionSchema>;
+export type RowAction = Record<string, unknown>;
 
 /** Inferred bulk action type. */
-export type BulkAction = z.infer<typeof bulkActionSchema>;
+export type BulkAction = Record<string, unknown>;
 
 /** Sort state for the data table. */
 export interface SortState {

@@ -35,7 +35,7 @@ export interface SaveIndicatorBaseProps {
 
 /**
  * Standalone SaveIndicator — shows saving/saved/error status.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

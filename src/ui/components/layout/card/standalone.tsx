@@ -41,7 +41,7 @@ export interface CardBaseProps {
 
 /**
  * Standalone Card — a styled container with optional title/subtitle and
- * standard React children. No manifest context required.
+ * standard React children. Works with plain React props.
  *
  * @example
  * ```tsx
@@ -68,7 +68,7 @@ export function CardBase({
   const backgroundStyle = resolveComponentBackgroundStyle(background);
   const rootId = id ?? "card";
 
-  // ── Surface resolution (pure CSS computation — no manifest) ──────────────
+  // ── Surface resolution (pure CSS computation) ────────────────────────────
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,

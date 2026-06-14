@@ -58,7 +58,7 @@ export interface StatCardBaseProps {
 
 /**
  * Standalone StatCard — displays a single metric with optional trend indicator.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

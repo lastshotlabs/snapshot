@@ -39,7 +39,7 @@ export interface NavLinkBaseProps {
 
 /**
  * Standalone NavLink -- a navigation link with optional icon and badge.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

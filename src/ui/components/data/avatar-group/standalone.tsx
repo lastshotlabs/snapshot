@@ -95,7 +95,7 @@ export interface AvatarGroupBaseProps {
 
 /**
  * Standalone AvatarGroup — overlapping avatars with +N overflow.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

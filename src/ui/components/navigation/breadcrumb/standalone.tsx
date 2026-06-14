@@ -63,7 +63,7 @@ function collapseItems(
 
 /**
  * Standalone Breadcrumb — a navigation trail rendered with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

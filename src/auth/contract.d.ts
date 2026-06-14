@@ -80,7 +80,7 @@ export declare function defaultContract(apiUrl: string): AuthContract;
  * Merge a partial auth contract override with the built-in defaults.
  *
  * @param apiUrl - Base API URL used to derive absolute auth URLs
- * @param partial - Partial contract override from bootstrap or manifest config
+ * @param partial - Partial contract override from code-first auth config
  * @returns The merged auth contract
  */
 export declare function mergeContract(apiUrl: string, partial?: AuthContractConfig): AuthContract;

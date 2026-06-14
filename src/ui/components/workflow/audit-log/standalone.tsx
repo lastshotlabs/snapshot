@@ -277,7 +277,7 @@ function DetailsSection({
 
 /**
  * Standalone AuditLogBase — renders a filterable, paginated timeline of audit log entries
- * with user avatars, relative timestamps, and expandable detail panels. No manifest context required.
+ * with user avatars, relative timestamps, and expandable detail panels. Works with plain React props.
  *
  * @example
  * ```tsx

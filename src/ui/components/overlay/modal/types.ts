@@ -1,4 +1,5 @@
-import type { ModalConfig } from "./schema";
+
+export type ModalConfig = Record<string, unknown>;
 
 /**
  * Return type for the useModal hook.

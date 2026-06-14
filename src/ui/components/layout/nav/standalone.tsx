@@ -336,7 +336,7 @@ function NavEntryBase({
 
 /**
  * Standalone Nav -- a navigation component with items, logo, and collapse support.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

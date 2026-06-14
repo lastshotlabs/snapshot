@@ -1,5 +1,7 @@
 import type { AdminScaffoldConfig } from "../../types";
 
+declare const __SNAPSHOT_VERSION__: string;
+
 export function generatePackageJson(config: AdminScaffoldConfig): string {
   const pkg = {
     name: config.packageName,
@@ -13,7 +15,14 @@ export function generatePackageJson(config: AdminScaffoldConfig): string {
       typecheck: "tsc",
       sync: "bunx snapshot sync",
     },
+    snapshot: {
+      apiDir: "src/api",
+      hooksDir: "src/hooks/api",
+      typesPath: "src/types/api.ts",
+      snapshotImport: "@lib/snapshot",
+    },
     dependencies: {
+      "@lastshotlabs/snapshot": `^${__SNAPSHOT_VERSION__}`,
       "@tanstack/react-query": "^5.0.0",
       "@tanstack/react-router": "^1.0.0",
       "@tanstack/router-plugin": "^1.0.0",
@@ -108,16 +117,6 @@ export function generateEnvFile(config: AdminScaffoldConfig): string {
 # Admin credentials (if your backend requires a static admin token for dev)
 # VITE_ADMIN_TOKEN=
 `;
-}
-
-export function generateSnapshotConfig(_config: AdminScaffoldConfig): string {
-  const cfg = {
-    apiDir: "src/api",
-    hooksDir: "src/hooks/api",
-    typesPath: "src/types/api.ts",
-    snapshotImport: "@lib/snapshot",
-  };
-  return JSON.stringify(cfg, null, 2) + "\n";
 }
 
 export function generateGitignore(): string {

@@ -6,13 +6,12 @@ import type {
   PointerEventHandler,
   TouchEventHandler,
 } from "react";
-import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
-import type { textareaConfigSchema } from "./schema";
 
-/** Inferred config type from the Textarea Zod schema. */
-export type TextareaConfig = z.input<typeof textareaConfigSchema>;
+export interface TextareaConfig extends Record<string, unknown> {
+  resize?: "none" | "vertical" | "horizontal" | "both";
+}
 
 export interface TextareaControlProps {
   /** Ref callback for the underlying element. */

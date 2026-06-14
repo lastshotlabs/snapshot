@@ -66,7 +66,7 @@ function getStepStates(
 
 /**
  * Standalone Stepper — a multi-step progress indicator with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

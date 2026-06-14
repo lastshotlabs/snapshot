@@ -169,7 +169,7 @@ function TypeIcon({
 
 /**
  * Standalone NotificationFeedBase — renders a scrollable notification list with type icons,
- * unread indicators, relative timestamps, and a mark-all-read action. No manifest context required.
+ * unread indicators, relative timestamps, and a mark-all-read action. Works with plain React props.
  *
  * @example
  * ```tsx

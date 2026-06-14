@@ -79,7 +79,7 @@ const ALIGN_MAP: Record<string, string> = {
 
 /**
  * Standalone Modal — a centered overlay dialog with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

@@ -1,233 +1,121 @@
-# Data Binding: `id` / `from` Pattern
+# Data Binding
 
-The context system lets config-driven components communicate without direct imports.
-Components publish values by `id`; other components subscribe via `{ "from": "id" }` refs.
+Snapshot's UI context helpers let components publish values and subscribe to
+them without prop drilling. This is optional; use it when sibling components
+need to coordinate across a page.
 
-## Two Contexts
+## Providers
 
-| Context         | Scope     | Lifetime                | Prefix    |
-| --------------- | --------- | ----------------------- | --------- |
-| **PageContext** | Per-route | Destroyed on navigation | none      |
-| **AppContext**  | Global    | Persists across routes  | `global.` |
+Use `AppContextProvider` for app-wide values and `PageContextProvider` for
+values that should reset when a route unmounts.
 
-## How It Works
+```tsx
+import { AppContextProvider, PageContextProvider } from "@lastshotlabs/snapshot/ui";
 
-### Publishing (Page Context)
+export function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <AppContextProvider>
+      <PageContextProvider>{children}</PageContextProvider>
+    </AppContextProvider>
+  );
+}
+```
 
-A component with an `id` registers a Jotai atom in the page context and publishes its
-current value (selected row, form data, active tab, etc.):
+## Publishing
 
 ```tsx
 import { usePublish } from "@lastshotlabs/snapshot/ui";
 
-function UsersTable() {
+function UsersTable({ rows }: { rows: User[] }) {
   const publish = usePublish("users-table");
 
-  const handleRowSelect = (row) => {
-    publish({ selected: row });
-  };
-
-  return <table onClick={handleRowSelect}>...</table>;
+  return (
+    <table>
+      <tbody>
+        {rows.map((row) => (
+          <tr
+            key={row.id}
+            onClick={() => publish({ selected: row })}
+          >
+            <td>{row.email}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
 ```
 
-When the component unmounts, the atom is cleaned up automatically.
-
-### Subscribing
-
-Other components subscribe to published values using `{ from: "id" }`:
+## Subscribing
 
 ```tsx
 import { useSubscribe } from "@lastshotlabs/snapshot/ui";
 
 function UserDetail() {
-  // Full value
-  const data = useSubscribe({ from: "users-table.selected" });
+  const selectedUser = useSubscribe({ from: "users-table.selected" }) as
+    | User
+    | undefined;
 
-  // Nested field via dot-path
-  const name = useSubscribe({ from: "users-table.selected.name" });
-
-  // Static values pass through unchanged
-  const label = useSubscribe("Hello"); // -> 'Hello'
-  const count = useSubscribe(42); // -> 42
-
-  return <div>{name}</div>;
+  if (!selectedUser) return null;
+  return <aside>{selectedUser.email}</aside>;
 }
 ```
 
-If the source component hasn't mounted yet, `useSubscribe` returns `undefined`.
+Dot paths are supported:
 
-### Resolving Multiple Refs
+```tsx
+const email = useSubscribe({ from: "users-table.selected.email" });
+```
 
-Use `useResolveFrom` to resolve all `FromRef` values in a config object at once:
+## Resolving Objects
+
+Use `useResolveFrom` when a component accepts an object with a mix of static
+values and refs.
 
 ```tsx
 import { useResolveFrom } from "@lastshotlabs/snapshot/ui";
 
-function StatsCard() {
-  const resolved = useResolveFrom({
+function RevenueCard() {
+  const params = useResolveFrom({
     userId: { from: "users-table.selected.id" },
-    period: { from: "date-range" },
-    label: "Revenue",
+    period: { from: "date-range.value" },
+    currency: "USD",
   });
-  // -> { userId: 5, period: '30d', label: 'Revenue' }
+
+  const revenue = useRevenue(params);
+  return <strong>{revenue.total}</strong>;
 }
 ```
 
-## Global State
-
-Global state persists across route changes. Define globals in the manifest and access
-them with the `global.` prefix:
-
-```json
-{
-  "globals": {
-    "user": {},
-    "cart": { "data": "GET /api/cart", "default": { "items": [] } }
-  }
-}
-```
+## Multiple Values
 
 ```tsx
-// In any component, on any page
-const cart = useSubscribe({ from: "global.cart" });
-const itemCount = useSubscribe({ from: "global.cart.items.length" });
-```
+import { useResolveFromMany } from "@lastshotlabs/snapshot/ui";
 
-- `default` values are available immediately on mount.
-- `data` endpoints are fetched asynchronously; the default is used until the response arrives.
-
-## Wiring Examples
-
-### Table drives detail drawer
-
-```json
-{
-  "content": [
-    {
-      "type": "table",
-      "id": "users-table",
-      "data": "GET /api/users",
-      "selectable": true
-    },
-    {
-      "type": "drawer",
-      "id": "user-detail",
-      "trigger": { "from": "users-table.selected" },
-      "title": { "from": "users-table.selected.name" },
-      "content": [
-        { "type": "detail-card", "data": { "from": "users-table.selected" } }
-      ]
-    }
-  ]
-}
-```
-
-### Filter chain
-
-```json
-{
-  "content": [
-    { "type": "select", "id": "date-range", "options": ["7d", "30d", "90d"] },
-    {
-      "type": "stat-card",
-      "data": "GET /api/stats/revenue",
-      "params": { "period": { "from": "date-range" } }
-    },
-    {
-      "type": "table",
-      "data": "GET /api/orders",
-      "filters": { "period": { "from": "date-range" } }
-    }
-  ]
-}
-```
-
-Changing the dropdown refetches all bound components automatically.
-
-### Global cart badge
-
-```json
-{
-  "globals": {
-    "cart": { "data": "GET /api/cart" }
-  },
-  "nav": [
-    {
-      "label": "Cart",
-      "path": "/cart",
-      "badge": { "from": "global.cart.items.length" }
-    }
-  ]
-}
+const values = useResolveFromMany([
+  { from: "filters.status" },
+  { from: "filters.owner" },
+]);
 ```
 
 ## Type Guard
-
-Use `isFromRef` to check whether a value is a `FromRef`:
 
 ```ts
 import { isFromRef } from "@lastshotlabs/snapshot/ui";
 
 isFromRef({ from: "users-table.selected" }); // true
-isFromRef("static-string"); // false
-isFromRef(42); // false
+isFromRef("plain value"); // false
 ```
 
-## Realtime Event Binding
+## When To Use It
 
-Manifest realtime events can dispatch workflows without custom wiring code.
+Use context refs for page-level coordination such as:
 
-```json
-{
-  "realtime": {
-    "ws": {
-      "events": {
-        "chat.message.created": "append-to-feed"
-      }
-    },
-    "sse": {
-      "endpoints": {
-        "/__sse/feed": {
-          "events": {
-            "feed.updated": "refresh-feed"
-          }
-        }
-      }
-    }
-  }
-}
-```
+- A table driving a detail drawer.
+- A filter bar driving cards and charts.
+- A selected item driving a toolbar.
+- A global notification or layout state read by multiple components.
 
-- `realtime.ws.events` maps WebSocket event name to workflow name.
-- `realtime.sse.endpoints[path].events` maps SSE event name to workflow name.
-- Each event dispatches the mapped workflow through the same manifest workflow runtime used by actions and route lifecycle hooks.
-
-## Providers
-
-Wrap your app with `AppContextProvider` (once, at the root) and each page with
-`PageContextProvider`:
-
-```tsx
-import {
-  AppContextProvider,
-  PageContextProvider,
-} from "@lastshotlabs/snapshot/ui";
-
-function App() {
-  return (
-    <AppContextProvider globals={manifest.globals} api={apiClient}>
-      <Router>
-        <Route
-          path="/users"
-          element={
-            <PageContextProvider>
-              <UsersPage />
-            </PageContextProvider>
-          }
-        />
-      </Router>
-    </AppContextProvider>
-  );
-}
-```
+Use normal props for local parent-child composition. The context helpers are an
+escape hatch for cross-component coordination, not a replacement for React data
+flow.

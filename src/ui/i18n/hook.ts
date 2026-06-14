@@ -1,15 +1,11 @@
 'use client';
 
 import { useMemo } from "react";
-import { useSubscribe } from "../context/index";
-import { useManifestRuntime } from "../manifest/runtime";
 import { resolveDetectedLocale, resolveTRef } from "./resolve";
+import type { I18nConfig } from "./schema";
 
 /**
  * Resolve a translation key against the active locale.
- *
- * The active locale comes from the manifest i18n detect strategy and current
- * `state.locale` value when present.
  *
  * @param key - Translation key path (e.g. `page.title`)
  * @param vars - Optional interpolation variables
@@ -18,21 +14,18 @@ import { resolveDetectedLocale, resolveTRef } from "./resolve";
 export function useT(
   key: string,
   vars?: Record<string, unknown>,
+  options?: { i18n?: I18nConfig; locale?: string },
 ): string {
-  const manifest = useManifestRuntime();
-  const localeStateValue = useSubscribe({ from: "state.locale" });
-  const stateLocale =
-    typeof localeStateValue === "string" ? localeStateValue : undefined;
-  const i18n = manifest?.raw.i18n;
+  const i18n = options?.i18n;
 
   const locale = useMemo(
     () =>
+      options?.locale ??
       resolveDetectedLocale(i18n, {
-        stateLocale,
         navigatorLanguage:
           typeof navigator !== "undefined" ? navigator.language : undefined,
       }),
-    [i18n, stateLocale],
+    [i18n, options?.locale],
   );
 
   return useMemo(

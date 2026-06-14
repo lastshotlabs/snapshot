@@ -76,7 +76,7 @@ export interface InputFieldProps {
 
 /**
  * Standalone InputField — a complete form field (label + input + helper/error)
- * that works with plain React props. No manifest context required.
+ * that works with plain React props. Works with plain React props.
  *
  * @example
  * ```tsx
@@ -185,7 +185,7 @@ export function InputField({
     ...(disabled ? (["disabled"] as const) : []),
   ];
 
-  // ── Surface resolution (pure CSS computation — no manifest) ──────────────
+  // ── Surface resolution (pure CSS computation) ────────────────────────────
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,

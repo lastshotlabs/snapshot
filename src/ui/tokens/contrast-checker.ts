@@ -39,7 +39,7 @@ function getThemeColorValue(
 }
 
 /**
- * Warn when manifest theme color pairs fail WCAG AA contrast.
+ * Warn when theme color pairs fail WCAG AA contrast.
  */
 export function validateContrast(theme: ThemeConfig | undefined): void {
   if (

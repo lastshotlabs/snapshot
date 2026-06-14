@@ -10,11 +10,6 @@ import { useAtomValue } from "jotai/react";
 import type { PrimitiveAtom } from "jotai";
 import { PageRegistryContext, AppRegistryContext } from "./providers";
 import {
-  useManifestRuntime,
-  useOverlayRuntime,
-  useRouteRuntime,
-} from "../manifest/runtime";
-import {
   evaluateExpression,
   extractExpressionRefs,
 } from "../expressions/parser";
@@ -30,6 +25,28 @@ import type { AtomRegistry } from "../state/types";
 
 /** Fallback atom used when the source atom doesn't exist yet. */
 const UNDEFINED_ATOM = atom<unknown>(undefined);
+
+type RouteBindingContext = {
+  currentRoute?: { id?: string; path?: string };
+  currentPath?: string;
+  params?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+} | null;
+
+type OverlayBindingContext = {
+  id?: string;
+  kind?: string;
+  payload?: unknown;
+  result?: unknown;
+} | null;
+
+function useRouteBindingContext(): RouteBindingContext {
+  return null;
+}
+
+function useOverlayBindingContext(): OverlayBindingContext {
+  return null;
+}
 
 function isExprRef(value: unknown): value is ExprRef {
   return (
@@ -115,8 +132,8 @@ export function useSubscribe(ref: FromRef | unknown): unknown {
   const isRef = isFromRef(ref);
   const pageRegistry = useContext(PageRegistryContext);
   const appRegistry = useContext(AppRegistryContext);
-  const overlayRuntime = useOverlayRuntime();
-  const routeRuntime = useRouteRuntime();
+  const overlayRuntime = useOverlayBindingContext();
+  const routeRuntime = useRouteBindingContext();
   const refPath = isRef ? ref.from : "";
 
   if (isRef && refPath.startsWith("params.")) {
@@ -199,8 +216,8 @@ export function useSubscribe(ref: FromRef | unknown): unknown {
 export function useResolveFromMany(values: readonly unknown[]): unknown[] {
   const pageRegistry = useContext(PageRegistryContext);
   const appRegistry = useContext(AppRegistryContext);
-  const overlayRuntime = useOverlayRuntime();
-  const routeRuntime = useRouteRuntime();
+  const overlayRuntime = useOverlayBindingContext();
+  const routeRuntime = useRouteBindingContext();
 
   // Track all subscribed atoms across all values. Subscribing through
   // useSyncExternalStore once means we get re-renders for any change to
@@ -312,9 +329,10 @@ export function useResolveFromMany(values: readonly unknown[]): unknown[] {
 export function useResolveFrom<T extends Record<string, unknown>>(
   config: T,
 ): ResolvedConfig<T> {
-  const manifestRuntime = useManifestRuntime();
-  const overlayRuntime = useOverlayRuntime();
-  const routeRuntime = useRouteRuntime();
+  const appContext = {};
+  const authContext = {};
+  const overlayRuntime = useOverlayBindingContext();
+  const routeRuntime = useRouteBindingContext();
   const refs = extractFromRefs(config);
   const resolved = new Map<string, unknown>();
   const expressionRefs = new Map<string, string[]>();
@@ -411,8 +429,8 @@ export function useResolveFrom<T extends Record<string, unknown>>(
 
       return evaluateExpression(expression, {
         ...(context ?? {}),
-        app: manifestRuntime?.app ?? {},
-        auth: manifestRuntime?.auth ?? {},
+        app: appContext,
+        auth: authContext,
         route: {
           id: routeRuntime?.currentRoute?.id,
           path: routeRuntime?.currentPath,

@@ -1,8 +1,6 @@
-import type { z } from "zod";
-import type { gifPickerConfigSchema } from "./schema";
 
 /** Inferred config type from the GifPicker Zod schema. */
-export type GifPickerConfig = z.input<typeof gifPickerConfigSchema>;
+export type GifPickerConfig = Record<string, unknown>;
 
 /** Shape of a GIF entry. */
 export interface GifEntry {

@@ -36,7 +36,7 @@ export interface VideoBaseProps {
 
 /**
  * Standalone Video — a styled video element that works with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

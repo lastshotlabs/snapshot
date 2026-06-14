@@ -489,7 +489,7 @@ function FullWidthLayout({
 
 /**
  * Standalone Layout -- a layout shell component that wraps page content.
- * Renders one of six layout variants without manifest context.
+ * Renders one of six layout variants with plain React props.
  *
  * @example
  * ```tsx

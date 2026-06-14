@@ -12,8 +12,6 @@ import { getFlavor } from "./flavors";
 import { colorToOklch, oklchToString } from "./color";
 import { deriveDarkVariant } from "./derive-dark";
 import { resolveTokens } from "./resolve";
-import { useManifestRuntime } from "../manifest/runtime";
-import { buildRequestUrl, resolveEndpointTarget } from "../manifest/resources";
 
 // ── Token path -> CSS variable mapping ───────────────────────────────────────
 
@@ -121,8 +119,12 @@ type Listener = (overrides: Overrides) => void;
 
 type PersistTarget = NonNullable<NonNullable<ThemeConfig["editor"]>["persist"]>;
 
+function getDefaultPersistTarget(): PersistTarget {
+  return "localStorage";
+}
+
 /**
- * Convert the internal overrides map to a manifest-compatible config object.
+ * Convert the internal overrides map to a token override object.
  */
 function mapToThemeConfig(overrides: Map<string, string>): Overrides {
   const result: Overrides = {};
@@ -206,13 +208,11 @@ function parsePersistedOverrides(value: string | null): Record<string, string> |
  * @returns TokenEditor interface for runtime token manipulation
  */
 export function useTokenEditor(): TokenEditor {
-  const manifestRuntime = useManifestRuntime();
   const overridesRef = useRef<Map<string, string>>(new Map());
   const currentFlavorRef = useRef<string>("neutral");
   const listenersRef = useRef<Set<Listener>>(new Set());
   const appliedFlavorVarsRef = useRef<string[]>([]);
-  const persistTarget: PersistTarget =
-    manifestRuntime?.theme?.editor?.persist ?? "localStorage";
+  const persistTarget = getDefaultPersistTarget();
 
   const renderDarkOverrides = useCallback(() => {
     if (typeof document === "undefined") {
@@ -280,25 +280,9 @@ export function useTokenEditor(): TokenEditor {
         return;
       }
 
-      if (!manifestRuntime?.resources?.[persistTarget.resource]) {
-        return;
-      }
-
-      const request = resolveEndpointTarget(
-        { resource: persistTarget.resource },
-        manifestRuntime.resources,
-      );
-      const endpoint = buildRequestUrl(request.endpoint, request.params);
-      void fetch(endpoint, {
-        method: request.method,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ overrides: next }),
-      });
+      return;
     },
-    [manifestRuntime?.resources, persistTarget],
+    [persistTarget],
   );
 
   const persistCurrentOverrides = useCallback(() => {
@@ -335,36 +319,7 @@ export function useTokenEditor(): TokenEditor {
           );
         }
       } else if (typeof persistTarget === "object") {
-        if (!manifestRuntime?.resources?.[persistTarget.resource]) {
-          return;
-        }
-
-        const request = resolveEndpointTarget(
-          { resource: persistTarget.resource },
-          manifestRuntime.resources,
-          undefined,
-          "GET",
-        );
-        const endpoint = buildRequestUrl(request.endpoint, request.params);
-        const response = await fetch(endpoint, {
-          method: request.method,
-          credentials: "include",
-        });
-        if (!response.ok) {
-          return;
-        }
-
-        const payload = (await response.json()) as {
-          overrides?: Record<string, unknown>;
-        };
-        if (payload.overrides && typeof payload.overrides === "object") {
-          restored = Object.fromEntries(
-            Object.entries(payload.overrides).filter(
-              (entry): entry is [string, string] =>
-                typeof entry[1] === "string",
-            ),
-          );
-        }
+        return;
       }
 
       if (cancelled || !restored) {
@@ -392,7 +347,7 @@ export function useTokenEditor(): TokenEditor {
     return () => {
       cancelled = true;
     };
-  }, [applyOverride, manifestRuntime?.resources, notifyListeners, persistTarget]);
+  }, [applyOverride, notifyListeners, persistTarget]);
 
   const setToken = useCallback(
     (path: string, value: string) => {

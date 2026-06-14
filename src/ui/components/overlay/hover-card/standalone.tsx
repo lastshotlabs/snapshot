@@ -44,7 +44,7 @@ export interface HoverCardBaseProps {
 
 /**
  * Standalone HoverCard — a floating panel that appears on hover with plain
- * React props. No manifest context required.
+ * React props. Works with plain React props.
  *
  * @example
  * ```tsx

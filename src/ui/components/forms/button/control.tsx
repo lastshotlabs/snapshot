@@ -65,7 +65,7 @@ function omitButtonInteractionOverrides(
 /**
  * Low-level styled button element with surface resolution and accessibility attributes.
  * Used internally by ButtonBase and other components that need a styled `<button>`.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

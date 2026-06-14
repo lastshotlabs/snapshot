@@ -47,7 +47,7 @@ export interface EmptyStateBaseProps {
 
 /**
  * Standalone EmptyState — a centered message with optional icon and action.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

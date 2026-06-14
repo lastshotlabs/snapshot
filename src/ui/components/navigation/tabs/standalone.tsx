@@ -176,7 +176,7 @@ const VARIANT_STYLES: Record<
 
 /**
  * Standalone Tabs — tabbed navigation with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

@@ -86,7 +86,7 @@ export interface FloatingMenuBaseProps {
 
 /**
  * Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation,
- * and pre-resolved items. No manifest context required.
+ * and pre-resolved items. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -28,7 +28,7 @@ export interface DividerBaseProps {
 
 /**
  * Standalone Divider — renders a horizontal or vertical separator line,
- * optionally with a centered label. No manifest context required.
+ * optionally with a centered label. Works with plain React props.
  *
  * @example
  * ```tsx

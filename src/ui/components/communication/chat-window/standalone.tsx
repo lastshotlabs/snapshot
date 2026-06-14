@@ -39,7 +39,7 @@ export interface ChatWindowBaseProps {
 
 /**
  * Standalone ChatWindow — composable chat container with header, message thread,
- * typing indicator, and input slots. No manifest context required.
+ * typing indicator, and input slots. Works with plain React props.
  *
  * @example
  * ```tsx

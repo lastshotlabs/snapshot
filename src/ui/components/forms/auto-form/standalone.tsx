@@ -1591,8 +1591,8 @@ function StandaloneFieldGrid({
 }
 
 /**
- * Standalone AutoFormBase -- renders a config-driven form with fields, sections,
- * validation, and submit/reset actions. No manifest context required.
+ * Standalone AutoFormBase -- renders a schema-driven form with fields, sections,
+ * validation, and submit/reset actions. Works with plain React props.
  *
  * @example
  * ```tsx

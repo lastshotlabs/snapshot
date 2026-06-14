@@ -30,12 +30,13 @@ import type {
 } from "./types";
 
 // ── Cache key helpers ──────────────────────────────────────────────────────────
-//
-// Exported as `communityKeys` so SSR loaders (in any consuming app) can seed
-// the QueryClient under the SAME keys these hooks read. Drift between
-// loader-seeded keys and hook-read keys is the canonical cause of pages
-// loading twice (seed lands in cache, hook reads a different key, refetches).
 
+/**
+ * Query key helpers for the community API surface.
+ *
+ * SSR loaders can seed the QueryClient under these keys so loader-seeded keys
+ * and hook-read keys stay aligned.
+ */
 export const communityKeys = {
   containers: () => ["community", "containers"] as const,
   container: (containerId: string) =>

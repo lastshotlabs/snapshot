@@ -22,7 +22,6 @@ import {
   deriveDarkVariant,
 } from "./color";
 import { getFlavor, defineFlavorWithExtension } from "./flavors";
-import { getRegisteredSchemaTypes } from "../manifest/schema";
 
 // ── Known Google Font families ────────────────────────────────────────────────
 
@@ -1030,7 +1029,7 @@ export function resolveFrameworkStyles(options?: {
   respectReducedMotion?: boolean;
 }): string {
   const allComponentSelector = [
-    ...new Set([...ALL_COMPONENT_TYPES, ...getRegisteredSchemaTypes()]),
+    ...new Set(ALL_COMPONENT_TYPES),
   ]
     .map(
     (type) => `[data-snapshot-component="${type}"]`,

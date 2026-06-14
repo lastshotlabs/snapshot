@@ -1,4 +1,7 @@
-import type { TabConfig } from "./schema";
+
+export interface TabConfig extends Record<string, unknown> {
+  label?: string;
+}
 
 export type ResolvedTabConfig = Omit<TabConfig, "label"> & {
   label: string;

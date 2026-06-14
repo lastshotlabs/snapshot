@@ -202,7 +202,7 @@ function StandaloneToggleItem({
 
 /**
  * Standalone ToggleGroupBase -- a group of toggle buttons supporting single
- * or multi-select modes. No manifest context required.
+ * or multi-select modes. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -79,7 +79,7 @@ export interface HighlightedTextBaseProps {
 
 /**
  * Standalone HighlightedText — renders text with search query highlighting.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

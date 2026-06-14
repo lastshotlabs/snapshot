@@ -9,9 +9,11 @@ import { createSnapshot } from "@lastshotlabs/snapshot";
 import { InputField, ButtonBase, CardBase, ColumnBase, AlertBase } from "@lastshotlabs/snapshot/ui";
 import { useState, useEffect } from "react";
 
-const snap = createSnapshot({ apiUrl: "/api", manifest: {
-  app: { auth: { loginPath: "/login", homePath: "/" } },
-}});
+const snap = createSnapshot({
+  apiUrl: "/api",
+  loginPath: "/login",
+  homePath: "/",
+});
 
 function LoginPage() {
   const { mutate: login, isPending, error, reset } = snap.useLogin();
@@ -265,7 +267,7 @@ function MfaSetup() {
 ```tsx
 const url = snap.getOAuthUrl("google");
 window.location.href = url;
-// URL is built from manifest auth.oauth config (clientId, scopes, redirectUri)
+// URL is built from auth.providers config (clientId, scopes, callbackPath)
 ```
 
 ### Exchange OAuth code for session

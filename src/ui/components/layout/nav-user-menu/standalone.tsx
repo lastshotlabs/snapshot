@@ -54,7 +54,7 @@ export interface NavUserMenuBaseProps {
 
 /**
  * Standalone NavUserMenu -- a user menu dropdown with avatar trigger.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

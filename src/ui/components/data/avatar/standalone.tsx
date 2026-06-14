@@ -71,7 +71,7 @@ export interface AvatarBaseProps {
 
 /**
  * Standalone Avatar — image, initials, or icon fallback.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

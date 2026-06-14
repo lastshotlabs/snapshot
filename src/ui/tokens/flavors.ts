@@ -36,8 +36,8 @@ export function defineFlavor(
 /**
  * Remove all non-built-in flavors from the registry.
  *
- * Used by manifest compilation so per-manifest flavor declarations do not
- * leak across snapshot instances.
+ * Used when resetting code-registered flavor overrides between isolated
+ * runtime instances.
  */
 export function clearCustomFlavors(): void {
   for (const name of [...flavorRegistry.keys()]) {

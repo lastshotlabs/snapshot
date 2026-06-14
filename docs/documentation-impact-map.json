@@ -8,143 +8,72 @@
         "src/providers",
         "src/routing",
         "src/theme",
-        "src/types.ts",
-        "src/plugin.ts",
-        "src/schema-generator.ts"
+        "src/types.ts"
       ],
       "docs": [
+        "README.md",
+        "docs/getting-started.md",
+        "docs/api-cheatsheet.md",
         "apps/docs/src/content/docs/index.md",
         "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
-        "apps/docs/src/content/docs/guides/authentication.md",
-        "apps/docs/src/content/docs/reference/sdk.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
+        "apps/docs/src/content/docs/reference/sdk.md"
       ]
     },
     "auth-and-identity": {
       "sources": ["src/auth"],
       "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
+        "README.md",
+        "docs/getting-started.md",
         "apps/docs/src/content/docs/guides/authentication.md",
-        "apps/docs/src/content/docs/build/manifest-apps.md",
-        "apps/docs/src/content/docs/reference/sdk.md",
-        "apps/docs/src/content/docs/reference/manifest.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
+        "apps/docs/src/content/docs/reference/sdk.md"
       ]
     },
     "realtime-and-integrations": {
-      "sources": [
-        "src/community",
-        "src/webhooks",
-        "src/ws",
-        "src/sse",
-        "src/push"
-      ],
+      "sources": ["src/community", "src/webhooks", "src/ws", "src/sse", "src/push"],
       "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
+        "README.md",
+        "docs/api-cheatsheet.md",
         "apps/docs/src/content/docs/guides/community-and-chat.md",
         "apps/docs/src/content/docs/guides/realtime.md",
-        "apps/docs/src/content/docs/reference/sdk.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
+        "apps/docs/src/content/docs/reference/sdk.md"
       ]
     },
     "ui-foundation": {
       "sources": [
         "src/ui.ts",
         "src/ui/actions",
-        "src/ui/analytics",
         "src/ui/context",
-        "src/ui/expressions",
         "src/ui/hooks",
-        "src/ui/i18n",
         "src/ui/icons",
-        "src/ui/layouts",
-        "src/ui/manifest",
-        "src/ui/policies",
-        "src/ui/shortcuts",
         "src/ui/state",
-        "src/ui/tokens",
-        "src/ui/workflows"
+        "src/ui/tokens"
       ],
       "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
-        "apps/docs/src/content/docs/build/manifest-apps.md",
-        "apps/docs/src/content/docs/build/styling-and-slots.md",
-        "apps/docs/src/content/docs/guides/theming-and-styling.md",
-        "apps/docs/src/content/docs/reference/ui/index.md",
-        "apps/docs/src/content/docs/reference/manifest.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
-      ]
-    },
-    "ui-components-and-presets": {
-      "sources": ["src/ui/components", "src/ui/presets", "src/ui/entity-pages"],
-      "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
-        "apps/docs/src/content/docs/guides/forms.md",
-        "apps/docs/src/content/docs/guides/data-tables.md",
-        "apps/docs/src/content/docs/guides/layout-and-navigation.md",
-        "apps/docs/src/content/docs/guides/overlays.md",
-        "apps/docs/src/content/docs/guides/file-uploads-and-media.md",
-        "apps/docs/src/content/docs/build/manifest-apps.md",
+        "docs/components.md",
+        "docs/customization.md",
+        "docs/tokens.md",
+        "apps/docs/src/content/docs/build/component-library.md",
         "apps/docs/src/content/docs/build/styling-and-slots.md",
         "apps/docs/src/content/docs/reference/ui/index.md",
-        "apps/docs/src/content/docs/reference/components.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
+        "apps/docs/src/content/docs/reference/components.md"
       ]
     },
     "ssr-vite": {
       "sources": ["src/ssr", "src/vite"],
       "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
+        "README.md",
         "apps/docs/src/content/docs/server/ssr-rsc.md",
         "apps/docs/src/content/docs/server/vite.md",
         "apps/docs/src/content/docs/reference/ssr.md",
-        "apps/docs/src/content/docs/reference/vite.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
+        "apps/docs/src/content/docs/reference/vite.md"
       ]
     },
     "cli-sync": {
       "sources": ["src/cli"],
       "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
-        "apps/docs/src/content/docs/build/manifest-apps.md",
-        "apps/docs/src/content/docs/manifest/quick-start.md",
-        "apps/docs/src/content/docs/reference/cli.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
-      ]
-    },
-    "playground-examples": {
-      "sources": [
-        "playground/src/showcase.tsx",
-        "playground/src/app.tsx",
-        "playground/src/token-editor.tsx"
-      ],
-      "docs": [
-        "apps/docs/src/content/docs/index.md",
-        "apps/docs/src/content/docs/start-here/index.md",
-        "apps/docs/src/content/docs/start-here/installation.md",
-        "apps/docs/src/content/docs/examples/index.md",
-        "apps/docs/src/content/docs/reference/components.md",
-        "apps/docs/src/content/docs/contribute/testing.md"
+        "README.md",
+        "docs/cli.md",
+        "apps/docs/src/content/docs/reference/cli.md"
       ]
     }
   }

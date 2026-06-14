@@ -7,11 +7,12 @@ import type {
   ReactNode,
   TouchEventHandler,
 } from "react";
-import type { z } from "zod";
 import type { DomRef } from "../../_base/dom-ref";
-import type { buttonConfigSchema } from "./schema";
 
-export type ButtonConfig = z.input<typeof buttonConfigSchema>;
+export interface ButtonConfig extends Record<string, unknown> {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  size?: "sm" | "md" | "lg" | "icon";
+}
 
 export interface ButtonControlProps {
   /** HTML id attribute for the element. */

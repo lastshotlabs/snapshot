@@ -100,7 +100,7 @@ export interface BadgeBaseProps {
 
 /**
  * Standalone Badge — a small label with color-coded variants.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

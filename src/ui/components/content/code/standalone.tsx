@@ -28,7 +28,7 @@ export interface CodeBaseProps {
 
 /**
  * Standalone Code — an inline code element for displaying code snippets
- * within flowing text. No manifest context required.
+ * within flowing text. Works with plain React props.
  *
  * @example
  * ```tsx

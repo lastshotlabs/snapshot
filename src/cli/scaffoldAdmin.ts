@@ -8,7 +8,6 @@ import {
   generateTsConfig,
   generateViteConfig,
   generateEnvFile,
-  generateSnapshotConfig,
   generateGitignore,
   generateCapabilitiesLib,
   generateSnapshotLib,
@@ -59,7 +58,6 @@ export async function scaffoldAdmin(
   await write("vite.config.ts", generateViteConfig());
   await write(".env", generateEnvFile(config));
   await write(".gitignore", generateGitignore());
-  await write("snapshot.config.json", generateSnapshotConfig(config));
 
   // Source: lib
   await write("src/lib/snapshot.ts", generateSnapshotLib(config));

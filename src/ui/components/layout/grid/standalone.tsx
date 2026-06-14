@@ -34,7 +34,7 @@ export interface GridBaseProps {
 
 /**
  * Standalone Grid -- a CSS grid container.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

@@ -1,113 +1,62 @@
 ---
 title: Snapshot
-description: Build React apps with 113 components, 108 hooks, and full-stack auth — backed by Bunshot.
+description: Build code-first React apps on Bunshot with auth, realtime, generated hooks, and standalone UI.
 draft: false
 ---
 
-Snapshot gives you everything you need to build React apps on a Bunshot backend: authentication, forms, data tables, real-time chat, file uploads, and 113 standalone components that work with plain props.
+Snapshot is a code-first React SDK for Bunshot-powered apps. Create one runtime
+with `createSnapshot({ apiUrl })`, compose hooks in React, and import UI from
+`@lastshotlabs/snapshot/ui`.
 
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
-import { ButtonBase, InputField, CardBase } from "@lastshotlabs/snapshot/ui";
+import { ButtonBase, CardBase } from "@lastshotlabs/snapshot/ui";
 
 const snap = createSnapshot({
   apiUrl: "/api",
-  manifest: {},
 });
 
 function App() {
   const { user, isLoading } = snap.useUser();
   if (isLoading) return null;
   if (!user) return <LoginPage />;
-  return <Dashboard user={user} />;
+
+  return (
+    <CardBase>
+      <h1>Welcome, {user.email}</h1>
+      <ButtonBase label="Open dashboard" />
+    </CardBase>
+  );
 }
 ```
 
-## What you get
+## What You Get
 
-### 108 hooks across 8 domains
+- Auth, MFA, OAuth, passkey, account, community, webhook, WebSocket, SSE, and
+  routing hooks from one runtime instance.
+- A low-level API client plus TanStack Query cache access.
+- OpenAPI sync for typed API helpers and React Query hooks.
+- Standalone UI components with typed props, slots, and Snapshot design tokens.
+- Vite helpers for sync, SSR, RSC, PPR, prefetch metadata, and static route
+  metadata.
+- CLI commands for scaffolding and sync.
 
-| Domain | Hooks | What they do |
-|--------|-------|-------------|
-| **Auth** | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword` | Core authentication flow |
-| **MFA** | `useMfaVerify`, `useMfaSetup`, `useMfaDisable`, + 7 more | Multi-factor auth with TOTP, email OTP, recovery codes |
-| **OAuth** | `getOAuthUrl`, `getLinkUrl`, `useOAuthExchange`, `useOAuthUnlink` | Social login providers |
-| **Passkeys** | `useWebAuthnRegister`, `usePasskeyLogin`, `useWebAuthnCredentials`, + 4 more | WebAuthn/passkey authentication |
-| **Account** | `useSetPassword`, `useSessions`, `useRevokeSession`, `useDeleteAccount`, + 5 more | Account management and sessions |
-| **WebSocket** | `useSocket`, `useRoom`, `useRoomEvent` | Real-time rooms and events |
-| **SSE** | `useSSE`, `useSseEvent`, `onSseEvent` | Server-sent events |
-| **Community** | 49 hooks | Threads, replies, reactions, moderation, notifications, search |
+## Learning Path
 
-### 113 standalone components
+1. [Installation](/start-here/installation/)
+2. [Quick Start](/start-here/)
+3. [Core Concepts](/start-here/core-concepts/)
+4. [Authentication](/guides/authentication/)
+5. [Component Overview](/build/component-library/)
+6. [SSR and RSC](/server/ssr-rsc/)
 
-Every component works as a plain React component with typed props. No context, no config object.
-
-| Category | Components | Examples |
-|----------|-----------|----------|
-| **Forms** | 18 | `InputField`, `SelectField`, `AutoFormBase`, `WizardBase` |
-| **Data** | 7 | `DataTableBase`, `ListBase`, `ChartBase`, `StatCardBase` |
-| **Layout** | 15 | `NavBase`, `CardBase`, `GridBase`, `LayoutBase`, `SplitPaneBase` |
-| **Navigation** | 5 | `TabsBase`, `BreadcrumbBase`, `AccordionBase`, `TreeViewBase` |
-| **Overlay** | 8 | `ModalBase`, `DrawerBase`, `CommandPaletteBase`, `DropdownMenuBase` |
-| **Content** | 6 | `MarkdownBase`, `RichTextEditorBase`, `CodeBlockBase` |
-| **Media** | 5 | `FileUploaderBase`, `CarouselBase`, `VideoBase`, `EmbedBase` |
-| **Communication** | 7 | `ChatWindowBase`, `PresenceIndicatorBase`, `TypingIndicatorBase` |
-| **Feedback** | 4 | Error, loading, not-found, offline states |
-| **Workflow** | 4 | `StepperBase`, `KanbanBase`, `ApprovalBase` |
-
-### Full-stack features
-
-- **Auth** -- Login, register, MFA, OAuth, passkeys, session management, and route guards
-- **Real-time** -- WebSocket rooms, SSE streams, push notifications, typing indicators, presence
-- **Community** -- Threads, replies, reactions, moderation, notifications, chat windows
-- **Theming** -- Design tokens, named slots, dark mode, responsive patterns
-- **SSR** -- React SSR, manifest rendering, RSC, PPR, Vite integration
-- **Manifest mode** -- Config-driven assembly from JSON with routes, resources, workflows
-
-## Learning path
-
-### 1. Get running
-
-- [Installation](/start-here/installation/) -- install, create your snapshot instance
-- [Quick Start](/start-here/) -- build a working app with auth and a data table in 30 lines
-- [Core Concepts](/start-here/core-concepts/) -- the mental model: hooks, components, naming, slots
-
-### 2. Build common features
-
-Pick the guides for what you're building. Start with auth and forms — most apps need both.
-
-| Building... | Guide | You'll learn |
-|-------------|-------|-------------|
-| Login, registration, MFA | [Authentication](/guides/authentication/) | Auth hooks, MFA flows, OAuth, passkeys |
-| Input fields, selects, wizards | [Forms and Validation](/guides/forms/) | 18 field components, controlled forms, wizards |
-| Tables, lists, charts | [Data Tables and Lists](/guides/data-tables/) | Sorting, pagination, row actions, charts |
-| Nav bars, sidebars, layouts | [Layout and Navigation](/guides/layout-and-navigation/) | App shells, grids, nav patterns |
-| Modals, drawers, dialogs | [Overlays and Modals](/guides/overlays/) | Modal forms, confirm dialogs, command palettes |
-
-### 3. Add specialized features
-
-| Building... | Guide |
-|-------------|-------|
-| Chat, threads, reactions | [Community and Chat](/guides/community-and-chat/) |
-| WebSocket, SSE, push | [Realtime](/guides/realtime/) |
-| Uploads, images, video | [File Uploads and Media](/guides/file-uploads-and-media/) |
-| Tokens, slots, dark mode | [Theming and Styling](/guides/theming-and-styling/) |
-
-### 4. See complete apps
-
-Copy-paste-ready applications that combine multiple features:
-
-- [Login Page](/recipes/login-page/) -- email/password + OAuth + MFA + passkeys
-- [Admin Dashboard](/recipes/admin-dashboard/) -- nav, stats, CRUD table, modals
-- [Chat Application](/recipes/chat-app/) -- rooms, messages, presence, typing
-- [Settings Page](/recipes/settings-page/) -- tabs, profile, password, sessions
-
-### 5. Go deeper
+## Reference
 
 | Need | Where to go |
-|------|------------|
-| Config-driven assembly | [Manifest Quick Start](/manifest/quick-start/), [Examples](/manifest/examples/), [Presets](/manifest/presets/) |
-| Server-side rendering | [SSR and RSC](/server/ssr-rsc/), [Vite Plugin](/server/vite/) |
-| All 113 components at a glance | [Component Overview](/build/component-library/) |
-| Full API surface | [SDK Reference](/reference/sdk/), [Component Reference](/reference/components/) |
-| Custom plugins | [Manifest Reference](/reference/manifest/) |
+| --- | --- |
+| Runtime API | [SDK Reference](/reference/sdk/) |
+| UI exports | [UI Reference](/reference/ui/) |
+| Components | [Component Reference](/reference/components/) |
+| Vite plugins | [Vite Reference](/reference/vite/) |
+| SSR helpers | [SSR Reference](/reference/ssr/) |
+| CLI | [CLI Reference](/reference/cli/) |

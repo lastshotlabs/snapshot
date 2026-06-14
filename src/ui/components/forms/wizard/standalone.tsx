@@ -710,7 +710,7 @@ function StandaloneWizardProgress({
 
 /**
  * Standalone WizardBase -- a multi-step form wizard with progress indicator,
- * step navigation, field validation, and completion state. No manifest context required.
+ * step navigation, field validation, and completion state. Works with plain React props.
  *
  * @example
  * ```tsx

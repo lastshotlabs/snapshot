@@ -71,7 +71,7 @@ export interface CodeBlockBaseProps {
 /**
  * Standalone CodeBlock — displays code with syntax highlighting,
  * optional line numbers, copy button, and title bar.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

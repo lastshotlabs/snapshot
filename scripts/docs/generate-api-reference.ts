@@ -71,7 +71,6 @@ const uiGroups: GroupRule[] = [
   { label: "Context & Data Binding", test: (p) => p.startsWith("src/ui/context/") },
   { label: "State Runtime", test: (p) => p.startsWith("src/ui/state/") },
   { label: "Actions", test: (p) => p.startsWith("src/ui/actions/") },
-  { label: "Manifest & Rendering", test: (p) => p.startsWith("src/ui/manifest/") },
   { label: "Components — Data", test: (p) => p.startsWith("src/ui/components/data/") },
   { label: "Components — Forms", test: (p) => p.startsWith("src/ui/components/forms/") },
   {
@@ -91,7 +90,6 @@ const uiGroups: GroupRule[] = [
     test: (p) => p.startsWith("src/ui/components/primitives/"),
   },
   { label: "Component Utilities", test: (p) => p.startsWith("src/ui/components/_base/") },
-  { label: "Page Presets", test: (p) => p.startsWith("src/ui/presets/") },
   { label: "Hooks & Utilities", test: (p) => p.startsWith("src/ui/hooks/") },
   { label: "Icons", test: (p) => p.startsWith("src/ui/icons/") },
   { label: "Workflows", test: (p) => p.startsWith("src/ui/workflows/") },
@@ -223,7 +221,7 @@ function getFallbackDocString(
   }
 
   if (/Config$/.test(name)) {
-    return `Manifest configuration type for ${readableName}.`;
+    return `Configuration type for ${readableName}.`;
   }
 
   if (/^use[A-Z]/.test(name)) {
@@ -266,7 +264,7 @@ function getSignature(
   const type = checker.getTypeOfSymbolAtLocation(target, decl);
   const sigs = type.getCallSignatures();
   if (sigs.length === 0) return undefined;
-  // Use default truncation — NoTruncation blows up config-driven component sigs
+  // Use default truncation. NoTruncation blows up large component signatures.
   return checker.signatureToString(
     sigs[0],
     undefined,
@@ -451,7 +449,7 @@ function renderExportDetail(
   const lines: string[] = [];
 
   // Heading — function with signature or name with kind
-  // Truncate very long signatures (config-driven component props expand hugely)
+  // Truncate very long signatures from large component prop types.
   const MAX_SIG = 200;
   if (exp.kind === "function" && exp.signature) {
     const sig = exp.signature.length > MAX_SIG

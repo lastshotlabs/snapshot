@@ -23,20 +23,8 @@ import {
   styleableElementFields as sharedStyleableElementFields,
 } from "@lastshotlabs/frontend-contract/components";
 
-/**
- * Enter animation config for a component.
- *
- * Symmetric with `exitAnimationSchema` — both support `duration` and `easing`.
- * Uses CSS `@keyframes` names via the `enter` field.
- */
 export { componentAnimationSchema };
 
-/**
- * Exit animation config for a component.
- *
- * Symmetric with `componentAnimationSchema` — both support `duration` and `easing`.
- * Uses the same `@keyframes` names (via the `preset` field) but runs them in reverse.
- */
 export const exitAnimationSchema = upstreamExitAnimationSchema.extend({
   easing: z
     .union([z.enum(["default", "in", "out", "in-out", "spring"]), z.string()])

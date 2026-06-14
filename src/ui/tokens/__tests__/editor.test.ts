@@ -111,7 +111,7 @@ describe("useTokenEditor", () => {
       expect(result.current.getTokens()).toEqual({});
     });
 
-    it("returns current overrides as manifest-compatible config", () => {
+    it("returns current overrides as token config", () => {
       const { result } = renderHook(() => useTokenEditor());
 
       act(() => {

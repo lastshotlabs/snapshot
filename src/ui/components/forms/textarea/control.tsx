@@ -8,7 +8,7 @@ import type { TextareaControlProps } from "./types";
 /**
  * Low-level styled textarea element with surface resolution and state management.
  * Used internally by TextareaField and other components that need a styled `<textarea>`.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

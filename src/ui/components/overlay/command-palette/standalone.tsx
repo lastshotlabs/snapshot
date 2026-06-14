@@ -95,7 +95,7 @@ function flattenItems(
 
 /**
  * Standalone CommandPalette — a search-driven command list with keyboard
- * navigation. No manifest context required.
+ * navigation. Works with plain React props.
  *
  * @example
  * ```tsx

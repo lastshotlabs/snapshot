@@ -471,7 +471,7 @@ function CardContent({
 
 /**
  * Standalone KanbanBase — renders a multi-column board with cards, WIP limits,
- * assignee avatars, priority indicators, and optional drag-and-drop reordering. No manifest context required.
+ * assignee avatars, priority indicators, and optional drag-and-drop reordering. Works with plain React props.
  *
  * @example
  * ```tsx

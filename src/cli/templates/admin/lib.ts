@@ -81,18 +81,7 @@ export function generateSnapshotLib(config: AdminScaffoldConfig): string {
 
 export const snapshot = createSnapshot({
   apiUrl: import.meta.env.VITE_API_URL,
-  manifest: {
-    app: {
-      home: '/users',
-    },
-    routes: [
-      {
-        id: 'home',
-        path: '/users',
-        content: [{ type: 'heading', text: 'Users' }],
-      },
-    ],
-  },
+  homePath: '/users',
 })
 
 export const {

@@ -1,15 +1,13 @@
-import type { z } from "zod";
-import type { wizardSchema, wizardStepSchema } from "./schema";
 
 /**
  * Inferred type for the Wizard component configuration.
  */
-export type WizardConfig = z.input<typeof wizardSchema>;
+export type WizardConfig = Record<string, unknown>;
 
 /**
  * Inferred type for a single wizard step configuration.
  */
-export type WizardStepConfig = z.input<typeof wizardStepSchema>;
+export type WizardStepConfig = Record<string, unknown>;
 
 /**
  * Return type of the useWizard headless hook.

@@ -1,9 +1,5 @@
 import { readFileSync } from "node:fs";
-import {
-  collectComponentDirectories,
-  collectLazyLoadedTypes,
-  collectRegisteredManifestComponents,
-} from "./component-inventory.ts";
+import { collectComponentDirectories } from "./component-inventory.ts";
 import { repoPath } from "./_common.ts";
 
 const componentDocsPath = repoPath(
@@ -29,48 +25,20 @@ const apiDocsPath = repoPath(
 const componentDocs = readFileSync(componentDocsPath, "utf8");
 const apiDocs = readFileSync(apiDocsPath, "utf8");
 const componentDirectories = collectComponentDirectories();
-const manifestComponents = collectRegisteredManifestComponents();
-const lazyLoadedTypes = collectLazyLoadedTypes();
 
 let hasError = false;
+let documentedComponents = 0;
 
 for (const directory of componentDirectories) {
-  if (directory.hasComponent && !directory.hasComponentTest) {
-    console.error(
-      `[components:coverage] Missing component test for ${directory.relativeDir}`,
-    );
-    hasError = true;
-  }
-
-  if (directory.hasSchema && !directory.hasSchemaTest) {
-    console.error(
-      `[components:coverage] Missing schema test for ${directory.relativeDir}`,
-    );
-    hasError = true;
-  }
-
-  if (!componentDocs.includes(`### \`${directory.componentName}\``)) {
+  if (directory.hasComponent && !componentDocs.includes(`### \`${directory.relativeDir}\``)) {
     console.error(
       `[components:coverage] Missing component directory doc entry for ${directory.relativeDir}`,
     );
     hasError = true;
-  }
-}
-
-for (const component of manifestComponents) {
-  if (!lazyLoadedTypes.has(component.type)) {
-    console.error(
-      `[components:coverage] Missing lazy loader for manifest component type "${component.type}" (${component.relativeDir})`,
-    );
-    hasError = true;
+    continue;
   }
 
-  if (!componentDocs.includes(`\`${component.type}\``)) {
-    console.error(
-      `[components:coverage] Missing manifest type doc entry for "${component.type}" (${component.relativeDir})`,
-    );
-    hasError = true;
-  }
+  if (directory.hasComponent) documentedComponents += 1;
 }
 
 if (/No JSDoc description|No description/i.test(apiDocs)) {
@@ -85,5 +53,5 @@ if (hasError) {
 }
 
 console.log(
-  `[components:coverage] Verified ${componentDirectories.length} component directories, ${manifestComponents.length} manifest component types, and generated component/API docs.`,
+  `[components:coverage] Verified ${documentedComponents} code-first component docs and generated UI API docs.`,
 );

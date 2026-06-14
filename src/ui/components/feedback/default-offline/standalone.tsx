@@ -27,7 +27,7 @@ export interface DefaultOfflineBaseProps {
 
 /**
  * Standalone DefaultOffline — renders an offline status banner.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

@@ -26,11 +26,10 @@ export interface OutletBaseProps {
 
 /**
  * Standalone OutletBase — a router-agnostic mount point for child routes or
- * manually-supplied content. No manifest context required.
+ * manually-supplied content. Works with plain React props.
  *
- * Pass router-rendered content as `children`. When children is empty, `fallback`
- * is rendered instead. Use `<Outlet config={...} />` for the manifest-driven
- * variant that resolves child routes from the route tree.
+ * Pass router-rendered content as `children`. When children is empty,
+ * `fallback` is rendered instead.
  *
  * @example
  * ```tsx

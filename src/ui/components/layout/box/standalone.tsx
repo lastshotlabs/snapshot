@@ -26,7 +26,7 @@ export interface BoxBaseProps {
 
 /**
  * Standalone Box -- a generic container element with configurable HTML tag.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

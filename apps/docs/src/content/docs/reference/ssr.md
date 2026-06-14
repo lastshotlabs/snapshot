@@ -10,14 +10,11 @@ Generated from `src/ssr/index.ts`.
 |---|---|---|---|
 | `__callServerAction__` | function | `src/ssr/action-client.ts` | Called by server action stubs in the client bundle. Routes the call to `POST /_snapshot/action` on the server and returns the action's result. Handles three response shapes from the server: - `{ result }` — returned as-is to the caller - `{ error }` — throws `Error(message)` - `{ redirect }` — navigates via `window.location.href` When the first argument is a `FormData` instance the request is sent as a raw `FormData` body (for `<form action={serverFn}>` usage). Otherwise the call is serialised as JSON. |
 | `buildComponentId` | function | `src/ssr/rsc.ts` | Builds the component ID string used as a key in {@link RscManifest.components}. Format: `"{relativePath}#{exportName}"` |
-| `createManifestRenderer` | function | `src/ssr/manifest-renderer.ts` | Create a manifest-based SSR renderer. Resolves routes from the Snapshot manifest config rather than from server route files. Manifest routes declare their data requirements via the `preload` field — keys into `manifest.resources`. Provide `preloadResolvers` to call bunshot adapters directly instead of making HTTP round-trips. **Route resolution:** The middleware calls `resolve()` after the file-based resolver returns `null`. Both `createReactRenderer` and `createManifestRenderer` can be used together in a composite renderer — file routes take precedence. **Manifest compilation:** The manifest is compiled and route patterns are built at construction time — not per request. **Manifest-first:** This renderer works entirely from the manifest JSON config. No TypeScript is required at the consumer to enable SSR for manifest routes. |
 | `createPprCache` | function | `src/ssr/ppr-cache.ts` | Create an in-memory PPR shell cache. At build time, shells are pre-computed for all PPR-enabled routes and stored here via `set()`. At request time, `get()` returns the shell instantly so the HTTP response can begin with the pre-computed HTML without any rendering overhead, while dynamic Suspense slots are streamed in behind it. **Factory, not singleton.** Call `createPprCache()` once at application startup and pass the instance to both `prerenderPprShells()` (build step) and `renderPprPage()` (request handler). Do not share instances across processes. |
 | `createReactRenderer` | function | `src/ssr/renderer.ts` | Create the official React renderer for `bunshot-ssr`. Returns an object that satisfies `BunshotSsrRenderer` from `@lastshotlabs/bunshot-ssr` by structural typing. The consumer app imports both packages and wires them together — no forced dependency between repos. **File-based routing:** `createReactRenderer` relies on bunshot-ssr's built-in file resolver to match URLs to route files. The `resolve()` method returns `null` — the file resolver is authoritative. `render()` is called only when a match was found. **Per-request isolation:** Every call to `render()` creates a fresh `QueryClient`. The global `snapshot.queryClient` singleton is never used during SSR. **Config freeze:** The config object is frozen at construction time. |
 | `extractPprShell` | function | `src/ssr/ppr.ts` | Render only the static shell of a React tree. Dynamic Suspense boundaries are replaced with their fallback content because `renderToString` emits Suspense fallback markup immediately for any boundary whose children suspend, then terminates without awaiting the async subtree. Wrapping the tree in `StaticShellWrapper` ensures the output contains only the static parts and pre-populated fallback markup. Used at build time to pre-render the static portions of PPR routes. The resulting `shellHtml` is stored in the PPR cache and sent immediately on every subsequent request before dynamic content is streamed. |
 | `hasUseClientDirective` | function | `src/ssr/rsc.ts` | Returns `true` if the source file contains a `'use client'` or `"use client"` directive as its first meaningful content (before any non-whitespace, non-comment code). The check is intentionally loose — it matches the directive anywhere in the leading whitespace/comment region of the file, consistent with how bundlers like webpack and Parcel handle it. |
 | `hasUseServerDirective` | function | `src/ssr/rsc.ts` | Returns `true` if the source file contains a `'use server'` or `"use server"` directive as its first meaningful content. |
-| `ManifestPreloadResolver` | typealias | `src/ssr/types.ts` | Server-side resolver for a single named manifest resource. Called instead of an HTTP fetch during SSR preload. Receives the extracted URL params and the full BunshotContext for direct DB/adapter access. |
-| `ManifestSsrConfig` | interface | `src/ssr/types.ts` | Configuration for `createManifestRenderer()`. The manifest is compiled at construction time — route patterns and resource maps are resolved once, not per request. |
 | `PprCache` | interface | `src/ssr/ppr-cache.ts` | Interface for the PPR static shell cache. Implementations are free to use any backing store; the default produced by `createPprCache()` is in-process memory (suitable for single-instance servers). For multi-instance deployments, provide a Redis-backed implementation. |
 | `PprCacheEntry` | interface | `src/ssr/ppr-cache.ts` | A single entry in the PPR shell cache. Stored by `PprCache.set()` after build-time shell extraction. Retrieved by `PprCache.get()` at request time to serve the shell immediately. |
 | `PprShell` | interface | `src/ssr/ppr.ts` | The result of a build-time static shell extraction for a PPR route. |
@@ -104,57 +101,6 @@ buildComponentId('src/components/Button.tsx', 'default');
 
 buildComponentId('src/components/Button.tsx', 'Button');
 // → 'src/components/Button.tsx#Button'
-```
-
----
-
-#### `createManifestRenderer(rawConfig: ManifestSsrConfig) => { resolve(url: URL, bsCtx: unknown): Promise<SsrRouteMatchShape | null>; render(match: SsrRouteMatchShape, shell: SsrShellShape, bsCtx: unknown): Promise<...>; render...`
-
-Create a manifest-based SSR renderer.
-
-Resolves routes from the Snapshot manifest config rather than from server
-route files. Manifest routes declare their data requirements via the
-`preload` field — keys into `manifest.resources`. Provide `preloadResolvers`
-to call bunshot adapters directly instead of making HTTP round-trips.
-
-**Route resolution:** The middleware calls `resolve()` after the file-based
-resolver returns `null`. Both `createReactRenderer` and `createManifestRenderer`
-can be used together in a composite renderer — file routes take precedence.
-
-**Manifest compilation:** The manifest is compiled and route patterns are built
-at construction time — not per request.
-
-**Manifest-first:** This renderer works entirely from the manifest JSON config.
-No TypeScript is required at the consumer to enable SSR for manifest routes.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `rawConfig` | Renderer configuration. Manifest is compiled and route patterns are built at construction time — not per request. |
-
-**Example:**
-
-```ts
-import { createSsrPlugin } from '@lastshotlabs/bunshot-ssr'
-import { createManifestRenderer } from '@lastshotlabs/snapshot/ssr'
-import myManifest from './snapshot.manifest.json'
-
-createSsrPlugin({
-  renderer: createManifestRenderer({
-    manifest: myManifest,
-    preloadResolvers: {
-      listPosts: async (params, bsCtx) => {
-        const { threadAdapter } = (bsCtx as BunshotContext)
-          .pluginState.get('bunshot-community');
-        return threadAdapter.list({ containerId: params.containerId });
-      },
-    },
-    getUser: async (headers) => resolveSessionFromHeaders(headers),
-  }),
-  serverRoutesDir: import.meta.dir + '/server/routes',
-  assetsManifest: import.meta.dir + '/dist/.vite/manifest.json',
-})
 ```
 
 ---
@@ -275,24 +221,6 @@ directive as its first meaningful content.
 | Name | Description |
 |------|-------------|
 | `code` | Raw source text of the file. |
-
----
-
-#### `ManifestPreloadResolver` *(typealias)*
-
-Server-side resolver for a single named manifest resource.
-
-Called instead of an HTTP fetch during SSR preload. Receives the extracted
-URL params and the full BunshotContext for direct DB/adapter access.
-
-**Parameters:**
-
-| Name | Description |
-|------|-------------|
-| `params` | Dynamic URL params extracted from the matched route path. |
-| `bsCtx` | The BunshotContext (typed `unknown` — cast inside the resolver). |
-
-**Returns:** The data to cache under `[resourceKey, params]` queryKey.
 
 ---
 

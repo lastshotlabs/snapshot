@@ -27,14 +27,14 @@ The developer describes what they want. The agent does NOT start writing immedia
 2. **Check for existing context** — Read related specs in `docs/specs/`, check
    `docs/archive/GENERATION_CHAT.md` in the bunshot repo for vision context on how Snapshot
    should evolve. Key areas from that chat:
-   - **Frontend manifest** — `frontend: { theme, pages, auth, nav }` as the full-stack config
+   - **Code-first app bootstrap** — `createSnapshot({ apiUrl, auth, ws, sse })` plus explicit React composition
    - **Design token system** — semantic color/spacing/radius/font tokens, breakpoint-aware values, component-level tokens, dark/light mode as token switch
-   - **Config-addressable components** — each component has a Zod config schema, self-manages data fetching and state, never exposes React props to the user
+   - **Standalone components** — each component exposes plain React props and composes with app-owned data fetching and state
    - **Inter-component data binding** — `id` + `{ "from": "id" }` ref pattern for reactive cross-component state
    - **Action vocabulary** — fixed set: navigate, api, open-modal, refresh, set-value, download, confirm, toast
    - **Interaction presets** — named tokens (lift, glow, fade-in) + duration tokens; breakpoint-aware layout
    - **Code escape hatch** — Monaco editor in browser for custom components; `generated/` is never hand-edited
-   - **bunshot sync evolution** — generates page components + data bindings + theme from frontend manifest + OpenAPI, not just API client + hooks
+   - **bunshot sync evolution** — generates API types, hooks, and optional app scaffolds from OpenAPI
    - **Selective hook syncing, multi-client generation, offline docs, apps-within-apps, SSR**
 3. **Confirm scope** — Restate the goal back to the developer. Get alignment before researching.
 

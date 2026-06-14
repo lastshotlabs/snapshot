@@ -1,6 +1,6 @@
 ---
 title: Styling and Slots
-description: The canonical manifest styling model for Snapshot UI surfaces.
+description: The canonical styling model for Snapshot UI surfaces.
 draft: false
 ---
 
@@ -13,7 +13,7 @@ This page documents two things:
 - the canonical platform model for `slots` and runtime `states`
 - the current product contract implemented in source
 
-The examples on this page are representative, not exhaustive. Use generated reference and current source schemas for the full surface inventory.
+The examples on this page are representative, not exhaustive. Use generated reference docs and current component source for the full surface inventory.
 
 Use this guide when you need to answer three questions:
 
@@ -302,7 +302,6 @@ This guide reflects the active platform contract. Pair it with generated referen
 
 For exact field-level API shape on a specific component, pair this guide with:
 
-- [Manifest Reference](/reference/manifest/)
 - [Component Catalog](/reference/components/)
 - [UI Reference](/reference/ui/)
 

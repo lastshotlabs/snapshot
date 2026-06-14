@@ -32,7 +32,7 @@ export interface NavLogoBaseProps {
 
 /**
  * Standalone NavLogo -- a clickable brand logo/text element for navigation headers.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

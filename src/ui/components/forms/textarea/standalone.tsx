@@ -57,7 +57,7 @@ export interface TextareaFieldProps {
 
 /**
  * Standalone TextareaField -- a complete textarea form field with label,
- * character counter, validation, and helper/error text. No manifest context required.
+ * character counter, validation, and helper/error text. Works with plain React props.
  *
  * @example
  * ```tsx

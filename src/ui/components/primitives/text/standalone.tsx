@@ -5,7 +5,7 @@ import type { SlotOverrides } from "../../_base/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 
-// ── Token maps (shared with manifest variant) ────────────────────────────────
+// ── Token maps ───────────────────────────────────────────────────────────────
 
 const COLOR_MAP: Record<string, string> = {
   default: "var(--sn-color-foreground)",
@@ -58,7 +58,7 @@ export interface TextBaseProps {
 
 /**
  * Standalone Text — renders a styled paragraph element with token-based
- * typography. No manifest context required.
+ * typography. Works with plain React props.
  *
  * @example
  * ```tsx

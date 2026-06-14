@@ -183,7 +183,7 @@ export interface RichInputBaseHandle {
 
 /**
  * Standalone RichInput — a rich text editor with formatting toolbar,
- * powered by tiptap. No manifest context required.
+ * powered by tiptap. Works with plain React props.
  *
  * @example
  * ```tsx

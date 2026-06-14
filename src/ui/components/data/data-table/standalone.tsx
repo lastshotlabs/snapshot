@@ -331,7 +331,7 @@ function formatCellValue(
 
 /**
  * Standalone DataTable — feature-rich data table with sorting, pagination,
- * selection, and search. No manifest context required.
+ * selection, and search. Works with plain React props.
  *
  * @example
  * ```tsx

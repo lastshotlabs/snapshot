@@ -1,7 +1,7 @@
 import type { ActionConfig } from "../actions/types";
 import type { PolicyExpr } from "../policies/types";
 
-/** Keyboard shortcut definition from manifest. */
+/** Keyboard shortcut definition from app configuration. */
 export interface ShortcutBinding {
   label?: string;
   action: ActionConfig | ActionConfig[];

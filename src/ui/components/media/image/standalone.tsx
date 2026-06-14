@@ -121,7 +121,7 @@ export interface SnapshotImageBaseProps {
 
 /**
  * Standalone SnapshotImage — an optimized image component with placeholder
- * support. No manifest context required.
+ * support. Works with plain React props.
  *
  * @example
  * ```tsx

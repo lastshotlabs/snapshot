@@ -155,8 +155,8 @@ describe("runSync integration", () => {
     try {
       await fs.writeFile(schemaPath, JSON.stringify(schema), "utf8");
       await fs.writeFile(
-        path.join(tmpDir, "snapshot.config.json"),
-        JSON.stringify({ prefetchDir: "src/server/prefetch" }),
+        path.join(tmpDir, "package.json"),
+        JSON.stringify({ snapshot: { prefetchDir: "src/server/prefetch" } }),
         "utf8",
       );
 

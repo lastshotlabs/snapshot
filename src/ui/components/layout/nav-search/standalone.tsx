@@ -30,7 +30,7 @@ export interface NavSearchBaseProps {
 
 /**
  * Standalone NavSearch -- a search input with optional keyboard shortcut display.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

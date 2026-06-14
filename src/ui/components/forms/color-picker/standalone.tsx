@@ -81,7 +81,7 @@ function formatColorValue(color: string, format: ColorPickerFieldProps["format"]
 
 /**
  * Standalone ColorPickerField -- a color picker with optional swatches, alpha slider,
- * and custom hex input. No manifest context required.
+ * and custom hex input. Works with plain React props.
  *
  * @example
  * ```tsx

@@ -73,7 +73,7 @@ function clampPosition(x: number, y: number) {
 
 /**
  * Standalone ContextMenu — a right-click context menu with plain React props.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

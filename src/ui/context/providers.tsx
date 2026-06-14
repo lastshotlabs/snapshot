@@ -27,7 +27,7 @@ export const AppRegistryContext = AppStateRegistryContext;
 
 /**
  * Provides persistent global state that survives route changes.
- * Initializes globals from the manifest config.
+ * Initializes globals from runtime config.
  */
 export function AppContextProvider({
   globals,

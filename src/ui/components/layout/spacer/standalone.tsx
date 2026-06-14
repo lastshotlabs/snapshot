@@ -40,7 +40,7 @@ export interface SpacerBaseProps {
 
 /**
  * Standalone Spacer -- an empty element that takes up space along an axis.
- * No manifest context required.
+ * Works with plain React props.
  *
  * @example
  * ```tsx

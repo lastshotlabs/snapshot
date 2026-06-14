@@ -44,7 +44,7 @@ export interface TypingIndicatorBaseProps {
 
 /**
  * Standalone TypingIndicator — shows animated bouncing dots with user names
- * to indicate who is currently typing. No manifest context required.
+ * to indicate who is currently typing. Works with plain React props.
  *
  * @example
  * ```tsx

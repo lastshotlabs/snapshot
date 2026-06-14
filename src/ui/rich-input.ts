@@ -1,21 +1,13 @@
 // Subpath entry: `@lastshotlabs/snapshot/ui/rich-input`.
-//
-// Importing from this subpath instead of the main `./ui` barrel avoids
-// pulling the rest of the snapshot UI surface into your bundle when
-// you only need the rich-text editor. The entry re-exports the
-// standalone, manifest, schema, and mention-list types so a Composer
-// implementation can use any of them without crossing the barrel.
-export {
-  RichInput,
-  RichInputBase,
-  DefaultMentionList,
-  richInputConfigSchema,
-} from "./components/content/rich-input/index";
+// Standalone, code-first rich input exports only.
+export { RichInputBase } from "./components/content/rich-input/standalone";
+export { DefaultMentionList } from "./components/content/rich-input/mention-list";
 export type {
-  RichInputConfig,
   RichInputBaseProps,
   RichInputBaseHandle,
+} from "./components/content/rich-input/standalone";
+export type {
   MentionSuggestion,
   MentionListProps,
   MentionListHandle,
-} from "./components/content/rich-input/index";
+} from "./components/content/rich-input/mention-list";

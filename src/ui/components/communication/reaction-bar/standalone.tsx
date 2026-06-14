@@ -30,7 +30,7 @@ export interface ReactionBarBaseProps {
   onReactionClick?: (emoji: string, wasActive: boolean) => void;
   /** Called when an emoji is picked from the add-reaction picker. */
   onEmojiSelect?: (payload: { emoji: string; name: string; isCustom: boolean }) => void;
-  /** Optional override for the emoji picker component (used by the manifest adapter for mockability). */
+  /** Optional override for the emoji picker component, useful in tests. */
   EmojiPickerComponent?: React.ComponentType<{ maxHeight?: string; perRow?: number; onSelect?: (payload: { emoji: string; name: string; isCustom: boolean }) => void }>;
   /** className applied to the root wrapper. */
   className?: string;
@@ -44,7 +44,7 @@ export interface ReactionBarBaseProps {
 
 /**
  * Standalone ReactionBar — row of emoji reaction pills with counts and an
- * add-reaction button that opens an inline emoji picker. No manifest context required.
+ * add-reaction button that opens an inline emoji picker. Works with plain React props.
  *
  * @example
  * ```tsx

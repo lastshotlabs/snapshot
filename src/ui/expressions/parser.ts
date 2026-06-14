@@ -15,7 +15,7 @@ interface Token {
 }
 
 /**
- * Expression AST used by the manifest-safe expression evaluator.
+ * Expression AST used by the safe expression evaluator.
  */
 type AstNode =
   | { type: "literal"; value: unknown }
@@ -47,7 +47,7 @@ export interface ExpressionContext {
 }
 
 /**
- * Safe builtin allowlist available to manifest expressions.
+ * Safe builtin allowlist available to expressions.
  */
 export const SAFE_BUILTINS: Record<
   "Math" | "String",
@@ -579,7 +579,7 @@ function evaluateMethodCall(
         args[1] !== undefined ? Number(args[1]) : undefined,
       );
     default:
-      throw new Error(`Unknown method "${method}" in manifest expression`);
+      throw new Error(`Unknown method "${method}" in expression`);
   }
 }
 
@@ -615,7 +615,7 @@ function evaluateAst(node: AstNode, context: ExpressionContext): unknown {
       const method = namespace[node.method];
       if (!method) {
         throw new Error(
-          `Unknown builtin "${node.namespace}.${node.method}" in manifest expression`,
+          `Unknown builtin "${node.namespace}.${node.method}" in expression`,
         );
       }
       return method(...node.args.map((arg) => evaluateAst(arg, context)));

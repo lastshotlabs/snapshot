@@ -68,7 +68,7 @@ export interface PresenceIndicatorBaseProps {
 
 /**
  * Standalone PresenceIndicator — displays online/offline/away/busy/dnd status
- * with a colored dot and optional label. No manifest context required.
+ * with a colored dot and optional label. Works with plain React props.
  *
  * @example
  * ```tsx

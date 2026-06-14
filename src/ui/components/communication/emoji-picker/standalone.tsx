@@ -52,7 +52,7 @@ export interface EmojiPickerBaseProps {
 
 /**
  * Standalone EmojiPicker — searchable emoji grid with category tabs and custom emoji
- * support. No manifest context required.
+ * support. Works with plain React props.
  *
  * @example
  * ```tsx

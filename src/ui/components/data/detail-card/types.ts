@@ -1,12 +1,25 @@
-import type {
-  DetailCardAction,
-  DetailCardConfig,
-  DetailCardActionSlotNames,
-  DetailCardFieldSlotNames,
-  DetailCardSlotNames,
-  DetailFieldConfig,
-  DetailFieldFormat,
-} from "./schema";
+
+export type DetailFieldFormat =
+  | "text"
+  | "date"
+  | "number"
+  | "currency"
+  | "badge"
+  | "boolean"
+  | "avatar"
+  | "progress"
+  | "link"
+  | "code";
+
+export interface DetailFieldConfig {
+  slots?: Record<string, Record<string, unknown>>;
+}
+
+export type DetailCardConfig = Record<string, unknown>;
+export type DetailCardAction = Record<string, unknown>;
+export const DetailCardSlotNames = [] as const;
+export const DetailCardFieldSlotNames = [] as const;
+export const DetailCardActionSlotNames = [] as const;
 
 /**
  * A resolved field ready for rendering — includes the raw value,
@@ -53,13 +66,6 @@ export interface UseDetailCardResult {
   refetch: () => void;
 }
 
-export type DetailCardSlotName = DetailCardSlotNames[number];
-export type DetailCardFieldSlotName = DetailCardFieldSlotNames[number];
-export type DetailCardActionSlotName = DetailCardActionSlotNames[number];
-
-export type {
-  DetailCardAction,
-  DetailCardConfig,
-  DetailFieldConfig,
-  DetailFieldFormat,
-};
+export type DetailCardSlotName = (typeof DetailCardSlotNames)[number];
+export type DetailCardFieldSlotName = (typeof DetailCardFieldSlotNames)[number];
+export type DetailCardActionSlotName = (typeof DetailCardActionSlotNames)[number];

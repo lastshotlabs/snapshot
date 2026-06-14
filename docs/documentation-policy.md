@@ -4,15 +4,13 @@ Snapshot documentation is a product surface. It ships with the framework, not af
 
 ## Documentation Personas
 
-Snapshot has four primary documentation personas:
+Snapshot has three primary documentation personas:
 
-1. **Manifest App Builder**
-   - builds primarily from `snapshot.manifest.json`, built-in schemas, presets, workflows, routes, and tokens
-2. **SDK App Builder**
+1. **SDK App Builder**
    - builds with `createSnapshot`, generated client output, auth/realtime/community/webhook hooks, and custom React
-3. **SSR / Platform Integrator**
-   - integrates Snapshot with Bunshot SSR, manifest rendering, RSC, Vite, PPR, prefetch, and SSG
-4. **Snapshot Contributor**
+2. **SSR / Platform Integrator**
+   - integrates Snapshot with Bunshot SSR, RSC, Vite, PPR, prefetch, and SSG
+3. **Snapshot Contributor**
    - changes Snapshot itself and must keep source, docs, examples, and tests aligned
 
 ## Canonical Sources Of Truth
@@ -25,7 +23,6 @@ These are the only canonical documentation sources:
   - `src/ssr/index.ts`
   - `src/vite/index.ts`
 - schemas and source-backed contracts:
-  - `src/ui/manifest/schema.ts`
   - `src/ui/components/**/schema.ts`
   - `src/cli/commands/**`
   - `src/ssr/**`
@@ -66,9 +63,9 @@ Use this order:
 2. choose the persona path
    - `apps/docs/src/content/docs/start-here/index.md`
 3. read the relevant build or integration guide
-   - `build/manifest-apps.md`
-   - `build/sdk-apps.md`
-   - `integrate/ssr-rsc.md`
+   - `start-here/index.md`
+   - `guides/authentication.md`
+   - `server/ssr-rsc.md`
 4. read generated reference for the surface in use
 5. read `apps/docs/src/content/docs/examples/index.md`
 6. only then inspect lower-level source when necessary
