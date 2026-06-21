@@ -1,6 +1,8 @@
 node_modules/
 dist/
 dist-types/
+# Generated TS declarations belong in dist-types/, never alongside sources
+src/**/*.d.ts
 storybook-static/
 apps/docs/.astro/
 *.log

@@ -1,9 +1,3 @@
-
-/**
- * Inferred type for the Feed component config (from Zod schema).
- */
-export type FeedConfig = Record<string, unknown>;
-
 /**
  * A single resolved feed item for rendering.
  */

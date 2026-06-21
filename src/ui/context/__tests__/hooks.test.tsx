@@ -6,7 +6,12 @@ import { renderHook, act } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { AtomRegistryImpl } from "../registry";
 import { PageRegistryContext, AppRegistryContext } from "../providers";
-import { usePublish, useSubscribe, useResolveFrom } from "../hooks";
+import {
+  usePublish,
+  useSubscribe,
+  useResolveFrom,
+  useResolveFromMany,
+} from "../hooks";
 
 /** Test wrapper that provides both page and app registries. */
 function createTestWrapper(
@@ -258,5 +263,77 @@ describe("useResolveFrom", () => {
     });
 
     expect(result.current).toEqual({ a: 1, b: "hello" });
+  });
+});
+
+describe("useResolveFromMany", () => {
+  it("resolves a mixed array of FromRefs and static values, length-agnostic", () => {
+    const registry = new AtomRegistryImpl();
+    const wrapper = createTestWrapper(registry);
+
+    const a = registry.register("a");
+    registry.store.set(a, { v: 1 });
+    const b = registry.register("b");
+    registry.store.set(b, "two");
+
+    const values = [
+      { from: "a.v" },
+      "static",
+      { from: "b" },
+      42,
+      { from: "missing" },
+      { from: "a" },
+    ];
+
+    const { result } = renderHook(() => useResolveFromMany(values), {
+      wrapper,
+    });
+
+    expect(result.current).toEqual([
+      1,
+      "static",
+      "two",
+      42,
+      undefined,
+      { v: 1 },
+    ]);
+  });
+
+  it("re-renders with updated values when a subscribed atom changes", () => {
+    const registry = new AtomRegistryImpl();
+    const wrapper = createTestWrapper(registry);
+
+    const { result: pub } = renderHook(() => usePublish("counter"), {
+      wrapper,
+    });
+    const values = [{ from: "counter" }];
+    const { result } = renderHook(() => useResolveFromMany(values), {
+      wrapper,
+    });
+
+    expect(result.current).toEqual([undefined]);
+
+    act(() => {
+      pub.current(7);
+    });
+
+    expect(result.current).toEqual([7]);
+  });
+
+  it("returns a referentially stable array when nothing changes", () => {
+    const registry = new AtomRegistryImpl();
+    const wrapper = createTestWrapper(registry);
+
+    const a = registry.register("a");
+    registry.store.set(a, "x");
+
+    const values = [{ from: "a" }, "lit"];
+    const { result, rerender } = renderHook(() => useResolveFromMany(values), {
+      wrapper,
+    });
+
+    const first = result.current;
+    rerender();
+    expect(result.current).toBe(first);
   });
 });

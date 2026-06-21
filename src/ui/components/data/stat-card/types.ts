@@ -1,7 +1,3 @@
-
-/** Inferred config type from the StatCard Zod schema. */
-export type StatCardConfig = Record<string, unknown>;
-
 /**
  * Result returned by the StatCard headless hook or internal logic.
  * Provides all the data needed to render a stat card.

@@ -1,4 +1,3 @@
-
 export type DetailFieldFormat =
   | "text"
   | "date"
@@ -15,8 +14,6 @@ export interface DetailFieldConfig {
   slots?: Record<string, Record<string, unknown>>;
 }
 
-export type DetailCardConfig = Record<string, unknown>;
-export type DetailCardAction = Record<string, unknown>;
 export const DetailCardSlotNames = [] as const;
 export const DetailCardFieldSlotNames = [] as const;
 export const DetailCardActionSlotNames = [] as const;
@@ -68,4 +65,5 @@ export interface UseDetailCardResult {
 
 export type DetailCardSlotName = (typeof DetailCardSlotNames)[number];
 export type DetailCardFieldSlotName = (typeof DetailCardFieldSlotNames)[number];
-export type DetailCardActionSlotName = (typeof DetailCardActionSlotNames)[number];
+export type DetailCardActionSlotName =
+  (typeof DetailCardActionSlotNames)[number];

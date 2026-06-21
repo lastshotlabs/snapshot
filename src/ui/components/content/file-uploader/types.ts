@@ -1,7 +1,3 @@
-
-/** Inferred config type from the FileUploader Zod schema. */
-export type FileUploaderConfig = Record<string, unknown>;
-
 /** Internal state for a file in the upload queue. */
 export interface UploadFileEntry {
   /** The native File object. */

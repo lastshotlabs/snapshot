@@ -10,8 +10,6 @@ import type {
 import type { DomRef } from "../../_base/dom-ref";
 import type { RuntimeSurfaceState } from "../../_base/style-surfaces";
 
-export type SelectConfig = Record<string, unknown>;
-
 export interface SelectControlProps {
   /** Ref callback for the underlying element. */
   selectRef?: DomRef<HTMLSelectElement>;

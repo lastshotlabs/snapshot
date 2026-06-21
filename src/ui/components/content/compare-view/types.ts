@@ -1,7 +1,3 @@
-
-/** Inferred config type from the CompareView Zod schema. */
-export type CompareViewConfig = Record<string, unknown>;
-
 /** A single line in the diff output. */
 export interface DiffLine {
   /** The line type: unchanged, added, or removed. */

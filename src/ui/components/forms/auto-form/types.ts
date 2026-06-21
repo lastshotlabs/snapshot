@@ -1,19 +1,3 @@
-
-/**
- * Inferred type for a single field configuration.
- */
-export type FieldConfig = Record<string, unknown>;
-
-/**
- * Inferred type for the AutoForm component config.
- */
-export type AutoFormConfig = Record<string, unknown>;
-
-/**
- * Inferred type for a field section configuration.
- */
-export type FieldSectionConfig = Record<string, unknown>;
-
 /**
  * Per-field validation error.
  */

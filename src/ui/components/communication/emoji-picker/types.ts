@@ -1,7 +1,3 @@
-
-/** Inferred config type from the EmojiPicker Zod schema. */
-export type EmojiPickerConfig = Record<string, unknown>;
-
 /** Shape of a single emoji entry. */
 export interface EmojiEntry {
   native: string;

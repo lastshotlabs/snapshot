@@ -61,15 +61,6 @@ export const pollConfigSchema = z
   })
   .strict();
 
-export type ComponentZIndex = Record<string, unknown>;
-export type ComponentAnimationConfig = Record<string, unknown>;
-export type ComponentBackgroundConfig = Record<string, unknown>;
-export type ComponentTransitionConfig = Record<string, unknown>;
-export type HoverConfig = Record<string, unknown>;
-export type FocusConfig = Record<string, unknown>;
-export type ActiveConfig = Record<string, unknown>;
-export type ExitAnimationConfig = Record<string, unknown>;
-
 /**
  * Base style fields shared by code-first components.
  */
@@ -80,7 +71,9 @@ export const baseComponentConfigSchema = z.object({
   visible: orFromRef(z.boolean()).optional(),
   className: z.string().optional(),
   style: z.record(z.union([z.string(), z.number()])).optional(),
-  span: z.union([z.number().int().min(1).max(12), z.record(z.number())]).optional(),
+  span: z
+    .union([z.number().int().min(1).max(12), z.record(z.number())])
+    .optional(),
   sticky: z
     .union([
       z.boolean(),
@@ -108,9 +101,6 @@ export const baseComponentConfigSchema = z.object({
   /** Exit animation when the component is removed. */
   exitAnimation: exitAnimationSchema.optional(),
 });
-
-/** Base config type inferred from the schema. */
-export type BaseComponentConfig = Record<string, unknown>;
 
 /**
  * Typed slot override map. Use the slot-name union as the type parameter for
