@@ -66,13 +66,13 @@ export const pollConfigSchema = z
  */
 export const baseComponentConfigSchema = z.object({
   id: z.string().optional(),
-  tokens: z.record(z.string()).optional(),
+  tokens: z.record(z.string(), z.string()).optional(),
   visibleWhen: z.string().optional(),
   visible: orFromRef(z.boolean()).optional(),
   className: z.string().optional(),
-  style: z.record(z.union([z.string(), z.number()])).optional(),
+  style: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
   span: z
-    .union([z.number().int().min(1).max(12), z.record(z.number())])
+    .union([z.number().int().min(1).max(12), z.record(z.string(), z.number())])
     .optional(),
   sticky: z
     .union([
@@ -91,7 +91,7 @@ export const baseComponentConfigSchema = z.object({
   background: componentBackgroundSchema.optional(),
   transition: componentTransitionSchema.optional(),
   /** Slot overrides for sub-elements. Components extend this with named slots. */
-  slots: z.record(z.record(z.unknown())).optional(),
+  slots: z.record(z.string(), z.record(z.string(), z.unknown())).optional(),
   /** Hover state styling overrides. */
   hover: hoverConfigSchema.optional(),
   /** Focus state styling overrides. */

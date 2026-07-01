@@ -46,7 +46,7 @@ export {
 export const styleableElementFields = {
   ...sharedStyleableElementFields,
   className: z.string().optional(),
-  style: z.record(z.union([z.string(), z.number()])).optional(),
+  style: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
   cursor: z.string().optional(),
   backgroundColor: z.string().optional(),
   gridTemplateColumns: z.string().optional(),
@@ -62,7 +62,7 @@ export const styleableElementFields = {
 export const styleableElementSchema = z.object(styleableElementFields).strict();
 
 export const statefulElementSchema = styleableElementSchema.extend({
-  states: z.record(slotStateNameSchema, styleableElementSchema.partial()).optional(),
+  states: z.partialRecord(slotStateNameSchema, styleableElementSchema.partial()).optional(),
 });
 
 export function slotsSchema<const T extends readonly [string, ...string[]]>(
@@ -105,8 +105,7 @@ export const extendedBaseComponentSchema = z.object({
 });
 
 export type ComponentConfigSchema<T extends z.ZodRawShape> = z.ZodObject<
-  Omit<typeof extendedBaseComponentSchema.shape, keyof T> & T,
-  "strict"
+  Omit<typeof extendedBaseComponentSchema.shape, keyof T> & T
 >;
 
 export function extendComponentSchema<T extends z.ZodRawShape>(shape: T) {

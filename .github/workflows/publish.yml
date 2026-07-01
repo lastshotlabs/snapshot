@@ -1,12 +1,13 @@
-name: Publish to npm
+name: Publish to GitHub Packages
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  release:
+    types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   publish:
@@ -16,12 +17,13 @@ jobs:
       - name: Checkout snapshot
         uses: actions/checkout@v6
 
+      # Install + build/test against the public npm registry (default). We only
+      # point npm at GitHub Packages right before `npm publish`, so resolving
+      # public deps here is unaffected.
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
-          scope: "@lastshotlabs"
           cache: npm
           cache-dependency-path: package-lock.json
 
@@ -37,13 +39,23 @@ jobs:
         run: npm ci
 
       - name: Verify tag matches package version
+        if: github.event_name == 'release'
         run: |
           node -e 'const pkg = require("./package.json"); const expected = "v" + pkg.version; const actual = process.env.GITHUB_REF_NAME; if (actual !== expected) { console.error("Tag " + actual + " does not match package version " + expected); process.exit(1); }'
 
       - name: Check snapshot release
         run: npm run release:check
 
-      - name: Publish snapshot to npm
-        run: npm publish --access public
+      - name: Configure npm for GitHub Packages
+        # Write to $HOME/.npmrc so the auth token is picked up at publish time
+        # without changing the default registry used for install/build above.
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > $HOME/.npmrc
+          echo "@lastshotlabs:registry=https://npm.pkg.github.com" >> $HOME/.npmrc
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish snapshot to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
