@@ -94,8 +94,7 @@
     ".oclif.manifest.json"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.pkg.github.com"
   },
   "bundledDependencies": [
     "@lastshotlabs/frontend-contract"
