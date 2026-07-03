@@ -1,12 +1,22 @@
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { wsManagerAtom } from "./atom";
 import type { SocketHook } from "../types";
 import type { WebSocketManager } from "./manager";
 
-export function createWsHooks<TEvents extends Record<string, unknown>>() {
+export function createWsHooks<TEvents extends Record<string, unknown>>(
+  getManager?: () => WebSocketManager<TEvents> | null,
+) {
   function useWebSocketManager(): WebSocketManager<TEvents> | null {
-    return useAtomValue(wsManagerAtom) as WebSocketManager<TEvents> | null;
+    const [current, setManager] = useAtom(wsManagerAtom);
+    const instance = getManager?.() ?? null;
+    // Seed the atom from the instance closure on first use so every consumer
+    // (useSocket/useRoom/useRoomEvent) sees the manager without requiring the
+    // app to mount a dedicated initializer first.
+    if (instance !== null && current === null) {
+      setManager(instance);
+    }
+    return (current ?? instance) as WebSocketManager<TEvents> | null;
   }
 
   function useSocket(): SocketHook<TEvents> {

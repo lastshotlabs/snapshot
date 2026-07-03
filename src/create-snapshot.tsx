@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtomValue } from "jotai";
 import { useEffect, useState, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
 import { ApiClient } from "./api/client";
@@ -15,7 +15,6 @@ import { createWebAuthnHooks } from "./auth/webauthn-hooks";
 import { isMfaChallenge } from "./types";
 import type { MfaChallenge } from "./types";
 import { WebSocketManager } from "./ws/manager";
-import { wsManagerAtom } from "./ws/atom";
 import { createWsHooks } from "./ws/hook";
 import { createCommunityHooks } from "./community/hooks";
 import { createWebhookHooks } from "./webhooks/hooks";
@@ -194,17 +193,10 @@ export function createSnapshot<
   const webhookHooks = createWebhookHooks({ api, queryClient });
 
   // ── WS hooks ────────────────────────────────────────────────────────────────
-  const { useSocket, useRoom, useRoomEvent } = createWsHooks<TWSEvents>();
-
-  // Hook that initializes the atom on first render and returns the manager
-  function useWebSocketManagerWithInit(): WebSocketManager<TWSEvents> | null {
-    const [current, setManager] = useAtom(wsManagerAtom);
-    // Initialize atom on first use
-    if (wsManager !== null && current === null) {
-      setManager(wsManager);
-    }
-    return current as WebSocketManager<TWSEvents> | null;
-  }
+  // The instance closure supplies the manager so useSocket/useRoom work without
+  // the app mounting a dedicated initializer first.
+  const { useWebSocketManager, useSocket, useRoom, useRoomEvent } =
+    createWsHooks<TWSEvents>(() => wsManager);
 
   // ── SSE hooks (per-endpoint, closure-backed, no shared atoms) ────────────────
 
@@ -581,7 +573,7 @@ export function createSnapshot<
     api,
     tokenStorage,
     queryClient,
-    useWebSocketManager: useWebSocketManagerWithInit,
+    useWebSocketManager,
 
     // Routing
     protectedBeforeLoad,

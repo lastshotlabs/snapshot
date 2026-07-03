@@ -9,7 +9,12 @@
 export { resolveTokens, resolveFrameworkStyles } from "./ui/tokens/resolve";
 export { validateContrast } from "./ui/tokens/contrast-checker";
 export { useTokenEditor } from "./ui/tokens/editor";
-export { defineFlavor, getFlavor, getAllFlavors } from "./ui/tokens/flavors";
+export {
+  defineFlavor,
+  defineFlavorWithExtension,
+  getFlavor,
+  getAllFlavors,
+} from "./ui/tokens/flavors";
 export {
   hexToOklch,
   hslToOklch,
