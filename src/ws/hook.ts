@@ -37,7 +37,7 @@ export function createWsHooks<TEvents extends Record<string, unknown>>(
 
     return {
       isConnected,
-      send: (type, payload) => manager?.send(type, payload),
+      send: (type, payload) => manager?.send(type, payload) ?? "dropped",
       subscribe: (room) => manager?.subscribe(room),
       unsubscribe: (room) => manager?.unsubscribe(room),
       getRooms: () => manager?.getRooms() ?? [],
@@ -86,15 +86,9 @@ export function createWsHooks<TEvents extends Record<string, unknown>>(
         }
       };
 
-      manager.on(
-        event as keyof TEvents,
-        scoped as (data: unknown) => void,
-      );
+      manager.on(event as keyof TEvents, scoped as (data: unknown) => void);
       return () => {
-        manager.off(
-          event as keyof TEvents,
-          scoped as (data: unknown) => void,
-        );
+        manager.off(event as keyof TEvents, scoped as (data: unknown) => void);
       };
     }, [room, event, handler, manager]);
   }

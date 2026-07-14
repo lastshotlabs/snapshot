@@ -25,6 +25,35 @@ interface WsConfig {
 type EventHandler<T = unknown> = (data: T) => void;
 
 /**
+ * Outcome of writing a frame.
+ *
+ * - `"sent"` — written to an OPEN socket this instant.
+ * - `"queued"` — the socket was not OPEN (connecting / reconnecting), so the
+ *   frame was buffered and WILL be flushed, in order, the moment the socket
+ *   opens. It has NOT reached the server yet.
+ * - `"dropped"` — the manager is destroyed, or the caller opted out of
+ *   queueing (a frame that is reconstructed on reconnect anyway), so the frame
+ *   was discarded.
+ *
+ * A caller that needs to know its write is not yet delivered (e.g. a game input
+ * that must not report "sent" until the server confirms) can read this — a
+ * `"queued"` result is an explicit "deferred, not delivered" signal. Note that
+ * even `"sent"` is not proof of *delivery*: a frame written to an OPEN socket
+ * can still be lost in a half-open connection. Only an application-level ack
+ * proves the server received it.
+ */
+export type SendResult = "sent" | "queued" | "dropped";
+
+/**
+ * Frames buffered while the socket is not OPEN are held here and flushed in
+ * order on open. Capped so a socket that never opens cannot grow it without
+ * bound; on overflow the OLDEST buffered frame is dropped (a stale game input
+ * is worth less than the newest one, and the app layer's ack/resend recovers
+ * anything that matters).
+ */
+const MAX_QUEUED_FRAMES = 256;
+
+/**
  * Per-instance WebSocket connection manager.
  */
 export class WebSocketManager<
@@ -33,6 +62,11 @@ export class WebSocketManager<
   private ws: WebSocket | null = null;
   private readonly rooms = new Set<string>();
   private readonly listeners = new Map<string, Set<EventHandler>>();
+  /**
+   * Serialized frames written while the socket was not OPEN, awaiting a flush
+   * on the next `open`. Ordered oldest-first; flushed and cleared atomically.
+   */
+  private outbound: string[] = [];
   private reconnectAttempts = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
@@ -174,9 +208,14 @@ export class WebSocketManager<
       }
       this.onConnected?.();
       this.emit("connected", { connected: true });
+      // Rebuild room subscriptions first (durable desired state, not queued —
+      // see subscribe/unsubscribe), then flush everything that was written
+      // while the socket was down, in order. Subscribes go out before the
+      // buffered frames so a queued input lands on a re-subscribed session.
       this.rooms.forEach((room) =>
-        this.sendMessage({ action: "subscribe", room }),
+        this.sendMessage({ action: "subscribe", room }, { queue: false }),
       );
+      this.flushOutbound();
     };
 
     this.ws.onclose = () => {
@@ -207,9 +246,58 @@ export class WebSocketManager<
     };
   }
 
-  private sendMessage(message: Record<string, unknown>) {
+  /**
+   * Write a frame, or buffer it if the socket is not OPEN.
+   *
+   * The old implementation dropped any frame written while the socket was not
+   * OPEN — silently, no throw, no return value — so a game input sent during a
+   * ~200ms reconnect simply VANISHED and the caller could never tell. Now such
+   * a frame is queued and flushed, in order, on the next `open` (see
+   * `flushOutbound`), and the caller gets back whether it was sent, queued, or
+   * dropped.
+   *
+   * `{ queue: false }` opts a frame OUT of buffering — used for frames that are
+   * reconstructed on reconnect anyway (room subscribes, which the `onopen`
+   * handler replays from `this.rooms`), so they are never sent twice.
+   */
+  private sendMessage(
+    message: Record<string, unknown>,
+    opts?: { queue?: boolean },
+  ): SendResult {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
+      return "sent";
+    }
+    if (this.destroyed || opts?.queue === false) {
+      return "dropped";
+    }
+    // Buffer for the next open. Cap the backlog: drop the OLDEST frame if we
+    // are over the limit so a socket that never opens cannot leak memory.
+    if (this.outbound.length >= MAX_QUEUED_FRAMES) {
+      this.outbound.shift();
+    }
+    this.outbound.push(JSON.stringify(message));
+    return "queued";
+  }
+
+  /**
+   * Flush every buffered frame to the (now OPEN) socket, in the order they were
+   * written, then clear the buffer. A no-op if the socket is not OPEN.
+   */
+  private flushOutbound(): void {
+    if (this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    if (this.outbound.length === 0) {
+      return;
+    }
+    // Swap out the buffer before sending so a re-entrant send during flush
+    // (e.g. a handler firing off another frame) appends to a fresh buffer
+    // instead of being replayed here.
+    const pending = this.outbound;
+    this.outbound = [];
+    for (const frame of pending) {
+      this.ws.send(frame);
     }
   }
 
@@ -245,20 +333,29 @@ export class WebSocketManager<
 
   subscribe(room: string) {
     this.rooms.add(room);
-    this.sendMessage({ action: "subscribe", room });
+    // Not queued: the room set is the durable desired state and `onopen`
+    // replays it on every (re)connect, so a subscribe written while offline is
+    // recovered without risking a double-subscribe from a flushed duplicate.
+    this.sendMessage({ action: "subscribe", room }, { queue: false });
   }
 
   unsubscribe(room: string) {
     this.rooms.delete(room);
-    this.sendMessage({ action: "unsubscribe", room });
+    this.sendMessage({ action: "unsubscribe", room }, { queue: false });
   }
 
   getRooms(): string[] {
     return Array.from(this.rooms);
   }
 
-  send(type: string, payload: unknown) {
-    this.sendMessage({ action: "event", event: type, payload });
+  /**
+   * Send an application event frame. Returns whether it was written now
+   * (`"sent"`), buffered for the next open (`"queued"`), or discarded
+   * (`"dropped"`). A buffered frame is flushed, in order, on reconnect — it is
+   * no longer silently lost.
+   */
+  send(type: string, payload: unknown): SendResult {
+    return this.sendMessage({ action: "event", event: type, payload });
   }
 
   on<K extends keyof TEvents | "*">(
@@ -294,6 +391,7 @@ export class WebSocketManager<
 
   disconnect() {
     this.destroyed = true;
+    this.outbound = [];
     this.clearReconnectTimer();
     this.clearHeartbeatTimer();
     if (typeof document !== "undefined") {

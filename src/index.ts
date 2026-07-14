@@ -74,7 +74,7 @@ export type {
 } from "./types";
 
 export type { TokenStorage } from "./auth/storage";
-export type { WebSocketManager } from "./ws/manager";
+export type { SendResult, WebSocketManager } from "./ws/manager";
 export type { SseConnectionStatus } from "./sse/manager";
 export type {
   SseConfig,

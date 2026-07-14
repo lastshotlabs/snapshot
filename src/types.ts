@@ -4,7 +4,7 @@ import type { ApiClient } from "./api/client";
 import type { ApiError } from "./api/error";
 import type { AuthContractConfig } from "./auth/contract";
 import type { TokenStorage } from "./auth/storage";
-import type { WebSocketManager } from "./ws/manager";
+import type { SendResult, WebSocketManager } from "./ws/manager";
 import type { SseConnectionStatus } from "./sse/manager";
 import type { CommunityHooks } from "./community/hooks";
 import type { WebhookHooks } from "./webhooks/hooks";
@@ -473,7 +473,15 @@ export interface SseEventHookResult<T> {
  */
 export interface SocketHook<TEvents = Record<string, unknown>> {
   isConnected: boolean;
-  send: (type: string, payload: unknown) => void;
+  /**
+   * Send an application event frame. Returns whether the frame was written to
+   * the open socket now (`"sent"`), buffered to flush in order on the next
+   * reconnect because the socket was not OPEN (`"queued"`), or discarded
+   * (`"dropped"`). A `"queued"` result is a deferred-not-delivered signal;
+   * even `"sent"` is not proof the server received it — only an app-level ack
+   * is. Frames are no longer silently dropped when the socket is down.
+   */
+  send: (type: string, payload: unknown) => SendResult;
   subscribe: (room: string) => void;
   unsubscribe: (room: string) => void;
   getRooms: () => string[];
@@ -764,11 +772,9 @@ export interface SnapshotInstance<
    * exchange completes (e.g. an admin callback that needs to verify a
    * permission grant before navigating).
    */
-  useOAuthExchange: (opts?: { navigateOnSuccess?: boolean }) => UseMutationResult<
-    OAuthExchangeResponse,
-    ApiError,
-    OAuthExchangeBody
-  >;
+  useOAuthExchange: (opts?: {
+    navigateOnSuccess?: boolean;
+  }) => UseMutationResult<OAuthExchangeResponse, ApiError, OAuthExchangeBody>;
   /** Remove an OAuth provider link from the current account. */
   useOAuthUnlink: () => UseMutationResult<void, ApiError, OAuthProvider>;
   /**
@@ -778,7 +784,10 @@ export interface SnapshotInstance<
    * origin (admin app, embedded surface) shares the same OAuth client
    * but needs the callback delivered to its own origin.
    */
-  getOAuthUrl: (provider: OAuthProvider, opts?: { returnTo?: string }) => string;
+  getOAuthUrl: (
+    provider: OAuthProvider,
+    opts?: { returnTo?: string },
+  ) => string;
   /** Build the redirect URL for linking an OAuth provider to the current account. */
   getLinkUrl: (provider: OAuthProvider) => string;
 
@@ -1031,10 +1040,11 @@ export interface SnapshotInstance<
    * );
    * ```
    */
-  setNavigator: (nav: ((to: string, opts: { replace?: boolean }) => void) | null) => void;
+  setNavigator: (
+    nav: ((to: string, opts: { replace?: boolean }) => void) | null,
+  ) => void;
 
   // Scaffold component
   /** React provider that wraps children with the TanStack QueryClientProvider for this instance. */
   QueryProvider: React.FC<{ children: React.ReactNode }>;
-
 }
