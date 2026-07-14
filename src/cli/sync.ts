@@ -682,7 +682,16 @@ function generateOperation(
     ),
   ]);
   const pathParams = allParams.filter((p) => p.in === "path");
-  const queryParams = allParams.filter((p) => p.in === "query");
+  // A query param that shares a name with a path param collides in the emitted
+  // signature (`(sessionId: string, ..., sessionId?: string)` → TS2300 duplicate
+  // identifier, and the file will not compile). The path segment already binds
+  // that value, so a query filter of the same name is redundant: drop it and let
+  // the path win. Real case: GET /game/sessions/{sessionId}/players carries a
+  // `sessionId` query filter from the entity's generated CRUD.
+  const pathParamNames = new Set(pathParams.map((p) => p.name));
+  const queryParams = allParams.filter(
+    (p) => p.in === "query" && !pathParamNames.has(p.name),
+  );
   const hasPathParams = pathParams.length > 0;
   const hasQueryParams = queryParams.length > 0;
 

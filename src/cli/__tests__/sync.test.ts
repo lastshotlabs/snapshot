@@ -45,6 +45,59 @@ describe.skip("generateOperation (not exported)", () => {
 // ── Integration test ───────────────────────────────────────────────────────────
 
 describe("runSync integration", () => {
+  /**
+   * REGRESSION: a path param and a query param may share a name.
+   *
+   * Real case: `GET /game/sessions/{sessionId}/players` carries a `sessionId`
+   * QUERY filter (from the entity's generated CRUD) alongside the `{sessionId}`
+   * PATH segment. The generator used to emit both into the same signature —
+   * `(sessionId: string, ..., sessionId?: string)` — which is a TS2300 duplicate
+   * identifier, so the generated file would not compile at all. The path segment
+   * already binds the value, so a query filter of the same name is redundant and
+   * the path wins.
+   */
+  it("does not emit a duplicate identifier when a query param shadows a path param", async () => {
+    const tmpDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "snapshot-sync-collision-"),
+    );
+    try {
+      await runSync({
+        filePath: path.resolve(
+          __dirname,
+          "fixtures/path-query-name-collision.json",
+        ),
+        cwd: tmpDir,
+        logger: {
+          info: () => {},
+          success: () => {},
+          warn: () => {},
+          error: () => {},
+        },
+      });
+
+      const generated = await fs.readFile(
+        path.join(tmpDir, "src/api/players.ts"),
+        "utf8",
+      );
+
+      // The signature must declare `sessionId` exactly once.
+      const signature = generated.slice(
+        generated.indexOf("getGameSessionsBySessionIdPlayers"),
+      );
+      const params = signature.slice(
+        signature.indexOf("("),
+        signature.indexOf(")"),
+      );
+      const occurrences = params.match(/\bsessionId\b/g) ?? [];
+      expect(occurrences).toHaveLength(1);
+
+      // The surviving, non-colliding query param is still there.
+      expect(params).toContain("connected");
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it("generates output files from a local schema fixture", async () => {
     const tmpDir = await fs.mkdtemp(
       path.join(os.tmpdir(), "snapshot-sync-test-"),
