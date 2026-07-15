@@ -64,6 +64,11 @@ export function createAuthHooks({
     } = useQuery<AuthUser | null, ApiError>({
       queryKey: AUTH_QUERY_KEY,
       queryFn: async () => {
+        // Token mode with no stored token cannot be anyone: the `me` request
+        // could only 401. Skipping it keeps a fresh visitor's first load quiet
+        // (no guaranteed console 401) — callers that mint a session afterwards
+        // already invalidate this query, which refetches with the new token.
+        if (config.auth !== "cookie" && !storage.get()) return null;
         try {
           const raw = await api.get<Record<string, unknown>>(
             contract.endpoints.me,

@@ -202,13 +202,36 @@ export class ApiClient implements ApiClientLike {
     return response.json() as Promise<T>;
   }
 
+  /** The user token that would be attached to a request sent right now. */
+  private currentUserToken(): string | null {
+    if (this.authMode !== "token") return null;
+    return this.storage?.get() ?? null;
+  }
+
   private async executeRequest<T>(
     method: string,
     path: string,
     body?: unknown,
     options?: RequestOptions,
   ): Promise<T> {
-    const response = await this.rawFetch(method, path, body, options);
+    let tokenUsed = this.currentUserToken();
+    let response = await this.rawFetch(method, path, body, options);
+
+    if (response.status === 401 && this.authMode === "token") {
+      // The stored credential may have CHANGED while this request was in
+      // flight — a login or a guest-session mint landing after the headers
+      // were built. That 401 is about the old credential, not the new one:
+      // retry once with the current token instead of treating it as a real
+      // authentication failure. Without this, the stale 401 below would
+      // clear a token that never failed — which is how a guest mint, an
+      // in-flight tokenless request and a `useUser` refetch chained into an
+      // unbounded mint storm (hundreds of fresh guest identities per minute).
+      const tokenNow = this.currentUserToken();
+      if (tokenNow !== tokenUsed) {
+        tokenUsed = tokenNow;
+        response = await this.rawFetch(method, path, body, options);
+      }
+    }
 
     if (response.status === 401) {
       const refreshToken = this.storage?.getRefreshToken();
@@ -248,10 +271,16 @@ export class ApiClient implements ApiClientLike {
         }
       }
 
-      this.storage?.clear();
-      this.storage?.clearRefreshToken();
-      if (!options?.suppressUnauthenticated) {
-        this.onUnauthenticated?.();
+      // Cleanup applies only to the credential that actually failed. If the
+      // stored token changed again since the failing attempt went out, this
+      // 401 is stale: clearing here would clobber a newer session, and the
+      // unauthenticated handler would bounce a user who IS authenticated.
+      if (this.currentUserToken() === tokenUsed) {
+        this.storage?.clear();
+        this.storage?.clearRefreshToken();
+        if (!options?.suppressUnauthenticated) {
+          this.onUnauthenticated?.();
+        }
       }
       const errBody = await response.json().catch(() => null);
       throw new ApiError(401, errBody);
