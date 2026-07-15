@@ -53,6 +53,11 @@ class MockWebSocket {
     this.readyState = MockWebSocket.CLOSED;
     this.onclose?.(new Event("close") as CloseEvent);
   }
+
+  /** A frame arriving FROM the server. */
+  simulateMessage(frame: Record<string, unknown>) {
+    this.onmessage?.({ data: JSON.stringify(frame) } as MessageEvent);
+  }
 }
 
 const OriginalWebSocket = (globalThis as unknown as { WebSocket?: unknown })
@@ -226,5 +231,137 @@ describe("WebSocketManager frame delivery", () => {
     manager.disconnect();
 
     expect(manager.send("game:input", { sequence: 1 })).toBe("dropped");
+  });
+});
+
+// ── Input-epoch stamping ─────────────────────────────────────────────────────
+//
+// The server bumps a session's INPUT EPOCH on every phase transition and stamps
+// it on every frame it broadcasts; an input echoing an OLDER epoch is rejected
+// as stale. The manager's half of that contract: learn the epoch from incoming
+// frames, and stamp outbound `game:input` payloads AT WRITE TIME — so a frame
+// buffered through a reconnect carries the epoch of the state the player was
+// actually looking at when they acted, not whatever the world advanced to
+// while their phone was offline.
+describe("WebSocketManager input-epoch stamping", () => {
+  function openManagerWithEpoch(epoch: number) {
+    const manager = new WebSocketManager({ url: "/game" });
+    const ws = firstSocket();
+    ws.simulateOpen();
+    ws.simulateMessage({
+      type: "game:phase.entered",
+      sessionId: "sess-1",
+      phase: "pick",
+      epoch,
+    });
+    return { manager, ws };
+  }
+
+  it("stamps an outbound game:input with the last epoch seen for its session", () => {
+    const { manager, ws } = openManagerWithEpoch(5);
+
+    manager.send("game:input", {
+      type: "game:input",
+      sessionId: "sess-1",
+      channel: "pick",
+      data: { v: 1 },
+      sequence: 1,
+    });
+
+    const input = ws.received.find((m) => m["event"] === "game:input")!;
+    expect((input["payload"] as Record<string, unknown>)["epoch"]).toBe(5);
+    manager.disconnect();
+  });
+
+  it("THE RECONNECT CASE: a frame buffered while offline keeps the epoch from WRITE time", () => {
+    const { manager, ws } = openManagerWithEpoch(5);
+
+    // The phone drops. The player taps their move against the epoch-5 screen.
+    ws.simulateClose();
+    expect(
+      manager.send("game:input", {
+        type: "game:input",
+        sessionId: "sess-1",
+        channel: "pick",
+        data: { v: 1 },
+        sequence: 1,
+      }),
+    ).toBe("queued");
+
+    // Reconnect. The world moved on to epoch 6 — the server's snapshot says so
+    // — but the buffered frame must still say 5, because THAT is the state the
+    // player acted against. The server decides staleness, not the client.
+    vi.advanceTimersByTime(5000);
+    const ws2 = MockWebSocket.instances[1]!;
+    ws2.simulateOpen();
+    ws2.simulateMessage({
+      type: "game:state.snapshot",
+      sessionId: "sess-1",
+      epoch: 6,
+    });
+
+    const flushed = ws2.received.find((m) => m["event"] === "game:input")!;
+    expect((flushed["payload"] as Record<string, unknown>)["epoch"]).toBe(5);
+
+    // …and a FRESH move composed after the snapshot is stamped 6.
+    manager.send("game:input", {
+      type: "game:input",
+      sessionId: "sess-1",
+      channel: "pick",
+      data: { v: 2 },
+      sequence: 2,
+    });
+    const fresh = ws2.received.filter((m) => m["event"] === "game:input")[1]!;
+    expect((fresh["payload"] as Record<string, unknown>)["epoch"]).toBe(6);
+    manager.disconnect();
+  });
+
+  it("never overwrites an explicit epoch, never stamps other frame types, never goes backwards", () => {
+    const { manager, ws } = openManagerWithEpoch(5);
+
+    // A late/reordered frame reporting an older epoch must not lower the value.
+    ws.simulateMessage({ type: "game:score.changed", sessionId: "sess-1", epoch: 3 });
+
+    manager.send("game:input", {
+      type: "game:input",
+      sessionId: "sess-1",
+      channel: "pick",
+      data: { v: 1 },
+      sequence: 1,
+      epoch: 2, // an app doing build-time stamping (or a resend) wins
+    });
+    manager.send("game:other", { type: "game:other", sessionId: "sess-1" });
+    manager.send("game:input", {
+      type: "game:input",
+      sessionId: "sess-1",
+      channel: "pick",
+      data: { v: 2 },
+      sequence: 2,
+    });
+
+    const frames = ws.received.filter((m) => m["action"] === "event");
+    const payloads = frames.map((f) => f["payload"] as Record<string, unknown>);
+    expect(payloads[0]!["epoch"]).toBe(2); // explicit stamp preserved
+    expect(payloads[1]!["epoch"]).toBeUndefined(); // not a game:input
+    expect(payloads[2]!["epoch"]).toBe(5); // monotonic: 3 did not lower 5
+    manager.disconnect();
+  });
+
+  it("leaves inputs unstamped for sessions whose epoch it has never seen", () => {
+    const manager = new WebSocketManager({ url: "/game" });
+    const ws = firstSocket();
+    ws.simulateOpen();
+
+    manager.send("game:input", {
+      type: "game:input",
+      sessionId: "sess-unknown",
+      channel: "pick",
+      data: { v: 1 },
+      sequence: 1,
+    });
+
+    const input = ws.received.find((m) => m["event"] === "game:input")!;
+    expect((input["payload"] as Record<string, unknown>)["epoch"]).toBeUndefined();
+    manager.disconnect();
   });
 });

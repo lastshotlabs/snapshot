@@ -67,6 +67,18 @@ export class WebSocketManager<
    * on the next `open`. Ordered oldest-first; flushed and cleared atomically.
    */
   private outbound: string[] = [];
+  /**
+   * Latest INPUT EPOCH seen per game session, learned from any incoming frame
+   * carrying `{ sessionId, epoch }` (the game engine stamps every session
+   * frame and the subscribe snapshot). Outbound `game:input` payloads that
+   * carry no `epoch` of their own are stamped with this at WRITE time — i.e.
+   * with the epoch of the world the player was actually looking at — so a
+   * frame buffered through a reconnect still tells the server which
+   * phase/turn it was composed against, and the engine can reject it as
+   * stale instead of letting it complete a later, same-named channel.
+   * Monotonic per session: a late frame can never lower it.
+   */
+  private readonly epochBySession = new Map<string, number>();
   private reconnectAttempts = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
@@ -239,6 +251,7 @@ export class WebSocketManager<
           [key: string]: unknown;
         };
         const eventName = message["event"] ?? message["type"] ?? "message";
+        this.trackSessionEpoch(message);
         this.emit(eventName, message);
       } catch {
         this.emit("message", event.data);
@@ -355,7 +368,49 @@ export class WebSocketManager<
    * no longer silently lost.
    */
   send(type: string, payload: unknown): SendResult {
-    return this.sendMessage({ action: "event", event: type, payload });
+    return this.sendMessage({
+      action: "event",
+      event: type,
+      payload: this.stampInputEpoch(payload),
+    });
+  }
+
+  /** Record the freshest epoch a server frame reports for its session. */
+  private trackSessionEpoch(message: Record<string, unknown>): void {
+    const sessionId = message["sessionId"];
+    const epoch = message["epoch"];
+    if (typeof sessionId !== "string" || typeof epoch !== "number") return;
+    const known = this.epochBySession.get(sessionId);
+    if (known === undefined || epoch > known) {
+      this.epochBySession.set(sessionId, epoch);
+    }
+  }
+
+  /**
+   * Stamp an outbound `game:input` payload with the last epoch seen for its
+   * session — at write time, NOT flush time, so a frame buffered through a
+   * reconnect carries the epoch of the state the player actually saw when
+   * they acted. A payload that already carries an `epoch` (an app doing its
+   * own build-time stamping, or a resend preserving its original stamp) is
+   * left untouched. See `epochBySession`.
+   */
+  private stampInputEpoch(payload: unknown): unknown {
+    if (
+      payload === null ||
+      typeof payload !== "object" ||
+      Array.isArray(payload)
+    ) {
+      return payload;
+    }
+    const frame = payload as Record<string, unknown>;
+    if (frame["type"] !== "game:input" || frame["epoch"] !== undefined) {
+      return payload;
+    }
+    const sessionId = frame["sessionId"];
+    if (typeof sessionId !== "string") return payload;
+    const epoch = this.epochBySession.get(sessionId);
+    if (epoch === undefined) return payload;
+    return { ...frame, epoch };
   }
 
   on<K extends keyof TEvents | "*">(
