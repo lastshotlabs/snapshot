@@ -61,8 +61,23 @@ export const styleableElementFields = {
 
 export const styleableElementSchema = z.object(styleableElementFields).strict();
 
+// Build the finite optional-key object explicitly instead of using Zod 4's
+// `partialRecord`. Snapshot is commonly consumed as linked source by apps whose
+// sibling install can still expose Zod 3 declarations; both Zod 3 and 4 support
+// optional object fields, and `.strict()` preserves the same unknown-key guard.
+const statefulElementStatesSchema = z
+  .object(
+    Object.fromEntries(
+      slotStateNameSchema.options.map((stateName: string) => [
+        stateName,
+        styleableElementSchema.partial().optional(),
+      ]),
+    ),
+  )
+  .strict();
+
 export const statefulElementSchema = styleableElementSchema.extend({
-  states: z.partialRecord(slotStateNameSchema, styleableElementSchema.partial()).optional(),
+  states: statefulElementStatesSchema.optional(),
 });
 
 export function slotsSchema<const T extends readonly [string, ...string[]]>(
