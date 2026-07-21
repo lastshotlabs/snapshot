@@ -17,9 +17,6 @@ jobs:
       - name: Checkout snapshot
         uses: actions/checkout@v6
 
-      # Install + build/test against the public npm registry (default). We only
-      # point npm at GitHub Packages right before `npm publish`, so resolving
-      # public deps here is unaffected.
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -35,6 +32,18 @@ jobs:
       - name: Use npm 11
         run: npm install -g npm@^11.10.0
 
+      # Must precede `npm ci`: snapshot now depends on
+      # @lastshotlabs/frontend-contract from GitHub Packages, so installing
+      # needs auth too — not just publishing. This only maps the @lastshotlabs
+      # scope; the default registry stays npmjs.org, so public deps and the
+      # install smoke test in release:check are unaffected.
+      - name: Configure npm for GitHub Packages
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > $HOME/.npmrc
+          echo "@lastshotlabs:registry=https://npm.pkg.github.com" >> $HOME/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install snapshot dependencies
         run: npm ci
 
@@ -45,15 +54,6 @@ jobs:
 
       - name: Check snapshot release
         run: npm run release:check
-
-      - name: Configure npm for GitHub Packages
-        # Write to $HOME/.npmrc so the auth token is picked up at publish time
-        # without changing the default registry used for install/build above.
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > $HOME/.npmrc
-          echo "@lastshotlabs:registry=https://npm.pkg.github.com" >> $HOME/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish snapshot to GitHub Packages
         run: npm publish
