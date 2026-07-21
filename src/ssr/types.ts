@@ -247,7 +247,11 @@ export interface SsrQueryCacheEntry {
  * Successful result from a server route's `load()` function.
  *
  * Both `data` and `queryCache` must be JSON-serializable — they are embedded
- * in the HTML as dehydrated state for client hydration.
+ * in the HTML as dehydrated state for client hydration. The renderer enforces
+ * this by JSON round-tripping both before render, so the server component
+ * tree sees exactly the values the client will hydrate with (e.g. a `Date`
+ * read straight from a storage adapter renders as its ISO string on both
+ * sides instead of causing a hydration mismatch).
  */
 export interface SsrLoadResult {
   /** Arbitrary data passed as `loaderData` prop to the rendered React component. */

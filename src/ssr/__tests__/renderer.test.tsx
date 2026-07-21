@@ -23,6 +23,9 @@ const headerEchoRoutePath = fileURLToPath(
 const notFoundRoutePath = fileURLToPath(
   new URL("./fixtures/not-found-route.ts", import.meta.url),
 );
+const dateLoaderRoutePath = fileURLToPath(
+  new URL("./fixtures/date-loader-route.ts", import.meta.url),
+);
 
 describe("createReactRenderer — resolve()", () => {
   it("resolve() always returns null (file resolver is authoritative)", async () => {
@@ -149,6 +152,39 @@ describe("createReactRenderer — render() returns Response", () => {
     expect(html).toContain("<title>Missing</title>");
     expect(html).toContain("/assets/app.js");
     expect(html).toContain('<div id="root"></div>');
+  });
+});
+
+describe("createReactRenderer — loader data JSON normalization", () => {
+  it("renders loaderData as its JSON form so SSR matches client hydration", async () => {
+    // A loader returning a Date must render as the ISO string the client
+    // will see after the JSON round-trip — not Date#toString(), which is
+    // locale/timezone-dependent and guarantees a hydration mismatch.
+    let seenType = "";
+    const renderer = createReactRenderer({
+      resolveComponent: async () =>
+        ((props: { loaderData?: Record<string, unknown> }) => {
+          seenType = typeof props.loaderData?.createdAt;
+          return React.createElement(
+            "time",
+            { dateTime: props.loaderData?.createdAt as string },
+            String(props.loaderData?.createdAt),
+          );
+        }) as React.ComponentType<Record<string, unknown>>,
+    });
+
+    const response = await renderer.render(
+      { ...fakeMatch, filePath: dateLoaderRoutePath },
+      emptyShell,
+      {},
+    );
+    const html = await response.text();
+
+    expect(seenType).toBe("string");
+    expect(html).toContain('dateTime="2026-05-08T19:53:13.916Z"');
+    expect(html).not.toContain("GMT");
+    // The dehydrated queryCache entry is serialized the same way.
+    expect(html).toContain("2026-01-02T03:04:05.678Z");
   });
 });
 

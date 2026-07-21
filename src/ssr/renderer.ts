@@ -356,6 +356,37 @@ function buildSpaShell(shell: SsrShellShape): string {
   ].join("\n");
 }
 
+/**
+ * Round-trip a load() result through JSON so the server renders exactly the
+ * values the client will hydrate with.
+ *
+ * Loaders read entities directly from adapters — no HTTP hop — so non-JSON
+ * values like `Date` survive to server render time, while the client only
+ * ever sees their JSON forms (ISO strings) from the dehydrated state script
+ * or the `?_data=1` endpoint. Any component that renders such a value (e.g.
+ * `<time dateTime={createdAt}>`) then produces different output on the two
+ * sides and hydration reports a mismatch. Serializing up front makes both
+ * renders read identical data. `data` and `queryCache` are documented as
+ * JSON-serializable, and both are stringified into the HTML anyway, so this
+ * adds no new constraint.
+ *
+ * @internal
+ */
+function normalizeLoadResult(result: SsrLoadResult): SsrLoadResult {
+  return {
+    ...result,
+    data: JSON.parse(JSON.stringify(result.data ?? {})) as Record<
+      string,
+      unknown
+    >,
+    ...(result.queryCache !== undefined && {
+      queryCache: JSON.parse(
+        JSON.stringify(result.queryCache),
+      ) as SsrLoadResult["queryCache"],
+    }),
+  };
+}
+
 function buildEntityPageMatch(
   filePath: string,
   path: string,
@@ -633,7 +664,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         );
       }
 
-      const ssrLoadResult = loadResult as SsrLoadResult;
+      const ssrLoadResult = normalizeLoadResult(loadResult as SsrLoadResult);
 
       // 5. Create per-request QueryClient and seed cache
       const queryClient = new QueryClient({
@@ -826,7 +857,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         ),
       );
 
-      const [layoutResults, pageResult] = await Promise.all([
+      const [rawLayoutResults, pageResult] = await Promise.all([
         Promise.all(
           layoutModules.map(async (mod, i) => {
             const loadFn = mod["load"] as
@@ -848,6 +879,13 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           return loadFn(pageLoadContext);
         })(),
       ]);
+
+      // Layout data reaches the client as JSON; render from the same values.
+      const layoutResults = rawLayoutResults.map((result) =>
+        isLoadResult(result)
+          ? normalizeLoadResult(result as SsrLoadResult)
+          : result,
+      );
 
       // 3. Page result takes precedence for redirect / not-found
       if (isRedirectResult(pageResult)) {
@@ -969,7 +1007,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         );
       }
 
-      const ssrPageResult = pageResult as SsrLoadResult;
+      const ssrPageResult = normalizeLoadResult(pageResult as SsrLoadResult);
 
       // 4. Seed QueryClient with all cache entries (layouts + page)
       const queryClient = new QueryClient({
@@ -1129,7 +1167,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
                 slotsMap[slot.name] = null;
                 return;
               }
-              const slotResultTyped = slotResult as SsrLoadResult;
+              const slotResultTyped = normalizeLoadResult(
+                slotResult as SsrLoadResult,
+              );
 
               for (const entry of slotResultTyped.queryCache ?? []) {
                 queryClient.setQueryData(

@@ -14,39 +14,35 @@ function hashCss(input: string): string {
   return (hash >>> 0).toString(36);
 }
 
-// Module-level registry of CSS hashes already emitted to the document. On the
-// client, the first SurfaceStyles for a given hash mounts the <style> tag and
-// every subsequent SurfaceStyles render with the same css is a no-op. SSR
-// uses the existing data-sn-style attribute on emitted tags so repeated SSR
-// passes (or hydration) won't double-mount: hydration matches the existing
-// markup, and client renders see the live tag and skip re-mounting.
-const emittedHashes: Set<string> = (() => {
-  if (typeof window === "undefined") return new Set();
-  const w = window as unknown as { __snStyleHashes?: Set<string> };
-  if (!w.__snStyleHashes) {
-    w.__snStyleHashes = new Set<string>();
-    // Seed from any pre-existing tags (SSR-emitted or hot-reloaded).
-    if (typeof document !== "undefined") {
-      const existing = document.querySelectorAll("style[data-sn-style]");
-      existing.forEach((el) => {
-        const hash = el.getAttribute("data-sn-style");
-        if (hash) w.__snStyleHashes!.add(hash);
-      });
-    }
-  }
-  return w.__snStyleHashes;
-})();
-
+/**
+ * Render a component's CSS as a React 19 hoistable `<style>` element.
+ *
+ * `href` + `precedence` hand ownership of dedup and placement to React
+ * itself: multiple instances with the same content-addressed `href` render
+ * the stylesheet once, React hoists it into `document.head`, and — critically
+ * — hydration matches hoistables by `href` anywhere in the document rather
+ * than by tree position, so server- and client-rendered trees never disagree.
+ *
+ * The previous implementation dedup'd through a module-level registry seeded
+ * from SSR-emitted tags. That produced a guaranteed hydration mismatch on
+ * every SSR'd page: the server (which skipped the registry) emitted a tag per
+ * component instance, while the seeded client rendered none of them. React
+ * then discarded the entire server tree and re-rendered from scratch —
+ * negating SSR. Do not reintroduce manual registries here; React's hoistable
+ * contract is the mechanism that keeps both sides consistent.
+ */
 export function SurfaceStyles({ css }: { css?: string }) {
   const hash = useMemo(() => (css ? hashCss(css) : null), [css]);
   if (!css || !hash) return null;
-  if (typeof window !== "undefined" && emittedHashes.has(hash)) {
-    return null;
-  }
-  if (typeof window !== "undefined") {
-    emittedHashes.add(hash);
-  }
+  // React owns hoistable attributes: it serialises `href`/`precedence` as
+  // `data-href`/`data-precedence` on the emitted tag and strips anything
+  // else, so no custom marker attribute survives — select emitted tags via
+  // `style[data-precedence="sn-component"]` if needed.
   return (
-    <style data-sn-style={hash} dangerouslySetInnerHTML={{ __html: css }} />
+    <style
+      href={`sn-${hash}`}
+      precedence="sn-component"
+      dangerouslySetInnerHTML={{ __html: css }}
+    />
   );
 }
