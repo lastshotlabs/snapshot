@@ -2,6 +2,7 @@ import path from "node:path";
 import * as ts from "typescript";
 import {
   escapeCell,
+  isDocumentedSource,
   markdownPage,
   repoPath,
   relToRepo,
@@ -250,8 +251,7 @@ function isRepoOwnedExport(
   symbol: ts.Symbol,
   checker: ts.TypeChecker,
 ): boolean {
-  const sourcePath = getSourcePath(symbol, checker);
-  return sourcePath !== "unknown" && !sourcePath.startsWith("node_modules/");
+  return isDocumentedSource(getSourcePath(symbol, checker));
 }
 
 function getSignature(

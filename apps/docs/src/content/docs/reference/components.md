@@ -964,10 +964,10 @@ Forms Input is a code-first Snapshot UI component exported from the UI package.
 | `onKeyDown` | `KeyboardEventHandler<HTMLInputElement> \| undefined` | No | Standard keydown handler. |
 | `onMouseEnter` | `MouseEventHandler<HTMLInputElement> \| undefined` | No | Standard mouseenter handler. |
 | `onMouseLeave` | `MouseEventHandler<HTMLInputElement> \| undefined` | No | Standard mouseleave handler. |
-| `onPointerDown` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerdown handler. |
-| `onPointerUp` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerup handler. |
-| `onTouchEnd` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchend handler. |
-| `onTouchStart` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchstart handler. |
+| `onPointerDown` | `PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerdown handler. |
+| `onPointerUp` | `PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerup handler. |
+| `onTouchEnd` | `TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchend handler. |
+| `onTouchStart` | `TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchstart handler. |
 | `pattern` | `string \| undefined` | No | Regex validation pattern. |
 | `placeholder` | `string \| undefined` | No | Placeholder text inside the input. |
 | `readOnly` | `boolean \| undefined` | No | Read-only state. |
@@ -2603,8 +2603,8 @@ powered by tiptap. Works with plain React props.
 | `onSend` | `((data: { html: string; text: string; markdown?: string; }) => void) \| undefined` | No | Called when the send button is pressed or Enter is pressed (if sendOnEnter). |
 | `placeholder` | `string \| undefined` | No | Placeholder text. |
 | `readonly` | `boolean \| undefined` | No | Whether the editor is read-only. |
-| `ref` | `Ref<import("/home/jdd/dev/snapshot/src/ui").RichInputBaseHandle> \| undefined` | No | Allows getting a ref to the component instance. Once the component unmounts, React will set `ref.current` to `null` (or call the ref with `null` if you passed a callback ref). |
-| `renderMentionList` | `ComponentType<MentionListProps & import("/home/jdd/dev/snapshot/node_modules/@types/react/index").RefAttributes<MentionListHandle>> \| undefined` | No | Optional consumer-rendered popover. If omitted, snapshot uses a minimal default list styled with the framework's CSS variables. Accepts the same props the default does and exposes `onKeyDown({ event })` via `forwardRef` so the suggestion plugin can forward arrow / Enter keys. |
+| `ref` | `Ref<RichInputBaseHandle> \| undefined` | No | Allows getting a ref to the component instance. Once the component unmounts, React will set `ref.current` to `null` (or call the ref with `null` if you passed a callback ref). |
+| `renderMentionList` | `ComponentType<MentionListProps & RefAttributes<MentionListHandle>> \| undefined` | No | Optional consumer-rendered popover. If omitted, snapshot uses a minimal default list styled with the framework's CSS variables. Accepts the same props the default does and exposes `onKeyDown({ event })` via `forwardRef` so the suggestion plugin can forward arrow / Enter keys. |
 | `sendOnEnter` | `boolean \| undefined` | No | Whether pressing Enter sends (vs. newline). Default: true. |
 | `serializeMention` | `((attrs: { id: string; label: string; }) => string) \| undefined` | No | Override the mention serialization format. Defaults to slingshot's `<@<id>>` content-token format, which `slingshot-core/parseBody` understands. Override only when integrating into a non-slingshot server. |
 | `showSendButton` | `boolean \| undefined` | No | Whether to show a send button. |
@@ -3612,7 +3612,7 @@ add-reaction button that opens an inline emoji picker. Works with plain React pr
 | Prop | Type | Required | Summary |
 | --- | --- | --- | --- |
 | `className` | `string \| undefined` | No | className applied to the root wrapper. |
-| `EmojiPickerComponent` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").ComponentType<{ maxHeight?: string; perRow?: number; onSelect?: (payload: { emoji: string; name: string; isCustom: boolean; }) => void; }> \| undefined` | No | Optional override for the emoji picker component, useful in tests. |
+| `EmojiPickerComponent` | `ComponentType<{ maxHeight?: string; perRow?: number; onSelect?: (payload: { emoji: string; name: string; isCustom: boolean; }) => void; }> \| undefined` | No | Optional override for the emoji picker component, useful in tests. |
 | `id` | `string \| undefined` | No | Unique identifier for surface scoping. |
 | `onEmojiSelect` | `((payload: { emoji: string; name: string; isCustom: boolean; }) => void) \| undefined` | No | Called when an emoji is picked from the add-reaction picker. |
 | `onReactionClick` | `((emoji: string, wasActive: boolean) => void) \| undefined` | No | Called when a reaction button is clicked. Receives the emoji and whether it was active (for toggle). |

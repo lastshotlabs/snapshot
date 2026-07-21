@@ -12,6 +12,7 @@ import * as ts from "typescript";
 import { collectComponentDirectories } from "./component-inventory.ts";
 import {
   escapeCell,
+  isDocumentedSource,
   markdownPage,
   relToRepo,
   repoPath,
@@ -155,7 +156,7 @@ function getExports(
         symbol: target,
       };
     })
-    .filter((entry) => entry.source && !entry.source.includes("node_modules"))
+    .filter((entry) => entry.source && isDocumentedSource(entry.source))
     .sort((left, right) => left.name.localeCompare(right.name));
 }
 
@@ -170,12 +171,30 @@ function typeToString(
   type: ts.Type,
   node?: ts.Node,
 ): string {
-  return checker.typeToString(
-    type,
-    node,
-    ts.TypeFormatFlags.NoTruncation |
-      ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+  return stripImportPaths(
+    checker.typeToString(
+      type,
+      node,
+      ts.TypeFormatFlags.NoTruncation |
+        ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+    ),
   );
+}
+
+/**
+ * Rewrites `import("/abs/path/to/module").Foo` down to `Foo`.
+ *
+ * The checker emits absolute, machine-specific paths inside type text, which
+ * then get committed. Regenerating on a different machine rewrote every such
+ * line (the committed docs still carried paths from a previous machine's
+ * layout), producing large diffs that had nothing to do with the change at hand
+ * and made the output non-reproducible across contributors.
+ *
+ * The qualifier carries no information for a reader — the surrounding table
+ * already records where the symbol comes from.
+ */
+function stripImportPaths(typeText: string): string {
+  return typeText.replace(/import\((?:"[^"]*"|'[^']*')\)\./g, "");
 }
 
 function getPropsForComponent(

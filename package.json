@@ -1,6 +1,6 @@
 {
   "name": "@lastshotlabs/snapshot",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "React frontend framework for slingshot-powered backends",
   "type": "module",
   "sideEffects": [
@@ -121,9 +121,10 @@
     "storybook:build": "bun run storybook:generate && storybook build",
     "examples:smoke": "node --experimental-strip-types scripts/docs/examples-smoke.ts",
     "docs:ci": "bun run docs:generate && bun run docs:typecheck && bun run docs:impact && bun run docs:coverage && bun run components:coverage && bun run examples:smoke && bun run docs:build",
-    "release:check": "npm run typecheck && npm run build && npm test && npm run docs:ci && npm pack --dry-run",
+    "release:check": "npm run typecheck && npm run build && npm test && npm run docs:ci && npm run install:smoke",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "install:smoke": "node scripts/install-smoke.mjs"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",

@@ -1,7 +1,7 @@
 import path from "node:path";
 import { writeFileSync, mkdirSync } from "node:fs";
 import * as ts from "typescript";
-import { repoPath, relToRepo } from "./_common.ts";
+import { isDocumentedSource, repoPath, relToRepo } from "./_common.ts";
 
 /**
  * Generate docs/api-cheatsheet.md — a condensed single-file API reference
@@ -113,10 +113,7 @@ function getModuleExports(
   if (!mod) throw new Error(`No module symbol: ${filePath}`);
   return checker
     .getExportsOfModule(mod)
-    .filter((s) => {
-      const p = sourcePath(s, checker);
-      return p !== "unknown" && !p.startsWith("node_modules/");
-    })
+    .filter((s) => isDocumentedSource(sourcePath(s, checker)))
     .filter((s) => s.getName() !== "default")
     .map((s) => ({
       name: s.getName(),

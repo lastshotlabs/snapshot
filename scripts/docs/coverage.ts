@@ -139,6 +139,10 @@ for (const entrypoint of entrypoints) {
       target.getDeclarations() ?? symbol.getDeclarations() ?? [];
     const declarationFile = declarations[0]?.getSourceFile().fileName;
 
+    // Intentionally stricter than `isDocumentedSource`: the JSDoc gate covers
+    // exports THIS repo authors. Re-exports from @lastshotlabs/frontend-contract
+    // still appear in the generated reference, but their JSDoc lives in that
+    // package and cannot be fixed from here.
     if (!declarationFile || declarationFile.includes("node_modules")) {
       continue;
     }

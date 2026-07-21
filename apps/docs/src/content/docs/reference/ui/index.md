@@ -34,8 +34,8 @@ Generated from `src/ui.ts`.
 | `AccordionBase` | function | `src/ui/components/navigation/accordion/standalone.tsx` | Standalone Accordion — an expandable/collapsible panel list with plain React children. Works with plain React props. |
 | `AccordionBaseItem` | interface | `src/ui/components/navigation/accordion/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `AccordionBaseProps` | interface | `src/ui/components/navigation/accordion/standalone.tsx` | Props accepted by the AccordionBase standalone component. |
-| `ActionConfig` | typealias | `../frontend-contract/src/actions/types.ts` | Configuration type for action config. |
-| `ActionExecuteFn` | typealias | `../frontend-contract/src/actions/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `ActionConfig` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/actions/index.d.ts` | Configuration type for action config. |
+| `ActionExecuteFn` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/actions/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `AlertBase` | function | `src/ui/components/data/alert/standalone.tsx` | Standalone Alert — a styled alert/notification box with optional icon, action button, and dismiss. Works with plain React props. |
 | `AlertBaseProps` | interface | `src/ui/components/data/alert/standalone.tsx` | Props accepted by the AlertBase standalone component. |
 | `AppContextProvider` | function | `src/ui/context/providers.tsx` | Provides persistent global state that survives route changes. Initializes globals from runtime config. |
@@ -66,7 +66,7 @@ Generated from `src/ui.ts`.
 | `BreadcrumbBaseProps` | interface | `src/ui/components/navigation/breadcrumb/standalone.tsx` | Props accepted by the BreadcrumbBase standalone component. |
 | `Breakpoint` | typealias | `src/ui/hooks/use-breakpoint.ts` | All breakpoint names including `"default"` (below `sm`). |
 | `buildEmojiMap` | function | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Builds a shortcode lookup map from an array of custom emojis. |
-| `buildRequestUrl` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `buildRequestUrl` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
 | `ButtonBase` | function | `src/ui/components/forms/button/standalone.tsx` | Standalone ButtonBase -- a styled button that works with plain React props. Works with plain React props. |
 | `ButtonBaseProps` | interface | `src/ui/components/forms/button/standalone.tsx` | Props accepted by the ButtonBase standalone component. |
 | `ButtonControl` | function | `src/ui/components/forms/button/control.tsx` | Low-level styled button element with surface resolution and accessibility attributes. Used internally by ButtonBase and other components that need a styled `<button>`. Works with plain React props. |
@@ -90,7 +90,7 @@ Generated from `src/ui.ts`.
 | `CodeBlockBaseProps` | interface | `src/ui/components/content/code-block/standalone.tsx` | Props accepted by the CodeBlockBase standalone component. |
 | `CollapsibleBase` | function | `src/ui/components/layout/collapsible/standalone.tsx` | Standalone Collapsible -- an animated expand/collapse container with an optional trigger. Works with plain React props. |
 | `CollapsibleBaseProps` | interface | `src/ui/components/layout/collapsible/standalone.tsx` | Props accepted by the CollapsibleBase standalone component. |
-| `collectDependentResources` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `collectDependentResources` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
 | `ColorPickerBase` | variable | `src/ui/components/forms/color-picker/standalone.tsx` | Exported variable from the Snapshot UI runtime. |
 | `ColorPickerBaseProps` | typealias | `src/ui/components/forms/color-picker/standalone.tsx` | Props accepted by the ColorPickerBase standalone component. |
 | `ColorPickerField` | function | `src/ui/components/forms/color-picker/standalone.tsx` | Standalone ColorPickerField -- a color picker with optional swatches, alpha slider, and custom hex input. Works with plain React props. |
@@ -109,7 +109,7 @@ Generated from `src/ui.ts`.
 | `ComponentDataResult` | interface | `src/ui/components/_base/use-component-data.ts` | Result returned by `useComponentData`. Provides the fetched data, loading/error states, and a refetch function. |
 | `ComponentGroupBase` | function | `src/ui/components/_base/component-group/standalone.tsx` | Standalone ComponentGroup — a simple wrapper for pre-rendered group content. Works with plain React props. |
 | `ComponentGroupBaseProps` | interface | `src/ui/components/_base/component-group/standalone.tsx` | Props accepted by the ComponentGroupBase standalone component. |
-| `ComponentTokens` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `ComponentTokens` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `ConfirmDialog` | function | `src/ui/actions/confirm.tsx` | Render the global confirmation dialog for requests queued through `useConfirmManager`. |
 | `ConfirmDialogBase` | function | `src/ui/components/overlay/confirm-dialog/standalone.tsx` | Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props. Works with plain React props. |
 | `ConfirmDialogBaseProps` | interface | `src/ui/components/overlay/confirm-dialog/standalone.tsx` | Props accepted by the ConfirmDialogBase standalone component. |
@@ -127,7 +127,7 @@ Generated from `src/ui.ts`.
 | `contrastRatio` | function | `src/ui/tokens/color.ts` | Calculate the WCAG contrast ratio between two supported color values. |
 | `CUSTOM_EMOJI_CSS` | variable | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | CSS for custom emoji sizing. Custom emojis render as inline images sized to match surrounding text. |
 | `CustomEmoji` | interface | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Shape of a custom emoji entry. |
-| `dataSourceSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating data source schema. |
+| `dataSourceSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating data source schema. |
 | `DataTableBase` | function | `src/ui/components/data/data-table/standalone.tsx` | Standalone DataTable — feature-rich data table with sorting, pagination, selection, and search. Works with plain React props. |
 | `DataTableBaseBulkAction` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `DataTableBaseColumn` | interface | `src/ui/components/data/data-table/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
@@ -177,13 +177,13 @@ Generated from `src/ui.ts`.
 | `EmojiPickerBaseProps` | interface | `src/ui/components/communication/emoji-picker/standalone.tsx` | Props accepted by the EmojiPickerBase standalone component. |
 | `EmptyStateBase` | function | `src/ui/components/data/empty-state/standalone.tsx` | Standalone EmptyState — a centered message with optional icon and action. Works with plain React props. |
 | `EmptyStateBaseProps` | interface | `src/ui/components/data/empty-state/standalone.tsx` | Props accepted by the EmptyStateBase standalone component. |
-| `EndpointTarget` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
-| `endpointTargetSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating endpoint target schema. |
+| `EndpointTarget` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `endpointTargetSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating endpoint target schema. |
 | `EntityPickerBase` | function | `src/ui/components/data/entity-picker/standalone.tsx` | Standalone EntityPicker — dropdown with search, single/multi select. Works with plain React props. |
 | `EntityPickerBaseProps` | interface | `src/ui/components/data/entity-picker/standalone.tsx` | Props accepted by the EntityPickerBase standalone component. |
 | `EntityPickerEntity` | interface | `src/ui/components/data/entity-picker/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `ExprRef` | interface | `../frontend-contract/src/refs/from.ts` | Type definition exported by the Snapshot UI runtime. |
-| `extractResourceRefs` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `ExprRef` | interface | `node_modules/@lastshotlabs/frontend-contract/dist/from-B_VrpLQ5.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `extractResourceRefs` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
 | `FavoriteButtonBase` | function | `src/ui/components/data/favorite-button/standalone.tsx` | Standalone FavoriteButton — a toggle button with a star icon. Works with plain React props. |
 | `FavoriteButtonBaseProps` | interface | `src/ui/components/data/favorite-button/standalone.tsx` | Props accepted by the FavoriteButtonBase standalone component. |
 | `FeedBase` | function | `src/ui/components/data/feed/standalone.tsx` | Standalone Feed — feed/activity list with grouping, pagination, and live updates. Works with plain React props. |
@@ -195,18 +195,18 @@ Generated from `src/ui.ts`.
 | `FilterBarBase` | function | `src/ui/components/data/filter-bar/standalone.tsx` | Standalone FilterBar — search + filter dropdowns + active pills. Works with plain React props. |
 | `FilterBarBaseProps` | interface | `src/ui/components/data/filter-bar/standalone.tsx` | Props accepted by the FilterBarBase standalone component. |
 | `FilterBarFilter` | interface | `src/ui/components/data/filter-bar/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `Flavor` | interface | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `Flavor` | interface | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBase` | function | `src/ui/components/primitives/floating-menu/standalone.tsx` | Standalone FloatingMenu — a dropdown menu with trigger, keyboard navigation, and pre-resolved items. Works with plain React props. |
 | `FloatingMenuBaseEntry` | typealias | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseItem` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseLabel` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `FloatingMenuBaseProps` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Props accepted by the FloatingMenuBase standalone component. |
 | `FloatingMenuBaseSeparator` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `FontConfig` | typealias | `../frontend-contract/src/tokens/types.ts` | Configuration type for font config. |
-| `FromRef` | interface | `../frontend-contract/src/refs/from.ts` | Type definition exported by the Snapshot UI runtime. |
+| `FontConfig` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Configuration type for font config. |
+| `FromRef` | interface | `node_modules/@lastshotlabs/frontend-contract/dist/from-B_VrpLQ5.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `getAllFlavors` | function | `src/ui/tokens/flavors.ts` | Get all registered flavors as a record. |
 | `getFlavor` | function | `src/ui/tokens/flavors.ts` | Retrieve a registered flavor by name. |
-| `getResourceInvalidationTargets` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `getResourceInvalidationTargets` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
 | `getSortableStyle` | function | `src/ui/hooks/use-drag-drop.ts` | CSS transform helper for sortable items. Converts the dnd-kit transform into a CSS transform string. |
 | `GifPickerBase` | function | `src/ui/components/communication/gif-picker/standalone.tsx` | Standalone GifPicker — searchable GIF grid with debounced search, loading states, and optional attribution. Works with plain React props. |
 | `GifPickerBaseProps` | interface | `src/ui/components/communication/gif-picker/standalone.tsx` | Props accepted by the GifPickerBase standalone component. |
@@ -221,8 +221,8 @@ Generated from `src/ui.ts`.
 | `HoverCardBase` | function | `src/ui/components/overlay/hover-card/standalone.tsx` | Standalone HoverCard — a floating panel that appears on hover with plain React props. Works with plain React props. |
 | `HoverCardBaseProps` | interface | `src/ui/components/overlay/hover-card/standalone.tsx` | Props accepted by the HoverCardBase standalone component. |
 | `hslToOklch` | function | `src/ui/tokens/color.ts` | Convert HSL values to OKLCH. |
-| `HttpMethod` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
-| `httpMethodSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating http method schema. |
+| `HttpMethod` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `httpMethodSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating http method schema. |
 | `Icon` | function | `src/ui/icons/icon.tsx` | Render a Snapshot icon from the built-in icon registry. |
 | `ICON_PATHS` | variable | `src/ui/icons/paths.ts` | SVG inner content for Lucide icons. Each entry maps a kebab-case icon name to the SVG child elements (path, circle, line, rect, polyline, etc.) that belong inside a 24x24 `stroke="currentColor"` SVG container. Source: https://lucide.dev — MIT-licensed. |
 | `IconButtonBase` | function | `src/ui/components/forms/icon-button/standalone.tsx` | Standalone IconButtonBase -- an icon-only button with configurable shape, size, and variant. Works with plain React props. |
@@ -240,9 +240,9 @@ Generated from `src/ui.ts`.
 | `InputFieldProps` | interface | `src/ui/components/forms/input/standalone.tsx` | Props accepted by the InputField component. |
 | `interpolate` | function | `src/ui/actions/interpolate.ts` | Replace `{key}` placeholders with values from context. Supports nested paths: `{user.name}`, `{result.id}`. Missing keys are preserved as-is: `{unknown}` stays `{unknown}`. |
 | `isFromRef` | variable | `src/ui/context/utils.ts` | Type guard for Snapshot binding references resolved from page, app, or resource state. |
-| `isOptimisticResourceTarget` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
-| `isQueryKeyInvalidationTarget` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
-| `isResourceRef` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `isOptimisticResourceTarget` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
+| `isQueryKeyInvalidationTarget` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
+| `isResourceRef` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
 | `KanbanBase` | function | `src/ui/components/workflow/kanban/standalone.tsx` | Standalone KanbanBase — renders a multi-column board with cards, WIP limits, assignee avatars, priority indicators, and optional drag-and-drop reordering. Works with plain React props. |
 | `KanbanBaseProps` | interface | `src/ui/components/workflow/kanban/standalone.tsx` | Props accepted by the KanbanBase standalone component. |
 | `KanbanColumnEntry` | interface | `src/ui/components/workflow/kanban/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
@@ -304,10 +304,10 @@ Generated from `src/ui.ts`.
 | `OAuthProvider` | interface | `src/ui/components/primitives/oauth-buttons/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `oklchToHex` | function | `src/ui/tokens/color.ts` | Convert OKLCH values back to a hex color string. Used for serializing runtime overrides. |
 | `oklchToString` | function | `src/ui/tokens/color.ts` | Format OKLCH values as a CSS-compatible string (without the oklch() wrapper). Output format: "L C H" where L, C, H are rounded to 3 decimal places. |
-| `OptimisticConfig` | typealias | `../frontend-contract/src/resources/index.ts` | Configuration type for optimistic config. |
-| `optimisticConfigSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating optimistic config schema. |
-| `OptimisticTarget` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
-| `optimisticTargetSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating optimistic target schema. |
+| `OptimisticConfig` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Configuration type for optimistic config. |
+| `optimisticConfigSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating optimistic config schema. |
+| `OptimisticTarget` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `optimisticTargetSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating optimistic target schema. |
 | `OutletBase` | function | `src/ui/components/layout/outlet/standalone.tsx` | Standalone OutletBase — a router-agnostic mount point for child routes or manually-supplied content. Works with plain React props. Pass router-rendered content as `children`. When children is empty, `fallback` is rendered instead. |
 | `OutletBaseProps` | interface | `src/ui/components/layout/outlet/standalone.tsx` | Props accepted by the OutletBase standalone component. |
 | `PageContextProvider` | function | `src/ui/context/providers.tsx` | Provides per-page state that is destroyed on route change. |
@@ -336,28 +336,28 @@ Generated from `src/ui.ts`.
 | `QuickAddBaseProps` | typealias | `src/ui/components/forms/quick-add/standalone.tsx` | Props accepted by the QuickAddBase standalone component. |
 | `QuickAddField` | function | `src/ui/components/forms/quick-add/standalone.tsx` | Standalone QuickAddField -- a compact input with submit button for quickly adding items to a list. Works with plain React props. |
 | `QuickAddFieldProps` | interface | `src/ui/components/forms/quick-add/standalone.tsx` | Props accepted by the QuickAddField component. |
-| `RadiusScale` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `RadiusScale` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `ReactionBarBase` | function | `src/ui/components/communication/reaction-bar/standalone.tsx` | Standalone ReactionBar — row of emoji reaction pills with counts and an add-reaction button that opens an inline emoji picker. Works with plain React props. |
 | `ReactionBarBaseProps` | interface | `src/ui/components/communication/reaction-bar/standalone.tsx` | Props accepted by the ReactionBarBase standalone component. |
 | `ReactionEntry` | interface | `src/ui/components/communication/reaction-bar/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
 | `readPersistedState` | function | `src/ui/state/persist.ts` | Read and JSON-decode a persisted state value, returning `undefined` on failure or absence. |
 | `relativeLuminance` | function | `src/ui/tokens/color.ts` | Compute relative luminance from OKLCH for WCAG contrast calculations. Uses sRGB relative luminance (rec. 709) from the linear RGB values. |
 | `ResolvedConfig` | typealias | `src/ui/context/types.ts` | Resolves a type where FromRef values are replaced with their resolved types. Used internally — consumers don't need to use this directly. |
-| `ResolvedRequest` | interface | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
+| `ResolvedRequest` | interface | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `resolveEmojiRecords` | function | `src/ui/components/communication/emoji-picker/custom-emoji.ts` | Resolves emoji records from the API into CustomEmoji entries. Handles the `uploadKey` → `url` resolution using a URL prefix or field mapping. |
-| `resolveEndpointTarget` | function | `../frontend-contract/src/resources/index.ts` | Function exported by the Snapshot UI runtime. |
+| `resolveEndpointTarget` | function | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Function exported by the Snapshot UI runtime. |
 | `resolveFrameworkStyles` | function | `src/ui/tokens/resolve.ts` | Returns a CSS string containing framework-level styles: 1. CSS reset (box-sizing, margin, padding, body defaults, font inherit) 2. Component polish CSS — data-attribute-driven styles for page layout,    data-table, stat-card, form, detail-card, and focus rings. All values are parameterized via `--sn-*` token custom properties so the output adapts to whatever theme tokens are active. |
 | `resolveResponsiveValue` | function | `src/ui/hooks/use-breakpoint.ts` | Resolve a responsive value for a given breakpoint. Cascades down: if the active breakpoint isn't defined, falls back to the next smaller breakpoint, then `default`. For flat (non-object) values, returns the value directly. |
 | `resolveTokens` | function | `src/ui/tokens/resolve.ts` | Resolve a theme configuration into a complete CSS string. Pipeline: 1. Load base flavor (default: neutral) 2. Deep merge overrides onto flavor defaults 3. Convert all colors to oklch 4. Auto-derive foreground colors (contrast-aware) 5. Auto-derive dark mode colors if not provided 6. Map radius/spacing/font to CSS 7. Generate component-level tokens 8. Output CSS string with :root, .dark, and component selectors |
-| `ResourceConfig` | typealias | `../frontend-contract/src/resources/index.ts` | Configuration type for resource config. |
-| `resourceConfigSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource config schema. |
-| `ResourceInvalidationTarget` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
-| `resourceInvalidationTargetSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource invalidation target schema. |
-| `ResourceMap` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
-| `resourceParamSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource param schema. |
-| `ResourceRef` | typealias | `../frontend-contract/src/resources/index.ts` | Type definition exported by the Snapshot UI runtime. |
-| `resourceRefSchema` | variable | `../frontend-contract/src/resources/index.ts` | Zod schema for validating resource ref schema. |
-| `Responsive` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `ResourceConfig` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Configuration type for resource config. |
+| `resourceConfigSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating resource config schema. |
+| `ResourceInvalidationTarget` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `resourceInvalidationTargetSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating resource invalidation target schema. |
+| `ResourceMap` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `resourceParamSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating resource param schema. |
+| `ResourceRef` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `resourceRefSchema` | variable | `node_modules/@lastshotlabs/frontend-contract/dist/resources/index.d.ts` | Zod schema for validating resource ref schema. |
+| `Responsive` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `RichInputBase` | variable | `src/ui/components/content/rich-input/standalone.tsx` | Standalone RichInput — a rich text editor with formatting toolbar, powered by tiptap. Works with plain React props. |
 | `RichInputBaseHandle` | interface | `src/ui/components/content/rich-input/standalone.tsx` | Imperative handle exposed via `ref`. Use this when an external surface (emoji picker, GIF picker, slash-command menu) needs to insert content at the user's current cursor position without going through the controlled-value path (which clobbers the cursor). |
 | `RichInputBaseProps` | interface | `src/ui/components/content/rich-input/standalone.tsx` | Props accepted by the RichInputBase standalone component. |
@@ -392,7 +392,7 @@ Generated from `src/ui.ts`.
 | `SnapshotImageBaseProps` | interface | `src/ui/components/media/image/standalone.tsx` | Props accepted by the SnapshotImageBase standalone component. |
 | `SpacerBase` | function | `src/ui/components/layout/spacer/standalone.tsx` | Standalone Spacer -- an empty element that takes up space along an axis. Works with plain React props. |
 | `SpacerBaseProps` | interface | `src/ui/components/layout/spacer/standalone.tsx` | Props accepted by the SpacerBase standalone component. |
-| `SpacingScale` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `SpacingScale` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `SplitPaneBase` | function | `src/ui/components/layout/split-pane/standalone.tsx` | Standalone SplitPane -- a resizable two-pane layout with a draggable divider. Works with plain React props. |
 | `SplitPaneBaseProps` | interface | `src/ui/components/layout/split-pane/standalone.tsx` | Props accepted by the SplitPaneBase standalone component. |
 | `StackBase` | function | `src/ui/components/primitives/stack/standalone.tsx` | Standalone Stack — a flex-column layout container with token-based spacing. Works with plain React props. |
@@ -403,7 +403,7 @@ Generated from `src/ui.ts`.
 | `StateConfigMap` | typealias | `src/ui/state/types.ts` | Map of named state definitions. |
 | `StateHookScope` | typealias | `src/ui/state/hooks.ts` | Hook-level scope override that can force app, route, or auto-discovered state resolution. |
 | `StateProviderProps` | interface | `src/ui/state/types.ts` | Props accepted by the provider layer that wires named state into a React tree. |
-| `StateScope` | typealias | `../frontend-contract/src/state/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `StateScope` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/types-xWJCMOrd.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `StepperBase` | function | `src/ui/components/navigation/stepper/standalone.tsx` | Standalone Stepper — a multi-step progress indicator with plain React props. Works with plain React props. |
 | `StepperBaseProps` | interface | `src/ui/components/navigation/stepper/standalone.tsx` | Props accepted by the StepperBase standalone component. |
 | `StepperBaseStep` | interface | `src/ui/components/navigation/stepper/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
@@ -427,8 +427,8 @@ Generated from `src/ui.ts`.
 | `TextareaFieldProps` | interface | `src/ui/components/forms/textarea/standalone.tsx` | Props accepted by the TextareaField component. |
 | `TextBase` | function | `src/ui/components/primitives/text/standalone.tsx` | Standalone Text — renders a styled paragraph element with token-based typography. Works with plain React props. |
 | `TextBaseProps` | interface | `src/ui/components/primitives/text/standalone.tsx` | Props accepted by the TextBase standalone component. |
-| `ThemeColors` | typealias | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
-| `ThemeConfig` | typealias | `../frontend-contract/src/tokens/types.ts` | Configuration type for theme config. |
+| `ThemeColors` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
+| `ThemeConfig` | typealias | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Configuration type for theme config. |
 | `throttleAction` | function | `src/ui/actions/timing.ts` | Throttle async or sync action execution by key and drop calls inside the active throttle window. |
 | `TimelineBase` | function | `src/ui/components/content/timeline/standalone.tsx` | Standalone Timeline — vertical event timeline with dot markers, connectors, date labels, and default/compact/alternating layout variants. Works with plain React props. |
 | `TimelineBaseProps` | interface | `src/ui/components/content/timeline/standalone.tsx` | Props accepted by the TimelineBase standalone component. |
@@ -443,7 +443,7 @@ Generated from `src/ui.ts`.
 | `ToggleGroupBase` | function | `src/ui/components/forms/toggle-group/standalone.tsx` | Standalone ToggleGroupBase -- a group of toggle buttons supporting single or multi-select modes. Works with plain React props. |
 | `ToggleGroupBaseProps` | interface | `src/ui/components/forms/toggle-group/standalone.tsx` | Props accepted by the ToggleGroupBase standalone component. |
 | `ToggleGroupItem` | interface | `src/ui/components/forms/toggle-group/standalone.tsx` | Type definition exported by the Snapshot UI runtime. |
-| `TokenEditor` | interface | `../frontend-contract/src/tokens/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `TokenEditor` | interface | `node_modules/@lastshotlabs/frontend-contract/dist/tokens/index.d.ts` | Type definition exported by the Snapshot UI runtime. |
 | `TooltipBase` | function | `src/ui/components/data/tooltip/standalone.tsx` | Standalone Tooltip — wraps child content and shows informational text on hover with configurable placement and delay. Works with plain React props. |
 | `TooltipBaseProps` | interface | `src/ui/components/data/tooltip/standalone.tsx` | Props accepted by the TooltipBase standalone component. |
 | `toPersistedStateKey` | function | `src/ui/state/persist.ts` | Build the storage key used for persisted Snapshot state entries. |
@@ -3425,7 +3425,7 @@ Works with plain React props.
 
 ---
 
-#### `useComponentData(dataConfig: string | FromRef | { resource: string; params?: Record<string, unknown> | undefined; }, params?: Record<string, unknown> | undefined, options?: ComponentDataOptions | undefined) => Compon...`
+#### `useComponentData(dataConfig: string | { resource: string; params?: Record<string, unknown> | undefined; } | FromRef, params?: Record<string, unknown> | undefined, options?: ComponentDataOptions | undefined) => Compon...`
 
 Shared data-fetching hook for Snapshot UI components.
 
@@ -3648,7 +3648,7 @@ with user avatars, relative timestamps, and expandable detail panels. Works with
 
 ---
 
-#### `buildRequestUrl(endpoint: string, params?: Record<string, unknown>, pathParams?: Record<string, unknown>) => string`
+#### `buildRequestUrl(endpoint: string, params?: Record<string, unknown> | undefined, pathParams?: Record<string, unknown> | undefined) => string`
 
 Function exported by the Snapshot UI runtime.
 
@@ -3673,7 +3673,7 @@ navigation controls, and optional week numbers. Works with plain React props.
 
 ---
 
-#### `collectDependentResources(resourceName: string, resources?: ResourceMap | undefined, visited?: Set<string>) => string[]`
+#### `collectDependentResources(resourceName: string, resources?: ResourceMap | undefined, visited?: Set<string> | undefined) => string[]`
 
 Function exported by the Snapshot UI runtime.
 
@@ -3742,7 +3742,7 @@ Works with plain React props.
 
 ---
 
-#### `extractResourceRefs(value: unknown, results?: { resource: string; params?: Record<string, unknown> | undefined; }[]) => { resource: string; params?: Record<string, unknown> | undefined; }[]`
+#### `extractResourceRefs(value: unknown, results?: { resource: string; params?: Record<string, unknown> | undefined; }[] | undefined) => { resource: string; params?: Record<string, unknown> | undefined; }[]`
 
 Function exported by the Snapshot UI runtime.
 
@@ -3835,7 +3835,7 @@ a card grid or a feature-comparison table with CTA buttons per tier. Works with 
 
 ---
 
-#### `resolveEndpointTarget(target: string | { resource: string; params?: Record<string, unknown> | undefined; }, resources?: ResourceMap | undefined, params?: Record<string, unknown> | undefined, fallbackMethod?: "GET" | ... 3...`
+#### `resolveEndpointTarget(target: string | { resource: string; params?: Record<string, unknown> | undefined; }, resources?: ResourceMap | undefined, params?: Record<string, unknown> | undefined, fallbackMethod?: "GET" | ... 4...`
 
 Function exported by the Snapshot UI runtime.
 
