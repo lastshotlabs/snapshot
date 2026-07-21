@@ -14,7 +14,7 @@ Generated from `src/index.ts`.
 - [Community](#community) (41)
 - [Webhooks](#webhooks) (9)
 - [Push Notifications](#push-notifications) (4)
-- [Realtime](#realtime) (7)
+- [Realtime](#realtime) (8)
 - [Core Types](#core-types) (12)
 
 <details>
@@ -110,6 +110,7 @@ Generated from `src/index.ts`.
 | `ResetPasswordBody` | interface | `src/types.ts` | Request body for completing a password reset flow. |
 | `ResolveReportBody` | interface | `src/community/types.ts` | Request body for resolving a moderation report. |
 | `SearchResponse` | interface | `src/community/types.ts` | Search results returned by the thread and reply search endpoints. |
+| `SendResult` | typealias | `src/ws/manager.ts` | Outcome of writing a frame. - `"sent"` — written to an OPEN socket this instant. - `"queued"` — the socket was not OPEN (connecting / reconnecting), so the   frame was buffered and WILL be flushed, in order, the moment the socket   opens. It has NOT reached the server yet. - `"dropped"` — the manager is destroyed, or the caller opted out of   queueing (a frame that is reconstructed on reconnect anyway), so the frame   was discarded. A caller that needs to know its write is not yet delivered (e.g. a game input that must not report "sent" until the server confirms) can read this — a `"queued"` result is an explicit "deferred, not delivered" signal. Note that even `"sent"` is not proof of *delivery*: a frame written to an OPEN socket can still be lost in a half-open connection. Only an application-level ack proves the server received it. |
 | `Session` | interface | `src/types.ts` | Active session metadata returned by session-management hooks. |
 | `SetPasswordBody` | interface | `src/types.ts` | Request body for setting or rotating an account password. |
 | `SnapshotAuthConfig` | interface | `src/types.ts` | Code-first auth configuration for `createSnapshot()`. |
@@ -443,6 +444,7 @@ const { state, subscribe, unsubscribe } = usePushNotifications({
 
 | Export | Kind | Description |
 |---|---|---|
+| `SendResult` | typealias | Outcome of writing a frame. - `"sent"` — written to an OPEN socket this instant. - `"queued"` — the socket was not OPEN (connecting / reconnecting), so the   frame was buffered and WILL be flushed, in order, the moment the socket   opens. It has NOT reached the server yet. - `"dropped"` — the manager is destroyed, or the caller opted out of   queueing (a frame that is reconstructed on reconnect anyway), so the frame   was discarded. A caller that needs to know its write is not yet delivered (e.g. a game input that must not report "sent" until the server confirms) can read this — a `"queued"` result is an explicit "deferred, not delivered" signal. Note that even `"sent"` is not proof of *delivery*: a frame written to an OPEN socket can still be lost in a half-open connection. Only an application-level ack proves the server received it. |
 | `SocketHook` | interface | Realtime websocket control surface returned by `useSocket()`. |
 | `SseConfig` | interface | SSE configuration. Each key is an endpoint path that must start with `/__sse/`. The value is per-endpoint options. One EventSource is created per endpoint. reconnectOnLogin: whether to reconnect all endpoints on login success (default true). |
 | `SseConnectionStatus` | typealias | Lifecycle state of a managed SSE connection. |

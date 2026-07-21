@@ -1,6 +1,6 @@
 {
   "name": "@lastshotlabs/snapshot",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "React frontend framework for slingshot-powered backends",
   "type": "module",
   "sideEffects": [
