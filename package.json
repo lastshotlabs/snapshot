@@ -96,9 +96,6 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "bundledDependencies": [
-    "@lastshotlabs/frontend-contract"
-  ],
   "oclif": {
     "bin": "snapshot",
     "dirname": "snapshot",
@@ -196,7 +193,7 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@lastshotlabs/frontend-contract": "file:vendor/lastshotlabs-frontend-contract-0.2.0.tgz",
+    "@lastshotlabs/frontend-contract": "^0.2.1",
     "@oclif/core": "^4.10.2",
     "@tiptap/extension-link": "^3.22.2",
     "@tiptap/extension-mention": "^3.22.2",
