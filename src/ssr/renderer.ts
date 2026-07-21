@@ -41,7 +41,7 @@ function isCustomPage(
 // ─── Route chain shape (structural — avoids cross-repo import) ─────────────────
 
 /**
- * Structural equivalent of `SsrRouteChain` from `@lastshotlabs/bunshot-ssr`.
+ * Structural equivalent of `SsrRouteChain` from `@lastshotlabs/slingshot-ssr`.
  * Defined here to avoid cross-repo coupling (Rule 9: structural typing).
  *
  * @internal
@@ -211,16 +211,16 @@ function wrapWithErrorBoundary(
 /**
  * Build the `SsrLoadContext` for a given route match and request.
  *
- * Provides direct bunshot adapter access via `bsCtx` without an HTTP round-trip.
- * Auth resolution via `getUser()` calls into bunshot-auth's plugin state.
+ * Provides direct slingshot adapter access via `bsCtx` without an HTTP round-trip.
+ * Auth resolution via `getUser()` calls into slingshot-auth's plugin state.
  * Draft mode status is forwarded from the shell's `_draftMode` flag, which the
- * bunshot-ssr middleware sets based on the incoming request cookie.
+ * slingshot-ssr middleware sets based on the incoming request cookie.
  * The `afterFn` parameter, when provided, is exposed as `ctx.after()` so load
- * functions can schedule post-response callbacks without importing from bunshot-ssr.
+ * functions can schedule post-response callbacks without importing from slingshot-ssr.
  *
  * @param match - The resolved route match for this request.
  * @param request - The raw HTTP request (used to read cookies for auth).
- * @param bsCtx - The bunshot context for direct DB/adapter access.
+ * @param bsCtx - The slingshot context for direct DB/adapter access.
  * @param draftModeEnabled - Whether the request is in draft mode.
  * @param afterFn - Optional scheduler from `shell._after` for post-response callbacks.
  * @internal
@@ -245,9 +245,9 @@ function buildLoadContext(
       email: string;
       roles: string[];
     } | null> {
-      // bunshot-auth stores its state in pluginState keyed by 'bunshot-auth'
+      // slingshot-auth stores its state in pluginState keyed by 'slingshot-auth'
       const ctx = bsCtx as { pluginState?: Map<string, unknown> };
-      const authState = ctx.pluginState?.get("bunshot-auth") as
+      const authState = ctx.pluginState?.get("slingshot-auth") as
         | { resolveSession?: (cookie: string) => Promise<unknown> }
         | undefined;
       if (!authState?.resolveSession || !cookieHeader) return null;
@@ -264,7 +264,7 @@ function buildLoadContext(
     /**
      * Returns the draft mode status for the current request.
      *
-     * Reflects whether the incoming request carried the bunshot draft mode cookie.
+     * Reflects whether the incoming request carried the slingshot draft mode cookie.
      * The SSR middleware sets `shell._draftMode` before calling the renderer.
      *
      * @returns `{ isEnabled: boolean }` snapshot for this request.
@@ -275,7 +275,7 @@ function buildLoadContext(
     /**
      * Schedule a callback to run after the HTTP response has been fully sent.
      *
-     * Proxies to `shell._after` injected by the bunshot-ssr middleware.
+     * Proxies to `shell._after` injected by the slingshot-ssr middleware.
      * When `_after` is not set (e.g. in tests), this is a no-op.
      *
      * @param callback - The async function to execute after the response is sent.
@@ -380,13 +380,13 @@ function buildEntityPageMatch(
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
 /**
- * Create the official React renderer for `bunshot-ssr`.
+ * Create the official React renderer for `slingshot-ssr`.
  *
- * Returns an object that satisfies `BunshotSsrRenderer` from
- * `@lastshotlabs/bunshot-ssr` by structural typing. The consumer app imports
+ * Returns an object that satisfies `SlingshotSsrRenderer` from
+ * `@lastshotlabs/slingshot-ssr` by structural typing. The consumer app imports
  * both packages and wires them together — no forced dependency between repos.
  *
- * **File-based routing:** `createReactRenderer` relies on bunshot-ssr's built-in
+ * **File-based routing:** `createReactRenderer` relies on slingshot-ssr's built-in
  * file resolver to match URLs to route files. The `resolve()` method returns
  * `null` — the file resolver is authoritative. `render()` is called only when
  * a match was found.
@@ -398,11 +398,11 @@ function buildEntityPageMatch(
  * **Config freeze:** The config object is frozen at construction time.
  *
  * @param config - Renderer configuration. `resolveComponent` is required.
- * @returns An object with `resolve()` and `render()` satisfying `BunshotSsrRenderer`.
+ * @returns An object with `resolve()` and `render()` satisfying `SlingshotSsrRenderer`.
  *
  * @example
  * ```ts
- * import { createSsrPlugin } from '@lastshotlabs/bunshot-ssr'
+ * import { createSsrPlugin } from '@lastshotlabs/slingshot-ssr'
  * import { createReactRenderer } from '@lastshotlabs/snapshot/ssr'
  *
  * createSsrPlugin({
@@ -460,9 +460,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
     /**
      * Resolve a URL to a server route match.
      *
-     * The file-based resolver in bunshot-ssr already handles URL → file matching.
+     * The file-based resolver in slingshot-ssr already handles URL → file matching.
      * This method always returns `null` — the file resolver is authoritative.
-     * bunshot-ssr calls `resolveRoute()` before calling `renderer.resolve()`;
+     * slingshot-ssr calls `resolveRoute()` before calling `renderer.resolve()`;
      * if that returns a match, `renderer.resolve()` is called as a secondary
      * filter only.
      */
@@ -478,16 +478,16 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
      *
      * Flow:
      * 1. Dynamic `import()` the route file
-     * 2. Build `SsrLoadContext` with direct bunshot access
+     * 2. Build `SsrLoadContext` with direct slingshot access
      * 3. Call `load()` — handle redirect / notFound / data signals
      * 4. Seed `QueryClient` cache with `queryCache` entries
      * 5. Call `meta()` — build head tags
      * 6. Dynamic `import()` the React component via `resolveComponent()`
      * 7. Call `renderPage()` with the component and the populated `QueryClient`
      *
-     * @param match - The resolved server route from bunshot-ssr's file resolver.
-     * @param shell - Shell from bunshot-ssr (asset tags, nonce).
-     * @param bsCtx - Bunshot context for DB access and auth.
+     * @param match - The resolved server route from slingshot-ssr's file resolver.
+     * @param shell - Shell from slingshot-ssr (asset tags, nonce).
+     * @param bsCtx - Slingshot context for DB access and auth.
      */
     async render(
       match: ServerRouteMatchShape,
@@ -714,7 +714,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         );
       }
 
-      // 8. Build the full shell (bunshot-ssr shell + head tags from meta())
+      // 8. Build the full shell (slingshot-ssr shell + head tags from meta())
       const fullShell: SsrShellShape = {
         ...shell,
         headTags,
@@ -755,9 +755,9 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
      * When `chain.intercepted` is true, adds `X-Snapshot-Interception: modal`
      * to the response.
      *
-     * @param chain - Fully resolved route chain from bunshot-ssr's resolver.
-     * @param shell - Shell from bunshot-ssr (asset tags, nonce, ISR sink).
-     * @param bsCtx - Bunshot context for DB access and auth.
+     * @param chain - Fully resolved route chain from slingshot-ssr's resolver.
+     * @param shell - Shell from slingshot-ssr (asset tags, nonce, ISR sink).
+     * @param bsCtx - Slingshot context for DB access and auth.
      */
     async renderChain(
       chain: SsrRouteChainShape,
@@ -1243,7 +1243,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
     },
 
     /**
-     * Render an entity-driven bunshot page.
+     * Render an entity-driven slingshot page.
      *
      * Custom handler-ref pages are delegated back to the standard route render
      * path using the handler module path as the route file.

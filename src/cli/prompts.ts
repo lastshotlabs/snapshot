@@ -215,10 +215,10 @@ export async function runPrompts(
   if (isCancel(sseVal)) return null;
   const sse = sseVal as boolean;
 
-  // Mail plugin (bunshot-mail)
+  // Mail plugin (slingshot-mail)
   const mailVal = await confirm({
     message:
-      "Scaffold bunshot-mail plugin config? (Resend + auth delivery events)",
+      "Scaffold slingshot-mail plugin config? (Resend + auth delivery events)",
     initialValue: false,
   });
   if (isCancel(mailVal)) return null;

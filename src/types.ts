@@ -67,7 +67,7 @@ export interface LogoutVars {
  */
 export type MfaMethod = "totp" | "emailOtp" | "webauthn";
 
-/** Raw login response shape from bunshot (includes MFA fields) */
+/** Raw login response shape from slingshot (includes MFA fields) */
 export interface LoginResponse {
   token: string;
   userId: string;

@@ -9,7 +9,7 @@ Snapshot has three primary documentation personas:
 1. **SDK App Builder**
    - builds with `createSnapshot`, generated client output, auth/realtime/community/webhook hooks, and custom React
 2. **SSR / Platform Integrator**
-   - integrates Snapshot with Bunshot SSR, RSC, Vite, PPR, prefetch, and SSG
+   - integrates Snapshot with Slingshot SSR, RSC, Vite, PPR, prefetch, and SSG
 3. **Snapshot Contributor**
    - changes Snapshot itself and must keep source, docs, examples, and tests aligned
 

@@ -52,7 +52,7 @@ Snapshot has a layered documentation system with clear ownership:
 5. **Agent discovery**
    - root policy plus targeted `CLAUDE.md` files tell framework contributors and app-building agents where to read, what is canonical, and what must be updated in the same change
 
-The main property of the system is the same one Bunshot is moving toward: **docs should be difficult to drift by accident**.
+The main property of the system is the same one Slingshot is moving toward: **docs should be difficult to drift by accident**.
 
 ## Target Personas
 
@@ -63,7 +63,7 @@ The public docs app is designed around four real consumers:
 2. **SDK App Builder**
    - Wants to use `createSnapshot`, hooks, auth, routing helpers, sync output, and custom React.
 3. **SSR / Platform Integrator**
-   - Wants Snapshot working with bunshot SSR, manifest rendering, RSC, prefetch, and Vite integration.
+   - Wants Snapshot working with slingshot SSR, manifest rendering, RSC, prefetch, and Vite integration.
 4. **Snapshot Contributor**
    - Wants to implement or change Snapshot itself without guessing where patterns live or which docs/examples must move with the code.
 
@@ -205,7 +205,7 @@ This is the mechanism that prevents "I didn't know where to look" and "I didn't 
 
 ### Goal
 
-Make the contributor workflow explicit, repo-native, and required. Snapshot needs the same "agents know what to do without being reminded" layer Bunshot now has.
+Make the contributor workflow explicit, repo-native, and required. Snapshot needs the same "agents know what to do without being reminded" layer Slingshot now has.
 
 ### Files to create
 
@@ -376,7 +376,7 @@ Build the curated public docs layer that explains what Snapshot is, what it can 
 | `apps/docs/src/content/docs/start-here/capabilities.mdx` | Source-backed high-level capability map |
 | `apps/docs/src/content/docs/build/manifest-apps.mdx` | Manifest-first app building path |
 | `apps/docs/src/content/docs/build/sdk-apps.mdx` | Custom React / SDK path |
-| `apps/docs/src/content/docs/integrate/ssr-rsc.mdx` | bunshot SSR, manifest renderer, RSC, prefetch |
+| `apps/docs/src/content/docs/integrate/ssr-rsc.mdx` | slingshot SSR, manifest renderer, RSC, prefetch |
 | `apps/docs/src/content/docs/integrate/community-and-realtime.mdx` | community, websockets, SSE, push |
 | `apps/docs/src/content/docs/integrate/content-and-media.mdx` | markdown, rich input/editor, file upload, embeds, emoji/gif |
 | `apps/docs/src/content/docs/contribute/agent-flow.mdx` | Contributor/agent implementation flow |
@@ -388,7 +388,7 @@ Build the curated public docs layer that explains what Snapshot is, what it can 
 - the start-here surface explicitly answers:
   - what Snapshot can do
   - when to use manifest mode vs SDK mode
-  - how Snapshot fits with Bunshot
+  - how Snapshot fits with Slingshot
   - how agents should discover context efficiently
 
 ### Important audited correction
@@ -421,7 +421,7 @@ Make examples a first-class part of the documentation system rather than inciden
 | `examples/manifest-starter/*` | Minimal manifest-first example |
 | `examples/sdk-auth/*` | SDK/custom React/auth example |
 | `examples/community-realtime/*` | Community/chat/realtime example |
-| `examples/ssr-manifest/*` | bunshot SSR + Snapshot manifest renderer example |
+| `examples/ssr-manifest/*` | slingshot SSR + Snapshot manifest renderer example |
 | `scripts/docs/examples-smoke.ts` | Smoke runner for examples and showcase |
 
 ### Files to modify

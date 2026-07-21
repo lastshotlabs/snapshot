@@ -428,7 +428,7 @@ function EditUserDrawer({ user, onClose, onSave, isPending, error }: {
 
 ## API contract
 
-This recipe expects your Bunshot backend to expose:
+This recipe expects your Slingshot backend to expose:
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|

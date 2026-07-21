@@ -1,10 +1,10 @@
 ---
 title: Snapshot
-description: Build code-first React apps on Bunshot with auth, realtime, generated hooks, and standalone UI.
+description: Build code-first React apps on Slingshot with auth, realtime, generated hooks, and standalone UI.
 draft: false
 ---
 
-Snapshot is a code-first React SDK for Bunshot-powered apps. Create one runtime
+Snapshot is a code-first React SDK for Slingshot-powered apps. Create one runtime
 with `createSnapshot({ apiUrl })`, compose hooks in React, and import UI from
 `@lastshotlabs/snapshot/ui`.
 

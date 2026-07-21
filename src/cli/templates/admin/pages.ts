@@ -850,7 +850,7 @@ export function AuditLogPage() {
 }
 
 export function generateGroupsPageComponent(): string {
-  return `// NOTE: Groups are managed by bunshot-auth, not bunshot-admin.
+  return `// NOTE: Groups are managed by slingshot-auth, not slingshot-admin.
 // This page calls the auth-owned /auth/groups endpoint, not an admin endpoint.
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@lib/snapshot'
@@ -872,7 +872,7 @@ export function GroupsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Groups</h1>
-        <p className="text-xs text-muted-foreground">Managed by bunshot-auth</p>
+        <p className="text-xs text-muted-foreground">Managed by slingshot-auth</p>
       </div>
 
       {isLoading && <p className="text-sm text-muted-foreground">Loading…</p>}
@@ -914,7 +914,7 @@ export function GroupsPage() {
 }
 
 export function generateOrgsPageComponent(): string {
-  return `// NOTE: Orgs are managed by bunshot-auth. This page calls /auth/orgs.
+  return `// NOTE: Orgs are managed by slingshot-auth. This page calls /auth/orgs.
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@lib/snapshot'
 
@@ -935,7 +935,7 @@ export function OrgsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Organisations</h1>
-        <p className="text-xs text-muted-foreground">Managed by bunshot-auth</p>
+        <p className="text-xs text-muted-foreground">Managed by slingshot-auth</p>
       </div>
 
       {isLoading && <p className="text-sm text-muted-foreground">Loading…</p>}

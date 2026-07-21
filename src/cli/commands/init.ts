@@ -60,7 +60,7 @@ export default class Init extends Command {
 
       const relDir = path.relative(process.cwd(), dir);
       outro(
-        `${projectName} (admin) scaffolded successfully\n\n  Next steps:\n\n  cd ${relDir}\n\n  Fill in your .env:\n    VITE_API_URL — your bunshot backend URL\n\n  bun dev       — start the dev server\n\n  Note: TypeScript will show an error for routeTree.gen.ts until you run bun dev once.\n\n  Docs: github.com/lastshotlabs/snapshot`,
+        `${projectName} (admin) scaffolded successfully\n\n  Next steps:\n\n  cd ${relDir}\n\n  Fill in your .env:\n    VITE_API_URL — your slingshot backend URL\n\n  bun dev       — start the dev server\n\n  Note: TypeScript will show an error for routeTree.gen.ts until you run bun dev once.\n\n  Docs: github.com/lastshotlabs/snapshot`,
       );
       return;
     }
@@ -91,11 +91,11 @@ export default class Init extends Command {
         ? `    VITE_BEARER_TOKEN — your API bearer token (prototype mode)\n`
         : "";
     const mailLine = config.mailPlugin
-      ? `\n  bunshot-mail plugin config scaffolded to:\n    ${path.join(relDir, "server-plugins/mail.ts")}\n  Copy it into your bunshot backend and add RESEND_API_KEY to your backend .env.\n`
+      ? `\n  slingshot-mail plugin config scaffolded to:\n    ${path.join(relDir, "server-plugins/mail.ts")}\n  Copy it into your slingshot backend and add RESEND_API_KEY to your backend .env.\n`
       : "";
 
     outro(
-      `${config.projectName} initialised successfully\n\n  Next steps:\n\n  cd ${relDir}\n\n  Fill in your .env:\n    VITE_API_URL      — your bunshot backend URL\n${bearerLine}${wsLine}\n  bun dev            — start the dev server\n  bun run sync       — generate typed API hooks (auto-runs on bun dev when schema.json exists)\n${mailLine}\n  Note: TypeScript will show an error for routeTree.gen.ts until you run bun dev once.\n\n  Docs: github.com/lastshotlabs/snapshot`,
+      `${config.projectName} initialised successfully\n\n  Next steps:\n\n  cd ${relDir}\n\n  Fill in your .env:\n    VITE_API_URL      — your slingshot backend URL\n${bearerLine}${wsLine}\n  bun dev            — start the dev server\n  bun run sync       — generate typed API hooks (auto-runs on bun dev when schema.json exists)\n${mailLine}\n  Note: TypeScript will show an error for routeTree.gen.ts until you run bun dev once.\n\n  Docs: github.com/lastshotlabs/snapshot`,
     );
   }
 }

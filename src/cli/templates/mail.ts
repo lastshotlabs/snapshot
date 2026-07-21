@@ -1,8 +1,8 @@
 /**
- * Generates a starter bunshot-mail plugin config file.
+ * Generates a starter slingshot-mail plugin config file.
  *
  * Writes to src-server/plugins/mail.ts alongside the scaffolded frontend.
- * Copy this file into your bunshot backend (src/plugins/ or similar).
+ * Copy this file into your slingshot backend (src/plugins/ or similar).
  */
 
 export function generateMailPlugin(): string {
@@ -11,12 +11,12 @@ export function generateMailPlugin(): string {
   createResendProvider,
   createRawHtmlRenderer,
   adaptAuthTemplates,
-} from '@lastshotlabs/bunshot-mail'
+} from '@lastshotlabs/slingshot-mail'
 
 /**
- * Mail plugin — wires bunshot-auth delivery events to Resend.
+ * Mail plugin — wires slingshot-auth delivery events to Resend.
  *
- * Copy this file into your bunshot backend (e.g. src/plugins/mail.ts) and
+ * Copy this file into your slingshot backend (e.g. src/plugins/mail.ts) and
  * register the plugin with your app:
  *
  *   import { mailPlugin } from './plugins/mail'

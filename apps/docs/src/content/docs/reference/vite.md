@@ -8,10 +8,10 @@ Generated from `src/vite/index.ts`.
 
 | Export | Kind | Source | Description |
 |---|---|---|---|
-| `snapshotSsr` | function | `src/vite/index.ts` | Vite plugin for SSR builds with Snapshot. When added to the Vite config, it: 1. Enables Vite's manifest output (`build.manifest: true`) for client builds    so that bunshot-ssr can inject hashed asset URLs into the SSR HTML. 2. Configures the server bundle output directory when `vite build --ssr` is run. 3. Generates `dist/client/prefetch-manifest.json` after the client build, mapping    URL patterns to JS chunk and CSS file URLs for `<PrefetchLink>` prefetching. **Two build commands are required:** - `vite build` → client bundle in `dist/client/` + `.vite/manifest.json` - `vite build --ssr` → server bundle in `dist/server/` Add both to your `package.json`: ```json {   "scripts": {     "build:client": "vite build",     "build:server": "vite build --ssr src/ssr/entry-server.ts",     "build": "bun run build:client && bun run build:server"   } } ``` |
+| `snapshotSsr` | function | `src/vite/index.ts` | Vite plugin for SSR builds with Snapshot. When added to the Vite config, it: 1. Enables Vite's manifest output (`build.manifest: true`) for client builds    so that slingshot-ssr can inject hashed asset URLs into the SSR HTML. 2. Configures the server bundle output directory when `vite build --ssr` is run. 3. Generates `dist/client/prefetch-manifest.json` after the client build, mapping    URL patterns to JS chunk and CSS file URLs for `<PrefetchLink>` prefetching. **Two build commands are required:** - `vite build` → client bundle in `dist/client/` + `.vite/manifest.json` - `vite build --ssr` → server bundle in `dist/server/` Add both to your `package.json`: ```json {   "scripts": {     "build:client": "vite build",     "build:server": "vite build --ssr src/ssr/entry-server.ts",     "build": "bun run build:client && bun run build:server"   } } ``` |
 | `SnapshotSsrOptions` | interface | `src/vite/index.ts` | Options for the `snapshotSsr()` Vite plugin. |
-| `snapshotSync` | function | `src/vite/index.ts` | Vite plugin that runs Snapshot's OpenAPI sync step during the Vite lifecycle. Use this when a frontend project should regenerate API types and hooks from a Bunshot schema file or backend endpoint at startup. |
-| `SnapshotSyncOptions` | interface | `src/vite/index.ts` | Options for `snapshotSync()`, Snapshot's Vite-driven Bunshot sync plugin. |
+| `snapshotSync` | function | `src/vite/index.ts` | Vite plugin that runs Snapshot's OpenAPI sync step during the Vite lifecycle. Use this when a frontend project should regenerate API types and hooks from a Slingshot schema file or backend endpoint at startup. |
+| `SnapshotSyncOptions` | interface | `src/vite/index.ts` | Options for `snapshotSync()`, Snapshot's Vite-driven Slingshot sync plugin. |
 | `staticParamsPlugin` | function | `src/vite/index.ts` | Vite plugin that scans the server routes directory for `generateStaticParams` exports at build time and writes `static-params.json` to the client output directory. `static-params.json` is a build-time artifact consumed by the ISR pre-renderer and by deployment tooling. It maps route patterns to their enumerated param sets. This plugin runs during the `buildEnd` hook and only fires for client builds (not the SSR bundle build). It is automatically included in the plugin array returned by `snapshotSsr()` — you do not need to add it manually. |
 
 ## Details
@@ -22,7 +22,7 @@ Vite plugin for SSR builds with Snapshot.
 
 When added to the Vite config, it:
 1. Enables Vite's manifest output (`build.manifest: true`) for client builds
-   so that bunshot-ssr can inject hashed asset URLs into the SSR HTML.
+   so that slingshot-ssr can inject hashed asset URLs into the SSR HTML.
 2. Configures the server bundle output directory when `vite build --ssr` is run.
 3. Generates `dist/client/prefetch-manifest.json` after the client build, mapping
    URL patterns to JS chunk and CSS file URLs for `<PrefetchLink>` prefetching.
@@ -75,7 +75,7 @@ Vite plugin that runs Snapshot's OpenAPI sync step during the Vite
 lifecycle.
 
 Use this when a frontend project should regenerate API types and hooks
-from a Bunshot schema file or backend endpoint at startup.
+from a Slingshot schema file or backend endpoint at startup.
 
 **Parameters:**
 

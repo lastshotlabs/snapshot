@@ -16,7 +16,7 @@ export interface CustomEmoji {
   shortcode: string;
   /** Image URL (resolved). */
   url: string;
-  /** Storage key from bunshot (before URL resolution). */
+  /** Storage key from slingshot (before URL resolution). */
   uploadKey?: string;
   /** Optional category for grouping. */
   category?: string;

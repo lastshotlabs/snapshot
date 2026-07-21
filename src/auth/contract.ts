@@ -60,7 +60,7 @@ export interface AuthContract {
   oauthUnlink: (provider: OAuthProvider) => string;
   headers: AuthHeaders;
   csrfCookieName: string;
-  /** Field in the /me response to use as the canonical user ID. Defaults to "userId" (bunshot default). */
+  /** Field in the /me response to use as the canonical user ID. Defaults to "userId" (slingshot default). */
   userIdField: string;
 }
 

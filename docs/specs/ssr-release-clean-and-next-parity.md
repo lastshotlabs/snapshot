@@ -70,7 +70,7 @@ Four hard gaps still block sign-off:
 3. **Universal styling is broad, not uniform.** `layout/layout/schema.ts` still uses a
    layout-specific `slots` declaration rather than the canonical universal `slotsSchema(...)`
    surface used elsewhere.
-4. **SSG is implemented but under-specified.** `snapshotSsr()` can spawn `bunshot-ssg`, and
+4. **SSG is implemented but under-specified.** `snapshotSsr()` can spawn `slingshot-ssg`, and
    `staticParamsPlugin()` writes `static-params.json`, but the current docs do not yet provide
    a clear end-to-end guide for required packages, build order, generated artifacts, warning
    behavior, and supported SSR/RSC/SSG combinations.
@@ -118,7 +118,7 @@ Snapshot claims to provide an equivalent capability.
 | Style shorthand safety | `src/ui/components/_base/style-props.ts` | Simple backgrounds normalize to `backgroundColor`; complex shorthands stay `background`. |
 | Chart SSR safety | `src/ui/components/data/chart/component.tsx` | Server path renders charts with explicit dimensions instead of `ResponsiveContainer`. |
 | RSC option threading surface | `src/ssr/types.ts` | `SnapshotSsrConfig` and `ManifestSsrConfig` already expose `rscOptions?: RscOptions`. |
-| SSG runner wiring | `src/vite/index.ts` | `snapshotSsr({ ssg: true })` spawns `bunshot-ssg` and already forwards `--rsc-manifest` when `rsc: true`. |
+| SSG runner wiring | `src/vite/index.ts` | `snapshotSsr({ ssg: true })` spawns `slingshot-ssg` and already forwards `--rsc-manifest` when `rsc: true`. |
 | Static params artifact generation | `src/vite/index.ts` | `staticParamsPlugin()` writes `static-params.json` for routes that export `generateStaticParams`. |
 | Audited SSR/styling test slice | `src/ssr/__tests__`, `_base/__tests__`, chart tests | 176 tests passed across 23 files in the audited slice. |
 
@@ -194,7 +194,7 @@ After this spec:
 
 - the Snapshot SSR surface must describe exactly what request object the renderer receives,
   when abort signals propagate, and what status semantics apply to redirects and route signals.
-- the Snapshot Vite/SSG surface must describe exactly when `bunshot-ssg` runs, which package
+- the Snapshot Vite/SSG surface must describe exactly when `slingshot-ssg` runs, which package
   provides it, what artifacts it consumes, and what happens on warning or failure.
 - the universal styling system must document one meaning for `slots`, one meaning for layout
   area declarations, and one rendering path for styleable surfaces.
@@ -222,7 +222,7 @@ From root `CLAUDE.md`, `src/ssr/CLAUDE.md`, and the existing spec rules:
 3. **Public API changes require docs and JSDoc updates.** Any change to `src/ssr/index.ts`,
    `src/vite/index.ts`, or visible manifest/runtime behavior updates docs in the same phase.
 4. **SSG is part of the release surface.** A parity or release-clean SSR spec is incomplete if
-   it omits `snapshotSsr({ ssg: true })`, `staticParamsPlugin()`, or the bunshot-ssg handoff.
+   it omits `snapshotSsr({ ssg: true })`, `staticParamsPlugin()`, or the slingshot-ssg handoff.
 5. **No `any`-based build “fixes.”** DTS unblock work must not erase consumer-facing config
    typing by collapsing schemas to `Record<string, any>`.
 6. **One semantic model across renderers.** File-based SSR and manifest SSR must agree on
@@ -470,10 +470,10 @@ This phase covers the Snapshot-managed SSG handoff points:
 - `snapshotSsr({ ssg: true })`
 - `SnapshotSsrOptions.ssg` and `ssgOutDir`
 - `staticParamsPlugin()` and `static-params.json`
-- the `bunshot-ssg` CLI spawn contract in `src/vite/index.ts`
+- the `slingshot-ssg` CLI spawn contract in `src/vite/index.ts`
 
-This phase does **not** re-implement bunshot-ssg inside Snapshot. It defines and validates the
-contract between Snapshot and bunshot-ssg.
+This phase does **not** re-implement slingshot-ssg inside Snapshot. It defines and validates the
+contract between Snapshot and slingshot-ssg.
 
 ### Files to modify
 
@@ -488,11 +488,11 @@ contract between Snapshot and bunshot-ssg.
 ### Implementation details
 
 - document the exact SSG prerequisites in code comments and docs
-  - Snapshot's own `package.json` does not currently declare `@lastshotlabs/bunshot-ssr` or
-    `@lastshotlabs/bunshot-ssg` as peer dependencies, so the docs must state the install
+  - Snapshot's own `package.json` does not currently declare `@lastshotlabs/slingshot-ssr` or
+    `@lastshotlabs/slingshot-ssg` as peer dependencies, so the docs must state the install
     requirement explicitly unless package policy changes in the same workstream
-  - `@lastshotlabs/bunshot-ssr` for the server runtime wiring
-  - `@lastshotlabs/bunshot-ssg` for static generation
+  - `@lastshotlabs/slingshot-ssr` for the server runtime wiring
+  - `@lastshotlabs/slingshot-ssg` for static generation
   - client build artifact: `dist/client/.vite/manifest.json`
   - server build artifact: `dist/server/entry-server.js`
   - optional RSC artifact: `dist/server/rsc-manifest.json`
@@ -513,15 +513,15 @@ contract between Snapshot and bunshot-ssg.
 }
 ```
 
-  - rationale: `snapshotSsr({ ssg: true })` runs the `bunshot-ssg` spawn from the client
+  - rationale: `snapshotSsr({ ssg: true })` runs the `slingshot-ssg` spawn from the client
     build's `closeBundle`, so `dist/server/entry-server.js` must already exist
 - define and test warning behavior
-  - missing `bunshot-ssg` binary
-  - non-zero `bunshot-ssg` exit code
+  - missing `slingshot-ssg` binary
+  - non-zero `slingshot-ssg` exit code
   - any option combination that still cannot be declared `done` in the parity matrix after this
     phase must emit explicit docs language and a proving warning or test assertion
   - preserve the current Snapshot-owned semantics unless the developer explicitly changes them:
-    missing or failing `bunshot-ssg` produces warnings, not hard client-build failures
+    missing or failing `slingshot-ssg` produces warnings, not hard client-build failures
 - define and test the Snapshot-owned option matrix
   - `ssg: true`
   - `ssg: true` + `rsc: true`
@@ -530,12 +530,12 @@ contract between Snapshot and bunshot-ssg.
 ### Tests to update or add
 
 - add `src/vite/__tests__/ssg.test.ts`
-  - spawns bunshot-ssg with `--assets-manifest`
+  - spawns slingshot-ssg with `--assets-manifest`
   - passes `--renderer`
   - passes `--out`
   - passes `--rsc-manifest` when `rsc: true`
-  - warns when `bunshot-ssg` is missing
-  - warns when `bunshot-ssg` exits non-zero
+  - warns when `slingshot-ssg` is missing
+  - warns when `slingshot-ssg` exits non-zero
 - extend `src/vite/__tests__/plugin.test.ts`
   - verifies `snapshotSsr({ ssg: true })` docs-facing defaults remain stable:
     `serverOutDir = dist/server`, `ssgOutDir = dist/static`, and client-build SSG spawn
@@ -549,10 +549,10 @@ contract between Snapshot and bunshot-ssg.
   - add an explicit "SSR vs SSG vs PPR" decision section
   - add a short index section that points workflow readers to `integrate/ssr-ssg-workflows.md`
 - `integrate/ssr-ssg-workflows.md`
-  - add required package install commands for bunshot SSR and bunshot SSG
+  - add required package install commands for slingshot SSR and slingshot SSG
   - add an end-to-end Vite config plus package.json script example for SSG
   - document canonical build order and generated artifacts
-  - document current warning semantics for missing or failing `bunshot-ssg`
+  - document current warning semantics for missing or failing `slingshot-ssg`
 - `reference/vite.md`
   - make `SnapshotSsrOptions.ssg` and `ssgOutDir` visible and explained
   - explain what `snapshotSsr({ ssg: true })` actually triggers
@@ -793,13 +793,13 @@ Make the public documentation and the release gate reflect actual runtime truth.
 - document the real status semantics for `notFound`, `forbidden`, and `unauthorized`
 - document the difference between parity rows that are `done` versus `partial`
 - document the exact SSR and SSG package expectations:
-  - `@lastshotlabs/bunshot-ssr`
-  - `@lastshotlabs/bunshot-ssg`
+  - `@lastshotlabs/slingshot-ssr`
+  - `@lastshotlabs/slingshot-ssg`
   - the canonical install example in docs must be:
 
 ```sh
-bun add @lastshotlabs/bunshot-ssr
-bun add -d @lastshotlabs/bunshot-ssg
+bun add @lastshotlabs/slingshot-ssr
+bun add -d @lastshotlabs/slingshot-ssg
 ```
 
 - document the universal styling contract change for layout `areas` vs visual `slots`
@@ -858,7 +858,7 @@ bun run docs:ci
 | Track | Step 1 | Step 2 | Step 3 |
 | ----- | ------ | ------ | ------ |
 | A | reduce schema serialization complexity | restore exact exported config typing | run `typecheck` and `build` |
-| B | add request envelope type and fallback order | harden `snapshotSsr()` and bunshot-ssg integration semantics | add conformance tests and update SSR/SSG docs/JSDoc |
+| B | add request envelope type and fallback order | harden `snapshotSsr()` and slingshot-ssg integration semantics | add conformance tests and update SSR/SSG docs/JSDoc |
 | C | introduce `areas` plus legacy normalization | update layout runtime and slot-contract tests | update styling docs and deprecation language |
 | D | publish parity matrix and examples | verify docs wording matches actual test-backed status | run final certification commands |
 
@@ -867,7 +867,7 @@ bun run docs:ci
 | Track | Main risk | Mitigation |
 | ----- | --------- | ---------- |
 | A | build passes but consumer types silently degrade | verify exported config types remain exact and add focused component tests |
-| B | request-envelope or SSG claims land without adapter/runner clarity, leaving false confidence | keep legacy fallback covered, test bunshot-ssg handoff explicitly, and mark parity rows `partial` until upstream behavior is proven |
+| B | request-envelope or SSG claims land without adapter/runner clarity, leaving false confidence | keep legacy fallback covered, test slingshot-ssg handoff explicitly, and mark parity rows `partial` until upstream behavior is proven |
 | C | layout migration breaks existing manifests | accept legacy semantic `slots` during transition and test normalization explicitly |
 | D | docs over-claim parity before runtime is proven | require matrix rows, owner tests, and `docs:ci` before sign-off |
 

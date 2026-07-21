@@ -25,7 +25,7 @@ The developer describes what they want. The agent does NOT start writing immedia
 1. **Ask clarifying questions** — What's the scope? Is this a new feature, a refactor, or
    filling a gap? What's the end state look like from the consumer's perspective?
 2. **Check for existing context** — Read related specs in `docs/specs/`, check
-   `docs/archive/GENERATION_CHAT.md` in the bunshot repo for vision context on how Snapshot
+   `docs/archive/GENERATION_CHAT.md` in the slingshot repo for vision context on how Snapshot
    should evolve. Key areas from that chat:
    - **Code-first app bootstrap** — `createSnapshot({ apiUrl, auth, ws, sse })` plus explicit React composition
    - **Design token system** — semantic color/spacing/radius/font tokens, breakpoint-aware values, component-level tokens, dark/light mode as token switch
@@ -34,7 +34,7 @@ The developer describes what they want. The agent does NOT start writing immedia
    - **Action vocabulary** — fixed set: navigate, api, open-modal, refresh, set-value, download, confirm, toast
    - **Interaction presets** — named tokens (lift, glow, fade-in) + duration tokens; breakpoint-aware layout
    - **Code escape hatch** — Monaco editor in browser for custom components; `generated/` is never hand-edited
-   - **bunshot sync evolution** — generates API types, hooks, and optional app scaffolds from OpenAPI
+   - **slingshot sync evolution** — generates API types, hooks, and optional app scaffolds from OpenAPI
    - **Selective hook syncing, multi-client generation, offline docs, apps-within-apps, SSR**
 3. **Confirm scope** — Restate the goal back to the developer. Get alignment before researching.
 

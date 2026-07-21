@@ -8,7 +8,7 @@ Generated from `src/ui.ts`.
 
 ## Contents
 
-- [Tokens & Flavors](#tokens-flavors) (18)
+- [Tokens & Flavors](#tokens-flavors) (19)
 - [Context & Data Binding](#context-data-binding) (11)
 - [State Runtime](#state-runtime) (15)
 - [Actions](#actions) (15)
@@ -151,6 +151,7 @@ Generated from `src/ui.ts`.
 | `DefaultOfflineBase` | function | `src/ui/components/feedback/default-offline/standalone.tsx` | Standalone DefaultOffline — renders an offline status banner. Works with plain React props. |
 | `DefaultOfflineBaseProps` | interface | `src/ui/components/feedback/default-offline/standalone.tsx` | Props accepted by the DefaultOfflineBase standalone component. |
 | `defineFlavor` | function | `src/ui/tokens/flavors.ts` | Define and register a new flavor. If a flavor with the same name already exists, it is replaced. |
+| `defineFlavorWithExtension` | function | `src/ui/tokens/flavors.ts` | Define and register a flavor by extending an existing parent flavor. The child flavor inherits unspecified fields from the parent and derives dark color variants from light-color overrides when explicit dark overrides are not provided. |
 | `deriveDarkVariant` | function | `src/ui/tokens/color.ts` | Derive a dark mode variant of a light color. Adjusts lightness and chroma for dark mode readability: - If the color is light (L > 0.5), reduce lightness moderately - If the color is dark (L <= 0.5), increase lightness for dark backgrounds - Boost chroma slightly for vibrancy in dark mode |
 | `deriveForeground` | function | `src/ui/tokens/color.ts` | Derive a foreground color that passes WCAG AA contrast (4.5:1) against the given background color. Returns a light or dark foreground. |
 | `DetailCardBase` | function | `src/ui/components/data/detail-card/standalone.tsx` | Standalone DetailCard — data-driven detail view with formatted fields and header actions. Works with plain React props. |
@@ -496,6 +497,7 @@ Generated from `src/ui.ts`.
 | `colorToOklch` | function | Convert any supported color string to OKLCH values. Supports: hex (#rgb, #rrggbb), oklch strings ("L C H"), and oklch() CSS function. |
 | `contrastRatio` | function | Calculate the WCAG contrast ratio between two supported color values. |
 | `defineFlavor` | function | Define and register a new flavor. If a flavor with the same name already exists, it is replaced. |
+| `defineFlavorWithExtension` | function | Define and register a flavor by extending an existing parent flavor. The child flavor inherits unspecified fields from the parent and derives dark color variants from light-color overrides when explicit dark overrides are not provided. |
 | `deriveDarkVariant` | function | Derive a dark mode variant of a light color. Adjusts lightness and chroma for dark mode readability: - If the color is light (L > 0.5), reduce lightness moderately - If the color is dark (L <= 0.5), increase lightness for dark backgrounds - Boost chroma slightly for vibrancy in dark mode |
 | `deriveForeground` | function | Derive a foreground color that passes WCAG AA contrast (4.5:1) against the given background color. Returns a light or dark foreground. |
 | `getAllFlavors` | function | Get all registered flavors as a record. |
@@ -548,6 +550,26 @@ it is replaced.
 | `config` | Flavor configuration (colors, radius, spacing, font, components) |
 
 **Returns:** The registered Flavor object
+
+---
+
+#### `defineFlavorWithExtension(name: string, extendsName: string, overrides: Partial<FlavorConfig>) => Flavor`
+
+Define and register a flavor by extending an existing parent flavor.
+
+The child flavor inherits unspecified fields from the parent and derives
+dark color variants from light-color overrides when explicit dark overrides
+are not provided.
+
+**Parameters:**
+
+| Name | Description |
+|------|-------------|
+| `name` | Unique child flavor identifier |
+| `extendsName` | Parent flavor identifier to inherit from |
+| `overrides` | Partial flavor overrides applied to the parent |
+
+**Returns:** The registered merged flavor
 
 ---
 
@@ -710,7 +732,7 @@ output adapts to whatever theme tokens are active.
 
 ---
 
-#### `resolveTokens(config?: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: string | undefined; colors?: { input?: string | undefined; muted?: string | undefined; border?: strin...`
+#### `resolveTokens(config?: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: string | undefined; colors?: { primary?: string | undefined; secondary?: string | undefined; muted?: ...`
 
 Resolve a theme configuration into a complete CSS string.
 
@@ -746,7 +768,7 @@ on document.documentElement.
 
 ---
 
-#### `validateContrast(theme: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: string | undefined; colors?: { input?: string | undefined; muted?: string | undefined; border?: string ...`
+#### `validateContrast(theme: { flavor?: string | undefined; flavors?: Record<string, { extends: string; displayName?: string | undefined; colors?: { primary?: string | undefined; secondary?: string | undefined; ... 13 mor...`
 
 Warn when theme color pairs fail WCAG AA contrast.
 

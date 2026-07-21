@@ -352,7 +352,7 @@ if (
     );
   }
 
-  // bunshot-mail plugin config (for the backend)
+  // slingshot-mail plugin config (for the backend)
   if (config.mailPlugin) {
     await write("server-plugins/mail.ts", generateMailPlugin());
   }

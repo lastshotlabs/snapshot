@@ -23,7 +23,7 @@
 
 ### The Problem
 
-Today, building a frontend for a bunshot backend means writing hundreds of lines of React by
+Today, building a frontend for a slingshot backend means writing hundreds of lines of React by
 hand. Every page requires wiring: TanStack Query hooks for data fetching, Jotai atoms for
 state, TanStack Router for navigation, shadcn components for UI, and custom glue code to
 connect them all. A simple CRUD page — table with filters, create modal, edit form — is 300+

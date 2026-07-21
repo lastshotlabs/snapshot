@@ -3,12 +3,12 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { RscOptions } from "./rsc";
 import type { SnapshotInstance } from "../types";
 
-// ─── Structural shapes (no cross-repo import from bunshot-ssr) ────────────────
+// ─── Structural shapes (no cross-repo import from slingshot-ssr) ────────────────
 
 /**
- * Structural equivalent of `SsrRouteMatch` from `@lastshotlabs/bunshot-ssr`.
+ * Structural equivalent of `SsrRouteMatch` from `@lastshotlabs/slingshot-ssr`.
  *
- * Defined here without importing from bunshot-ssr to avoid cross-repo coupling.
+ * Defined here without importing from slingshot-ssr to avoid cross-repo coupling.
  * TypeScript structural typing ensures compatibility at the consumer's compile time.
  */
 export interface ServerRouteMatchShape {
@@ -86,7 +86,7 @@ export interface ServerRouteMatchShape {
 }
 
 /**
- * Structural equivalent of `IsrSink` from `@lastshotlabs/bunshot-ssr`.
+ * Structural equivalent of `IsrSink` from `@lastshotlabs/slingshot-ssr`.
  *
  * Mutable — written to by `renderPage()` after render completes.
  * The middleware reads these fields to decide whether to cache the response.
@@ -106,9 +106,9 @@ export interface IsrSinkShape {
 }
 
 /**
- * Structural equivalent of `SsrShell` from `@lastshotlabs/bunshot-ssr`.
+ * Structural equivalent of `SsrShell` from `@lastshotlabs/slingshot-ssr`.
  *
- * Contains the HTML tag strings injected into the document `<head>` by bunshot-ssr.
+ * Contains the HTML tag strings injected into the document `<head>` by slingshot-ssr.
  * Also carries the `_isr` sink which the renderer populates after calling `load()`.
  */
 export interface SsrShellShape {
@@ -128,7 +128,7 @@ export interface SsrShellShape {
   /**
    * Whether the current request is in draft mode.
    *
-   * Set by the bunshot-ssr middleware to `true` when the request carries the
+   * Set by the slingshot-ssr middleware to `true` when the request carries the
    * draft mode cookie. The renderer reads this and exposes it as `ctx.draftMode()`
    * in every route load function.
    *
@@ -226,7 +226,7 @@ export interface SnapshotSsrConfig {
 }
 
 // ─── Consumer-facing server route types ───────────────────────────────────────
-// Structural equivalents of bunshot-ssr types, so consumers only import from
+// Structural equivalents of slingshot-ssr types, so consumers only import from
 // @lastshotlabs/snapshot/ssr and not from both packages.
 
 /**
@@ -287,7 +287,7 @@ export interface SsrRedirectResult {
 /**
  * Signal from a server route's `load()` that the resource was not found.
  *
- * bunshot-ssr falls through to the SPA, which renders its own 404 page.
+ * slingshot-ssr falls through to the SPA, which renders its own 404 page.
  */
 export interface SsrNotFoundResult {
   readonly notFound: true;
@@ -296,7 +296,7 @@ export interface SsrNotFoundResult {
 /**
  * Signal from a server route's `load()` that the user lacks permission.
  *
- * `bunshot-ssr` responds with `403 Forbidden`. Co-locate a `forbidden.ts`
+ * `slingshot-ssr` responds with `403 Forbidden`. Co-locate a `forbidden.ts`
  * convention file to render a custom UI instead of a plain-text fallback.
  *
  * @example
@@ -316,7 +316,7 @@ export interface SsrForbiddenResult {
 /**
  * Signal from a server route's `load()` that the user is not authenticated.
  *
- * `bunshot-ssr` responds with `401 Unauthorized`. Co-locate an `unauthorized.ts`
+ * `slingshot-ssr` responds with `401 Unauthorized`. Co-locate an `unauthorized.ts`
  * convention file to render a custom UI instead of a plain-text fallback.
  *
  * @example
@@ -345,7 +345,7 @@ export type SsrLoaderReturn =
 /**
  * The context object passed to every server route `load()` and `meta()` function.
  *
- * Provides request data and direct access to the bunshot instance for DB calls
+ * Provides request data and direct access to the slingshot instance for DB calls
  * without HTTP round-trips.
  *
  * @example
@@ -377,8 +377,8 @@ export interface SsrLoadContext {
    */
   getUser(): Promise<{ id: string; email: string; roles: string[] } | null>;
   /**
-   * The raw bunshot context (typed `unknown` to avoid a hard dep on bunshot-core).
-   * Cast to `BunshotContext` inside the route file with `import type` from bunshot-core.
+   * The raw slingshot context (typed `unknown` to avoid a hard dep on slingshot-core).
+   * Cast to `SlingshotContext` inside the route file with `import type` from slingshot-core.
    */
   readonly bsCtx: unknown;
   /**

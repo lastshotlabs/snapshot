@@ -87,7 +87,7 @@ export function routePathToPattern(fsPath: string): string {
 
 /**
  * Recursively collect all CSS files reachable from a manifest entry key.
- * Follows the `imports` chain, same as `resolveAssetTags` in bunshot-ssr.
+ * Follows the `imports` chain, same as `resolveAssetTags` in slingshot-ssr.
  *
  * @param manifest - The Vite build manifest.
  * @param key - The manifest entry key to start from.

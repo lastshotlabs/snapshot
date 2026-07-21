@@ -64,7 +64,7 @@ Generated from `src/index.ts`.
 | `ListWebhookEndpointsParams` | interface | `src/webhooks/types.ts` | Page-based pagination parameters for listing webhook endpoints. |
 | `LocationData` | interface | `src/community/types.ts` | Geo coordinate sidecar. |
 | `LoginBody` | interface | `src/types.ts` | Credentials posted to the login endpoint. |
-| `LoginResponse` | interface | `src/types.ts` | Raw login response shape from bunshot (includes MFA fields) |
+| `LoginResponse` | interface | `src/types.ts` | Raw login response shape from slingshot (includes MFA fields) |
 | `LoginResult` | typealias | `src/types.ts` | useLogin resolves to either a user or an MFA challenge |
 | `LoginVars` | typealias | `src/types.ts` | Login variables accepted by `useLogin()`. |
 | `LogoutVars` | interface | `src/types.ts` | Logout options accepted by `useLogout()`. |
@@ -249,7 +249,7 @@ Register a named custom client factory.
 | `ForgotPasswordBody` | interface | Request body for the forgot-password endpoint. |
 | `formatAuthError` | function | Format a raw auth `ApiError` into the message shown to application code. |
 | `LoginBody` | interface | Credentials posted to the login endpoint. |
-| `LoginResponse` | interface | Raw login response shape from bunshot (includes MFA fields) |
+| `LoginResponse` | interface | Raw login response shape from slingshot (includes MFA fields) |
 | `LoginResult` | typealias | useLogin resolves to either a user or an MFA challenge |
 | `LoginVars` | typealias | Login variables accepted by `useLogin()`. |
 | `LogoutVars` | interface | Logout options accepted by `useLogout()`. |

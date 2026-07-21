@@ -132,7 +132,7 @@ manifestConfigSchema = z.object({
 - `src/ui/manifest/auth.tsx` exists (~1000 lines). Renders login, register, forgot-password, reset-password, verify-email, MFA, passkey, OAuth screens with hardcoded inline-styled React.
 - `resolveAuthScreen(manifest, route)` at `auth.tsx:70–85` — checks if the active route's id matches any declared auth screen and returns a screen type or `null`. Called from `ManifestApp` around line 1194.
 - Schema: `authScreenConfigSchema.screens = z.array(z.enum([...])).min(1)` — array of enum, one-or-more required.
-- OAuth redirect URL contract is hardcoded in `auth.tsx` and mismatches bunshot-auth's actual path.
+- OAuth redirect URL contract is hardcoded in `auth.tsx` and mismatches slingshot-auth's actual path.
 
 **This is the single largest piece of code to delete in this spec.**
 
@@ -1293,7 +1293,7 @@ The action executor calls `queryClient.invalidateQueries` for each resource name
 - `oauth-buttons` emits `navigate-external` to `auth.providers[name].startUrl`, which defaults to `/auth/{name}/start`.
 - The backend handles the OAuth handshake. On return, it redirects to `/auth/callback?token=...`.
 - The `sso-callback` route (in `defaultAuthFragment`) runs an action chain: `api` (exchange code for session) → `set-value` (session token to app state) → `navigate` to `afterLogin`.
-- **The URL contract between snapshot and bunshot-auth is now explicit.** `auth.providers[name].startUrl` is the only coupling point. Bunshot-auth must expose providers at `/auth/{name}/start`.
+- **The URL contract between snapshot and slingshot-auth is now explicit.** `auth.providers[name].startUrl` is the only coupling point. Slingshot-auth must expose providers at `/auth/{name}/start`.
 
 ### 12.2 Session management
 
@@ -1427,7 +1427,7 @@ Every component's `tokens` field (added in Phase 4's base schema) emits CSS cust
 ### 13.6 Exit criteria
 
 - [ ] Full i18n with locale switching, date/number formatting, RTL
-- [ ] Real-time subscriptions working end-to-end in `budget-fe` (via bunshot WS)
+- [ ] Real-time subscriptions working end-to-end in `budget-fe` (via slingshot WS)
 - [ ] Observability events fired for every action and error
 - [ ] Runtime theme switching via `set-theme`
 - [ ] Per-component token overrides emit scoped CSS vars
@@ -1671,7 +1671,7 @@ New file `playground/reference-manifest.json` — exercises every primitive, eve
 
 - `snapshot build` against `budget-fe`
 - SSR render against every route
-- End-to-end login flow against a mocked bunshot
+- End-to-end login flow against a mocked slingshot
 - Lint: fail if `src/` contains any forbidden files
 - Compare consumer manifest against a "minimum covered features" reference (every enterprise feature referenced at least once)
 
@@ -1806,8 +1806,8 @@ Not a concern per R8 — pre-production, no external consumers. `budget-fe` is t
 ### R7 — Component sprawl
 With 69 components already and more to add, risk of bloat. **Mitigation:** every new component must justify itself with a real use case from a real consumer. `budget-fe` drives the roadmap. No speculative primitives.
 
-### R8 — OAuth URL contract with bunshot-auth
-Current bespoke `auth.tsx` and bunshot-auth disagree on the OAuth URL shape. Phase 7 standardizes on `/auth/{provider}/start` and `/auth/{provider}/callback`. **Requires bunshot-auth change.** Track as a cross-repo dependency.
+### R8 — OAuth URL contract with slingshot-auth
+Current bespoke `auth.tsx` and slingshot-auth disagree on the OAuth URL shape. Phase 7 standardizes on `/auth/{provider}/start` and `/auth/{provider}/callback`. **Requires slingshot-auth change.** Track as a cross-repo dependency.
 
 ### R9 — Guard execution in SSR
 Guards run before rendering a route. Under SSR, the guard must run during server rendering — it can read the request (cookies, headers) via the SSR bridge. **Mitigation:** guard signatures receive a context object that works in both client and server modes; current code already handles this for the existing route guards. Verify in Phase 7.
@@ -1828,7 +1828,7 @@ The following are **intentionally out of scope** for this spec and should not cr
 - **Backwards compatibility.** P8 in CLAUDE.md — no compat shims.
 - **Code generation as the primary workflow.** `snapshot sync` generates an API client and infers resources from OpenAPI, but generated code is never hand-edited and never the source of truth.
 - **RSC as a first-class mode.** Components are SSR-safe (pre-rendered + hydrated), but React Server Components as the primary rendering model is a potential future phase, not in this spec.
-- **GraphQL as a data source.** REST + OpenAPI via bunshot is the canonical backend contract. GraphQL support is possible via `resources` with a custom client, but not built in.
+- **GraphQL as a data source.** REST + OpenAPI via slingshot is the canonical backend contract. GraphQL support is possible via `resources` with a custom client, but not built in.
 - **Multi-tenant theming switcher UI.** Runtime theme switching exists via `set-theme`; building a ready-made "theme picker" component is out of scope.
 
 ---

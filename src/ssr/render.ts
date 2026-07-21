@@ -63,7 +63,7 @@ const POSTAMBLE = "\n</div>\n</body>\n</html>";
  *
  * **Abort on timeout:** An `AbortController` is created per call. If the render
  * does not complete within `timeoutMs`, `controller.abort()` is called and the
- * stream rejects. The caller (bunshot-ssr middleware) catches this and falls
+ * stream rejects. The caller (slingshot-ssr middleware) catches this and falls
  * through to the SPA.
  *
  * **ISR opt-out:** The entire render executes within a `withRequestStore()` async
@@ -80,7 +80,7 @@ const POSTAMBLE = "\n</div>\n</body>\n</html>";
  *
  * @param element - The React element to render (already constructed with props).
  * @param context - Per-request context containing a fresh `QueryClient`.
- * @param shell - Asset and head tags from bunshot-ssr. `headTags` should already
+ * @param shell - Asset and head tags from slingshot-ssr. `headTags` should already
  *   be populated by the renderer before calling this function.
  * @param timeoutMs - Abort timeout in milliseconds. Default: 5000.
  * @param rscOptions - Optional RSC manifest. When provided, enables RSC two-pass

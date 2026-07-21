@@ -6,10 +6,10 @@ import { rscTransform } from "./rsc-transform";
 import { serverActionsTransform } from "./server-actions";
 
 /**
- * Options for `snapshotSync()`, Snapshot's Vite-driven Bunshot sync plugin.
+ * Options for `snapshotSync()`, Snapshot's Vite-driven Slingshot sync plugin.
  */
 export interface SnapshotSyncOptions {
-  /** URL of the bunshot backend. Falls back to VITE_API_URL env var. */
+  /** URL of the slingshot backend. Falls back to VITE_API_URL env var. */
   apiUrl?: string;
   /**
    * Path to a local OpenAPI JSON file. Takes precedence over apiUrl.
@@ -27,7 +27,7 @@ export interface SnapshotSyncOptions {
  * lifecycle.
  *
  * Use this when a frontend project should regenerate API types and hooks
- * from a Bunshot schema file or backend endpoint at startup.
+ * from a Slingshot schema file or backend endpoint at startup.
  *
  * @param opts - Sync source and generation options
  * @returns A Vite plugin that invokes Snapshot sync at build start
@@ -102,9 +102,9 @@ export interface SnapshotSsrOptions {
    */
   serverOutDir?: string;
   /**
-   * Run `bunshot ssg` after the client build completes.
+   * Run `slingshot ssg` after the client build completes.
    *
-   * When `true`, the `closeBundle` hook spawns `bunshot ssg` using the Vite
+   * When `true`, the `closeBundle` hook spawns `slingshot ssg` using the Vite
    * client manifest produced by this build and the server entry bundle in
    * `serverOutDir`. Pre-rendered HTML files are written to `ssgOutDir`.
    *
@@ -117,7 +117,7 @@ export interface SnapshotSsrOptions {
   ssg?: boolean;
   /**
    * Output directory for SSG `.html` files.
-   * Passed to `bunshot ssg --out`.
+   * Passed to `slingshot ssg --out`.
    * @default 'dist/static'
    */
   ssgOutDir?: string;
@@ -222,7 +222,7 @@ export interface SnapshotSsrOptions {
    * Shells are NOT pre-computed during the Vite build itself — that requires a
    * running React tree with real loader data and a live database. The manifest
    * only lists which routes opted into PPR so the startup step knows which shells
-   * to build. Call `prerenderPprShells()` from `bunshot-ssr/ppr` at server startup
+   * to build. Call `prerenderPprShells()` from `slingshot-ssr/ppr` at server startup
    * after reading this manifest.
    *
    * @default false
@@ -302,9 +302,9 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
         opts.serverRoutesDir ?? path.join(process.cwd(), "server/routes");
 
       try {
-        // Dynamic import so the Vite plugin does not bundle bunshot-ssr into the
+        // Dynamic import so the Vite plugin does not bundle slingshot-ssr into the
         // client bundle — this runs only in the Vite build process (Node/Bun).
-        // Typed via structural cast — bunshot-ssr is an optional peer dep of snapshot.
+        // Typed via structural cast — slingshot-ssr is an optional peer dep of snapshot.
         type StaticParamsModule = {
           scanStaticParams: (dir: string) => Promise<unknown[]>;
           writeStaticParamsManifest: (
@@ -314,7 +314,7 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
         };
 
         const staticParamsModuleSpecifier =
-          "@lastshotlabs/bunshot-ssr/static-params";
+          "@lastshotlabs/slingshot-ssr/static-params";
         const { scanStaticParams, writeStaticParamsManifest } = (await import(
           /* @vite-ignore */ staticParamsModuleSpecifier
         )) as unknown as StaticParamsModule;
@@ -329,7 +329,7 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
         }
       } catch (err) {
         // Static param scanning is a best-effort build artifact. The
-        // `@lastshotlabs/bunshot-ssr` package is genuinely optional —
+        // `@lastshotlabs/slingshot-ssr` package is genuinely optional —
         // most consumers (those using ISR or pure SSR rather than SSG)
         // will never install it, and "module not found" is the
         // expected steady state for them. Stay silent in that case;
@@ -354,7 +354,7 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
  *
  * When added to the Vite config, it:
  * 1. Enables Vite's manifest output (`build.manifest: true`) for client builds
- *    so that bunshot-ssr can inject hashed asset URLs into the SSR HTML.
+ *    so that slingshot-ssr can inject hashed asset URLs into the SSR HTML.
  * 2. Configures the server bundle output directory when `vite build --ssr` is run.
  * 3. Generates `dist/client/prefetch-manifest.json` after the client build, mapping
  *    URL patterns to JS chunk and CSS file URLs for `<PrefetchLink>` prefetching.
@@ -612,11 +612,11 @@ export function snapshotSsr(opts: SnapshotSsrOptions = {}): Plugin[] {
       const assetsManifest = path.join(clientOutDir, ".vite", "manifest.json");
       const rendererEntry = path.join(serverOutDir, "entry-server.js");
 
-      // Spawn `bunshot-ssg` CLI. Rule 11: use spawnSync with array args — no shell
+      // Spawn `slingshot-ssg` CLI. Rule 11: use spawnSync with array args — no shell
       // interpolation.
       const ssgArgs = [
         "run",
-        path.resolve(process.cwd(), "node_modules/.bin/bunshot-ssg"),
+        path.resolve(process.cwd(), "node_modules/.bin/slingshot-ssg"),
         "--assets-manifest",
         assetsManifest,
         "--out",
@@ -640,7 +640,7 @@ export function snapshotSsr(opts: SnapshotSsrOptions = {}): Plugin[] {
       if (result.error) {
         // CLI binary not found — fall back to direct module invocation
         console.warn(
-          "[snapshot-ssr] bunshot-ssg CLI not found — ensure @lastshotlabs/bunshot-ssg is installed.",
+          "[snapshot-ssr] slingshot-ssg CLI not found — ensure @lastshotlabs/slingshot-ssg is installed.",
           result.error.message,
         );
         return;
@@ -650,7 +650,7 @@ export function snapshotSsr(opts: SnapshotSsrOptions = {}): Plugin[] {
         // SSG failures are warnings, not hard build errors, so the client
         // build artifacts are not invalidated.
         console.warn(
-          `[snapshot-ssr] bunshot ssg exited with code ${result.status ?? "null"}. ` +
+          `[snapshot-ssr] slingshot ssg exited with code ${result.status ?? "null"}. ` +
             `Check the output above for details.`,
         );
       }

@@ -1,6 +1,6 @@
 # Snapshot Docs
 
-Snapshot is a code-first frontend SDK for Bunshot-powered React apps. The
+Snapshot is a code-first frontend SDK for Slingshot-powered React apps. The
 runtime starts with `createSnapshot({ apiUrl })`; apps then compose Snapshot
 hooks, generated API hooks, and standalone UI components in normal React code.
 

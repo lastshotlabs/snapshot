@@ -1,6 +1,6 @@
 # Snapshot
 
-Snapshot is the frontend framework for bunshot-powered backends.
+Snapshot is the frontend framework for slingshot-powered backends.
 
 It ships five contributor-facing surfaces:
 
@@ -12,7 +12,7 @@ It ships five contributor-facing surfaces:
 
 ## What Snapshot Supports On `main`
 
-Snapshot is a code-first frontend framework for bunshot-powered backends.
+Snapshot is a code-first frontend framework for slingshot-powered backends.
 
 It currently supports:
 

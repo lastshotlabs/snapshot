@@ -1,6 +1,6 @@
 # Snapshot
 
-Snapshot is a code-first React SDK for Bunshot-powered apps. Create one
+Snapshot is a code-first React SDK for Slingshot-powered apps. Create one
 runtime in TypeScript, compose hooks and standalone UI components in React, and
 sync backend schemas when you want generated client code.
 
@@ -9,7 +9,7 @@ sync backend schemas when you want generated client code.
 - `createSnapshot({ apiUrl })` for auth, account, OAuth, MFA, WebAuthn,
   realtime, community, webhook, routing, and API primitives.
 - TanStack Query integration through a pre-bound `QueryProvider`.
-- Generated API types and React Query hooks from a Bunshot OpenAPI schema.
+- Generated API types and React Query hooks from a Slingshot OpenAPI schema.
 - Standalone UI components from `@lastshotlabs/snapshot/ui`.
 - Vite helpers for OpenAPI sync, SSR, RSC, PPR, prefetch metadata, and static
   route metadata.
@@ -164,7 +164,7 @@ export function SnapshotNavigationBridge() {
 
 ## API Sync
 
-Generate typed request helpers and React Query hooks from a Bunshot OpenAPI
+Generate typed request helpers and React Query hooks from a Slingshot OpenAPI
 schema.
 
 ```sh

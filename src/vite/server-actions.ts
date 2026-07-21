@@ -112,7 +112,7 @@ function buildClientStub(exportNames: string[], moduleName: string): string {
  *
  * The module name embedded in the stub is inferred from the file path relative
  * to the Vite project root. It must match the module name registered in
- * `bunshot-ssr`'s server action registry.
+ * `slingshot-ssr`'s server action registry.
  *
  * @example
  * ```ts

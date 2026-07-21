@@ -149,7 +149,7 @@ export function createOAuthHooks({
   }
 
   /**
-   * Execute the Bunshot one-time OAuth code exchange.
+   * Execute the Slingshot one-time OAuth code exchange.
    *
    * The provider callback redirects the browser back to the app with a short-lived
    * authorization `code`. Snapshot exchanges that code via

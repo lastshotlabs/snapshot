@@ -212,7 +212,7 @@ describe("createReactRenderer — renderChain structural contract", () => {
     );
   });
 
-  it("renderer satisfies BunshotSsrRenderer structural shape with renderChain", () => {
+  it("renderer satisfies SlingshotSsrRenderer structural shape with renderChain", () => {
     const renderer = createReactRenderer({
       resolveComponent: async () =>
         (() => null) as React.ComponentType<Record<string, unknown>>,

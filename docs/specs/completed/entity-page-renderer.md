@@ -2,11 +2,11 @@
 
 > **Last updated:** 2026-04-09
 >
-> **Companion spec:** `bunshot/docs/specs/entity-driven-ssr-pages.md` (Phases 1-7)
+> **Companion spec:** `slingshot/docs/specs/entity-driven-ssr-pages.md` (Phases 1-7)
 >
 > This spec covers the **snapshot-side** implementation: how the React renderer
-> maps bunshot's abstract page declarations to Snapshot's component system.
-> The bunshot spec defines the manifest schema, page resolution, data loading,
+> maps slingshot's abstract page declarations to Snapshot's component system.
+> The slingshot spec defines the manifest schema, page resolution, data loading,
 > and renderer contract. This spec implements that contract.
 >
 > | Phase                                                | Status | Track |
@@ -46,9 +46,9 @@ Important runtime notes:
 - SSR required two runtime fixes beyond the original phase plan:
   1. structural component registration is explicitly loaded in the SSR entity-page path
   2. route/app state defaults and inline `from` data are seeded synchronously so
-     preloaded bunshot data appears in the first server render
-- Bunshot bridge types currently live in `src/ui/entity-pages/bunshot-types.ts` until the
-  public `@lastshotlabs/bunshot-ssr` types are imported directly.
+     preloaded slingshot data appears in the first server render
+- Slingshot bridge types currently live in `src/ui/entity-pages/slingshot-types.ts` until the
+  public `@lastshotlabs/slingshot-ssr` types are imported directly.
 
 Validation status for this implementation:
 
@@ -66,15 +66,15 @@ Validation status for this implementation:
 ## Read This First — Architectural Context
 
 This spec sits in **Layer 3** of a three-layer architecture defined in the
-bunshot companion spec:
+slingshot companion spec:
 
 ```
-Layer 1: bunshot manifest (app.manifest.json)     ← bunshot spec
-Layer 2: bunshot-ssr plugin (resolution + loaders) ← bunshot spec
+Layer 1: slingshot manifest (app.manifest.json)     ← slingshot spec
+Layer 2: slingshot-ssr plugin (resolution + loaders) ← slingshot spec
 Layer 3: Renderer (this spec)                      ← YOU ARE HERE
 ```
 
-By the time this code runs, bunshot has already:
+By the time this code runs, slingshot has already:
 
 1. Parsed the manifest and validated page declarations
 2. Matched a URL to a page declaration
@@ -123,19 +123,19 @@ JSON config — but someone has to write that JSON. The presets (`crudPage()`,
 programmatic TypeScript functions that must be called from code.
 
 This spec closes the last gap: **generating Snapshot page configs from
-bunshot's entity metadata at render time**, so the entire pipeline is
+slingshot's entity metadata at render time**, so the entire pipeline is
 manifest-driven end-to-end. The user declares entities and pages in
-`app.manifest.json`; bunshot loads the data; Snapshot renders it. No
+`app.manifest.json`; slingshot loads the data; Snapshot renders it. No
 code anywhere.
 
 **Before:** A developer who wants a Post list page writes:
 
-- Entity definition in bunshot manifest
+- Entity definition in slingshot manifest
 - A Snapshot manifest JSON with a `data-table`, `resources`, column config,
   filter config, pagination config, actions, and a navigation section
 - OR calls `crudPage()` from TypeScript code
 
-**After:** The developer writes entity fields + page declaration in bunshot's
+**After:** The developer writes entity fields + page declaration in slingshot's
 manifest. The renderer auto-generates the equivalent of `crudPage()` output
 from the entity metadata and page declaration config. Zero Snapshot-specific
 JSON. Zero TypeScript.
@@ -192,7 +192,7 @@ JSON. Zero TypeScript.
 
 These are the closest existing pattern to what we're building. The difference:
 presets take TypeScript options objects and return `PageConfig`. We take
-`PageLoaderResult` (from bunshot) and return the same `PageConfig`.
+`PageLoaderResult` (from slingshot) and return the same `PageConfig`.
 
 ---
 
@@ -207,13 +207,13 @@ bun run build              # tsup
 bun test                   # vitest
 ```
 
-### Key Types from bunshot (consumed, not defined here)
+### Key Types from slingshot (consumed, not defined here)
 
-These types come from `@lastshotlabs/bunshot-ssr` (published by the bunshot
+These types come from `@lastshotlabs/slingshot-ssr` (published by the slingshot
 spec). The snapshot renderer receives them — it does NOT define them.
 
 ```ts
-// From bunshot-ssr — the renderer contract
+// From slingshot-ssr — the renderer contract
 interface PageLoaderResult {
   readonly declaration: ResolvedPageDeclaration;
   readonly data: PageData;
@@ -363,7 +363,7 @@ Our mappers do the exact same thing, but the "high-level options" come from
 | Rule                        | Constraint                                                                                 |
 | --------------------------- | ------------------------------------------------------------------------------------------ |
 | Manifest-First              | Output must be valid Snapshot `PageConfig` — same JSON that `ManifestApp` renders          |
-| `src/ui/` boundary          | All mapper code goes under `src/ui/`. Never import bunshot internals.                      |
+| `src/ui/` boundary          | All mapper code goes under `src/ui/`. Never import slingshot internals.                      |
 | Components fetch own data   | Pre-fetched data injected via Snapshot state, not prop drilling                            |
 | No direct component imports | Components communicate via context system (publish/subscribe)                              |
 | Fixed action vocabulary     | Only use the 10 defined action types                                                       |
@@ -414,12 +414,12 @@ export interface EntityPageMapResult {
 }
 
 /**
- * Maps a bunshot PageLoaderResult to Snapshot's manifest format.
+ * Maps a slingshot PageLoaderResult to Snapshot's manifest format.
  *
  * This is the main entry point. Dispatches to per-type mappers
  * based on `result.declaration.declaration.type`.
  *
- * @param result - The page loader result from bunshot-ssr
+ * @param result - The page loader result from slingshot-ssr
  * @returns Snapshot-compatible page config, resources, state, and overlays
  */
 export function mapPageDeclaration(
@@ -479,7 +479,7 @@ export { formatFieldLabel } from "./utils";
 
 ### Goal
 
-Define the mapping between bunshot's `FieldType` (8 types) and Snapshot's
+Define the mapping between slingshot's `FieldType` (8 types) and Snapshot's
 component types for three contexts: display (read-only), input (form), and
 column (data-table).
 
@@ -488,7 +488,7 @@ column (data-table).
 New file: `src/ui/entity-pages/field-mappers.ts`
 
 ```ts
-import type { EntityFieldMeta } from "@lastshotlabs/bunshot-ssr";
+import type { EntityFieldMeta } from "@lastshotlabs/slingshot-ssr";
 
 // ─── Display mapping (detail-card, read-only views) ─────────────
 
@@ -723,7 +723,7 @@ export function formatFieldLabel(name: string): string {
  *
  * By convention, entity API routes are mounted at `/{storageName}` where
  * storageName is the lowercase pluralized entity name. This matches
- * how bunshot's entity plugin mounts routes.
+ * how slingshot's entity plugin mounts routes.
  *
  * @param entityName - Entity name from manifest (e.g., 'Post')
  * @returns API path (e.g., '/posts')
@@ -832,7 +832,7 @@ import type {
   PageLoaderResult,
   EntityListPageDeclaration,
   PageData,
-} from "@lastshotlabs/bunshot-ssr";
+} from "@lastshotlabs/slingshot-ssr";
 import type { EntityPageMapResult } from "./mapper";
 import { mapFieldToColumn } from "./field-mappers";
 import {
@@ -1083,7 +1083,7 @@ import type {
   PageLoaderResult,
   EntityDetailPageDeclaration,
   PageData,
-} from "@lastshotlabs/bunshot-ssr";
+} from "@lastshotlabs/slingshot-ssr";
 import type { EntityPageMapResult } from "./mapper";
 import { mapFieldToDisplay } from "./field-mappers";
 import {
@@ -1348,7 +1348,7 @@ import type {
   PageLoaderResult,
   EntityFormPageDeclaration,
   PageData,
-} from "@lastshotlabs/bunshot-ssr";
+} from "@lastshotlabs/slingshot-ssr";
 import type { EntityPageMapResult } from "./mapper";
 import { mapFieldToInput } from "./field-mappers";
 import {
@@ -1570,7 +1570,7 @@ import type {
   PageLoaderResult,
   EntityDashboardPageDeclaration,
   PageData,
-} from "@lastshotlabs/bunshot-ssr";
+} from "@lastshotlabs/slingshot-ssr";
 import type { EntityPageMapResult } from "./mapper";
 import { formatFieldLabel, resolvePageTitle } from "./utils";
 
@@ -1719,7 +1719,7 @@ Test cases:
 
 ### Goal
 
-Map bunshot's renderer-agnostic `NavigationConfig` to Snapshot's existing
+Map slingshot's renderer-agnostic `NavigationConfig` to Snapshot's existing
 navigation manifest format for the app shell.
 
 ### Implementation
@@ -1727,14 +1727,14 @@ navigation manifest format for the app shell.
 New file: `src/ui/entity-pages/navigation-mapper.ts`
 
 ```ts
-import type { NavigationConfig as BunshotNavigationConfig } from "@lastshotlabs/bunshot-ssr";
+import type { NavigationConfig as SlingshotNavigationConfig } from "@lastshotlabs/slingshot-ssr";
 import type { NavigationConfig as SnapshotNavigationConfig } from "../manifest/types";
 
 /**
- * Maps bunshot's renderer-agnostic NavigationConfig to Snapshot's
+ * Maps slingshot's renderer-agnostic NavigationConfig to Snapshot's
  * navigation manifest format.
  *
- * bunshot NavigationConfig:
+ * slingshot NavigationConfig:
  *   shell: 'sidebar' | 'top-nav' | 'none'
  *   title, logo, items, userMenu
  *
@@ -1743,7 +1743,7 @@ import type { NavigationConfig as SnapshotNavigationConfig } from "../manifest/t
  *   items: { label, path, icon, children }[]
  */
 export function mapNavigation(
-  config: BunshotNavigationConfig,
+  config: SlingshotNavigationConfig,
 ): SnapshotNavigationConfig | undefined {
   if (config.shell === "none") return undefined;
 
@@ -1757,7 +1757,7 @@ export function mapNavigation(
  * Maps the app-level config (title, logo) to Snapshot's AppConfig format.
  */
 export function mapAppConfig(
-  config: BunshotNavigationConfig,
+  config: SlingshotNavigationConfig,
 ): Record<string, unknown> {
   return {
     title: config.title,
@@ -1767,7 +1767,7 @@ export function mapAppConfig(
 }
 
 function mapNavigationItem(
-  item: BunshotNavigationConfig["items"][number],
+  item: SlingshotNavigationConfig["items"][number],
 ): Record<string, unknown> {
   const mapped: Record<string, unknown> = {
     label: item.label,
@@ -1863,7 +1863,7 @@ No Snapshot component mapping needed.
 ### Goal
 
 Implement the `renderPage()` method on the React renderer returned by
-`createReactRenderer()`. This is the method that bunshot-ssr calls when
+`createReactRenderer()`. This is the method that slingshot-ssr calls when
 a page declaration match is found.
 
 ### Implementation
@@ -1990,10 +1990,10 @@ async renderPage(
 
   // Apply ISR headers
   if (result.revalidate != null) {
-    response.headers.set('X-Bunshot-Revalidate', String(result.revalidate));
+    response.headers.set('X-Slingshot-Revalidate', String(result.revalidate));
   }
   if (result.tags?.length) {
-    response.headers.set('X-Bunshot-Tags', result.tags.join(','));
+    response.headers.set('X-Slingshot-Tags', result.tags.join(','));
   }
 
   // Apply meta to head
@@ -2072,7 +2072,7 @@ export function AppShellWrapper({
 - Entity pages render via Snapshot's `PageRenderer` + `ComponentRenderer`
 - Custom pages fall through to standard `render()` path
 - Navigation renders as sidebar or top-nav
-- ISR headers (`X-Bunshot-Revalidate`, `X-Bunshot-Tags`) set on response
+- ISR headers (`X-Slingshot-Revalidate`, `X-Slingshot-Tags`) set on response
 - Pre-fetched data available to components via state
 - Theme tokens applied
 
@@ -2175,10 +2175,10 @@ async renderPage(
   const response = await renderPage(element, context, shell, undefined, rscOptions);
 
   if (result.revalidate != null) {
-    response.headers.set('X-Bunshot-Revalidate', String(result.revalidate));
+    response.headers.set('X-Slingshot-Revalidate', String(result.revalidate));
   }
   if (result.tags?.length) {
-    response.headers.set('X-Bunshot-Tags', result.tags.join(','));
+    response.headers.set('X-Slingshot-Tags', result.tags.join(','));
   }
 
   return response;
@@ -2229,7 +2229,7 @@ import type {
   PageLoaderResult,
   EntityMeta,
   EntityFieldMeta,
-} from "@lastshotlabs/bunshot-ssr";
+} from "@lastshotlabs/slingshot-ssr";
 
 export const postEntityMeta: EntityMeta = {
   name: "Post",
@@ -2360,7 +2360,7 @@ Document the renderer-side entity page implementation in snapshot's docs.
 
 **`docs/ssr/entity-pages.md`:**
 
-- Overview: how Snapshot renders bunshot's entity page declarations
+- Overview: how Snapshot renders slingshot's entity page declarations
 - Architecture: PageLoaderResult → mapPageDeclaration() → PageConfig → PageRenderer
 - Component mapping tables:
   - entity-list → heading + filter-bar + data-table
@@ -2381,7 +2381,7 @@ Document the renderer-side entity page implementation in snapshot's docs.
 - `docs/components.md` — Note that `data-table`, `detail-card`, `form`,
   `stat-card`, `chart`, `filter-bar`, `feed` are used by entity page rendering
 - `docs/getting-started.md` — Add entity-driven pages as a path:
-  "Define entities in bunshot, get rendered pages automatically"
+  "Define entities in slingshot, get rendered pages automatically"
 
 ### JSDoc Requirements
 
@@ -2423,8 +2423,8 @@ Phase 8 (custom page)                                        Phase 12 (docs)
 
 | Phase    | Depends On      | Why                                         |
 | -------- | --------------- | ------------------------------------------- |
-| Phase 1  | bunshot Phase 5 | Needs `PageLoaderResult` types published    |
-| Phase 2  | bunshot Phase 5 | Needs `EntityFieldMeta` type                |
+| Phase 1  | slingshot Phase 5 | Needs `PageLoaderResult` types published    |
+| Phase 2  | slingshot Phase 5 | Needs `EntityFieldMeta` type                |
 | Phase 3  | Phases 1, 2     | Needs mapper infrastructure + field mappers |
 | Phase 4  | Phases 1, 2     | Needs mapper infrastructure + field mappers |
 | Phase 5  | Phases 1, 2     | Needs mapper infrastructure + field mappers |
@@ -2438,7 +2438,7 @@ Phase 8 (custom page)                                        Phase 12 (docs)
 
 ### File Ownership
 
-All files in the `snapshot` repo. No bunshot files are modified.
+All files in the `snapshot` repo. No slingshot files are modified.
 
 **Track A owns:**
 
@@ -2482,7 +2482,7 @@ Merge order: A → B → C.
 
 1. Read `CLAUDE.md` (snapshot repo)
 2. Read this spec fully
-3. Read the bunshot companion spec (Phases 1-5 for type definitions)
+3. Read the slingshot companion spec (Phases 1-5 for type definitions)
 4. Pick your track
 5. Implement phase by phase
 6. After each phase:
@@ -2511,7 +2511,7 @@ bun run format:check
 
 - Zero `any` casts in new files
 - All new exports have JSDoc
-- No imports from bunshot internals (only `@lastshotlabs/bunshot-ssr` public types)
+- No imports from slingshot internals (only `@lastshotlabs/slingshot-ssr` public types)
 - All component configs use existing registered component types (no new components)
 - All actions use the fixed action vocabulary (10 types)
 - All styles use `var(--sn-*)` tokens

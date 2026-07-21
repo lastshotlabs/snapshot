@@ -1,10 +1,10 @@
 // src/ssr/head.ts
 
 /**
- * SsrMeta shape — structural equivalent of `SsrMeta` from `@lastshotlabs/bunshot-ssr`.
+ * SsrMeta shape — structural equivalent of `SsrMeta` from `@lastshotlabs/slingshot-ssr`.
  *
  * Defined here so consumers can import from `@lastshotlabs/snapshot/ssr` only,
- * without needing to install bunshot-ssr as a dependency.
+ * without needing to install slingshot-ssr as a dependency.
  */
 export interface SsrMetaShape {
   /** Page title. Injected as `<title>`. */

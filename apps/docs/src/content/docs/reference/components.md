@@ -56,7 +56,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `BoxBaseProps` | interface | `src/ui/components/layout/box/standalone.tsx` |  |
-| `BoxConfig` | type | `src/ui/components/layout/box/types.ts` |  |
 
 ---
 
@@ -91,7 +90,6 @@ standard React children. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CardBaseProps` | interface | `src/ui/components/layout/card/standalone.tsx` |  |
-| `CardConfig` | type | `src/ui/components/layout/card/types.ts` |  |
 
 ---
 
@@ -126,7 +124,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CollapsibleBaseProps` | interface | `src/ui/components/layout/collapsible/standalone.tsx` |  |
-| `CollapsibleConfig` | type | `src/ui/components/layout/collapsible/types.ts` |  |
 
 ---
 
@@ -161,7 +158,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ColumnBaseProps` | interface | `src/ui/components/layout/column/standalone.tsx` |  |
-| `ColumnConfig` | type | `src/ui/components/layout/column/types.ts` | Inferred config type for the Column layout component. |
 
 ---
 
@@ -194,7 +190,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ContainerBaseProps` | interface | `src/ui/components/layout/container/standalone.tsx` |  |
-| `ContainerConfig` | type | `src/ui/components/layout/container/types.ts` |  |
 
 ---
 
@@ -228,7 +223,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `GridBaseProps` | interface | `src/ui/components/layout/grid/standalone.tsx` |  |
-| `GridConfig` | type | `src/ui/components/layout/grid/types.ts` |  |
 
 ---
 
@@ -349,7 +343,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NavDropdownBaseProps` | interface | `src/ui/components/layout/nav-dropdown/standalone.tsx` |  |
-| `NavDropdownConfig` | type | `src/ui/components/layout/nav-dropdown/types.ts` |  |
 
 ---
 
@@ -386,7 +379,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NavLinkBaseProps` | interface | `src/ui/components/layout/nav-link/standalone.tsx` |  |
-| `NavLinkConfig` | type | `src/ui/components/layout/nav-link/types.ts` |  |
 
 ---
 
@@ -420,7 +412,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NavLogoBaseProps` | interface | `src/ui/components/layout/nav-logo/standalone.tsx` |  |
-| `NavLogoConfig` | type | `src/ui/components/layout/nav-logo/types.ts` |  |
 
 ---
 
@@ -453,7 +444,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NavSearchBaseProps` | interface | `src/ui/components/layout/nav-search/standalone.tsx` |  |
-| `NavSearchConfig` | type | `src/ui/components/layout/nav-search/types.ts` |  |
 
 ---
 
@@ -486,7 +476,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NavSectionBaseProps` | interface | `src/ui/components/layout/nav-section/standalone.tsx` |  |
-| `NavSectionConfig` | type | `src/ui/components/layout/nav-section/types.ts` |  |
 
 ---
 
@@ -524,7 +513,6 @@ Works with plain React props.
 | --- | --- | --- | --- |
 | `NavUserMenuBaseItem` | interface | `src/ui/components/layout/nav-user-menu/standalone.tsx` |  |
 | `NavUserMenuBaseProps` | interface | `src/ui/components/layout/nav-user-menu/standalone.tsx` |  |
-| `NavUserMenuConfig` | type | `src/ui/components/layout/nav-user-menu/types.ts` |  |
 
 ---
 
@@ -558,7 +546,6 @@ Pass router-rendered content as `children`. When children is empty,
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `OutletBaseProps` | interface | `src/ui/components/layout/outlet/standalone.tsx` |  |
-| `OutletConfig` | type | `src/ui/components/layout/outlet/types.ts` |  |
 
 ---
 
@@ -594,7 +581,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `RowBaseProps` | interface | `src/ui/components/layout/row/standalone.tsx` |  |
-| `RowConfig` | type | `src/ui/components/layout/row/types.ts` |  |
 
 ---
 
@@ -628,7 +614,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SectionBaseProps` | interface | `src/ui/components/layout/section/standalone.tsx` |  |
-| `SectionConfig` | type | `src/ui/components/layout/section/types.ts` |  |
 
 ---
 
@@ -660,7 +645,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SpacerBaseProps` | interface | `src/ui/components/layout/spacer/standalone.tsx` |  |
-| `SpacerConfig` | type | `src/ui/components/layout/spacer/types.ts` |  |
 
 ---
 
@@ -694,7 +678,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SplitPaneBaseProps` | interface | `src/ui/components/layout/split-pane/standalone.tsx` |  |
-| `SplitPaneConfig` | type | `src/ui/components/layout/split-pane/types.ts` |  |
 
 ---
 
@@ -751,14 +734,11 @@ validation, and submit/reset actions. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `AutoFormBaseProps` | interface | `src/ui/components/forms/auto-form/standalone.tsx` |  |
-| `AutoFormConfig` | type | `src/ui/components/forms/auto-form/types.ts` | Inferred type for the AutoForm component config. |
 | `AutoFormFieldConfig` | interface | `src/ui/components/forms/auto-form/standalone.tsx` |  |
 | `AutoFormFieldOption` | interface | `src/ui/components/forms/auto-form/standalone.tsx` |  |
 | `AutoFormFieldValidation` | interface | `src/ui/components/forms/auto-form/standalone.tsx` |  |
 | `AutoFormSectionConfig` | interface | `src/ui/components/forms/auto-form/standalone.tsx` |  |
-| `FieldConfig` | type | `src/ui/components/forms/auto-form/types.ts` | Inferred type for a single field configuration. |
 | `FieldErrors` | type | `src/ui/components/forms/auto-form/types.ts` | Per-field validation error. |
-| `FieldSectionConfig` | type | `src/ui/components/forms/auto-form/types.ts` | Inferred type for a field section configuration. |
 | `TouchedFields` | type | `src/ui/components/forms/auto-form/types.ts` | Tracks which fields have been interacted with. |
 | `UseAutoFormResult` | interface | `src/ui/components/forms/auto-form/types.ts` | Return type for the useAutoForm headless hook. |
 
@@ -837,7 +817,6 @@ Forms Color Picker is a code-first Snapshot UI component exported from the UI pa
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ColorPickerBaseProps` | type | `src/ui/components/forms/color-picker/standalone.tsx` |  |
-| `ColorPickerConfig` | type | `src/ui/components/forms/color-picker/types.ts` | Props/config shape for the color picker component. |
 | `ColorPickerFieldProps` | interface | `src/ui/components/forms/color-picker/standalone.tsx` |  |
 
 ---
@@ -877,7 +856,6 @@ Forms Date Picker is a code-first Snapshot UI component exported from the UI pac
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `DatePickerBaseProps` | type | `src/ui/components/forms/date-picker/standalone.tsx` |  |
-| `DatePickerConfig` | type | `src/ui/components/forms/date-picker/types.ts` | Props/config shape for the date picker component. |
 | `DatePickerDisabledEntry` | interface | `src/ui/components/forms/date-picker/standalone.tsx` |  |
 | `DatePickerFieldProps` | interface | `src/ui/components/forms/date-picker/standalone.tsx` |  |
 | `DatePickerPreset` | interface | `src/ui/components/forms/date-picker/standalone.tsx` |  |
@@ -917,7 +895,6 @@ size, and variant. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `IconButtonBaseProps` | interface | `src/ui/components/forms/icon-button/standalone.tsx` |  |
-| `IconButtonConfig` | type | `src/ui/components/forms/icon-button/types.ts` |  |
 
 ---
 
@@ -952,7 +929,6 @@ Forms Inline Edit is a code-first Snapshot UI component exported from the UI pac
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `InlineEditBaseProps` | type | `src/ui/components/forms/inline-edit/standalone.tsx` |  |
-| `InlineEditConfig` | type | `src/ui/components/forms/inline-edit/types.ts` | Inferred config type for the InlineEdit component. |
 | `InlineEditFieldProps` | interface | `src/ui/components/forms/inline-edit/standalone.tsx` |  |
 
 ---
@@ -988,10 +964,10 @@ Forms Input is a code-first Snapshot UI component exported from the UI package.
 | `onKeyDown` | `KeyboardEventHandler<HTMLInputElement> \| undefined` | No | Standard keydown handler. |
 | `onMouseEnter` | `MouseEventHandler<HTMLInputElement> \| undefined` | No | Standard mouseenter handler. |
 | `onMouseLeave` | `MouseEventHandler<HTMLInputElement> \| undefined` | No | Standard mouseleave handler. |
-| `onPointerDown` | `import("/Users/jdd/projects/snapshot/node_modules/@types/react/index").PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerdown handler. |
-| `onPointerUp` | `import("/Users/jdd/projects/snapshot/node_modules/@types/react/index").PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerup handler. |
-| `onTouchEnd` | `import("/Users/jdd/projects/snapshot/node_modules/@types/react/index").TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchend handler. |
-| `onTouchStart` | `import("/Users/jdd/projects/snapshot/node_modules/@types/react/index").TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchstart handler. |
+| `onPointerDown` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerdown handler. |
+| `onPointerUp` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").PointerEventHandler<HTMLInputElement> \| undefined` | No | Standard pointerup handler. |
+| `onTouchEnd` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchend handler. |
+| `onTouchStart` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").TouchEventHandler<HTMLInputElement> \| undefined` | No | Standard touchstart handler. |
 | `pattern` | `string \| undefined` | No | Regex validation pattern. |
 | `placeholder` | `string \| undefined` | No | Placeholder text inside the input. |
 | `readOnly` | `boolean \| undefined` | No | Read-only state. |
@@ -1049,7 +1025,6 @@ Forms Location Input is a code-first Snapshot UI component exported from the UI 
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `LocationInputBaseProps` | type | `src/ui/components/forms/location-input/standalone.tsx` |  |
-| `LocationInputConfig` | type | `src/ui/components/forms/location-input/types.ts` | Props/config shape for the location input component. |
 | `LocationInputFieldProps` | interface | `src/ui/components/forms/location-input/standalone.tsx` |  |
 | `LocationResult` | interface | `src/ui/components/forms/location-input/standalone.tsx` |  |
 
@@ -1092,7 +1067,6 @@ Forms Multi Select is a code-first Snapshot UI component exported from the UI pa
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `MultiSelectBaseProps` | type | `src/ui/components/forms/multi-select/standalone.tsx` |  |
-| `MultiSelectConfig` | type | `src/ui/components/forms/multi-select/types.ts` | Inferred config type from the MultiSelect Zod schema. |
 | `MultiSelectFieldOption` | interface | `src/ui/components/forms/multi-select/standalone.tsx` |  |
 | `MultiSelectFieldProps` | interface | `src/ui/components/forms/multi-select/standalone.tsx` |  |
 | `MultiSelectOption` | interface | `src/ui/components/forms/multi-select/types.ts` | Normalized option shape used internally by the component. |
@@ -1131,7 +1105,6 @@ Forms Quick Add is a code-first Snapshot UI component exported from the UI packa
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `QuickAddBaseProps` | type | `src/ui/components/forms/quick-add/standalone.tsx` |  |
-| `QuickAddConfig` | type | `src/ui/components/forms/quick-add/types.ts` | Inferred config type from the QuickAdd Zod schema. |
 | `QuickAddFieldProps` | interface | `src/ui/components/forms/quick-add/standalone.tsx` |  |
 
 ---
@@ -1177,7 +1150,6 @@ Forms Select is a code-first Snapshot UI component exported from the UI package.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SelectBaseProps` | type | `src/ui/components/forms/select/standalone.tsx` |  |
-| `SelectConfig` | type | `src/ui/components/forms/select/types.ts` |  |
 | `SelectControlProps` | interface | `src/ui/components/forms/select/types.ts` |  |
 | `SelectFieldProps` | interface | `src/ui/components/forms/select/standalone.tsx` |  |
 
@@ -1219,7 +1191,6 @@ Forms Slider is a code-first Snapshot UI component exported from the UI package.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SliderBaseProps` | type | `src/ui/components/forms/slider/standalone.tsx` |  |
-| `SliderConfig` | type | `src/ui/components/forms/slider/types.ts` | Props/config shape for the slider component. |
 | `SliderFieldProps` | interface | `src/ui/components/forms/slider/standalone.tsx` |  |
 
 ---
@@ -1257,7 +1228,6 @@ Forms Switch is a code-first Snapshot UI component exported from the UI package.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SwitchBaseProps` | type | `src/ui/components/forms/switch/standalone.tsx` |  |
-| `SwitchConfig` | type | `src/ui/components/forms/switch/types.ts` | Inferred config type from the Switch Zod schema. |
 | `SwitchFieldProps` | interface | `src/ui/components/forms/switch/standalone.tsx` |  |
 
 ---
@@ -1295,7 +1265,6 @@ Forms Tag Selector is a code-first Snapshot UI component exported from the UI pa
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `TagSelectorBaseProps` | type | `src/ui/components/forms/tag-selector/standalone.tsx` |  |
-| `TagSelectorConfig` | type | `src/ui/components/forms/tag-selector/types.ts` | Inferred config type from the TagSelector Zod schema. |
 | `TagSelectorFieldProps` | interface | `src/ui/components/forms/tag-selector/standalone.tsx` |  |
 | `TagSelectorTag` | interface | `src/ui/components/forms/tag-selector/standalone.tsx` |  |
 
@@ -1382,7 +1351,6 @@ Forms Toggle is a code-first Snapshot UI component exported from the UI package.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ToggleBaseProps` | type | `src/ui/components/forms/toggle/standalone.tsx` |  |
-| `ToggleConfig` | type | `src/ui/components/forms/toggle/types.ts` | Inferred config type from the Toggle Zod schema. |
 | `ToggleFieldProps` | interface | `src/ui/components/forms/toggle/standalone.tsx` |  |
 
 ---
@@ -1419,7 +1387,6 @@ or multi-select modes. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ToggleGroupBaseProps` | interface | `src/ui/components/forms/toggle-group/standalone.tsx` |  |
-| `ToggleGroupConfig` | type | `src/ui/components/forms/toggle-group/types.ts` |  |
 | `ToggleGroupItem` | interface | `src/ui/components/forms/toggle-group/standalone.tsx` |  |
 
 ---
@@ -1453,10 +1420,8 @@ step navigation, field validation, and completion state. Works with plain React 
 | --- | --- | --- | --- |
 | `UseWizardResult` | interface | `src/ui/components/forms/wizard/types.ts` | Return type of the useWizard headless hook. |
 | `WizardBaseProps` | interface | `src/ui/components/forms/wizard/standalone.tsx` |  |
-| `WizardConfig` | type | `src/ui/components/forms/wizard/types.ts` | Inferred type for the Wizard component configuration. |
 | `WizardFieldConfig` | interface | `src/ui/components/forms/wizard/standalone.tsx` |  |
 | `WizardState` | interface | `src/ui/components/forms/wizard/standalone.tsx` |  |
-| `WizardStepConfig` | type | `src/ui/components/forms/wizard/types.ts` | Inferred type for a single wizard step configuration. |
 | `WizardStepDef` | interface | `src/ui/components/forms/wizard/standalone.tsx` |  |
 
 ---
@@ -1496,7 +1461,6 @@ action button, and dismiss. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `AlertBaseProps` | interface | `src/ui/components/data/alert/standalone.tsx` |  |
-| `AlertConfig` | type | `src/ui/components/data/alert/types.ts` | Inferred config type from the Alert Zod schema. |
 
 ---
 
@@ -1533,7 +1497,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `AvatarBaseProps` | interface | `src/ui/components/data/avatar/standalone.tsx` |  |
-| `AvatarConfig` | type | `src/ui/components/data/avatar/types.ts` | Inferred config type from the Avatar Zod schema. |
 
 ---
 
@@ -1567,7 +1530,6 @@ Works with plain React props.
 | --- | --- | --- | --- |
 | `AvatarGroupBaseAvatar` | interface | `src/ui/components/data/avatar-group/standalone.tsx` |  |
 | `AvatarGroupBaseProps` | interface | `src/ui/components/data/avatar-group/standalone.tsx` |  |
-| `AvatarGroupConfig` | type | `src/ui/components/data/avatar-group/types.ts` | Inferred config type from the AvatarGroup Zod schema. |
 
 ---
 
@@ -1602,7 +1564,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `BadgeBaseProps` | interface | `src/ui/components/data/badge/standalone.tsx` |  |
-| `BadgeConfig` | type | `src/ui/components/data/badge/types.ts` | Inferred config type from the Badge Zod schema. |
 
 ---
 
@@ -1648,8 +1609,6 @@ Works with plain React props.
 | --- | --- | --- | --- |
 | `ChartBaseProps` | interface | `src/ui/components/data/chart/standalone.tsx` |  |
 | `ChartBaseSeries` | interface | `src/ui/components/data/chart/standalone.tsx` |  |
-| `ChartConfig` | type | `src/ui/components/data/chart/types.ts` | Inferred type for the Chart component configuration. |
-| `SeriesConfig` | type | `src/ui/components/data/chart/types.ts` | Inferred type for a single chart series config. |
 
 ---
 
@@ -1708,18 +1667,14 @@ selection, and search. Works with plain React props.
 
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
-| `BulkAction` | type | `src/ui/components/data/data-table/types.ts` | Inferred bulk action type. |
-| `ColumnConfig` | type | `src/ui/components/data/data-table/types.ts` | Inferred column configuration type. |
 | `DataTableBaseBulkAction` | interface | `src/ui/components/data/data-table/standalone.tsx` |  |
 | `DataTableBaseColumn` | interface | `src/ui/components/data/data-table/standalone.tsx` |  |
 | `DataTableBasePagination` | interface | `src/ui/components/data/data-table/standalone.tsx` |  |
 | `DataTableBaseProps` | interface | `src/ui/components/data/data-table/standalone.tsx` |  |
 | `DataTableBaseRowAction` | interface | `src/ui/components/data/data-table/standalone.tsx` |  |
 | `DataTableBaseSort` | interface | `src/ui/components/data/data-table/standalone.tsx` |  |
-| `DataTableConfig` | type | `src/ui/components/data/data-table/types.ts` | Inferred DataTable configuration type from the Zod schema. |
 | `PaginationState` | interface | `src/ui/components/data/data-table/types.ts` | Pagination state for the data table. |
 | `ResolvedColumn` | interface | `src/ui/components/data/data-table/types.ts` | Resolved column definition used internally by the hook and component. |
-| `RowAction` | type | `src/ui/components/data/data-table/types.ts` | Inferred row action type. |
 | `SortState` | interface | `src/ui/components/data/data-table/types.ts` | Sort state for the data table. |
 | `UseDataTableResult` | interface | `src/ui/components/data/data-table/types.ts` | Return type of the `useDataTable` headless hook. Provides all state and handlers needed to render a data table. |
 
@@ -1757,12 +1712,10 @@ and header actions. Works with plain React props.
 
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
-| `DetailCardAction` | type | `src/ui/components/data/detail-card/types.ts` |  |
 | `DetailCardActionSlotName` | type | `src/ui/components/data/detail-card/types.ts` |  |
 | `DetailCardBaseAction` | interface | `src/ui/components/data/detail-card/standalone.tsx` |  |
 | `DetailCardBaseField` | interface | `src/ui/components/data/detail-card/standalone.tsx` |  |
 | `DetailCardBaseProps` | interface | `src/ui/components/data/detail-card/standalone.tsx` |  |
-| `DetailCardConfig` | type | `src/ui/components/data/detail-card/types.ts` |  |
 | `DetailCardFieldSlotName` | type | `src/ui/components/data/detail-card/types.ts` |  |
 | `DetailCardSlotName` | type | `src/ui/components/data/detail-card/types.ts` |  |
 | `DetailFieldConfig` | interface | `src/ui/components/data/detail-card/types.ts` |  |
@@ -1812,7 +1765,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `EmptyStateBaseProps` | interface | `src/ui/components/data/empty-state/standalone.tsx` |  |
-| `EmptyStateConfig` | type | `src/ui/components/data/empty-state/types.ts` | Inferred config type from the EmptyState Zod schema. |
 
 ---
 
@@ -1850,7 +1802,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `EntityPickerBaseProps` | interface | `src/ui/components/data/entity-picker/standalone.tsx` |  |
-| `EntityPickerConfig` | type | `src/ui/components/data/entity-picker/types.ts` | Inferred config type from the EntityPicker Zod schema. |
 | `EntityPickerEntity` | interface | `src/ui/components/data/entity-picker/standalone.tsx` |  |
 
 ---
@@ -1883,7 +1834,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `FavoriteButtonBaseProps` | interface | `src/ui/components/data/favorite-button/standalone.tsx` |  |
-| `FavoriteButtonConfig` | type | `src/ui/components/data/favorite-button/types.ts` | Inferred config type from the FavoriteButton Zod schema. |
 
 ---
 
@@ -1927,7 +1877,6 @@ live updates. Works with plain React props.
 | `FeedBaseItem` | interface | `src/ui/components/data/feed/standalone.tsx` |  |
 | `FeedBaseItemAction` | interface | `src/ui/components/data/feed/standalone.tsx` |  |
 | `FeedBaseProps` | interface | `src/ui/components/data/feed/standalone.tsx` |  |
-| `FeedConfig` | type | `src/ui/components/data/feed/types.ts` | Inferred type for the Feed component config (from Zod schema). |
 | `FeedItem` | interface | `src/ui/components/data/feed/types.ts` | A single resolved feed item for rendering. |
 | `UseFeedResult` | interface | `src/ui/components/data/feed/types.ts` | Return type of the useFeed headless hook. |
 
@@ -1962,7 +1911,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `FilterBarBaseProps` | interface | `src/ui/components/data/filter-bar/standalone.tsx` |  |
-| `FilterBarConfig` | type | `src/ui/components/data/filter-bar/types.ts` | Inferred config type for the FilterBar component. |
 | `FilterBarFilter` | interface | `src/ui/components/data/filter-bar/standalone.tsx` |  |
 
 ---
@@ -1996,7 +1944,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `HighlightedTextBaseProps` | interface | `src/ui/components/data/highlighted-text/standalone.tsx` |  |
-| `HighlightedTextConfig` | type | `src/ui/components/data/highlighted-text/types.ts` | Inferred config type from the HighlightedText Zod schema. |
 
 ---
 
@@ -2039,8 +1986,6 @@ descriptions, badges, and click actions. Works with plain React props.
 | --- | --- | --- | --- |
 | `ListBaseItem` | interface | `src/ui/components/data/list/standalone.tsx` |  |
 | `ListBaseProps` | interface | `src/ui/components/data/list/standalone.tsx` |  |
-| `ListConfig` | type | `src/ui/components/data/list/types.ts` | Inferred config type from the List Zod schema. |
-| `ListItemConfig` | type | `src/ui/components/data/list/types.ts` | Inferred type for a single static list item. |
 
 ---
 
@@ -2074,7 +2019,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NotificationBellBaseProps` | interface | `src/ui/components/data/notification-bell/standalone.tsx` |  |
-| `NotificationBellConfig` | type | `src/ui/components/data/notification-bell/types.ts` | Inferred config type from the NotificationBell Zod schema. |
 
 ---
 
@@ -2111,7 +2055,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ProgressBaseProps` | interface | `src/ui/components/data/progress/standalone.tsx` |  |
-| `ProgressConfig` | type | `src/ui/components/data/progress/types.ts` | Inferred config type from the Progress Zod schema. |
 
 ---
 
@@ -2145,7 +2088,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SaveIndicatorBaseProps` | interface | `src/ui/components/data/save-indicator/standalone.tsx` |  |
-| `SaveIndicatorConfig` | type | `src/ui/components/data/save-indicator/types.ts` | Inferred config type from the SaveIndicator Zod schema. |
 
 ---
 
@@ -2179,7 +2121,6 @@ scrollbars. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ScrollAreaBaseProps` | interface | `src/ui/components/data/scroll-area/standalone.tsx` |  |
-| `ScrollAreaConfig` | type | `src/ui/components/data/scroll-area/types.ts` | Inferred config type for the ScrollArea component. |
 
 ---
 
@@ -2210,7 +2151,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SeparatorBaseProps` | interface | `src/ui/components/data/separator/standalone.tsx` |  |
-| `SeparatorConfig` | type | `src/ui/components/data/separator/types.ts` | Inferred config type for the Separator component. |
 
 ---
 
@@ -2244,7 +2184,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SkeletonBaseProps` | interface | `src/ui/components/data/skeleton/standalone.tsx` |  |
-| `SkeletonConfig` | type | `src/ui/components/data/skeleton/types.ts` | Inferred config type from the Skeleton Zod schema. |
 
 ---
 
@@ -2283,7 +2222,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `StatCardBaseProps` | interface | `src/ui/components/data/stat-card/standalone.tsx` |  |
-| `StatCardConfig` | type | `src/ui/components/data/stat-card/types.ts` | Inferred config type from the StatCard Zod schema. |
 | `StatCardTrend` | interface | `src/ui/components/data/stat-card/standalone.tsx` |  |
 | `UseStatCardResult` | interface | `src/ui/components/data/stat-card/types.ts` | Result returned by the StatCard headless hook or internal logic. Provides all the data needed to render a stat card. |
 
@@ -2318,7 +2256,6 @@ on hover with configurable placement and delay. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `TooltipBaseProps` | interface | `src/ui/components/data/tooltip/standalone.tsx` |  |
-| `TooltipConfig` | type | `src/ui/components/data/tooltip/types.ts` | Inferred config type from the Tooltip Zod schema. |
 
 ---
 
@@ -2350,7 +2287,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `VoteBaseProps` | interface | `src/ui/components/data/vote/standalone.tsx` |  |
-| `VoteConfig` | type | `src/ui/components/data/vote/types.ts` | Inferred config type from the Vote Zod schema. |
 
 ---
 
@@ -2385,7 +2321,6 @@ and content alignment. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `BannerBaseProps` | interface | `src/ui/components/content/banner/standalone.tsx` |  |
-| `BannerConfig` | type | `src/ui/components/content/banner/types.ts` | Inferred config type from the Banner Zod schema. |
 
 ---
 
@@ -2416,7 +2351,6 @@ within flowing text. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CodeBaseProps` | interface | `src/ui/components/content/code/standalone.tsx` |  |
-| `CodeConfig` | type | `src/ui/components/content/code/types.ts` | Inferred config type for the Code component. |
 
 ---
 
@@ -2454,7 +2388,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CodeBlockBaseProps` | interface | `src/ui/components/content/code-block/standalone.tsx` |  |
-| `CodeBlockConfig` | type | `src/ui/components/content/code-block/types.ts` | Inferred config type from the CodeBlock Zod schema. |
 
 ---
 
@@ -2489,7 +2422,6 @@ text blocks. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CompareViewBaseProps` | interface | `src/ui/components/content/compare-view/standalone.tsx` |  |
-| `CompareViewConfig` | type | `src/ui/components/content/compare-view/types.ts` | Inferred config type from the CompareView Zod schema. |
 | `DiffLine` | interface | `src/ui/components/content/compare-view/types.ts` | A single line in the diff output. |
 
 ---
@@ -2532,7 +2464,6 @@ and compact variants. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `FileUploaderBaseProps` | interface | `src/ui/components/content/file-uploader/standalone.tsx` |  |
-| `FileUploaderConfig` | type | `src/ui/components/content/file-uploader/types.ts` | Inferred config type from the FileUploader Zod schema. |
 | `UploadFileEntry` | interface | `src/ui/components/content/file-uploader/types.ts` | Internal state for a file in the upload queue. |
 
 ---
@@ -2565,7 +2496,6 @@ React props. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `HeadingBaseProps` | interface | `src/ui/components/content/heading/standalone.tsx` |  |
-| `HeadingConfig` | type | `src/ui/components/content/heading/types.ts` |  |
 
 ---
 
@@ -2600,7 +2530,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `LinkEmbedBaseProps` | interface | `src/ui/components/content/link-embed/standalone.tsx` |  |
-| `LinkEmbedConfig` | type | `src/ui/components/content/link-embed/types.ts` | Inferred config type from the LinkEmbed Zod schema. |
 | `LinkEmbedMeta` | interface | `src/ui/components/content/link-embed/standalone.tsx` |  |
 | `Platform` | type | `src/ui/components/content/link-embed/platform.ts` | Platform detection and embed URL extraction. Identifies known platforms from URLs and extracts the embed-compatible URL or ID needed to render platform-specific iframes. |
 | `PlatformInfo` | interface | `src/ui/components/content/link-embed/platform.ts` | Resolved platform metadata used to render a platform-specific embedded preview. |
@@ -2642,7 +2571,6 @@ and Snapshot design tokens. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `MarkdownBaseProps` | interface | `src/ui/components/content/markdown/standalone.tsx` |  |
-| `MarkdownConfig` | type | `src/ui/components/content/markdown/types.ts` | Inferred config type from the Markdown Zod schema. |
 
 ---
 
@@ -2675,8 +2603,8 @@ powered by tiptap. Works with plain React props.
 | `onSend` | `((data: { html: string; text: string; markdown?: string; }) => void) \| undefined` | No | Called when the send button is pressed or Enter is pressed (if sendOnEnter). |
 | `placeholder` | `string \| undefined` | No | Placeholder text. |
 | `readonly` | `boolean \| undefined` | No | Whether the editor is read-only. |
-| `ref` | `Ref<import("/Users/jdd/projects/snapshot/src/ui").RichInputBaseHandle> \| undefined` | No | Allows getting a ref to the component instance. Once the component unmounts, React will set `ref.current` to `null` (or call the ref with `null` if you passed a callback ref). |
-| `renderMentionList` | `ComponentType<MentionListProps & import("/Users/jdd/projects/snapshot/node_modules/@types/react/index").RefAttributes<MentionListHandle>> \| undefined` | No | Optional consumer-rendered popover. If omitted, snapshot uses a minimal default list styled with the framework's CSS variables. Accepts the same props the default does and exposes `onKeyDown({ event })` via `forwardRef` so the suggestion plugin can forward arrow / Enter keys. |
+| `ref` | `Ref<import("/home/jdd/dev/snapshot/src/ui").RichInputBaseHandle> \| undefined` | No | Allows getting a ref to the component instance. Once the component unmounts, React will set `ref.current` to `null` (or call the ref with `null` if you passed a callback ref). |
+| `renderMentionList` | `ComponentType<MentionListProps & import("/home/jdd/dev/snapshot/node_modules/@types/react/index").RefAttributes<MentionListHandle>> \| undefined` | No | Optional consumer-rendered popover. If omitted, snapshot uses a minimal default list styled with the framework's CSS variables. Accepts the same props the default does and exposes `onKeyDown({ event })` via `forwardRef` so the suggestion plugin can forward arrow / Enter keys. |
 | `sendOnEnter` | `boolean \| undefined` | No | Whether pressing Enter sends (vs. newline). Default: true. |
 | `serializeMention` | `((attrs: { id: string; label: string; }) => string) \| undefined` | No | Override the mention serialization format. Defaults to slingshot's `<@<id>>` content-token format, which `slingshot-core/parseBody` understands. Override only when integrating into a non-slingshot server. |
 | `showSendButton` | `boolean \| undefined` | No | Whether to show a send button. |
@@ -2690,7 +2618,6 @@ powered by tiptap. Works with plain React props.
 | --- | --- | --- | --- |
 | `RichInputBaseHandle` | interface | `src/ui/components/content/rich-input/standalone.tsx` | Imperative handle exposed via `ref`. Use this when an external surface (emoji picker, GIF picker, slash-command menu) needs to insert content at the user's current cursor position without going through the controlled-value path (which clobbers the cursor). |
 | `RichInputBaseProps` | interface | `src/ui/components/content/rich-input/standalone.tsx` |  |
-| `RichInputConfig` | type | `src/ui/components/content/rich-input/types.ts` | Inferred config type from the RichInput Zod schema. |
 
 ---
 
@@ -2728,7 +2655,6 @@ powered by CodeMirror. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `RichTextEditorBaseProps` | interface | `src/ui/components/content/rich-text-editor/standalone.tsx` |  |
-| `RichTextEditorConfig` | type | `src/ui/components/content/rich-text-editor/types.ts` | Inferred config type from the RichTextEditor Zod schema. |
 
 ---
 
@@ -2764,8 +2690,6 @@ date labels, and default/compact/alternating layout variants. Works with plain R
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `TimelineBaseProps` | interface | `src/ui/components/content/timeline/standalone.tsx` |  |
-| `TimelineConfig` | type | `src/ui/components/content/timeline/types.ts` | Inferred config type from the Timeline Zod schema. |
-| `TimelineItem` | type | `src/ui/components/content/timeline/types.ts` | Inferred type for a single timeline item. |
 | `TimelineItemEntry` | interface | `src/ui/components/content/timeline/standalone.tsx` |  |
 
 ---
@@ -2803,8 +2727,6 @@ children. Works with plain React props.
 | --- | --- | --- | --- |
 | `AccordionBaseItem` | interface | `src/ui/components/navigation/accordion/standalone.tsx` |  |
 | `AccordionBaseProps` | interface | `src/ui/components/navigation/accordion/standalone.tsx` |  |
-| `AccordionConfig` | type | `src/ui/components/navigation/accordion/types.ts` | Inferred config type from the Accordion Zod schema. |
-| `AccordionItemConfig` | type | `src/ui/components/navigation/accordion/types.ts` | Inferred type for a single accordion item. |
 
 ---
 
@@ -2838,8 +2760,6 @@ Works with plain React props.
 | --- | --- | --- | --- |
 | `BreadcrumbBaseItem` | interface | `src/ui/components/navigation/breadcrumb/standalone.tsx` |  |
 | `BreadcrumbBaseProps` | interface | `src/ui/components/navigation/breadcrumb/standalone.tsx` |  |
-| `BreadcrumbConfig` | type | `src/ui/components/navigation/breadcrumb/types.ts` | Inferred config type from the Breadcrumb Zod schema. |
-| `BreadcrumbItemConfig` | type | `src/ui/components/navigation/breadcrumb/types.ts` | Inferred type for a single breadcrumb item. |
 
 ---
 
@@ -2874,9 +2794,6 @@ based on the configured strategy. Works without SSR context.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `PrefetchLinkBaseProps` | interface | `src/ui/components/navigation/prefetch-link/standalone.tsx` |  |
-| `PrefetchLinkConfig` | type | `src/ui/components/navigation/prefetch-link/types.ts` |  |
-| `PrefetchLinkProps` | type | `src/ui/components/navigation/prefetch-link/types.ts` |  |
-| `PrefetchLinkSlotNames` | type | `src/ui/components/navigation/prefetch-link/types.ts` |  |
 
 ---
 
@@ -2910,10 +2827,8 @@ Works with plain React props.
 
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
-| `StepConfig` | type | `src/ui/components/navigation/stepper/types.ts` | Inferred type for a single step config. |
 | `StepperBaseProps` | interface | `src/ui/components/navigation/stepper/standalone.tsx` |  |
 | `StepperBaseStep` | interface | `src/ui/components/navigation/stepper/standalone.tsx` |  |
-| `StepperConfig` | type | `src/ui/components/navigation/stepper/types.ts` | Inferred config type from the Stepper Zod schema. |
 
 ---
 
@@ -2990,7 +2905,6 @@ Works with plain React props.
 | `TreeItemInput` | interface | `src/ui/components/navigation/tree-view/types.ts` |  |
 | `TreeViewBaseItem` | interface | `src/ui/components/navigation/tree-view/standalone.tsx` |  |
 | `TreeViewBaseProps` | interface | `src/ui/components/navigation/tree-view/standalone.tsx` |  |
-| `TreeViewConfig` | type | `src/ui/components/navigation/tree-view/types.ts` | Inferred config type from the TreeView Zod schema. |
 
 ---
 
@@ -3033,7 +2947,6 @@ navigation. Works with plain React props.
 | `CommandPaletteBaseGroup` | interface | `src/ui/components/overlay/command-palette/standalone.tsx` |  |
 | `CommandPaletteBaseItem` | interface | `src/ui/components/overlay/command-palette/standalone.tsx` |  |
 | `CommandPaletteBaseProps` | interface | `src/ui/components/overlay/command-palette/standalone.tsx` |  |
-| `CommandPaletteConfig` | type | `src/ui/components/overlay/command-palette/types.ts` | Inferred config type for the CommandPalette component. |
 
 ---
 
@@ -3073,7 +2986,6 @@ plain React props. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ConfirmDialogBaseProps` | interface | `src/ui/components/overlay/confirm-dialog/standalone.tsx` |  |
-| `ConfirmDialogConfig` | type | `src/ui/components/overlay/confirm-dialog/types.ts` | Input config type for the ConfirmDialog component. |
 
 ---
 
@@ -3110,7 +3022,6 @@ Works with plain React props.
 | `ContextMenuBaseLabel` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` |  |
 | `ContextMenuBaseProps` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` |  |
 | `ContextMenuBaseSeparator` | interface | `src/ui/components/overlay/context-menu/standalone.tsx` |  |
-| `ContextMenuConfig` | type | `src/ui/components/overlay/context-menu/types.ts` | Inferred config type for the ContextMenu component. |
 
 ---
 
@@ -3191,7 +3102,6 @@ Works with plain React props.
 | `DropdownMenuBaseProps` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` |  |
 | `DropdownMenuBaseSeparator` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` |  |
 | `DropdownMenuBaseTrigger` | interface | `src/ui/components/overlay/dropdown-menu/standalone.tsx` |  |
-| `DropdownMenuConfig` | type | `src/ui/components/overlay/dropdown-menu/types.ts` | Inferred config type from the DropdownMenu Zod schema. |
 
 ---
 
@@ -3227,7 +3137,6 @@ React props. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `HoverCardBaseProps` | interface | `src/ui/components/overlay/hover-card/standalone.tsx` |  |
-| `HoverCardConfig` | type | `src/ui/components/overlay/hover-card/types.ts` |  |
 
 ---
 
@@ -3309,7 +3218,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `PopoverBaseProps` | interface | `src/ui/components/overlay/popover/standalone.tsx` |  |
-| `PopoverConfig` | type | `src/ui/components/overlay/popover/types.ts` | Inferred config type for the Popover component. |
 
 ---
 
@@ -3345,7 +3253,6 @@ and dot indicators. Pauses on hover. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CarouselBaseProps` | interface | `src/ui/components/media/carousel/standalone.tsx` |  |
-| `CarouselConfig` | type | `src/ui/components/media/carousel/types.ts` | Inferred config type from the Carousel Zod schema. |
 
 ---
 
@@ -3377,7 +3284,6 @@ content. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `EmbedBaseProps` | interface | `src/ui/components/media/embed/standalone.tsx` |  |
-| `EmbedSchemaConfig` | type | `src/ui/components/media/embed/types.ts` | Inferred config type from the Embed Zod schema. |
 
 ---
 
@@ -3417,8 +3323,6 @@ support. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `SnapshotImageBaseProps` | interface | `src/ui/components/media/image/standalone.tsx` |  |
-| `SnapshotImageConfig` | type | `src/ui/components/media/image/types.ts` | Inferred config type from the SnapshotImage Zod schema. This is the single source of truth for what props the `<SnapshotImage>` component accepts. Never define this type manually. |
-| `SnapshotImageConfigInput` | type | `src/ui/components/media/image/types.ts` |  |
 
 ---
 
@@ -3453,7 +3357,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `VideoBaseProps` | interface | `src/ui/components/media/video/standalone.tsx` |  |
-| `VideoSchemaConfig` | type | `src/ui/components/media/video/types.ts` | Inferred config type from the Video Zod schema. |
 
 ---
 
@@ -3492,7 +3395,6 @@ typing indicator, and input slots. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ChatWindowBaseProps` | interface | `src/ui/components/communication/chat-window/standalone.tsx` |  |
-| `ChatWindowConfig` | type | `src/ui/components/communication/chat-window/types.ts` | Inferred config type from the ChatWindow Zod schema. |
 
 ---
 
@@ -3533,7 +3435,6 @@ optional delete actions, and a composable input slot. Works with plain React pro
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CommentSectionBaseProps` | interface | `src/ui/components/communication/comment-section/standalone.tsx` |  |
-| `CommentSectionConfig` | type | `src/ui/components/communication/comment-section/types.ts` | Inferred config type from the CommentSection Zod schema. |
 
 ---
 
@@ -3570,7 +3471,6 @@ support. Works with plain React props.
 | `EmojiCategory` | interface | `src/ui/components/communication/emoji-picker/types.ts` | Shape of an emoji category. |
 | `EmojiEntry` | interface | `src/ui/components/communication/emoji-picker/types.ts` | Shape of a single emoji entry. |
 | `EmojiPickerBaseProps` | interface | `src/ui/components/communication/emoji-picker/standalone.tsx` |  |
-| `EmojiPickerConfig` | type | `src/ui/components/communication/emoji-picker/types.ts` | Inferred config type from the EmojiPicker Zod schema. |
 
 #### Helpers
 
@@ -3617,7 +3517,6 @@ and optional attribution. Works with plain React props.
 | --- | --- | --- | --- |
 | `GifEntry` | interface | `src/ui/components/communication/gif-picker/types.ts` | Shape of a GIF entry. |
 | `GifPickerBaseProps` | interface | `src/ui/components/communication/gif-picker/standalone.tsx` |  |
-| `GifPickerConfig` | type | `src/ui/components/communication/gif-picker/types.ts` | Inferred config type from the GifPicker Zod schema. |
 
 ---
 
@@ -3661,7 +3560,6 @@ auto-scroll, embed rendering, and consecutive-message grouping. Works with plain
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `MessageThreadBaseProps` | interface | `src/ui/components/communication/message-thread/standalone.tsx` |  |
-| `MessageThreadConfig` | type | `src/ui/components/communication/message-thread/types.ts` | Inferred config type from the MessageThread Zod schema. |
 
 ---
 
@@ -3695,7 +3593,6 @@ with a colored dot and optional label. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `PresenceIndicatorBaseProps` | interface | `src/ui/components/communication/presence-indicator/standalone.tsx` |  |
-| `PresenceIndicatorConfig` | type | `src/ui/components/communication/presence-indicator/types.ts` | Inferred config type from the PresenceIndicator Zod schema. |
 
 ---
 
@@ -3715,7 +3612,7 @@ add-reaction button that opens an inline emoji picker. Works with plain React pr
 | Prop | Type | Required | Summary |
 | --- | --- | --- | --- |
 | `className` | `string \| undefined` | No | className applied to the root wrapper. |
-| `EmojiPickerComponent` | `import("/Users/jdd/projects/snapshot/node_modules/@types/react/index").ComponentType<{ maxHeight?: string; perRow?: number; onSelect?: (payload: { emoji: string; name: string; isCustom: boolean; }) => void; }> \| undefined` | No | Optional override for the emoji picker component, useful in tests. |
+| `EmojiPickerComponent` | `import("/home/jdd/dev/snapshot/node_modules/@types/react/index").ComponentType<{ maxHeight?: string; perRow?: number; onSelect?: (payload: { emoji: string; name: string; isCustom: boolean; }) => void; }> \| undefined` | No | Optional override for the emoji picker component, useful in tests. |
 | `id` | `string \| undefined` | No | Unique identifier for surface scoping. |
 | `onEmojiSelect` | `((payload: { emoji: string; name: string; isCustom: boolean; }) => void) \| undefined` | No | Called when an emoji is picked from the add-reaction picker. |
 | `onReactionClick` | `((emoji: string, wasActive: boolean) => void) \| undefined` | No | Called when a reaction button is clicked. Receives the emoji and whether it was active (for toggle). |
@@ -3729,7 +3626,6 @@ add-reaction button that opens an inline emoji picker. Works with plain React pr
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ReactionBarBaseProps` | interface | `src/ui/components/communication/reaction-bar/standalone.tsx` |  |
-| `ReactionBarConfig` | type | `src/ui/components/communication/reaction-bar/types.ts` | Inferred config type from the ReactionBar Zod schema. |
 | `ReactionEntry` | interface | `src/ui/components/communication/reaction-bar/standalone.tsx` |  |
 
 ---
@@ -3761,7 +3657,6 @@ to indicate who is currently typing. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `TypingIndicatorBaseProps` | interface | `src/ui/components/communication/typing-indicator/standalone.tsx` |  |
-| `TypingIndicatorConfig` | type | `src/ui/components/communication/typing-indicator/types.ts` | Inferred config type from the TypingIndicator Zod schema. |
 | `TypingUser` | interface | `src/ui/components/communication/typing-indicator/standalone.tsx` | A user entry for the typing indicator. |
 
 ---
@@ -3802,8 +3697,6 @@ with user avatars, relative timestamps, and expandable detail panels. Works with
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `AuditLogBaseProps` | interface | `src/ui/components/workflow/audit-log/standalone.tsx` |  |
-| `AuditLogConfig` | type | `src/ui/components/workflow/audit-log/types.ts` | Inferred config type from the AuditLog Zod schema. |
-| `AuditLogFilterConfig` | type | `src/ui/components/workflow/audit-log/types.ts` | Inferred filter configuration type. |
 | `AuditLogFilterEntry` | interface | `src/ui/components/workflow/audit-log/standalone.tsx` |  |
 
 ---
@@ -3842,8 +3735,6 @@ navigation controls, and optional week numbers. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `CalendarBaseProps` | interface | `src/ui/components/workflow/calendar/standalone.tsx` |  |
-| `CalendarConfig` | type | `src/ui/components/workflow/calendar/types.ts` | Inferred config type from the Calendar Zod schema. |
-| `CalendarEventConfig` | type | `src/ui/components/workflow/calendar/types.ts` | Inferred static event type. |
 | `CalendarEventEntry` | interface | `src/ui/components/workflow/calendar/standalone.tsx` |  |
 | `ResolvedEvent` | interface | `src/ui/components/workflow/calendar/types.ts` | Internal resolved event used for rendering. |
 
@@ -3888,9 +3779,7 @@ assignee avatars, priority indicators, and optional drag-and-drop reordering. Wo
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `KanbanBaseProps` | interface | `src/ui/components/workflow/kanban/standalone.tsx` |  |
-| `KanbanColumnConfig` | type | `src/ui/components/workflow/kanban/types.ts` | Inferred column definition type. |
 | `KanbanColumnEntry` | interface | `src/ui/components/workflow/kanban/standalone.tsx` |  |
-| `KanbanConfig` | type | `src/ui/components/workflow/kanban/types.ts` | Inferred config type from the Kanban Zod schema. |
 
 ---
 
@@ -3933,7 +3822,6 @@ unread indicators, relative timestamps, and a mark-all-read action. Works with p
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `NotificationFeedBaseProps` | interface | `src/ui/components/workflow/notification-feed/standalone.tsx` |  |
-| `NotificationFeedConfig` | type | `src/ui/components/workflow/notification-feed/types.ts` | Inferred config type from the NotificationFeed Zod schema. |
 
 ---
 
@@ -3969,7 +3857,6 @@ a card grid or a feature-comparison table with CTA buttons per tier. Works with 
 | --- | --- | --- | --- |
 | `PricingFeatureEntry` | interface | `src/ui/components/commerce/pricing-table/standalone.tsx` |  |
 | `PricingTableBaseProps` | interface | `src/ui/components/commerce/pricing-table/standalone.tsx` |  |
-| `PricingTableConfig` | type | `src/ui/components/commerce/pricing-table/types.ts` | Inferred config type from the PricingTable Zod schema. |
 | `PricingTierEntry` | interface | `src/ui/components/commerce/pricing-table/standalone.tsx` |  |
 
 ---
@@ -4006,7 +3893,6 @@ retry button. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `DefaultErrorBaseProps` | interface | `src/ui/components/feedback/default-error/standalone.tsx` |  |
-| `ErrorPageConfig` | type | `src/ui/components/feedback/default-error/types.ts` | Inferred config type from the default error schema. |
 
 ---
 
@@ -4037,7 +3923,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `DefaultLoadingBaseProps` | interface | `src/ui/components/feedback/default-loading/standalone.tsx` |  |
-| `SpinnerConfig` | type | `src/ui/components/feedback/default-loading/types.ts` | Inferred config type from the default loading schema. |
 
 ---
 
@@ -4068,7 +3953,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `DefaultNotFoundBaseProps` | interface | `src/ui/components/feedback/default-not-found/standalone.tsx` |  |
-| `NotFoundConfig` | type | `src/ui/components/feedback/default-not-found/types.ts` | Inferred config type from the default not-found schema. |
 
 ---
 
@@ -4099,7 +3983,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `DefaultOfflineBaseProps` | interface | `src/ui/components/feedback/default-offline/standalone.tsx` |  |
-| `OfflineBannerConfig` | type | `src/ui/components/feedback/default-offline/types.ts` | Inferred config type from the default offline schema. |
 
 ---
 
@@ -4132,7 +4015,6 @@ optionally with a centered label. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `DividerBaseProps` | interface | `src/ui/components/primitives/divider/standalone.tsx` |  |
-| `DividerConfig` | type | `src/ui/components/primitives/divider/types.ts` |  |
 
 ---
 
@@ -4171,8 +4053,6 @@ and pre-resolved items. Works with plain React props.
 | `FloatingMenuBaseLabel` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` |  |
 | `FloatingMenuBaseProps` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` |  |
 | `FloatingMenuBaseSeparator` | interface | `src/ui/components/primitives/floating-menu/standalone.tsx` |  |
-| `FloatingMenuConfig` | type | `src/ui/components/primitives/floating-menu/types.ts` |  |
-| `FloatingMenuEntry` | type | `src/ui/components/primitives/floating-menu/types.ts` |  |
 | `FloatingPanelProps` | interface | `src/ui/components/primitives/floating-menu/shared.tsx` |  |
 | `MenuItemProps` | interface | `src/ui/components/primitives/floating-menu/shared.tsx` |  |
 
@@ -4223,7 +4103,6 @@ badge. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `LinkBaseProps` | interface | `src/ui/components/primitives/link/standalone.tsx` |  |
-| `LinkConfig` | type | `src/ui/components/primitives/link/types.ts` |  |
 
 ---
 
@@ -4256,7 +4135,6 @@ heading and auto-redirect support. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `OAuthButtonsBaseProps` | interface | `src/ui/components/primitives/oauth-buttons/standalone.tsx` |  |
-| `OAuthButtonsConfig` | type | `src/ui/components/primitives/oauth-buttons/types.ts` |  |
 | `OAuthProvider` | interface | `src/ui/components/primitives/oauth-buttons/standalone.tsx` |  |
 
 ---
@@ -4292,7 +4170,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `PasskeyButtonBaseProps` | interface | `src/ui/components/primitives/passkey-button/standalone.tsx` |  |
-| `PasskeyButtonConfig` | type | `src/ui/components/primitives/passkey-button/types.ts` |  |
 
 ---
 
@@ -4330,7 +4207,6 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `StackBaseProps` | interface | `src/ui/components/primitives/stack/standalone.tsx` |  |
-| `StackConfig` | type | `src/ui/components/primitives/stack/types.ts` |  |
 
 ---
 
@@ -4364,7 +4240,6 @@ typography. Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `TextBaseProps` | interface | `src/ui/components/primitives/text/standalone.tsx` |  |
-| `TextConfig` | type | `src/ui/components/primitives/text/types.ts` |  |
 
 ---
 
@@ -4396,6 +4271,5 @@ Works with plain React props.
 | Export | Kind | Source | Summary |
 | --- | --- | --- | --- |
 | `ComponentGroupBaseProps` | interface | `src/ui/components/_base/component-group/standalone.tsx` |  |
-| `ComponentGroupConfig` | type | `src/ui/components/_base/component-group/types.ts` |  |
 
 ---

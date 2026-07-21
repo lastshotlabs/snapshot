@@ -64,10 +64,10 @@ export { renderPage } from "./render";
 // ─── Renderers ────────────────────────────────────────────────────────────────
 
 /**
- * File-based React renderer for bunshot-ssr.
+ * File-based React renderer for slingshot-ssr.
  *
  * Routes are resolved from `server/routes/` directory files.
- * Use with `createSsrPlugin` from `@lastshotlabs/bunshot-ssr`.
+ * Use with `createSsrPlugin` from `@lastshotlabs/slingshot-ssr`.
  */
 export { createReactRenderer } from "./renderer";
 
@@ -76,16 +76,16 @@ export { createReactRenderer } from "./renderer";
 export type {
   /** Config for `createReactRenderer()`. */
   SnapshotSsrConfig,
-  /** Structural equivalent of `SsrRouteMatch` from bunshot-ssr. */
+  /** Structural equivalent of `SsrRouteMatch` from slingshot-ssr. */
   ServerRouteMatchShape,
-  /** Structural equivalent of `SsrShell` from bunshot-ssr. */
+  /** Structural equivalent of `SsrShell` from slingshot-ssr. */
   SsrShellShape,
   /** Per-request SSR context (fresh QueryClient per request). */
   SsrRequestContext,
 } from "./types";
 
 // ─── Types — server route file contract ──────────────────────────────────────
-// Consumers import from @lastshotlabs/snapshot/ssr only — not from bunshot-ssr.
+// Consumers import from @lastshotlabs/snapshot/ssr only — not from slingshot-ssr.
 
 export type {
   /** Context passed to every `load()` and `meta()` function. */
@@ -109,7 +109,7 @@ export type {
 // ─── Types — meta / head injection ───────────────────────────────────────────
 
 /**
- * Structural equivalent of `SsrMeta` from bunshot-ssr.
+ * Structural equivalent of `SsrMeta` from slingshot-ssr.
  * Used as the return type of server route `meta()` functions.
  */
 export type { SsrMetaShape as SsrMeta } from "./head";
@@ -139,7 +139,7 @@ export type { PprShell } from "./ppr";
  * Create an in-memory PPR shell cache.
  *
  * Instantiate once at server startup. Pass to `prerenderPprShells()` (from
- * `@lastshotlabs/bunshot-ssr/ppr`) to populate at startup, then pass to
+ * `@lastshotlabs/slingshot-ssr/ppr`) to populate at startup, then pass to
  * `renderPprPage()` to serve cached shells at request time.
  */
 export { createPprCache } from "./ppr-cache";

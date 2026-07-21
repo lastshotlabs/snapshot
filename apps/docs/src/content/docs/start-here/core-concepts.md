@@ -77,7 +77,7 @@ const css = resolveTokens({ flavor: "neutral" });
 ## Backend Sync
 
 Run `snapshot sync` when you want typed API helpers and React Query hooks from
-your Bunshot OpenAPI schema.
+your Slingshot OpenAPI schema.
 
 ```sh
 snapshot sync --api http://localhost:3000

@@ -34,7 +34,7 @@ Vite plugin. On paper, RSC is supported. In practice, it has never been wired en
    render body with an `"undefined"` guard — the guard prevents crashes but the pattern is wrong.
 
 4. **SSG + RSC is untested and unwired** — `snapshotSsr({ ssg: true, rsc: true })` spawns
-   `bunshot-ssg` via `spawnSync`. The bunshot-ssg runner calls `renderPage()` independently. It
+   `slingshot-ssg` via `spawnSync`. The slingshot-ssg runner calls `renderPage()` independently. It
    has no awareness of `rsc-manifest.json` and no mechanism to receive `rscOptions`. SSG with
    RSC silently falls back to standard SSR.
 
@@ -51,7 +51,7 @@ Vite plugin. On paper, RSC is supported. In practice, it has never been wired en
 - `createReactRenderer()` and `createManifestRenderer()` accept `rscOptions?: RscOptions` in
   their config structs and thread it through to every `renderPage()` call site.
 - Both `SnapshotSsrConfig` and `ManifestSsrConfig` have an `rscOptions` field.
-- `snapshotSsr({ ssg: true, rsc: true })` passes `--rsc-manifest` to the bunshot-ssg spawn so
+- `snapshotSsr({ ssg: true, rsc: true })` passes `--rsc-manifest` to the slingshot-ssg spawn so
   the SSG runner can load `rsc-manifest.json` and pass `rscOptions` to `renderPage()`.
 - A user can enable RSC from `snapshot.manifest.json` by setting `"ssr": { "rsc": true }` in the
   manifest. The manifest renderer reads this and loads the manifest file.
@@ -79,7 +79,7 @@ Vite plugin. On paper, RSC is supported. In practice, it has never been wired en
 | Component `'use client'` directives       | All 69 `src/ui/components/**/component.tsx` files                | Zero files have `'use client'`. All use hooks.                        |
 | `save-indicator` render-body DOM access   | `src/ui/components/data/save-indicator/component.tsx` lines 16–21 | `ensureStyles()` calls `document.createElement` in render body.      |
 | `nav` render-body `window` access         | `src/ui/components/layout/nav/component.tsx` line 297            | `window.location.pathname` read synchronously with `typeof` guard.   |
-| SSG + RSC composition                     | `src/vite/index.ts` lines 562–608 (SSG spawn)                   | bunshot-ssg spawn never passes `--rsc-manifest`.                      |
+| SSG + RSC composition                     | `src/vite/index.ts` lines 562–608 (SSG spawn)                   | slingshot-ssg spawn never passes `--rsc-manifest`.                      |
 | Manifest-addressable RSC                  | `src/ssr/types.ts` `ManifestSsrConfig`                          | No `ssr.rsc` field in the manifest config type or schema.             |
 
 ### Component execution context audit
@@ -363,7 +363,7 @@ is a render-body browser API call that was missed.
 in their config structs and pass it to every `renderPage()` call site. After this phase,
 a consumer who sets `rsc: true` in `snapshotSsr()` and loads `rsc-manifest.json` can activate
 RSC rendering by passing `rscOptions` to the renderer factory — without any code changes to
-bunshot-ssr.
+slingshot-ssr.
 
 ### Changes to `src/ssr/types.ts`
 
@@ -528,7 +528,7 @@ and which are unsupported. Fix the one combination that requires a code change: 
 | Combination                                    | Works today? | After this spec? | Notes                                                                                                                                              |
 | ---------------------------------------------- | ------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rsc: true` only (standard SSR + RSC)          | No           | Yes (Phase B)    | Requires Phase B (renderer threading) + Phase A (components). Build side already works. Consumer must load `rsc-manifest.json` and pass to renderer. |
-| `rsc: true` + `ssg: true`                      | No           | Yes (Phase C)    | bunshot-ssg spawn must receive `--rsc-manifest` path. See fix below.                                                                               |
+| `rsc: true` + `ssg: true`                      | No           | Yes (Phase C)    | slingshot-ssg spawn must receive `--rsc-manifest` path. See fix below.                                                                               |
 | `rsc: true` + `ppr: true`                      | No           | Partially        | PPR uses `renderPprPage()` which calls `renderToReadableStream` directly — not `renderPage()`. RSC two-pass is not composed into PPR. Out of scope for this spec. |
 | `rsc: true` + `target: 'edge-cloudflare'`      | No           | No (unsupported) | Edge runtimes lack `AsyncLocalStorage`. Snapshot's `cache()` primitive uses it. Attempting RSC on Cloudflare will silently fall back to standard SSR or throw. Document the limitation — do not attempt to fix it here. |
 | `rsc: true` + `target: 'edge-deno'`            | No           | Yes (Phase B)    | Deno supports `AsyncLocalStorage` via Node compat. Same fix as standard RSC. No extra changes. |
@@ -536,9 +536,9 @@ and which are unsupported. Fix the one combination that requires a code change: 
 | `ssg: true` only                               | Yes          | Yes              | Unaffected by this spec.                                                                                                                           |
 | `ppr: true` only                               | Yes          | Yes              | Unaffected by this spec.                                                                                                                           |
 
-### Fix: `ssg: true` + `rsc: true` — pass RSC manifest to bunshot-ssg
+### Fix: `ssg: true` + `rsc: true` — pass RSC manifest to slingshot-ssg
 
-**Current behavior:** `snapshotSsr()` spawns `bunshot-ssg` with `--assets-manifest`,
+**Current behavior:** `snapshotSsr()` spawns `slingshot-ssg` with `--assets-manifest`,
 `--out`, and `--renderer`. If `rsc: true` is set, the `rsc-manifest.json` is written to
 `dist/server/rsc-manifest.json` by `rscTransform()`. The SSG runner does not know about it.
 
@@ -560,7 +560,7 @@ const rendererEntry = path.join(serverOutDir, "entry-server.js");
 // Build the arg array. Rule: spawnSync with array args — no shell interpolation.
 const ssgArgs = [
   "run",
-  path.resolve(process.cwd(), "node_modules/.bin/bunshot-ssg"),
+  path.resolve(process.cwd(), "node_modules/.bin/slingshot-ssg"),
   "--assets-manifest",
   assetsManifest,
   "--out",
@@ -579,7 +579,7 @@ if (opts.rsc) {
 const result = spawnSync("bun", ssgArgs, { ... });
 ```
 
-**The bunshot-ssg runner** (in `@lastshotlabs/bunshot-ssg`, not in this repo) must be updated
+**The slingshot-ssg runner** (in `@lastshotlabs/slingshot-ssg`, not in this repo) must be updated
 to accept `--rsc-manifest <path>` and, when provided, load the file and pass `rscOptions` to
 `renderPage()`. That change is out of scope for this spec but must be filed as a dependency.
 The Vite plugin side of this fix (adding `--rsc-manifest` to the spawn args) is in scope.
@@ -746,7 +746,7 @@ The file-based renderer (`createReactRenderer()`) does not read from a manifest 
 enabled by passing `rscOptions` explicitly in `SnapshotSsrConfig`. There is no auto-loading
 path for the file-based renderer — the caller is responsible for loading the manifest.
 
-This is correct: the file-based renderer is used by bunshot-ssr middleware which already
+This is correct: the file-based renderer is used by slingshot-ssr middleware which already
 controls its own startup logic. The manifest-based renderer (`createManifestRenderer()`) is
 the one that needs auto-loading because manifest-first apps should not need any code.
 
@@ -864,7 +864,7 @@ For an agent executing either track:
 
 ### Phase C — Composition fixes
 
-- [ ] `snapshotSsr()` passes `--rsc-manifest` to bunshot-ssg when `rsc: true` and `ssg: true`
+- [ ] `snapshotSsr()` passes `--rsc-manifest` to slingshot-ssg when `rsc: true` and `ssg: true`
 - [ ] `snapshotSsr()` warns when `rsc: true` + `ppr: true` are combined
 - [ ] `snapshotSsr()` warns when `rsc: true` + `target: 'edge-cloudflare'` are combined
 - [ ] `bun run typecheck` passes

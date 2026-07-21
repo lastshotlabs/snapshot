@@ -28,7 +28,7 @@
 **OpenAPI sync**
 
 - `snapshot sync` generates typed API clients and React Query hooks from a
-  Bunshot/OpenAPI schema.
+  Slingshot/OpenAPI schema.
 - `snapshotSync()` keeps generated clients current during Vite startup and
   builds.
 

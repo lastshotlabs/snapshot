@@ -1,4 +1,4 @@
-// Bunshot push notification service worker
+// Slingshot push notification service worker
 // Copy this file to your project's public/ directory (e.g., public/sw.js)
 
 self.addEventListener("push", (event) => {
