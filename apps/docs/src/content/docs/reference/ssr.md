@@ -26,6 +26,7 @@ Generated from `src/ssr/index.ts`.
 | `safeJsonStringify` | function | `src/ssr/state.ts` | JSON-stringify a value with XSS-safe escaping. Escapes `</` as `<\/` and `<!--` as `<\!--` in the JSON output. Both are valid JSON and both prevent the HTML parser from misinterpreting the script content. |
 | `ServerRouteMatchShape` | interface | `src/ssr/types.ts` | Structural equivalent of `SsrRouteMatch` from `@lastshotlabs/slingshot-ssr`. Defined here without importing from slingshot-ssr to avoid cross-repo coupling. TypeScript structural typing ensures compatibility at the consumer's compile time. |
 | `SnapshotSsrConfig` | interface | `src/ssr/types.ts` | Configuration for `createReactRenderer()`. |
+| `SsrElementTransformContext` | interface | `src/ssr/types.ts` | Context supplied to an application's optional SSR root-element transformer. The matched loader has run and the request QueryClient is already seeded. |
 | `SsrForbiddenResult` | interface | `src/ssr/types.ts` | Signal from a server route's `load()` that the user lacks permission. `slingshot-ssr` responds with `403 Forbidden`. Co-locate a `forbidden.ts` convention file to render a custom UI instead of a plain-text fallback. |
 | `SsrLoadContext` | interface | `src/ssr/types.ts` | The context object passed to every server route `load()` and `meta()` function. Provides request data and direct access to the slingshot instance for DB calls without HTTP round-trips. |
 | `SsrLoaderReturn` | typealias | `src/ssr/types.ts` | All valid return types from a server route's `load()` function. |

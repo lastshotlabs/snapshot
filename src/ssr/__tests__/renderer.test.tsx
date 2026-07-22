@@ -188,6 +188,53 @@ describe("createReactRenderer — loader data JSON normalization", () => {
   });
 });
 
+describe("createReactRenderer — root element transform", () => {
+  it("runs after loader normalization and cache seeding and renders its result", async () => {
+    const transformElement = vi.fn(
+      async (
+        element: React.ReactElement,
+        context: {
+          loaderData: Readonly<Record<string, unknown>>;
+          url: URL;
+        },
+      ) =>
+        React.createElement(
+          "section",
+          { "data-router-root": context.url.pathname },
+          React.createElement(
+            "output",
+            null,
+            String(context.loaderData.cookie),
+          ),
+          element,
+        ),
+    );
+    const renderer = createReactRenderer({
+      resolveComponent: async () =>
+        (() => React.createElement("p", null, "page")) as React.ComponentType<
+          Record<string, unknown>
+        >,
+      transformElement,
+    });
+
+    const response = await renderer.render(
+      { ...fakeMatch, filePath: headerEchoRoutePath },
+      emptyShell,
+      {
+        request: new Request(fakeMatch.url.toString(), {
+          headers: { cookie: "session=router" },
+        }),
+      },
+    );
+    const html = await response.text();
+
+    expect(transformElement).toHaveBeenCalledOnce();
+    expect(html).toContain('data-router-root="/posts/test"');
+    expect(html).toContain("session=router");
+    expect(html).toContain("<p>page</p>");
+  });
+});
+
 describe("createReactRenderer — renders structural contract", () => {
   it("exports resolve, render, and renderChain functions", () => {
     const renderer = createReactRenderer({

@@ -82,6 +82,8 @@ export type {
   SsrShellShape,
   /** Per-request SSR context (fresh QueryClient per request). */
   SsrRequestContext,
+  /** Context passed to the optional root-element transformer. */
+  SsrElementTransformContext,
 } from "./types";
 
 // ─── Types — server route file contract ──────────────────────────────────────

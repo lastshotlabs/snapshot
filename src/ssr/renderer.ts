@@ -758,11 +758,20 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
       };
 
       // 10. Render
-      const element = React.createElement(Component, {
+      let element: React.ReactElement = React.createElement(Component, {
         loaderData: ssrLoadResult.data,
         params: match.params,
         query: match.query,
       });
+
+      if (frozen.transformElement) {
+        element = await frozen.transformElement(element, {
+          queryClient,
+          match,
+          loaderData: ssrLoadResult.data,
+          url: match.url,
+        });
+      }
 
       return renderPage(
         element,
@@ -1250,6 +1259,15 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           params: layoutParams,
           children: element,
           ...extraProps,
+        });
+      }
+
+      if (frozen.transformElement) {
+        element = await frozen.transformElement(element, {
+          queryClient,
+          match: chain.page,
+          loaderData: ssrPageResult.data,
+          url: chain.page.url,
         });
       }
 

@@ -167,6 +167,21 @@ export interface SsrRequestContext {
   readonly match: ServerRouteMatchShape;
 }
 
+/**
+ * Context supplied to an application's optional SSR root-element transformer.
+ * The matched loader has run and the request QueryClient is already seeded.
+ */
+export interface SsrElementTransformContext {
+  /** Per-request QueryClient populated from the loader's queryCache. */
+  readonly queryClient: QueryClient;
+  /** Leaf route matched for the request. */
+  readonly match: ServerRouteMatchShape;
+  /** JSON-normalized data returned by the leaf route loader. */
+  readonly loaderData: Readonly<Record<string, unknown>>;
+  /** Full request URL, including search parameters. */
+  readonly url: URL;
+}
+
 // ─── Renderer config ──────────────────────────────────────────────────────────
 
 /**
@@ -206,6 +221,19 @@ export interface SnapshotSsrConfig {
   resolveComponent: (
     match: ServerRouteMatchShape,
   ) => Promise<React.ComponentType<Record<string, unknown>>>;
+
+  /**
+   * Optionally replace or wrap Snapshot's resolved page/layout element before
+   * streaming.
+   *
+   * Router adapters use this seam to make the server and hydration trees share
+   * the same router-owned root. The hook may be async and receives the
+   * already-normalized loader data plus the populated request QueryClient.
+   */
+  transformElement?: (
+    element: React.ReactElement,
+    context: SsrElementTransformContext,
+  ) => React.ReactElement | Promise<React.ReactElement>;
 
   /**
    * Timeout in milliseconds for server-side rendering.
