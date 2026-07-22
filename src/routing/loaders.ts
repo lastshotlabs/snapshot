@@ -13,6 +13,33 @@ import type { AuthContract } from "../auth/contract";
  */
 export const AUTH_QUERY_KEY = ["auth", "me"] as const;
 
+/**
+ * Local hint that a session existed in this browser. Purely an optimization
+ * signal: without it, every anonymous hard navigation through a route guard
+ * would fire a doomed `/auth/refresh` (visible as a 401 in the console).
+ * Never treated as proof of authentication — only as "a refresh attempt is
+ * worth one round-trip here".
+ */
+const SESSION_HINT_KEY = "snapshot:session-hint";
+
+function readSessionHint(): boolean {
+  try {
+    return typeof localStorage !== "undefined" && localStorage.getItem(SESSION_HINT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writeSessionHint(present: boolean): void {
+  try {
+    if (typeof localStorage === "undefined") return;
+    if (present) localStorage.setItem(SESSION_HINT_KEY, "1");
+    else localStorage.removeItem(SESSION_HINT_KEY);
+  } catch {
+    // Storage unavailable (private mode etc.) — the hint is best-effort.
+  }
+}
+
 interface RouterContext {
   context: { queryClient: QueryClient };
 }
@@ -68,10 +95,31 @@ export function createLoaders(
         queryKey: AUTH_QUERY_KEY,
         queryFn: async () => {
           try {
-            return await api.get<AuthUser>(contract.endpoints.me);
+            const me = await api.get<AuthUser | null>(contract.endpoints.me);
+            if (me) {
+              writeSessionHint(true);
+              return me;
+            }
           } catch {
-            return null;
+            // fall through to the refresh attempt below
           }
+          // A fresh document load after the access credential expired still
+          // has a live refresh credential (cookie or stored token). One
+          // refresh round-trip resurrects the session; without it, hard
+          // navigation to a protected route bounces an authenticated user
+          // to the login page. Gated on the local session hint so a
+          // never-signed-in visitor doesn't fire a doomed refresh on every
+          // guarded navigation.
+          if (readSessionHint() && (await api.tryRefreshSession())) {
+            try {
+              const me = await api.get<AuthUser | null>(contract.endpoints.me);
+              if (me) return me;
+            } catch {
+              // fall through to the signed-out result
+            }
+          }
+          writeSessionHint(false);
+          return null;
         },
         staleTime,
       });

@@ -81,6 +81,7 @@ export class ApiClient implements ApiClientLike {
   private storage: TokenStorage | null = null;
   private onUnauthenticated: (() => void) | undefined;
   private onForbidden: (() => void) | undefined;
+  private refreshInFlight: Promise<boolean> | null = null;
 
   constructor(config: ApiClientConfig) {
     this.baseUrl = config.apiUrl.replace(/\/$/, "");
@@ -202,6 +203,54 @@ export class ApiClient implements ApiClientLike {
     return response.json() as Promise<T>;
   }
 
+  /**
+   * Attempt to renew the session with whatever refresh credential this auth
+   * mode has: the stored refresh token in `token` mode, or the httpOnly
+   * `refresh_token` cookie in `cookie` mode (the browser attaches it — the
+   * client never reads it, so "no readable token" is the NORMAL cookie-mode
+   * state, not a reason to skip). Single-flight: concurrent 401s share one
+   * round-trip, which also keeps server-side token rotation from racing
+   * itself.
+   *
+   * @returns true when the server issued a fresh session credential.
+   */
+  tryRefreshSession(): Promise<boolean> {
+    if (!this.refreshInFlight) {
+      this.refreshInFlight = this.doRefreshSession().finally(() => {
+        this.refreshInFlight = null;
+      });
+    }
+    return this.refreshInFlight;
+  }
+
+  private async doRefreshSession(): Promise<boolean> {
+    const refreshToken = this.storage?.getRefreshToken() ?? null;
+    if (this.authMode === "token" && !refreshToken) return false;
+
+    try {
+      const csrf = getCsrfToken(this.contract.csrfCookieName);
+      const response = await fetch(
+        `${this.baseUrl}${this.contract.endpoints.refresh}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(csrf ? { [this.contract.headers.csrf]: csrf } : {}),
+          },
+          body: JSON.stringify(refreshToken ? { refreshToken } : {}),
+          credentials: "include",
+        },
+      );
+      if (!response.ok) return false;
+      const data = await response.json().catch(() => null);
+      if (data?.token) this.storage?.set(data.token);
+      if (data?.refreshToken) this.storage?.setRefreshToken(data.refreshToken);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   /** The user token that would be attached to a request sent right now. */
   private currentUserToken(): string | null {
     if (this.authMode !== "token") return null;
@@ -234,41 +283,23 @@ export class ApiClient implements ApiClientLike {
     }
 
     if (response.status === 401) {
-      const refreshToken = this.storage?.getRefreshToken();
-
-      const refreshEndpoint = this.contract.endpoints.refresh;
-
-      if (refreshToken && path !== refreshEndpoint) {
-        // Attempt token refresh using a raw fetch to avoid infinite loops
-        try {
-          const refreshResponse = await fetch(
-            `${this.baseUrl}${refreshEndpoint}`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ refreshToken }),
-              credentials: "include",
-            },
-          );
-
-          if (refreshResponse.ok) {
-            const refreshData = await refreshResponse.json();
-            this.storage?.set(refreshData.token);
-            if (refreshData.refreshToken) {
-              this.storage?.setRefreshToken(refreshData.refreshToken);
-            }
-            // Retry the original request once with the new token
-            const retryResponse = await this.rawFetch(
-              method,
-              path,
-              body,
-              options,
-            );
-            return this.handleResponse<T>(retryResponse);
-          }
-        } catch {
-          // refresh failed — fall through to cleanup
+      // Refresh works in BOTH auth modes: token mode sends the stored
+      // refresh token, cookie mode leans on the httpOnly refresh cookie.
+      // (Cookie mode previously never refreshed at all, so every session
+      // hard-died at access-token expiry mid-visit.)
+      if (
+        path !== this.contract.endpoints.refresh &&
+        (await this.tryRefreshSession())
+      ) {
+        // Retry the original request once with the renewed credential. A
+        // retry that STILL 401s means the renewed session is no good either
+        // — fall through to the cleanup below instead of throwing early,
+        // so `onUnauthenticated` fires exactly like an unrefreshable 401.
+        const retryResponse = await this.rawFetch(method, path, body, options);
+        if (retryResponse.status !== 401) {
+          return this.handleResponse<T>(retryResponse);
         }
+        response = retryResponse;
       }
 
       // Cleanup applies only to the credential that actually failed. If the

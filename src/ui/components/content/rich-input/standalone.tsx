@@ -4,8 +4,6 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRe
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import { Extension } from "@tiptap/core";
-import Link from "@tiptap/extension-link";
-import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
@@ -261,6 +259,11 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
   );
 
   const extensions = [
+    // StarterKit (tiptap v3) already ships Link and Underline — configure
+    // them here rather than registering the standalone extensions a second
+    // time, which logs "Duplicate extension names found: ['link',
+    // 'underline']" on every editor mount and leaves which instance wins
+    // undefined.
     StarterKit.configure({
       bold: featuresSet.has("bold") ? {} : false,
       italic: featuresSet.has("italic") ? {} : false,
@@ -271,11 +274,11 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       orderedList: featuresSet.has("ordered-list") ? {} : false,
       heading: false,
       hardBreak: {},
+      underline: featuresSet.has("underline") ? {} : false,
+      link: featuresSet.has("link")
+        ? { openOnClick: false, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }
+        : false,
     }),
-    ...(featuresSet.has("underline") ? [Underline] : []),
-    ...(featuresSet.has("link")
-      ? [Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } })]
-      : []),
     // Markdown extension: registered when `emitMarkdown` is on. Provides
     // `editor.storage.markdown.getMarkdown()` and a richer markdown
     // round-trip on `setContent`. Costs ~70 KB raw (markdown-it +

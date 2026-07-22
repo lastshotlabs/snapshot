@@ -163,6 +163,53 @@ describe("createSnapshot", () => {
     expect(onUnauthenticated).toHaveBeenCalledOnce();
   });
 
+  it("recovers a cookie-mode 401 via the refresh endpoint and retries once", async () => {
+    // First hit on /protected is 401 (expired access cookie); the refresh
+    // POST succeeds (browser carries the httpOnly refresh cookie), and the
+    // retried request goes through. Cookie mode previously never refreshed,
+    // so every session hard-died at access-token expiry.
+    const onUnauthenticated = vi.fn();
+    let protectedCalls = 0;
+    let refreshCalls = 0;
+    global.fetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/protected")) {
+        protectedCalls += 1;
+        if (protectedCalls === 1) {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        return new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      if (url.endsWith("/auth/refresh")) {
+        refreshCalls += 1;
+        return new Response(JSON.stringify({ token: "fresh", userId: "1" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      return new Response(JSON.stringify({}), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+
+    const snapshot = createSnapshot({
+      apiUrl: "https://api.example.com",
+      auth: { on: { unauthenticated: onUnauthenticated } },
+    });
+
+    await expect(snapshot.api.get("/protected")).resolves.toEqual({ ok: true });
+    expect(refreshCalls).toBe(1);
+    expect(protectedCalls).toBe(2);
+    expect(onUnauthenticated).not.toHaveBeenCalled();
+  });
+
   it("creates a websocket when ws config is provided", () => {
     const createdUrls: string[] = [];
     class MockWebSocket {
