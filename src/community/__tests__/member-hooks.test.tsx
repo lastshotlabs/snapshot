@@ -256,4 +256,13 @@ describe("notification hooks — route correctness", () => {
       path: "/notifications/notifications/mark-all-read",
     });
   });
+
+  it("useDismissNotification deletes the user-owned row", async () => {
+    const { result } = renderHook(() => hooks.useDismissNotification(), { wrapper });
+    await result.current.mutateAsync({ notificationId: "n-1" }).catch(() => undefined);
+    expect(calls[0]).toMatchObject({
+      method: "DELETE",
+      path: "/notifications/notifications/n-1",
+    });
+  });
 });

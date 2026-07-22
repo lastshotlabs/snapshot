@@ -943,6 +943,8 @@ export interface SnapshotInstance<
   useMarkNotificationRead: CommunityHooks["useMarkNotificationRead"];
   /** Mark all notifications as read. */
   useMarkAllNotificationsRead: CommunityHooks["useMarkAllNotificationsRead"];
+  /** Dismiss a notification owned by the current user. */
+  useDismissNotification: CommunityHooks["useDismissNotification"];
   // Community hooks — Reports & Moderation
   /** List moderation reports with pagination. */
   useReports: CommunityHooks["useReports"];

@@ -857,6 +857,20 @@ export function createCommunityHooks({
     });
   }
 
+  /** Dismiss one notification owned by the current user. */
+  function useDismissNotification() {
+    const queryClient = useQueryClient();
+    return useMutation<void, ApiError, { notificationId: string }>({
+      mutationFn: async ({ notificationId }) => {
+        await api.delete(`/notifications/notifications/${notificationId}`);
+      },
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: keys.notifications() });
+        void queryClient.invalidateQueries({ queryKey: keys.notificationsUnread() });
+      },
+    });
+  }
+
   // ── Reports ───────────────────────────────────────────────────────────────────
 
   /** Fetch paginated community reports. */
@@ -1063,6 +1077,7 @@ export function createCommunityHooks({
     useNotificationsUnreadCount,
     useMarkNotificationRead,
     useMarkAllNotificationsRead,
+    useDismissNotification,
     // Reports
     useReports,
     useReport,
