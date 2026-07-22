@@ -772,28 +772,35 @@ export function createCommunityHooks({
     );
   }
 
-  // ── Notifications ─────────────────────────────────────────────────────────────
+  // ── Notifications ─────────────────────────────────────────────────────────
+  //
+  // Served by slingshot-notifications (not slingshot-community): the entity
+  // is mounted at `/notifications/notifications` with named ops. `list` is
+  // dataScoped to the actor; `unread-count` is an aggregate POST;
+  // `mark-read` is a fieldUpdate named op (POST, body `{id, read, readAt}`,
+  // userId ctx-injected); `mark-all-read` is a batch update (POST).
 
-  /** Fetch paginated community notifications for the current user. */
+  /** Fetch the current user's notifications (newest first). */
   function useNotifications(params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
+    const limit = params?.pageSize ?? 20;
     return useQuery<PaginatedResponse<NotificationResponse>, ApiError>({
       queryKey: keys.notifications(),
       queryFn: () =>
         api.get<PaginatedResponse<NotificationResponse>>(
-          `/community/notifications${query}`,
+          `/notifications/notifications?limit=${limit}&sortDir=desc`,
         ),
     });
   }
 
-  /** Fetch the count of unread community notifications. */
+  /** Fetch the count of unread notifications for the current user. */
   function useNotificationsUnreadCount() {
     return useQuery<{ count: number }, ApiError>({
       queryKey: keys.notificationsUnread(),
       queryFn: () =>
-        api.get<{ count: number }>("/community/notifications/unread-count"),
+        api.post<{ count: number }>(
+          "/notifications/notifications/unread-count",
+          {},
+        ),
     });
   }
 
@@ -801,8 +808,13 @@ export function createCommunityHooks({
   function useMarkNotificationRead() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { notificationId: string }>({
-      mutationFn: ({ notificationId }) =>
-        api.patch<void>(`/community/notifications/${notificationId}/read`, {}),
+      mutationFn: async ({ notificationId }) => {
+        await api.post(`/notifications/notifications/mark-read`, {
+          id: notificationId,
+          read: true,
+          readAt: Date.now(),
+        });
+      },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
         void queryClient.invalidateQueries({
@@ -812,11 +824,13 @@ export function createCommunityHooks({
     });
   }
 
-  /** Mark all community notifications as read. */
+  /** Mark all of the current user's notifications as read. */
   function useMarkAllNotificationsRead() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, void>({
-      mutationFn: () => api.post<void>("/community/notifications/read-all", {}),
+      mutationFn: async () => {
+        await api.post("/notifications/notifications/mark-all-read", {});
+      },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
         void queryClient.invalidateQueries({

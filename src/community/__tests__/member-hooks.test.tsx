@@ -216,3 +216,37 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
     expect(calls[0]?.body).toEqual({ id: "t1" });
   });
 });
+
+describe("notification hooks — route correctness", () => {
+  it("useNotifications lists the slingshot-notifications entity", async () => {
+    const { result } = renderHook(() => hooks.useNotifications(), { wrapper });
+    await waitFor(() => expect(result.current.isFetched).toBe(true));
+    expect(calls[0]?.path).toBe("/notifications/notifications?limit=20&sortDir=desc");
+  });
+
+  it("useNotificationsUnreadCount posts the aggregate op", async () => {
+    const { result } = renderHook(() => hooks.useNotificationsUnreadCount(), { wrapper });
+    await waitFor(() => expect(result.current.isFetched).toBe(true));
+    expect(calls[0]).toMatchObject({
+      method: "POST",
+      path: "/notifications/notifications/unread-count",
+    });
+  });
+
+  it("useMarkNotificationRead posts mark-read with id + read fields", async () => {
+    const { result } = renderHook(() => hooks.useMarkNotificationRead(), { wrapper });
+    await result.current.mutateAsync({ notificationId: "n-1" }).catch(() => undefined);
+    expect(calls[0]?.method).toBe("POST");
+    expect(calls[0]?.path).toBe("/notifications/notifications/mark-read");
+    expect(calls[0]?.body).toMatchObject({ id: "n-1", read: true });
+  });
+
+  it("useMarkAllNotificationsRead posts the batch op", async () => {
+    const { result } = renderHook(() => hooks.useMarkAllNotificationsRead(), { wrapper });
+    await result.current.mutateAsync().catch(() => undefined);
+    expect(calls[0]).toMatchObject({
+      method: "POST",
+      path: "/notifications/notifications/mark-all-read",
+    });
+  });
+});

@@ -380,10 +380,19 @@ export interface BanCheckResponse {
 export interface NotificationResponse {
   id: string;
   userId: string;
+  /** Producing package/source, e.g. `'community'`, `'chat'`. */
+  source: string;
+  /** Notification type, e.g. `'community:reply'`, `'chat:invite'`. */
   type: string;
-  payload: unknown;
+  actorId?: string | null;
+  targetType?: string | null;
+  targetId?: string | null;
+  scopeId?: string | null;
+  /** Structured payload written by the producer. */
+  data?: Record<string, unknown> | null;
   read: boolean;
-  createdAt: string;
+  readAt?: string | number | null;
+  createdAt: string | number;
 }
 
 // ── Pagination / Search ────────────────────────────────────────────────────────
