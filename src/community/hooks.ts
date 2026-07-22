@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
+import { ApiError as MemberApiError } from "../api/error";
 import type {
   ContainerResponse,
   CreateContainerBody,
@@ -27,6 +28,8 @@ import type {
   ThreadListParams,
   ReplyListParams,
   CommunitySearchParams,
+  MemberRecord,
+  MemberListResponse,
 } from "./types";
 
 // ── Cache key helpers ──────────────────────────────────────────────────────────
@@ -163,12 +166,12 @@ export function createCommunityHooks({
 
   /** Fetch paginated threads for a specific container. */
   function useContainerThreads({ containerId, ...params }: ThreadListParams) {
-    const query = `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`;
+    const query = `?limit=${params.pageSize ?? 20}`;
     return useQuery<PaginatedResponse<ThreadResponse>, ApiError>({
       queryKey: keys.threads(containerId),
       queryFn: () =>
         api.get<PaginatedResponse<ThreadResponse>>(
-          `/community/containers/${containerId}/threads${query}`,
+          `/community/threads/list-by-container/${containerId}${query}`,
         ),
       enabled: !!containerId,
     });
@@ -192,10 +195,7 @@ export function createCommunityHooks({
       { containerId: string } & CreateThreadBody
     >({
       mutationFn: ({ containerId, ...body }) =>
-        api.post<ThreadResponse>(
-          `/community/containers/${containerId}/threads`,
-          body,
-        ),
+        api.post<ThreadResponse>(`/community/threads`, { containerId, ...body }),
       onSuccess: (_data, { containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threads(containerId),
@@ -255,7 +255,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/${threadId}/publish`, {}),
+        api.post<ThreadResponse>(`/community/threads/publish`, { id: threadId }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -276,7 +276,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/${threadId}/lock`, {}),
+        api.patch<ThreadResponse>(`/community/threads/lock`, { id: threadId, locked: true }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -297,7 +297,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/${threadId}/pin`, {}),
+        api.patch<ThreadResponse>(`/community/threads/pin`, { id: threadId, pinned: true }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -318,7 +318,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/${threadId}/unpin`, {}),
+        api.patch<ThreadResponse>(`/community/threads/unpin`, { id: threadId, pinned: false }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -334,12 +334,12 @@ export function createCommunityHooks({
 
   /** Fetch paginated replies for a specific thread. */
   function useThreadReplies({ threadId, ...params }: ReplyListParams) {
-    const query = `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`;
+    const query = `?limit=${params.pageSize ?? 20}`;
     return useQuery<PaginatedResponse<ReplyResponse>, ApiError>({
       queryKey: keys.replies(threadId),
       queryFn: () =>
         api.get<PaginatedResponse<ReplyResponse>>(
-          `/community/threads/${threadId}/replies${query}`,
+          `/community/replies/list-by-thread/${threadId}${query}`,
         ),
       enabled: !!threadId,
     });
@@ -363,7 +363,7 @@ export function createCommunityHooks({
       { threadId: string } & CreateReplyBody
     >({
       mutationFn: ({ threadId, ...body }) =>
-        api.post<ReplyResponse>(`/community/threads/${threadId}/replies`, body),
+        api.post<ReplyResponse>(`/community/replies`, { threadId, ...body }),
       onSuccess: (_data, { threadId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.replies(threadId),
@@ -384,6 +384,9 @@ export function createCommunityHooks({
       mutationFn: ({ replyId, threadId: _tid, ...body }) =>
         api.patch<ReplyResponse>(`/community/replies/${replyId}`, body),
       onSuccess: (_data, { replyId, threadId }) => {
+        void queryClient.invalidateQueries({
+          queryKey: ["community", "reply-reactions", replyId],
+        });
         void queryClient.invalidateQueries({
           queryKey: keys.replyDetail(replyId),
         });
@@ -416,8 +419,12 @@ export function createCommunityHooks({
   function useThreadReactions(threadId: string) {
     return useQuery<ReactionResponse[], ApiError>({
       queryKey: ["community", "thread-reactions", threadId] as const,
-      queryFn: () =>
-        api.get<ReactionResponse[]>(`/community/threads/${threadId}/reactions`),
+      queryFn: async () => {
+        const res = await api.get<{ items: ReactionResponse[] }>(
+          `/community/reactions/list-by-target/${threadId}/thread`,
+        );
+        return res.items;
+      },
       enabled: !!threadId,
     });
   }
@@ -430,9 +437,18 @@ export function createCommunityHooks({
       ApiError,
       { threadId: string; containerId: string } & ReactionBody
     >({
-      mutationFn: ({ threadId, containerId: _cid, ...body }) =>
-        api.post<void>(`/community/threads/${threadId}/reactions`, body),
+      mutationFn: ({ threadId, containerId, ...body }) =>
+        api.post<void>(`/community/reactions`, {
+          targetId: threadId,
+          targetType: "thread",
+          containerId,
+          type: "emoji",
+          value: body.emoji,
+        }),
       onSuccess: (_data, { threadId, containerId }) => {
+        void queryClient.invalidateQueries({
+          queryKey: ["community", "thread-reactions", threadId],
+        });
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
         });
@@ -449,13 +465,14 @@ export function createCommunityHooks({
     return useMutation<
       void,
       ApiError,
-      { threadId: string; containerId: string; emoji: string }
+      { reactionId: string; threadId: string; containerId: string }
     >({
-      mutationFn: ({ threadId, emoji }) =>
-        api.delete<void>(
-          `/community/threads/${threadId}/reactions/${encodeURIComponent(emoji)}`,
-        ),
+      mutationFn: ({ reactionId }) =>
+        api.delete<void>(`/community/reactions/${reactionId}`),
       onSuccess: (_data, { threadId, containerId }) => {
+        void queryClient.invalidateQueries({
+          queryKey: ["community", "thread-reactions", threadId],
+        });
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
         });
@@ -472,8 +489,12 @@ export function createCommunityHooks({
   function useReplyReactions(replyId: string) {
     return useQuery<ReactionResponse[], ApiError>({
       queryKey: ["community", "reply-reactions", replyId] as const,
-      queryFn: () =>
-        api.get<ReactionResponse[]>(`/community/replies/${replyId}/reactions`),
+      queryFn: async () => {
+        const res = await api.get<{ items: ReactionResponse[] }>(
+          `/community/reactions/list-by-target/${replyId}/reply`,
+        );
+        return res.items;
+      },
       enabled: !!replyId,
     });
   }
@@ -484,11 +505,20 @@ export function createCommunityHooks({
     return useMutation<
       void,
       ApiError,
-      { replyId: string; threadId: string } & ReactionBody
+      { replyId: string; threadId: string; containerId: string } & ReactionBody
     >({
-      mutationFn: ({ replyId, threadId: _tid, ...body }) =>
-        api.post<void>(`/community/replies/${replyId}/reactions`, body),
+      mutationFn: ({ replyId, containerId, threadId: _tid, ...body }) =>
+        api.post<void>(`/community/reactions`, {
+          targetId: replyId,
+          targetType: "reply",
+          containerId,
+          type: "emoji",
+          value: body.emoji,
+        }),
       onSuccess: (_data, { replyId, threadId }) => {
+        void queryClient.invalidateQueries({
+          queryKey: ["community", "reply-reactions", replyId],
+        });
         void queryClient.invalidateQueries({
           queryKey: keys.replyDetail(replyId),
         });
@@ -506,13 +536,14 @@ export function createCommunityHooks({
     return useMutation<
       void,
       ApiError,
-      { replyId: string; threadId: string; emoji: string }
+      { reactionId: string; replyId: string; threadId: string }
     >({
-      mutationFn: ({ replyId, emoji }) =>
-        api.delete<void>(
-          `/community/replies/${replyId}/reactions/${encodeURIComponent(emoji)}`,
-        ),
+      mutationFn: ({ reactionId }) =>
+        api.delete<void>(`/community/reactions/${reactionId}`),
       onSuccess: (_data, { replyId, threadId }) => {
+        void queryClient.invalidateQueries({
+          queryKey: ["community", "reply-reactions", replyId],
+        });
         void queryClient.invalidateQueries({
           queryKey: keys.replyDetail(replyId),
         });
@@ -525,59 +556,113 @@ export function createCommunityHooks({
   }
 
   // ── Members / Roles ───────────────────────────────────────────────────────────
+  //
+  // Membership is the `ContainerMember` entity mounted at
+  // `/community/container-members` (flat, not nested under the container):
+  //   - POST   /community/container-members                {containerId,userId}  self-join
+  //   - GET    /community/container-members?containerId=&userId=&role=&limit=
+  //   - GET    /community/container-members/list-by-role/:containerId/:role
+  //   - DELETE /community/container-members/:membershipId
+  //   - POST   /community/container-members/assign-role    {containerId,userId,role} upsert
+  // Moderator/owner assignment is a ROLE on the membership row (assign-role),
+  // not a separate collection. "Remove moderator/owner" demotes to `member`.
+
+  function memberList(containerId: string, params?: ListParams) {
+    const limit = params?.pageSize ?? 20;
+    return api.get<MemberListResponse>(
+      `/community/container-members?containerId=${encodeURIComponent(containerId)}&limit=${limit}`,
+    );
+  }
+
+  function membersByRole(
+    containerId: string,
+    role: "moderator" | "owner",
+    params?: ListParams,
+  ) {
+    const limit = params?.pageSize ?? 20;
+    return api.get<MemberListResponse>(
+      `/community/container-members/list-by-role/${containerId}/${role}?limit=${limit}`,
+    );
+  }
+
+  /** Upsert a membership row's role (gated on container manage upstream). */
+  function assignRole(
+    containerId: string,
+    userId: string,
+    role: "member" | "moderator" | "owner",
+  ) {
+    return api.post<MemberRecord>(`/community/container-members/assign-role`, {
+      containerId,
+      userId,
+      role,
+    });
+  }
+
+  /**
+   * Resolve a (containerId, userId) pair to its membership row id.
+   * The delete route is keyed by membership id; hooks keep the ergonomic
+   * pair-based signature and resolve internally.
+   */
+  async function findMembershipId(
+    containerId: string,
+    userId: string,
+  ): Promise<string> {
+    const res = await api.get<MemberListResponse>(
+      `/community/container-members?containerId=${encodeURIComponent(containerId)}&userId=${encodeURIComponent(userId)}&limit=1`,
+    );
+    const row = res.items[0];
+    if (!row) {
+      throw new MemberApiError(
+        404,
+        null,
+        `No membership for user ${userId} in container ${containerId}`,
+      );
+    }
+    return row.id;
+  }
 
   /** Fetch paginated members of a container. */
   function useContainerMembers(containerId: string, params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
-    return useQuery<PaginatedResponse<{ userId: string }>, ApiError>({
+    return useQuery<MemberListResponse, ApiError>({
       queryKey: keys.members(containerId),
-      queryFn: () =>
-        api.get<PaginatedResponse<{ userId: string }>>(
-          `/community/containers/${containerId}/members${query}`,
-        ),
+      queryFn: () => memberList(containerId, params),
       enabled: !!containerId,
     });
   }
 
   /** Fetch paginated moderators of a container. */
   function useContainerModerators(containerId: string, params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
-    return useQuery<PaginatedResponse<{ userId: string }>, ApiError>({
+    return useQuery<MemberListResponse, ApiError>({
       queryKey: keys.moderators(containerId),
-      queryFn: () =>
-        api.get<PaginatedResponse<{ userId: string }>>(
-          `/community/containers/${containerId}/moderators${query}`,
-        ),
+      queryFn: () => membersByRole(containerId, "moderator", params),
       enabled: !!containerId,
     });
   }
 
   /** Fetch paginated owners of a container. */
   function useContainerOwners(containerId: string, params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
-    return useQuery<PaginatedResponse<{ userId: string }>, ApiError>({
+    return useQuery<MemberListResponse, ApiError>({
       queryKey: keys.owners(containerId),
-      queryFn: () =>
-        api.get<PaginatedResponse<{ userId: string }>>(
-          `/community/containers/${containerId}/owners${query}`,
-        ),
+      queryFn: () => membersByRole(containerId, "owner", params),
       enabled: !!containerId,
     });
   }
 
-  /** Add a user as a member of a container. */
+  /**
+   * Add a user as a member of a container.
+   *
+   * The create route is a self-join endpoint: the server takes the effective
+   * user from the authenticated actor. Community plugins issue the member
+   * grant via middleware — invalidate the container's abilities cache after
+   * success if UI gating should update immediately.
+   */
   function useAddMember() {
     const queryClient = useQueryClient();
-    return useMutation<void, ApiError, { containerId: string; userId: string }>(
+    return useMutation<MemberRecord, ApiError, { containerId: string; userId: string }>(
       {
         mutationFn: ({ containerId, userId }) =>
-          api.post<void>(`/community/containers/${containerId}/members`, {
+          api.post<MemberRecord>(`/community/container-members`, {
+            containerId,
             userId,
           }),
         onSuccess: (_data, { containerId }) => {
@@ -594,10 +679,10 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
-        mutationFn: ({ containerId, userId }) =>
-          api.delete<void>(
-            `/community/containers/${containerId}/members/${userId}`,
-          ),
+        mutationFn: async ({ containerId, userId }) => {
+          const membershipId = await findMembershipId(containerId, userId);
+          await api.delete<void>(`/community/container-members/${membershipId}`);
+        },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
             queryKey: keys.members(containerId),
@@ -612,31 +697,35 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
-        mutationFn: ({ containerId, userId }) =>
-          api.post<void>(`/community/containers/${containerId}/moderators`, {
-            userId,
-          }),
+        mutationFn: async ({ containerId, userId }) => {
+          await assignRole(containerId, userId, "moderator");
+        },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
             queryKey: keys.moderators(containerId),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: keys.members(containerId),
           });
         },
       },
     );
   }
 
-  /** Remove moderator role from a user in a container. */
+  /** Remove moderator role from a user in a container (demotes to member). */
   function useRemoveModerator() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
-        mutationFn: ({ containerId, userId }) =>
-          api.delete<void>(
-            `/community/containers/${containerId}/moderators/${userId}`,
-          ),
+        mutationFn: async ({ containerId, userId }) => {
+          await assignRole(containerId, userId, "member");
+        },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
             queryKey: keys.moderators(containerId),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: keys.members(containerId),
           });
         },
       },
@@ -648,31 +737,35 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
-        mutationFn: ({ containerId, userId }) =>
-          api.post<void>(`/community/containers/${containerId}/owners`, {
-            userId,
-          }),
+        mutationFn: async ({ containerId, userId }) => {
+          await assignRole(containerId, userId, "owner");
+        },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
             queryKey: keys.owners(containerId),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: keys.members(containerId),
           });
         },
       },
     );
   }
 
-  /** Remove owner role from a user in a container. */
+  /** Remove owner role from a user in a container (demotes to member). */
   function useRemoveOwner() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
-        mutationFn: ({ containerId, userId }) =>
-          api.delete<void>(
-            `/community/containers/${containerId}/owners/${userId}`,
-          ),
+        mutationFn: async ({ containerId, userId }) => {
+          await assignRole(containerId, userId, "member");
+        },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
             queryKey: keys.owners(containerId),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: keys.members(containerId),
           });
         },
       },

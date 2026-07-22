@@ -241,6 +241,12 @@ export interface ReplyResponse {
  */
 export interface CreateReplyBody {
   body: string;
+  /**
+   * Container the reply's thread belongs to. Required by the server's
+   * create permission (`community:container.write` scoped to
+   * `body:containerId`) — omitting it denies the mutation.
+   */
+  containerId: string;
 }
 
 /**
@@ -385,6 +391,22 @@ export interface NotificationResponse {
 /**
  * Generic paginated list response used by community and webhook list endpoints.
  */
+/** A container membership row as returned by the ContainerMember routes. */
+export interface MemberRecord {
+  id: string;
+  containerId: string;
+  userId: string;
+  role: "member" | "moderator" | "owner";
+  joinedAt: string;
+}
+
+/** Cursor-paginated membership list (`items` + `hasMore`/`cursor`). */
+export interface MemberListResponse {
+  items: MemberRecord[];
+  hasMore?: boolean;
+  cursor?: string;
+}
+
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
