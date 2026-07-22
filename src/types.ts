@@ -75,12 +75,26 @@ export interface LoginResponse {
   mfaRequired?: boolean;
   mfaToken?: string;
   mfaMethods?: MfaMethod[];
+  /**
+   * WebAuthn assertion request options (`PublicKeyCredentialRequestOptions`
+   * with base64url-encoded binary fields), sent when `mfaMethods` includes
+   * `"webauthn"`. The app decodes these, passes them to
+   * `navigator.credentials.get()`, and completes with `useMfaVerify`
+   * (`method: "webauthn"`, `webauthnResponse`).
+   */
+  webauthnOptions?: unknown;
 }
 
 /** Returned by useLogin when mfaRequired is true */
 export interface MfaChallenge {
   mfaToken: string;
   mfaMethods: MfaMethod[];
+  /**
+   * WebAuthn assertion request options carried through from the login
+   * response so the MFA step can run the ceremony without a second
+   * options round-trip. Present when `mfaMethods` includes `"webauthn"`.
+   */
+  webauthnOptions?: unknown;
 }
 
 /** useLogin resolves to either a user or an MFA challenge */

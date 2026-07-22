@@ -30,6 +30,11 @@ function readSessionHint(): boolean {
   }
 }
 
+/** Clear the hint eagerly (logout) so the next guard probe stays quiet. */
+export function clearSessionHint(): void {
+  writeSessionHint(false);
+}
+
 function writeSessionHint(present: boolean): void {
   try {
     if (typeof localStorage === "undefined") return;

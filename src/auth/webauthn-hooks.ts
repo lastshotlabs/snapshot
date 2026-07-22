@@ -157,6 +157,7 @@ export function createWebAuthnHooks({
           return {
             mfaToken: response.mfaToken,
             mfaMethods: response.mfaMethods,
+            webauthnOptions: response.webauthnOptions,
           };
         }
         if (config.auth !== "cookie" && response.token) {
@@ -172,6 +173,7 @@ export function createWebAuthnHooks({
           setMfaChallenge({
             mfaToken: result.mfaToken,
             mfaMethods: result.mfaMethods,
+            webauthnOptions: result.webauthnOptions,
           });
           navigateToPath(config.mfaPath);
           return;

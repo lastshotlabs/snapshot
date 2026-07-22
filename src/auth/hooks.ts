@@ -5,6 +5,7 @@ import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
 import type { TokenStorage } from "./storage";
 import { navigateToPath } from "./navigation";
+import { clearSessionHint } from "../routing/loaders";
 import type {
   AuthUser,
   LoginVars,
@@ -100,7 +101,13 @@ export function createAuthHooks({
 
         // MFA challenge — do NOT store token or fetch /auth/me
         if (res.mfaRequired) {
-          return { mfaToken: res.mfaToken!, mfaMethods: res.mfaMethods ?? [] };
+          return {
+            mfaToken: res.mfaToken!,
+            mfaMethods: res.mfaMethods ?? [],
+            // Kept on the challenge: dropping it forced webauthn MFA apps
+            // into a dead end (no way to run the ceremony).
+            webauthnOptions: res.webauthnOptions,
+          };
         }
 
         if (config.auth !== "cookie") {
@@ -119,6 +126,7 @@ export function createAuthHooks({
           setMfaChallenge({
             mfaToken: result.mfaToken,
             mfaMethods: result.mfaMethods,
+            webauthnOptions: result.webauthnOptions,
           });
           navigateToPath(config.mfaPath);
           return;
@@ -140,6 +148,9 @@ export function createAuthHooks({
       setMfaChallenge(null);
       storage.clear();
       storage.clearRefreshToken();
+      // Drop the guards' session hint too, or the first navigation after
+      // logout fires one doomed refresh attempt (console 401).
+      clearSessionHint();
       queryClient.clear();
       config.onLogoutSuccess?.();
       onLogoutSuccess?.(); // transport-level cleanup hook (e.g. SSE close)
