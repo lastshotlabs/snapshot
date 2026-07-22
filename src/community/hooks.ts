@@ -815,9 +815,23 @@ export function createCommunityHooks({
       queryKey: keys.notificationsUnread(),
       queryFn: () =>
         api.post<{ count: number }>(
-          "/notifications/notifications/unread-count",
+          "/notifications/notifications/unseen-count",
           {},
         ),
+    });
+  }
+
+  /** Mark every notification as seen without changing its read tint. */
+  function useMarkAllNotificationsSeen() {
+    const queryClient = useQueryClient();
+    return useMutation<void, ApiError, void>({
+      mutationFn: async () => {
+        await api.post("/notifications/notifications/mark-all-seen", {});
+      },
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: keys.notifications() });
+        void queryClient.invalidateQueries({ queryKey: keys.notificationsUnread() });
+      },
     });
   }
 
@@ -1075,6 +1089,7 @@ export function createCommunityHooks({
     // Notifications
     useNotifications,
     useNotificationsUnreadCount,
+    useMarkAllNotificationsSeen,
     useMarkNotificationRead,
     useMarkAllNotificationsRead,
     useDismissNotification,

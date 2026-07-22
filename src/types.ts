@@ -939,6 +939,8 @@ export interface SnapshotInstance<
   useNotifications: CommunityHooks["useNotifications"];
   /** Get the count of unread notifications. */
   useNotificationsUnreadCount: CommunityHooks["useNotificationsUnreadCount"];
+  /** Clear the notification badge without marking rows read. */
+  useMarkAllNotificationsSeen: CommunityHooks["useMarkAllNotificationsSeen"];
   /** Mark a single notification as read. */
   useMarkNotificationRead: CommunityHooks["useMarkNotificationRead"];
   /** Mark all notifications as read. */

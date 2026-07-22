@@ -392,6 +392,8 @@ export interface NotificationResponse {
   data?: Record<string, unknown> | null;
   read: boolean;
   readAt?: string | number | null;
+  seen?: boolean;
+  seenAt?: string | number | null;
   createdAt: string | number;
 }
 

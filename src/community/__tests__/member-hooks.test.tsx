@@ -236,7 +236,16 @@ describe("notification hooks — route correctness", () => {
     await waitFor(() => expect(result.current.isFetched).toBe(true));
     expect(calls[0]).toMatchObject({
       method: "POST",
-      path: "/notifications/notifications/unread-count",
+      path: "/notifications/notifications/unseen-count",
+    });
+  });
+
+  it("useMarkAllNotificationsSeen clears the badge tier", async () => {
+    const { result } = renderHook(() => hooks.useMarkAllNotificationsSeen(), { wrapper });
+    await result.current.mutateAsync().catch(() => undefined);
+    expect(calls[0]).toMatchObject({
+      method: "POST",
+      path: "/notifications/notifications/mark-all-seen",
     });
   });
 
