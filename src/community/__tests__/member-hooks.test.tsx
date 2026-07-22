@@ -204,9 +204,16 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
   it("thread moderation ops hit the flat named-op routes", async () => {
     const pin = renderHook(() => hooks.usePinThread(), { wrapper });
     await pin.result.current.mutateAsync({ threadId: "t1", containerId: "c1" }).catch(() => undefined);
-    expect(calls[0]?.method).toBe("PATCH");
+    expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/community/threads/pin");
     expect(calls[0]?.body).toEqual({ id: "t1", pinned: true });
+
+    calls.length = 0;
+    const unlock = renderHook(() => hooks.useUnlockThread(), { wrapper });
+    await unlock.result.current.mutateAsync({ threadId: "t1", containerId: "c1" }).catch(() => undefined);
+    expect(calls[0]?.method).toBe("POST");
+    expect(calls[0]?.path).toBe("/community/threads/unlock");
+    expect(calls[0]?.body).toEqual({ id: "t1", locked: false });
 
     calls.length = 0;
     const publish = renderHook(() => hooks.usePublishThread(), { wrapper });

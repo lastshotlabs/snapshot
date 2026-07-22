@@ -276,7 +276,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/lock`, { id: threadId, locked: true }),
+        api.post<ThreadResponse>(`/community/threads/lock`, { id: threadId, locked: true }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -284,6 +284,23 @@ export function createCommunityHooks({
         void queryClient.invalidateQueries({
           queryKey: keys.threads(containerId),
         });
+      },
+    });
+  }
+
+  /** Unlock a thread so replies can be posted again. */
+  function useUnlockThread() {
+    const queryClient = useQueryClient();
+    return useMutation<
+      ThreadResponse,
+      ApiError,
+      { threadId: string; containerId: string }
+    >({
+      mutationFn: ({ threadId }) =>
+        api.post<ThreadResponse>(`/community/threads/unlock`, { id: threadId, locked: false }),
+      onSuccess: (_data, { threadId, containerId }) => {
+        void queryClient.invalidateQueries({ queryKey: keys.threadDetail(threadId) });
+        void queryClient.invalidateQueries({ queryKey: keys.threads(containerId) });
       },
     });
   }
@@ -297,7 +314,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/pin`, { id: threadId, pinned: true }),
+        api.post<ThreadResponse>(`/community/threads/pin`, { id: threadId, pinned: true }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -318,7 +335,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/unpin`, { id: threadId, pinned: false }),
+        api.post<ThreadResponse>(`/community/threads/unpin`, { id: threadId, pinned: false }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -1014,6 +1031,7 @@ export function createCommunityHooks({
     useDeleteThread,
     usePublishThread,
     useLockThread,
+    useUnlockThread,
     usePinThread,
     useUnpinThread,
     // Replies

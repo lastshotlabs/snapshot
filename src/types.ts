@@ -885,6 +885,8 @@ export interface SnapshotInstance<
   usePublishThread: CommunityHooks["usePublishThread"];
   /** Lock a thread to prevent new replies. */
   useLockThread: CommunityHooks["useLockThread"];
+  /** Unlock a thread so replies can be posted again. */
+  useUnlockThread: CommunityHooks["useUnlockThread"];
   /** Pin a thread to the top of its container. */
   usePinThread: CommunityHooks["usePinThread"];
   /** Unpin a previously pinned thread. */
