@@ -177,6 +177,15 @@ export interface RichInputBaseHandle {
   insertContent(html: string): void;
   /** Move keyboard focus into the editor without changing content. */
   focus(): void;
+  /**
+   * Fire the same send path as the built-in send button, then clear.
+   *
+   * This exists so a host can render its OWN send affordance — a product
+   * with a specific button treatment shouldn't have to choose between its
+   * design and this editor. No-ops when the editor is empty, matching the
+   * built-in button's behavior exactly.
+   */
+  submit(): void;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -309,6 +318,12 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       },
       focus: () => {
         editor?.commands.focus();
+      },
+      // Reads through `sendRef` rather than closing over `handleSend`,
+      // because `handleSend` is defined below this hook — the ref is the
+      // same indirection the Enter-key handler already uses.
+      submit: () => {
+        sendRef.current?.();
       },
     }),
     [editor],
