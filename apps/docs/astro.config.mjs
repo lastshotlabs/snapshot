@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
-  site: "https://snapshot.lastshotlabs.dev",
+  site: "https://snapshot.lastshotlabs.com",
   integrations: [
     starlight({
       title: "Snapshot Docs",
