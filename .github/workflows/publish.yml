@@ -59,3 +59,15 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish snapshot to public npm
+        # The `@lastshotlabs` scope mapping — not publishConfig — decides where a
+        # scoped package is published, so repoint the scope at npmjs (this
+        # overwrites the GitHub Packages npmrc, hence running after that step).
+        # --access public is required for a scoped package to be publicly installable.
+        run: |
+          echo "@lastshotlabs:registry=https://registry.npmjs.org" > $HOME/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> $HOME/.npmrc
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
