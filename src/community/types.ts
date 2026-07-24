@@ -418,10 +418,25 @@ export interface MemberListResponse {
   cursor?: string;
 }
 
+/**
+ * Offset-paginated list response: one page of `items` plus the counters needed
+ * to render a pager.
+ *
+ * Distinct from {@link MemberListResponse} and the other cursor-paginated
+ * shapes, which carry `hasMore`/`cursor` instead. Use this when the caller needs
+ * to know the total size or jump to an arbitrary page; prefer cursor pagination
+ * for feeds, where offsets skip or repeat rows as content is inserted.
+ *
+ * @typeParam T - The element type of a single page.
+ */
 export interface PaginatedResponse<T> {
+  /** The current page of results. */
   items: T[];
+  /** Total number of matching records across all pages. */
   total: number;
+  /** 1-based index of the page in `items`. */
   page: number;
+  /** Maximum number of records a page may contain. */
   pageSize: number;
 }
 

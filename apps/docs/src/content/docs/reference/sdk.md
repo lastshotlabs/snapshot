@@ -87,7 +87,7 @@ Generated from `src/index.ts`.
 | `OAuthExchangeBody` | interface | `src/types.ts` | Request body for exchanging an OAuth callback code. |
 | `OAuthExchangeResponse` | interface | `src/types.ts` | Tokens returned after a successful OAuth exchange. |
 | `OAuthProvider` | typealias | `src/types.ts` | OAuth provider identifier used by auth URL helpers and OAuth hooks. |
-| `PaginatedResponse` | interface | `src/community/types.ts` | Type definition exported by the Snapshot UI runtime. |
+| `PaginatedResponse` | interface | `src/community/types.ts` | Offset-paginated list response: one page of `items` plus the counters needed to render a pager. Distinct from {@link MemberListResponse} and the other cursor-paginated shapes, which carry `hasMore`/`cursor` instead. Use this when the caller needs to know the total size or jump to an arbitrary page; prefer cursor pagination for feeds, where offsets skip or repeat rows as content is inserted. |
 | `PasskeyLoginBody` | interface | `src/types.ts` | Request body for completing a passkey login. |
 | `PasskeyLoginOptionsBody` | interface | `src/types.ts` | Request body for retrieving passkey login options. |
 | `PasskeyLoginOptionsResponse` | interface | `src/types.ts` | Response returned when beginning a passkey login flow. |
@@ -370,7 +370,7 @@ Merge a partial auth contract override with the built-in defaults.
 | `ListParams` | interface | Shared page-based pagination parameters. |
 | `LocationData` | interface | Geo coordinate sidecar. |
 | `NotificationResponse` | interface | Notification record returned by community notification endpoints. |
-| `PaginatedResponse` | interface | Type definition exported by the Snapshot UI runtime. |
+| `PaginatedResponse` | interface | Offset-paginated list response: one page of `items` plus the counters needed to render a pager. Distinct from {@link MemberListResponse} and the other cursor-paginated shapes, which carry `hasMore`/`cursor` instead. Use this when the caller needs to know the total size or jump to an arbitrary page; prefer cursor pagination for feeds, where offsets skip or repeat rows as content is inserted. |
 | `QuotePreview` | interface | Snapshot of a quoted message for inline display. |
 | `ReactionBody` | interface | Request body for adding/removing an emoji reaction. Sent to `POST /community/threads/:id/reactions`, etc. |
 | `ReactionResponse` | interface | Reaction record returned by the read endpoints — full shape with `userId`, `type`, and `createdAt`. Mirrors the slingshot-community `Reaction` entity. The list hooks (`useThreadReactions`, `useReplyReactions`) return arrays of this type. Consumers gating UI on "is this MY reaction" read `userId`. |
@@ -561,66 +561,66 @@ Runtime surface returned by `createSnapshot()`.
 | `useSseEvent` | `<T = unknown>(endpoint: string, event: string) => SseEventHookResult<T>` | Subscribe to a named event on an SSE endpoint. Returns the latest payload and connection status. |
 | `onSseEvent` | `(endpoint: string, event: string, handler: (payload: unknown) => void) => () ...` | Register a callback for a named SSE event. Returns an unsubscribe function. |
 | `useCommunityNotifications` | `(opts?: UseCommunityNotificationsOpts \| undefined) => UseCommunityNotificatio...` | Subscribe to real-time community notifications via SSE. Requires an `/__sse/notifications` endpoint. |
-| `useContainers` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<Contain...` | List community containers with optional pagination. |
-| `useContainer` | `(containerId: string) => UseQueryResult<ContainerResponse, ApiError>` | Fetch a single container by ID. |
-| `useCreateContainer` | `() => UseMutationResult<ContainerResponse, ApiError, CreateContainerBody, unk...` | Create a new community container. |
-| `useUpdateContainer` | `() => UseMutationResult<ContainerResponse, ApiError, { containerId: string; }...` | Update a container's metadata. |
-| `useDeleteContainer` | `() => UseMutationResult<void, ApiError, { containerId: string; }, unknown>` | Delete a container and its contents. |
-| `useContainerThreads` | `({ containerId, ...params }: ThreadListParams) => UseQueryResult<PaginatedRes...` | List threads in a container with pagination and optional filters. |
-| `useContainerThread` | `(threadId: string) => UseQueryResult<ThreadResponse, ApiError>` | Fetch a single thread by ID. |
-| `useCreateThread` | `() => UseMutationResult<ThreadResponse, ApiError, { containerId: string; } & ...` | Create a new thread in a container. |
-| `useUpdateThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Update a thread's content or metadata. |
-| `useDeleteThread` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Delete a thread. |
-| `usePublishThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Publish a draft thread, making it visible to other users. |
-| `useLockThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Lock a thread to prevent new replies. |
-| `useUnlockThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Unlock a thread so replies can be posted again. |
-| `usePinThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Pin a thread to the top of its container. |
-| `useUnpinThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Unpin a previously pinned thread. |
-| `useThreadReplies` | `({ threadId, ...params }: ReplyListParams) => UseQueryResult<PaginatedRespons...` | List replies in a thread with pagination. |
-| `useReply` | `(replyId: string) => UseQueryResult<ReplyResponse, ApiError>` | Fetch a single reply by ID. |
-| `useCreateReply` | `() => UseMutationResult<ReplyResponse, ApiError, { threadId: string; } & Crea...` | Post a new reply to a thread. |
-| `useUpdateReply` | `() => UseMutationResult<ReplyResponse, ApiError, { replyId: string; threadId:...` | Update a reply's content. |
-| `useDeleteReply` | `() => UseMutationResult<void, ApiError, { replyId: string; threadId: string; ...` | Delete a reply. |
-| `useThreadReactions` | `(threadId: string) => UseQueryResult<ReactionResponse[], ApiError>` | List reactions on a thread. |
-| `useReplyReactions` | `(replyId: string) => UseQueryResult<ReactionResponse[], ApiError>` | List reactions on a reply. |
-| `useAddThreadReaction` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Add an emoji reaction to a thread. |
-| `useRemoveThreadReaction` | `() => UseMutationResult<void, ApiError, { reactionId: string; threadId: strin...` | Remove an emoji reaction from a thread. |
-| `useAddReplyReaction` | `() => UseMutationResult<void, ApiError, { replyId: string; threadId: string; ...` | Add an emoji reaction to a reply. |
-| `useRemoveReplyReaction` | `() => UseMutationResult<void, ApiError, { reactionId: string; replyId: string...` | Remove an emoji reaction from a reply. |
-| `useContainerMembers` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List members of a container with pagination. |
-| `useContainerModerators` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List moderators of a container. |
-| `useContainerOwners` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List owners of a container. |
-| `useAddMember` | `() => UseMutationResult<MemberRecord, ApiError, { containerId: string; userId...` | Add a user as a member of a container. |
-| `useRemoveMember` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove a member from a container. |
-| `useAssignModerator` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Promote a member to moderator. |
-| `useRemoveModerator` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove moderator role from a user. |
-| `useAssignOwner` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Promote a member to owner. |
-| `useRemoveOwner` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove owner role from a user. |
-| `useNotifications` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<Notific...` | List notifications for the current user with pagination. |
-| `useNotificationsUnreadCount` | `() => UseQueryResult<{ count: number; }, ApiError>` | Get the count of unread notifications. |
-| `useMarkAllNotificationsSeen` | `() => UseMutationResult<void, ApiError, void, unknown>` | Clear the notification badge without marking rows read. |
-| `useMarkNotificationRead` | `() => UseMutationResult<void, ApiError, { notificationId: string; }, unknown>` | Mark a single notification as read. |
-| `useMarkAllNotificationsRead` | `() => UseMutationResult<void, ApiError, void, unknown>` | Mark all notifications as read. |
-| `useDismissNotification` | `() => UseMutationResult<void, ApiError, { notificationId: string; }, unknown>` | Dismiss a notification owned by the current user. |
-| `useReports` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<ReportR...` | List moderation reports with pagination. |
-| `useReport` | `(reportId: string) => UseQueryResult<ReportResponse, ApiError>` | Fetch a single report by ID. |
-| `useCreateReport` | `() => UseMutationResult<ReportResponse, ApiError, ReportBody, unknown>` | File a moderation report against a thread or reply. |
-| `useResolveReport` | `() => UseMutationResult<ReportResponse, ApiError, { reportId: string; } & Res...` | Resolve a moderation report with an action (e.g., warn, delete). |
-| `useDismissReport` | `() => UseMutationResult<ReportResponse, ApiError, { reportId: string; }, unkn...` | Dismiss a moderation report without taking action. |
-| `useBans` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<BanResp...` | List banned users with pagination. |
-| `useCheckBan` | `(userId: string, containerId?: string \| undefined) => UseQueryResult<BanCheck...` | Check whether a specific user is banned. |
-| `useCreateBan` | `() => UseMutationResult<BanResponse, ApiError, BanBody, unknown>` | Ban a user from a container or globally. |
-| `useRemoveBan` | `() => UseMutationResult<void, ApiError, { banId: string; userId: string; }, u...` | Remove a ban, restoring the user's access. |
-| `useSearchThreads` | `(params: CommunitySearchParams & { q: string; }) => UseQueryResult<SearchResp...` | Full-text search across threads. |
-| `useSearchReplies` | `(params: CommunitySearchParams & { q: string; }) => UseQueryResult<SearchResp...` | Full-text search across replies. |
-| `useWebhookEndpoints` | `() => UseQueryResult<WebhookEndpointResponse[], ApiError>` | List webhook endpoints with pagination. |
-| `useWebhookEndpoint` | `(endpointId: string) => UseQueryResult<WebhookEndpointResponse, ApiError>` | Fetch a single webhook endpoint by ID. |
-| `useCreateWebhookEndpoint` | `() => UseMutationResult<WebhookEndpointResponse, ApiError, CreateWebhookEndpo...` | Create a new webhook endpoint. |
-| `useUpdateWebhookEndpoint` | `() => UseMutationResult<WebhookEndpointResponse, ApiError, { endpointId: stri...` | Update an existing webhook endpoint's URL, events, or status. |
-| `useDeleteWebhookEndpoint` | `() => UseMutationResult<void, ApiError, { endpointId: string; }, unknown>` | Delete a webhook endpoint. |
-| `useWebhookDeliveries` | `({ endpointId, page, pageSize, }: ListWebhookDeliveriesParams) => UseQueryRes...` | List delivery attempts for a webhook endpoint. |
-| `useWebhookDelivery` | `(deliveryId: string) => UseQueryResult<WebhookDeliveryResponse, ApiError>` | Fetch a single delivery record by ID. |
-| `useTestWebhookEndpoint` | `() => UseMutationResult<void, ApiError, { endpointId: string; } & TestWebhook...` | Send a test delivery through a webhook endpoint. |
+| `useContainers` | `(params?: ListParams \| undefined) => any` | List community containers with optional pagination. |
+| `useContainer` | `(containerId: string) => any` | Fetch a single container by ID. |
+| `useCreateContainer` | `() => any` | Create a new community container. |
+| `useUpdateContainer` | `() => any` | Update a container's metadata. |
+| `useDeleteContainer` | `() => any` | Delete a container and its contents. |
+| `useContainerThreads` | `({ containerId, ...params }: ThreadListParams) => any` | List threads in a container with pagination and optional filters. |
+| `useContainerThread` | `(threadId: string) => any` | Fetch a single thread by ID. |
+| `useCreateThread` | `() => any` | Create a new thread in a container. |
+| `useUpdateThread` | `() => any` | Update a thread's content or metadata. |
+| `useDeleteThread` | `() => any` | Delete a thread. |
+| `usePublishThread` | `() => any` | Publish a draft thread, making it visible to other users. |
+| `useLockThread` | `() => any` | Lock a thread to prevent new replies. |
+| `useUnlockThread` | `() => any` | Unlock a thread so replies can be posted again. |
+| `usePinThread` | `() => any` | Pin a thread to the top of its container. |
+| `useUnpinThread` | `() => any` | Unpin a previously pinned thread. |
+| `useThreadReplies` | `({ threadId, ...params }: ReplyListParams) => any` | List replies in a thread with pagination. |
+| `useReply` | `(replyId: string) => any` | Fetch a single reply by ID. |
+| `useCreateReply` | `() => any` | Post a new reply to a thread. |
+| `useUpdateReply` | `() => any` | Update a reply's content. |
+| `useDeleteReply` | `() => any` | Delete a reply. |
+| `useThreadReactions` | `(threadId: string) => any` | List reactions on a thread. |
+| `useReplyReactions` | `(replyId: string) => any` | List reactions on a reply. |
+| `useAddThreadReaction` | `() => any` | Add an emoji reaction to a thread. |
+| `useRemoveThreadReaction` | `() => any` | Remove an emoji reaction from a thread. |
+| `useAddReplyReaction` | `() => any` | Add an emoji reaction to a reply. |
+| `useRemoveReplyReaction` | `() => any` | Remove an emoji reaction from a reply. |
+| `useContainerMembers` | `(containerId: string, params?: ListParams \| undefined) => any` | List members of a container with pagination. |
+| `useContainerModerators` | `(containerId: string, params?: ListParams \| undefined) => any` | List moderators of a container. |
+| `useContainerOwners` | `(containerId: string, params?: ListParams \| undefined) => any` | List owners of a container. |
+| `useAddMember` | `() => any` | Add a user as a member of a container. |
+| `useRemoveMember` | `() => any` | Remove a member from a container. |
+| `useAssignModerator` | `() => any` | Promote a member to moderator. |
+| `useRemoveModerator` | `() => any` | Remove moderator role from a user. |
+| `useAssignOwner` | `() => any` | Promote a member to owner. |
+| `useRemoveOwner` | `() => any` | Remove owner role from a user. |
+| `useNotifications` | `(params?: ListParams \| undefined) => any` | List notifications for the current user with pagination. |
+| `useNotificationsUnreadCount` | `() => any` | Get the count of unread notifications. |
+| `useMarkAllNotificationsSeen` | `() => any` | Clear the notification badge without marking rows read. |
+| `useMarkNotificationRead` | `() => any` | Mark a single notification as read. |
+| `useMarkAllNotificationsRead` | `() => any` | Mark all notifications as read. |
+| `useDismissNotification` | `() => any` | Dismiss a notification owned by the current user. |
+| `useReports` | `(params?: ListParams \| undefined) => any` | List moderation reports with pagination. |
+| `useReport` | `(reportId: string) => any` | Fetch a single report by ID. |
+| `useCreateReport` | `() => any` | File a moderation report against a thread or reply. |
+| `useResolveReport` | `() => any` | Resolve a moderation report with an action (e.g., warn, delete). |
+| `useDismissReport` | `() => any` | Dismiss a moderation report without taking action. |
+| `useBans` | `(params?: ListParams \| undefined) => any` | List banned users with pagination. |
+| `useCheckBan` | `(userId: string, containerId?: string \| undefined) => any` | Check whether a specific user is banned. |
+| `useCreateBan` | `() => any` | Ban a user from a container or globally. |
+| `useRemoveBan` | `() => any` | Remove a ban, restoring the user's access. |
+| `useSearchThreads` | `(params: CommunitySearchParams & { q: string; }) => any` | Full-text search across threads. |
+| `useSearchReplies` | `(params: CommunitySearchParams & { q: string; }) => any` | Full-text search across replies. |
+| `useWebhookEndpoints` | `() => any` | List webhook endpoints with pagination. |
+| `useWebhookEndpoint` | `(endpointId: string) => any` | Fetch a single webhook endpoint by ID. |
+| `useCreateWebhookEndpoint` | `() => any` | Create a new webhook endpoint. |
+| `useUpdateWebhookEndpoint` | `() => any` | Update an existing webhook endpoint's URL, events, or status. |
+| `useDeleteWebhookEndpoint` | `() => any` | Delete a webhook endpoint. |
+| `useWebhookDeliveries` | `({ endpointId, page, pageSize, }: ListWebhookDeliveriesParams) => any` | List delivery attempts for a webhook endpoint. |
+| `useWebhookDelivery` | `(deliveryId: string) => any` | Fetch a single delivery record by ID. |
+| `useTestWebhookEndpoint` | `() => any` | Send a test delivery through a webhook endpoint. |
 | `api` | `ApiClient` | Low-level API client bound to this snapshot instance. |
 | `tokenStorage` | `TokenStorage` | Token storage used for session persistence (access + refresh tokens). |
 | `queryClient` | `QueryClient` | TanStack Query client shared across all hooks in this snapshot instance. |
