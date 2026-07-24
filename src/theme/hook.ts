@@ -6,10 +6,23 @@ type Theme = "light" | "dark";
 
 const getInitialTheme = (): Theme => {
   if (typeof window === "undefined") return "light";
-  const stored =
+  // `atomWithStorage` persists this value JSON-ENCODED (e.g. `"light"` with
+  // quotes). Reading it as a raw string made `stored === "light"` always false,
+  // so the atom fell back to the OS theme on every load — even when the user had
+  // explicitly chosen light — producing a flash/revert to the system theme.
+  // Parse it the same way it was written.
+  const raw =
     typeof localStorage !== "undefined"
-      ? (localStorage.getItem("snapshot-theme") as Theme | null)
+      ? localStorage.getItem("snapshot-theme")
       : null;
+  let stored: string | null = raw;
+  if (raw && raw.charAt(0) === '"') {
+    try {
+      stored = JSON.parse(raw) as string;
+    } catch {
+      stored = raw;
+    }
+  }
   if (stored === "light" || stored === "dark") return stored;
   if (typeof window.matchMedia !== "function") return "light";
   return window.matchMedia("(prefers-color-scheme: dark)").matches

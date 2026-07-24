@@ -45,15 +45,18 @@ export interface ForgotPasswordBody {
 }
 
 /**
- * Login variables accepted by `useLogin()`.
+ * Login variables accepted by `useLogin()`. `redirectTo` must resolve within
+ * the current application origin; cross-origin targets are ignored.
  */
 export type LoginVars = LoginBody & { redirectTo?: string };
 /**
- * Registration variables accepted by `useRegister()`.
+ * Registration variables accepted by `useRegister()`. `redirectTo` must
+ * resolve within the current application origin.
  */
 export type RegisterVars = RegisterBody & { redirectTo?: string };
 /**
- * Logout options accepted by `useLogout()`.
+ * Logout options accepted by `useLogout()`. `redirectTo` must resolve within
+ * the current application origin.
  */
 export interface LogoutVars {
   redirectTo?: string;

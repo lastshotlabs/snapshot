@@ -6,7 +6,13 @@ draft: false
 
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
-import { InputField, ButtonBase, CardBase, ColumnBase, AlertBase } from "@lastshotlabs/snapshot/ui";
+import {
+  InputField,
+  ButtonBase,
+  CardBase,
+  ColumnBase,
+  AlertBase,
+} from "@lastshotlabs/snapshot/ui";
 import { useState, useEffect } from "react";
 
 const snap = createSnapshot({
@@ -22,12 +28,39 @@ function LoginPage() {
 
   return (
     <CardBase title="Sign in">
-      <form onSubmit={(e) => { e.preventDefault(); reset(); login({ email, password }); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          reset();
+          login({ email, password });
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="Email" type="email" value={email} onChange={setEmail} required />
-          <InputField label="Password" type="password" value={password} onChange={setPassword} required />
-          {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-          <ButtonBase label={isPending ? "Signing in..." : "Sign in"} type="submit" disabled={isPending} fullWidth />
+          <InputField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            required
+          />
+          <InputField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            required
+          />
+          {error && (
+            <AlertBase severity="error">
+              {snap.formatAuthError(error)}
+            </AlertBase>
+          )}
+          <ButtonBase
+            label={isPending ? "Signing in..." : "Sign in"}
+            type="submit"
+            disabled={isPending}
+            fullWidth
+          />
         </ColumnBase>
       </form>
     </CardBase>
@@ -64,6 +97,9 @@ To redirect somewhere other than `homePath`:
 login({ email, password, redirectTo: "/onboarding" });
 ```
 
+Auth redirect targets are restricted to the current application origin.
+Cross-origin `redirectTo` values are ignored.
+
 ### useLogout
 
 Clears tokens and cache, navigates to `loginPath`.
@@ -90,20 +126,52 @@ function RegisterForm() {
 
   return (
     <CardBase title="Create account">
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        if (!mismatch) register({ name, email, password });
-      }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!mismatch) register({ name, email, password });
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="Full name" value={name} onChange={setName} required />
-          <InputField label="Email" type="email" value={email} onChange={setEmail} required />
-          <InputField label="Password" type="password" value={password} onChange={setPassword} required />
           <InputField
-            label="Confirm password" type="password" value={confirm} onChange={setConfirm} required
+            label="Full name"
+            value={name}
+            onChange={setName}
+            required
+          />
+          <InputField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            required
+          />
+          <InputField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            required
+          />
+          <InputField
+            label="Confirm password"
+            type="password"
+            value={confirm}
+            onChange={setConfirm}
+            required
             errorText={mismatch ? "Passwords don't match" : undefined}
           />
-          {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-          <ButtonBase label={isPending ? "Creating..." : "Create account"} type="submit" disabled={isPending || mismatch} fullWidth />
+          {error && (
+            <AlertBase severity="error">
+              {snap.formatAuthError(error)}
+            </AlertBase>
+          )}
+          <ButtonBase
+            label={isPending ? "Creating..." : "Create account"}
+            type="submit"
+            disabled={isPending || mismatch}
+            fullWidth
+          />
         </ColumnBase>
       </form>
     </CardBase>
@@ -117,24 +185,52 @@ function RegisterForm() {
 
 ```tsx
 function ForgotPasswordPage() {
-  const { mutate: forgot, isSuccess, isPending, error } = snap.useForgotPassword();
+  const {
+    mutate: forgot,
+    isSuccess,
+    isPending,
+    error,
+  } = snap.useForgotPassword();
   const [email, setEmail] = useState("");
 
   if (isSuccess) {
     return (
       <CardBase title="Check your email">
-        <p>We sent a reset link to <strong>{email}</strong>. It expires in 1 hour.</p>
+        <p>
+          We sent a reset link to <strong>{email}</strong>. It expires in 1
+          hour.
+        </p>
       </CardBase>
     );
   }
 
   return (
     <CardBase title="Reset password">
-      <form onSubmit={(e) => { e.preventDefault(); forgot({ email }); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          forgot({ email });
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="Email" type="email" value={email} onChange={setEmail} required />
-          {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-          <ButtonBase label={isPending ? "Sending..." : "Send reset link"} type="submit" disabled={isPending} fullWidth />
+          <InputField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            required
+          />
+          {error && (
+            <AlertBase severity="error">
+              {snap.formatAuthError(error)}
+            </AlertBase>
+          )}
+          <ButtonBase
+            label={isPending ? "Sending..." : "Send reset link"}
+            type="submit"
+            disabled={isPending}
+            fullWidth
+          />
         </ColumnBase>
       </form>
     </CardBase>
@@ -146,7 +242,12 @@ Mount a reset page at the URL in your reset emails (e.g. `/auth/reset?token=...`
 
 ```tsx
 function ResetPasswordPage() {
-  const { mutate: resetPassword, isPending, isSuccess, error } = snap.useResetPassword();
+  const {
+    mutate: resetPassword,
+    isPending,
+    isSuccess,
+    error,
+  } = snap.useResetPassword();
   const token = new URLSearchParams(window.location.search).get("token") ?? "";
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -156,20 +257,50 @@ function ResetPasswordPage() {
     return (
       <CardBase title="Password reset">
         <AlertBase severity="success">Your password has been reset.</AlertBase>
-        <ButtonBase label="Sign in" onClick={() => (window.location.href = "/login")} fullWidth />
+        <ButtonBase
+          label="Sign in"
+          onClick={() => (window.location.href = "/login")}
+          fullWidth
+        />
       </CardBase>
     );
   }
 
   return (
     <CardBase title="Set new password">
-      <form onSubmit={(e) => { e.preventDefault(); if (!mismatch) resetPassword({ token, password }); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!mismatch) resetPassword({ token, password });
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="New password" type="password" value={password} onChange={setPassword} required />
-          <InputField label="Confirm password" type="password" value={confirm} onChange={setConfirm} required
-            errorText={mismatch ? "Passwords don't match" : undefined} />
-          {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-          <ButtonBase label={isPending ? "Resetting..." : "Reset password"} type="submit" disabled={isPending || mismatch} fullWidth />
+          <InputField
+            label="New password"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            required
+          />
+          <InputField
+            label="Confirm password"
+            type="password"
+            value={confirm}
+            onChange={setConfirm}
+            required
+            errorText={mismatch ? "Passwords don't match" : undefined}
+          />
+          {error && (
+            <AlertBase severity="error">
+              {snap.formatAuthError(error)}
+            </AlertBase>
+          )}
+          <ButtonBase
+            label={isPending ? "Resetting..." : "Reset password"}
+            type="submit"
+            disabled={isPending || mismatch}
+            fullWidth
+          />
         </ColumnBase>
       </form>
     </CardBase>
@@ -192,7 +323,12 @@ function LoginWithMfa() {
 
   if (challenge) {
     return (
-      <form onSubmit={(e) => { e.preventDefault(); verify({ code, method: challenge.mfaMethods[0] }); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          verify({ code, method: challenge.mfaMethods[0] });
+        }}
+      >
         <InputField label="Verification code" value={code} onChange={setCode} />
         <ButtonBase label="Verify" type="submit" />
       </form>
@@ -209,8 +345,16 @@ Enable TOTP (authenticator app) for a user in their settings:
 
 ```tsx
 function MfaSetup() {
-  const { mutate: startSetup, data: setupData, isPending: starting } = snap.useMfaSetup();
-  const { mutate: verifySetup, isPending: verifying, error } = snap.useMfaVerifySetup();
+  const {
+    mutate: startSetup,
+    data: setupData,
+    isPending: starting,
+  } = snap.useMfaSetup();
+  const {
+    mutate: verifySetup,
+    isPending: verifying,
+    error,
+  } = snap.useMfaVerifySetup();
   const [code, setCode] = useState("");
 
   // Step 1: Start setup — returns QR code URI and backup codes
@@ -228,14 +372,39 @@ function MfaSetup() {
   return (
     <ColumnBase gap="md">
       <p>Scan this QR code with your authenticator app:</p>
-      <img src={setupData.qrCodeUrl} alt="TOTP QR code" style={{ width: 200, height: 200 }} />
-      <p style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground)" }}>
+      <img
+        src={setupData.qrCodeUrl}
+        alt="TOTP QR code"
+        style={{ width: 200, height: 200 }}
+      />
+      <p
+        style={{
+          fontSize: "0.875rem",
+          color: "var(--sn-color-muted-foreground)",
+        }}
+      >
         Or enter this key manually: <code>{setupData.secret}</code>
       </p>
-      <form onSubmit={(e) => { e.preventDefault(); verifySetup({ code }); }}>
-        <InputField label="Enter the 6-digit code" value={code} onChange={setCode} maxLength={6} />
-        {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-        <ButtonBase label={verifying ? "Verifying..." : "Confirm"} type="submit" disabled={verifying} />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          verifySetup({ code });
+        }}
+      >
+        <InputField
+          label="Enter the 6-digit code"
+          value={code}
+          onChange={setCode}
+          maxLength={6}
+        />
+        {error && (
+          <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>
+        )}
+        <ButtonBase
+          label={verifying ? "Verifying..." : "Confirm"}
+          type="submit"
+          disabled={verifying}
+        />
       </form>
       <details>
         <summary>Backup codes (save these somewhere safe)</summary>
@@ -248,17 +417,17 @@ function MfaSetup() {
 
 ### All MFA hooks
 
-| Hook | Purpose |
-|------|---------|
-| `useMfaSetup()` | Start TOTP setup, get QR code and backup codes |
-| `useMfaVerifySetup()` | Confirm TOTP setup with first code |
-| `useMfaDisable()` | Disable MFA (requires password) |
-| `useMfaRecoveryCodes()` | Regenerate recovery codes (requires password) |
-| `useMfaMethods()` | Query enabled MFA methods |
-| `useMfaResend()` | Resend OTP code |
-| `useMfaEmailOtpEnable()` | Enable email OTP method |
-| `useMfaEmailOtpVerifySetup()` | Confirm email OTP setup |
-| `useMfaEmailOtpDisable()` | Disable email OTP (requires password) |
+| Hook                          | Purpose                                        |
+| ----------------------------- | ---------------------------------------------- |
+| `useMfaSetup()`               | Start TOTP setup, get QR code and backup codes |
+| `useMfaVerifySetup()`         | Confirm TOTP setup with first code             |
+| `useMfaDisable()`             | Disable MFA (requires password)                |
+| `useMfaRecoveryCodes()`       | Regenerate recovery codes (requires password)  |
+| `useMfaMethods()`             | Query enabled MFA methods                      |
+| `useMfaResend()`              | Resend OTP code                                |
+| `useMfaEmailOtpEnable()`      | Enable email OTP method                        |
+| `useMfaEmailOtpVerifySetup()` | Confirm email OTP setup                        |
+| `useMfaEmailOtpDisable()`     | Disable email OTP (requires password)          |
 
 ## OAuth
 
@@ -289,7 +458,10 @@ function OAuthCallback() {
     return (
       <CardBase title="Sign-in failed">
         <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>
-        <ButtonBase label="Try again" onClick={() => (window.location.href = "/login")} />
+        <ButtonBase
+          label="Try again"
+          onClick={() => (window.location.href = "/login")}
+        />
       </CardBase>
     );
   }
@@ -305,14 +477,26 @@ import { OAuthButtonsBase } from "@lastshotlabs/snapshot/ui";
 
 <OAuthButtonsBase
   providers={[
-    { name: "google", label: "Continue with Google", url: snap.getOAuthUrl("google") },
-    { name: "github", label: "Continue with GitHub", url: snap.getOAuthUrl("github") },
-    { name: "discord", label: "Continue with Discord", url: snap.getOAuthUrl("discord") },
+    {
+      name: "google",
+      label: "Continue with Google",
+      url: snap.getOAuthUrl("google"),
+    },
+    {
+      name: "github",
+      label: "Continue with GitHub",
+      url: snap.getOAuthUrl("github"),
+    },
+    {
+      name: "discord",
+      label: "Continue with Discord",
+      url: snap.getOAuthUrl("discord"),
+    },
   ]}
   onProviderClick={(url) => {
     window.location.href = url;
   }}
-/>
+/>;
 ```
 
 ### Unlink an OAuth provider
@@ -334,12 +518,16 @@ const { mutate: register } = snap.useWebAuthnRegister();
 getOptions(undefined, {
   onSuccess: async (options) => {
     // Step 2: Create credential with browser API
-    const credential = await navigator.credentials.create({ publicKey: options });
+    const credential = await navigator.credentials.create({
+      publicKey: options,
+    });
     // Step 3: Send credential to server
     register({
       id: credential.id,
       rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))),
-      response: { /* attestation response */ },
+      response: {
+        /* attestation response */
+      },
       type: credential.type,
     });
   },
@@ -364,34 +552,58 @@ function PasskeyLogin() {
         label="Sign in with passkey"
         onClick={() => {
           setError(null);
-          getLoginOptions({}, {
-            onSuccess: async (response) => {
-              try {
-                const assertion = await navigator.credentials.get({
-                  publicKey: response.options as any,
-                });
-                if (assertion) {
-                  passkeyLogin({
-                    id: assertion.id,
-                    rawId: btoa(String.fromCharCode(...new Uint8Array((assertion as any).rawId))),
-                    response: {
-                      authenticatorData: btoa(String.fromCharCode(
-                        ...new Uint8Array((assertion as any).response.authenticatorData))),
-                      clientDataJSON: btoa(String.fromCharCode(
-                        ...new Uint8Array((assertion as any).response.clientDataJSON))),
-                      signature: btoa(String.fromCharCode(
-                        ...new Uint8Array((assertion as any).response.signature))),
-                    },
+          getLoginOptions(
+            {},
+            {
+              onSuccess: async (response) => {
+                try {
+                  const assertion = await navigator.credentials.get({
+                    publicKey: response.options as any,
                   });
+                  if (assertion) {
+                    passkeyLogin({
+                      id: assertion.id,
+                      rawId: btoa(
+                        String.fromCharCode(
+                          ...new Uint8Array((assertion as any).rawId),
+                        ),
+                      ),
+                      response: {
+                        authenticatorData: btoa(
+                          String.fromCharCode(
+                            ...new Uint8Array(
+                              (assertion as any).response.authenticatorData,
+                            ),
+                          ),
+                        ),
+                        clientDataJSON: btoa(
+                          String.fromCharCode(
+                            ...new Uint8Array(
+                              (assertion as any).response.clientDataJSON,
+                            ),
+                          ),
+                        ),
+                        signature: btoa(
+                          String.fromCharCode(
+                            ...new Uint8Array(
+                              (assertion as any).response.signature,
+                            ),
+                          ),
+                        ),
+                      },
+                    });
+                  }
+                } catch (err) {
+                  if ((err as Error).name !== "NotAllowedError") {
+                    setError(
+                      "Passkey authentication failed. Try another sign-in method.",
+                    );
+                  }
                 }
-              } catch (err) {
-                if ((err as Error).name !== "NotAllowedError") {
-                  setError("Passkey authentication failed. Try another sign-in method.");
-                }
-              }
+              },
+              onError: () => setError("Could not start passkey login."),
             },
-            onError: () => setError("Could not start passkey login."),
-          });
+          );
         }}
       />
       {error && <AlertBase severity="error">{error}</AlertBase>}
@@ -422,7 +634,11 @@ Mount a verification page at the URL in your verification emails (e.g. `/auth/ve
 function VerifyEmailPage() {
   const { mutate: verify, isPending, isSuccess, error } = snap.useVerifyEmail();
   const token = new URLSearchParams(window.location.search).get("token") ?? "";
-  const { mutate: resend, isPending: resending, isSuccess: resent } = snap.useResendVerification();
+  const {
+    mutate: resend,
+    isPending: resending,
+    isSuccess: resent,
+  } = snap.useResendVerification();
   const { user } = snap.useUser();
 
   useEffect(() => {
@@ -433,7 +649,11 @@ function VerifyEmailPage() {
     return (
       <CardBase title="Email verified">
         <AlertBase severity="success">Your email has been verified.</AlertBase>
-        <ButtonBase label="Go to dashboard" onClick={() => (window.location.href = "/")} fullWidth />
+        <ButtonBase
+          label="Go to dashboard"
+          onClick={() => (window.location.href = "/")}
+          fullWidth
+        />
       </CardBase>
     );
   }
@@ -444,16 +664,17 @@ function VerifyEmailPage() {
       {error && (
         <ColumnBase gap="md">
           <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>
-          {resent
-            ? <AlertBase severity="success">Verification email sent</AlertBase>
-            : <ButtonBase
-                label={resending ? "Sending..." : "Resend verification email"}
-                variant="outline"
-                onClick={() => resend({ email: user?.email ?? "" })}
-                disabled={resending}
-                fullWidth
-              />
-          }
+          {resent ? (
+            <AlertBase severity="success">Verification email sent</AlertBase>
+          ) : (
+            <ButtonBase
+              label={resending ? "Sending..." : "Resend verification email"}
+              variant="outline"
+              onClick={() => resend({ email: user?.email ?? "" })}
+              disabled={resending}
+              fullWidth
+            />
+          )}
         </ColumnBase>
       )}
     </CardBase>
@@ -467,23 +688,58 @@ function VerifyEmailPage() {
 
 ```tsx
 function ChangePassword() {
-  const { mutate: setPassword, isPending, isSuccess, error, reset } = snap.useSetPassword();
+  const {
+    mutate: setPassword,
+    isPending,
+    isSuccess,
+    error,
+    reset,
+  } = snap.useSetPassword();
   const [current, setCurrent] = useState("");
   const [newPwd, setNewPwd] = useState("");
 
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      setPassword({ password: newPwd, currentPassword: current }, {
-        onSuccess: () => { setCurrent(""); setNewPwd(""); },
-      });
-    }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setPassword(
+          { password: newPwd, currentPassword: current },
+          {
+            onSuccess: () => {
+              setCurrent("");
+              setNewPwd("");
+            },
+          },
+        );
+      }}
+    >
       <ColumnBase gap="md">
-        <InputField label="Current password" type="password" value={current} onChange={(v) => { setCurrent(v); reset(); }} />
-        <InputField label="New password" type="password" value={newPwd} onChange={setNewPwd} />
-        {isSuccess && <AlertBase severity="success">Password updated</AlertBase>}
-        {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-        <ButtonBase label={isPending ? "Updating..." : "Update password"} type="submit" disabled={isPending || !current || !newPwd} />
+        <InputField
+          label="Current password"
+          type="password"
+          value={current}
+          onChange={(v) => {
+            setCurrent(v);
+            reset();
+          }}
+        />
+        <InputField
+          label="New password"
+          type="password"
+          value={newPwd}
+          onChange={setNewPwd}
+        />
+        {isSuccess && (
+          <AlertBase severity="success">Password updated</AlertBase>
+        )}
+        {error && (
+          <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>
+        )}
+        <ButtonBase
+          label={isPending ? "Updating..." : "Update password"}
+          type="submit"
+          disabled={isPending || !current || !newPwd}
+        />
       </ColumnBase>
     </form>
   );
@@ -503,9 +759,16 @@ function ActiveSessions() {
     <ColumnBase gap="sm">
       {sessions?.map((s) => (
         <RowBase key={s.id} justify="between" align="center">
-          <span>{s.device} — {s.ip} {s.current && "(current)"}</span>
+          <span>
+            {s.device} — {s.ip} {s.current && "(current)"}
+          </span>
           {!s.current && (
-            <ButtonBase label="Revoke" variant="destructive" size="sm" onClick={() => revoke(s.id)} />
+            <ButtonBase
+              label="Revoke"
+              variant="destructive"
+              size="sm"
+              onClick={() => revoke(s.id)}
+            />
           )}
         </RowBase>
       ))}
@@ -516,17 +779,17 @@ function ActiveSessions() {
 
 ### All account hooks
 
-| Hook | Purpose | Parameters |
-|------|---------|------------|
-| `useResetPassword()` | Reset password with token | `{ token, password }` |
-| `useVerifyEmail()` | Verify email address | `{ token }` |
-| `useResendVerification()` | Resend verification email | `{ email }` |
-| `useSetPassword()` | Change password | `{ password, currentPassword? }` |
-| `useDeleteAccount()` | Delete account | `{ password }` |
-| `useCancelDeletion()` | Cancel pending deletion | (none) |
-| `useRefreshToken()` | Refresh access token | `{ refreshToken? }` |
-| `useSessions()` | List active sessions | (query hook) |
-| `useRevokeSession()` | Revoke a session | session ID string |
+| Hook                      | Purpose                   | Parameters                       |
+| ------------------------- | ------------------------- | -------------------------------- |
+| `useResetPassword()`      | Reset password with token | `{ token, password }`            |
+| `useVerifyEmail()`        | Verify email address      | `{ token }`                      |
+| `useResendVerification()` | Resend verification email | `{ email }`                      |
+| `useSetPassword()`        | Change password           | `{ password, currentPassword? }` |
+| `useDeleteAccount()`      | Delete account            | `{ password }`                   |
+| `useCancelDeletion()`     | Cancel pending deletion   | (none)                           |
+| `useRefreshToken()`       | Refresh access token      | `{ refreshToken? }`              |
+| `useSessions()`           | List active sessions      | (query hook)                     |
+| `useRevokeSession()`      | Revoke a session          | session ID string                |
 
 ## Route guards
 

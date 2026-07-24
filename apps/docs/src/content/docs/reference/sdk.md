@@ -66,8 +66,8 @@ Generated from `src/index.ts`.
 | `LoginBody` | interface | `src/types.ts` | Credentials posted to the login endpoint. |
 | `LoginResponse` | interface | `src/types.ts` | Raw login response shape from slingshot (includes MFA fields) |
 | `LoginResult` | typealias | `src/types.ts` | useLogin resolves to either a user or an MFA challenge |
-| `LoginVars` | typealias | `src/types.ts` | Login variables accepted by `useLogin()`. |
-| `LogoutVars` | interface | `src/types.ts` | Logout options accepted by `useLogout()`. |
+| `LoginVars` | typealias | `src/types.ts` | Login variables accepted by `useLogin()`. `redirectTo` must resolve within the current application origin; cross-origin targets are ignored. |
+| `LogoutVars` | interface | `src/types.ts` | Logout options accepted by `useLogout()`. `redirectTo` must resolve within the current application origin. |
 | `mergeContract` | function | `src/auth/contract.ts` | Merge a partial auth contract override with the built-in defaults. |
 | `MfaChallenge` | interface | `src/types.ts` | Returned by useLogin when mfaRequired is true |
 | `MfaDisableBody` | interface | `src/types.ts` | Request body for disabling MFA. |
@@ -87,7 +87,7 @@ Generated from `src/index.ts`.
 | `OAuthExchangeBody` | interface | `src/types.ts` | Request body for exchanging an OAuth callback code. |
 | `OAuthExchangeResponse` | interface | `src/types.ts` | Tokens returned after a successful OAuth exchange. |
 | `OAuthProvider` | typealias | `src/types.ts` | OAuth provider identifier used by auth URL helpers and OAuth hooks. |
-| `PaginatedResponse` | interface | `src/community/types.ts` | Generic paginated list response used by community and webhook list endpoints. |
+| `PaginatedResponse` | interface | `src/community/types.ts` | Type definition exported by the Snapshot UI runtime. |
 | `PasskeyLoginBody` | interface | `src/types.ts` | Request body for completing a passkey login. |
 | `PasskeyLoginOptionsBody` | interface | `src/types.ts` | Request body for retrieving passkey login options. |
 | `PasskeyLoginOptionsResponse` | interface | `src/types.ts` | Response returned when beginning a passkey login flow. |
@@ -100,7 +100,7 @@ Generated from `src/index.ts`.
 | `RefreshTokenResponse` | interface | `src/types.ts` | Token refresh response returned by the auth API. |
 | `RegisterBody` | interface | `src/types.ts` | Registration payload posted to the register endpoint. |
 | `registerClient` | function | `src/api/client.ts` | Register a named custom client factory. |
-| `RegisterVars` | typealias | `src/types.ts` | Registration variables accepted by `useRegister()`. |
+| `RegisterVars` | typealias | `src/types.ts` | Registration variables accepted by `useRegister()`. `redirectTo` must resolve within the current application origin. |
 | `ReplyListParams` | interface | `src/community/types.ts` | List parameters for fetching replies in a specific thread. |
 | `ReplyResponse` | interface | `src/community/types.ts` | Reply record returned by the community API. Fields mirror the slingshot-community `Reply` entity. JSON sidecars are typed against slingshot-core's content types. |
 | `ReportBody` | interface | `src/community/types.ts` | Request body for filing a community moderation report. |
@@ -252,8 +252,8 @@ Register a named custom client factory.
 | `LoginBody` | interface | Credentials posted to the login endpoint. |
 | `LoginResponse` | interface | Raw login response shape from slingshot (includes MFA fields) |
 | `LoginResult` | typealias | useLogin resolves to either a user or an MFA challenge |
-| `LoginVars` | typealias | Login variables accepted by `useLogin()`. |
-| `LogoutVars` | interface | Logout options accepted by `useLogout()`. |
+| `LoginVars` | typealias | Login variables accepted by `useLogin()`. `redirectTo` must resolve within the current application origin; cross-origin targets are ignored. |
+| `LogoutVars` | interface | Logout options accepted by `useLogout()`. `redirectTo` must resolve within the current application origin. |
 | `mergeContract` | function | Merge a partial auth contract override with the built-in defaults. |
 | `MfaChallenge` | interface | Returned by useLogin when mfaRequired is true |
 | `MfaDisableBody` | interface | Request body for disabling MFA. |
@@ -279,7 +279,7 @@ Register a named custom client factory.
 | `RefreshTokenBody` | interface | Request body for refreshing auth tokens. |
 | `RefreshTokenResponse` | interface | Token refresh response returned by the auth API. |
 | `RegisterBody` | interface | Registration payload posted to the register endpoint. |
-| `RegisterVars` | typealias | Registration variables accepted by `useRegister()`. |
+| `RegisterVars` | typealias | Registration variables accepted by `useRegister()`. `redirectTo` must resolve within the current application origin. |
 | `ResendVerificationBody` | interface | Request body for sending a new verification email. |
 | `ResetPasswordBody` | interface | Request body for completing a password reset flow. |
 | `Session` | interface | Active session metadata returned by session-management hooks. |
@@ -370,7 +370,7 @@ Merge a partial auth contract override with the built-in defaults.
 | `ListParams` | interface | Shared page-based pagination parameters. |
 | `LocationData` | interface | Geo coordinate sidecar. |
 | `NotificationResponse` | interface | Notification record returned by community notification endpoints. |
-| `PaginatedResponse` | interface | Generic paginated list response used by community and webhook list endpoints. |
+| `PaginatedResponse` | interface | Type definition exported by the Snapshot UI runtime. |
 | `QuotePreview` | interface | Snapshot of a quoted message for inline display. |
 | `ReactionBody` | interface | Request body for adding/removing an emoji reaction. Sent to `POST /community/threads/:id/reactions`, etc. |
 | `ReactionResponse` | interface | Reaction record returned by the read endpoints — full shape with `userId`, `type`, and `createdAt`. Mirrors the slingshot-community `Reaction` entity. The list hooks (`useThreadReactions`, `useReplyReactions`) return arrays of this type. Consumers gating UI on "is this MY reaction" read `userId`. |
@@ -573,6 +573,7 @@ Runtime surface returned by `createSnapshot()`.
 | `useDeleteThread` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Delete a thread. |
 | `usePublishThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Publish a draft thread, making it visible to other users. |
 | `useLockThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Lock a thread to prevent new replies. |
+| `useUnlockThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Unlock a thread so replies can be posted again. |
 | `usePinThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Pin a thread to the top of its container. |
 | `useUnpinThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Unpin a previously pinned thread. |
 | `useThreadReplies` | `({ threadId, ...params }: ReplyListParams) => UseQueryResult<PaginatedRespons...` | List replies in a thread with pagination. |
@@ -583,13 +584,13 @@ Runtime surface returned by `createSnapshot()`.
 | `useThreadReactions` | `(threadId: string) => UseQueryResult<ReactionResponse[], ApiError>` | List reactions on a thread. |
 | `useReplyReactions` | `(replyId: string) => UseQueryResult<ReactionResponse[], ApiError>` | List reactions on a reply. |
 | `useAddThreadReaction` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Add an emoji reaction to a thread. |
-| `useRemoveThreadReaction` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Remove an emoji reaction from a thread. |
+| `useRemoveThreadReaction` | `() => UseMutationResult<void, ApiError, { reactionId: string; threadId: strin...` | Remove an emoji reaction from a thread. |
 | `useAddReplyReaction` | `() => UseMutationResult<void, ApiError, { replyId: string; threadId: string; ...` | Add an emoji reaction to a reply. |
-| `useRemoveReplyReaction` | `() => UseMutationResult<void, ApiError, { replyId: string; threadId: string; ...` | Remove an emoji reaction from a reply. |
-| `useContainerMembers` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Pagi...` | List members of a container with pagination. |
-| `useContainerModerators` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Pagi...` | List moderators of a container. |
-| `useContainerOwners` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Pagi...` | List owners of a container. |
-| `useAddMember` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Add a user as a member of a container. |
+| `useRemoveReplyReaction` | `() => UseMutationResult<void, ApiError, { reactionId: string; replyId: string...` | Remove an emoji reaction from a reply. |
+| `useContainerMembers` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List members of a container with pagination. |
+| `useContainerModerators` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List moderators of a container. |
+| `useContainerOwners` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List owners of a container. |
+| `useAddMember` | `() => UseMutationResult<MemberRecord, ApiError, { containerId: string; userId...` | Add a user as a member of a container. |
 | `useRemoveMember` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove a member from a container. |
 | `useAssignModerator` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Promote a member to moderator. |
 | `useRemoveModerator` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove moderator role from a user. |
@@ -597,8 +598,10 @@ Runtime surface returned by `createSnapshot()`.
 | `useRemoveOwner` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove owner role from a user. |
 | `useNotifications` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<Notific...` | List notifications for the current user with pagination. |
 | `useNotificationsUnreadCount` | `() => UseQueryResult<{ count: number; }, ApiError>` | Get the count of unread notifications. |
+| `useMarkAllNotificationsSeen` | `() => UseMutationResult<void, ApiError, void, unknown>` | Clear the notification badge without marking rows read. |
 | `useMarkNotificationRead` | `() => UseMutationResult<void, ApiError, { notificationId: string; }, unknown>` | Mark a single notification as read. |
 | `useMarkAllNotificationsRead` | `() => UseMutationResult<void, ApiError, void, unknown>` | Mark all notifications as read. |
+| `useDismissNotification` | `() => UseMutationResult<void, ApiError, { notificationId: string; }, unknown>` | Dismiss a notification owned by the current user. |
 | `useReports` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<ReportR...` | List moderation reports with pagination. |
 | `useReport` | `(reportId: string) => UseQueryResult<ReportResponse, ApiError>` | Fetch a single report by ID. |
 | `useCreateReport` | `() => UseMutationResult<ReportResponse, ApiError, ReportBody, unknown>` | File a moderation report against a thread or reply. |

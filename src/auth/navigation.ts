@@ -29,16 +29,31 @@ export function navigateToPath(
     return;
   }
 
+  // Auth hooks accept caller-provided redirect targets after login, register,
+  // passkey, and logout flows. Keep those navigations inside the current
+  // application even when an app supplies a custom router navigator (which
+  // may otherwise treat absolute URLs as external redirects).
+  let target: string;
+  try {
+    const parsed = new URL(to, window.location.href);
+    if (parsed.origin !== window.location.origin) {
+      return;
+    }
+    target = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return;
+  }
+
   if (runtimeNavigator) {
-    runtimeNavigator(to, { replace });
+    runtimeNavigator(target, { replace });
     return;
   }
 
   const historyState = window.history.state ?? {};
   if (replace) {
-    window.history.replaceState(historyState, "", to);
+    window.history.replaceState(historyState, "", target);
   } else {
-    window.history.pushState(historyState, "", to);
+    window.history.pushState(historyState, "", target);
   }
 
   window.dispatchEvent(new PopStateEvent("popstate", { state: historyState }));

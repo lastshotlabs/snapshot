@@ -64,4 +64,26 @@ describe("navigateToPath", () => {
     expect(nav).not.toHaveBeenCalled();
     expect(push).not.toHaveBeenCalled();
   });
+
+  it("rejects cross-origin auth redirect targets before calling a registered navigator", () => {
+    const nav = vi.fn();
+    setRuntimeNavigator(nav);
+
+    navigateToPath("https://attacker.example/steal");
+    navigateToPath("//attacker.example/steal");
+
+    expect(nav).not.toHaveBeenCalled();
+    expect(window.location.pathname).not.toBe("/steal");
+  });
+
+  it("normalizes same-origin absolute redirect targets to app-local paths", () => {
+    const nav = vi.fn();
+    setRuntimeNavigator(nav);
+
+    navigateToPath(`${window.location.origin}/dashboard?tab=auth#sessions`);
+
+    expect(nav).toHaveBeenCalledWith("/dashboard?tab=auth#sessions", {
+      replace: false,
+    });
+  });
 });

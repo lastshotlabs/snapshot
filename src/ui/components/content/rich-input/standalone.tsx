@@ -364,6 +364,29 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
   const isOverLimit = maxLength !== undefined && charCount > maxLength;
   const isEmpty = charCount === 0;
 
+  // Apply a link from the link bar. With a text selection, mark it; with NO
+  // selection (the common "just drop a link in" case) `setLink` has nothing to
+  // attach to and nothing appears — so insert the URL as clickable linked text.
+  const applyLink = (raw: string) => {
+    if (!editor) return;
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+    const url = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+    const { from, to } = editor.state.selection;
+    if (from === to) {
+      editor
+        .chain()
+        .focus()
+        .insertContent({ type: "text", text: url, marks: [{ type: "link", attrs: { href: url } }] })
+        // Drop the link mark so text typed AFTER the URL isn't also linked.
+        .unsetMark("link")
+        .insertContent(" ")
+        .run();
+    } else {
+      editor.chain().focus().setLink({ href: url }).run();
+    }
+  };
+
   const handleToolbarAction = (item: ToolbarItem) => {
     if (!editor) return;
     if (item.action === "setLink") {
@@ -434,7 +457,9 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
     implementationBase: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: "sm", paddingY: "xs", paddingX: "sm", style: { borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" } },
     componentSurface: slots?.toolbar,
   });
-  const formattingGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-formattingGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "2xs", flexWrap: "wrap" }, componentSurface: slots?.formattingGroup });
+  // Single tight row that scrolls horizontally if the buttons overflow (narrow
+  // mobile) instead of wrapping to an ugly second row or getting spread out.
+  const formattingGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-formattingGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "2xs", flexWrap: "nowrap", flex: "1", minWidth: "0", style: { overflowX: "auto", scrollbarWidth: "none" } }, componentSurface: slots?.formattingGroup });
   const statusGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-statusGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "sm" }, componentSurface: slots?.statusGroup });
   const counterSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-counter`,
@@ -470,10 +495,10 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
           <div data-snapshot-id={`${rootId}-linkBar`} className={linkBarSurface.className} style={linkBarSurface.style}>
             <span data-snapshot-id={`${rootId}-linkIcon`} className={linkIconSurface.className} style={linkIconSurface.style}><Icon name="link" size={14} /></span>
             <InputControl inputRef={linkInputRef} type="url" value={linkUrl} onChangeText={setLinkUrl} onKeyDown={(e) => {
-              if (e.key === "Enter" && linkUrl.trim()) { e.preventDefault(); const url = linkUrl.trim().startsWith("http") ? linkUrl.trim() : `https://${linkUrl.trim()}`; editor?.chain().focus().setLink({ href: url }).run(); setShowLinkInput(false); setLinkUrl(""); }
+              if (e.key === "Enter" && linkUrl.trim()) { e.preventDefault(); applyLink(linkUrl); setShowLinkInput(false); setLinkUrl(""); }
               if (e.key === "Escape") { setShowLinkInput(false); setLinkUrl(""); editor?.chain().focus().run(); }
             }} placeholder="Paste URL and press Enter..." surfaceId={`${rootId}-linkInput`} surfaceConfig={linkInputSurface.resolvedConfigForWrapper} testId="rich-input-link-input" />
-            <ButtonControl type="button" ariaLabel="Close link input" onClick={() => { if (linkUrl.trim()) { const url = linkUrl.trim().startsWith("http") ? linkUrl.trim() : `https://${linkUrl.trim()}`; editor?.chain().focus().setLink({ href: url }).run(); } setShowLinkInput(false); setLinkUrl(""); }} surfaceId={`${rootId}-linkCloseButton`} surfaceConfig={linkCloseSurface.resolvedConfigForWrapper} variant="ghost" size="icon">
+            <ButtonControl type="button" ariaLabel="Close link input" onClick={() => { applyLink(linkUrl); setShowLinkInput(false); setLinkUrl(""); }} surfaceId={`${rootId}-linkCloseButton`} surfaceConfig={linkCloseSurface.resolvedConfigForWrapper} variant="ghost" size="icon">
               <Icon name="x" size={14} />
             </ButtonControl>
           </div>
