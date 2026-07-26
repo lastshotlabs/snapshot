@@ -904,6 +904,46 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
         });
       }
 
+      /**
+       * Build the shell for a signal page (not-found / forbidden /
+       * unauthorized) by running the page's own `meta()` against the signal
+       * result.
+       *
+       * These branches used to render with the RAW shell, whose `headTags` is
+       * still the empty string this far up — meta is not merged until step 6,
+       * well below. So every 404/403/401 went out with NO <title>, no
+       * description, and no robots directive, even for apps that had already
+       * written `meta()` to handle the envelope (returning a not-found title
+       * and `noindex`). The page was styled and headless at the same time.
+       *
+       * Failing to build meta must never turn a 404 into a 500, so a throwing
+       * `meta()` degrades to the empty head it would have had anyway.
+       */
+      const signalShell = async (
+        signalResult: unknown,
+      ): Promise<SsrShellShape> => {
+        const metaFn = pageModule["meta"] as
+          | ((ctx: unknown, result: unknown) => Promise<unknown>)
+          | undefined;
+        if (!metaFn) return shell;
+        try {
+          const meta = await metaFn(pageLoadContext, signalResult);
+          if (!meta || typeof meta !== "object") return shell;
+          return {
+            ...shell,
+            headTags: buildHeadTags(
+              meta as Parameters<typeof buildHeadTags>[0],
+            ),
+          };
+        } catch (err) {
+          console.warn(
+            `[snapshot-ssr] meta() in ${chain.page.filePath} threw while building a signal page:`,
+            err,
+          );
+          return shell;
+        }
+      };
+
       if (isNotFoundResult(pageResult)) {
         // Phase 28: use co-located not-found.ts when available
         const NotFoundComponent = await importConventionComponent(
@@ -922,7 +962,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const resp = await renderPage(
             element,
             requestContext,
-            shell,
+            await signalShell(pageResult),
             timeoutMs,
             rscOptions,
           );
@@ -952,7 +992,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const resp = await renderPage(
             element,
             requestContext,
-            shell,
+            await signalShell(pageResult),
             timeoutMs,
             rscOptions,
           );
@@ -985,7 +1025,7 @@ export function createReactRenderer(config: SnapshotSsrConfig): {
           const resp = await renderPage(
             element,
             requestContext,
-            shell,
+            await signalShell(pageResult),
             timeoutMs,
             rscOptions,
           );

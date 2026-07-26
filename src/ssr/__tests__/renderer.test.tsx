@@ -26,6 +26,9 @@ const notFoundRoutePath = fileURLToPath(
 const dateLoaderRoutePath = fileURLToPath(
   new URL("./fixtures/date-loader-route.ts", import.meta.url),
 );
+const notFoundWithMetaRoutePath = fileURLToPath(
+  new URL("./fixtures/not-found-with-meta-route.ts", import.meta.url),
+);
 
 describe("createReactRenderer — resolve()", () => {
   it("resolve() always returns null (file resolver is authoritative)", async () => {
@@ -306,5 +309,74 @@ describe("createReactRenderer — renderChain structural contract", () => {
       render: expect.any(Function) as unknown,
       renderChain: expect.any(Function) as unknown,
     });
+  });
+});
+
+describe("createReactRenderer — signal pages get a head", () => {
+  // A 404/403/401 used to render with the RAW shell, whose headTags is still
+  // "" at that point in renderChain — meta is not merged until much later. So
+  // signal pages went out with no <title>, no description and no robots
+  // directive even when the app's meta() already handled the envelope. A
+  // styled, headless 404 on a public crawlable URL.
+  const notFoundConvention = fileURLToPath(
+    new URL("./fixtures/not-found-convention.tsx", import.meta.url),
+  );
+
+  function chainFor(pagePath: string, extra: Record<string, unknown> = {}) {
+    return {
+      layouts: [] as (typeof fakeMatch)[],
+      page: { ...fakeMatch, filePath: pagePath, ...extra },
+      slots: undefined,
+      intercepted: undefined,
+      middlewareFilePath: null,
+    };
+  }
+
+  it("runs the page meta() against the notFound result and emits its head tags", async () => {
+    const renderer = createReactRenderer({
+      resolveComponent: async () =>
+        (() => React.createElement("div")) as React.ComponentType<
+          Record<string, unknown>
+        >,
+    });
+
+    const response = await renderer.renderChain(
+      chainFor(notFoundWithMetaRoutePath, {
+        notFoundFilePath: notFoundConvention,
+      }),
+      {
+        headTags: "",
+        assetTags: '<script type="module" src="/assets/app.js"></script>',
+      },
+      {},
+    );
+
+    const html = await response.text();
+    expect(response.status).toBe(404);
+    expect(html).toContain("<title>Profile not found</title>");
+    expect(html).toContain('<meta name="robots" content="noindex, follow">');
+    // The convention component still rendered — meta must not replace it.
+    expect(html).toContain("NO SIGNAL");
+  });
+
+  it("still answers 404 when meta() throws, rather than turning it into a 500", async () => {
+    const throwingMeta = fileURLToPath(
+      new URL("./fixtures/not-found-throwing-meta-route.ts", import.meta.url),
+    );
+    const renderer = createReactRenderer({
+      resolveComponent: async () =>
+        (() => React.createElement("div")) as React.ComponentType<
+          Record<string, unknown>
+        >,
+    });
+
+    const response = await renderer.renderChain(
+      chainFor(throwingMeta, { notFoundFilePath: notFoundConvention }),
+      { headTags: "", assetTags: "" },
+      {},
+    );
+
+    expect(response.status).toBe(404);
+    expect(await response.text()).toContain("NO SIGNAL");
   });
 });
