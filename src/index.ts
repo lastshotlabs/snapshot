@@ -134,6 +134,8 @@ export type {
   NotificationResponse,
   PaginatedResponse,
   CommunitySearchParams,
+  ThreadSearchParams,
+  ReplySearchParams,
   SearchResponse,
   ListParams,
   ThreadListParams,

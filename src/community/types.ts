@@ -362,6 +362,10 @@ export interface BanResponse {
   reason?: string;
   expiresAt?: string;
   createdAt: string;
+  /** Actor who lifted the ban. Set once the ban has been removed. */
+  unbannedBy?: string;
+  /** When the ban was lifted. A ban carrying this is no longer in force. */
+  unbannedAt?: string;
 }
 
 /**
@@ -419,52 +423,83 @@ export interface MemberListResponse {
 }
 
 /**
- * Offset-paginated list response: one page of `items` plus the counters needed
- * to render a pager.
+ * Cursor-paginated list response: one page of `items` plus the cursor needed to
+ * fetch the next.
  *
- * Distinct from {@link MemberListResponse} and the other cursor-paginated
- * shapes, which carry `hasMore`/`cursor` instead. Use this when the caller needs
- * to know the total size or jump to an arbitrary page; prefer cursor pagination
- * for feeds, where offsets skip or repeat rows as content is inserted.
+ * This is the cursor-paginated envelope every Slingshot entity `list` and
+ * `search` route returns. It carries no `total`/`page`/`pageSize`: the backend
+ * pages by opaque cursor, so there is no total count and no way to jump to an
+ * arbitrary offset. Continue a listing by passing `nextCursor` back as the
+ * `cursor` request parameter, and stop when `hasMore` is false.
  *
  * @typeParam T - The element type of a single page.
  */
 export interface PaginatedResponse<T> {
   /** The current page of results. */
   items: T[];
-  /** Total number of matching records across all pages. */
-  total: number;
-  /** 1-based index of the page in `items`. */
-  page: number;
-  /** Maximum number of records a page may contain. */
-  pageSize: number;
+  /**
+   * Cursor echoing the request position. Prefer {@link PaginatedResponse.nextCursor}
+   * when advancing; this is present for backends that mirror the request cursor.
+   */
+  cursor?: string;
+  /** Opaque cursor for the next page. Absent once the final page is reached. */
+  nextCursor?: string;
+  /** Whether more records exist after this page. */
+  hasMore?: boolean;
 }
 
 /**
- * Search parameters accepted by the community search hooks.
+ * Search parameters shared by the community search hooks.
+ *
+ * Each search route additionally accepts the filter parameter its entity
+ * declares — `containerId` for threads, `threadId` for replies — exposed by
+ * {@link ThreadSearchParams} and {@link ReplySearchParams}.
  */
 export interface CommunitySearchParams {
+  /** Maximum number of records to return. */
   limit?: number;
+  /** Opaque cursor from a previous page's `nextCursor`. */
   cursor?: string;
+}
+
+/** Search parameters accepted by `GET /community/threads/search`. */
+export interface ThreadSearchParams extends CommunitySearchParams {
+  /** Restrict results to a single container. */
   containerId?: string;
+}
+
+/** Search parameters accepted by `GET /community/replies/search`. */
+export interface ReplySearchParams extends CommunitySearchParams {
+  /** Restrict results to a single thread. */
+  threadId?: string;
 }
 
 /**
  * Search results returned by the thread and reply search endpoints.
+ *
+ * Search shares the cursor-paginated envelope used by list routes, so results
+ * arrive as a flat `items` array rather than split per entity type.
+ *
+ * @typeParam T - The matched entity type.
  */
-export interface SearchResponse {
-  threads?: PaginatedResponse<ThreadResponse>;
-  replies?: PaginatedResponse<ReplyResponse>;
-}
+export type SearchResponse<T = ThreadResponse> = PaginatedResponse<T>;
 
 // ── Param types ───────────────────────────────────────────────────────────────
 
 /**
- * Shared page-based pagination parameters.
+ * Shared cursor pagination parameters.
+ *
+ * Mirrors the `limit`/`cursor`/`sortDir` query contract every Slingshot entity
+ * `list` route accepts. There is no `page`/`pageSize`: pass `limit` for the page
+ * size and feed the previous response's `nextCursor` back as `cursor`.
  */
 export interface ListParams {
-  page?: number;
-  pageSize?: number;
+  /** Maximum number of records to return. */
+  limit?: number;
+  /** Opaque cursor from a previous page's `nextCursor`. */
+  cursor?: string;
+  /** Sort direction applied to the entity's default sort field. */
+  sortDir?: "asc" | "desc";
 }
 
 /**

@@ -11,7 +11,7 @@ Generated from `src/index.ts`.
 - [Factory](#factory) (1)
 - [API Client](#api-client) (3)
 - [Auth](#auth) (52)
-- [Community](#community) (41)
+- [Community](#community) (43)
 - [Webhooks](#webhooks) (9)
 - [Push Notifications](#push-notifications) (4)
 - [Realtime](#realtime) (8)
@@ -40,7 +40,7 @@ Generated from `src/index.ts`.
 | `communityKeys` | variable | `src/community/hooks.ts` | Query key helpers for the community API surface. SSR loaders can seed the QueryClient under these keys so loader-seeded keys and hook-read keys stay aligned. |
 | `CommunityNotification` | interface | `src/types.ts` | Normalized notification shape used by `useCommunityNotifications()`. |
 | `CommunityNotificationType` | typealias | `src/types.ts` | Community notification types surfaced by Snapshot's notification helpers. |
-| `CommunitySearchParams` | interface | `src/community/types.ts` | Search parameters accepted by the community search hooks. |
+| `CommunitySearchParams` | interface | `src/community/types.ts` | Search parameters shared by the community search hooks. Each search route additionally accepts the filter parameter its entity declares — `containerId` for threads, `threadId` for replies — exposed by {@link ThreadSearchParams} and {@link ReplySearchParams}. |
 | `ContactData` | interface | `src/community/types.ts` | Contact card sidecar. |
 | `ContainerResponse` | interface | `src/community/types.ts` | Community container returned by the community API. |
 | `ContentFormat` | typealias | `src/community/types.ts` | Storage format hint for body text. |
@@ -59,7 +59,7 @@ Generated from `src/index.ts`.
 | `formatAuthError` | function | `src/auth/error-format.ts` | Format a raw auth `ApiError` into the message shown to application code. |
 | `getRegisteredClient` | function | `src/api/client.ts` | Look up a previously registered custom client factory. |
 | `isMfaChallenge` | function | `src/types.ts` | Narrow a login result to the MFA challenge branch. |
-| `ListParams` | interface | `src/community/types.ts` | Shared page-based pagination parameters. |
+| `ListParams` | interface | `src/community/types.ts` | Shared cursor pagination parameters. Mirrors the `limit`/`cursor`/`sortDir` query contract every Slingshot entity `list` route accepts. There is no `page`/`pageSize`: pass `limit` for the page size and feed the previous response's `nextCursor` back as `cursor`. |
 | `ListWebhookDeliveriesParams` | interface | `src/webhooks/types.ts` | Parameters for listing deliveries for a single webhook endpoint. |
 | `ListWebhookEndpointsParams` | interface | `src/webhooks/types.ts` | Page-based pagination parameters for listing webhook endpoints. |
 | `LocationData` | interface | `src/community/types.ts` | Geo coordinate sidecar. |
@@ -87,7 +87,7 @@ Generated from `src/index.ts`.
 | `OAuthExchangeBody` | interface | `src/types.ts` | Request body for exchanging an OAuth callback code. |
 | `OAuthExchangeResponse` | interface | `src/types.ts` | Tokens returned after a successful OAuth exchange. |
 | `OAuthProvider` | typealias | `src/types.ts` | OAuth provider identifier used by auth URL helpers and OAuth hooks. |
-| `PaginatedResponse` | interface | `src/community/types.ts` | Offset-paginated list response: one page of `items` plus the counters needed to render a pager. Distinct from {@link MemberListResponse} and the other cursor-paginated shapes, which carry `hasMore`/`cursor` instead. Use this when the caller needs to know the total size or jump to an arbitrary page; prefer cursor pagination for feeds, where offsets skip or repeat rows as content is inserted. |
+| `PaginatedResponse` | interface | `src/community/types.ts` | Cursor-paginated list response: one page of `items` plus the cursor needed to fetch the next. This is the cursor-paginated envelope every Slingshot entity `list` and `search` route returns. It carries no `total`/`page`/`pageSize`: the backend pages by opaque cursor, so there is no total count and no way to jump to an arbitrary offset. Continue a listing by passing `nextCursor` back as the `cursor` request parameter, and stop when `hasMore` is false. |
 | `PasskeyLoginBody` | interface | `src/types.ts` | Request body for completing a passkey login. |
 | `PasskeyLoginOptionsBody` | interface | `src/types.ts` | Request body for retrieving passkey login options. |
 | `PasskeyLoginOptionsResponse` | interface | `src/types.ts` | Response returned when beginning a passkey login flow. |
@@ -103,13 +103,14 @@ Generated from `src/index.ts`.
 | `RegisterVars` | typealias | `src/types.ts` | Registration variables accepted by `useRegister()`. `redirectTo` must resolve within the current application origin. |
 | `ReplyListParams` | interface | `src/community/types.ts` | List parameters for fetching replies in a specific thread. |
 | `ReplyResponse` | interface | `src/community/types.ts` | Reply record returned by the community API. Fields mirror the slingshot-community `Reply` entity. JSON sidecars are typed against slingshot-core's content types. |
+| `ReplySearchParams` | interface | `src/community/types.ts` | Search parameters accepted by `GET /community/replies/search`. |
 | `ReportBody` | interface | `src/community/types.ts` | Request body for filing a community moderation report. |
 | `ReportResponse` | interface | `src/community/types.ts` | Report record returned by moderation endpoints. |
 | `RequestOptions` | interface | `src/types.ts` | Optional overrides for individual API client requests. |
 | `ResendVerificationBody` | interface | `src/types.ts` | Request body for sending a new verification email. |
 | `ResetPasswordBody` | interface | `src/types.ts` | Request body for completing a password reset flow. |
 | `ResolveReportBody` | interface | `src/community/types.ts` | Request body for resolving a moderation report. |
-| `SearchResponse` | interface | `src/community/types.ts` | Search results returned by the thread and reply search endpoints. |
+| `SearchResponse` | typealias | `src/community/types.ts` | Search results returned by the thread and reply search endpoints. Search shares the cursor-paginated envelope used by list routes, so results arrive as a flat `items` array rather than split per entity type. |
 | `SendResult` | typealias | `src/ws/manager.ts` | Outcome of writing a frame. - `"sent"` — written to an OPEN socket this instant. - `"queued"` — the socket was not OPEN (connecting / reconnecting), so the   frame was buffered and WILL be flushed, in order, the moment the socket   opens. It has NOT reached the server yet. - `"dropped"` — the manager is destroyed, or the caller opted out of   queueing (a frame that is reconstructed on reconnect anyway), so the frame   was discarded. A caller that needs to know its write is not yet delivered (e.g. a game input that must not report "sent" until the server confirms) can read this — a `"queued"` result is an explicit "deferred, not delivered" signal. Note that even `"sent"` is not proof of *delivery*: a frame written to an OPEN socket can still be lost in a half-open connection. Only an application-level ack proves the server received it. |
 | `Session` | interface | `src/types.ts` | Active session metadata returned by session-management hooks. |
 | `SetPasswordBody` | interface | `src/types.ts` | Request body for setting or rotating an account password. |
@@ -132,6 +133,7 @@ Generated from `src/index.ts`.
 | `TestWebhookBody` | interface | `src/webhooks/types.ts` | Request body for sending a test delivery through a webhook endpoint. |
 | `ThreadListParams` | interface | `src/community/types.ts` | List parameters for fetching threads in a specific container. |
 | `ThreadResponse` | interface | `src/community/types.ts` | Thread record returned by the community API. Fields mirror the slingshot-community `Thread` entity. JSON sidecar fields (`mentions`, `attachments`, `embeds`, …) are typed against slingshot-core's content types and re-exported above for direct use. |
+| `ThreadSearchParams` | interface | `src/community/types.ts` | Search parameters accepted by `GET /community/threads/search`. |
 | `TokenStorage` | interface | `src/auth/storage.ts` | Per-instance token storage used by Snapshot auth flows. |
 | `UpdateContainerBody` | interface | `src/community/types.ts` | Request body for updating a community container. |
 | `UpdateReplyBody` | interface | `src/community/types.ts` | Request body for updating an existing reply. |
@@ -357,7 +359,7 @@ Merge a partial auth contract override with the built-in defaults.
 | `communityKeys` | variable | Query key helpers for the community API surface. SSR loaders can seed the QueryClient under these keys so loader-seeded keys and hook-read keys stay aligned. |
 | `CommunityNotification` | interface | Normalized notification shape used by `useCommunityNotifications()`. |
 | `CommunityNotificationType` | typealias | Community notification types surfaced by Snapshot's notification helpers. |
-| `CommunitySearchParams` | interface | Search parameters accepted by the community search hooks. |
+| `CommunitySearchParams` | interface | Search parameters shared by the community search hooks. Each search route additionally accepts the filter parameter its entity declares — `containerId` for threads, `threadId` for replies — exposed by {@link ThreadSearchParams} and {@link ReplySearchParams}. |
 | `ContactData` | interface | Contact card sidecar. |
 | `ContainerResponse` | interface | Community container returned by the community API. |
 | `ContentFormat` | typealias | Storage format hint for body text. |
@@ -367,22 +369,24 @@ Merge a partial auth contract override with the built-in defaults.
 | `CreateThreadBody` | interface | Request body for creating a thread in a container. |
 | `CreateThreadBodyExtended` | interface | Request body for creating a thread (extended). Optional sidecar fields can be set client-side; the server may overwrite them with parsed content metadata when its `parseBody` middleware runs. Treat client-supplied values as advisory. |
 | `EmbedData` | interface | Resolved link-preview metadata for a URL referenced in content. |
-| `ListParams` | interface | Shared page-based pagination parameters. |
+| `ListParams` | interface | Shared cursor pagination parameters. Mirrors the `limit`/`cursor`/`sortDir` query contract every Slingshot entity `list` route accepts. There is no `page`/`pageSize`: pass `limit` for the page size and feed the previous response's `nextCursor` back as `cursor`. |
 | `LocationData` | interface | Geo coordinate sidecar. |
 | `NotificationResponse` | interface | Notification record returned by community notification endpoints. |
-| `PaginatedResponse` | interface | Offset-paginated list response: one page of `items` plus the counters needed to render a pager. Distinct from {@link MemberListResponse} and the other cursor-paginated shapes, which carry `hasMore`/`cursor` instead. Use this when the caller needs to know the total size or jump to an arbitrary page; prefer cursor pagination for feeds, where offsets skip or repeat rows as content is inserted. |
+| `PaginatedResponse` | interface | Cursor-paginated list response: one page of `items` plus the cursor needed to fetch the next. This is the cursor-paginated envelope every Slingshot entity `list` and `search` route returns. It carries no `total`/`page`/`pageSize`: the backend pages by opaque cursor, so there is no total count and no way to jump to an arbitrary offset. Continue a listing by passing `nextCursor` back as the `cursor` request parameter, and stop when `hasMore` is false. |
 | `QuotePreview` | interface | Snapshot of a quoted message for inline display. |
 | `ReactionBody` | interface | Request body for adding/removing an emoji reaction. Sent to `POST /community/threads/:id/reactions`, etc. |
 | `ReactionResponse` | interface | Reaction record returned by the read endpoints — full shape with `userId`, `type`, and `createdAt`. Mirrors the slingshot-community `Reaction` entity. The list hooks (`useThreadReactions`, `useReplyReactions`) return arrays of this type. Consumers gating UI on "is this MY reaction" read `userId`. |
 | `ReplyListParams` | interface | List parameters for fetching replies in a specific thread. |
 | `ReplyResponse` | interface | Reply record returned by the community API. Fields mirror the slingshot-community `Reply` entity. JSON sidecars are typed against slingshot-core's content types. |
+| `ReplySearchParams` | interface | Search parameters accepted by `GET /community/replies/search`. |
 | `ReportBody` | interface | Request body for filing a community moderation report. |
 | `ReportResponse` | interface | Report record returned by moderation endpoints. |
 | `ResolveReportBody` | interface | Request body for resolving a moderation report. |
-| `SearchResponse` | interface | Search results returned by the thread and reply search endpoints. |
+| `SearchResponse` | typealias | Search results returned by the thread and reply search endpoints. Search shares the cursor-paginated envelope used by list routes, so results arrive as a flat `items` array rather than split per entity type. |
 | `SystemEventData` | interface | System message payload (room renames, member joins, etc.). |
 | `ThreadListParams` | interface | List parameters for fetching threads in a specific container. |
 | `ThreadResponse` | interface | Thread record returned by the community API. Fields mirror the slingshot-community `Thread` entity. JSON sidecar fields (`mentions`, `attachments`, `embeds`, …) are typed against slingshot-core's content types and re-exported above for direct use. |
+| `ThreadSearchParams` | interface | Search parameters accepted by `GET /community/threads/search`. |
 | `UpdateContainerBody` | interface | Request body for updating a community container. |
 | `UpdateReplyBody` | interface | Request body for updating an existing reply. |
 | `UpdateThreadBody` | interface | Request body for updating or moderating a thread. Field names match the entity (`pinned` / `locked`). |
@@ -561,66 +565,66 @@ Runtime surface returned by `createSnapshot()`.
 | `useSseEvent` | `<T = unknown>(endpoint: string, event: string) => SseEventHookResult<T>` | Subscribe to a named event on an SSE endpoint. Returns the latest payload and connection status. |
 | `onSseEvent` | `(endpoint: string, event: string, handler: (payload: unknown) => void) => () ...` | Register a callback for a named SSE event. Returns an unsubscribe function. |
 | `useCommunityNotifications` | `(opts?: UseCommunityNotificationsOpts \| undefined) => UseCommunityNotificatio...` | Subscribe to real-time community notifications via SSE. Requires an `/__sse/notifications` endpoint. |
-| `useContainers` | `(params?: ListParams \| undefined) => any` | List community containers with optional pagination. |
-| `useContainer` | `(containerId: string) => any` | Fetch a single container by ID. |
-| `useCreateContainer` | `() => any` | Create a new community container. |
-| `useUpdateContainer` | `() => any` | Update a container's metadata. |
-| `useDeleteContainer` | `() => any` | Delete a container and its contents. |
-| `useContainerThreads` | `({ containerId, ...params }: ThreadListParams) => any` | List threads in a container with pagination and optional filters. |
-| `useContainerThread` | `(threadId: string) => any` | Fetch a single thread by ID. |
-| `useCreateThread` | `() => any` | Create a new thread in a container. |
-| `useUpdateThread` | `() => any` | Update a thread's content or metadata. |
-| `useDeleteThread` | `() => any` | Delete a thread. |
-| `usePublishThread` | `() => any` | Publish a draft thread, making it visible to other users. |
-| `useLockThread` | `() => any` | Lock a thread to prevent new replies. |
-| `useUnlockThread` | `() => any` | Unlock a thread so replies can be posted again. |
-| `usePinThread` | `() => any` | Pin a thread to the top of its container. |
-| `useUnpinThread` | `() => any` | Unpin a previously pinned thread. |
-| `useThreadReplies` | `({ threadId, ...params }: ReplyListParams) => any` | List replies in a thread with pagination. |
-| `useReply` | `(replyId: string) => any` | Fetch a single reply by ID. |
-| `useCreateReply` | `() => any` | Post a new reply to a thread. |
-| `useUpdateReply` | `() => any` | Update a reply's content. |
-| `useDeleteReply` | `() => any` | Delete a reply. |
-| `useThreadReactions` | `(threadId: string) => any` | List reactions on a thread. |
-| `useReplyReactions` | `(replyId: string) => any` | List reactions on a reply. |
-| `useAddThreadReaction` | `() => any` | Add an emoji reaction to a thread. |
-| `useRemoveThreadReaction` | `() => any` | Remove an emoji reaction from a thread. |
-| `useAddReplyReaction` | `() => any` | Add an emoji reaction to a reply. |
-| `useRemoveReplyReaction` | `() => any` | Remove an emoji reaction from a reply. |
-| `useContainerMembers` | `(containerId: string, params?: ListParams \| undefined) => any` | List members of a container with pagination. |
-| `useContainerModerators` | `(containerId: string, params?: ListParams \| undefined) => any` | List moderators of a container. |
-| `useContainerOwners` | `(containerId: string, params?: ListParams \| undefined) => any` | List owners of a container. |
-| `useAddMember` | `() => any` | Add a user as a member of a container. |
-| `useRemoveMember` | `() => any` | Remove a member from a container. |
-| `useAssignModerator` | `() => any` | Promote a member to moderator. |
-| `useRemoveModerator` | `() => any` | Remove moderator role from a user. |
-| `useAssignOwner` | `() => any` | Promote a member to owner. |
-| `useRemoveOwner` | `() => any` | Remove owner role from a user. |
-| `useNotifications` | `(params?: ListParams \| undefined) => any` | List notifications for the current user with pagination. |
-| `useNotificationsUnreadCount` | `() => any` | Get the count of unread notifications. |
-| `useMarkAllNotificationsSeen` | `() => any` | Clear the notification badge without marking rows read. |
-| `useMarkNotificationRead` | `() => any` | Mark a single notification as read. |
-| `useMarkAllNotificationsRead` | `() => any` | Mark all notifications as read. |
-| `useDismissNotification` | `() => any` | Dismiss a notification owned by the current user. |
-| `useReports` | `(params?: ListParams \| undefined) => any` | List moderation reports with pagination. |
-| `useReport` | `(reportId: string) => any` | Fetch a single report by ID. |
-| `useCreateReport` | `() => any` | File a moderation report against a thread or reply. |
-| `useResolveReport` | `() => any` | Resolve a moderation report with an action (e.g., warn, delete). |
-| `useDismissReport` | `() => any` | Dismiss a moderation report without taking action. |
-| `useBans` | `(params?: ListParams \| undefined) => any` | List banned users with pagination. |
-| `useCheckBan` | `(userId: string, containerId?: string \| undefined) => any` | Check whether a specific user is banned. |
-| `useCreateBan` | `() => any` | Ban a user from a container or globally. |
-| `useRemoveBan` | `() => any` | Remove a ban, restoring the user's access. |
-| `useSearchThreads` | `(params: CommunitySearchParams & { q: string; }) => any` | Full-text search across threads. |
-| `useSearchReplies` | `(params: CommunitySearchParams & { q: string; }) => any` | Full-text search across replies. |
-| `useWebhookEndpoints` | `() => any` | List webhook endpoints with pagination. |
-| `useWebhookEndpoint` | `(endpointId: string) => any` | Fetch a single webhook endpoint by ID. |
-| `useCreateWebhookEndpoint` | `() => any` | Create a new webhook endpoint. |
-| `useUpdateWebhookEndpoint` | `() => any` | Update an existing webhook endpoint's URL, events, or status. |
-| `useDeleteWebhookEndpoint` | `() => any` | Delete a webhook endpoint. |
-| `useWebhookDeliveries` | `({ endpointId, page, pageSize, }: ListWebhookDeliveriesParams) => any` | List delivery attempts for a webhook endpoint. |
-| `useWebhookDelivery` | `(deliveryId: string) => any` | Fetch a single delivery record by ID. |
-| `useTestWebhookEndpoint` | `() => any` | Send a test delivery through a webhook endpoint. |
+| `useContainers` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<Contain...` | List community containers with optional pagination. |
+| `useContainer` | `(containerId: string) => UseQueryResult<ContainerResponse, ApiError>` | Fetch a single container by ID. |
+| `useCreateContainer` | `() => UseMutationResult<ContainerResponse, ApiError, CreateContainerBody, unk...` | Create a new community container. |
+| `useUpdateContainer` | `() => UseMutationResult<ContainerResponse, ApiError, { containerId: string; }...` | Update a container's metadata. |
+| `useDeleteContainer` | `() => UseMutationResult<void, ApiError, { containerId: string; }, unknown>` | Delete a container and its contents. |
+| `useContainerThreads` | `({ containerId, ...params }: ThreadListParams) => UseQueryResult<PaginatedRes...` | List threads in a container with pagination and optional filters. |
+| `useContainerThread` | `(threadId: string) => UseQueryResult<ThreadResponse, ApiError>` | Fetch a single thread by ID. |
+| `useCreateThread` | `() => UseMutationResult<ThreadResponse, ApiError, { containerId: string; } & ...` | Create a new thread in a container. |
+| `useUpdateThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Update a thread's content or metadata. |
+| `useDeleteThread` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Delete a thread. |
+| `usePublishThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Publish a draft thread, making it visible to other users. |
+| `useLockThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Lock a thread to prevent new replies. |
+| `useUnlockThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Unlock a thread so replies can be posted again. |
+| `usePinThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Pin a thread to the top of its container. |
+| `useUnpinThread` | `() => UseMutationResult<ThreadResponse, ApiError, { threadId: string; contain...` | Unpin a previously pinned thread. |
+| `useThreadReplies` | `({ threadId, ...params }: ReplyListParams) => UseQueryResult<PaginatedRespons...` | List replies in a thread with pagination. |
+| `useReply` | `(replyId: string) => UseQueryResult<ReplyResponse, ApiError>` | Fetch a single reply by ID. |
+| `useCreateReply` | `() => UseMutationResult<ReplyResponse, ApiError, { threadId: string; } & Crea...` | Post a new reply to a thread. |
+| `useUpdateReply` | `() => UseMutationResult<ReplyResponse, ApiError, { replyId: string; threadId:...` | Update a reply's content. |
+| `useDeleteReply` | `() => UseMutationResult<void, ApiError, { replyId: string; threadId: string; ...` | Delete a reply. |
+| `useThreadReactions` | `(threadId: string) => UseQueryResult<ReactionResponse[], ApiError>` | List reactions on a thread. |
+| `useReplyReactions` | `(replyId: string) => UseQueryResult<ReactionResponse[], ApiError>` | List reactions on a reply. |
+| `useAddThreadReaction` | `() => UseMutationResult<void, ApiError, { threadId: string; containerId: stri...` | Add an emoji reaction to a thread. |
+| `useRemoveThreadReaction` | `() => UseMutationResult<void, ApiError, { reactionId: string; threadId: strin...` | Remove an emoji reaction from a thread. |
+| `useAddReplyReaction` | `() => UseMutationResult<void, ApiError, { replyId: string; threadId: string; ...` | Add an emoji reaction to a reply. |
+| `useRemoveReplyReaction` | `() => UseMutationResult<void, ApiError, { reactionId: string; replyId: string...` | Remove an emoji reaction from a reply. |
+| `useContainerMembers` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List members of a container with pagination. |
+| `useContainerModerators` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List moderators of a container. |
+| `useContainerOwners` | `(containerId: string, params?: ListParams \| undefined) => UseQueryResult<Memb...` | List owners of a container. |
+| `useAddMember` | `() => UseMutationResult<MemberRecord, ApiError, { containerId: string; userId...` | Add a user as a member of a container. |
+| `useRemoveMember` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove a member from a container. |
+| `useAssignModerator` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Promote a member to moderator. |
+| `useRemoveModerator` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove moderator role from a user. |
+| `useAssignOwner` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Promote a member to owner. |
+| `useRemoveOwner` | `() => UseMutationResult<void, ApiError, { containerId: string; userId: string...` | Remove owner role from a user. |
+| `useNotifications` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<Notific...` | List notifications for the current user with pagination. |
+| `useNotificationsUnreadCount` | `() => UseQueryResult<{ count: number; }, ApiError>` | Get the count of unread notifications. |
+| `useMarkAllNotificationsSeen` | `() => UseMutationResult<void, ApiError, void, unknown>` | Clear the notification badge without marking rows read. |
+| `useMarkNotificationRead` | `() => UseMutationResult<void, ApiError, { notificationId: string; }, unknown>` | Mark a single notification as read. |
+| `useMarkAllNotificationsRead` | `() => UseMutationResult<void, ApiError, void, unknown>` | Mark all notifications as read. |
+| `useDismissNotification` | `() => UseMutationResult<void, ApiError, { notificationId: string; }, unknown>` | Dismiss a notification owned by the current user. |
+| `useReports` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<ReportR...` | List moderation reports with pagination. |
+| `useReport` | `(reportId: string) => UseQueryResult<ReportResponse, ApiError>` | Fetch a single report by ID. |
+| `useCreateReport` | `() => UseMutationResult<ReportResponse, ApiError, ReportBody, unknown>` | File a moderation report against a thread or reply. |
+| `useResolveReport` | `() => UseMutationResult<ReportResponse, ApiError, { reportId: string; } & Res...` | Resolve a moderation report with an action (e.g., warn, delete). |
+| `useDismissReport` | `() => UseMutationResult<ReportResponse, ApiError, { reportId: string; }, unkn...` | Dismiss a moderation report without taking action. |
+| `useBans` | `(params?: ListParams \| undefined) => UseQueryResult<PaginatedResponse<BanResp...` | List banned users with pagination. |
+| `useCheckBan` | `(userId: string, containerId?: string \| undefined) => UseQueryResult<BanCheck...` | Check whether a specific user is banned. |
+| `useCreateBan` | `() => UseMutationResult<BanResponse, ApiError, BanBody, unknown>` | Ban a user from a container or globally. |
+| `useRemoveBan` | `() => UseMutationResult<void, ApiError, { banId: string; userId: string; }, u...` | Remove a ban, restoring the user's access. |
+| `useSearchThreads` | `(params: ThreadSearchParams & { q: string; }) => UseQueryResult<SearchRespons...` | Full-text search across threads. |
+| `useSearchReplies` | `(params: ReplySearchParams & { q: string; }) => UseQueryResult<SearchResponse...` | Full-text search across replies. |
+| `useWebhookEndpoints` | `() => UseQueryResult<WebhookEndpointResponse[], ApiError>` | List webhook endpoints with pagination. |
+| `useWebhookEndpoint` | `(endpointId: string) => UseQueryResult<WebhookEndpointResponse, ApiError>` | Fetch a single webhook endpoint by ID. |
+| `useCreateWebhookEndpoint` | `() => UseMutationResult<WebhookEndpointResponse, ApiError, CreateWebhookEndpo...` | Create a new webhook endpoint. |
+| `useUpdateWebhookEndpoint` | `() => UseMutationResult<WebhookEndpointResponse, ApiError, { endpointId: stri...` | Update an existing webhook endpoint's URL, events, or status. |
+| `useDeleteWebhookEndpoint` | `() => UseMutationResult<void, ApiError, { endpointId: string; }, unknown>` | Delete a webhook endpoint. |
+| `useWebhookDeliveries` | `({ endpointId, page, pageSize, }: ListWebhookDeliveriesParams) => UseQueryRes...` | List delivery attempts for a webhook endpoint. |
+| `useWebhookDelivery` | `(deliveryId: string) => UseQueryResult<WebhookDeliveryResponse, ApiError>` | Fetch a single delivery record by ID. |
+| `useTestWebhookEndpoint` | `() => UseMutationResult<void, ApiError, { endpointId: string; } & TestWebhook...` | Send a test delivery through a webhook endpoint. |
 | `api` | `ApiClient` | Low-level API client bound to this snapshot instance. |
 | `tokenStorage` | `TokenStorage` | Token storage used for session persistence (access + refresh tokens). |
 | `queryClient` | `QueryClient` | TanStack Query client shared across all hooks in this snapshot instance. |
