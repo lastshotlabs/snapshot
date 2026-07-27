@@ -224,6 +224,20 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
   slots,
 }: RichInputBaseProps, ref) {
   const [charCount, setCharCount] = useState(0);
+  /**
+   * Edge affordance for the formatting strip.
+   *
+   * The strip is `overflowX: auto` with the scrollbar hidden, so when it
+   * overflows a control is sliced in half at the edge with nothing to say it
+   * continues — a half-cut icon reads as a rendering bug rather than as "scroll
+   * me". Tracked rather than always-on: a permanent fade on a strip that fits
+   * would dim a control for no reason.
+   */
+  const formattingScrollRef = useRef<HTMLDivElement | null>(null);
+  const [stripEdges, setStripEdges] = useState<{ start: boolean; end: boolean }>({
+    start: false,
+    end: false,
+  });
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const linkInputRef = useRef<HTMLInputElement>(null);
@@ -460,6 +474,40 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
   // Single tight row that scrolls horizontally if the buttons overflow (narrow
   // mobile) instead of wrapping to an ugly second row or getting spread out.
   const formattingGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-formattingGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "2xs", flexWrap: "nowrap", flex: "1", minWidth: "0", style: { overflowX: "auto", scrollbarWidth: "none" } }, componentSurface: slots?.formattingGroup });
+  useEffect(() => {
+    const el = formattingScrollRef.current;
+    if (!el) return;
+    const measure = () => {
+      // 1px of slack: sub-pixel layout means scrollWidth can exceed clientWidth
+      // by a hair on a strip that visibly fits, which would fade it forever.
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      setStripEdges({
+        start: el.scrollLeft > 1,
+        end: maxScroll > 1 && el.scrollLeft < maxScroll - 1,
+      });
+    };
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    const observer =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    observer?.observe(el);
+    return () => {
+      el.removeEventListener("scroll", measure);
+      observer?.disconnect();
+    };
+    // Re-measures when the control set changes, which changes the strip's width.
+  }, [toolbarItems.length]);
+
+  /**
+   * Fade whichever edge has more content behind it. `mask-image` rather than an
+   * overlaid gradient so it works on any background — the toolbar surface is
+   * themeable and an opaque overlay would be wrong on half of them.
+   */
+  const stripMask =
+    stripEdges.start || stripEdges.end
+      ? `linear-gradient(to right, ${stripEdges.start ? "transparent 0, black 16px" : "black 0"}, ${stripEdges.end ? "black calc(100% - 16px), transparent 100%" : "black 100%"})`
+      : undefined;
+
   const statusGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-statusGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "sm" }, componentSurface: slots?.statusGroup });
   const counterSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-counter`,
@@ -506,7 +554,18 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
 
         {(toolbarItems.length > 0 || showSendButton) ? (
           <div role="toolbar" data-testid="rich-input-toolbar" data-snapshot-id={`${rootId}-toolbar`} className={toolbarSurface.className} style={toolbarSurface.style}>
-            <div data-snapshot-id={`${rootId}-formattingGroup`} className={formattingGroupSurface.className} style={formattingGroupSurface.style}>
+            <div
+              ref={formattingScrollRef}
+              data-snapshot-id={`${rootId}-formattingGroup`}
+              data-scroll-start={stripEdges.start || undefined}
+              data-scroll-end={stripEdges.end || undefined}
+              className={formattingGroupSurface.className}
+              style={
+                stripMask
+                  ? { ...formattingGroupSurface.style, maskImage: stripMask, WebkitMaskImage: stripMask }
+                  : formattingGroupSurface.style
+              }
+            >
               {toolbarItems.map((item, index) => {
                 const active = editor?.isActive(item.name === "bullet-list" ? "bulletList" : item.name === "ordered-list" ? "orderedList" : item.name === "code-block" ? "codeBlock" : item.name) ?? false;
                 const buttonSurface = resolveSurfacePresentation({
