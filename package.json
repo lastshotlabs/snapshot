@@ -1,6 +1,6 @@
 {
   "name": "@lastshotlabs/snapshot",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "React frontend framework for slingshot-powered backends",
   "license": "MIT",
   "type": "module",
