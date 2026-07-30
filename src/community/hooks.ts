@@ -27,7 +27,8 @@ import type {
   ListParams,
   ThreadListParams,
   ReplyListParams,
-  CommunitySearchParams,
+  ThreadSearchParams,
+  ReplySearchParams,
   MemberRecord,
   MemberListResponse,
 } from "./types";
@@ -90,13 +91,25 @@ export function createCommunityHooks({
   api: ApiClient;
   queryClient: QueryClient;
 }) {
+  /**
+   * Build the `limit`/`cursor`/`sortDir` query string every Slingshot entity
+   * `list` route accepts. Returns "" when nothing is set so the caller emits a
+   * bare path rather than a dangling "?".
+   */
+  function listQuery(params?: ListParams): string {
+    const qs = new URLSearchParams();
+    if (params?.limit !== undefined) qs.set("limit", String(params.limit));
+    if (params?.cursor) qs.set("cursor", params.cursor);
+    if (params?.sortDir) qs.set("sortDir", params.sortDir);
+    const s = qs.toString();
+    return s ? `?${s}` : "";
+  }
+
   // ── Containers ───────────────────────────────────────────────────────────────
 
   /** Fetch all community containers with optional pagination. */
   function useContainers(params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
+    const query = listQuery(params);
     return useQuery<PaginatedResponse<ContainerResponse>, ApiError>({
       queryKey: keys.containers(),
       queryFn: () =>
@@ -166,7 +179,7 @@ export function createCommunityHooks({
 
   /** Fetch paginated threads for a specific container. */
   function useContainerThreads({ containerId, ...params }: ThreadListParams) {
-    const query = `?limit=${params.pageSize ?? 20}`;
+    const query = listQuery({ limit: 20, ...params });
     return useQuery<PaginatedResponse<ThreadResponse>, ApiError>({
       queryKey: keys.threads(containerId),
       queryFn: () =>
@@ -276,7 +289,10 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/lock`, { id: threadId, locked: true }),
+        api.patch<ThreadResponse>(`/community/threads/lock`, {
+          id: threadId,
+          locked: true,
+        }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -297,7 +313,10 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/unlock`, { id: threadId, locked: false }),
+        api.patch<ThreadResponse>(`/community/threads/unlock`, {
+          id: threadId,
+          locked: false,
+        }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({ queryKey: keys.threadDetail(threadId) });
         void queryClient.invalidateQueries({ queryKey: keys.threads(containerId) });
@@ -314,7 +333,10 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/pin`, { id: threadId, pinned: true }),
+        api.patch<ThreadResponse>(`/community/threads/pin`, {
+          id: threadId,
+          pinned: true,
+        }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -335,7 +357,10 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/unpin`, { id: threadId, pinned: false }),
+        api.patch<ThreadResponse>(`/community/threads/unpin`, {
+          id: threadId,
+          pinned: false,
+        }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -351,7 +376,7 @@ export function createCommunityHooks({
 
   /** Fetch paginated replies for a specific thread. */
   function useThreadReplies({ threadId, ...params }: ReplyListParams) {
-    const query = `?limit=${params.pageSize ?? 20}`;
+    const query = listQuery({ limit: 20, ...params });
     return useQuery<PaginatedResponse<ReplyResponse>, ApiError>({
       queryKey: keys.replies(threadId),
       queryFn: () =>
@@ -585,7 +610,7 @@ export function createCommunityHooks({
   // not a separate collection. "Remove moderator/owner" demotes to `member`.
 
   function memberList(containerId: string, params?: ListParams) {
-    const limit = params?.pageSize ?? 20;
+    const limit = params?.limit ?? 20;
     return api.get<MemberListResponse>(
       `/community/container-members?containerId=${encodeURIComponent(containerId)}&limit=${limit}`,
     );
@@ -596,7 +621,7 @@ export function createCommunityHooks({
     role: "moderator" | "owner",
     params?: ListParams,
   ) {
-    const limit = params?.pageSize ?? 20;
+    const limit = params?.limit ?? 20;
     return api.get<MemberListResponse>(
       `/community/container-members/list-by-role/${containerId}/${role}?limit=${limit}`,
     );
@@ -799,7 +824,7 @@ export function createCommunityHooks({
 
   /** Fetch the current user's notifications (newest first). */
   function useNotifications(params?: ListParams) {
-    const limit = params?.pageSize ?? 20;
+    const limit = params?.limit ?? 20;
     return useQuery<PaginatedResponse<NotificationResponse>, ApiError>({
       queryKey: keys.notifications(),
       queryFn: () =>
@@ -889,9 +914,7 @@ export function createCommunityHooks({
 
   /** Fetch paginated community reports. */
   function useReports(params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
+    const query = listQuery(params);
     return useQuery<PaginatedResponse<ReportResponse>, ApiError>({
       queryKey: keys.reports(),
       queryFn: () =>
@@ -959,9 +982,7 @@ export function createCommunityHooks({
 
   /** Fetch paginated community bans. */
   function useBans(params?: ListParams) {
-    const query = params
-      ? `?page=${params.page ?? 1}&pageSize=${params.pageSize ?? 20}`
-      : "";
+    const query = listQuery(params);
     return useQuery<PaginatedResponse<BanResponse>, ApiError>({
       queryKey: keys.bans(),
       queryFn: () =>
@@ -969,15 +990,32 @@ export function createCommunityHooks({
     });
   }
 
-  /** Check whether a user is banned, optionally scoped to a container. */
+  /**
+   * Check whether a user is banned, optionally scoped to a container.
+   *
+   * slingshot-community disables its `isUserBanned` and `getUserBan` operations
+   * (`routes.disable` on the Ban entity) and mounts no `/bans/check` route, so
+   * this derives the answer from the filtered ban list — the same approach
+   * {@link findMembershipId} uses for membership. A ban counts as in force only
+   * when it has not been lifted (`unbannedAt`) and has not expired.
+   */
   function useCheckBan(userId: string, containerId?: string) {
-    const params = containerId
-      ? `?userId=${userId}&containerId=${containerId}`
-      : `?userId=${userId}`;
+    const query = new URLSearchParams({ userId, limit: "50" });
+    if (containerId) query.set("containerId", containerId);
     return useQuery<BanCheckResponse, ApiError>({
       queryKey: keys.banCheck(userId, containerId),
-      queryFn: () =>
-        api.get<BanCheckResponse>(`/community/bans/check${params}`),
+      queryFn: async () => {
+        const res = await api.get<PaginatedResponse<BanResponse>>(
+          `/community/bans?${query.toString()}`,
+        );
+        const now = Date.now();
+        const ban = res.items.find(
+          (b) =>
+            !b.unbannedAt &&
+            (!b.expiresAt || new Date(b.expiresAt).getTime() > now),
+        );
+        return ban ? { banned: true, ban } : { banned: false };
+      },
       enabled: !!userId,
     });
   }
@@ -1012,32 +1050,47 @@ export function createCommunityHooks({
 
   // ── Search ────────────────────────────────────────────────────────────────────
 
-  /** Search threads by query string with optional container and cursor-based pagination. */
-  function useSearchThreads(params: CommunitySearchParams & { q: string }) {
+  /**
+   * Search threads by query string, optionally scoped to a container.
+   *
+   * Hits the entity search route `GET /community/threads/search`; there is no
+   * `/community/search/*` namespace. Results use the shared cursor envelope —
+   * pass the previous response's `nextCursor` back as `cursor` to page.
+   */
+  function useSearchThreads(params: ThreadSearchParams & { q: string }) {
     const qs = new URLSearchParams();
     if (params.q) qs.set("q", params.q);
     if (params.containerId) qs.set("containerId", params.containerId);
-    if (params.limit) qs.set("limit", String(params.limit));
+    if (params.limit !== undefined) qs.set("limit", String(params.limit));
     if (params.cursor) qs.set("cursor", params.cursor);
-    return useQuery<SearchResponse, ApiError>({
+    return useQuery<SearchResponse<ThreadResponse>, ApiError>({
       queryKey: [...keys.searchThreads(), params] as const,
       queryFn: () =>
-        api.get<SearchResponse>(`/community/search/threads?${qs.toString()}`),
+        api.get<SearchResponse<ThreadResponse>>(
+          `/community/threads/search?${qs.toString()}`,
+        ),
       enabled: !!params.q,
     });
   }
 
-  /** Search replies by query string with optional container and cursor-based pagination. */
-  function useSearchReplies(params: CommunitySearchParams & { q: string }) {
+  /**
+   * Search replies by query string, optionally scoped to a thread.
+   *
+   * Hits `GET /community/replies/search`. The Reply entity filters on
+   * `threadId`, not `containerId` — a container filter is not available here.
+   */
+  function useSearchReplies(params: ReplySearchParams & { q: string }) {
     const qs = new URLSearchParams();
     if (params.q) qs.set("q", params.q);
-    if (params.containerId) qs.set("containerId", params.containerId);
-    if (params.limit) qs.set("limit", String(params.limit));
+    if (params.threadId) qs.set("threadId", params.threadId);
+    if (params.limit !== undefined) qs.set("limit", String(params.limit));
     if (params.cursor) qs.set("cursor", params.cursor);
-    return useQuery<SearchResponse, ApiError>({
+    return useQuery<SearchResponse<ReplyResponse>, ApiError>({
       queryKey: [...keys.searchReplies(), params] as const,
       queryFn: () =>
-        api.get<SearchResponse>(`/community/search/replies?${qs.toString()}`),
+        api.get<SearchResponse<ReplyResponse>>(
+          `/community/replies/search?${qs.toString()}`,
+        ),
       enabled: !!params.q,
     });
   }

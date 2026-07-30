@@ -17,9 +17,22 @@ sync backend schemas when you want generated client code.
 
 ## Registry setup
 
-`@lastshotlabs/*` packages are published to **GitHub Packages**, not the public npm
-registry. They're public, but GitHub still requires authentication to install them.
-One-time setup:
+Snapshot is published to the **public npm registry**. No token, no `.npmrc`, no
+scope mapping — install it like any other package:
+
+```sh
+npm install @lastshotlabs/snapshot
+```
+
+Every release from `0.2.0` onward is published to both npmjs.org and GitHub
+Packages. The two registries carry identical versions; npmjs.org is the
+recommended channel because it needs no authentication.
+
+<details>
+<summary>Installing from GitHub Packages instead</summary>
+
+GitHub Packages requires authentication even for public packages. Only use this
+channel if your organization mandates it:
 
 1. Create a GitHub [personal access token](https://github.com/settings/tokens/new)
    with the **`read:packages`** scope.
@@ -33,6 +46,12 @@ One-time setup:
 3. Export the token where you install: `export GITHUB_TOKEN=ghp_…` (do the same in CI).
 
 The default registry stays npmjs.org, so your other dependencies are unaffected.
+
+</details>
+
+> **Note:** versions `0.1.0` and `0.1.4` on npmjs.org are abandoned early
+> artifacts and are **not installable** — they carry an unresolvable
+> `file:vendor/…` dependency. Use `0.2.0` or later.
 
 ## Install
 
