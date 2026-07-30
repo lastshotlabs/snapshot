@@ -868,7 +868,12 @@ export function createCommunityHooks({
         await api.post(`/notifications/notifications/mark-read`, {
           id: notificationId,
           read: true,
-          readAt: Date.now(),
+          // AN ISO STRING, NOT `Date.now()`. `readAt` is a timestamp column,
+          // and a millisecond NUMBER makes Postgres reject the write with
+          // 22008 (datetime_field_overflow) — so every "mark this read" tap
+          // 500s and the notification never clears. Measured against a real
+          // api 2026-07-29: number -> 500, ISO string -> 200.
+          readAt: new Date().toISOString(),
         });
       },
       onSuccess: () => {
