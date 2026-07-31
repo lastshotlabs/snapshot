@@ -180,7 +180,8 @@ void snapshotFactory;
     readFileSync(join(installedSnapshotRoot, "package.json"), "utf8"),
   );
   const componentExports = Object.entries(installedManifest.exports).filter(
-    ([key]) => key.startsWith("./ui/") && key !== "./ui/icon",
+    ([key]) =>
+      key.startsWith("./ui/") && key !== "./ui/icon" && key !== "./ui/tokens",
   );
   for (const [key, conditions] of componentExports) {
     for (const [condition, target] of Object.entries(conditions)) {
@@ -293,9 +294,12 @@ void snapshotFactory;
     `import React from "react";
 import { createRoot } from "react-dom/client";
 import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { resolveTokens } from "@lastshotlabs/snapshot/ui/tokens";
 
+const tokens = resolveTokens({ flavor: "neutral" });
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <style>{tokens}</style>
     <ButtonBase>Installed Snapshot</ButtonBase>
   </React.StrictMode>,
 );

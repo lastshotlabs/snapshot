@@ -25,6 +25,7 @@ manifest.exports = {
   "./ui": current["./ui"],
   ...generated,
   "./ui/icon": current["./ui/icon"],
+  "./ui/tokens": current["./ui/tokens"],
   "./vite": current["./vite"],
   "./ssr": current["./ssr"],
 };

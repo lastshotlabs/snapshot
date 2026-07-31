@@ -83,6 +83,10 @@ one of these UI surfaces:
 The CLI packages are optional too, so apps that only import Snapshot runtime or
 UI code do not install them.
 
+Use focused `@lastshotlabs/snapshot/ui/<name>` imports for the minimal
+dependency path. The compatibility `@lastshotlabs/snapshot/ui` barrel
+re-exports the whole catalog and therefore requires every optional UI peer.
+
 ## Runtime Setup
 
 Create a single Snapshot runtime and import it anywhere your app needs hooks or
@@ -243,16 +247,14 @@ export default defineConfig({
 
 ## Standalone UI
 
-UI components are plain React components. Import the full barrel or focused
-subpaths for larger pieces.
+UI components are plain React components. Import each component from its
+focused subpath so unused component families and optional peers stay out of the
+module graph.
 
 ```tsx
-import {
-  ButtonBase,
-  CardBase,
-  RichInputBase,
-  ToastContainer,
-} from "@lastshotlabs/snapshot/ui";
+import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { CardBase } from "@lastshotlabs/snapshot/ui/card";
+import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
 
 export function Composer() {
   return (
@@ -265,13 +267,12 @@ export function Composer() {
         }}
       />
       <ButtonBase label="Publish" icon="send" />
-      <ToastContainer />
     </CardBase>
   );
 }
 ```
 
-Focused UI subpaths:
+Every catalog component follows the same subpath convention:
 
 ```ts
 import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
@@ -284,7 +285,7 @@ import { GifPickerBase } from "@lastshotlabs/snapshot/ui/gif-picker";
 Snapshot UI uses CSS custom properties with optional token helpers.
 
 ```tsx
-import { resolveTokens } from "@lastshotlabs/snapshot/ui";
+import { resolveTokens } from "@lastshotlabs/snapshot/ui/tokens";
 
 const css = resolveTokens({
   flavor: "neutral",

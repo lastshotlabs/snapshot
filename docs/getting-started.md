@@ -25,6 +25,10 @@ only for the matching component:
 
 Apps that do not use the CLI do not install its oclif or prompt runtime.
 
+Use focused `@lastshotlabs/snapshot/ui/<name>` imports for the minimal
+dependency path. The compatibility `@lastshotlabs/snapshot/ui` barrel
+re-exports the whole catalog and therefore requires every optional UI peer.
+
 ## Create A Runtime
 
 ```ts
@@ -123,7 +127,9 @@ those generated hooks from your components.
 ## Add UI Components
 
 ```tsx
-import { ButtonBase, CardBase, RichInputBase } from "@lastshotlabs/snapshot/ui";
+import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { CardBase } from "@lastshotlabs/snapshot/ui/card";
+import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
 
 export function ReplyComposer() {
   return (
@@ -141,7 +147,7 @@ export function ReplyComposer() {
 }
 ```
 
-For heavier components, import focused subpaths:
+Every catalog component follows the same subpath convention:
 
 ```ts
 import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";

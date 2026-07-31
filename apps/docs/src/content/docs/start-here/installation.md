@@ -33,6 +33,10 @@ basic install. Add optional peers only for the UI surfaces you use:
 The CLI packages are optional too, so apps that only import Snapshot runtime or
 UI code do not install either package.
 
+Use focused `@lastshotlabs/snapshot/ui/<name>` imports for the minimal
+dependency path. The compatibility `@lastshotlabs/snapshot/ui` barrel
+re-exports the whole catalog and therefore requires every optional UI peer.
+
 ## Create A Runtime
 
 ```tsx
@@ -62,10 +66,12 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 ## Import UI
 
 ```tsx
-import { ButtonBase, CardBase, RichInputBase } from "@lastshotlabs/snapshot/ui";
+import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { CardBase } from "@lastshotlabs/snapshot/ui/card";
+import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
 ```
 
-Focused subpaths:
+Other component subpaths:
 
 ```ts
 import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";

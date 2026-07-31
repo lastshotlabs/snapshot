@@ -12,7 +12,7 @@
 //   POST   /community/container-members/assign-role
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { createCommunityHooks } from "../hooks";
 import type { ApiClient } from "../../api/client";
@@ -56,6 +56,12 @@ function wrapper({ children }: { children: ReactNode }) {
   );
 }
 
+async function runMutation(action: () => Promise<unknown>): Promise<void> {
+  await act(async () => {
+    await action();
+  });
+}
+
 beforeEach(() => {
   calls.length = 0;
   queryClient.clear();
@@ -85,7 +91,9 @@ describe("community member hooks — route correctness", () => {
 
   it("useAddMember posts the self-join create route with ids in the body", async () => {
     const { result } = renderHook(() => hooks.useAddMember(), { wrapper });
-    await result.current.mutateAsync({ containerId: "c1", userId: "u2" });
+    await runMutation(() =>
+      result.current.mutateAsync({ containerId: "c1", userId: "u2" }),
+    );
     expect(calls[0]).toEqual({
       method: "POST",
       path: "/community/container-members",
@@ -95,7 +103,9 @@ describe("community member hooks — route correctness", () => {
 
   it("useRemoveMember resolves the membership id, then deletes by id", async () => {
     const { result } = renderHook(() => hooks.useRemoveMember(), { wrapper });
-    await result.current.mutateAsync({ containerId: "c1", userId: "u2" });
+    await runMutation(() =>
+      result.current.mutateAsync({ containerId: "c1", userId: "u2" }),
+    );
     expect(calls[0]?.path).toBe(
       "/community/container-members?containerId=c1&userId=u2&limit=1",
     );
@@ -107,10 +117,12 @@ describe("community member hooks — route correctness", () => {
 
   it("useAssignModerator / useRemoveModerator upsert the role via assign-role", async () => {
     const assign = renderHook(() => hooks.useAssignModerator(), { wrapper });
-    await assign.result.current.mutateAsync({
-      containerId: "c1",
-      userId: "u2",
-    });
+    await runMutation(() =>
+      assign.result.current.mutateAsync({
+        containerId: "c1",
+        userId: "u2",
+      }),
+    );
     expect(calls[0]).toEqual({
       method: "POST",
       path: "/community/container-members/assign-role",
@@ -119,10 +131,12 @@ describe("community member hooks — route correctness", () => {
 
     calls.length = 0;
     const remove = renderHook(() => hooks.useRemoveModerator(), { wrapper });
-    await remove.result.current.mutateAsync({
-      containerId: "c1",
-      userId: "u2",
-    });
+    await runMutation(() =>
+      remove.result.current.mutateAsync({
+        containerId: "c1",
+        userId: "u2",
+      }),
+    );
     expect(calls[0]?.body).toEqual({
       containerId: "c1",
       userId: "u2",
@@ -132,7 +146,9 @@ describe("community member hooks — route correctness", () => {
 
   it("useAssignOwner upserts role owner", async () => {
     const { result } = renderHook(() => hooks.useAssignOwner(), { wrapper });
-    await result.current.mutateAsync({ containerId: "c1", userId: "u2" });
+    await runMutation(() =>
+      result.current.mutateAsync({ containerId: "c1", userId: "u2" }),
+    );
     expect(calls[0]?.body).toEqual({
       containerId: "c1",
       userId: "u2",
@@ -155,9 +171,11 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
 
   it("useCreateThread posts the flat threads collection with containerId in the body", async () => {
     const { result } = renderHook(() => hooks.useCreateThread(), { wrapper });
-    await result.current
-      .mutateAsync({ containerId: "c1", title: "t", body: "b" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      result.current
+        .mutateAsync({ containerId: "c1", title: "t", body: "b" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/community/threads");
     expect(calls[0]?.body).toEqual({
@@ -169,9 +187,11 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
 
   it("useCreateReply posts the flat replies collection with threadId in the body", async () => {
     const { result } = renderHook(() => hooks.useCreateReply(), { wrapper });
-    await result.current
-      .mutateAsync({ threadId: "t1", containerId: "c1", body: "hello" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      result.current
+        .mutateAsync({ threadId: "t1", containerId: "c1", body: "hello" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/community/replies");
     expect(calls[0]?.body).toEqual({
@@ -196,9 +216,11 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
     const { result } = renderHook(() => hooks.useAddThreadReaction(), {
       wrapper,
     });
-    await result.current
-      .mutateAsync({ threadId: "t1", containerId: "c1", emoji: "👍" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      result.current
+        .mutateAsync({ threadId: "t1", containerId: "c1", emoji: "👍" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.path).toBe("/community/reactions");
     expect(calls[0]?.body).toEqual({
       targetId: "t1",
@@ -213,9 +235,15 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
     const { result } = renderHook(() => hooks.useRemoveThreadReaction(), {
       wrapper,
     });
-    await result.current
-      .mutateAsync({ reactionId: "r-9", threadId: "t1", containerId: "c1" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      result.current
+        .mutateAsync({
+          reactionId: "r-9",
+          threadId: "t1",
+          containerId: "c1",
+        })
+        .catch(() => undefined),
+    );
     expect(calls[0]).toEqual({
       method: "DELETE",
       path: "/community/reactions/r-9",
@@ -239,27 +267,33 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
   // pagination-search-ban-hooks.test.tsx.
   it("thread moderation ops hit the flat named-op routes", async () => {
     const pin = renderHook(() => hooks.usePinThread(), { wrapper });
-    await pin.result.current
-      .mutateAsync({ threadId: "t1", containerId: "c1" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      pin.result.current
+        .mutateAsync({ threadId: "t1", containerId: "c1" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.method).toBe("PATCH");
     expect(calls[0]?.path).toBe("/community/threads/pin");
     expect(calls[0]?.body).toEqual({ id: "t1", pinned: true });
 
     calls.length = 0;
     const unlock = renderHook(() => hooks.useUnlockThread(), { wrapper });
-    await unlock.result.current
-      .mutateAsync({ threadId: "t1", containerId: "c1" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      unlock.result.current
+        .mutateAsync({ threadId: "t1", containerId: "c1" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.method).toBe("PATCH");
     expect(calls[0]?.path).toBe("/community/threads/unlock");
     expect(calls[0]?.body).toEqual({ id: "t1", locked: false });
 
     calls.length = 0;
     const publish = renderHook(() => hooks.usePublishThread(), { wrapper });
-    await publish.result.current
-      .mutateAsync({ threadId: "t1", containerId: "c1" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      publish.result.current
+        .mutateAsync({ threadId: "t1", containerId: "c1" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/community/threads/publish");
     expect(calls[0]?.body).toEqual({ id: "t1" });
@@ -290,7 +324,9 @@ describe("notification hooks — route correctness", () => {
     const { result } = renderHook(() => hooks.useMarkAllNotificationsSeen(), {
       wrapper,
     });
-    await result.current.mutateAsync().catch(() => undefined);
+    await runMutation(() =>
+      result.current.mutateAsync().catch(() => undefined),
+    );
     expect(calls[0]).toMatchObject({
       method: "POST",
       path: "/notifications/notifications/mark-all-seen",
@@ -301,9 +337,11 @@ describe("notification hooks — route correctness", () => {
     const { result } = renderHook(() => hooks.useMarkNotificationRead(), {
       wrapper,
     });
-    await result.current
-      .mutateAsync({ notificationId: "n-1" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      result.current
+        .mutateAsync({ notificationId: "n-1" })
+        .catch(() => undefined),
+    );
     expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/notifications/notifications/mark-read");
     expect(calls[0]?.body).toMatchObject({ id: "n-1", read: true });
@@ -313,7 +351,9 @@ describe("notification hooks — route correctness", () => {
     const { result } = renderHook(() => hooks.useMarkAllNotificationsRead(), {
       wrapper,
     });
-    await result.current.mutateAsync().catch(() => undefined);
+    await runMutation(() =>
+      result.current.mutateAsync().catch(() => undefined),
+    );
     expect(calls[0]).toMatchObject({
       method: "POST",
       path: "/notifications/notifications/mark-all-read",
@@ -324,9 +364,11 @@ describe("notification hooks — route correctness", () => {
     const { result } = renderHook(() => hooks.useDismissNotification(), {
       wrapper,
     });
-    await result.current
-      .mutateAsync({ notificationId: "n-1" })
-      .catch(() => undefined);
+    await runMutation(() =>
+      result.current
+        .mutateAsync({ notificationId: "n-1" })
+        .catch(() => undefined),
+    );
     expect(calls[0]).toMatchObject({
       method: "DELETE",
       path: "/notifications/notifications/n-1",

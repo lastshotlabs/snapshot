@@ -600,6 +600,11 @@
       "import": "./dist/ui/icon.js",
       "require": "./dist/ui/icon.cjs"
     },
+    "./ui/tokens": {
+      "types": "./dist-types/ui/tokens/index.d.ts",
+      "import": "./dist/ui/tokens.js",
+      "require": "./dist/ui/tokens.cjs"
+    },
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js",

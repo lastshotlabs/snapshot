@@ -37,6 +37,7 @@ export default defineConfig([
       ui: "src/ui.ts",
       ...componentTsupEntries(),
       "ui/icon": "src/ui/icon.ts",
+      "ui/tokens": "src/ui/tokens/index.ts",
     },
     format: ["esm", "cjs"],
     dts: false,
