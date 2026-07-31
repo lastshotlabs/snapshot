@@ -302,6 +302,7 @@ export function SliderField({
             <>
               <InputControl
                 type="range"
+                ariaLabel={label ? `${label} minimum` : "Minimum value"}
                 min={String(min)}
                 max={String(max)}
                 step={step}
@@ -322,6 +323,7 @@ export function SliderField({
               />
               <InputControl
                 type="range"
+                ariaLabel={label ? `${label} maximum` : "Maximum value"}
                 min={String(min)}
                 max={String(max)}
                 step={step}
@@ -344,6 +346,7 @@ export function SliderField({
           ) : (
             <InputControl
               type="range"
+              ariaLabel={label ?? "Value"}
               min={String(min)}
               max={String(max)}
               step={step}

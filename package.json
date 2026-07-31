@@ -116,6 +116,7 @@
     "docs:impact": "node --experimental-strip-types scripts/docs/impact.ts",
     "docs:coverage": "node --experimental-strip-types scripts/docs/coverage.ts",
     "components:coverage": "node --experimental-strip-types scripts/docs/component-coverage.ts",
+    "components:test-coverage": "node scripts/check-component-tests.mjs",
     "storybook:generate": "bun scripts/storybook/generate-component-stories.ts",
     "storybook:coverage": "bun scripts/storybook/check-component-stories.ts",
     "storybook:dev": "bun run storybook:generate && storybook dev -p 6006",

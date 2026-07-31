@@ -13,10 +13,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  formatting:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v6
         with:
@@ -29,6 +31,17 @@ jobs:
 
       - name: Check formatting
         run: npm run format:check
+
+      - name: Check component-test ratchet
+        run: npm run components:test-coverage
+        env:
+          COMPONENT_TEST_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
 
   installed-consumers:
     runs-on: ubuntu-latest
