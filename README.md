@@ -152,18 +152,18 @@ export function LoginForm() {
 
 Common runtime hooks include:
 
-| Area | Hooks and helpers |
-| --- | --- |
-| Auth | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword` |
-| Account | `useResetPassword`, `useVerifyEmail`, `useSetPassword`, `useDeleteAccount`, `useSessions` |
-| MFA | `usePendingMfaChallenge`, `useMfaVerify`, `useMfaSetup`, `useMfaMethods` |
-| OAuth | `getOAuthUrl`, `getLinkUrl`, `useOAuthExchange`, `useOAuthUnlink` |
-| WebAuthn | `useWebAuthnRegisterOptions`, `useWebAuthnRegister`, `usePasskeyLogin` |
-| Realtime | `useSocket`, `useRoom`, `useRoomEvent`, `useSSE`, `useSseEvent` |
-| Community | container, thread, reply, reaction, moderation, notification, and search hooks |
-| Webhooks | endpoint, delivery, and test-delivery hooks |
-| Routing | `protect`, `guest`, `protectedBeforeLoad`, `guestBeforeLoad`, `setNavigator` |
-| Primitives | `api`, `queryClient`, `tokenStorage`, `useWebSocketManager` |
+| Area       | Hooks and helpers                                                                         |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| Auth       | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword`                    |
+| Account    | `useResetPassword`, `useVerifyEmail`, `useSetPassword`, `useDeleteAccount`, `useSessions` |
+| MFA        | `usePendingMfaChallenge`, `useMfaVerify`, `useMfaSetup`, `useMfaMethods`                  |
+| OAuth      | `getOAuthUrl`, `getLinkUrl`, `useOAuthExchange`, `useOAuthUnlink`                         |
+| WebAuthn   | `useWebAuthnRegisterOptions`, `useWebAuthnRegister`, `usePasskeyLogin`                    |
+| Realtime   | `useSocket`, `useRoom`, `useRoomEvent`, `useSSE`, `useSseEvent`                           |
+| Community  | container, thread, reply, reaction, moderation, notification, and search hooks            |
+| Webhooks   | endpoint, delivery, and test-delivery hooks                                               |
+| Routing    | `protect`, `guest`, `protectedBeforeLoad`, `guestBeforeLoad`, `setNavigator`              |
+| Primitives | `api`, `queryClient`, `tokenStorage`, `useWebSocketManager`                               |
 
 ## Route Guards
 
@@ -220,10 +220,7 @@ import react from "@vitejs/plugin-react";
 import { snapshotSync } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    snapshotSync({ file: "./schema.json", zod: true }),
-  ],
+  plugins: [react(), snapshotSync({ file: "./schema.json", zod: true })],
 });
 ```
 
@@ -344,19 +341,19 @@ export default defineConfig({
 
 ## CLI
 
-| Command | Purpose |
-| --- | --- |
-| `snapshot init` | Scaffold a new code-first Snapshot application |
+| Command         | Purpose                                             |
+| --------------- | --------------------------------------------------- |
+| `snapshot init` | Scaffold a new code-first Snapshot application      |
 | `snapshot sync` | Generate API types and hooks from an OpenAPI schema |
 
 ## Package Entry Points
 
-| Import | Purpose |
-| --- | --- |
-| `@lastshotlabs/snapshot` | `createSnapshot`, runtime hooks, auth/account/community/webhook types |
-| `@lastshotlabs/snapshot/ui` | Standalone UI components, tokens, actions, hooks, icons |
-| `@lastshotlabs/snapshot/ui/rich-input` | Focused rich input component bundle |
-| `@lastshotlabs/snapshot/ui/emoji-picker` | Focused emoji picker component bundle |
-| `@lastshotlabs/snapshot/ui/gif-picker` | Focused GIF picker component bundle |
-| `@lastshotlabs/snapshot/vite` | `snapshotSync`, `snapshotSsr` |
-| `@lastshotlabs/snapshot/ssr` | React SSR, RSC, PPR, cache, and prefetch helpers |
+| Import                                   | Purpose                                                               |
+| ---------------------------------------- | --------------------------------------------------------------------- |
+| `@lastshotlabs/snapshot`                 | `createSnapshot`, runtime hooks, auth/account/community/webhook types |
+| `@lastshotlabs/snapshot/ui`              | Standalone UI components, tokens, actions, hooks, icons               |
+| `@lastshotlabs/snapshot/ui/rich-input`   | Focused rich input component bundle                                   |
+| `@lastshotlabs/snapshot/ui/emoji-picker` | Focused emoji picker component bundle                                 |
+| `@lastshotlabs/snapshot/ui/gif-picker`   | Focused GIF picker component bundle                                   |
+| `@lastshotlabs/snapshot/vite`            | `snapshotSync`, `snapshotSsr`                                         |
+| `@lastshotlabs/snapshot/ssr`             | React SSR, RSC, PPR, cache, and prefetch helpers                      |

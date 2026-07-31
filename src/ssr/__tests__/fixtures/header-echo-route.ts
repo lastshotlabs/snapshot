@@ -1,6 +1,4 @@
-export async function load(ctx: {
-  headers: Headers;
-}): Promise<{
+export async function load(ctx: { headers: Headers }): Promise<{
   data: {
     cookie: string | null;
     userAgent: string | null;

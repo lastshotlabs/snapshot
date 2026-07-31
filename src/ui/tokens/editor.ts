@@ -174,7 +174,9 @@ function mapToPersistedOverrides(
   return Object.fromEntries(overrides.entries());
 }
 
-function parsePersistedOverrides(value: string | null): Record<string, string> | null {
+function parsePersistedOverrides(
+  value: string | null,
+): Record<string, string> | null {
   if (!value) {
     return null;
   }
@@ -264,7 +266,10 @@ export function useTokenEditor(): TokenEditor {
         return;
       }
 
-      if (persistTarget === "localStorage" || persistTarget === "sessionStorage") {
+      if (
+        persistTarget === "localStorage" ||
+        persistTarget === "sessionStorage"
+      ) {
         if (typeof window === "undefined") {
           return;
         }
@@ -289,18 +294,21 @@ export function useTokenEditor(): TokenEditor {
     persistOverrides(mapToPersistedOverrides(overridesRef.current));
   }, [persistOverrides]);
 
-  const applyOverride = useCallback((path: string, value: string) => {
-    if (path.startsWith("darkColors.")) {
-      overridesRef.current.set(path, value);
-      renderDarkOverrides();
-      return;
-    }
+  const applyOverride = useCallback(
+    (path: string, value: string) => {
+      if (path.startsWith("darkColors.")) {
+        overridesRef.current.set(path, value);
+        renderDarkOverrides();
+        return;
+      }
 
-    const cssVar = tokenPathToCssVar(path);
-    const cssValue = convertToCssValue(path, value);
-    document.documentElement.style.setProperty(cssVar, cssValue);
-    overridesRef.current.set(path, value);
-  }, [renderDarkOverrides]);
+      const cssVar = tokenPathToCssVar(path);
+      const cssValue = convertToCssValue(path, value);
+      document.documentElement.style.setProperty(cssVar, cssValue);
+      overridesRef.current.set(path, value);
+    },
+    [renderDarkOverrides],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -308,7 +316,10 @@ export function useTokenEditor(): TokenEditor {
     const hydrate = async () => {
       let restored: Record<string, string> | null = null;
 
-      if (persistTarget === "localStorage" || persistTarget === "sessionStorage") {
+      if (
+        persistTarget === "localStorage" ||
+        persistTarget === "sessionStorage"
+      ) {
         if (typeof window !== "undefined") {
           const storage =
             persistTarget === "localStorage"

@@ -47,9 +47,12 @@ export function createGa4Provider(): AnalyticsProvider {
         return;
       }
 
-      await injectScript(`https://www.googletagmanager.com/gtag/js?id=${apiKey}`);
-      const dataLayer = ((window as unknown as { dataLayer?: unknown[] })
-        .dataLayer ??= []);
+      await injectScript(
+        `https://www.googletagmanager.com/gtag/js?id=${apiKey}`,
+      );
+      const dataLayer = ((
+        window as unknown as { dataLayer?: unknown[] }
+      ).dataLayer ??= []);
       const gtag = (
         window as unknown as {
           gtag?: (...args: unknown[]) => void;
@@ -60,7 +63,10 @@ export function createGa4Provider(): AnalyticsProvider {
         gtag("js", new Date());
         gtag("config", apiKey, config.config ?? {});
       } else {
-        dataLayer.push(["js", new Date()], ["config", apiKey, config.config ?? {}]);
+        dataLayer.push(
+          ["js", new Date()],
+          ["config", apiKey, config.config ?? {}],
+        );
       }
 
       initialized = true;

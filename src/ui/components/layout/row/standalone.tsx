@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -77,7 +77,7 @@ export function RowBase({
   children,
 }: RowBaseProps) {
   const gap = useResponsiveValue(gapProp);
-  const resolvedGap = gap ? GAP_MAP[gap] ?? gap : undefined;
+  const resolvedGap = gap ? (GAP_MAP[gap] ?? gap) : undefined;
   const rootId = id ?? "row";
 
   const rootSurface = resolveSurfacePresentation({

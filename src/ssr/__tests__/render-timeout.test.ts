@@ -4,10 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SsrRequestContext, SsrShellShape } from "../types";
 
 const renderToReadableStreamMock = vi.fn(
-  (
-    _element: React.ReactElement,
-    options?: { signal?: AbortSignal },
-  ) =>
+  (_element: React.ReactElement, options?: { signal?: AbortSignal }) =>
     new ReadableStream<Uint8Array>({
       start(controller) {
         options?.signal?.addEventListener("abort", () => {
@@ -18,9 +15,10 @@ const renderToReadableStreamMock = vi.fn(
 );
 
 vi.mock("react-dom/server", async () => {
-  const actual = await vi.importActual<typeof import("react-dom/server")>(
-    "react-dom/server",
-  );
+  const actual =
+    await vi.importActual<typeof import("react-dom/server")>(
+      "react-dom/server",
+    );
   return {
     ...actual,
     renderToReadableStream: renderToReadableStreamMock,

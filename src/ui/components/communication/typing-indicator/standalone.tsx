@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";

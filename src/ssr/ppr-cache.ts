@@ -96,7 +96,10 @@ export function createPprCache(): PprCache {
         );
         return;
       }
-      store.set(path, Object.freeze({ shellHtml: shell.shellHtml, cachedAt: Date.now() }));
+      store.set(
+        path,
+        Object.freeze({ shellHtml: shell.shellHtml, cachedAt: Date.now() }),
+      );
     },
 
     get(path: string): PprCacheEntry | undefined {

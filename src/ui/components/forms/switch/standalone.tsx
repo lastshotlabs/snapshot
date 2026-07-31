@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useCallback, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -71,7 +71,9 @@ export function SwitchField({
   style,
   slots,
 }: SwitchFieldProps) {
-  const [internalChecked, setInternalChecked] = useState(controlledChecked ?? defaultChecked);
+  const [internalChecked, setInternalChecked] = useState(
+    controlledChecked ?? defaultChecked,
+  );
   const checked = controlledChecked ?? internalChecked;
   const dims = SIZE_MAP[sizeProp];
 

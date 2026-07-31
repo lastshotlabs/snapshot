@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -79,11 +79,7 @@ export function SectionBase({
       flexDirection: "column",
       width: "100%",
       minHeight:
-        height === "screen"
-          ? "100vh"
-          : height === "auto"
-            ? undefined
-            : height,
+        height === "screen" ? "100vh" : height === "auto" ? undefined : height,
       alignItems: align ? ALIGN_MAP[align] : undefined,
       justifyContent: justify ? JUSTIFY_MAP[justify] : undefined,
       style: bleed

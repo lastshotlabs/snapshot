@@ -8,20 +8,20 @@
 
 Each phase has a dedicated implementation spec that a zero-context agent can execute.
 
-| Phase | Spec File | Lines | Priority |
-|---|---|---|---|
-| A | [`phase-a-css-foundation.md`](phase-a-css-foundation.md) | 1268 | **P0** |
-| B | [`phase-b-layout.md`](phase-b-layout.md) | 666 | P1 |
-| C | [`phase-c-styling.md`](phase-c-styling.md) | 475 | P1 |
-| D | [`phase-d-interactivity.md`](phase-d-interactivity.md) | 1391 | P2 |
-| E | [`phase-e-state-machine.md`](phase-e-state-machine.md) | 1163 | P1 |
-| F | [`phase-f-realtime.md`](phase-f-realtime.md) | 1071 | P3 |
-| G | [`phase-g-navigation.md`](phase-g-navigation.md) | 1006 | P2 |
-| H | [`phase-h-components.md`](phase-h-components.md) | 1569 | P2 |
-| I | [`phase-i-presets.md`](phase-i-presets.md) | 1283 | P3 |
-| J | [`phase-j-accessibility.md`](phase-j-accessibility.md) | 965 | P4 |
-| K | [`phase-k-performance.md`](phase-k-performance.md) | 984 | P4 |
-| L | [`phase-l-dx.md`](phase-l-dx.md) | 1257 | P4 |
+| Phase | Spec File                                                | Lines | Priority |
+| ----- | -------------------------------------------------------- | ----- | -------- |
+| A     | [`phase-a-css-foundation.md`](phase-a-css-foundation.md) | 1268  | **P0**   |
+| B     | [`phase-b-layout.md`](phase-b-layout.md)                 | 666   | P1       |
+| C     | [`phase-c-styling.md`](phase-c-styling.md)               | 475   | P1       |
+| D     | [`phase-d-interactivity.md`](phase-d-interactivity.md)   | 1391  | P2       |
+| E     | [`phase-e-state-machine.md`](phase-e-state-machine.md)   | 1163  | P1       |
+| F     | [`phase-f-realtime.md`](phase-f-realtime.md)             | 1071  | P3       |
+| G     | [`phase-g-navigation.md`](phase-g-navigation.md)         | 1006  | P2       |
+| H     | [`phase-h-components.md`](phase-h-components.md)         | 1569  | P2       |
+| I     | [`phase-i-presets.md`](phase-i-presets.md)               | 1283  | P3       |
+| J     | [`phase-j-accessibility.md`](phase-j-accessibility.md)   | 965   | P4       |
+| K     | [`phase-k-performance.md`](phase-k-performance.md)       | 984   | P4       |
+| L     | [`phase-l-dx.md`](phase-l-dx.md)                         | 1257  | P4       |
 
 **Total: 13,098 lines of implementation specs.**
 
@@ -50,6 +50,7 @@ Each phase has a dedicated implementation spec that a zero-context agent can exe
 ## 1. Current State & Gap Analysis
 
 ### What Works Today
+
 - 76 registered components across 14 categories
 - Design token system with OKLCH color derivation, 8 built-in flavors
 - `id`/`from` data binding between components
@@ -62,32 +63,32 @@ Each phase has a dedicated implementation spec that a zero-context agent can exe
 
 **Root cause:** The playground has **1,031 lines of production CSS** (`playground/src/styles.css`) that manifest-mode apps never receive. This includes:
 
-| What Playground Gets | What Manifest Apps Get |
-|---|---|
-| CSS reset (box-sizing, margin, padding) | Nothing |
+| What Playground Gets                                 | What Manifest Apps Get                |
+| ---------------------------------------------------- | ------------------------------------- |
+| CSS reset (box-sizing, margin, padding)              | Nothing                               |
 | Typography defaults (font-family, size, line-height) | Token CSS vars (unused by components) |
-| Form input styling (borders, focus, placeholders) | Raw browser defaults |
-| Component container styles (cards, tables, sections) | Bare divs |
-| Dark mode `.dark` class management | Token vars but no class toggling |
-| Tailwind `@import "tailwindcss"` | No utility classes |
-| Responsive breakpoints | Nothing |
+| Form input styling (borders, focus, placeholders)    | Raw browser defaults                  |
+| Component container styles (cards, tables, sections) | Bare divs                             |
+| Dark mode `.dark` class management                   | Token vars but no class toggling      |
+| Tailwind `@import "tailwindcss"`                     | No utility classes                    |
+| Responsive breakpoints                               | Nothing                               |
 
 **Components hardcode inline styles instead of reading token CSS variables.** Tokens are generated but never consumed. The entire token infrastructure is wasted.
 
 ### The Vision Gap (Ranked by Impact)
 
-| Gap | Impact | Blocks |
-|---|---|---|
-| No CSS baseline in manifest mode | **Critical** — everything looks broken | All visual quality |
-| main.tsx exists (should be zero-code) | **High** — breaks "one JSON file" promise | Developer experience |
-| No className/Tailwind in manifest mode | **High** — no fine-grained styling | Visual polish |
-| No route transitions / animations | **Medium** — feels like page reloads | SPA feel |
-| No client-side computed state | **Medium** — can't derive values | Dynamic UIs |
-| No drag-and-drop beyond kanban | **Medium** — limits interactivity | Rich interactions |
-| No keyboard shortcuts from config | **Medium** — power user experience | Discord-level UX |
-| No WebSocket implementation depth | **Medium** — real-time is schema-only | Live apps |
-| No page presets | **Low** — convenience, not capability | Developer velocity |
-| No infinite scroll / virtualization | **Low** — works at small scale | Large datasets |
+| Gap                                    | Impact                                    | Blocks               |
+| -------------------------------------- | ----------------------------------------- | -------------------- |
+| No CSS baseline in manifest mode       | **Critical** — everything looks broken    | All visual quality   |
+| main.tsx exists (should be zero-code)  | **High** — breaks "one JSON file" promise | Developer experience |
+| No className/Tailwind in manifest mode | **High** — no fine-grained styling        | Visual polish        |
+| No route transitions / animations      | **Medium** — feels like page reloads      | SPA feel             |
+| No client-side computed state          | **Medium** — can't derive values          | Dynamic UIs          |
+| No drag-and-drop beyond kanban         | **Medium** — limits interactivity         | Rich interactions    |
+| No keyboard shortcuts from config      | **Medium** — power user experience        | Discord-level UX     |
+| No WebSocket implementation depth      | **Medium** — real-time is schema-only     | Live apps            |
+| No page presets                        | **Low** — convenience, not capability     | Developer velocity   |
+| No infinite scroll / virtualization    | **Low** — works at small scale            | Large datasets       |
 
 ---
 
@@ -104,7 +105,10 @@ import manifest from "../snapshot.manifest.json";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ManifestApp manifest={manifest as never} apiUrl={import.meta.env.VITE_API_URL ?? "http://localhost:2323"} />
+    <ManifestApp
+      manifest={manifest as never}
+      apiUrl={import.meta.env.VITE_API_URL ?? "http://localhost:2323"}
+    />
   </React.StrictMode>,
 );
 ```
@@ -112,6 +116,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 ### Why This Is Wrong
 
 The "one JSON file" vision means a consuming app ships:
+
 - `snapshot.manifest.json`
 - `index.html`
 - `package.json`
@@ -132,6 +137,7 @@ export default defineConfig({
 ```
 
 The plugin:
+
 1. Auto-generates a virtual entry module (`virtual:snapshot-app`)
 2. Reads `snapshot.manifest.json` from project root
 3. Injects React, ReactDOM, ManifestApp, CSS baseline, Tailwind bridge
@@ -163,11 +169,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   "app": {
     "title": "Budget",
     "api": {
-      "baseUrl": { "env": "VITE_API_URL", "default": "http://localhost:2323" }
+      "baseUrl": { "env": "VITE_API_URL", "default": "http://localhost:2323" },
     },
     "shell": "sidebar",
-    "home": "/"
-  }
+    "home": "/",
+  },
   // ... rest of manifest
 }
 ```
@@ -186,7 +192,13 @@ The `app.api.baseUrl` replaces the `apiUrl` prop. Everything is in the JSON.
 
 ```css
 /* Auto-injected by Snapshot */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 html {
   font-family: var(--sn-font-sans, system-ui, sans-serif);
   font-size: var(--sn-font-size-base, 16px);
@@ -195,9 +207,22 @@ html {
   background: var(--sn-color-background);
   -webkit-font-smoothing: antialiased;
 }
-body { min-height: 100dvh; }
-img, video, svg { display: block; max-width: 100%; }
-input, button, textarea, select { font: inherit; color: inherit; }
+body {
+  min-height: 100dvh;
+}
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
 ```
 
 ### A2: Component Stylesheet (Token-Driven)
@@ -243,11 +268,14 @@ Every component gets baseline CSS that reads token vars. Example:
 ### A3: Wire Token Vars Through Components
 
 **Audit every component implementation.** Replace:
+
 ```tsx
 // BAD: hardcoded
 <div style={{ padding: "16px", borderRadius: "8px", background: "#1e1e2e" }}>
 ```
+
 With:
+
 ```tsx
 // GOOD: token-driven
 <div style={{
@@ -262,6 +290,7 @@ Or better: remove inline styles entirely and let the component stylesheet handle
 ### A4: Dark Mode Class Management
 
 `ManifestApp` manages the `.dark` class on `<html>`:
+
 - Read initial state from `manifest.theme.mode` or `localStorage`
 - Toggle via `set-theme` action
 - Persist preference to `localStorage`
@@ -291,17 +320,26 @@ Support Google Fonts or custom fonts from manifest:
 {
   "theme": {
     "fonts": {
-      "sans": { "family": "Inter", "source": "google", "weights": [400, 500, 600, 700] },
+      "sans": {
+        "family": "Inter",
+        "source": "google",
+        "weights": [400, 500, 600, 700],
+      },
       "mono": { "family": "JetBrains Mono", "source": "google" },
-      "display": { "family": "Cal Sans", "source": "url", "url": "/fonts/CalSans.woff2" }
-    }
-  }
+      "display": {
+        "family": "Cal Sans",
+        "source": "url",
+        "url": "/fonts/CalSans.woff2",
+      },
+    },
+  },
 }
 ```
 
 `ManifestApp` injects `<link>` tags or `@font-face` rules automatically.
 
 ### Acceptance Criteria
+
 - [ ] Budget-fe looks polished with zero code changes — just upgrade Snapshot
 - [ ] Every component reads token CSS vars, not hardcoded values
 - [ ] Dark mode toggles correctly
@@ -338,12 +376,13 @@ Support Google Fonts or custom fonts from manifest:
 ```
 
 Responsive areas:
+
 ```jsonc
 {
   "areas": {
     "default": ["main", "main"],
-    "lg": ["sidebar main", "sidebar main"]
-  }
+    "lg": ["sidebar main", "sidebar main"],
+  },
 }
 ```
 
@@ -369,17 +408,31 @@ Responsive areas:
     "overlay": "rgba(0,0,0,0.6)",
     "position": "center",
     "size": "cover",
-    "fixed": true           // parallax scrolling
+    "fixed": true, // parallax scrolling
   },
-  "height": "60vh",         // or "screen" for full viewport
+  "height": "60vh", // or "screen" for full viewport
   "align": "center",
   "justify": "center",
-  "bleed": true,            // break out of parent container
+  "bleed": true, // break out of parent container
   "children": [
-    { "type": "heading", "text": "Welcome", "level": 1, "className": "text-5xl text-white" },
-    { "type": "text", "text": "Build anything from JSON", "className": "text-xl text-white/80" },
-    { "type": "button", "label": "Get Started", "size": "lg", "variant": "default" }
-  ]
+    {
+      "type": "heading",
+      "text": "Welcome",
+      "level": 1,
+      "className": "text-5xl text-white",
+    },
+    {
+      "type": "text",
+      "text": "Build anything from JSON",
+      "className": "text-xl text-white/80",
+    },
+    {
+      "type": "button",
+      "label": "Get Started",
+      "size": "lg",
+      "variant": "default",
+    },
+  ],
 }
 ```
 
@@ -388,10 +441,8 @@ Responsive areas:
 ```jsonc
 {
   "type": "stack",
-  "sticky": true,          // or { "top": "0", "zIndex": 10 }
-  "children": [
-    { "type": "heading", "text": "Section Header" }
-  ]
+  "sticky": true, // or { "top": "0", "zIndex": 10 }
+  "children": [{ "type": "heading", "text": "Section Header" }],
 }
 ```
 
@@ -403,9 +454,9 @@ Any component can be made sticky via the `sticky` prop in its config.
 {
   "type": "image",
   "src": "/photo.jpg",
-  "aspectRatio": "16/9",    // or "1/1", "4/3", "auto"
-  "objectFit": "cover",     // "contain", "fill", "none"
-  "objectPosition": "top"
+  "aspectRatio": "16/9", // or "1/1", "4/3", "auto"
+  "objectFit": "cover", // "contain", "fill", "none"
+  "objectPosition": "top",
 }
 ```
 
@@ -415,7 +466,7 @@ Any component can be made sticky via the `sticky` prop in its config.
 {
   "type": "nav",
   "variant": "sidebar",
-  "visible": { "default": false, "lg": true }   // hidden on mobile, shown on desktop
+  "visible": { "default": false, "lg": true }, // hidden on mobile, shown on desktop
 }
 ```
 
@@ -443,6 +494,7 @@ Any component can be made sticky via the `sticky` prop in its config.
 ```
 
 ### Acceptance Criteria
+
 - [ ] CSS Grid named areas work with responsive breakpoints
 - [ ] Hero sections with background images, overlays, parallax
 - [ ] Sticky elements work anywhere in the tree
@@ -476,8 +528,8 @@ Already partially spec'd. Every component accepts `className`:
   "style": {
     "background": "linear-gradient(135deg, var(--sn-color-primary), var(--sn-color-accent))",
     "backdropFilter": "blur(12px)",
-    "WebkitBackdropFilter": "blur(12px)"
-  }
+    "WebkitBackdropFilter": "blur(12px)",
+  },
 }
 ```
 
@@ -487,27 +539,28 @@ Already partially spec'd. Every component accepts `className`:
 {
   "type": "stat-card",
   "animation": {
-    "enter": "fade-up",         // preset: "fade"|"fade-up"|"fade-down"|"slide-left"|"slide-right"|"scale"|"bounce"
-    "duration": "normal",       // token: "instant"|"fast"|"normal"|"slow" or ms number
-    "delay": 100,               // ms, useful for staggered lists
-    "easing": "spring"          // token or cubic-bezier string
-  }
+    "enter": "fade-up", // preset: "fade"|"fade-up"|"fade-down"|"slide-left"|"slide-right"|"scale"|"bounce"
+    "duration": "normal", // token: "instant"|"fast"|"normal"|"slow" or ms number
+    "delay": 100, // ms, useful for staggered lists
+    "easing": "spring", // token or cubic-bezier string
+  },
 }
 ```
 
 Staggered children:
+
 ```jsonc
 {
   "type": "row",
   "animation": {
     "enter": "fade-up",
-    "stagger": 50               // ms between each child's animation start
+    "stagger": 50, // ms between each child's animation start
   },
   "children": [
-    { "type": "stat-card", "..." : "..." },
-    { "type": "stat-card", "..." : "..." },
-    { "type": "stat-card", "..." : "..." }
-  ]
+    { "type": "stat-card", "...": "..." },
+    { "type": "stat-card", "...": "..." },
+    { "type": "stat-card", "...": "..." },
+  ],
 }
 ```
 
@@ -517,7 +570,7 @@ Staggered children:
 {
   "type": "card",
   "className": "hover:shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer",
-  "action": { "type": "navigate", "to": "/details/{id}" }
+  "action": { "type": "navigate", "to": "/details/{id}" },
 }
 ```
 
@@ -530,14 +583,14 @@ Tailwind handles this via `className`. No new schema needed beyond enabling Tail
   "type": "section",
   "background": {
     "gradient": {
-      "type": "linear",         // "linear"|"radial"|"conic"
-      "direction": "135deg",    // or "to-right", "to-bottom-right"
+      "type": "linear", // "linear"|"radial"|"conic"
+      "direction": "135deg", // or "to-right", "to-bottom-right"
       "stops": [
         { "color": "primary", "position": "0%" },
-        { "color": "accent", "position": "100%" }
-      ]
-    }
-  }
+        { "color": "accent", "position": "100%" },
+      ],
+    },
+  },
 }
 ```
 
@@ -546,9 +599,9 @@ Tailwind handles this via `className`. No new schema needed beyond enabling Tail
 ```jsonc
 {
   "type": "card",
-  "glass": true,                // shorthand for backdrop-blur + translucent bg
+  "glass": true, // shorthand for backdrop-blur + translucent bg
   // OR explicit:
-  "className": "bg-card/80 backdrop-blur-md border border-white/10"
+  "className": "bg-card/80 backdrop-blur-md border border-white/10",
 }
 ```
 
@@ -563,10 +616,10 @@ Tailwind handles this via `className`. No new schema needed beyond enabling Tail
         "track": "transparent",
         "thumb": "muted",
         "thumbHover": "primary",
-        "radius": "full"
-      }
-    }
-  }
+        "radius": "full",
+      },
+    },
+  },
 }
 ```
 
@@ -578,12 +631,13 @@ Token-driven but also overridable per-instance:
 {
   "type": "card",
   "tokens": {
-    "shadow": "0 20px 60px -10px rgba(0,0,0,0.3)"  // custom shadow per-instance
-  }
+    "shadow": "0 20px 60px -10px rgba(0,0,0,0.3)", // custom shadow per-instance
+  },
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Tailwind className works on every component
 - [ ] Inline style escape hatch works
 - [ ] Enter animations with presets and stagger
@@ -607,8 +661,8 @@ Token-driven but also overridable per-instance:
     "escape": { "type": "close-modal" },
     "ctrl+/": { "type": "navigate", "to": "/shortcuts" },
     "g then d": { "type": "navigate", "to": "/dashboard" },
-    "g then t": { "type": "navigate", "to": "/transactions" }
-  }
+    "g then t": { "type": "navigate", "to": "/transactions" },
+  },
 }
 ```
 
@@ -620,10 +674,14 @@ Token-driven but also overridable per-instance:
   "shortcuts": {
     "delete": [
       { "type": "confirm", "message": "Delete selected?" },
-      { "type": "api", "method": "DELETE", "endpoint": "/api/{selected.id}" }
+      { "type": "api", "method": "DELETE", "endpoint": "/api/{selected.id}" },
     ],
-    "enter": { "type": "open-modal", "modal": "edit", "payload": { "from": "self.selected" } }
-  }
+    "enter": {
+      "type": "open-modal",
+      "modal": "edit",
+      "payload": { "from": "self.selected" },
+    },
+  },
 }
 ```
 
@@ -639,19 +697,20 @@ Token-driven but also overridable per-instance:
     "type": "api",
     "method": "PATCH",
     "endpoint": "/api/tasks/reorder",
-    "body": { "ids": "{reorderedIds}" }
+    "body": { "ids": "{reorderedIds}" },
   },
-  "dropTargets": ["done-list"],       // allow dropping onto other components
+  "dropTargets": ["done-list"], // allow dropping onto other components
   "onDrop": {
     "type": "api",
     "method": "PATCH",
     "endpoint": "/api/tasks/{draggedItem.id}",
-    "body": { "status": "done" }
-  }
+    "body": { "status": "done" },
+  },
 }
 ```
 
 **File drag-and-drop:**
+
 ```jsonc
 {
   "type": "file-uploader",
@@ -662,8 +721,8 @@ Token-driven but also overridable per-instance:
     "type": "api",
     "method": "POST",
     "endpoint": "/api/files",
-    "body": "{files}"
-  }
+    "body": "{files}",
+  },
 }
 ```
 
@@ -673,31 +732,47 @@ Token-driven but also overridable per-instance:
 {
   "type": "section",
   "onScroll": {
-    "threshold": 100,                 // px from top
-    "enter": { "type": "set-value", "target": "header", "field": "compact", "value": true },
-    "leave": { "type": "set-value", "target": "header", "field": "compact", "value": false }
-  }
+    "threshold": 100, // px from top
+    "enter": {
+      "type": "set-value",
+      "target": "header",
+      "field": "compact",
+      "value": true,
+    },
+    "leave": {
+      "type": "set-value",
+      "target": "header",
+      "field": "compact",
+      "value": false,
+    },
+  },
 }
 ```
 
 **Infinite scroll:**
+
 ```jsonc
 {
   "type": "data-table",
   "pagination": {
     "type": "cursor",
     "pageSize": 25,
-    "infinite": true              // auto-load next page on scroll
-  }
+    "infinite": true, // auto-load next page on scroll
+  },
 }
 ```
 
 **Scroll to element:**
+
 ```jsonc
 {
   "type": "button",
   "label": "Jump to Comments",
-  "action": { "type": "scroll-to", "target": "comments-section", "behavior": "smooth" }
+  "action": {
+    "type": "scroll-to",
+    "target": "comments-section",
+    "behavior": "smooth",
+  },
 }
 ```
 
@@ -710,23 +785,25 @@ Token-driven but also overridable per-instance:
     {
       "name": "accountType",
       "type": "select",
-      "options": ["checking", "savings", "credit"]
+      "options": ["checking", "savings", "credit"],
     },
     {
       "name": "creditLimit",
       "type": "number",
       "visible": { "equals": [{ "from": "self.accountType" }, "credit"] },
-      "required": { "equals": [{ "from": "self.accountType" }, "credit"] }
+      "required": { "equals": [{ "from": "self.accountType" }, "credit"] },
     },
     {
       "name": "interestRate",
       "type": "number",
-      "visible": { "any": [
-        { "equals": [{ "from": "self.accountType" }, "credit"] },
-        { "equals": [{ "from": "self.accountType" }, "savings"] }
-      ]}
-    }
-  ]
+      "visible": {
+        "any": [
+          { "equals": [{ "from": "self.accountType" }, "credit"] },
+          { "equals": [{ "from": "self.accountType" }, "savings"] },
+        ],
+      },
+    },
+  ],
 }
 ```
 
@@ -741,8 +818,11 @@ Token-driven but also overridable per-instance:
       "type": "email",
       "validate": {
         "required": "Email is required",
-        "pattern": { "regex": "^[^@]+@[^@]+\\.[^@]+$", "message": "Invalid email" }
-      }
+        "pattern": {
+          "regex": "^[^@]+@[^@]+\\.[^@]+$",
+          "message": "Invalid email",
+        },
+      },
     },
     {
       "name": "password",
@@ -750,17 +830,17 @@ Token-driven but also overridable per-instance:
       "validate": {
         "required": true,
         "minLength": { "value": 8, "message": "At least 8 characters" },
-        "pattern": { "regex": "[A-Z]", "message": "Must contain uppercase" }
-      }
+        "pattern": { "regex": "[A-Z]", "message": "Must contain uppercase" },
+      },
     },
     {
       "name": "confirmPassword",
       "type": "password",
       "validate": {
-        "equals": { "field": "password", "message": "Passwords must match" }
-      }
-    }
-  ]
+        "equals": { "field": "password", "message": "Passwords must match" },
+      },
+    },
+  ],
 }
 ```
 
@@ -774,8 +854,8 @@ Token-driven but also overridable per-instance:
     "type": "api",
     "method": "GET",
     "endpoint": "/api/search?q={value}",
-    "debounce": 300                  // ms
-  }
+    "debounce": 300, // ms
+  },
 }
 ```
 
@@ -802,8 +882,8 @@ Token-driven but also overridable per-instance:
   "icon": "Copy",
   "action": [
     { "type": "copy-to-clipboard", "value": "https://app.com/share/{id}" },
-    { "type": "toast", "message": "Link copied!", "variant": "success" }
-  ]
+    { "type": "toast", "message": "Link copied!", "variant": "success" },
+  ],
 }
 ```
 
@@ -814,9 +894,9 @@ Token-driven but also overridable per-instance:
   "type": "stat-card",
   "data": "GET /api/metrics/active-users",
   "poll": {
-    "interval": 5000,             // ms
-    "pauseWhenHidden": true       // pause when tab not visible
-  }
+    "interval": 5000, // ms
+    "pauseWhenHidden": true, // pause when tab not visible
+  },
 }
 ```
 
@@ -830,16 +910,17 @@ Token-driven but also overridable per-instance:
       "title": "Delete Account",
       "message": "This action cannot be undone. Type 'DELETE' to confirm.",
       "variant": "destructive",
-      "requireInput": "DELETE",       // must type this string
+      "requireInput": "DELETE", // must type this string
       "confirmLabel": "Delete Forever",
-      "cancelLabel": "Keep Account"
+      "cancelLabel": "Keep Account",
     },
-    { "type": "api", "method": "DELETE", "endpoint": "/api/account" }
-  ]
+    { "type": "api", "method": "DELETE", "endpoint": "/api/account" },
+  ],
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Global and component-scoped keyboard shortcuts work
 - [ ] Generic drag-and-drop with reorder and cross-component drops
 - [ ] Infinite scroll on data tables and lists
@@ -866,8 +947,8 @@ Token-driven but also overridable per-instance:
     "tax": { "compute": "{ subtotal } * 0.08" },
     "total": { "compute": "{ subtotal } + { tax }" },
     "isEmpty": { "compute": "{ totalItems } === 0" },
-    "formattedTotal": { "compute": "{ total }", "format": "currency" }
-  }
+    "formattedTotal": { "compute": "{ total }", "format": "currency" },
+  },
 }
 ```
 
@@ -878,7 +959,7 @@ Anywhere a value is accepted, support expressions:
 ```jsonc
 {
   "type": "text",
-  "text": { "expr": "'Hello, ' + {global.user.firstName} + '!'" }
+  "text": { "expr": "'Hello, ' + {global.user.firstName} + '!'" },
 }
 ```
 
@@ -886,7 +967,7 @@ Anywhere a value is accepted, support expressions:
 {
   "type": "badge",
   "variant": { "expr": "{item.amount} > 0 ? 'success' : 'destructive'" },
-  "text": { "expr": "{item.amount} > 0 ? 'Income' : 'Expense'" }
+  "text": { "expr": "{item.amount} > 0 ? 'Income' : 'Expense'" },
 }
 ```
 
@@ -903,11 +984,11 @@ Anywhere a value is accepted, support expressions:
   "type": "data-table",
   "id": "transactions",
   "urlSync": {
-    "page": "page",           // ?page=2
-    "sort": "sort",           // ?sort=date:desc
-    "search": "q",            // ?q=groceries
-    "filters": "f"            // ?f=status:pending,type:expense
-  }
+    "page": "page", // ?page=2
+    "sort": "sort", // ?sort=date:desc
+    "search": "q", // ?q=groceries
+    "filters": "f", // ?f=status:pending,type:expense
+  },
 }
 ```
 
@@ -920,14 +1001,14 @@ Browser back/forward updates the component state. Component state changes update
   "state": {
     "sidebarCollapsed": {
       "default": false,
-      "persist": "localStorage"       // or "sessionStorage"
+      "persist": "localStorage", // or "sessionStorage"
     },
     "recentSearches": {
       "default": [],
       "persist": "localStorage",
-      "key": "budget-recent-searches"  // custom storage key
-    }
-  }
+      "key": "budget-recent-searches", // custom storage key
+    },
+  },
 }
 ```
 
@@ -941,12 +1022,12 @@ For small datasets already loaded:
   "data": { "from": "all-categories.data" },
   "clientFilter": {
     "field": "name",
-    "source": "search-input.value"      // filter by another component's value
+    "source": "search-input.value", // filter by another component's value
   },
   "clientSort": {
     "field": "name",
-    "direction": "asc"
-  }
+    "direction": "asc",
+  },
 }
 ```
 
@@ -961,14 +1042,14 @@ For small datasets already loaded:
       "condition": { "expr": "{result.requiresApproval}" },
       "then": [
         { "type": "navigate", "to": "/pending-approval/{result.id}" },
-        { "type": "toast", "message": "Sent for approval", "variant": "info" }
+        { "type": "toast", "message": "Sent for approval", "variant": "info" },
       ],
       "else": [
         { "type": "navigate", "to": "/orders/{result.id}" },
-        { "type": "toast", "message": "Order placed!", "variant": "success" }
-      ]
-    }
-  ]
+        { "type": "toast", "message": "Order placed!", "variant": "success" },
+      ],
+    },
+  ],
 }
 ```
 
@@ -982,17 +1063,18 @@ For small datasets already loaded:
     "action": {
       "type": "api",
       "method": "DELETE",
-      "endpoint": "/api/items/{item.id}"
+      "endpoint": "/api/items/{item.id}",
     },
     "onComplete": [
       { "type": "refresh", "target": "table" },
-      { "type": "toast", "message": "Deleted {count} items" }
-    ]
-  }
+      { "type": "toast", "message": "Deleted {count} items" },
+    ],
+  },
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Computed values with expression language (no eval)
 - [ ] Expressions work in text, visibility, variant — anywhere a value is used
 - [ ] URL state sync for tables and filters
@@ -1014,18 +1096,18 @@ For small datasets already loaded:
   "realtime": {
     "ws": {
       "url": { "env": "VITE_WS_URL", "default": "ws://localhost:2323/ws" },
-      "auth": true,                   // send auth token on connect
+      "auth": true, // send auth token on connect
       "reconnect": {
         "enabled": true,
         "maxAttempts": 10,
-        "backoff": "exponential"      // "linear"|"exponential"
+        "backoff": "exponential", // "linear"|"exponential"
       },
       "heartbeat": {
         "interval": 30000,
-        "message": { "type": "ping" }
-      }
-    }
-  }
+        "message": { "type": "ping" },
+      },
+    },
+  },
 }
 ```
 
@@ -1041,23 +1123,37 @@ For small datasets already loaded:
           "actions": [
             { "type": "refresh", "target": "transactions-table" },
             { "type": "refresh", "target": "net-worth-stat" },
-            { "type": "toast", "message": "New transaction: {event.description}", "variant": "info" }
-          ]
+            {
+              "type": "toast",
+              "message": "New transaction: {event.description}",
+              "variant": "info",
+            },
+          ],
         },
         "notification": {
           "actions": [
-            { "type": "set-value", "target": "global.notifications", "merge": "prepend", "value": "{event}" },
-            { "type": "toast", "message": "{event.title}" }
-          ]
+            {
+              "type": "set-value",
+              "target": "global.notifications",
+              "merge": "prepend",
+              "value": "{event}",
+            },
+            { "type": "toast", "message": "{event.title}" },
+          ],
         },
         "user.typing": {
           "actions": [
-            { "type": "set-value", "target": "typing-indicator", "field": "users", "value": "{event.users}" }
-          ]
-        }
-      }
-    }
-  }
+            {
+              "type": "set-value",
+              "target": "typing-indicator",
+              "field": "users",
+              "value": "{event.users}",
+            },
+          ],
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -1074,9 +1170,9 @@ New action type: `ws-send`
     "event": "message",
     "data": {
       "text": { "from": "message-input.value" },
-      "channelId": { "from": "route.params.channelId" }
-    }
-  }
+      "channelId": { "from": "route.params.channelId" },
+    },
+  },
 }
 ```
 
@@ -1090,12 +1186,17 @@ New action type: `ws-send`
       "events": {
         "price-update": {
           "actions": [
-            { "type": "set-value", "target": "price-display", "field": "value", "value": "{event.price}" }
-          ]
-        }
-      }
-    }
-  }
+            {
+              "type": "set-value",
+              "target": "price-display",
+              "field": "value",
+              "value": "{event.price}",
+            },
+          ],
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -1106,10 +1207,10 @@ New action type: `ws-send`
   "realtime": {
     "presence": {
       "enabled": true,
-      "channel": "page:{route.path}",     // scoped per page
-      "publishInterval": 10000            // heartbeat
-    }
-  }
+      "channel": "page:{route.path}", // scoped per page
+      "publishInterval": 10000, // heartbeat
+    },
+  },
 }
 ```
 
@@ -1118,7 +1219,7 @@ New action type: `ws-send`
   "type": "presence-indicator",
   "data": { "from": "global.presence.users" },
   "maxDisplay": 5,
-  "showCount": true
+  "showCount": true,
 }
 ```
 
@@ -1130,12 +1231,13 @@ Components auto-subscribe to real-time updates:
 {
   "type": "stat-card",
   "data": "GET /api/metrics/revenue",
-  "live": "revenue.updated",            // refresh when this WS event fires
-  "animation": { "enter": "pulse" }     // animate on update
+  "live": "revenue.updated", // refresh when this WS event fires
+  "animation": { "enter": "pulse" }, // animate on update
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] WebSocket connects from config with auth and reconnection
 - [ ] WS events trigger action chains
 - [ ] `ws-send` action sends messages
@@ -1157,24 +1259,25 @@ Components auto-subscribe to real-time updates:
     "/dashboard": {
       "page": "dashboard",
       "transition": {
-        "enter": "fade",               // "fade"|"slide-left"|"slide-right"|"slide-up"|"scale"|"none"
+        "enter": "fade", // "fade"|"slide-left"|"slide-right"|"slide-up"|"scale"|"none"
         "exit": "fade",
-        "duration": "fast"
-      }
-    }
-  }
+        "duration": "fast",
+      },
+    },
+  },
 }
 ```
 
 Global default:
+
 ```jsonc
 {
   "app": {
     "transitions": {
       "default": "fade",
-      "duration": "fast"
-    }
-  }
+      "duration": "fast",
+    },
+  },
 }
 ```
 
@@ -1184,8 +1287,8 @@ Global default:
 {
   "type": "link",
   "to": "/transactions",
-  "preload": "hover",                  // "hover"|"visible"|"eager"|"none"
-  "children": [{ "type": "text", "text": "View Transactions" }]
+  "preload": "hover", // "hover"|"visible"|"eager"|"none"
+  "children": [{ "type": "text", "text": "View Transactions" }],
 }
 ```
 
@@ -1201,9 +1304,9 @@ Nav items preload on hover by default.
       "children": {
         "/settings/profile": { "page": "settings-profile" },
         "/settings/billing": { "page": "settings-billing" },
-        "/settings/team": { "page": "settings-team" }
-      }
-    }
+        "/settings/team": { "page": "settings-team" },
+      },
+    },
   },
   "pages": {
     "settings-layout": {
@@ -1217,16 +1320,16 @@ Nav items preload on hover by default.
               "items": [
                 { "label": "Profile", "to": "/settings/profile" },
                 { "label": "Billing", "to": "/settings/billing" },
-                { "label": "Team", "to": "/settings/team" }
+                { "label": "Team", "to": "/settings/team" },
               ],
-              "span": 3
+              "span": 3,
             },
-            { "type": "outlet", "span": 9 }
-          ]
-        }
-      ]
-    }
-  }
+            { "type": "outlet", "span": 9 },
+          ],
+        },
+      ],
+    },
+  },
 }
 ```
 
@@ -1236,28 +1339,30 @@ Nav items preload on hover by default.
 {
   "app": {
     "breadcrumbs": {
-      "auto": true,                     // generate from route hierarchy
+      "auto": true, // generate from route hierarchy
       "home": { "label": "Home", "icon": "Home" },
-      "separator": "chevron"            // "chevron"|"slash"|"dot"
-    }
-  }
+      "separator": "chevron", // "chevron"|"slash"|"dot"
+    },
+  },
 }
 ```
 
 Override per-route:
+
 ```jsonc
 {
   "routes": {
     "/transactions/:id": {
-      "breadcrumb": { "label": { "from": "transaction.description" } }
-    }
-  }
+      "breadcrumb": { "label": { "from": "transaction.description" } },
+    },
+  },
 }
 ```
 
 ### G5: Deep Linking & Share URLs
 
 All state that affects the view should be in the URL by default:
+
 - Table page, sort, filters → query params
 - Tab selection → query param
 - Modal open state → query param (enables sharing "edit transaction" links)
@@ -1277,7 +1382,7 @@ All state that affects the view should be in the URL by default:
 {
   "routes": {
     "*": { "page": "not-found" },
-    "error": { "page": "error" }
+    "error": { "page": "error" },
   },
   "pages": {
     "not-found": {
@@ -1287,15 +1392,16 @@ All state that affects the view should be in the URL by default:
           "title": "Page not found",
           "description": "The page you're looking for doesn't exist.",
           "action": { "type": "navigate", "to": "/" },
-          "actionLabel": "Go Home"
-        }
-      ]
-    }
-  }
+          "actionLabel": "Go Home",
+        },
+      ],
+    },
+  },
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Route transitions with configurable animations
 - [ ] Link preloading on hover/visible
 - [ ] Nested layouts with `<outlet>` component
@@ -1314,29 +1420,30 @@ All state that affects the view should be in the URL by default:
 ```jsonc
 {
   "type": "chart",
-  "variant": "line",                  // "line"|"bar"|"area"|"pie"|"donut"|"scatter"|"radar"|"treemap"|"funnel"|"sparkline"
+  "variant": "line", // "line"|"bar"|"area"|"pie"|"donut"|"scatter"|"radar"|"treemap"|"funnel"|"sparkline"
   "data": "GET /api/analytics/revenue",
   "xAxis": { "field": "date", "format": "MMM dd" },
   "yAxis": { "field": "amount", "format": "currency" },
   "series": [
     { "field": "revenue", "label": "Revenue", "color": "chart-1" },
-    { "field": "expenses", "label": "Expenses", "color": "chart-2" }
+    { "field": "expenses", "label": "Expenses", "color": "chart-2" },
   ],
   "legend": true,
   "tooltip": true,
   "responsive": true,
-  "aspectRatio": "16/9"
+  "aspectRatio": "16/9",
 }
 ```
 
 **Sparkline variant** (inline mini-chart):
+
 ```jsonc
 {
   "type": "chart",
   "variant": "sparkline",
   "data": { "from": "stat-card.trend" },
   "height": 40,
-  "color": "primary"
+  "color": "primary",
 }
 ```
 
@@ -1353,9 +1460,12 @@ All state that affects the view should be in the URL by default:
     "description": { "field": "item.details" },
     "timestamp": { "field": "item.createdAt", "format": "relative" },
     "actions": [
-      { "label": "Reply", "action": { "type": "open-modal", "modal": "reply" } }
-    ]
-  }
+      {
+        "label": "Reply",
+        "action": { "type": "open-modal", "modal": "reply" },
+      },
+    ],
+  },
 }
 ```
 
@@ -1409,23 +1519,32 @@ All state that affects the view should be in the URL by default:
     {
       "label": "Navigation",
       "items": { "from": "global.nav.items" },
-      "itemAction": { "type": "navigate", "to": "{item.path}" }
+      "itemAction": { "type": "navigate", "to": "{item.path}" },
     },
     {
       "label": "Actions",
       "items": [
-        { "label": "Create Transaction", "icon": "Plus", "shortcut": "ctrl+n", "action": { "type": "open-modal", "modal": "create-transaction" } },
-        { "label": "Toggle Dark Mode", "icon": "Moon", "action": { "type": "set-theme", "toggle": true } }
-      ]
+        {
+          "label": "Create Transaction",
+          "icon": "Plus",
+          "shortcut": "ctrl+n",
+          "action": { "type": "open-modal", "modal": "create-transaction" },
+        },
+        {
+          "label": "Toggle Dark Mode",
+          "icon": "Moon",
+          "action": { "type": "set-theme", "toggle": true },
+        },
+      ],
     },
     {
       "label": "Search",
       "search": true,
       "endpoint": "GET /api/search?q={query}",
       "debounce": 200,
-      "itemAction": { "type": "navigate", "to": "{item.url}" }
-    }
-  ]
+      "itemAction": { "type": "navigate", "to": "{item.url}" },
+    },
+  ],
 }
 ```
 
@@ -1436,17 +1555,18 @@ All state that affects the view should be in the URL by default:
   "theme": {
     "components": {
       "toast": {
-        "position": "bottom-right",    // "top-right"|"top-left"|"bottom-right"|"bottom-left"|"top-center"|"bottom-center"
+        "position": "bottom-right", // "top-right"|"top-left"|"bottom-right"|"bottom-left"|"top-center"|"bottom-center"
         "maxVisible": 5,
         "duration": 5000,
-        "animation": "slide-right"
-      }
-    }
-  }
+        "animation": "slide-right",
+      },
+    },
+  },
 }
 ```
 
 Toast with undo:
+
 ```jsonc
 {
   "action": [
@@ -1458,11 +1578,11 @@ Toast with undo:
       "undo": {
         "type": "api",
         "method": "POST",
-        "endpoint": "/api/item/{id}/restore"
+        "endpoint": "/api/item/{id}/restore",
       },
-      "duration": 8000
-    }
-  ]
+      "duration": 8000,
+    },
+  ],
 }
 ```
 
@@ -1489,11 +1609,11 @@ Toast with undo:
           "title": { "field": "title" },
           "description": { "field": "body" },
           "timestamp": { "field": "createdAt", "format": "relative" },
-          "action": { "type": "navigate", "to": "{item.actionUrl}" }
-        }
-      }
-    ]
-  }
+          "action": { "type": "navigate", "to": "{item.actionUrl}" },
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -1503,9 +1623,9 @@ Toast with undo:
 {
   "type": "color-picker",
   "id": "category-color",
-  "format": "hex",                    // "hex"|"rgb"|"hsl"|"oklch"
+  "format": "hex", // "hex"|"rgb"|"hsl"|"oklch"
   "swatches": ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6"],
-  "allowCustom": true
+  "allowCustom": true,
 }
 ```
 
@@ -1514,7 +1634,7 @@ Toast with undo:
 ```jsonc
 {
   "type": "date-picker",
-  "mode": "range",                    // "single"|"range"|"multiple"
+  "mode": "range", // "single"|"range"|"multiple"
   "format": "yyyy-MM-dd",
   "minDate": "today",
   "maxDate": { "expr": "today + 365" },
@@ -1522,8 +1642,8 @@ Toast with undo:
     { "label": "Last 7 days", "value": "-7d" },
     { "label": "Last 30 days", "value": "-30d" },
     { "label": "This month", "value": "thisMonth" },
-    { "label": "This year", "value": "thisYear" }
-  ]
+    { "label": "This year", "value": "thisYear" },
+  ],
 }
 ```
 
@@ -1537,7 +1657,7 @@ Toast with undo:
   "step": 10,
   "format": "currency",
   "showValue": true,
-  "range": true                       // dual-thumb for min/max
+  "range": true, // dual-thumb for min/max
 }
 ```
 
@@ -1550,9 +1670,9 @@ Components should automatically show skeleton states while loading:
   "type": "data-table",
   "data": "GET /api/transactions",
   "loading": {
-    "variant": "skeleton",            // "skeleton"|"spinner"|"blur"
-    "rows": 10                        // skeleton row count
-  }
+    "variant": "skeleton", // "skeleton"|"spinner"|"blur"
+    "rows": 10, // skeleton row count
+  },
 }
 ```
 
@@ -1568,12 +1688,16 @@ Components should automatically show skeleton states while loading:
     "icon": "FileText",
     "title": "No transactions yet",
     "description": "Add your first transaction to get started.",
-    "action": { "label": "Add Transaction", "action": { "type": "open-modal", "modal": "create" } }
-  }
+    "action": {
+      "label": "Add Transaction",
+      "action": { "type": "open-modal", "modal": "create" },
+    },
+  },
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Chart with 10+ variants and sparkline mode
 - [ ] Feed with infinite scroll, relative timestamps, actions
 - [ ] Multi-step wizard with validation per step
@@ -1604,21 +1728,25 @@ Components should automatically show skeleton states while loading:
         { "field": "date", "format": "date", "sortable": true },
         { "field": "description", "sortable": true },
         { "field": "amount", "format": "currency", "align": "right" },
-        { "field": "category.name", "label": "Category" }
+        { "field": "category.name", "label": "Category" },
       ],
       "form": {
         "fields": [
           { "name": "date", "type": "date", "required": true },
           { "name": "description", "type": "text", "required": true },
           { "name": "amount", "type": "number", "required": true },
-          { "name": "categoryId", "type": "select", "options": "GET /api/categories" }
-        ]
+          {
+            "name": "categoryId",
+            "type": "select",
+            "options": "GET /api/categories",
+          },
+        ],
       },
       "searchable": true,
       "deletable": true,
-      "exportable": true
-    }
-  }
+      "exportable": true,
+    },
+  },
 }
 ```
 
@@ -1633,20 +1761,43 @@ Components should automatically show skeleton states while loading:
       "preset": "dashboard",
       "title": "Dashboard",
       "stats": [
-        { "label": "Revenue", "endpoint": "/api/stats/revenue", "format": "currency", "icon": "DollarSign" },
-        { "label": "Users", "endpoint": "/api/stats/users", "format": "number", "icon": "Users" },
-        { "label": "Orders", "endpoint": "/api/stats/orders", "format": "number", "icon": "ShoppingCart" }
+        {
+          "label": "Revenue",
+          "endpoint": "/api/stats/revenue",
+          "format": "currency",
+          "icon": "DollarSign",
+        },
+        {
+          "label": "Users",
+          "endpoint": "/api/stats/users",
+          "format": "number",
+          "icon": "Users",
+        },
+        {
+          "label": "Orders",
+          "endpoint": "/api/stats/orders",
+          "format": "number",
+          "icon": "ShoppingCart",
+        },
       ],
       "charts": [
-        { "title": "Revenue Over Time", "variant": "area", "endpoint": "/api/charts/revenue" },
-        { "title": "Users by Region", "variant": "pie", "endpoint": "/api/charts/users-region" }
+        {
+          "title": "Revenue Over Time",
+          "variant": "area",
+          "endpoint": "/api/charts/revenue",
+        },
+        {
+          "title": "Users by Region",
+          "variant": "pie",
+          "endpoint": "/api/charts/users-region",
+        },
       ],
       "recentActivity": {
         "endpoint": "/api/activity",
-        "limit": 10
-      }
-    }
-  }
+        "limit": 10,
+      },
+    },
+  },
 }
 ```
 
@@ -1667,20 +1818,28 @@ Components should automatically show skeleton states while loading:
           "fields": [
             { "name": "name", "type": "text" },
             { "name": "email", "type": "email" },
-            { "name": "avatar", "type": "file-upload", "accept": "image/*" }
-          ]
+            { "name": "avatar", "type": "file-upload", "accept": "image/*" },
+          ],
         },
         {
           "title": "Notifications",
           "icon": "Bell",
           "fields": [
-            { "name": "emailNotifications", "type": "switch", "label": "Email notifications" },
-            { "name": "pushNotifications", "type": "switch", "label": "Push notifications" }
-          ]
-        }
-      ]
-    }
-  }
+            {
+              "name": "emailNotifications",
+              "type": "switch",
+              "label": "Email notifications",
+            },
+            {
+              "name": "pushNotifications",
+              "type": "switch",
+              "label": "Push notifications",
+            },
+          ],
+        },
+      ],
+    },
+  },
 }
 ```
 
@@ -1703,6 +1862,7 @@ Already partially implemented. Formalize:
 ```
 
 ### Acceptance Criteria
+
 - [ ] CrudPage preset generates full CRUD interface from resource + columns + form
 - [ ] DashboardPage preset generates stat cards + charts + activity feed
 - [ ] SettingsPage preset generates tabbed/sectioned form pages
@@ -1720,10 +1880,10 @@ Already partially implemented. Formalize:
 {
   "type": "modal",
   "focus": {
-    "trap": true,                     // focus stays inside modal
-    "initialFocus": "name-input",     // focus this component on open
-    "returnFocus": true               // return focus to trigger on close
-  }
+    "trap": true, // focus stays inside modal
+    "initialFocus": "name-input", // focus this component on open
+    "returnFocus": true, // return focus to trigger on close
+  },
 }
 ```
 
@@ -1735,10 +1895,10 @@ Already partially implemented. Formalize:
     "a11y": {
       "skipLinks": [
         { "label": "Skip to main content", "target": "main-content" },
-        { "label": "Skip to navigation", "target": "nav" }
-      ]
-    }
-  }
+        { "label": "Skip to navigation", "target": "nav" },
+      ],
+    },
+  },
 }
 ```
 
@@ -1749,7 +1909,7 @@ Already partially implemented. Formalize:
   "type": "button",
   "icon": "Trash",
   "ariaLabel": "Delete transaction",
-  "variant": "ghost"
+  "variant": "ghost",
 }
 ```
 
@@ -1761,9 +1921,9 @@ Every interactive component supports `ariaLabel`, `ariaDescribedBy`, `role`.
 {
   "app": {
     "a11y": {
-      "respectReducedMotion": true    // default: true
-    }
-  }
+      "respectReducedMotion": true, // default: true
+    },
+  },
 }
 ```
 
@@ -1778,19 +1938,20 @@ The token resolution system should validate that foreground/background pairs mee
 ```jsonc
 {
   "type": "toast",
-  "ariaLive": "polite"               // screen readers announce toast content
+  "ariaLive": "polite", // screen readers announce toast content
 }
 ```
 
 ```jsonc
 {
   "type": "stat-card",
-  "ariaLive": "polite",             // announce value changes
-  "live": "revenue.updated"
+  "ariaLive": "polite", // announce value changes
+  "live": "revenue.updated",
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Focus trapping in modals and drawers
 - [ ] Skip links from config
 - [ ] ARIA labels on all interactive components
@@ -1810,15 +1971,16 @@ The token resolution system should validate that foreground/background pairs mee
 {
   "type": "list",
   "data": "GET /api/messages",
-  "virtualize": true,               // only render visible items
-  "itemHeight": 72,                  // fixed height for calculation (or "auto" with ResizeObserver)
-  "overscan": 5                      // render N items beyond viewport
+  "virtualize": true, // only render visible items
+  "itemHeight": 72, // fixed height for calculation (or "auto" with ResizeObserver)
+  "overscan": 5, // render N items beyond viewport
 }
 ```
 
 ### K2: Code Splitting by Route
 
 The Vite plugin should automatically code-split:
+
 - Each page's component tree is a lazy chunk
 - Component implementations loaded on first use
 - Preload triggered by link hover (`preload: "hover"`)
@@ -1829,10 +1991,10 @@ The Vite plugin should automatically code-split:
 {
   "type": "image",
   "src": "/photos/hero.jpg",
-  "loading": "lazy",                 // "lazy"|"eager"
+  "loading": "lazy", // "lazy"|"eager"
   "sizes": "(max-width: 768px) 100vw, 50vw",
-  "placeholder": "blur",            // "blur"|"skeleton"|"none"
-  "blurDataUrl": "data:image/..."
+  "placeholder": "blur", // "blur"|"skeleton"|"none"
+  "blurDataUrl": "data:image/...",
 }
 ```
 
@@ -1843,9 +2005,9 @@ The Vite plugin should automatically code-split:
   "routes": {
     "/dashboard": {
       "prefetch": ["GET /api/stats", "GET /api/recent-activity"],
-      "page": "dashboard"
-    }
-  }
+      "page": "dashboard",
+    },
+  },
 }
 ```
 
@@ -1857,15 +2019,14 @@ Start API calls before the page renders.
 {
   "type": "stack",
   "suspense": {
-    "fallback": { "type": "skeleton", "variant": "card", "count": 3 }
+    "fallback": { "type": "skeleton", "variant": "card", "count": 3 },
   },
-  "children": [
-    { "type": "stat-card", "data": "GET /api/slow-query" }
-  ]
+  "children": [{ "type": "stat-card", "data": "GET /api/slow-query" }],
 }
 ```
 
 ### Acceptance Criteria
+
 - [ ] Virtual lists for 10k+ items
 - [ ] Automatic code splitting by route
 - [ ] Lazy image loading with blur placeholder
@@ -1885,6 +2046,7 @@ Editing `snapshot.manifest.json` hot-reloads the app without full page refresh. 
 ### L2: Manifest Validation Errors
 
 On invalid manifest, show an overlay in the browser with:
+
 - Which field is invalid
 - What the expected type/value is
 - A link to the docs for that field
@@ -1892,6 +2054,7 @@ On invalid manifest, show an overlay in the browser with:
 ### L3: Component Inspector (Dev Mode)
 
 In development, clicking a component while holding `Alt` shows:
+
 - Component type and config
 - Current data/state
 - Which `from` refs it subscribes to
@@ -1911,6 +2074,7 @@ snapshot preview              # open browser with live preview
 ### L5: JSON Schema for IDE Autocomplete
 
 Publish a JSON Schema for `snapshot.manifest.json` that provides:
+
 - Autocomplete for all fields
 - Inline documentation
 - Error highlighting for invalid values
@@ -1926,6 +2090,7 @@ Publish a JSON Schema for `snapshot.manifest.json` that provides:
 ```
 
 ### Acceptance Criteria
+
 - [ ] Manifest changes hot-reload
 - [ ] Validation errors shown as browser overlay
 - [ ] Component inspector in dev mode
@@ -2011,22 +2176,22 @@ Phase L: Developer Experience (depends on main.tsx) ─────┘
 
 ### Recommended Execution Order
 
-| Priority | Phase | Why |
-|----------|-------|-----|
-| **P0** | **A: CSS Foundation** | Budget-fe goes from 1999 → 2026 immediately |
-| **P0** | **main.tsx Elimination** | Delivers on "one JSON file" promise |
-| **P1** | **E2: Expression Language** | Unlocks conditional rendering, computed values — used by everything |
-| **P1** | **B: Layout** | Hero sections, grids, sticky — visual sophistication |
-| **P1** | **C: Styling** | Animations, gradients, glass — visual polish |
-| **P2** | **D: Interactivity** | Keyboard shortcuts, DnD, form logic — Discord-level UX |
-| **P2** | **H: Components** | Chart, Feed, Wizard — fill primitive gaps |
-| **P2** | **G: Navigation** | Route transitions, preloading — SPA feel |
-| **P3** | **F: Real-Time** | WebSockets, presence — live apps |
-| **P3** | **E (rest): State** | URL sync, persistence, computed values |
-| **P3** | **I: Presets** | Developer velocity shortcuts |
-| **P4** | **J: Accessibility** | Compliance and polish |
-| **P4** | **K: Performance** | Virtualization, code splitting |
-| **P4** | **L: Developer Experience** | Hot reload, inspector, CLI |
+| Priority | Phase                       | Why                                                                 |
+| -------- | --------------------------- | ------------------------------------------------------------------- |
+| **P0**   | **A: CSS Foundation**       | Budget-fe goes from 1999 → 2026 immediately                         |
+| **P0**   | **main.tsx Elimination**    | Delivers on "one JSON file" promise                                 |
+| **P1**   | **E2: Expression Language** | Unlocks conditional rendering, computed values — used by everything |
+| **P1**   | **B: Layout**               | Hero sections, grids, sticky — visual sophistication                |
+| **P1**   | **C: Styling**              | Animations, gradients, glass — visual polish                        |
+| **P2**   | **D: Interactivity**        | Keyboard shortcuts, DnD, form logic — Discord-level UX              |
+| **P2**   | **H: Components**           | Chart, Feed, Wizard — fill primitive gaps                           |
+| **P2**   | **G: Navigation**           | Route transitions, preloading — SPA feel                            |
+| **P3**   | **F: Real-Time**            | WebSockets, presence — live apps                                    |
+| **P3**   | **E (rest): State**         | URL sync, persistence, computed values                              |
+| **P3**   | **I: Presets**              | Developer velocity shortcuts                                        |
+| **P4**   | **J: Accessibility**        | Compliance and polish                                               |
+| **P4**   | **K: Performance**          | Virtualization, code splitting                                      |
+| **P4**   | **L: Developer Experience** | Hot reload, inspector, CLI                                          |
 
 ---
 
@@ -2035,6 +2200,7 @@ Phase L: Developer Experience (depends on main.tsx) ─────┘
 When this spec is fully implemented, the following test must pass:
 
 > **Test:** A developer creates a new directory with `package.json`, `vite.config.ts`, and `snapshot.manifest.json`. They run `npm install && npm run dev`. The result is a production-quality app with:
+>
 > - Sophisticated visual design (custom theme, proper typography, shadows, gradients)
 > - Rich interactivity (keyboard shortcuts, drag-and-drop, real-time updates)
 > - Full CRUD with modals, forms, validation, and optimistic updates

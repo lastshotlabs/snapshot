@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useMemo, useState, type ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -143,7 +143,8 @@ function ListItem({
   isCard: boolean;
   slots?: SlotOverrides;
 }) {
-  const isClickable = selectable && (item.onAction != null || item.href != null);
+  const isClickable =
+    selectable && (item.onAction != null || item.href != null);
   const itemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-item-${itemIndex}`,
     implementationBase: {
@@ -153,11 +154,15 @@ function ListItem({
       padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
       transition: `background-color var(--sn-duration-fast, 150ms) var(--sn-ease-out, ease-out)`,
       ...(isClickable
-        ? { hover: { bg: "var(--sn-color-accent, #f3f4f6)" }, focus: { ring: true } }
+        ? {
+            hover: { bg: "var(--sn-color-accent, #f3f4f6)" },
+            focus: { ring: true },
+          }
         : {}),
       ...(isCard
         ? {
-            border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             borderRadius: "var(--sn-radius-md, 0.5rem)",
             boxShadow: "var(--sn-shadow-sm, 0 1px 2px rgba(0,0,0,0.05))",
             backgroundColor: "var(--sn-color-card, #ffffff)",
@@ -236,7 +241,10 @@ function ListItem({
   });
   const dividerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-divider-${itemIndex}`,
-    implementationBase: { height: "1px", backgroundColor: "var(--sn-color-border, #e5e7eb)" },
+    implementationBase: {
+      height: "1px",
+      backgroundColor: "var(--sn-color-border, #e5e7eb)",
+    },
     componentSurface: slots?.divider,
     itemSurface: item.slots?.divider,
   });
@@ -252,7 +260,12 @@ function ListItem({
       onClick={isClickable ? handleClick : undefined}
       onKeyDown={
         isClickable
-          ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleClick(); } }
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleClick();
+              }
+            }
           : undefined
       }
       role={isClickable ? "button" : undefined}
@@ -387,12 +400,17 @@ export function ListBase({
   const containerStyle: React.CSSProperties =
     variant === "bordered"
       ? {
-          border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+          border:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           borderRadius: "var(--sn-radius-md, 0.5rem)",
           overflow: "hidden",
         }
       : variant === "card"
-        ? { display: "flex", flexDirection: "column", gap: "var(--sn-spacing-sm, 0.5rem)" }
+        ? {
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--sn-spacing-sm, 0.5rem)",
+          }
         : {};
 
   const rootSurface = resolveSurfacePresentation({
@@ -409,9 +427,14 @@ export function ListBase({
   const liveBannerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-liveBanner`,
     implementationBase: {
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-      gap: "0.75rem", padding: "0.75rem 1rem", marginBottom: "0.75rem",
-      borderRadius: "var(--sn-radius-md, 0.5rem)", backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "0.75rem",
+      padding: "0.75rem 1rem",
+      marginBottom: "0.75rem",
+      borderRadius: "var(--sn-radius-md, 0.5rem)",
+      backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
     },
     componentSurface: slots?.liveBanner,
   });
@@ -428,7 +451,9 @@ export function ListBase({
   const loadingItemSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadingItem`,
     implementationBase: {
-      display: "flex", alignItems: "center", gap: "var(--sn-spacing-sm, 0.5rem)",
+      display: "flex",
+      alignItems: "center",
+      gap: "var(--sn-spacing-sm, 0.5rem)",
       padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
     },
     componentSurface: slots?.loadingItem,
@@ -436,7 +461,9 @@ export function ListBase({
   const loadingIconSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadingIcon`,
     implementationBase: {
-      width: "2rem", height: "2rem", borderRadius: "var(--sn-radius-sm, 0.25rem)",
+      width: "2rem",
+      height: "2rem",
+      borderRadius: "var(--sn-radius-sm, 0.25rem)",
       backgroundColor: "var(--sn-color-muted, #e5e7eb)",
     },
     componentSurface: slots?.loadingIcon,
@@ -449,15 +476,20 @@ export function ListBase({
   const loadingTitleSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadingTitle`,
     implementationBase: {
-      height: "0.75rem", width: "40%", backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-      borderRadius: "var(--sn-radius-sm, 0.25rem)", marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+      height: "0.75rem",
+      width: "40%",
+      backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+      borderRadius: "var(--sn-radius-sm, 0.25rem)",
+      marginBottom: "var(--sn-spacing-xs, 0.25rem)",
     },
     componentSurface: slots?.loadingTitle,
   });
   const loadingDescriptionSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadingDescription`,
     implementationBase: {
-      height: "0.625rem", width: "60%", backgroundColor: "var(--sn-color-muted, #e5e7eb)",
+      height: "0.625rem",
+      width: "60%",
+      backgroundColor: "var(--sn-color-muted, #e5e7eb)",
       borderRadius: "var(--sn-radius-sm, 0.25rem)",
     },
     componentSurface: slots?.loadingDescription,
@@ -504,14 +536,19 @@ export function ListBase({
           >
             New items available
           </span>
-          <ButtonControl type="button" onClick={onRefresh} variant="outline" size="sm">
+          <ButtonControl
+            type="button"
+            onClick={onRefresh}
+            variant="outline"
+            size="sm"
+          >
             Refresh
           </ButtonControl>
         </div>
       ) : null}
 
-      {isLoading && (
-        loadingContent ? (
+      {isLoading &&
+        (loadingContent ? (
           <div
             data-testid="list-loading"
             data-snapshot-id={`${rootId}-loading`}
@@ -540,11 +577,11 @@ export function ListBase({
               />
             ))}
           </div>
-        )
-      )}
+        ))}
 
-      {!isLoading && error && (
-        errorContent ?? (
+      {!isLoading &&
+        error &&
+        (errorContent ?? (
           <div
             data-testid="list-error"
             data-snapshot-id={`${rootId}-error`}
@@ -555,11 +592,12 @@ export function ListBase({
               {error}
             </span>
           </div>
-        )
-      )}
+        ))}
 
-      {!isLoading && !error && limitedItems.length === 0 && (
-        emptyContent ?? (
+      {!isLoading &&
+        !error &&
+        limitedItems.length === 0 &&
+        (emptyContent ?? (
           <div
             data-testid="list-empty"
             data-snapshot-id={`${rootId}-empty`}
@@ -571,8 +609,7 @@ export function ListBase({
           >
             {emptyMessage}
           </div>
-        )
-      )}
+        ))}
 
       {!isLoading && !error && limitedItems.length > 0 && (
         <div

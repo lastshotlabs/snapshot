@@ -73,14 +73,14 @@ export function AppChrome() {
 
 Toast options:
 
-| Option | Purpose |
-| --- | --- |
-| `message` | Required message text |
-| `variant` | `success`, `error`, `warning`, or `info` |
+| Option     | Purpose                                                       |
+| ---------- | ------------------------------------------------------------- |
+| `message`  | Required message text                                         |
+| `variant`  | `success`, `error`, `warning`, or `info`                      |
 | `duration` | Auto-dismiss timeout in milliseconds. Use `0` to keep it open |
-| `icon` | Snapshot icon name |
-| `color` | Custom background color |
-| `action` | Inline button with `{ label, onClick }` |
+| `icon`     | Snapshot icon name                                            |
+| `color`    | Custom background color                                       |
+| `action`   | Inline button with `{ label, onClick }`                       |
 
 ## Confirmations
 
@@ -126,14 +126,14 @@ export function AppChrome() {
 
 Confirmation options:
 
-| Option | Purpose |
-| --- | --- |
-| `title` | Dialog title |
-| `message` / `description` | Dialog body |
-| `confirmLabel` | Confirm button label |
-| `cancelLabel` | Cancel button label |
-| `variant` | `default` or `destructive` |
-| `requireInput` | Requires the user to type an exact value before confirming |
+| Option                    | Purpose                                                    |
+| ------------------------- | ---------------------------------------------------------- |
+| `title`                   | Dialog title                                               |
+| `message` / `description` | Dialog body                                                |
+| `confirmLabel`            | Confirm button label                                       |
+| `cancelLabel`             | Cancel button label                                        |
+| `variant`                 | `default` or `destructive`                                 |
+| `requireInput`            | Requires the user to type an exact value before confirming |
 
 ## Mutation Flows
 

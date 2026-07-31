@@ -20,9 +20,9 @@ const login = snap.useLogin();
 
 ## Two Main Imports
 
-| Import | What you get |
-| --- | --- |
-| `@lastshotlabs/snapshot` | `createSnapshot`, runtime types, auth helpers |
+| Import                      | What you get                                            |
+| --------------------------- | ------------------------------------------------------- |
+| `@lastshotlabs/snapshot`    | `createSnapshot`, runtime types, auth helpers           |
 | `@lastshotlabs/snapshot/ui` | Standalone components, tokens, actions, icons, UI hooks |
 
 ## Query And Mutation Hooks
@@ -60,7 +60,7 @@ import { ButtonBase, CardBase, DataTableBase } from "@lastshotlabs/snapshot/ui";
 
 <CardBase title="Settings">
   <ButtonBase label="Save" onClick={save} />
-</CardBase>
+</CardBase>;
 ```
 
 ## Styling

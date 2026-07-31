@@ -2,16 +2,16 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | 1 | Canonical Styleable Element Contract | Not started | Foundation |
-> | 2 | Shared Slots, States, and Merge Runtime | Not started | Foundation |
-> | 3 | Navigation + Composable Nav Cutover | Not started | Navigation |
-> | 4 | Overlay + Menu Surfaces | Not started | Overlay |
-> | 5 | Data Display Surfaces | Not started | Data |
-> | 6 | Forms + Field Surfaces | Not started | Forms |
-> | 7 | Remove Obsolete Visual APIs | Not started | Cleanup |
-> | 8 | Docs + Playground + Dogfood | Not started | Docs |
+> | Phase | Title                                   | Status      | Track      |
+> | ----- | --------------------------------------- | ----------- | ---------- |
+> | 1     | Canonical Styleable Element Contract    | Not started | Foundation |
+> | 2     | Shared Slots, States, and Merge Runtime | Not started | Foundation |
+> | 3     | Navigation + Composable Nav Cutover     | Not started | Navigation |
+> | 4     | Overlay + Menu Surfaces                 | Not started | Overlay    |
+> | 5     | Data Display Surfaces                   | Not started | Data       |
+> | 6     | Forms + Field Surfaces                  | Not started | Forms      |
+> | 7     | Remove Obsolete Visual APIs             | Not started | Cleanup    |
+> | 8     | Docs + Playground + Dogfood             | Not started | Docs       |
 >
 > **Priority:** P0
 >
@@ -992,29 +992,29 @@ Each grouped component or grouped behavior must end in one of three states:
 
 ### Convergence table
 
-| Area | Component(s) | Current state | Target primitive family | Action |
-|---|---|---|---|---|
-| Nav menus | `layout/nav`, `layout/nav-dropdown`, `layout/nav-user-menu` | bespoke floating/menu behavior | `FloatingPanel` + `MenuItem` / `MenuSeparator` / `MenuLabel` | Rewrite to compose |
-| Overlay menus | `overlay/dropdown-menu` | already primitive-backed | `FloatingPanel` + menu primitives | Reuse existing |
-| Context menu | `overlay/context-menu`, `_base/context-menu-portal` | shared but not explicit primitive family | menu/floating primitive family | Extract or normalize primitive |
-| Popover | `overlay/popover` | bespoke floating behavior | `FloatingPanel`-family plus trigger primitive | Rewrite to compose |
-| Hover card | `overlay/hover-card` | likely bespoke floating behavior | `FloatingPanel`-family plus hover trigger primitive | Rewrite to compose |
-| Command palette | `overlay/command-palette` | bespoke list/menu/search behavior | menu surface + input/search primitive families | Extract primitive(s) then compose |
-| Nav links | `layout/nav-link`, `navigation/prefetch-link`, `primitives/link` | split across multiple link shells | link/navigation-link primitive family | Extract or normalize primitive |
-| Button-like triggers | dropdown trigger, popover trigger, action triggers across grouped components | inconsistent use of button primitive | `ButtonControl` or stricter trigger primitive | Rewrite to compose |
-| Disclosure | `layout/collapsible`, `navigation/accordion`, tree expansion shells | split behavior | disclosure/collapsible primitive family | Extract or normalize primitive |
-| Tabs | `navigation/tabs` | bespoke trigger/panel shell | tabs primitive family or shared trigger/panel shell | Extract primitive |
-| Stepper | `navigation/stepper` | bespoke item-shell and progress rendering | interactive item-shell + connector primitive family | Extract primitive(s) |
-| Tree view | `navigation/tree-view` | bespoke recursive row/disclosure shell | disclosure + interactive item-shell primitive family | Extract primitive(s) |
-| Breadcrumb | `navigation/breadcrumb` | bespoke link hover shell | link/navigation-link primitive family + separator primitive | Rewrite to compose |
-| Toggle group | `forms/toggle-group` | bespoke segmented-control shell | toggle/segmented-control primitive family | Extract primitive |
-| Auto form fields | `forms/auto-form` | grouped but mostly local field shells | field-shell/input/label/helper/error primitive family | Extract or normalize primitive |
-| Wizard | `forms/wizard` | grouped step + field orchestration | stepper/disclosure + field primitive families | Rewrite to compose |
-| Data list | `data/list` | bespoke interactive item row shell | interactive item-shell + badge/icon primitives | Extract primitive(s) |
-| Data table | `data/data-table` | bespoke table cell/row/action shells | table surface primitives + button primitive + context menu primitive | Extract primitive(s) |
-| Timeline | `content/timeline` | grouped rich item shell | interactive item-shell + divider/connector primitive family | Extract primitive(s) |
-| Kanban | `workflow/kanban` | grouped board/column/card interactions | interactive item-shell + drag/drop board primitive family | Extract primitive(s) |
-| Carousel | `media/carousel` | grouped viewport/slide/indicator behavior | carousel primitive family | Extract primitive |
+| Area                 | Component(s)                                                                 | Current state                             | Target primitive family                                              | Action                            |
+| -------------------- | ---------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------- | --------------------------------- |
+| Nav menus            | `layout/nav`, `layout/nav-dropdown`, `layout/nav-user-menu`                  | bespoke floating/menu behavior            | `FloatingPanel` + `MenuItem` / `MenuSeparator` / `MenuLabel`         | Rewrite to compose                |
+| Overlay menus        | `overlay/dropdown-menu`                                                      | already primitive-backed                  | `FloatingPanel` + menu primitives                                    | Reuse existing                    |
+| Context menu         | `overlay/context-menu`, `_base/context-menu-portal`                          | shared but not explicit primitive family  | menu/floating primitive family                                       | Extract or normalize primitive    |
+| Popover              | `overlay/popover`                                                            | bespoke floating behavior                 | `FloatingPanel`-family plus trigger primitive                        | Rewrite to compose                |
+| Hover card           | `overlay/hover-card`                                                         | likely bespoke floating behavior          | `FloatingPanel`-family plus hover trigger primitive                  | Rewrite to compose                |
+| Command palette      | `overlay/command-palette`                                                    | bespoke list/menu/search behavior         | menu surface + input/search primitive families                       | Extract primitive(s) then compose |
+| Nav links            | `layout/nav-link`, `navigation/prefetch-link`, `primitives/link`             | split across multiple link shells         | link/navigation-link primitive family                                | Extract or normalize primitive    |
+| Button-like triggers | dropdown trigger, popover trigger, action triggers across grouped components | inconsistent use of button primitive      | `ButtonControl` or stricter trigger primitive                        | Rewrite to compose                |
+| Disclosure           | `layout/collapsible`, `navigation/accordion`, tree expansion shells          | split behavior                            | disclosure/collapsible primitive family                              | Extract or normalize primitive    |
+| Tabs                 | `navigation/tabs`                                                            | bespoke trigger/panel shell               | tabs primitive family or shared trigger/panel shell                  | Extract primitive                 |
+| Stepper              | `navigation/stepper`                                                         | bespoke item-shell and progress rendering | interactive item-shell + connector primitive family                  | Extract primitive(s)              |
+| Tree view            | `navigation/tree-view`                                                       | bespoke recursive row/disclosure shell    | disclosure + interactive item-shell primitive family                 | Extract primitive(s)              |
+| Breadcrumb           | `navigation/breadcrumb`                                                      | bespoke link hover shell                  | link/navigation-link primitive family + separator primitive          | Rewrite to compose                |
+| Toggle group         | `forms/toggle-group`                                                         | bespoke segmented-control shell           | toggle/segmented-control primitive family                            | Extract primitive                 |
+| Auto form fields     | `forms/auto-form`                                                            | grouped but mostly local field shells     | field-shell/input/label/helper/error primitive family                | Extract or normalize primitive    |
+| Wizard               | `forms/wizard`                                                               | grouped step + field orchestration        | stepper/disclosure + field primitive families                        | Rewrite to compose                |
+| Data list            | `data/list`                                                                  | bespoke interactive item row shell        | interactive item-shell + badge/icon primitives                       | Extract primitive(s)              |
+| Data table           | `data/data-table`                                                            | bespoke table cell/row/action shells      | table surface primitives + button primitive + context menu primitive | Extract primitive(s)              |
+| Timeline             | `content/timeline`                                                           | grouped rich item shell                   | interactive item-shell + divider/connector primitive family          | Extract primitive(s)              |
+| Kanban               | `workflow/kanban`                                                            | grouped board/column/card interactions    | interactive item-shell + drag/drop board primitive family            | Extract primitive(s)              |
+| Carousel             | `media/carousel`                                                             | grouped viewport/slide/indicator behavior | carousel primitive family                                            | Extract primitive                 |
 
 ### Interpretation rules
 
@@ -1429,8 +1429,12 @@ export const styleableElementFields = {
   inset: z.string().optional(),
   display: responsiveDisplay.optional(),
   flexDirection: responsiveFlexDirection.optional(),
-  alignItems: z.enum(["start", "center", "end", "stretch", "baseline"]).optional(),
-  justifyContent: z.enum(["start", "center", "end", "between", "around", "evenly"]).optional(),
+  alignItems: z
+    .enum(["start", "center", "end", "stretch", "baseline"])
+    .optional(),
+  justifyContent: z
+    .enum(["start", "center", "end", "between", "around", "evenly"])
+    .optional(),
   flexWrap: z.enum(["wrap", "nowrap", "wrap-reverse"]).optional(),
   flex: z.string().optional(),
   gridTemplateColumns: z.string().optional(),
@@ -1440,8 +1444,15 @@ export const styleableElementFields = {
   textAlign: z.enum(["left", "center", "right", "justify"]).optional(),
   fontSize: responsiveFontSize.optional(),
   fontWeight: z.union([fontWeightEnum, z.number()]).optional(),
-  lineHeight: z.union([z.enum(["none", "tight", "snug", "normal", "relaxed", "loose"]), z.string()]).optional(),
-  letterSpacing: z.union([z.enum(["tight", "normal", "wide"]), z.string()]).optional(),
+  lineHeight: z
+    .union([
+      z.enum(["none", "tight", "snug", "normal", "relaxed", "loose"]),
+      z.string(),
+    ])
+    .optional(),
+  letterSpacing: z
+    .union([z.enum(["tight", "normal", "wide"]), z.string()])
+    .optional(),
 
   hover: hoverConfigSchema.optional(),
   focus: focusConfigSchema.optional(),
@@ -1571,7 +1582,9 @@ Example:
     "tab": {
       "className": "rounded-none",
       "states": {
-        "active": { "className": "bg-primary/20 text-foreground font-semibold" },
+        "active": {
+          "className": "bg-primary/20 text-foreground font-semibold"
+        },
         "disabled": { "opacity": 0.5, "cursor": "not-allowed" }
       }
     },
@@ -1600,7 +1613,9 @@ Example:
         "className": "rounded-none",
         "states": {
           "hover": { "className": "bg-primary/18" },
-          "current": { "className": "bg-primary/30 text-foreground font-semibold" }
+          "current": {
+            "className": "bg-primary/30 text-foreground font-semibold"
+          }
         }
       },
       "dropdownItem": {
@@ -1725,14 +1740,16 @@ The manifest system must remain configurable all the way down to the visible sur
 When a component renders repeated items, the item schema must follow this pattern:
 
 ```ts
-const exampleItemSchema = z.object({
-  // item data
-  label: z.string(),
-  value: z.string().optional(),
+const exampleItemSchema = z
+  .object({
+    // item data
+    label: z.string(),
+    value: z.string().optional(),
 
-  // canonical item-local surface overrides
-  slots: slotsSchema(["item", "label", "icon", "badge"]).optional(),
-}).strict();
+    // canonical item-local surface overrides
+    slots: slotsSchema(["item", "label", "icon", "badge"]).optional(),
+  })
+  .strict();
 ```
 
 Notes:
@@ -1748,18 +1765,20 @@ When a component renders repeated items or internal visible surfaces, the compon
 follow this pattern:
 
 ```ts
-const exampleGroupedConfigSchema = baseComponentConfigSchema.extend({
-  type: z.literal("example-group"),
-  items: z.array(exampleItemSchema),
-  slots: slotsSchema([
-    "root",
-    "list",
-    "item",
-    "label",
-    "icon",
-    "badge",
-  ]).optional(),
-}).strict();
+const exampleGroupedConfigSchema = baseComponentConfigSchema
+  .extend({
+    type: z.literal("example-group"),
+    items: z.array(exampleItemSchema),
+    slots: slotsSchema([
+      "root",
+      "list",
+      "item",
+      "label",
+      "icon",
+      "badge",
+    ]).optional(),
+  })
+  .strict();
 ```
 
 Notes:
@@ -1774,10 +1793,18 @@ Notes:
 Primitive components that expose visible internal surfaces should also use `slots`.
 
 ```ts
-const examplePrimitiveConfigSchema = baseComponentConfigSchema.extend({
-  type: z.literal("example-primitive"),
-  slots: slotsSchema(["root", "trigger", "panel", "icon", "label"]).optional(),
-}).strict();
+const examplePrimitiveConfigSchema = baseComponentConfigSchema
+  .extend({
+    type: z.literal("example-primitive"),
+    slots: slotsSchema([
+      "root",
+      "trigger",
+      "panel",
+      "icon",
+      "label",
+    ]).optional(),
+  })
+  .strict();
 ```
 
 This preserves parity between primitive and grouped authoring.
@@ -2352,7 +2379,11 @@ This is a valid product-grade goal state. `className` is not required.
         "color": "text.muted",
         "states": {
           "hover": { "bg": "surface.hover", "color": "text.default" },
-          "current": { "bg": "brand.soft", "color": "brand.fg", "fontWeight": "semibold" }
+          "current": {
+            "bg": "brand.soft",
+            "color": "brand.fg",
+            "fontWeight": "semibold"
+          }
         }
       },
       "dropdownItem": {
@@ -3092,14 +3123,14 @@ the component before proceeding.
 
 This matrix defines which grouped behaviors must converge on which primitive families.
 
-| Behavior | Canonical primitive family | Components that must use it or converge on it |
-|---|---|---|
-| Floating positioned panel | `FloatingPanel`-family | `dropdown-menu`, `nav-dropdown`, `nav-user-menu`, `popover`, future floating menus |
-| Menu item rendering | `MenuItem` / `MenuSeparator` / `MenuLabel`-family | `dropdown-menu`, nav dropdown/menu surfaces, context-menu-like surfaces where semantics align |
-| Button / trigger shell | `ButtonControl`-family or stricter trigger primitive | dropdown triggers, popover triggers, grouped action triggers, nav trigger surfaces where applicable |
-| Collapsible/disclosure shell | `Collapsible`-family or stricter disclosure primitive | accordion, tree expansion shells, future disclosure-based grouped components |
-| Link-like navigation shell | `Link` / navigation-link primitive family | breadcrumb links, nav links, prefetch-capable nav/link surfaces where semantics align |
-| Interactive item shell | extracted shared item-shell primitive if needed | nav item rows, tree rows, stepper step triggers, selectable grouped item rows |
+| Behavior                     | Canonical primitive family                            | Components that must use it or converge on it                                                       |
+| ---------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Floating positioned panel    | `FloatingPanel`-family                                | `dropdown-menu`, `nav-dropdown`, `nav-user-menu`, `popover`, future floating menus                  |
+| Menu item rendering          | `MenuItem` / `MenuSeparator` / `MenuLabel`-family     | `dropdown-menu`, nav dropdown/menu surfaces, context-menu-like surfaces where semantics align       |
+| Button / trigger shell       | `ButtonControl`-family or stricter trigger primitive  | dropdown triggers, popover triggers, grouped action triggers, nav trigger surfaces where applicable |
+| Collapsible/disclosure shell | `Collapsible`-family or stricter disclosure primitive | accordion, tree expansion shells, future disclosure-based grouped components                        |
+| Link-like navigation shell   | `Link` / navigation-link primitive family             | breadcrumb links, nav links, prefetch-capable nav/link surfaces where semantics align               |
+| Interactive item shell       | extracted shared item-shell primitive if needed       | nav item rows, tree rows, stepper step triggers, selectable grouped item rows                       |
 
 Matrix rules:
 
@@ -3135,80 +3166,80 @@ listed here, the agent should not reinterpret its role.
 
 ### Foundation modules
 
-| Path | Owner | Target contract | Required cutover | Priority |
-|---|---|---|---|---|
-| `src/ui/components/_base/schema.ts` | foundation | canonical styleable element fragments | export `styleableElementFields`, `styleableElementSchema`, `statefulElementSchema`, `slotsSchema(...)`; remove duplication pressure | now |
-| `src/ui/components/_base/component-wrapper.tsx` | foundation | shared root and sub-surface style resolution | expose reusable resolution path for non-root surfaces; do not stay root-only | now |
-| `src/ui/components/_base/style-props.ts` | foundation | single universal style vocabulary | remain source of style prop semantics; do not fork for grouped surfaces | now |
-| `src/ui/components/_base/style-surfaces.ts` | foundation | canonical sub-surface merge runtime | create new shared merge/state resolution utility | now |
-| `src/ui/manifest/schema.ts` | foundation | single manifest-side declarative contract | import shared slot/state fragments; normalize aliases; keep one manifest vocabulary | now |
-| `src/ui/manifest/app.tsx` | foundation | real nav/runtime handoff alignment | pass canonical slot/state config through live app assembly path | now |
-| `src/ui/entity-pages/AppShellWrapper.tsx` | foundation | shell parity with app assembly | ensure entity-page shell path uses same nav contract and does not lag behind main app shell | now |
-| `src/ui/manifest/runtime.tsx` | foundation | runtime state/resource/workflow alignment | remain canonical runtime state/data layer; do not add visual-specific side channels | next |
-| `src/ui/components/register.ts` | foundation | consistent package-root registration | import from package roots or explicit `schema.ts`; do not invent API shape here | next |
+| Path                                            | Owner      | Target contract                              | Required cutover                                                                                                                    | Priority |
+| ----------------------------------------------- | ---------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `src/ui/components/_base/schema.ts`             | foundation | canonical styleable element fragments        | export `styleableElementFields`, `styleableElementSchema`, `statefulElementSchema`, `slotsSchema(...)`; remove duplication pressure | now      |
+| `src/ui/components/_base/component-wrapper.tsx` | foundation | shared root and sub-surface style resolution | expose reusable resolution path for non-root surfaces; do not stay root-only                                                        | now      |
+| `src/ui/components/_base/style-props.ts`        | foundation | single universal style vocabulary            | remain source of style prop semantics; do not fork for grouped surfaces                                                             | now      |
+| `src/ui/components/_base/style-surfaces.ts`     | foundation | canonical sub-surface merge runtime          | create new shared merge/state resolution utility                                                                                    | now      |
+| `src/ui/manifest/schema.ts`                     | foundation | single manifest-side declarative contract    | import shared slot/state fragments; normalize aliases; keep one manifest vocabulary                                                 | now      |
+| `src/ui/manifest/app.tsx`                       | foundation | real nav/runtime handoff alignment           | pass canonical slot/state config through live app assembly path                                                                     | now      |
+| `src/ui/entity-pages/AppShellWrapper.tsx`       | foundation | shell parity with app assembly               | ensure entity-page shell path uses same nav contract and does not lag behind main app shell                                         | now      |
+| `src/ui/manifest/runtime.tsx`                   | foundation | runtime state/resource/workflow alignment    | remain canonical runtime state/data layer; do not add visual-specific side channels                                                 | next     |
+| `src/ui/components/register.ts`                 | foundation | consistent package-root registration         | import from package roots or explicit `schema.ts`; do not invent API shape here                                                     | next     |
 
 ### Existing primitive and primitive-adjacent packages
 
-| Path | Owner | Target contract | Required cutover | Priority |
-|---|---|---|---|---|
-| `src/ui/components/forms/button` | primitive | canonical button/trigger family | normalize package layout; add explicit schema/types story; become the button/trigger source of truth | now |
-| `src/ui/components/primitives/floating-menu` | primitive | canonical floating/menu family | normalize package layout; add explicit schema/types story; own panel/item/separator/label contract | now |
-| `src/ui/components/primitives/link` | primitive | canonical link/navigation-link family | add public types/tests; align grouped link consumers to it | next |
-| `src/ui/components/layout/collapsible` | primitive-adjacent | canonical disclosure family seed | either remain package root for disclosure family or be formalized into primitive disclosure contract | next |
-| `src/ui/components/_base/context-menu-portal.tsx` | foundation -> primitive-adjacent | explicit context/floating primitive infra | stop living as hidden behavior island; either fold into floating/menu family or wrap cleanly | next |
-| `src/ui/components/_base/button-styles.ts` | foundation -> primitive-adjacent | button-family infra only | subordinate to button/trigger family; must not remain alternate public styling path | next |
-| `src/ui/components/primitives/text` | primitive | canonical text primitive | add public types/tests as needed; keep slot/state parity if internal slots expand | later |
-| `src/ui/components/primitives/stack` | primitive | canonical stack/layout primitive | add public types/tests as needed; maintain package discipline | later |
-| `src/ui/components/primitives/divider` | primitive | canonical divider/separator primitive | add public types/tests; align separator-like grouped consumers where semantics fit | later |
+| Path                                              | Owner                            | Target contract                           | Required cutover                                                                                     | Priority |
+| ------------------------------------------------- | -------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------- |
+| `src/ui/components/forms/button`                  | primitive                        | canonical button/trigger family           | normalize package layout; add explicit schema/types story; become the button/trigger source of truth | now      |
+| `src/ui/components/primitives/floating-menu`      | primitive                        | canonical floating/menu family            | normalize package layout; add explicit schema/types story; own panel/item/separator/label contract   | now      |
+| `src/ui/components/primitives/link`               | primitive                        | canonical link/navigation-link family     | add public types/tests; align grouped link consumers to it                                           | next     |
+| `src/ui/components/layout/collapsible`            | primitive-adjacent               | canonical disclosure family seed          | either remain package root for disclosure family or be formalized into primitive disclosure contract | next     |
+| `src/ui/components/_base/context-menu-portal.tsx` | foundation -> primitive-adjacent | explicit context/floating primitive infra | stop living as hidden behavior island; either fold into floating/menu family or wrap cleanly         | next     |
+| `src/ui/components/_base/button-styles.ts`        | foundation -> primitive-adjacent | button-family infra only                  | subordinate to button/trigger family; must not remain alternate public styling path                  | next     |
+| `src/ui/components/primitives/text`               | primitive                        | canonical text primitive                  | add public types/tests as needed; keep slot/state parity if internal slots expand                    | later    |
+| `src/ui/components/primitives/stack`              | primitive                        | canonical stack/layout primitive          | add public types/tests as needed; maintain package discipline                                        | later    |
+| `src/ui/components/primitives/divider`            | primitive                        | canonical divider/separator primitive     | add public types/tests; align separator-like grouped consumers where semantics fit                   | later    |
 
 ### Grouped packages in first cutover wave
 
-| Path | Owner | Target contract | Required cutover | Priority |
-|---|---|---|---|---|
-| `src/ui/components/layout/nav` | grouped | nav shell over button/link/floating/menu/item-shell families | remove bespoke item/menu rendering; add canonical slots/per-item slots/state handling; preserve grouped/composable parity | now |
-| `src/ui/components/layout/nav-link` | grouped/composable | nav-link over link/button family | stop bespoke button-like rendering; expose canonical slots/states | now |
-| `src/ui/components/layout/nav-dropdown` | grouped/composable | nav dropdown over button + floating/menu family | remove private dropdown implementation; expose trigger/panel/item slots; preserve primitive configurability | now |
-| `src/ui/components/layout/nav-section` | grouped/composable | nav grouping shell over canonical slots | expose header/content/item surfaces cleanly; do not invent custom visual fields | now |
-| `src/ui/components/layout/nav-user-menu` | grouped/composable | user menu over button + floating/menu family | remove private menu implementation; expose trigger/avatar/panel/item surfaces | now |
-| `src/ui/components/overlay/dropdown-menu` | grouped | menu wrapper over button + floating/menu family | align trigger with button family; keep menu surfaces canonical | now |
-| `src/ui/components/overlay/context-menu` | grouped | context-menu over floating/menu family | converge with menu family contract; expose canonical slots/states | now |
-| `src/ui/components/overlay/popover` | grouped | floating content over trigger + panel family | remove bespoke outside-click/escape/positioning implementation where shared family covers it | now |
-| `src/ui/components/overlay/hover-card` | grouped | hover-triggered floating content | converge on floating family and canonical trigger/panel/content slots | next |
-| `src/ui/components/overlay/command-palette` | grouped | command surface over input + list/menu/item-shell families | extract missing primitives before exposing grouped sugar; do not keep isolated list/search shell | next |
+| Path                                        | Owner              | Target contract                                              | Required cutover                                                                                                          | Priority |
+| ------------------------------------------- | ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `src/ui/components/layout/nav`              | grouped            | nav shell over button/link/floating/menu/item-shell families | remove bespoke item/menu rendering; add canonical slots/per-item slots/state handling; preserve grouped/composable parity | now      |
+| `src/ui/components/layout/nav-link`         | grouped/composable | nav-link over link/button family                             | stop bespoke button-like rendering; expose canonical slots/states                                                         | now      |
+| `src/ui/components/layout/nav-dropdown`     | grouped/composable | nav dropdown over button + floating/menu family              | remove private dropdown implementation; expose trigger/panel/item slots; preserve primitive configurability               | now      |
+| `src/ui/components/layout/nav-section`      | grouped/composable | nav grouping shell over canonical slots                      | expose header/content/item surfaces cleanly; do not invent custom visual fields                                           | now      |
+| `src/ui/components/layout/nav-user-menu`    | grouped/composable | user menu over button + floating/menu family                 | remove private menu implementation; expose trigger/avatar/panel/item surfaces                                             | now      |
+| `src/ui/components/overlay/dropdown-menu`   | grouped            | menu wrapper over button + floating/menu family              | align trigger with button family; keep menu surfaces canonical                                                            | now      |
+| `src/ui/components/overlay/context-menu`    | grouped            | context-menu over floating/menu family                       | converge with menu family contract; expose canonical slots/states                                                         | now      |
+| `src/ui/components/overlay/popover`         | grouped            | floating content over trigger + panel family                 | remove bespoke outside-click/escape/positioning implementation where shared family covers it                              | now      |
+| `src/ui/components/overlay/hover-card`      | grouped            | hover-triggered floating content                             | converge on floating family and canonical trigger/panel/content slots                                                     | next     |
+| `src/ui/components/overlay/command-palette` | grouped            | command surface over input + list/menu/item-shell families   | extract missing primitives before exposing grouped sugar; do not keep isolated list/search shell                          | next     |
 
 ### Grouped packages in second cutover wave
 
-| Path | Owner | Target contract | Required cutover | Priority |
-|---|---|---|---|---|
-| `src/ui/components/navigation/tabs` | grouped | tabs family over trigger/panel/item-shell semantics | expose canonical slots/states; decide whether tabs primitive family is extracted | next |
-| `src/ui/components/navigation/accordion` | grouped | disclosure/item-shell family | remove bespoke disclosure shell once primitive contract exists | next |
-| `src/ui/components/navigation/breadcrumb` | grouped | link/separator family | remove bespoke hover logic; expose link/current/separator surfaces | next |
-| `src/ui/components/navigation/stepper` | grouped | item-shell + connector family | expose current/completed/disabled semantics canonically; extract connector/item-shell if needed | next |
-| `src/ui/components/navigation/tree-view` | grouped | disclosure + item-shell family | expose recursive row/disclosure/children surfaces; remove bespoke recursive shell duplication | next |
-| `src/ui/components/data/list` | grouped | item-shell + badge/icon family | remove bespoke interactive row shell; expose empty/loading/error/list item surfaces | next |
-| `src/ui/components/data/data-table` | grouped | table surface + action trigger/menu family | expose header/cell/row/actions/empty/loading/error; extract reusable table primitives where needed | next |
-| `src/ui/components/forms/auto-form` | grouped | field-shell + input/label/helper/error families | stop hiding field/input primitive capability; expose field-level slots and states | next |
-| `src/ui/components/forms/toggle-group` | grouped | segmented/toggle family | remove bespoke segmented shell; expose item/itemLabel/itemIcon states | next |
-| `src/ui/components/forms/wizard` | grouped | stepper + field-shell families | expose step/panel/actions surfaces; reuse field and stepper primitives instead of local shells | next |
+| Path                                      | Owner   | Target contract                                     | Required cutover                                                                                   | Priority |
+| ----------------------------------------- | ------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------- |
+| `src/ui/components/navigation/tabs`       | grouped | tabs family over trigger/panel/item-shell semantics | expose canonical slots/states; decide whether tabs primitive family is extracted                   | next     |
+| `src/ui/components/navigation/accordion`  | grouped | disclosure/item-shell family                        | remove bespoke disclosure shell once primitive contract exists                                     | next     |
+| `src/ui/components/navigation/breadcrumb` | grouped | link/separator family                               | remove bespoke hover logic; expose link/current/separator surfaces                                 | next     |
+| `src/ui/components/navigation/stepper`    | grouped | item-shell + connector family                       | expose current/completed/disabled semantics canonically; extract connector/item-shell if needed    | next     |
+| `src/ui/components/navigation/tree-view`  | grouped | disclosure + item-shell family                      | expose recursive row/disclosure/children surfaces; remove bespoke recursive shell duplication      | next     |
+| `src/ui/components/data/list`             | grouped | item-shell + badge/icon family                      | remove bespoke interactive row shell; expose empty/loading/error/list item surfaces                | next     |
+| `src/ui/components/data/data-table`       | grouped | table surface + action trigger/menu family          | expose header/cell/row/actions/empty/loading/error; extract reusable table primitives where needed | next     |
+| `src/ui/components/forms/auto-form`       | grouped | field-shell + input/label/helper/error families     | stop hiding field/input primitive capability; expose field-level slots and states                  | next     |
+| `src/ui/components/forms/toggle-group`    | grouped | segmented/toggle family                             | remove bespoke segmented shell; expose item/itemLabel/itemIcon states                              | next     |
+| `src/ui/components/forms/wizard`          | grouped | stepper + field-shell families                      | expose step/panel/actions surfaces; reuse field and stepper primitives instead of local shells     | next     |
 
 ### Grouped packages in advanced cutover wave
 
-| Path | Owner | Target contract | Required cutover | Priority |
-|---|---|---|---|---|
-| `src/ui/components/content/timeline` | grouped | item-shell + connector family | expose marker/connector/content/meta/title surfaces; extract connector/item-shell if missing | later |
-| `src/ui/components/workflow/kanban` | grouped | board/column/card family over item-shell primitives | expose column/card shells canonically; avoid isolated drag/drop rendering islands | later |
-| `src/ui/components/media/carousel` | grouped | carousel primitive family | expose viewport/slide/control/indicator surfaces and states canonically | later |
+| Path                                 | Owner   | Target contract                                     | Required cutover                                                                             | Priority |
+| ------------------------------------ | ------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------- |
+| `src/ui/components/content/timeline` | grouped | item-shell + connector family                       | expose marker/connector/content/meta/title surfaces; extract connector/item-shell if missing | later    |
+| `src/ui/components/workflow/kanban`  | grouped | board/column/card family over item-shell primitives | expose column/card shells canonically; avoid isolated drag/drop rendering islands            | later    |
+| `src/ui/components/media/carousel`   | grouped | carousel primitive family                           | expose viewport/slide/control/indicator surfaces and states canonically                      | later    |
 
 ### Planned primitive packages to create when extraction is required
 
-| Target package path | Owner | Target contract | Required cutover | Priority |
-|---|---|---|---|---|
-| `src/ui/components/primitives/disclosure` | planned primitive | canonical disclosure family | extract from `layout/collapsible` plus accordion/tree usage if existing package cannot cleanly serve primitive role | next |
-| `src/ui/components/primitives/item-shell` | planned primitive | canonical interactive row/item shell | unify selectable/current/disabled repeated rows across nav/list/tree/stepper | next |
-| `src/ui/components/primitives/field-shell` | planned primitive | canonical field wrapper family | unify label/input/helper/error/required/invalid shells across forms | next |
-| `src/ui/components/primitives/table-surface` | planned primitive | canonical table surface family | unify header row/cell/body row/cell/action cell shells | later |
-| `src/ui/components/primitives/connector` | planned primitive | canonical progress/connector family | unify stepper/timeline/related connector visuals and semantics | later |
-| `src/ui/components/primitives/segmented-control` | planned primitive | canonical toggle-group family | unify segmented/toggle item rendering and states | later |
+| Target package path                              | Owner             | Target contract                      | Required cutover                                                                                                    | Priority |
+| ------------------------------------------------ | ----------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | -------- |
+| `src/ui/components/primitives/disclosure`        | planned primitive | canonical disclosure family          | extract from `layout/collapsible` plus accordion/tree usage if existing package cannot cleanly serve primitive role | next     |
+| `src/ui/components/primitives/item-shell`        | planned primitive | canonical interactive row/item shell | unify selectable/current/disabled repeated rows across nav/list/tree/stepper                                        | next     |
+| `src/ui/components/primitives/field-shell`       | planned primitive | canonical field wrapper family       | unify label/input/helper/error/required/invalid shells across forms                                                 | next     |
+| `src/ui/components/primitives/table-surface`     | planned primitive | canonical table surface family       | unify header row/cell/body row/cell/action cell shells                                                              | later    |
+| `src/ui/components/primitives/connector`         | planned primitive | canonical progress/connector family  | unify stepper/timeline/related connector visuals and semantics                                                      | later    |
+| `src/ui/components/primitives/segmented-control` | planned primitive | canonical toggle-group family        | unify segmented/toggle item rendering and states                                                                    | later    |
 
 ### Matrix execution rule
 
@@ -3225,29 +3256,29 @@ Use this section when code work starts.
 
 ### Foundation and primitive packages
 
-| Path | Must create | Must update | Must remove or stop relying on | Must prove |
-|---|---|---|---|---|
-| `src/ui/components/_base/style-surfaces.ts` | canonical merge/state utility module | n/a | ad hoc per-component surface merge code as the long-term pattern | one merge algorithm works for root and non-root surfaces |
-| `src/ui/components/_base/schema.ts` | exported shared slot/state fragments if absent | shared styleable/stateful schema fragments | duplicated grouped-surface schema fragments | grouped surfaces use the same vocabulary as roots |
-| `src/ui/components/_base/component-wrapper.tsx` | n/a | shared style resolution hooks/helpers for sub-surfaces as needed | root-only assumption for universal styling resolution | sub-surfaces resolve through the same style-prop semantics |
-| `src/ui/manifest/schema.ts` | canonical manifest-side slot/state support if absent | import shared fragments; alias normalization; strict slot handling | bespoke grouped visual fields as canonical API | manifest grammar matches spec registries |
-| `src/ui/components/forms/button` | `schema.ts` and `types.ts` if still absent | package layout, exports, slot contract, tests | implicit package contract only through `component.tsx` | button/trigger family is explicit and reusable |
-| `src/ui/components/primitives/floating-menu` | `schema.ts`, `types.ts`, `__tests__/` if absent | package layout, slot contract, public exports | implicit/internal-only primitive behavior assumptions | floating/menu family is explicit and reusable |
-| `src/ui/components/_base/context-menu-portal.tsx` | explicit primitive-family ownership decision if needed | integrate with floating/menu family or document infra role in code | hidden private menu behavior island | context-menu behavior is no longer architecturally ambiguous |
-| `src/ui/components/_base/button-styles.ts` | n/a | ensure button family owns the public contract | alternate unofficial button API path | button styles are subordinate to button primitive contract |
+| Path                                              | Must create                                            | Must update                                                        | Must remove or stop relying on                                   | Must prove                                                   |
+| ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------ |
+| `src/ui/components/_base/style-surfaces.ts`       | canonical merge/state utility module                   | n/a                                                                | ad hoc per-component surface merge code as the long-term pattern | one merge algorithm works for root and non-root surfaces     |
+| `src/ui/components/_base/schema.ts`               | exported shared slot/state fragments if absent         | shared styleable/stateful schema fragments                         | duplicated grouped-surface schema fragments                      | grouped surfaces use the same vocabulary as roots            |
+| `src/ui/components/_base/component-wrapper.tsx`   | n/a                                                    | shared style resolution hooks/helpers for sub-surfaces as needed   | root-only assumption for universal styling resolution            | sub-surfaces resolve through the same style-prop semantics   |
+| `src/ui/manifest/schema.ts`                       | canonical manifest-side slot/state support if absent   | import shared fragments; alias normalization; strict slot handling | bespoke grouped visual fields as canonical API                   | manifest grammar matches spec registries                     |
+| `src/ui/components/forms/button`                  | `schema.ts` and `types.ts` if still absent             | package layout, exports, slot contract, tests                      | implicit package contract only through `component.tsx`           | button/trigger family is explicit and reusable               |
+| `src/ui/components/primitives/floating-menu`      | `schema.ts`, `types.ts`, `__tests__/` if absent        | package layout, slot contract, public exports                      | implicit/internal-only primitive behavior assumptions            | floating/menu family is explicit and reusable                |
+| `src/ui/components/_base/context-menu-portal.tsx` | explicit primitive-family ownership decision if needed | integrate with floating/menu family or document infra role in code | hidden private menu behavior island                              | context-menu behavior is no longer architecturally ambiguous |
+| `src/ui/components/_base/button-styles.ts`        | n/a                                                    | ensure button family owns the public contract                      | alternate unofficial button API path                             | button styles are subordinate to button primitive contract   |
 
 ### Nav and overlay packages
 
-| Path | Must create | Must update | Must remove or stop relying on | Must prove |
-|---|---|---|---|---|
-| `src/ui/components/layout/nav` | `__tests__/` additions if coverage is thin | grouped slots, per-item slots, state resolution, primitive composition | bespoke item/dropdown rendering logic as the durable pattern | grouped nav equals composable nav in styling power |
-| `src/ui/components/layout/nav-link` | `__tests__/` if absent | canonical slots/states; compose link/button family | bespoke button-like/nav-like shell | link/current/disabled visuals are declarative |
-| `src/ui/components/layout/nav-dropdown` | `__tests__/` if absent | compose button + floating/menu primitives; expose trigger/panel/item slots | private dropdown panel/menu item implementation | trigger and menu surfaces remain declaratively reachable |
-| `src/ui/components/layout/nav-section` | `__tests__/` if absent | canonical header/content slot exposure | custom header-only visual fields as the long-term API | section wrapper does not break slot model |
-| `src/ui/components/layout/nav-user-menu` | `__tests__/` if absent | compose button + floating/menu primitives; expose avatar/trigger/panel/item slots | private user-menu implementation | user menu uses shared behavior and shared slots |
-| `src/ui/components/overlay/dropdown-menu` | `__tests__/` additions if needed | converge trigger on button family; align slot names with floating/menu family | local trigger shell as public pattern | overlay menu and nav menu share primitive contract |
-| `src/ui/components/overlay/context-menu` | `__tests__/` if absent | converge on floating/menu family and canonical slots | context-specific private menu behavior as long-term pattern | context menu aligns with menu family semantics |
-| `src/ui/components/overlay/popover` | `__tests__/` if absent | compose trigger/panel primitives; expose panel/content/header/footer slots | bespoke outside-click/escape/positioning implementation where shared family covers it | popover becomes a real floating-family consumer |
+| Path                                      | Must create                                | Must update                                                                       | Must remove or stop relying on                                                        | Must prove                                               |
+| ----------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `src/ui/components/layout/nav`            | `__tests__/` additions if coverage is thin | grouped slots, per-item slots, state resolution, primitive composition            | bespoke item/dropdown rendering logic as the durable pattern                          | grouped nav equals composable nav in styling power       |
+| `src/ui/components/layout/nav-link`       | `__tests__/` if absent                     | canonical slots/states; compose link/button family                                | bespoke button-like/nav-like shell                                                    | link/current/disabled visuals are declarative            |
+| `src/ui/components/layout/nav-dropdown`   | `__tests__/` if absent                     | compose button + floating/menu primitives; expose trigger/panel/item slots        | private dropdown panel/menu item implementation                                       | trigger and menu surfaces remain declaratively reachable |
+| `src/ui/components/layout/nav-section`    | `__tests__/` if absent                     | canonical header/content slot exposure                                            | custom header-only visual fields as the long-term API                                 | section wrapper does not break slot model                |
+| `src/ui/components/layout/nav-user-menu`  | `__tests__/` if absent                     | compose button + floating/menu primitives; expose avatar/trigger/panel/item slots | private user-menu implementation                                                      | user menu uses shared behavior and shared slots          |
+| `src/ui/components/overlay/dropdown-menu` | `__tests__/` additions if needed           | converge trigger on button family; align slot names with floating/menu family     | local trigger shell as public pattern                                                 | overlay menu and nav menu share primitive contract       |
+| `src/ui/components/overlay/context-menu`  | `__tests__/` if absent                     | converge on floating/menu family and canonical slots                              | context-specific private menu behavior as long-term pattern                           | context menu aligns with menu family semantics           |
+| `src/ui/components/overlay/popover`       | `__tests__/` if absent                     | compose trigger/panel primitives; expose panel/content/header/footer slots        | bespoke outside-click/escape/positioning implementation where shared family covers it | popover becomes a real floating-family consumer          |
 
 ### First-wave execution rule
 
@@ -3273,31 +3304,31 @@ each grouped package.
 
 ### Nav and overlay mapping
 
-| Grouped package | Internal primitive expectation | Required forwarded surfaces |
-|---|---|---|
-| `layout/nav` | link/navigation-link family, item-shell family where needed, floating/menu family for nested menus | `item`, `itemLabel`, `itemIcon`, `itemBadge`, `dropdown`, `dropdownItem`, `dropdownItemLabel`, `dropdownItemIcon`, `userMenuTrigger`, `userMenuItem`, `userAvatar` |
-| `layout/nav-link` | link/navigation-link family | `root`, `label`, `icon`, `badge` |
-| `layout/nav-dropdown` | button/trigger family + floating/menu family | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label` |
-| `layout/nav-user-menu` | button/trigger family + floating/menu family | `trigger`, `triggerLabel`, `triggerIcon`, `avatar`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label` |
-| `overlay/dropdown-menu` | button/trigger family + floating/menu family | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label` |
-| `overlay/context-menu` | floating/menu family | `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label` |
-| `overlay/popover` | button/trigger family + floating panel family | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `content`, `header`, `title`, `description`, `footer`, `closeButton` |
-| `overlay/hover-card` | hover-trigger family + floating panel family | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `content`, `header`, `title`, `description`, `footer` |
+| Grouped package         | Internal primitive expectation                                                                     | Required forwarded surfaces                                                                                                                                        |
+| ----------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `layout/nav`            | link/navigation-link family, item-shell family where needed, floating/menu family for nested menus | `item`, `itemLabel`, `itemIcon`, `itemBadge`, `dropdown`, `dropdownItem`, `dropdownItemLabel`, `dropdownItemIcon`, `userMenuTrigger`, `userMenuItem`, `userAvatar` |
+| `layout/nav-link`       | link/navigation-link family                                                                        | `root`, `label`, `icon`, `badge`                                                                                                                                   |
+| `layout/nav-dropdown`   | button/trigger family + floating/menu family                                                       | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`                                                           |
+| `layout/nav-user-menu`  | button/trigger family + floating/menu family                                                       | `trigger`, `triggerLabel`, `triggerIcon`, `avatar`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`                                                 |
+| `overlay/dropdown-menu` | button/trigger family + floating/menu family                                                       | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`                                                           |
+| `overlay/context-menu`  | floating/menu family                                                                               | `panel`, `item`, `itemLabel`, `itemIcon`, `separator`, `label`                                                                                                     |
+| `overlay/popover`       | button/trigger family + floating panel family                                                      | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `content`, `header`, `title`, `description`, `footer`, `closeButton`                                            |
+| `overlay/hover-card`    | hover-trigger family + floating panel family                                                       | `trigger`, `triggerLabel`, `triggerIcon`, `panel`, `content`, `header`, `title`, `description`, `footer`                                                           |
 
 ### Second-wave mapping
 
-| Grouped package | Internal primitive expectation | Required forwarded surfaces |
-|---|---|---|
-| `navigation/tabs` | tabs or trigger/panel primitive family | `tab`, `tabLabel`, `tabIcon`, `panel` |
-| `navigation/accordion` | disclosure family + item-shell family | `item`, `trigger`, `triggerLabel`, `triggerIcon`, `content` |
-| `navigation/breadcrumb` | link family + divider/separator family | `item`, `link`, `current`, `separator`, `icon` |
-| `navigation/stepper` | item-shell family + connector family | `item`, `marker`, `label`, `description`, `connector`, `content` |
-| `navigation/tree-view` | disclosure family + item-shell family + connector family where needed | `row`, `label`, `icon`, `badge`, `connector`, `disclosure`, `children` |
-| `data/list` | item-shell family + badge/icon primitives | `item`, `itemTitle`, `itemDescription`, `itemIcon`, `itemBadge`, `emptyState`, `loadingState`, `errorState` |
-| `data/data-table` | table-surface family + button/menu families for actions | `headerRow`, `headerCell`, `row`, `cell`, `actionsCell`, `bulkActions`, `emptyState`, `loadingState`, `errorState`, `pagination` |
-| `forms/auto-form` | field-shell family + input/button primitive families | `field`, `label`, `description`, `input`, `helper`, `error`, `requiredIndicator`, `actions`, `submitButton` |
-| `forms/toggle-group` | segmented-control family | `item`, `itemLabel`, `itemIcon`, `indicator` |
-| `forms/wizard` | stepper family + field-shell family + button family | `step`, `stepLabel`, `stepDescription`, `stepMarker`, `stepConnector`, `panel`, `actions`, `backButton`, `nextButton`, `submitButton` |
+| Grouped package         | Internal primitive expectation                                        | Required forwarded surfaces                                                                                                           |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `navigation/tabs`       | tabs or trigger/panel primitive family                                | `tab`, `tabLabel`, `tabIcon`, `panel`                                                                                                 |
+| `navigation/accordion`  | disclosure family + item-shell family                                 | `item`, `trigger`, `triggerLabel`, `triggerIcon`, `content`                                                                           |
+| `navigation/breadcrumb` | link family + divider/separator family                                | `item`, `link`, `current`, `separator`, `icon`                                                                                        |
+| `navigation/stepper`    | item-shell family + connector family                                  | `item`, `marker`, `label`, `description`, `connector`, `content`                                                                      |
+| `navigation/tree-view`  | disclosure family + item-shell family + connector family where needed | `row`, `label`, `icon`, `badge`, `connector`, `disclosure`, `children`                                                                |
+| `data/list`             | item-shell family + badge/icon primitives                             | `item`, `itemTitle`, `itemDescription`, `itemIcon`, `itemBadge`, `emptyState`, `loadingState`, `errorState`                           |
+| `data/data-table`       | table-surface family + button/menu families for actions               | `headerRow`, `headerCell`, `row`, `cell`, `actionsCell`, `bulkActions`, `emptyState`, `loadingState`, `errorState`, `pagination`      |
+| `forms/auto-form`       | field-shell family + input/button primitive families                  | `field`, `label`, `description`, `input`, `helper`, `error`, `requiredIndicator`, `actions`, `submitButton`                           |
+| `forms/toggle-group`    | segmented-control family                                              | `item`, `itemLabel`, `itemIcon`, `indicator`                                                                                          |
+| `forms/wizard`          | stepper family + field-shell family + button family                   | `step`, `stepLabel`, `stepDescription`, `stepMarker`, `stepConnector`, `panel`, `actions`, `backButton`, `nextButton`, `submitButton` |
 
 ### Mapping execution rule
 
@@ -3334,11 +3365,28 @@ const targetPrimitiveSlotRegistries = {
   "src/ui/components/forms/button": {
     slots: ["root", "label", "icon", "leadingIcon", "trailingIcon", "spinner"],
     states: {
-      root: ["hover", "focus", "active", "open", "selected", "current", "disabled"],
+      root: [
+        "hover",
+        "focus",
+        "active",
+        "open",
+        "selected",
+        "current",
+        "disabled",
+      ],
     },
   },
   "src/ui/components/primitives/floating-menu": {
-    slots: ["root", "trigger", "panel", "item", "itemLabel", "itemIcon", "separator", "label"],
+    slots: [
+      "root",
+      "trigger",
+      "panel",
+      "item",
+      "itemLabel",
+      "itemIcon",
+      "separator",
+      "label",
+    ],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
       panel: ["open"],
@@ -3366,13 +3414,40 @@ const targetPrimitiveSlotRegistries = {
     },
   },
   "src/ui/components/primitives/item-shell": {
-    slots: ["root", "label", "description", "icon", "badge", "marker", "meta", "actions"],
+    slots: [
+      "root",
+      "label",
+      "description",
+      "icon",
+      "badge",
+      "marker",
+      "meta",
+      "actions",
+    ],
     states: {
-      root: ["hover", "focus", "active", "selected", "current", "open", "completed", "invalid", "disabled"],
+      root: [
+        "hover",
+        "focus",
+        "active",
+        "selected",
+        "current",
+        "open",
+        "completed",
+        "invalid",
+        "disabled",
+      ],
     },
   },
   "src/ui/components/primitives/field-shell": {
-    slots: ["root", "label", "description", "input", "helper", "error", "requiredIndicator"],
+    slots: [
+      "root",
+      "label",
+      "description",
+      "input",
+      "helper",
+      "error",
+      "requiredIndicator",
+    ],
     states: {
       root: ["focus", "invalid", "disabled"],
       input: ["hover", "focus", "active", "invalid", "disabled"],
@@ -3381,7 +3456,17 @@ const targetPrimitiveSlotRegistries = {
     },
   },
   "src/ui/components/primitives/table-surface": {
-    slots: ["root", "header", "headerRow", "headerCell", "body", "row", "cell", "actionsCell", "footer"],
+    slots: [
+      "root",
+      "header",
+      "headerRow",
+      "headerCell",
+      "body",
+      "row",
+      "cell",
+      "actionsCell",
+      "footer",
+    ],
     states: {
       row: ["hover", "focus", "selected", "current", "disabled"],
       cell: ["selected", "current", "disabled"],
@@ -3427,7 +3512,11 @@ const targetNavigationAndOverlaySlotRegistries = {
       "userAvatar",
     ],
     itemSlots: ["item", "itemLabel", "itemIcon", "itemBadge"],
-    dropdownItemSlots: ["dropdownItem", "dropdownItemLabel", "dropdownItemIcon"],
+    dropdownItemSlots: [
+      "dropdownItem",
+      "dropdownItemLabel",
+      "dropdownItemIcon",
+    ],
     states: {
       item: ["hover", "focus", "selected", "current", "open", "disabled"],
       dropdownItem: ["hover", "focus", "selected", "current", "disabled"],
@@ -3442,7 +3531,18 @@ const targetNavigationAndOverlaySlotRegistries = {
     },
   },
   "src/ui/components/layout/nav-dropdown": {
-    slots: ["root", "trigger", "triggerLabel", "triggerIcon", "panel", "item", "itemLabel", "itemIcon", "separator", "label"],
+    slots: [
+      "root",
+      "trigger",
+      "triggerLabel",
+      "triggerIcon",
+      "panel",
+      "item",
+      "itemLabel",
+      "itemIcon",
+      "separator",
+      "label",
+    ],
     itemSlots: ["item", "itemLabel", "itemIcon"],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
@@ -3457,7 +3557,19 @@ const targetNavigationAndOverlaySlotRegistries = {
     },
   },
   "src/ui/components/layout/nav-user-menu": {
-    slots: ["root", "trigger", "triggerLabel", "triggerIcon", "avatar", "panel", "item", "itemLabel", "itemIcon", "separator", "label"],
+    slots: [
+      "root",
+      "trigger",
+      "triggerLabel",
+      "triggerIcon",
+      "avatar",
+      "panel",
+      "item",
+      "itemLabel",
+      "itemIcon",
+      "separator",
+      "label",
+    ],
     itemSlots: ["item", "itemLabel", "itemIcon"],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
@@ -3465,7 +3577,18 @@ const targetNavigationAndOverlaySlotRegistries = {
     },
   },
   "src/ui/components/overlay/dropdown-menu": {
-    slots: ["root", "trigger", "triggerLabel", "triggerIcon", "panel", "item", "itemLabel", "itemIcon", "separator", "label"],
+    slots: [
+      "root",
+      "trigger",
+      "triggerLabel",
+      "triggerIcon",
+      "panel",
+      "item",
+      "itemLabel",
+      "itemIcon",
+      "separator",
+      "label",
+    ],
     itemSlots: ["item", "itemLabel", "itemIcon"],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
@@ -3473,14 +3596,35 @@ const targetNavigationAndOverlaySlotRegistries = {
     },
   },
   "src/ui/components/overlay/context-menu": {
-    slots: ["root", "trigger", "panel", "item", "itemLabel", "itemIcon", "separator", "label"],
+    slots: [
+      "root",
+      "trigger",
+      "panel",
+      "item",
+      "itemLabel",
+      "itemIcon",
+      "separator",
+      "label",
+    ],
     itemSlots: ["item", "itemLabel", "itemIcon"],
     states: {
       item: ["hover", "focus", "selected", "current", "disabled"],
     },
   },
   "src/ui/components/overlay/popover": {
-    slots: ["root", "trigger", "triggerLabel", "triggerIcon", "panel", "content", "header", "title", "description", "footer", "closeButton"],
+    slots: [
+      "root",
+      "trigger",
+      "triggerLabel",
+      "triggerIcon",
+      "panel",
+      "content",
+      "header",
+      "title",
+      "description",
+      "footer",
+      "closeButton",
+    ],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
       panel: ["open"],
@@ -3488,14 +3632,37 @@ const targetNavigationAndOverlaySlotRegistries = {
     },
   },
   "src/ui/components/overlay/hover-card": {
-    slots: ["root", "trigger", "triggerLabel", "triggerIcon", "panel", "content", "header", "title", "description", "footer"],
+    slots: [
+      "root",
+      "trigger",
+      "triggerLabel",
+      "triggerIcon",
+      "panel",
+      "content",
+      "header",
+      "title",
+      "description",
+      "footer",
+    ],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
       panel: ["open"],
     },
   },
   "src/ui/components/overlay/command-palette": {
-    slots: ["root", "trigger", "panel", "search", "searchInput", "list", "item", "itemLabel", "itemIcon", "groupLabel", "emptyState"],
+    slots: [
+      "root",
+      "trigger",
+      "panel",
+      "search",
+      "searchInput",
+      "list",
+      "item",
+      "itemLabel",
+      "itemIcon",
+      "groupLabel",
+      "emptyState",
+    ],
     itemSlots: ["item", "itemLabel", "itemIcon"],
     states: {
       trigger: ["hover", "focus", "open", "disabled"],
@@ -3519,7 +3686,14 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/navigation/accordion": {
-    slots: ["root", "item", "trigger", "triggerLabel", "triggerIcon", "content"],
+    slots: [
+      "root",
+      "item",
+      "trigger",
+      "triggerLabel",
+      "triggerIcon",
+      "content",
+    ],
     itemSlots: ["item", "trigger", "triggerLabel", "triggerIcon", "content"],
     states: {
       item: ["open", "disabled"],
@@ -3536,8 +3710,23 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/navigation/stepper": {
-    slots: ["root", "item", "marker", "label", "description", "connector", "content"],
-    itemSlots: ["item", "marker", "label", "description", "connector", "content"],
+    slots: [
+      "root",
+      "item",
+      "marker",
+      "label",
+      "description",
+      "connector",
+      "content",
+    ],
+    itemSlots: [
+      "item",
+      "marker",
+      "label",
+      "description",
+      "connector",
+      "content",
+    ],
     states: {
       item: ["hover", "focus", "selected", "current", "completed", "disabled"],
       marker: ["selected", "current", "completed", "disabled"],
@@ -3545,8 +3734,27 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/navigation/tree-view": {
-    slots: ["root", "item", "row", "label", "icon", "badge", "connector", "disclosure", "children"],
-    itemSlots: ["item", "row", "label", "icon", "badge", "connector", "disclosure", "children"],
+    slots: [
+      "root",
+      "item",
+      "row",
+      "label",
+      "icon",
+      "badge",
+      "connector",
+      "disclosure",
+      "children",
+    ],
+    itemSlots: [
+      "item",
+      "row",
+      "label",
+      "icon",
+      "badge",
+      "connector",
+      "disclosure",
+      "children",
+    ],
     states: {
       row: ["hover", "focus", "selected", "current", "open", "disabled"],
       disclosure: ["hover", "focus", "open", "disabled"],
@@ -3554,14 +3762,44 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/data/list": {
-    slots: ["root", "list", "item", "itemTitle", "itemDescription", "itemIcon", "itemBadge", "emptyState", "loadingState", "errorState"],
-    itemSlots: ["item", "itemTitle", "itemDescription", "itemIcon", "itemBadge"],
+    slots: [
+      "root",
+      "list",
+      "item",
+      "itemTitle",
+      "itemDescription",
+      "itemIcon",
+      "itemBadge",
+      "emptyState",
+      "loadingState",
+      "errorState",
+    ],
+    itemSlots: [
+      "item",
+      "itemTitle",
+      "itemDescription",
+      "itemIcon",
+      "itemBadge",
+    ],
     states: {
       item: ["hover", "focus", "active", "selected", "current", "disabled"],
     },
   },
   "src/ui/components/data/data-table": {
-    slots: ["root", "toolbar", "headerRow", "headerCell", "row", "cell", "actionsCell", "bulkActions", "emptyState", "loadingState", "errorState", "pagination"],
+    slots: [
+      "root",
+      "toolbar",
+      "headerRow",
+      "headerCell",
+      "row",
+      "cell",
+      "actionsCell",
+      "bulkActions",
+      "emptyState",
+      "loadingState",
+      "errorState",
+      "pagination",
+    ],
     itemSlots: ["row", "cell", "actionsCell"],
     states: {
       row: ["hover", "focus", "selected", "current", "disabled"],
@@ -3569,8 +3807,29 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/forms/auto-form": {
-    slots: ["root", "section", "sectionTitle", "field", "label", "description", "input", "helper", "error", "requiredIndicator", "actions", "submitButton"],
-    itemSlots: ["field", "label", "description", "input", "helper", "error", "requiredIndicator"],
+    slots: [
+      "root",
+      "section",
+      "sectionTitle",
+      "field",
+      "label",
+      "description",
+      "input",
+      "helper",
+      "error",
+      "requiredIndicator",
+      "actions",
+      "submitButton",
+    ],
+    itemSlots: [
+      "field",
+      "label",
+      "description",
+      "input",
+      "helper",
+      "error",
+      "requiredIndicator",
+    ],
     states: {
       field: ["focus", "invalid", "disabled"],
       input: ["hover", "focus", "active", "invalid", "disabled"],
@@ -3587,8 +3846,27 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/forms/wizard": {
-    slots: ["root", "steps", "step", "stepLabel", "stepDescription", "stepMarker", "stepConnector", "panel", "actions", "backButton", "nextButton", "submitButton"],
-    itemSlots: ["step", "stepLabel", "stepDescription", "stepMarker", "stepConnector"],
+    slots: [
+      "root",
+      "steps",
+      "step",
+      "stepLabel",
+      "stepDescription",
+      "stepMarker",
+      "stepConnector",
+      "panel",
+      "actions",
+      "backButton",
+      "nextButton",
+      "submitButton",
+    ],
+    itemSlots: [
+      "step",
+      "stepLabel",
+      "stepDescription",
+      "stepMarker",
+      "stepConnector",
+    ],
     states: {
       step: ["selected", "current", "completed", "disabled"],
       stepMarker: ["selected", "current", "completed", "disabled"],
@@ -3599,8 +3877,25 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/content/timeline": {
-    slots: ["root", "item", "marker", "connector", "title", "description", "meta", "content"],
-    itemSlots: ["item", "marker", "connector", "title", "description", "meta", "content"],
+    slots: [
+      "root",
+      "item",
+      "marker",
+      "connector",
+      "title",
+      "description",
+      "meta",
+      "content",
+    ],
+    itemSlots: [
+      "item",
+      "marker",
+      "connector",
+      "title",
+      "description",
+      "meta",
+      "content",
+    ],
     states: {
       item: ["selected", "current", "completed", "disabled"],
       marker: ["selected", "current", "completed", "disabled"],
@@ -3608,21 +3903,60 @@ const targetGroupedSlotRegistries = {
     },
   },
   "src/ui/components/workflow/kanban": {
-    slots: ["root", "column", "columnHeader", "columnTitle", "columnCount", "columnBody", "card", "cardTitle", "cardDescription", "cardMeta", "emptyState"],
-    itemSlots: ["column", "columnHeader", "columnTitle", "columnCount", "columnBody", "card", "cardTitle", "cardDescription", "cardMeta"],
+    slots: [
+      "root",
+      "column",
+      "columnHeader",
+      "columnTitle",
+      "columnCount",
+      "columnBody",
+      "card",
+      "cardTitle",
+      "cardDescription",
+      "cardMeta",
+      "emptyState",
+    ],
+    itemSlots: [
+      "column",
+      "columnHeader",
+      "columnTitle",
+      "columnCount",
+      "columnBody",
+      "card",
+      "cardTitle",
+      "cardDescription",
+      "cardMeta",
+    ],
     states: {
       column: ["selected", "current", "disabled"],
       card: ["hover", "focus", "active", "selected", "current", "disabled"],
     },
   },
   "src/ui/components/media/carousel": {
-    slots: ["root", "viewport", "track", "slide", "controls", "prevButton", "nextButton", "indicator", "indicatorItem"],
+    slots: [
+      "root",
+      "viewport",
+      "track",
+      "slide",
+      "controls",
+      "prevButton",
+      "nextButton",
+      "indicator",
+      "indicatorItem",
+    ],
     itemSlots: ["slide", "indicatorItem"],
     states: {
       slide: ["active", "selected", "current"],
       prevButton: ["hover", "focus", "active", "disabled"],
       nextButton: ["hover", "focus", "active", "disabled"],
-      indicatorItem: ["hover", "focus", "active", "selected", "current", "disabled"],
+      indicatorItem: [
+        "hover",
+        "focus",
+        "active",
+        "selected",
+        "current",
+        "disabled",
+      ],
     },
   },
 } as const;
@@ -4179,9 +4513,9 @@ This checklist is intentionally procedural for zero-context execution.
 9. Implement shared merge/runtime helpers second.
 10. Upgrade one product area at a time using canonical `slots`.
 11. When upgrading a grouped component, upgrade its primitive/composable equivalent in the same
-   phase if one exists.
+    phase if one exists.
 12. When upgrading a grouped component that currently rolls its own primitive behavior, either
-   converge it on an existing primitive or extract a new primitive first.
+    converge it on an existing primitive or extract a new primitive first.
 13. Normalize any temporary aliases into canonical `slots`.
 14. Remove obsolete visual APIs in the same cutover once canonical slots fully cover the use case.
 15. Normalize touched component packages toward the canonical repository layout unless there is a

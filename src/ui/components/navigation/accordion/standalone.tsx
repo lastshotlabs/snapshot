@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useCallback,
@@ -341,10 +341,12 @@ export function AccordionBase({
               }}
               surfaceId={`${rootId}-trigger-${index}`}
               surfaceConfig={triggerSurface.resolvedConfigForWrapper}
-              activeStates={[
-                ...(isOpen ? ["open"] : []),
-                ...(isDisabled ? ["disabled"] : []),
-              ] as Array<"open" | "disabled">}
+              activeStates={
+                [
+                  ...(isOpen ? ["open"] : []),
+                  ...(isDisabled ? ["disabled"] : []),
+                ] as Array<"open" | "disabled">
+              }
             >
               {iconPosition === "left" ? <Chevron open={isOpen} /> : null}
               {headerLabel}

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -44,8 +44,7 @@ export function CodeBase({
   slots,
 }: CodeBaseProps) {
   const rootId = id ?? "code";
-  const displayValue =
-    value.trim().length > 0 ? value : fallback;
+  const displayValue = value.trim().length > 0 ? value : fallback;
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -105,7 +105,8 @@ export function AvatarBase({
   }, [src]);
 
   const px = SIZE_PX[size] ?? 40;
-  const initialsFontSize = INITIALS_FONT_SIZE[size] ?? DEFAULT_INITIALS_FONT_SIZE;
+  const initialsFontSize =
+    INITIALS_FONT_SIZE[size] ?? DEFAULT_INITIALS_FONT_SIZE;
   const showImage = src && !imgError;
   const initials = name ? getInitials(name) : null;
   const borderRadius =

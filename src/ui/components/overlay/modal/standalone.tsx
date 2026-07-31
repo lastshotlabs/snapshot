@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback, useEffect, useRef } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -141,11 +141,10 @@ export function ModalBase({
     };
   }, [open]);
 
-  useFocusTrap(
-    open && animating && trapFocus,
-    dialogRef,
-    { initialFocus, returnFocus },
-  );
+  useFocusTrap(open && animating && trapFocus, dialogRef, {
+    initialFocus,
+    returnFocus,
+  });
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
@@ -189,7 +188,8 @@ export function ModalBase({
     implementationBase: {
       position: "fixed",
       inset: 0,
-      backgroundColor: "var(--sn-modal-overlay, color-mix(in oklch, var(--sn-color-foreground, #111827) 40%, transparent))",
+      backgroundColor:
+        "var(--sn-modal-overlay, color-mix(in oklch, var(--sn-color-foreground, #111827) 40%, transparent))",
       style: {
         opacity: animating ? 1 : 0,
         transition: `opacity var(--sn-duration-normal, ${ANIMATION_DURATION}ms) var(--sn-ease-default, ease)`,
@@ -214,7 +214,8 @@ export function ModalBase({
       outline: "none",
       backgroundColor: "var(--sn-color-surface, #fff)",
       borderRadius: size === "full" ? "0" : "var(--sn-radius-xl, 1rem)",
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
       boxShadow:
         "0 24px 48px -12px color-mix(in oklch, var(--sn-color-foreground, #111827) 18%, transparent), 0 0 0 1px color-mix(in oklch, var(--sn-color-border, #e5e7eb) 50%, transparent)",
       style: {

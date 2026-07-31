@@ -3,7 +3,13 @@
  */
 import { describe, it, expect, vi } from "vitest";
 import { afterEach } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import {
   AppStateProvider,
   RouteStateProvider,

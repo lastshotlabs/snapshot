@@ -1,6 +1,12 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import { Icon } from "../../../icons/index";
@@ -85,13 +91,34 @@ export interface FeedBaseProps {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const BADGE_COLOR_MAP: Record<string, { bg: string; fg: string }> = {
-  primary: { bg: "var(--sn-color-primary, #2563eb)", fg: "var(--sn-color-primary-foreground, #ffffff)" },
-  secondary: { bg: "var(--sn-color-secondary, #f3f4f6)", fg: "var(--sn-color-secondary-foreground, #111827)" },
-  success: { bg: "var(--sn-color-success, #16a34a)", fg: "var(--sn-color-success-foreground, #ffffff)" },
-  warning: { bg: "var(--sn-color-warning, #d97706)", fg: "var(--sn-color-warning-foreground, #ffffff)" },
-  destructive: { bg: "var(--sn-color-destructive, #dc2626)", fg: "var(--sn-color-destructive-foreground, #ffffff)" },
-  info: { bg: "var(--sn-color-info, #2563eb)", fg: "var(--sn-color-info-foreground, #ffffff)" },
-  muted: { bg: "var(--sn-color-muted, #f3f4f6)", fg: "var(--sn-color-muted-foreground, #6b7280)" },
+  primary: {
+    bg: "var(--sn-color-primary, #2563eb)",
+    fg: "var(--sn-color-primary-foreground, #ffffff)",
+  },
+  secondary: {
+    bg: "var(--sn-color-secondary, #f3f4f6)",
+    fg: "var(--sn-color-secondary-foreground, #111827)",
+  },
+  success: {
+    bg: "var(--sn-color-success, #16a34a)",
+    fg: "var(--sn-color-success-foreground, #ffffff)",
+  },
+  warning: {
+    bg: "var(--sn-color-warning, #d97706)",
+    fg: "var(--sn-color-warning-foreground, #ffffff)",
+  },
+  destructive: {
+    bg: "var(--sn-color-destructive, #dc2626)",
+    fg: "var(--sn-color-destructive-foreground, #ffffff)",
+  },
+  info: {
+    bg: "var(--sn-color-info, #2563eb)",
+    fg: "var(--sn-color-info-foreground, #ffffff)",
+  },
+  muted: {
+    bg: "var(--sn-color-muted, #f3f4f6)",
+    fg: "var(--sn-color-muted-foreground, #6b7280)",
+  },
 };
 
 function formatTimestamp(timestamp: string): string {
@@ -120,7 +147,10 @@ function resolveGroupLabel(
   const date = new Date(timestamp);
   if (Number.isNaN(date.getTime())) return "Unknown";
   if (groupBy === "month") {
-    return new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(date);
+    return new Intl.DateTimeFormat(undefined, {
+      month: "long",
+      year: "numeric",
+    }).format(date);
   }
   if (groupBy === "week") {
     const start = new Date(date);
@@ -129,7 +159,11 @@ function resolveGroupLabel(
     start.setDate(start.getDate() - offset);
     return `Week of ${new Intl.DateTimeFormat().format(start)}`;
   }
-  return new Intl.DateTimeFormat(undefined, { month: "long", day: "numeric", year: "numeric" }).format(date);
+  return new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
 }
 
 function groupItems(
@@ -146,7 +180,10 @@ function groupItems(
     if (bucket) bucket.push(item);
     else groups.set(label, [item]);
   }
-  return Array.from(groups, ([label, groupedItems]) => ({ label, items: groupedItems }));
+  return Array.from(groups, ([label, groupedItems]) => ({
+    label,
+    items: groupedItems,
+  }));
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -229,8 +266,10 @@ function FeedItemRow({
       hover: { bg: "var(--sn-color-accent, var(--sn-color-muted))" },
       states: { selected: { bg: "var(--sn-color-muted, #f3f4f6)" } },
       style: {
-        borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-        transition: "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+        borderBottom:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+        transition:
+          "background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
       },
     },
     componentSurface: slots?.item,
@@ -239,7 +278,13 @@ function FeedItemRow({
   const avatarImageSurface = resolveSurfacePresentation({
     surfaceId: `${itemId}-avatarImage`,
     implementationBase: {
-      style: { width: "2rem", height: "2rem", borderRadius: "var(--sn-radius-full, 9999px)", objectFit: "cover", flexShrink: 0 },
+      style: {
+        width: "2rem",
+        height: "2rem",
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        objectFit: "cover",
+        flexShrink: 0,
+      },
     },
     componentSurface: slots?.avatarImage,
   });
@@ -253,8 +298,12 @@ function FeedItemRow({
       fontWeight: "semibold",
       color: "var(--sn-color-primary, #2563eb)",
       style: {
-        width: "2rem", height: "2rem", borderRadius: "var(--sn-radius-full, 9999px)", flexShrink: 0,
-        backgroundColor: "color-mix(in oklch, var(--sn-color-primary, #2563eb) 14%, var(--sn-color-muted, #e5e7eb))",
+        width: "2rem",
+        height: "2rem",
+        borderRadius: "var(--sn-radius-full, 9999px)",
+        flexShrink: 0,
+        backgroundColor:
+          "color-mix(in oklch, var(--sn-color-primary, #2563eb) 14%, var(--sn-color-muted, #e5e7eb))",
         lineHeight: 1,
       },
     },
@@ -267,12 +316,21 @@ function FeedItemRow({
   });
   const headerRowSurface = resolveSurfacePresentation({
     surfaceId: `${itemId}-headerRow`,
-    implementationBase: { display: "flex", alignItems: "center", gap: "sm", flexWrap: "wrap" },
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "sm",
+      flexWrap: "wrap",
+    },
     componentSurface: slots?.headerRow,
   });
   const titleSurface = resolveSurfacePresentation({
     surfaceId: `${itemId}-title`,
-    implementationBase: { fontSize: "sm", fontWeight: "medium", color: "var(--sn-color-card-foreground, #111827)" },
+    implementationBase: {
+      fontSize: "sm",
+      fontWeight: "medium",
+      color: "var(--sn-color-card-foreground, #111827)",
+    },
     componentSurface: slots?.title,
   });
   const descriptionSurface = resolveSurfacePresentation({
@@ -280,7 +338,12 @@ function FeedItemRow({
     implementationBase: {
       fontSize: "sm",
       color: "var(--sn-color-muted-foreground, #6b7280)",
-      style: { marginTop: "var(--sn-spacing-2xs, 0.125rem)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+      style: {
+        marginTop: "var(--sn-spacing-2xs, 0.125rem)",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
     },
     componentSurface: slots?.description,
   });
@@ -289,13 +352,22 @@ function FeedItemRow({
     implementationBase: {
       fontSize: "xs",
       color: "var(--sn-color-muted-foreground, #6b7280)",
-      style: { flexShrink: 0, alignSelf: "flex-start", paddingTop: "var(--sn-spacing-2xs, 0.125rem)" },
+      style: {
+        flexShrink: 0,
+        alignSelf: "flex-start",
+        paddingTop: "var(--sn-spacing-2xs, 0.125rem)",
+      },
     },
     componentSurface: slots?.timestamp,
   });
   const actionsSurface = resolveSurfacePresentation({
     surfaceId: `${itemId}-actions`,
-    implementationBase: { display: "flex", alignItems: "center", gap: "xs", style: { flexShrink: 0 } },
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "xs",
+      style: { flexShrink: 0 },
+    },
     componentSurface: slots?.actions,
   });
 
@@ -411,15 +483,21 @@ function FeedItemRow({
                     itemAction.variant === "destructive"
                       ? "var(--sn-color-destructive, #dc2626)"
                       : "var(--sn-color-muted-foreground, #6b7280)",
-                  hover: { bg: "var(--sn-color-accent, var(--sn-color-muted))" },
-                  focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+                  hover: {
+                    bg: "var(--sn-color-accent, var(--sn-color-muted))",
+                  },
+                  focus: {
+                    ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+                  },
                   style: {
-                    border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+                    border:
+                      "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
                     backgroundColor:
                       itemAction.variant === "destructive"
                         ? "color-mix(in oklch, var(--sn-color-destructive, #dc2626) 8%, transparent)"
                         : "transparent",
-                    padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+                    padding:
+                      "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
                   },
                 },
                 componentSurface: slots?.itemAction,
@@ -439,7 +517,9 @@ function FeedItemRow({
                     variant="ghost"
                     size="sm"
                   >
-                    {itemAction.icon ? <Icon name={itemAction.icon} size={14} /> : null}
+                    {itemAction.icon ? (
+                      <Icon name={itemAction.icon} size={14} />
+                    ) : null}
                     <span>{itemAction.label}</span>
                   </ButtonControl>
                 </div>
@@ -501,12 +581,21 @@ export function FeedBase({
 }: FeedBaseProps) {
   const rootId = id ?? "feed";
   const [page, setPage] = useState(1);
-  const [selectedItem, setSelectedItem] = useState<Record<string, unknown> | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const [, setRelativeTick] = useState(0);
 
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
-  const visibleItems = useMemo(() => items.slice(0, page * pageSize), [page, pageSize, items]);
-  const groupedItems = useMemo(() => groupItems(visibleItems, groupBy), [groupBy, visibleItems]);
+  const visibleItems = useMemo(
+    () => items.slice(0, page * pageSize),
+    [page, pageSize, items],
+  );
+  const groupedItems = useMemo(
+    () => groupItems(visibleItems, groupBy),
+    [groupBy, visibleItems],
+  );
   const hasMore = page * pageSize < items.length;
 
   const loadMore = useCallback(() => {
@@ -534,7 +623,8 @@ export function FeedBase({
       bg: "var(--sn-color-card, #ffffff)",
       color: "var(--sn-color-card-foreground, #111827)",
       borderRadius: "md",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
     },
     componentSurface: className || style ? { className, style } : undefined,
     itemSurface: slots?.root,
@@ -542,9 +632,17 @@ export function FeedBase({
   const liveBannerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-liveBanner`,
     implementationBase: {
-      display: "flex", alignItems: "center", justifyContent: "space-between", gap: "sm", paddingY: "sm", paddingX: "md",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: "sm",
+      paddingY: "sm",
+      paddingX: "md",
       bg: "var(--sn-color-secondary, #f3f4f6)",
-      style: { borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" },
+      style: {
+        borderBottom:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
     },
     componentSurface: slots?.liveBanner,
   });
@@ -556,9 +654,13 @@ export function FeedBase({
   const liveButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-liveButton`,
     implementationBase: {
-      paddingY: "2xs", paddingX: "sm", borderRadius: "sm",
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
-      bg: "var(--sn-color-card, #ffffff)", cursor: "pointer",
+      paddingY: "2xs",
+      paddingX: "sm",
+      borderRadius: "sm",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+      bg: "var(--sn-color-card, #ffffff)",
+      cursor: "pointer",
       hover: { bg: "var(--sn-color-accent, var(--sn-color-muted))" },
       focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
     },
@@ -566,17 +668,32 @@ export function FeedBase({
   });
   const loadingStateSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadingState`,
-    implementationBase: { padding: "md", fontSize: "sm", color: "var(--sn-color-muted-foreground, #6b7280)", textAlign: "center" },
+    implementationBase: {
+      padding: "md",
+      fontSize: "sm",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      textAlign: "center",
+    },
     componentSurface: slots?.loadingState,
   });
   const errorStateSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-errorState`,
-    implementationBase: { padding: "md", fontSize: "sm", color: "var(--sn-color-destructive, #dc2626)", textAlign: "center" },
+    implementationBase: {
+      padding: "md",
+      fontSize: "sm",
+      color: "var(--sn-color-destructive, #dc2626)",
+      textAlign: "center",
+    },
     componentSurface: slots?.errorState,
   });
   const emptyStateSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-emptyState`,
-    implementationBase: { padding: "md", fontSize: "base", color: "var(--sn-color-muted-foreground, #6b7280)", textAlign: "center" },
+    implementationBase: {
+      padding: "md",
+      fontSize: "base",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      textAlign: "center",
+    },
     componentSurface: slots?.emptyState,
   });
   const listSurface = resolveSurfacePresentation({
@@ -587,15 +704,24 @@ export function FeedBase({
   const paginationSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-pagination`,
     implementationBase: {
-      paddingY: "sm", paddingX: "md", textAlign: "center",
-      style: { borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" },
+      paddingY: "sm",
+      paddingX: "md",
+      textAlign: "center",
+      style: {
+        borderTop:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
     },
     componentSurface: slots?.pagination,
   });
   const loadMoreButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadMoreButton`,
     implementationBase: {
-      paddingY: "xs", paddingX: "sm", fontSize: "sm", color: "var(--sn-color-primary, #111827)", cursor: "pointer",
+      paddingY: "xs",
+      paddingX: "sm",
+      fontSize: "sm",
+      color: "var(--sn-color-primary, #111827)",
+      cursor: "pointer",
       hover: { bg: "var(--sn-color-accent, var(--sn-color-muted))" },
       focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
       style: { background: "none", border: "none" },
@@ -637,18 +763,18 @@ export function FeedBase({
           </div>
         ) : null}
 
-        {isLoading ? (
-          loadingContent ?? (
-            <div
-              data-feed-loading=""
-              data-snapshot-id={`${rootId}-loadingState`}
-              className={loadingStateSurface.className}
-              style={loadingStateSurface.style}
-            >
-              Loading...
-            </div>
-          )
-        ) : null}
+        {isLoading
+          ? (loadingContent ?? (
+              <div
+                data-feed-loading=""
+                data-snapshot-id={`${rootId}-loadingState`}
+                className={loadingStateSurface.className}
+                style={loadingStateSurface.style}
+              >
+                Loading...
+              </div>
+            ))
+          : null}
 
         {error ? (
           <div
@@ -688,11 +814,16 @@ export function FeedBase({
                       const groupLabelSurface = resolveSurfacePresentation({
                         surfaceId: `${rootId}-group-${group.label}`,
                         implementationBase: {
-                          paddingY: "sm", paddingX: "md",
+                          paddingY: "sm",
+                          paddingX: "md",
                           bg: "var(--sn-color-muted, #f3f4f6)",
                           color: "var(--sn-color-muted-foreground, #6b7280)",
-                          fontSize: "xs", fontWeight: "semibold",
-                          style: { textTransform: "uppercase", letterSpacing: "var(--sn-tracking-wide, 0.05em)" },
+                          fontSize: "xs",
+                          fontWeight: "semibold",
+                          style: {
+                            textTransform: "uppercase",
+                            letterSpacing: "var(--sn-tracking-wide, 0.05em)",
+                          },
                         },
                         componentSurface: slots?.groupLabel,
                       });

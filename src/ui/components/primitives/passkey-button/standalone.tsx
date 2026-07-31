@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -58,7 +58,8 @@ export function PasskeyButtonBase({
 }: PasskeyButtonBaseProps) {
   const autoPromptedRef = useRef(false);
   const rootId = id ?? "passkey-button";
-  const componentSurface = className || style ? { className, style } : undefined;
+  const componentSurface =
+    className || style ? { className, style } : undefined;
 
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label`,

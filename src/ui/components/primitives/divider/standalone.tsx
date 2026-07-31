@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -44,7 +44,8 @@ export function DividerBase({
   slots,
 }: DividerBaseProps) {
   const rootId = id ?? "divider";
-  const componentSurface = className || style ? { className, style } : undefined;
+  const componentSurface =
+    className || style ? { className, style } : undefined;
 
   if (orientation === "vertical") {
     const rootSurface = resolveSurfacePresentation({
@@ -80,7 +81,11 @@ export function DividerBase({
       surfaceId: `${rootId}-root`,
       implementationBase: {
         border: "var(--sn-border-thin, 1px) solid var(--sn-color-border)",
-        style: { borderLeft: "none", borderRight: "none", borderBottom: "none" },
+        style: {
+          borderLeft: "none",
+          borderRight: "none",
+          borderBottom: "none",
+        },
       },
       componentSurface,
       itemSurface: slots?.root,

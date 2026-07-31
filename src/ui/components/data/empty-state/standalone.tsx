@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -107,7 +107,8 @@ export function EmptyStateBase({
         width: `${iconSize * 2}px`,
         height: `${iconSize * 2}px`,
         borderRadius: "var(--sn-radius-full, 9999px)",
-        background: "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 60%, transparent)",
+        background:
+          "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 60%, transparent)",
       },
     },
     componentSurface: slots?.icon,

@@ -45,7 +45,8 @@ export function DefaultLoadingBase({
 }: DefaultLoadingBaseProps) {
   const diameter = size === "sm" ? "1rem" : size === "lg" ? "2rem" : "1.5rem";
   const rootId = id ?? "spinner";
-  const componentSurface = className || style ? { className, style } : undefined;
+  const componentSurface =
+    className || style ? { className, style } : undefined;
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,

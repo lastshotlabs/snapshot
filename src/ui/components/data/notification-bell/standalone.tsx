@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -161,9 +161,7 @@ export function NotificationBellBase({
         onClick={onClick}
         testId="notification-bell"
         ariaLabel={
-          showBadge
-            ? `Notifications (${count} unread)`
-            : "Notifications"
+          showBadge ? `Notifications (${count} unread)` : "Notifications"
         }
         ariaLive={ariaLive}
         variant="ghost"

@@ -23,7 +23,10 @@ function getProgram(): ts.Program {
     ts.sys,
     path.dirname(configPath),
   );
-  return ts.createProgram({ rootNames: parsed.fileNames, options: parsed.options });
+  return ts.createProgram({
+    rootNames: parsed.fileNames,
+    options: parsed.options,
+  });
 }
 
 function resolveSymbol(s: ts.Symbol, c: ts.TypeChecker): ts.Symbol {
@@ -42,7 +45,11 @@ function sigOf(s: ts.Symbol, c: ts.TypeChecker): string | undefined {
   const type = c.getTypeOfSymbolAtLocation(t, d);
   const sigs = type.getCallSignatures();
   if (sigs.length === 0) return undefined;
-  return c.signatureToString(sigs[0], undefined, ts.TypeFormatFlags.WriteArrowStyleSignature);
+  return c.signatureToString(
+    sigs[0],
+    undefined,
+    ts.TypeFormatFlags.WriteArrowStyleSignature,
+  );
 }
 
 function sourcePath(s: ts.Symbol, c: ts.TypeChecker): string {
@@ -66,7 +73,8 @@ function kindOf(s: ts.Symbol, c: ts.TypeChecker): string {
 // ── Cheatsheet line formatters ───────────────────────────────────────────────
 
 function funcLine(name: string, sig: string | undefined, doc: string): string {
-  const desc = doc && doc !== "No JSDoc description." ? ` — ${firstSentence(doc)}` : "";
+  const desc =
+    doc && doc !== "No JSDoc description." ? ` — ${firstSentence(doc)}` : "";
   const sigStr = sig ? `${name}${sig}` : name;
   // Truncate very long signatures
   const display = sigStr.length > 120 ? sigStr.slice(0, 117) + "..." : sigStr;
@@ -74,14 +82,16 @@ function funcLine(name: string, sig: string | undefined, doc: string): string {
 }
 
 function typeLine(name: string, kind: string, doc: string): string {
-  const desc = doc && doc !== "No JSDoc description." ? ` — ${firstSentence(doc)}` : "";
+  const desc =
+    doc && doc !== "No JSDoc description." ? ` — ${firstSentence(doc)}` : "";
   return `- \`${name}\` *(${kind})*${desc}`;
 }
 
 function memberLine(name: string, type: string, doc: string): string {
-  const desc = doc && doc !== "No JSDoc description." && doc
-    ? ` — ${firstSentence(doc)}`
-    : "";
+  const desc =
+    doc && doc !== "No JSDoc description." && doc
+      ? ` — ${firstSentence(doc)}`
+      : "";
   const typeStr = type.length > 80 ? type.slice(0, 77) + "..." : type;
   return `- \`${name}\`: \`${typeStr}\`${desc}`;
 }
@@ -134,7 +144,9 @@ function getInterfaceMembers(
   if (!sf) return [];
   const mod = checker.getSymbolAtLocation(sf);
   if (!mod) return [];
-  const sym = checker.getExportsOfModule(mod).find((s) => s.getName() === interfaceName);
+  const sym = checker
+    .getExportsOfModule(mod)
+    .find((s) => s.getName() === interfaceName);
   if (!sym) return [];
   const target = resolveSymbol(sym, checker);
   const decl = target.declarations?.[0];
@@ -192,38 +204,92 @@ function renderGroup(label: string, entries: ExportEntry[]): string {
 
 // ── SDK Section ──────────────────────────────────────────────────────────────
 
-const AUTH_TYPE_RE = /Auth|Login|Register|Logout|Forgot|Mfa|OAuth|WebAuthn|Passkey|Session|Password|Verification|Token(?!Storage)/;
-const SSE_TYPE_NAMES = new Set(["SocketHook", "SseConfig", "SseEndpointConfig", "SseHookResult", "SseEventHookResult"]);
-const COMMUNITY_TYPE_NAMES = new Set(["CommunityNotification", "CommunityNotificationType", "UseCommunityNotificationsOpts", "UseCommunityNotificationsResult"]);
+const AUTH_TYPE_RE =
+  /Auth|Login|Register|Logout|Forgot|Mfa|OAuth|WebAuthn|Passkey|Session|Password|Verification|Token(?!Storage)/;
+const SSE_TYPE_NAMES = new Set([
+  "SocketHook",
+  "SseConfig",
+  "SseEndpointConfig",
+  "SseHookResult",
+  "SseEventHookResult",
+]);
+const COMMUNITY_TYPE_NAMES = new Set([
+  "CommunityNotification",
+  "CommunityNotificationType",
+  "UseCommunityNotificationsOpts",
+  "UseCommunityNotificationsResult",
+]);
 
 const sdkRules: [string, (e: ExportEntry) => boolean][] = [
   ["Factory", (e) => e.source.startsWith("src/create-snapshot")],
   ["API Client", (e) => e.source.startsWith("src/api/")],
-  ["Auth", (e) => e.source.startsWith("src/auth/") || (e.source.startsWith("src/types") && AUTH_TYPE_RE.test(e.name))],
-  ["Community", (e) => e.source.startsWith("src/community/") || (e.source.startsWith("src/types") && COMMUNITY_TYPE_NAMES.has(e.name))],
+  [
+    "Auth",
+    (e) =>
+      e.source.startsWith("src/auth/") ||
+      (e.source.startsWith("src/types") && AUTH_TYPE_RE.test(e.name)),
+  ],
+  [
+    "Community",
+    (e) =>
+      e.source.startsWith("src/community/") ||
+      (e.source.startsWith("src/types") && COMMUNITY_TYPE_NAMES.has(e.name)),
+  ],
   ["Webhooks", (e) => e.source.startsWith("src/webhooks/")],
   ["Plugins", (e) => e.source.startsWith("src/plugin")],
   ["Push Notifications", (e) => e.source.startsWith("src/push/")],
-  ["Realtime", (e) => e.source.startsWith("src/sse/") || e.source.startsWith("src/ws/") || (e.source.startsWith("src/types") && SSE_TYPE_NAMES.has(e.name))],
+  [
+    "Realtime",
+    (e) =>
+      e.source.startsWith("src/sse/") ||
+      e.source.startsWith("src/ws/") ||
+      (e.source.startsWith("src/types") && SSE_TYPE_NAMES.has(e.name)),
+  ],
   ["Schema Generation", (e) => e.source.startsWith("src/schema-generator")],
 ];
 
 // ── UI Section ───────────────────────────────────────────────────────────────
 
 const uiRules: [string, (e: ExportEntry) => boolean][] = [
-  ["Tokens & Flavors", (e) => e.source.startsWith("src/ui/tokens/") || e.source.startsWith("src/ui/analytics/") || e.source.startsWith("src/api/")],
+  [
+    "Tokens & Flavors",
+    (e) =>
+      e.source.startsWith("src/ui/tokens/") ||
+      e.source.startsWith("src/ui/analytics/") ||
+      e.source.startsWith("src/api/"),
+  ],
   ["Context & Data Binding", (e) => e.source.startsWith("src/ui/context/")],
   ["State Runtime", (e) => e.source.startsWith("src/ui/state/")],
   ["Actions", (e) => e.source.startsWith("src/ui/actions/")],
   ["Data Components", (e) => e.source.startsWith("src/ui/components/data/")],
   ["Form Components", (e) => e.source.startsWith("src/ui/components/forms/")],
-  ["Communication Components", (e) => e.source.startsWith("src/ui/components/communication/")],
-  ["Content Components", (e) => e.source.startsWith("src/ui/components/content/")],
-  ["Overlay Components", (e) => e.source.startsWith("src/ui/components/overlay/")],
-  ["Navigation Components", (e) => e.source.startsWith("src/ui/components/navigation/")],
-  ["Layout Components", (e) => e.source.startsWith("src/ui/components/layout/")],
+  [
+    "Communication Components",
+    (e) => e.source.startsWith("src/ui/components/communication/"),
+  ],
+  [
+    "Content Components",
+    (e) => e.source.startsWith("src/ui/components/content/"),
+  ],
+  [
+    "Overlay Components",
+    (e) => e.source.startsWith("src/ui/components/overlay/"),
+  ],
+  [
+    "Navigation Components",
+    (e) => e.source.startsWith("src/ui/components/navigation/"),
+  ],
+  [
+    "Layout Components",
+    (e) => e.source.startsWith("src/ui/components/layout/"),
+  ],
   ["Media Components", (e) => e.source.startsWith("src/ui/components/media/")],
-  ["Hooks & Utilities", (e) => e.source.startsWith("src/ui/hooks/") || e.source.startsWith("src/ui/components/_base/")],
+  [
+    "Hooks & Utilities",
+    (e) =>
+      e.source.startsWith("src/ui/hooks/") ||
+      e.source.startsWith("src/ui/components/_base/"),
+  ],
   ["Icons", (e) => e.source.startsWith("src/ui/icons/")],
   ["Workflows", (e) => e.source.startsWith("src/ui/workflows/")],
 ];
@@ -246,7 +312,11 @@ export function generateApiCheatsheet(): void {
   lines.push("## SDK (`@lastshotlabs/snapshot`)");
   lines.push("");
 
-  const sdkExports = getModuleExports(program, checker, repoPath("src", "index.ts"));
+  const sdkExports = getModuleExports(
+    program,
+    checker,
+    repoPath("src", "index.ts"),
+  );
   const sdkGroups = groupBy(sdkExports, sdkRules);
   for (const [label, entries] of sdkGroups) {
     lines.push(renderGroup(label, entries));
@@ -257,44 +327,178 @@ export function generateApiCheatsheet(): void {
 
   lines.push("## SnapshotInstance Hook Surface");
   lines.push("");
-  lines.push("These are the hooks and methods available on the object returned by `createSnapshot()`.");
+  lines.push(
+    "These are the hooks and methods available on the object returned by `createSnapshot()`.",
+  );
   lines.push("");
 
   const instanceMembers = getInterfaceMembers(
-    program, checker, repoPath("src", "types.ts"), "SnapshotInstance",
+    program,
+    checker,
+    repoPath("src", "types.ts"),
+    "SnapshotInstance",
   );
 
   // Sub-group instance members by their comment sections in source
   const instanceGroups: [string, string[]][] = [
-    ["Auth", ["useUser", "useLogin", "useLogout", "useRegister", "useForgotPassword", "isMfaChallenge", "formatAuthError"]],
+    [
+      "Auth",
+      [
+        "useUser",
+        "useLogin",
+        "useLogout",
+        "useRegister",
+        "useForgotPassword",
+        "isMfaChallenge",
+        "formatAuthError",
+      ],
+    ],
     ["Theme", ["useTheme"]],
-    ["MFA", ["usePendingMfaChallenge", "useMfaVerify", "useMfaSetup", "useMfaVerifySetup", "useMfaDisable", "useMfaRecoveryCodes", "useMfaEmailOtpEnable", "useMfaEmailOtpVerifySetup", "useMfaEmailOtpDisable", "useMfaResend", "useMfaMethods"]],
-    ["Account", ["useResetPassword", "useVerifyEmail", "useResendVerification", "useSetPassword", "useDeleteAccount", "useCancelDeletion", "useRefreshToken", "useSessions", "useRevokeSession"]],
-    ["OAuth", ["useOAuthExchange", "useOAuthUnlink", "getOAuthUrl", "getLinkUrl"]],
-    ["WebAuthn & Passkeys", ["useWebAuthnRegisterOptions", "useWebAuthnRegister", "useWebAuthnCredentials", "useWebAuthnRemoveCredential", "useWebAuthnDisable", "usePasskeyLoginOptions", "usePasskeyLogin"]],
-    ["Realtime", ["useSocket", "useRoom", "useRoomEvent", "useSSE", "useSseEvent", "onSseEvent", "useCommunityNotifications"]],
-    ["Community", [
-      "useContainers", "useContainer", "useCreateContainer", "useUpdateContainer", "useDeleteContainer",
-      "useContainerThreads", "useContainerThread", "useCreateThread", "useUpdateThread", "useDeleteThread",
-      "usePublishThread", "useLockThread", "usePinThread", "useUnpinThread",
-      "useThreadReplies", "useReply", "useCreateReply", "useUpdateReply", "useDeleteReply",
-      "useThreadReactions", "useReplyReactions", "useAddThreadReaction", "useRemoveThreadReaction",
-      "useAddReplyReaction", "useRemoveReplyReaction",
-      "useContainerMembers", "useContainerModerators", "useContainerOwners",
-      "useAddMember", "useRemoveMember", "useAssignModerator", "useRemoveModerator",
-      "useAssignOwner", "useRemoveOwner",
-      "useNotifications", "useNotificationsUnreadCount", "useMarkNotificationRead", "useMarkAllNotificationsRead",
-      "useReports", "useReport", "useCreateReport", "useResolveReport", "useDismissReport",
-      "useBans", "useCheckBan", "useCreateBan", "useRemoveBan",
-      "useSearchThreads", "useSearchReplies",
-    ]],
-    ["Webhooks", [
-      "useWebhookEndpoints", "useWebhookEndpoint", "useCreateWebhookEndpoint",
-      "useUpdateWebhookEndpoint", "useDeleteWebhookEndpoint",
-      "useWebhookDeliveries", "useWebhookDelivery", "useTestWebhookEndpoint",
-    ]],
-    ["Infrastructure", ["api", "tokenStorage", "queryClient", "useWebSocketManager", "bootstrap"]],
-    ["Routing", ["protectedBeforeLoad", "guestBeforeLoad", "protect", "guest", "setNavigator"]],
+    [
+      "MFA",
+      [
+        "usePendingMfaChallenge",
+        "useMfaVerify",
+        "useMfaSetup",
+        "useMfaVerifySetup",
+        "useMfaDisable",
+        "useMfaRecoveryCodes",
+        "useMfaEmailOtpEnable",
+        "useMfaEmailOtpVerifySetup",
+        "useMfaEmailOtpDisable",
+        "useMfaResend",
+        "useMfaMethods",
+      ],
+    ],
+    [
+      "Account",
+      [
+        "useResetPassword",
+        "useVerifyEmail",
+        "useResendVerification",
+        "useSetPassword",
+        "useDeleteAccount",
+        "useCancelDeletion",
+        "useRefreshToken",
+        "useSessions",
+        "useRevokeSession",
+      ],
+    ],
+    [
+      "OAuth",
+      ["useOAuthExchange", "useOAuthUnlink", "getOAuthUrl", "getLinkUrl"],
+    ],
+    [
+      "WebAuthn & Passkeys",
+      [
+        "useWebAuthnRegisterOptions",
+        "useWebAuthnRegister",
+        "useWebAuthnCredentials",
+        "useWebAuthnRemoveCredential",
+        "useWebAuthnDisable",
+        "usePasskeyLoginOptions",
+        "usePasskeyLogin",
+      ],
+    ],
+    [
+      "Realtime",
+      [
+        "useSocket",
+        "useRoom",
+        "useRoomEvent",
+        "useSSE",
+        "useSseEvent",
+        "onSseEvent",
+        "useCommunityNotifications",
+      ],
+    ],
+    [
+      "Community",
+      [
+        "useContainers",
+        "useContainer",
+        "useCreateContainer",
+        "useUpdateContainer",
+        "useDeleteContainer",
+        "useContainerThreads",
+        "useContainerThread",
+        "useCreateThread",
+        "useUpdateThread",
+        "useDeleteThread",
+        "usePublishThread",
+        "useLockThread",
+        "usePinThread",
+        "useUnpinThread",
+        "useThreadReplies",
+        "useReply",
+        "useCreateReply",
+        "useUpdateReply",
+        "useDeleteReply",
+        "useThreadReactions",
+        "useReplyReactions",
+        "useAddThreadReaction",
+        "useRemoveThreadReaction",
+        "useAddReplyReaction",
+        "useRemoveReplyReaction",
+        "useContainerMembers",
+        "useContainerModerators",
+        "useContainerOwners",
+        "useAddMember",
+        "useRemoveMember",
+        "useAssignModerator",
+        "useRemoveModerator",
+        "useAssignOwner",
+        "useRemoveOwner",
+        "useNotifications",
+        "useNotificationsUnreadCount",
+        "useMarkNotificationRead",
+        "useMarkAllNotificationsRead",
+        "useReports",
+        "useReport",
+        "useCreateReport",
+        "useResolveReport",
+        "useDismissReport",
+        "useBans",
+        "useCheckBan",
+        "useCreateBan",
+        "useRemoveBan",
+        "useSearchThreads",
+        "useSearchReplies",
+      ],
+    ],
+    [
+      "Webhooks",
+      [
+        "useWebhookEndpoints",
+        "useWebhookEndpoint",
+        "useCreateWebhookEndpoint",
+        "useUpdateWebhookEndpoint",
+        "useDeleteWebhookEndpoint",
+        "useWebhookDeliveries",
+        "useWebhookDelivery",
+        "useTestWebhookEndpoint",
+      ],
+    ],
+    [
+      "Infrastructure",
+      [
+        "api",
+        "tokenStorage",
+        "queryClient",
+        "useWebSocketManager",
+        "bootstrap",
+      ],
+    ],
+    [
+      "Routing",
+      [
+        "protectedBeforeLoad",
+        "guestBeforeLoad",
+        "protect",
+        "guest",
+        "setNavigator",
+      ],
+    ],
     ["Scaffold", ["QueryProvider"]],
   ];
 
@@ -316,7 +520,11 @@ export function generateApiCheatsheet(): void {
   lines.push("## UI (`@lastshotlabs/snapshot/ui`)");
   lines.push("");
 
-  const uiExports = getModuleExports(program, checker, repoPath("src", "ui.ts"));
+  const uiExports = getModuleExports(
+    program,
+    checker,
+    repoPath("src", "ui.ts"),
+  );
   const uiGrouped = groupBy(uiExports, uiRules);
   for (const [label, entries] of uiGrouped) {
     lines.push(renderGroup(label, entries));
@@ -328,7 +536,11 @@ export function generateApiCheatsheet(): void {
   lines.push("## SSR (`@lastshotlabs/snapshot/ssr`)");
   lines.push("");
 
-  const ssrExports = getModuleExports(program, checker, repoPath("src", "ssr", "index.ts"));
+  const ssrExports = getModuleExports(
+    program,
+    checker,
+    repoPath("src", "ssr", "index.ts"),
+  );
   for (const e of ssrExports.sort((a, b) => a.name.localeCompare(b.name))) {
     if (e.kind === "function" || e.kind === "variable") {
       lines.push(funcLine(e.name, e.sig, e.doc));
@@ -343,7 +555,11 @@ export function generateApiCheatsheet(): void {
   lines.push("## Vite (`@lastshotlabs/snapshot/vite`)");
   lines.push("");
 
-  const viteExports = getModuleExports(program, checker, repoPath("src", "vite", "index.ts"));
+  const viteExports = getModuleExports(
+    program,
+    checker,
+    repoPath("src", "vite", "index.ts"),
+  );
   for (const e of viteExports.sort((a, b) => a.name.localeCompare(b.name))) {
     if (e.kind === "function" || e.kind === "variable") {
       lines.push(funcLine(e.name, e.sig, e.doc));

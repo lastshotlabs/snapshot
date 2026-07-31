@@ -6,7 +6,15 @@ rmSync("apps/docs/node_modules/.astro", { recursive: true, force: true });
 
 const result = spawnSync(
   "bun",
-  ["x", "astro", "check", "--root", "apps/docs", "--minimumSeverity", "warning"],
+  [
+    "x",
+    "astro",
+    "check",
+    "--root",
+    "apps/docs",
+    "--minimumSeverity",
+    "warning",
+  ],
   {
     stdio: "inherit",
     encoding: "utf8",

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -184,12 +184,9 @@ export function StepperBase({
               flex: isHorizontal ? 1 : undefined,
               width: isHorizontal ? undefined : "100%",
               padding:
-                variant === "simple"
-                  ? "var(--sn-spacing-sm, 0.5rem)"
-                  : "0",
+                variant === "simple" ? "var(--sn-spacing-sm, 0.5rem)" : "0",
               textAlign: isHorizontal ? "center" : undefined,
-              cursor:
-                clickable && !step.disabled ? "pointer" : "default",
+              cursor: clickable && !step.disabled ? "pointer" : "default",
               appearance: "none",
               background: "none",
               border: "none",
@@ -296,9 +293,7 @@ export function StepperBase({
             surfaceId: `${rootId}-connector-${index}`,
             implementationBase: {
               flex: isHorizontal ? 1 : undefined,
-              width: isHorizontal
-                ? undefined
-                : "var(--sn-border-thin, 1px)",
+              width: isHorizontal ? undefined : "var(--sn-border-thin, 1px)",
               minWidth: isHorizontal
                 ? "var(--sn-spacing-lg, 1.5rem)"
                 : undefined,
@@ -309,9 +304,7 @@ export function StepperBase({
                 variant === "dots" && isHorizontal
                   ? "var(--sn-spacing-xs, 0.25rem)"
                   : undefined,
-              marginLeft: !isHorizontal
-                ? "11px"
-                : undefined,
+              marginLeft: !isHorizontal ? "11px" : undefined,
               backgroundColor:
                 index < currentStep
                   ? "var(--sn-color-success, #16a34a)"
@@ -328,8 +321,7 @@ export function StepperBase({
             ],
           });
 
-          const StepTag =
-            clickable && !step.disabled ? "button" : "div";
+          const StepTag = clickable && !step.disabled ? "button" : "div";
 
           return (
             <React.Fragment key={index}>
@@ -368,7 +360,7 @@ export function StepperBase({
                       className={markerSurface.className}
                       style={markerSurface.style}
                     >
-                      {isCompleted ? "\u2713" : step.icon ?? index + 1}
+                      {isCompleted ? "\u2713" : (step.icon ?? index + 1)}
                     </span>
                     <span
                       data-snapshot-id={`${rootId}-text-group-${index}`}

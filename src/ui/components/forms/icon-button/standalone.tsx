@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, MouseEventHandler } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -18,7 +18,13 @@ export interface IconButtonBaseProps {
   /** Accessible label (required for icon-only buttons). */
   ariaLabel: string;
   /** Visual variant. */
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   /** Size. */
   size?: "xs" | "sm" | "md" | "lg";
   /** Shape of the button. */

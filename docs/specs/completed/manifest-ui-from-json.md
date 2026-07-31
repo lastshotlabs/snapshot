@@ -23,8 +23,15 @@ The playground looks polished. Budget-fe looks like 1999 HTML. Same framework, s
 Generate and inject alongside token CSS:
 
 **A) CSS Reset:**
+
 ```css
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 body {
   font-family: var(--sn-font-sans, system-ui, -apple-system, sans-serif);
   font-size: var(--sn-font-size-md, 1rem);
@@ -34,10 +41,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-button, input, textarea, select { font: inherit; }
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
 ```
 
 **B) Component polish CSS** — extracted from playground's proven rules, parameterized by token vars:
+
 ```css
 [data-snapshot-component="data-table"] {
   overflow: hidden;
@@ -52,6 +65,7 @@ button, input, textarea, select { font: inherit; }
 ```
 
 **C) Page layout default:**
+
 ```css
 [data-snapshot-page] {
   display: flex;
@@ -67,6 +81,7 @@ button, input, textarea, select { font: inherit; }
 **Files**: `stat-card/component.tsx`, `data-table/component.tsx`, `button-styles.ts`
 
 Replace hardcoded inline styles with token var references:
+
 - `boxShadow: "0 1px 3px..."` → `var(--sn-card-shadow, 0 1px 3px...)`
 - Table density/striped/hover/header → `var(--sn-table-*)` tokens
 - Button weight/transform → `var(--sn-button-*)` tokens
@@ -100,16 +115,19 @@ Import `renderIcon` from `../icons/render`. Render alongside label.
 **File**: `src/ui/manifest/structural.tsx` + register in `boot-builtins.ts`
 
 **card**: Container with `--sn-card-*` tokens, optional title/subtitle/actions, children with gap.
+
 ```json
 { "type": "card", "title": "Recent Activity", "children": [...] }
 ```
 
 **section**: Semantic `<section>` with auto heading, description, divider.
+
 ```json
 { "type": "section", "heading": "Finance", "description": "...", "children": [...] }
 ```
 
 **container**: Max-width constraint, centered.
+
 ```json
 { "type": "container", "maxWidth": "xl", "children": [...] }
 ```
@@ -155,6 +173,7 @@ Extract the `@theme` generation from `globals-css.ts` scaffold template into reu
 **Files**: `structural.tsx` (row, stack, card, section), `schema.ts`
 
 Add to base container config schema:
+
 ```json
 {
   "type": "row",
@@ -177,6 +196,7 @@ Enables: Nike hero sections, promotional banners, jumbotrons, feature showcases.
 **Files**: `structural.tsx`, `schema.ts`
 
 Add `grid` structural component alongside `row`:
+
 ```json
 {
   "type": "grid",
@@ -187,12 +207,17 @@ Add `grid` structural component alongside `row`:
 ```
 
 Also support named grid areas:
+
 ```json
 {
   "type": "grid",
   "template": "200px 1fr 200px",
   "rows": "auto 1fr auto",
-  "areas": ["header header header", "sidebar main aside", "footer footer footer"],
+  "areas": [
+    "header header header",
+    "sidebar main aside",
+    "footer footer footer"
+  ],
   "children": [
     { "type": "heading", "text": "Hello", "area": "header" },
     { "type": "nav", "area": "sidebar" }
@@ -209,6 +234,7 @@ Enables: masonry-like layouts, holy grail layout, dashboard panels, sidebar+main
 **Files**: base component rendering in `structural.tsx`
 
 Add `position` field to any component config:
+
 ```json
 {
   "type": "row",
@@ -236,8 +262,8 @@ Enables: sticky headers, pinned toolbars, floating action bars, Gmail compose fo
   "defaultSplit": 30,
   "minSize": 200,
   "children": [
-    { "type": "data-table", "..." : "..." },
-    { "type": "detail-card", "..." : "..." }
+    { "type": "data-table", "...": "..." },
+    { "type": "detail-card", "...": "..." }
   ]
 }
 ```
@@ -270,6 +296,7 @@ Enables: fine-grained spacing control, push-to-end patterns.
 **Files**: `data-table/component.tsx`, `data-table/hook.ts`, `data-table/schema.ts`, `data-table/types.ts`
 
 Add `pagination.type: "infinite"` option:
+
 ```json
 {
   "type": "data-table",
@@ -287,6 +314,7 @@ Enables: Discord message history, Twitter feed, infinite product grids.
 **Files**: new `src/ui/shortcuts/` module (types, parse, listener, index), `schema.ts`, `app.tsx`
 
 Add to manifest top-level:
+
 ```json
 {
   "shortcuts": {
@@ -308,6 +336,7 @@ Enables: Gmail j/k navigation, Discord Ctrl+K command palette, Discourse keyboar
 _Deferred — not implemented in this iteration. Future work:_
 
 Named scroll behaviors on containers:
+
 - `revealOnScroll`: fade-in children as they enter viewport (Intersection Observer)
 - `scrollSpy`: update a target component's active state based on scroll position
 - `hideOnScroll`: hide/show element based on scroll direction (e.g., mobile nav)
@@ -317,6 +346,7 @@ Named scroll behaviors on containers:
 **Files**: `structural.tsx` (ANIMATION_MAP, DURATION_MAP, InlineComponentRenderer), `resolve.ts` (@keyframes)
 
 Add `animate` field to any component config:
+
 ```json
 {
   "type": "stat-card",
@@ -379,6 +409,7 @@ _Deferred — not implemented in this iteration. Future work:_ Grid of thumbnail
 ```
 
 Also supports iframe mode for YouTube/Vimeo:
+
 ```json
 {
   "type": "embed",
@@ -397,8 +428,16 @@ Video component wraps `<video>` with poster/controls/autoPlay/loop/muted support
 {
   "type": "vote",
   "value": 42,
-  "upAction": { "type": "api", "method": "POST", "endpoint": "/api/posts/:id/upvote" },
-  "downAction": { "type": "api", "method": "POST", "endpoint": "/api/posts/:id/downvote" }
+  "upAction": {
+    "type": "api",
+    "method": "POST",
+    "endpoint": "/api/posts/:id/upvote"
+  },
+  "downAction": {
+    "type": "api",
+    "method": "POST",
+    "endpoint": "/api/posts/:id/downvote"
+  }
 }
 ```
 
@@ -456,13 +495,13 @@ After all phases, every component supports:
 
 ## Priority Order
 
-| Phase | Effort | Impact | Unlocks |
-|-------|--------|--------|---------|
-| **Phase 1**: Rendering pipeline | Medium | Critical | Budget-fe, admin dashboards, CRUD apps look real |
-| **Phase 2**: Tailwind integration | Medium | Critical | className override layer lights up for all apps |
-| **Phase 3**: Layout expressiveness | Medium | High | Nike hero, Gmail split-pane, complex dashboards |
-| **Phase 4**: Interaction expressiveness | Large | High | Discord chat scroll, Gmail shortcuts, scroll animations |
-| **Phase 5**: Missing components | Medium | Medium | Carousel, gallery, video, vote fill specific gaps |
+| Phase                                   | Effort | Impact   | Unlocks                                                 |
+| --------------------------------------- | ------ | -------- | ------------------------------------------------------- |
+| **Phase 1**: Rendering pipeline         | Medium | Critical | Budget-fe, admin dashboards, CRUD apps look real        |
+| **Phase 2**: Tailwind integration       | Medium | Critical | className override layer lights up for all apps         |
+| **Phase 3**: Layout expressiveness      | Medium | High     | Nike hero, Gmail split-pane, complex dashboards         |
+| **Phase 4**: Interaction expressiveness | Large  | High     | Discord chat scroll, Gmail shortcuts, scroll animations |
+| **Phase 5**: Missing components         | Medium | Medium   | Carousel, gallery, video, vote fill specific gaps       |
 
 After Phase 1+2: budget-fe, Discourse, basic admin apps — **production-ready from JSON**.
 After Phase 3: Gmail, complex dashboards — **production-ready from JSON**.
@@ -473,57 +512,63 @@ After Phase 4+5: Discord, Nike.com — **production-ready from JSON**.
 ## Files to Modify/Create
 
 ### Phase 1 (Rendering Fix)
-| File | Changes |
-|------|---------|
-| `src/ui/tokens/resolve.ts` | CSS reset, font import, component styles, tokens to :root |
-| `src/ui/manifest/app.tsx` | Inject framework styles, dark mode class management |
-| `src/ui/components/data/stat-card/component.tsx` | Token var references |
-| `src/ui/components/data/data-table/component.tsx` | Token var references |
-| `src/ui/components/_base/button-styles.ts` | Token var references |
-| `src/ui/manifest/structural.tsx` | Button icon + card/section/container components |
-| `src/ui/manifest/boot-builtins.ts` | Register new structural components |
-| `src/ui/manifest/schema.ts` | Card/section/container schemas |
+
+| File                                              | Changes                                                   |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| `src/ui/tokens/resolve.ts`                        | CSS reset, font import, component styles, tokens to :root |
+| `src/ui/manifest/app.tsx`                         | Inject framework styles, dark mode class management       |
+| `src/ui/components/data/stat-card/component.tsx`  | Token var references                                      |
+| `src/ui/components/data/data-table/component.tsx` | Token var references                                      |
+| `src/ui/components/_base/button-styles.ts`        | Token var references                                      |
+| `src/ui/manifest/structural.tsx`                  | Button icon + card/section/container components           |
+| `src/ui/manifest/boot-builtins.ts`                | Register new structural components                        |
+| `src/ui/manifest/schema.ts`                       | Card/section/container schemas                            |
 
 ### Phase 2 (Tailwind)
-| File | Changes |
-|------|---------|
+
+| File                               | Changes                                                                          |
+| ---------------------------------- | -------------------------------------------------------------------------------- |
 | `src/ui/tokens/tailwind-bridge.ts` | New: `generateTailwindBridge()` — `@theme` block mapping `--sn-*` to Tailwind v4 |
-| `src/vite/index.ts` | Virtual `snapshot-globals.css` module, auto-inject `@tailwindcss/vite` |
-| `src/ui/tokens/index.ts` | Barrel export for `generateTailwindBridge` |
+| `src/vite/index.ts`                | Virtual `snapshot-globals.css` module, auto-inject `@tailwindcss/vite`           |
+| `src/ui/tokens/index.ts`           | Barrel export for `generateTailwindBridge`                                       |
 
 ### Phase 3 (Layout)
-| File | Changes |
-|------|---------|
-| `src/ui/manifest/structural.tsx` | Grid, spacer components; background image/overlay on row/card/section; sticky positioning; animation support in InlineComponentRenderer |
-| `src/ui/manifest/schema.ts` | Grid schema, spacer schema, background config schema |
-| `src/ui/components/layout/split-pane/` | New: resizable split pane (component, schema, types, index) |
+
+| File                                   | Changes                                                                                                                                 |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/structural.tsx`       | Grid, spacer components; background image/overlay on row/card/section; sticky positioning; animation support in InlineComponentRenderer |
+| `src/ui/manifest/schema.ts`            | Grid schema, spacer schema, background config schema                                                                                    |
+| `src/ui/components/layout/split-pane/` | New: resizable split pane (component, schema, types, index)                                                                             |
 
 ### Phase 4 (Interaction)
-| File | Changes |
-|------|---------|
-| `src/ui/shortcuts/` | New: types, parse, listener, index — keyboard shortcut module |
-| `src/ui/manifest/app.tsx` | Register shortcut listener in ManifestRouter |
-| `src/ui/manifest/schema.ts` | Shortcuts field on manifest schema |
-| `src/ui/tokens/resolve.ts` | CSS `@keyframes` for 6 built-in animations |
-| `src/ui/manifest/structural.tsx` | ANIMATION_MAP, DURATION_MAP, animate support |
-| `src/ui/components/data/data-table/component.tsx` | InfiniteScrollSentinel component |
-| `src/ui/components/data/data-table/hook.ts` | Infinite scroll accumulation logic |
-| `src/ui/components/data/data-table/schema.ts` | `"infinite"` pagination type |
-| `src/ui/components/data/data-table/types.ts` | `isInfiniteScroll`, `hasMore` fields |
+
+| File                                              | Changes                                                       |
+| ------------------------------------------------- | ------------------------------------------------------------- |
+| `src/ui/shortcuts/`                               | New: types, parse, listener, index — keyboard shortcut module |
+| `src/ui/manifest/app.tsx`                         | Register shortcut listener in ManifestRouter                  |
+| `src/ui/manifest/schema.ts`                       | Shortcuts field on manifest schema                            |
+| `src/ui/tokens/resolve.ts`                        | CSS `@keyframes` for 6 built-in animations                    |
+| `src/ui/manifest/structural.tsx`                  | ANIMATION_MAP, DURATION_MAP, animate support                  |
+| `src/ui/components/data/data-table/component.tsx` | InfiniteScrollSentinel component                              |
+| `src/ui/components/data/data-table/hook.ts`       | Infinite scroll accumulation logic                            |
+| `src/ui/components/data/data-table/schema.ts`     | `"infinite"` pagination type                                  |
+| `src/ui/components/data/data-table/types.ts`      | `isInfiniteScroll`, `hasMore` fields                          |
 
 ### Phase 5 (Components)
-| File | Changes |
-|------|---------|
-| `src/ui/components/media/carousel/` | New: carousel/slider component |
-| `src/ui/components/media/video/` | New: `<video>` wrapper component |
-| `src/ui/components/media/embed/` | New: `<iframe>` wrapper component |
-| `src/ui/components/data/vote/` | New: up/down vote component |
-| `src/ui/components/content/banner/` | New: hero/banner component |
-| `src/ui/components/register.ts` | Registration for all 6 new components |
+
+| File                                | Changes                               |
+| ----------------------------------- | ------------------------------------- |
+| `src/ui/components/media/carousel/` | New: carousel/slider component        |
+| `src/ui/components/media/video/`    | New: `<video>` wrapper component      |
+| `src/ui/components/media/embed/`    | New: `<iframe>` wrapper component     |
+| `src/ui/components/data/vote/`      | New: up/down vote component           |
+| `src/ui/components/content/banner/` | New: hero/banner component            |
+| `src/ui/components/register.ts`     | Registration for all 6 new components |
 
 ### Deferred Items
-| Item | Reason |
-|------|--------|
-| 4.3 Scroll event handling | Needs more design work for scroll-spy/reveal APIs |
-| 5.2 Image gallery + lightbox | Needs lightbox overlay system design |
-| 5.6 Mobile sidebar toggle | Needs responsive breakpoint state management design |
+
+| Item                         | Reason                                              |
+| ---------------------------- | --------------------------------------------------- |
+| 4.3 Scroll event handling    | Needs more design work for scroll-spy/reveal APIs   |
+| 5.2 Image gallery + lightbox | Needs lightbox overlay system design                |
+| 5.6 Mobile sidebar toggle    | Needs responsive breakpoint state management design |

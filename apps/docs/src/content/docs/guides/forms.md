@@ -7,7 +7,12 @@ draft: false
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
 import {
-  InputField, SelectField, ButtonBase, CardBase, ColumnBase, AlertBase,
+  InputField,
+  SelectField,
+  ButtonBase,
+  CardBase,
+  ColumnBase,
+  AlertBase,
 } from "@lastshotlabs/snapshot/ui";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -31,9 +36,21 @@ function CreateProjectForm() {
 
   return (
     <CardBase title="New Project">
-      <form onSubmit={(e) => { e.preventDefault(); reset(); mutate({ name, tier }); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          reset();
+          mutate({ name, tier });
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="Project name" value={name} onChange={setName} required placeholder="My project" />
+          <InputField
+            label="Project name"
+            value={name}
+            onChange={setName}
+            required
+            placeholder="My project"
+          />
           <SelectField
             label="Tier"
             value={tier}
@@ -44,8 +61,12 @@ function CreateProjectForm() {
               { label: "Enterprise", value: "enterprise" },
             ]}
           />
-          {isSuccess && <AlertBase severity="success">Project created</AlertBase>}
-          {error && <AlertBase severity="error">{(error as Error).message}</AlertBase>}
+          {isSuccess && (
+            <AlertBase severity="success">Project created</AlertBase>
+          )}
+          {error && (
+            <AlertBase severity="error">{(error as Error).message}</AlertBase>
+          )}
           <ButtonBase
             label={isPending ? "Creating..." : "Create project"}
             type="submit"
@@ -170,7 +191,7 @@ import { EntityPickerBase } from "@lastshotlabs/snapshot/ui";
   value={assignee}
   onChange={setAssignee}
   searchable
-/>
+/>;
 ```
 
 ## Toggles and switches
@@ -193,12 +214,7 @@ Toggle switch with label and description.
 Pressable toggle button.
 
 ```tsx
-<ToggleField
-  label="Bold"
-  icon="bold"
-  pressed={isBold}
-  onChange={setIsBold}
-/>
+<ToggleField label="Bold" icon="bold" pressed={isBold} onChange={setIsBold} />
 ```
 
 ### ToggleGroupBase
@@ -232,10 +248,19 @@ Range slider with optional dual-thumb mode.
   suffix="%"
   showValue
   onChange={setValue}
-/>
+/>;
 
-{/* Price range */}
-<SliderField min={0} max={1000} range defaultValue={[200, 800]} suffix="$" showLimits />
+{
+  /* Price range */
+}
+<SliderField
+  min={0}
+  max={1000}
+  range
+  defaultValue={[200, 800]}
+  suffix="$"
+  showLimits
+/>;
 ```
 
 ### DatePickerField
@@ -243,13 +268,11 @@ Range slider with optional dual-thumb mode.
 Date picker supporting single, range, and multiple selection.
 
 ```tsx
-<DatePickerField
-  mode="single"
-  format="MMM dd, yyyy"
-  onChange={setDate}
-/>
+<DatePickerField mode="single" format="MMM dd, yyyy" onChange={setDate} />;
 
-{/* Date range */}
+{
+  /* Date range */
+}
 <DatePickerField
   mode="range"
   min="2024-01-01"
@@ -259,7 +282,7 @@ Date picker supporting single, range, and multiple selection.
     { label: "Last 30 days", start: "2024-02-23", end: "2024-03-24" },
   ]}
   onChange={setRange}
-/>
+/>;
 ```
 
 ### ColorPickerField
@@ -357,20 +380,27 @@ import { AutoFormBase } from "@lastshotlabs/snapshot/ui";
   fields={[
     { name: "name", label: "Full Name", type: "text", required: true },
     { name: "email", label: "Email", type: "email", required: true },
-    { name: "role", label: "Role", type: "select", options: [
-      { label: "Admin", value: "admin" },
-      { label: "Member", value: "member" },
-    ]},
+    {
+      name: "role",
+      label: "Role",
+      type: "select",
+      options: [
+        { label: "Admin", value: "admin" },
+        { label: "Member", value: "member" },
+      ],
+    },
     { name: "bio", label: "Bio", type: "textarea" },
   ]}
   values={formValues}
   errors={formErrors}
   touched={touched}
-  onFieldChange={(name, value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
+  onFieldChange={(name, value) =>
+    setFormValues((prev) => ({ ...prev, [name]: value }))
+  }
   onFieldBlur={(name) => setTouched((prev) => ({ ...prev, [name]: true }))}
   onSubmit={() => submitForm(formValues)}
   layout="vertical"
-/>
+/>;
 ```
 
 ## Multi-step wizards
@@ -389,7 +419,12 @@ import { WizardBase } from "@lastshotlabs/snapshot/ui";
       title: "Account",
       fields: [
         { name: "email", label: "Email", type: "email", required: true },
-        { name: "password", label: "Password", type: "password", required: true },
+        {
+          name: "password",
+          label: "Password",
+          type: "password",
+          required: true,
+        },
       ],
     },
     {
@@ -398,10 +433,15 @@ import { WizardBase } from "@lastshotlabs/snapshot/ui";
       fields: [
         { name: "name", label: "Full Name", type: "text", required: true },
         { name: "bio", label: "Bio", type: "textarea" },
-        { name: "role", label: "Role", type: "select", options: [
-          { label: "Developer", value: "dev" },
-          { label: "Designer", value: "design" },
-        ]},
+        {
+          name: "role",
+          label: "Role",
+          type: "select",
+          options: [
+            { label: "Developer", value: "dev" },
+            { label: "Designer", value: "design" },
+          ],
+        },
       ],
       allowSkip: true,
     },
@@ -412,7 +452,7 @@ import { WizardBase } from "@lastshotlabs/snapshot/ui";
     },
   ]}
   submitLabel="Complete Setup"
-/>
+/>;
 ```
 
 WizardBase uses field configs (same shape as AutoFormBase fields) rather than custom React content per step. Each step receives its values, validation, and touched state through the `state` prop, so you can keep wizard state in React state, a form library, or a route loader.
@@ -428,7 +468,13 @@ function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { mutate, isPending, isSuccess, error: serverError, reset } = useMutation({
+  const {
+    mutate,
+    isPending,
+    isSuccess,
+    error: serverError,
+    reset,
+  } = useMutation({
     mutationFn: (data: typeof form) => snap.api.post("/contact", data),
     onSuccess: () => setForm({ name: "", email: "", message: "" }),
   });
@@ -437,27 +483,62 @@ function ContactForm() {
     const next: Record<string, string> = {};
     if (!form.name.trim()) next.name = "Name is required";
     if (!form.email.includes("@")) next.email = "Enter a valid email";
-    if (form.message.length < 10) next.message = "Message must be at least 10 characters";
+    if (form.message.length < 10)
+      next.message = "Message must be at least 10 characters";
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
   return (
     <CardBase title="Contact Us">
-      <form onSubmit={(e) => { e.preventDefault(); reset(); if (validate()) mutate(form); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          reset();
+          if (validate()) mutate(form);
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="Name" value={form.name}
+          <InputField
+            label="Name"
+            value={form.name}
             onChange={(v) => setForm({ ...form, name: v })}
-            errorText={errors.name} required />
-          <InputField label="Email" type="email" value={form.email}
+            errorText={errors.name}
+            required
+          />
+          <InputField
+            label="Email"
+            type="email"
+            value={form.email}
             onChange={(v) => setForm({ ...form, email: v })}
-            errorText={errors.email} required />
-          <TextareaField label="Message" value={form.message}
+            errorText={errors.email}
+            required
+          />
+          <TextareaField
+            label="Message"
+            value={form.message}
             onChange={(v) => setForm({ ...form, message: v })}
-            errorText={errors.message} rows={4} maxLength={500} required />
-          {isSuccess && <AlertBase severity="success">Message sent! We'll get back to you soon.</AlertBase>}
-          {serverError && <AlertBase severity="error">{(serverError as Error).message}</AlertBase>}
-          <ButtonBase label={isPending ? "Sending..." : "Send message"} type="submit" disabled={isPending} fullWidth />
+            errorText={errors.message}
+            rows={4}
+            maxLength={500}
+            required
+          />
+          {isSuccess && (
+            <AlertBase severity="success">
+              Message sent! We'll get back to you soon.
+            </AlertBase>
+          )}
+          {serverError && (
+            <AlertBase severity="error">
+              {(serverError as Error).message}
+            </AlertBase>
+          )}
+          <ButtonBase
+            label={isPending ? "Sending..." : "Send message"}
+            type="submit"
+            disabled={isPending}
+            fullWidth
+          />
         </ColumnBase>
       </form>
     </CardBase>
@@ -471,7 +552,11 @@ Pre-fill a form with fetched data and save changes:
 
 ```tsx
 function EditProjectForm({ projectId }: { projectId: string }) {
-  const { data: project, isLoading } = useQuery<{ name: string; tier: string; description: string }>({
+  const { data: project, isLoading } = useQuery<{
+    name: string;
+    tier: string;
+    description: string;
+  }>({
     queryKey: [`/projects/${projectId}`],
     queryFn: () => snap.api.get(`/projects/${projectId}`),
   });
@@ -486,27 +571,59 @@ function EditProjectForm({ projectId }: { projectId: string }) {
   const active = draft ?? project;
 
   const { mutate, isPending, isSuccess, error } = useMutation({
-    mutationFn: (data: typeof project) => snap.api.patch(`/projects/${projectId}`, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [`/projects/${projectId}`] }),
+    mutationFn: (data: typeof project) =>
+      snap.api.patch(`/projects/${projectId}`, data),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: [`/projects/${projectId}`] }),
   });
 
   if (isLoading || !active) return null;
 
   return (
     <CardBase title="Edit Project">
-      <form onSubmit={(e) => { e.preventDefault(); mutate(active); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mutate(active);
+        }}
+      >
         <ColumnBase gap="md">
-          <InputField label="Name" value={active.name} onChange={(v) => setDraft({ ...active, name: v })} />
-          <SelectField label="Tier" value={active.tier} onChange={(v) => setDraft({ ...active, tier: v })}
+          <InputField
+            label="Name"
+            value={active.name}
+            onChange={(v) => setDraft({ ...active, name: v })}
+          />
+          <SelectField
+            label="Tier"
+            value={active.tier}
+            onChange={(v) => setDraft({ ...active, tier: v })}
             options={[
-              { label: "Free", value: "free" }, { label: "Pro", value: "pro" }, { label: "Enterprise", value: "enterprise" },
-            ]} />
-          <TextareaField label="Description" value={active.description} onChange={(v) => setDraft({ ...active, description: v })} rows={3} />
+              { label: "Free", value: "free" },
+              { label: "Pro", value: "pro" },
+              { label: "Enterprise", value: "enterprise" },
+            ]}
+          />
+          <TextareaField
+            label="Description"
+            value={active.description}
+            onChange={(v) => setDraft({ ...active, description: v })}
+            rows={3}
+          />
           {isSuccess && <AlertBase severity="success">Saved</AlertBase>}
-          {error && <AlertBase severity="error">{(error as Error).message}</AlertBase>}
+          {error && (
+            <AlertBase severity="error">{(error as Error).message}</AlertBase>
+          )}
           <RowBase justify="end" gap="sm">
-            <ButtonBase label="Reset" variant="outline" onClick={() => setDraft(project ? { ...project } : null)} />
-            <ButtonBase label={isPending ? "Saving..." : "Save"} type="submit" disabled={isPending} />
+            <ButtonBase
+              label="Reset"
+              variant="outline"
+              onClick={() => setDraft(project ? { ...project } : null)}
+            />
+            <ButtonBase
+              label={isPending ? "Saving..." : "Save"}
+              type="submit"
+              disabled={isPending}
+            />
           </RowBase>
         </ColumnBase>
       </form>
@@ -517,26 +634,26 @@ function EditProjectForm({ projectId }: { projectId: string }) {
 
 ## All form components
 
-| Component | Description |
-|-----------|-------------|
-| `InputField` | Text input with label and validation |
-| `TextareaField` | Multi-line text with character counter |
-| `SelectField` | Dropdown with static options |
-| `MultiSelectField` | Multi-select with search and pills |
-| `SwitchField` | Toggle switch with label |
-| `SliderField` | Range slider with dual-thumb mode |
-| `DatePickerField` | Date/range picker with presets |
-| `ColorPickerField` | Color picker with swatches |
-| `TagSelectorField` | Tag picker with creation |
-| `ToggleField` | Pressable toggle button |
-| `ToggleGroupBase` | Toggle button group |
-| `LocationInputField` | Location search input |
-| `InlineEditField` | Click-to-edit text |
-| `QuickAddField` | Compact add input |
-| `AutoFormBase` | Config-driven form |
-| `WizardBase` | Multi-step wizard |
-| `ButtonBase` | Styled button |
-| `IconButtonBase` | Icon-only button |
+| Component            | Description                            |
+| -------------------- | -------------------------------------- |
+| `InputField`         | Text input with label and validation   |
+| `TextareaField`      | Multi-line text with character counter |
+| `SelectField`        | Dropdown with static options           |
+| `MultiSelectField`   | Multi-select with search and pills     |
+| `SwitchField`        | Toggle switch with label               |
+| `SliderField`        | Range slider with dual-thumb mode      |
+| `DatePickerField`    | Date/range picker with presets         |
+| `ColorPickerField`   | Color picker with swatches             |
+| `TagSelectorField`   | Tag picker with creation               |
+| `ToggleField`        | Pressable toggle button                |
+| `ToggleGroupBase`    | Toggle button group                    |
+| `LocationInputField` | Location search input                  |
+| `InlineEditField`    | Click-to-edit text                     |
+| `QuickAddField`      | Compact add input                      |
+| `AutoFormBase`       | Config-driven form                     |
+| `WizardBase`         | Multi-step wizard                      |
+| `ButtonBase`         | Styled button                          |
+| `IconButtonBase`     | Icon-only button                       |
 
 ## Next steps
 

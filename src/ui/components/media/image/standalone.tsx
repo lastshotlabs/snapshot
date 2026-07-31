@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -170,8 +170,7 @@ export function SnapshotImageBase({
       width: "100%",
       style: {
         aspectRatio:
-          aspectRatio ??
-          (height ? `${width} / ${height}` : undefined),
+          aspectRatio ?? (height ? `${width} / ${height}` : undefined),
       },
     },
     componentSurface: className || style ? { className, style } : undefined,

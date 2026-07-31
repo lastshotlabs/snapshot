@@ -9,9 +9,7 @@ import React, {
   type CSSProperties,
 } from "react";
 import { Icon } from "../../../icons/index";
-import {
-  resolveSurfacePresentation,
-} from "../../_base/style-surfaces";
+import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { useFocusTrap } from "../../_base/use-focus-trap";
 import { useOverlayAnimation } from "../../_base/use-overlay-animation";
@@ -73,9 +71,11 @@ export interface CommandPaletteBaseProps {
 
 const ANIMATION_DURATION = 150;
 
-function flattenItems(
-  groups: CommandPaletteBaseGroup[],
-): Array<{ item: CommandPaletteBaseItem; groupIndex: number; itemIndex: number }> {
+function flattenItems(groups: CommandPaletteBaseGroup[]): Array<{
+  item: CommandPaletteBaseItem;
+  groupIndex: number;
+  itemIndex: number;
+}> {
   const flat: Array<{
     item: CommandPaletteBaseItem;
     groupIndex: number;
@@ -165,7 +165,10 @@ export function CommandPaletteBase({
       .filter((group) => group.items.length > 0);
   }, [groups, query]);
 
-  const flatItems = useMemo(() => flattenItems(filteredGroups), [filteredGroups]);
+  const flatItems = useMemo(
+    () => flattenItems(filteredGroups),
+    [filteredGroups],
+  );
 
   useEffect(() => {
     setActiveIndex(0);
@@ -501,8 +504,7 @@ export function CommandPaletteBase({
                       states: {
                         current: {
                           bg: "var(--sn-color-accent, #f3f4f6)",
-                          color:
-                            "var(--sn-color-accent-foreground, #111827)",
+                          color: "var(--sn-color-accent-foreground, #111827)",
                         },
                       },
                       style: {
@@ -594,7 +596,8 @@ export function CommandPaletteBase({
                               gap: "var(--sn-spacing-2xs, 0.125rem)",
                               fontSize: "var(--sn-font-size-xs, 0.75rem)",
                               fontFamily: "var(--sn-font-mono, monospace)",
-                              color: "var(--sn-color-muted-foreground, #6b7280)",
+                              color:
+                                "var(--sn-color-muted-foreground, #6b7280)",
                               backgroundColor: "var(--sn-color-muted, #f3f4f6)",
                               padding:
                                 "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",

@@ -169,7 +169,10 @@ export function projectMetricRows(
   return rows.map((row) => {
     const next = { ...row };
     for (const [requestedField, resolvedField] of fieldMap.entries()) {
-      if (next[requestedField] === undefined && next[resolvedField] !== undefined) {
+      if (
+        next[requestedField] === undefined &&
+        next[resolvedField] !== undefined
+      ) {
         next[requestedField] = next[resolvedField];
       }
     }

@@ -1,4 +1,3 @@
-
 export interface TabConfig extends Record<string, unknown> {
   label?: string;
 }

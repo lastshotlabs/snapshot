@@ -87,9 +87,7 @@ interface TokenStorageConfig {
  * @param config - Auth/bootstrap token storage options
  * @returns A per-instance token storage backend
  */
-export function createTokenStorage(
-  config: TokenStorageConfig,
-): TokenStorage {
+export function createTokenStorage(config: TokenStorageConfig): TokenStorage {
   if (config.auth === "cookie") return createNoopStorage();
 
   const key = config.tokenKey ?? "x-user-token";

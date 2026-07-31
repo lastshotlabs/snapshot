@@ -363,7 +363,7 @@ Our mappers do the exact same thing, but the "high-level options" come from
 | Rule                        | Constraint                                                                                 |
 | --------------------------- | ------------------------------------------------------------------------------------------ |
 | Manifest-First              | Output must be valid Snapshot `PageConfig` — same JSON that `ManifestApp` renders          |
-| `src/ui/` boundary          | All mapper code goes under `src/ui/`. Never import slingshot internals.                      |
+| `src/ui/` boundary          | All mapper code goes under `src/ui/`. Never import slingshot internals.                    |
 | Components fetch own data   | Pre-fetched data injected via Snapshot state, not prop drilling                            |
 | No direct component imports | Components communicate via context system (publish/subscribe)                              |
 | Fixed action vocabulary     | Only use the 10 defined action types                                                       |
@@ -2421,20 +2421,20 @@ Phase 8 (custom page)                                        Phase 12 (docs)
 
 ### Dependencies
 
-| Phase    | Depends On      | Why                                         |
-| -------- | --------------- | ------------------------------------------- |
+| Phase    | Depends On        | Why                                         |
+| -------- | ----------------- | ------------------------------------------- |
 | Phase 1  | slingshot Phase 5 | Needs `PageLoaderResult` types published    |
 | Phase 2  | slingshot Phase 5 | Needs `EntityFieldMeta` type                |
-| Phase 3  | Phases 1, 2     | Needs mapper infrastructure + field mappers |
-| Phase 4  | Phases 1, 2     | Needs mapper infrastructure + field mappers |
-| Phase 5  | Phases 1, 2     | Needs mapper infrastructure + field mappers |
-| Phase 6  | Phases 1, 2     | Needs mapper infrastructure                 |
-| Phase 7  | Phase 1         | Needs mapper infrastructure                 |
-| Phase 8  | Phase 1         | Needs mapper infrastructure                 |
-| Phase 9  | Phases 3-8      | Needs all mappers                           |
-| Phase 10 | Phases 3-8      | Needs all mappers                           |
-| Phase 11 | Phases 1-10     | Tests everything                            |
-| Phase 12 | Phases 1-10     | Documents everything                        |
+| Phase 3  | Phases 1, 2       | Needs mapper infrastructure + field mappers |
+| Phase 4  | Phases 1, 2       | Needs mapper infrastructure + field mappers |
+| Phase 5  | Phases 1, 2       | Needs mapper infrastructure + field mappers |
+| Phase 6  | Phases 1, 2       | Needs mapper infrastructure                 |
+| Phase 7  | Phase 1           | Needs mapper infrastructure                 |
+| Phase 8  | Phase 1           | Needs mapper infrastructure                 |
+| Phase 9  | Phases 3-8        | Needs all mappers                           |
+| Phase 10 | Phases 3-8        | Needs all mappers                           |
+| Phase 11 | Phases 1-10       | Tests everything                            |
+| Phase 12 | Phases 1-10       | Documents everything                        |
 
 ### File Ownership
 

@@ -153,14 +153,17 @@ export function renderPage(
           renderToReadableStream: (
             element: React.ReactElement,
             clientManifest: Readonly<Record<string, string>>,
-            options?: { signal?: AbortSignal; onError?: (err: unknown) => void },
+            options?: {
+              signal?: AbortSignal;
+              onError?: (err: unknown) => void;
+            },
           ) => ReadableStream<Uint8Array>;
         };
 
         const rsdwServer = (await import(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore — optional peer dep, not in devDependencies
-          'react-server-dom-webpack/server'
+          "react-server-dom-webpack/server"
         )) as unknown as RsdwServer;
 
         // Pass 1: RSC flight stream
@@ -170,7 +173,7 @@ export function renderPage(
           {
             signal: controller.signal,
             onError(error: unknown) {
-              console.error('[snapshot-ssr] RSC flight render error:', error);
+              console.error("[snapshot-ssr] RSC flight render error:", error);
             },
           },
         );
@@ -184,14 +187,16 @@ export function renderPage(
         type RsdwClient = {
           createFromReadableStream: (
             stream: ReadableStream<Uint8Array>,
-            options?: { serverConsumerManifest?: Readonly<Record<string, string>> },
+            options?: {
+              serverConsumerManifest?: Readonly<Record<string, string>>;
+            },
           ) => Promise<React.ReactElement>;
         };
 
         const rsdwClient = (await import(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore — optional peer dep, not in devDependencies
-          'react-server-dom-webpack/client'
+          "react-server-dom-webpack/client"
         )) as unknown as RsdwClient;
 
         const reconstructedElement = await rsdwClient.createFromReadableStream(
@@ -202,7 +207,7 @@ export function renderPage(
         stream = await renderToReadableStream(reconstructedElement, {
           signal: controller.signal,
           onError(error: unknown) {
-            console.error('[snapshot-ssr] RSC HTML render error:', error);
+            console.error("[snapshot-ssr] RSC HTML render error:", error);
           },
         });
       } else {
@@ -210,7 +215,10 @@ export function renderPage(
         stream = await renderToReadableStream(wrappedElement, {
           signal: controller.signal,
           onError(error: unknown) {
-            console.error("[snapshot-ssr] renderToReadableStream error:", error);
+            console.error(
+              "[snapshot-ssr] renderToReadableStream error:",
+              error,
+            );
           },
         });
       }
@@ -344,7 +352,9 @@ export interface RenderPprOptions {
  *   and bootstrap script URLs.
  * @returns A streaming `Response` with `Content-Type: text/html; charset=utf-8`.
  */
-export async function renderPprPage(options: RenderPprOptions): Promise<Response> {
+export async function renderPprPage(
+  options: RenderPprOptions,
+): Promise<Response> {
   const { element, shell, head, scripts } = options;
 
   // ── No cached shell — fall back to standard SSR ───────────────────────────
@@ -358,13 +368,20 @@ export async function renderPprPage(options: RenderPprOptions): Promise<Response
     const fallbackStream = await renderToReadableStream(element, {
       bootstrapScripts: scripts,
       onError(error: unknown) {
-        console.error("[snapshot-ssr] PPR fallback renderToReadableStream error:", error);
+        console.error(
+          "[snapshot-ssr] PPR fallback renderToReadableStream error:",
+          error,
+        );
       },
     });
 
     const encoder = new TextEncoder();
     const headBytes = encoder.encode(head);
-    const body = buildConcatenatedStream(headBytes, fallbackStream, new Uint8Array(0));
+    const body = buildConcatenatedStream(
+      headBytes,
+      fallbackStream,
+      new Uint8Array(0),
+    );
 
     return new Response(body, {
       status: 200,
@@ -402,7 +419,10 @@ export async function renderPprPage(options: RenderPprOptions): Promise<Response
   const dynamicStream = await renderToReadableStream(element, {
     bootstrapScripts: scripts,
     onError(error: unknown) {
-      console.error("[snapshot-ssr] PPR dynamic renderToReadableStream error:", error);
+      console.error(
+        "[snapshot-ssr] PPR dynamic renderToReadableStream error:",
+        error,
+      );
     },
   });
 

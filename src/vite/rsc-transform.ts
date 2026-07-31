@@ -8,25 +8,23 @@
 //   Collects all files that had 'use client' and maps their exports to chunk names.
 //   The result is written to rsc-manifest.json in the output directory.
 
-import path from 'node:path';
-import type { Plugin } from 'vite';
-import {
-  buildComponentId,
-  hasUseClientDirective,
-} from '../ssr/rsc';
+import path from "node:path";
+import type { Plugin } from "vite";
+import { buildComponentId, hasUseClientDirective } from "../ssr/rsc";
 
 // ─── AST-free export scanner ──────────────────────────────────────────────────
 // Reuses the same pattern as server-actions.ts — regex scanning over the common
 // export forms emitted by TypeScript. Full parser not required here because
 // 'use client' files should contain only component exports.
 
-const EXPORT_FUNCTION_RE = /^export\s+(?:async\s+)?function\s+([\w$]+)\s*[(<]/gm;
+const EXPORT_FUNCTION_RE =
+  /^export\s+(?:async\s+)?function\s+([\w$]+)\s*[(<]/gm;
 const EXPORT_CONST_RE = /^export\s+const\s+([\w$]+)\s*/gm;
 const EXPORT_CLASS_RE = /^export\s+(?:abstract\s+)?class\s+([\w$]+)\s*[{<(]/gm;
 const EXPORT_DEFAULT_RE = /^export\s+default\s+/m;
 
 interface OutputChunkShape {
-  type: 'chunk';
+  type: "chunk";
   facadeModuleId?: string | null;
   moduleIds: string[];
   fileName: string;
@@ -34,7 +32,7 @@ interface OutputChunkShape {
 }
 
 interface OutputAssetShape {
-  type: 'asset';
+  type: "asset";
 }
 
 type OutputBundleShape = Record<string, OutputChunkShape | OutputAssetShape>;
@@ -81,11 +79,8 @@ function resolveChunkFileName(
   bundle: OutputBundleShape,
 ): string | undefined {
   for (const output of Object.values(bundle)) {
-    if (output.type !== 'chunk') continue;
-    if (
-      output.facadeModuleId === fileId ||
-      output.moduleIds.includes(fileId)
-    ) {
+    if (output.type !== "chunk") continue;
+    if (output.facadeModuleId === fileId || output.moduleIds.includes(fileId)) {
       return output.fileName;
     }
   }
@@ -102,7 +97,7 @@ function resolveChunkFileName(
  */
 function toRelativePath(fileId: string, projectRoot: string): string {
   const rel = path.relative(projectRoot, fileId);
-  return rel.replace(/\\/g, '/');
+  return rel.replace(/\\/g, "/");
 }
 
 // ─── Server-side client reference stub ───────────────────────────────────────
@@ -125,20 +120,22 @@ function buildServerStub(
     `// Auto-generated RSC server stub — do not edit.`,
     `// Source: ${relativePath}`,
     `import { createClientReference } from 'react-server-dom-webpack/server';`,
-    '',
+    "",
   ];
 
   for (const name of namedExports) {
     const id = buildComponentId(relativePath, name);
-    lines.push(`export const ${name} = createClientReference(${JSON.stringify(id)});`);
+    lines.push(
+      `export const ${name} = createClientReference(${JSON.stringify(id)});`,
+    );
   }
 
   if (hasDefault) {
-    const id = buildComponentId(relativePath, 'default');
+    const id = buildComponentId(relativePath, "default");
     lines.push(`export default createClientReference(${JSON.stringify(id)});`);
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 // ─── Plugin ───────────────────────────────────────────────────────────────────
@@ -167,7 +164,7 @@ export function rscTransform(): Plugin {
   // Closure-owned state — not module-level. Rule 7.
   let projectRoot = process.cwd();
   let isSsrBuild = false;
-  let outDir = 'dist/server';
+  let outDir = "dist/server";
 
   /**
    * Map from absolute file ID → relative path, for every file that was
@@ -176,19 +173,21 @@ export function rscTransform(): Plugin {
   const clientFiles = new Map<string, string>();
 
   return {
-    name: 'snapshot-rsc-transform',
+    name: "snapshot-rsc-transform",
 
     configResolved(resolvedConfig) {
       projectRoot = resolvedConfig.root;
       isSsrBuild = !!resolvedConfig.build?.ssr;
-      outDir = resolvedConfig.build?.outDir ?? (isSsrBuild ? 'dist/server' : 'dist/client');
+      outDir =
+        resolvedConfig.build?.outDir ??
+        (isSsrBuild ? "dist/server" : "dist/client");
     },
 
     transform(code: string, id: string) {
       // Only transform TypeScript/JavaScript source files.
       if (!/\.[cm]?[jt]sx?$/.test(id)) return null;
       // Skip virtual modules and node_modules.
-      if (id.includes('\0') || id.includes('/node_modules/')) return null;
+      if (id.includes("\0") || id.includes("/node_modules/")) return null;
 
       if (!hasUseClientDirective(code)) return null;
 
@@ -245,8 +244,9 @@ export function rscTransform(): Plugin {
         // We scan these to rebuild the export list without reparsing the original.
         const chunk = Object.values(outputBundle).find(
           (output): output is OutputChunkShape =>
-            output.type === 'chunk' &&
-            (output.facadeModuleId === fileId || output.moduleIds.includes(fileId)),
+            output.type === "chunk" &&
+            (output.facadeModuleId === fileId ||
+              output.moduleIds.includes(fileId)),
         );
 
         if (chunk) {
@@ -259,14 +259,15 @@ export function rscTransform(): Plugin {
           hasDefault = /\bexport\s+default\b/.test(chunk.code);
         }
 
-        const chunkUrl = chunkFileName ?? `assets/${path.basename(relativePath)}`;
+        const chunkUrl =
+          chunkFileName ?? `assets/${path.basename(relativePath)}`;
 
         for (const name of namedExports) {
           const id = buildComponentId(relativePath, name);
           components[id] = chunkUrl;
         }
         if (hasDefault) {
-          const id = buildComponentId(relativePath, 'default');
+          const id = buildComponentId(relativePath, "default");
           components[id] = chunkUrl;
         }
       }
@@ -274,8 +275,8 @@ export function rscTransform(): Plugin {
       const manifestJson = JSON.stringify({ components }, null, 2);
 
       this.emitFile({
-        type: 'asset',
-        fileName: 'rsc-manifest.json',
+        type: "asset",
+        fileName: "rsc-manifest.json",
         source: manifestJson,
       });
     },

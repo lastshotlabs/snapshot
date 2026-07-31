@@ -52,45 +52,79 @@ const sdkGroups: GroupRule[] = [
     label: "Auth",
     test: (p) =>
       p.startsWith("src/auth/") ||
-      (p.startsWith("src/types") && /Auth|Login|Register|Logout|Forgot|Mfa|OAuth|WebAuthn|Passkey|Session|Password|Verification|Token(?!Storage)/.test(p)),
+      (p.startsWith("src/types") &&
+        /Auth|Login|Register|Logout|Forgot|Mfa|OAuth|WebAuthn|Passkey|Session|Password|Verification|Token(?!Storage)/.test(
+          p,
+        )),
   },
   { label: "Community", test: (p) => p.startsWith("src/community/") },
   { label: "Webhooks", test: (p) => p.startsWith("src/webhooks/") },
   { label: "Plugins", test: (p) => p.startsWith("src/plugin") },
   { label: "Push Notifications", test: (p) => p.startsWith("src/push/") },
-  { label: "Realtime", test: (p) => p.startsWith("src/sse/") || p.startsWith("src/ws/") },
-  { label: "Schema Generation", test: (p) => p.startsWith("src/schema-generator") },
+  {
+    label: "Realtime",
+    test: (p) => p.startsWith("src/sse/") || p.startsWith("src/ws/"),
+  },
+  {
+    label: "Schema Generation",
+    test: (p) => p.startsWith("src/schema-generator"),
+  },
   { label: "Core Types", test: () => true },
 ];
 
 const uiGroups: GroupRule[] = [
   {
     label: "Tokens & Flavors",
-    test: (p) => p.startsWith("src/ui/tokens/") || p.startsWith("src/ui/analytics/"),
+    test: (p) =>
+      p.startsWith("src/ui/tokens/") || p.startsWith("src/ui/analytics/"),
   },
   { label: "API Client", test: (p) => p.startsWith("src/api/") },
-  { label: "Context & Data Binding", test: (p) => p.startsWith("src/ui/context/") },
+  {
+    label: "Context & Data Binding",
+    test: (p) => p.startsWith("src/ui/context/"),
+  },
   { label: "State Runtime", test: (p) => p.startsWith("src/ui/state/") },
   { label: "Actions", test: (p) => p.startsWith("src/ui/actions/") },
-  { label: "Components — Data", test: (p) => p.startsWith("src/ui/components/data/") },
-  { label: "Components — Forms", test: (p) => p.startsWith("src/ui/components/forms/") },
+  {
+    label: "Components — Data",
+    test: (p) => p.startsWith("src/ui/components/data/"),
+  },
+  {
+    label: "Components — Forms",
+    test: (p) => p.startsWith("src/ui/components/forms/"),
+  },
   {
     label: "Components — Communication",
     test: (p) => p.startsWith("src/ui/components/communication/"),
   },
-  { label: "Components — Content", test: (p) => p.startsWith("src/ui/components/content/") },
-  { label: "Components — Overlay", test: (p) => p.startsWith("src/ui/components/overlay/") },
+  {
+    label: "Components — Content",
+    test: (p) => p.startsWith("src/ui/components/content/"),
+  },
+  {
+    label: "Components — Overlay",
+    test: (p) => p.startsWith("src/ui/components/overlay/"),
+  },
   {
     label: "Components — Navigation",
     test: (p) => p.startsWith("src/ui/components/navigation/"),
   },
-  { label: "Components — Layout", test: (p) => p.startsWith("src/ui/components/layout/") },
-  { label: "Components — Media", test: (p) => p.startsWith("src/ui/components/media/") },
+  {
+    label: "Components — Layout",
+    test: (p) => p.startsWith("src/ui/components/layout/"),
+  },
+  {
+    label: "Components — Media",
+    test: (p) => p.startsWith("src/ui/components/media/"),
+  },
   {
     label: "Components — Primitives",
     test: (p) => p.startsWith("src/ui/components/primitives/"),
   },
-  { label: "Component Utilities", test: (p) => p.startsWith("src/ui/components/_base/") },
+  {
+    label: "Component Utilities",
+    test: (p) => p.startsWith("src/ui/components/_base/"),
+  },
   { label: "Hooks & Utilities", test: (p) => p.startsWith("src/ui/hooks/") },
   { label: "Icons", test: (p) => p.startsWith("src/ui/icons/") },
   { label: "Workflows", test: (p) => p.startsWith("src/ui/workflows/") },
@@ -157,10 +191,7 @@ function getProgram(): ts.Program {
   });
 }
 
-function resolveSymbol(
-  symbol: ts.Symbol,
-  checker: ts.TypeChecker,
-): ts.Symbol {
+function resolveSymbol(symbol: ts.Symbol, checker: ts.TypeChecker): ts.Symbol {
   return symbol.flags & ts.SymbolFlags.Alias
     ? checker.getAliasedSymbol(symbol)
     : symbol;
@@ -361,30 +392,64 @@ function buildExportInfo(
 
 /** For SDK Auth group, we need name-based matching for src/types exports. */
 const AUTH_TYPE_NAMES = new Set([
-  "AuthUser", "LoginBody", "LoginVars", "LoginResult", "LoginResponse",
-  "RegisterBody", "RegisterVars", "LogoutVars", "ForgotPasswordBody",
-  "MfaMethod", "MfaChallenge", "MfaVerifyBody", "MfaSetupResponse",
-  "MfaVerifySetupBody", "MfaVerifySetupResponse", "MfaDisableBody",
-  "MfaRecoveryCodesBody", "MfaRecoveryCodesResponse",
-  "MfaEmailOtpEnableResponse", "MfaEmailOtpVerifySetupBody",
-  "MfaEmailOtpDisableBody", "MfaResendBody", "MfaMethodsResponse",
-  "ResetPasswordBody", "VerifyEmailBody", "ResendVerificationBody",
-  "SetPasswordBody", "DeleteAccountBody", "RefreshTokenBody",
-  "RefreshTokenResponse", "Session", "OAuthProvider", "OAuthExchangeBody",
-  "OAuthExchangeResponse", "WebAuthnRegisterOptionsResponse",
-  "WebAuthnRegisterBody", "WebAuthnCredential", "PasskeyLoginOptionsBody",
-  "PasskeyLoginOptionsResponse", "PasskeyLoginBody", "PasskeyLoginVars",
-  "AuthErrorContext", "AuthErrorConfig",
+  "AuthUser",
+  "LoginBody",
+  "LoginVars",
+  "LoginResult",
+  "LoginResponse",
+  "RegisterBody",
+  "RegisterVars",
+  "LogoutVars",
+  "ForgotPasswordBody",
+  "MfaMethod",
+  "MfaChallenge",
+  "MfaVerifyBody",
+  "MfaSetupResponse",
+  "MfaVerifySetupBody",
+  "MfaVerifySetupResponse",
+  "MfaDisableBody",
+  "MfaRecoveryCodesBody",
+  "MfaRecoveryCodesResponse",
+  "MfaEmailOtpEnableResponse",
+  "MfaEmailOtpVerifySetupBody",
+  "MfaEmailOtpDisableBody",
+  "MfaResendBody",
+  "MfaMethodsResponse",
+  "ResetPasswordBody",
+  "VerifyEmailBody",
+  "ResendVerificationBody",
+  "SetPasswordBody",
+  "DeleteAccountBody",
+  "RefreshTokenBody",
+  "RefreshTokenResponse",
+  "Session",
+  "OAuthProvider",
+  "OAuthExchangeBody",
+  "OAuthExchangeResponse",
+  "WebAuthnRegisterOptionsResponse",
+  "WebAuthnRegisterBody",
+  "WebAuthnCredential",
+  "PasskeyLoginOptionsBody",
+  "PasskeyLoginOptionsResponse",
+  "PasskeyLoginBody",
+  "PasskeyLoginVars",
+  "AuthErrorContext",
+  "AuthErrorConfig",
 ]);
 
 const REALTIME_TYPE_NAMES = new Set([
-  "SocketHook", "SseConfig", "SseEndpointConfig", "SseHookResult",
+  "SocketHook",
+  "SseConfig",
+  "SseEndpointConfig",
+  "SseHookResult",
   "SseEventHookResult",
 ]);
 
 const COMMUNITY_TYPE_NAMES = new Set([
-  "CommunityNotification", "CommunityNotificationType",
-  "UseCommunityNotificationsOpts", "UseCommunityNotificationsResult",
+  "CommunityNotification",
+  "CommunityNotificationType",
+  "UseCommunityNotificationsOpts",
+  "UseCommunityNotificationsResult",
 ]);
 
 function assignGroup(info: ExportInfo, groups: GroupRule[]): string {
@@ -452,9 +517,10 @@ function renderExportDetail(
   // Truncate very long signatures from large component prop types.
   const MAX_SIG = 200;
   if (exp.kind === "function" && exp.signature) {
-    const sig = exp.signature.length > MAX_SIG
-      ? exp.signature.slice(0, MAX_SIG) + "..."
-      : exp.signature;
+    const sig =
+      exp.signature.length > MAX_SIG
+        ? exp.signature.slice(0, MAX_SIG) + "..."
+        : exp.signature;
     lines.push(`#### \`${exp.name}${sig}\``);
   } else {
     lines.push(`#### \`${exp.name}\` *(${exp.kind})*`);
@@ -474,7 +540,9 @@ function renderExportDetail(
     lines.push("| Name | Description |");
     lines.push("|------|-------------|");
     for (const p of exp.params) {
-      lines.push(`| \`${escapeCell(p.name)}\` | ${escapeCell(p.description)} |`);
+      lines.push(
+        `| \`${escapeCell(p.name)}\` | ${escapeCell(p.description)} |`,
+      );
     }
     lines.push("");
   }
@@ -507,9 +575,7 @@ function renderExportDetail(
             lines.push("| Name | Type | Description |");
             lines.push("|------|------|-------------|");
             for (const m of members) {
-              const desc = m.description
-                ? escapeCell(m.description)
-                : "";
+              const desc = m.description ? escapeCell(m.description) : "";
               const mType = escapeCell(
                 m.type.length > 80 ? m.type.slice(0, 77) + "..." : m.type,
               );
@@ -550,9 +616,7 @@ function renderGroupedSections(
   program: ts.Program,
   expandInterfaces?: string[],
 ): string {
-  const expandSet = expandInterfaces
-    ? new Set(expandInterfaces)
-    : undefined;
+  const expandSet = expandInterfaces ? new Set(expandInterfaces) : undefined;
   const sections: string[] = [];
 
   for (const [group, exports] of grouped) {
@@ -574,7 +638,7 @@ function renderGroupedSections(
         (e.kind === "function" && e.signature) ||
         (e.params && e.params.length > 0) ||
         (e.examples && e.examples.length > 0) ||
-        (e.returns) ||
+        e.returns ||
         expandSet?.has(e.name),
     );
 
@@ -582,9 +646,7 @@ function renderGroupedSections(
       lines.push("### Details");
       lines.push("");
       for (const exp of richExports) {
-        lines.push(
-          renderExportDetail(exp, checker, program, expandSet),
-        );
+        lines.push(renderExportDetail(exp, checker, program, expandSet));
         lines.push("---");
         lines.push("");
       }
@@ -632,14 +694,19 @@ function renderSurface(program: ts.Program, surface: Surface): void {
     parts.push("## Contents");
     parts.push("");
     for (const [group, items] of grouped) {
-      const anchor = group.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+      const anchor = group
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/-+$/, "");
       parts.push(`- [${group}](#${anchor}) (${items.length})`);
     }
     parts.push("");
 
     // Full alphabetical quick-reference (collapsed)
     parts.push("<details>");
-    parts.push("<summary><strong>All exports (alphabetical)</strong></summary>");
+    parts.push(
+      "<summary><strong>All exports (alphabetical)</strong></summary>",
+    );
     parts.push("");
     parts.push(renderQuickRefTable(exports));
     parts.push("");

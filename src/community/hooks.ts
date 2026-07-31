@@ -208,7 +208,10 @@ export function createCommunityHooks({
       { containerId: string } & CreateThreadBody
     >({
       mutationFn: ({ containerId, ...body }) =>
-        api.post<ThreadResponse>(`/community/threads`, { containerId, ...body }),
+        api.post<ThreadResponse>(`/community/threads`, {
+          containerId,
+          ...body,
+        }),
       onSuccess: (_data, { containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threads(containerId),
@@ -268,7 +271,9 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/publish`, { id: threadId }),
+        api.post<ThreadResponse>(`/community/threads/publish`, {
+          id: threadId,
+        }),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -318,8 +323,12 @@ export function createCommunityHooks({
           locked: false,
         }),
       onSuccess: (_data, { threadId, containerId }) => {
-        void queryClient.invalidateQueries({ queryKey: keys.threadDetail(threadId) });
-        void queryClient.invalidateQueries({ queryKey: keys.threads(containerId) });
+        void queryClient.invalidateQueries({
+          queryKey: keys.threadDetail(threadId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: keys.threads(containerId),
+        });
       },
     });
   }
@@ -700,20 +709,22 @@ export function createCommunityHooks({
    */
   function useAddMember() {
     const queryClient = useQueryClient();
-    return useMutation<MemberRecord, ApiError, { containerId: string; userId: string }>(
-      {
-        mutationFn: ({ containerId, userId }) =>
-          api.post<MemberRecord>(`/community/container-members`, {
-            containerId,
-            userId,
-          }),
-        onSuccess: (_data, { containerId }) => {
-          void queryClient.invalidateQueries({
-            queryKey: keys.members(containerId),
-          });
-        },
+    return useMutation<
+      MemberRecord,
+      ApiError,
+      { containerId: string; userId: string }
+    >({
+      mutationFn: ({ containerId, userId }) =>
+        api.post<MemberRecord>(`/community/container-members`, {
+          containerId,
+          userId,
+        }),
+      onSuccess: (_data, { containerId }) => {
+        void queryClient.invalidateQueries({
+          queryKey: keys.members(containerId),
+        });
       },
-    );
+    });
   }
 
   /** Remove a member from a container. */
@@ -723,7 +734,9 @@ export function createCommunityHooks({
       {
         mutationFn: async ({ containerId, userId }) => {
           const membershipId = await findMembershipId(containerId, userId);
-          await api.delete<void>(`/community/container-members/${membershipId}`);
+          await api.delete<void>(
+            `/community/container-members/${membershipId}`,
+          );
         },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
@@ -855,7 +868,9 @@ export function createCommunityHooks({
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
-        void queryClient.invalidateQueries({ queryKey: keys.notificationsUnread() });
+        void queryClient.invalidateQueries({
+          queryKey: keys.notificationsUnread(),
+        });
       },
     });
   }
@@ -910,7 +925,9 @@ export function createCommunityHooks({
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
-        void queryClient.invalidateQueries({ queryKey: keys.notificationsUnread() });
+        void queryClient.invalidateQueries({
+          queryKey: keys.notificationsUnread(),
+        });
       },
     });
   }

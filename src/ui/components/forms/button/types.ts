@@ -10,7 +10,13 @@ import type {
 import type { DomRef } from "../../_base/dom-ref";
 
 export interface ButtonConfig extends Record<string, unknown> {
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   size?: "sm" | "md" | "lg" | "icon";
 }
 

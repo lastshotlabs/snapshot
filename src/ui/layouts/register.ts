@@ -5,12 +5,18 @@ import { registerLayout } from "./registry";
 let builtInLayoutsRegistered = false;
 
 function wrapLayout(
-  Component: (props: { config: Record<string, unknown>; children: ReactNode }) => ReactNode,
+  Component: (props: {
+    config: Record<string, unknown>;
+    children: ReactNode;
+  }) => ReactNode,
 ) {
   return function RegisteredLayout({
     config,
     children,
-  }: { config: Record<string, unknown>; children: ReactNode }) {
+  }: {
+    config: Record<string, unknown>;
+    children: ReactNode;
+  }) {
     return createElement(Component, { config, children });
   };
 }

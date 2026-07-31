@@ -5,21 +5,21 @@
 > **Scope:** Make snapshot the single surface for building beautiful, fully-customizable, enterprise-grade applications entirely from `snapshot.manifest.json`. Zero `.tsx` / `.ts` / `.css` files in the consuming repo. No escape hatches for "special" screens. No bespoke code paths. The manifest is the source of truth, end to end.
 > **Completion note:** Phases 0-12 were implemented and this spec has been archived under `docs/specs/completed/`.
 >
-> | Phase | Title | Track | Status |
-> |---|---|---|---|
-> | 0 | Foundation fixes | Runtime | Completed |
-> | 1 | Delete the escape hatches | Runtime | Completed |
-> | 2 | Default fragments + merge | Compiler | Completed |
-> | 3 | Layout system completeness | Components | Completed |
-> | 4 | Component library gap-fill | Components | Completed |
-> | 5 | Action language expansion | Actions | Completed |
-> | 6 | Data binding unification | Runtime | Completed |
-> | 7 | Auth fragment rewrite | Compiler | Completed |
-> | 8 | Enterprise features | Runtime | Completed |
-> | 9 | CLI completion + scaffolding | CLI | Completed |
-> | 10 | Accessibility + i18n | Components | Completed |
-> | 11 | Extension points | Runtime | Completed |
-> | 12 | Enforcement + visual regression | CI | Completed |
+> | Phase | Title                           | Track      | Status    |
+> | ----- | ------------------------------- | ---------- | --------- |
+> | 0     | Foundation fixes                | Runtime    | Completed |
+> | 1     | Delete the escape hatches       | Runtime    | Completed |
+> | 2     | Default fragments + merge       | Compiler   | Completed |
+> | 3     | Layout system completeness      | Components | Completed |
+> | 4     | Component library gap-fill      | Components | Completed |
+> | 5     | Action language expansion       | Actions    | Completed |
+> | 6     | Data binding unification        | Runtime    | Completed |
+> | 7     | Auth fragment rewrite           | Compiler   | Completed |
+> | 8     | Enterprise features             | Runtime    | Completed |
+> | 9     | CLI completion + scaffolding    | CLI        | Completed |
+> | 10    | Accessibility + i18n            | Components | Completed |
+> | 11    | Extension points                | Runtime    | Completed |
+> | 12    | Enforcement + visual regression | CI         | Completed |
 
 ---
 
@@ -33,7 +33,7 @@ A developer runs `snapshot init my-app`, edits `snapshot.manifest.json`, runs `s
 - `resolveAuthScreen` hijacks routes at render time, making "auth" a special kind of thing the rest of the framework has to work around.
 - Default feedback screens (`error-page`, `not-found`, `offline-banner`, `spinner`) are registered as components but aren't composed from the component library — each is hand-rolled.
 - Token CSS injection runs in a `useLayoutEffect`, so the first paint is always unstyled when the browser renders faster than React commits.
-- Nav items render icon *names* as plain text (`LayoutDashboard`) instead of SVGs because the nav component's item loop uses `{item.icon}` directly while the user menu in the same file uses `<Icon name={item.icon} />` correctly.
+- Nav items render icon _names_ as plain text (`LayoutDashboard`) instead of SVGs because the nav component's item loop uses `{item.icon}` directly while the user menu in the same file uses `<Icon name={item.icon} />` correctly.
 - `auth.screens` is a flat `z.array(z.enum(...)).min(1)` — impossible to override individual screens or opt out of specific ones without workaround hacks.
 - Consuming apps must have a `main.tsx` even though the Vite plugin already supports a virtual entry. Nobody documented it; nobody uses it.
 - There is no "default fragment" concept. Every manifest is atomic. Framework-provided sensible defaults must be copied into every consumer's manifest by hand.
@@ -59,41 +59,53 @@ Audited against `snapshot/src/**` and reported here so the spec does not contrad
 Already registered in `src/ui/components/register.ts` via `registerBuiltInComponents()` (lines 181–589). All 69 use `var(--sn-*)` exclusively — no hardcoded hex/rgba/px values detected. Organized by domain:
 
 **Layout & structure**
+
 - `layout/layout` — 5 variants (`sidebar`, `top-nav`, `stacked`, `minimal`, `full-width`), slot-based (header/sidebar/main/footer/nav)
 - `layout/nav`
 - `data/separator`
 
 **Forms (13)**
+
 - `button`, `input`, `textarea`, `switch`, `toggle`, `multi-select`, `tag-selector`, `entity-picker`, `location-input`, `quick-add`, `inline-edit`, `auto-form`, `wizard`
 
 **Data display (17)**
+
 - `stat-card`, `data-table`, `detail-card`, `avatar`, `avatar-group`, `badge`, `alert`, `progress`, `skeleton`, `empty-state`, `list`, `tooltip`, `filter-bar`, `highlighted-text`, `favorite-button`, `notification-bell`, `save-indicator`
 
 **Content (8)**
+
 - `timeline`, `code-block`, `markdown`, `rich-text-editor`, `rich-input`, `file-uploader`, `compare-view`, `link-embed`
 
 **Navigation (6)**
+
 - `accordion`, `breadcrumb`, `stepper`, `tree-view`, `tabs`, `prefetch-link`
 
 **Overlay (7)**
+
 - `modal`, `drawer`, `popover`, `dropdown-menu`, `context-menu`, `command-palette`
 
 **Communication (7)**
+
 - `chat-window`, `message-thread`, `comment-section`, `emoji-picker`, `reaction-bar`, `presence-indicator`, `typing-indicator`, `gif-picker`
 
 **Workflow (4)**
+
 - `kanban`, `calendar`, `audit-log`, `notification-feed`
 
 **Commerce (1)**
+
 - `pricing-table`
 
 **Feedback (4)**
+
 - `spinner`, `error-page`, `not-found`, `offline-banner`
 
 **Specialized (2)**
+
 - `chart`, `feed`
 
 **Missing primitives this spec adds:**
+
 - `stack`, `column`, `grid`, `container`, `divider`, `spacer`, `section`, `heading` (confirmed not in inventory), `text`, `link`, `code` (separate from `code-block`), `oauth-buttons`, `confirm-dialog`
 
 ### 2.2 Layout system
@@ -149,6 +161,7 @@ manifestConfigSchema = z.object({
 ### 2.8 CLI
 
 `src/cli/commands/`:
+
 - `init.ts` — scaffolds a new project
 - `dev.ts` — starts dev server
 - `sync.ts` — generates types/hooks from OpenAPI
@@ -175,10 +188,11 @@ Three separate registries:
 3. **Flavor registry** — `src/ui/tokens/flavors.ts`, `defineFlavor(name, config)` + `registerBuiltInFlavors()`
 
 Bootstrap:
+
 - `registerBuiltInComponents()` in `src/ui/components/register.ts` — idempotent, guarded by a `builtInComponentsRegistered` flag
 - No single `bootBuiltins()` function; initialization is split across multiple call sites in `create-snapshot.tsx`
 
-**Gap:** the registration is spread out. The timing bug from the prior session is caused by `createSnapshot()` triggering builtin registration, which runs *after* `ManifestApp` has already called `compileManifest`. Fix: unify into one `bootBuiltins()` that runs as the first statement of `ManifestApp`.
+**Gap:** the registration is spread out. The timing bug from the prior session is caused by `createSnapshot()` triggering builtin registration, which runs _after_ `ManifestApp` has already called `compileManifest`. Fix: unify into one `bootBuiltins()` that runs as the first statement of `ManifestApp`.
 
 ---
 
@@ -197,25 +211,25 @@ All four must pass at the end of every phase. Phases leave the repo green.
 
 ### 3.2 Key files
 
-| Path | What | Notes |
-|---|---|---|
-| `src/ui/manifest/app.tsx` | `ManifestApp` boot + provider tree | 1600+ lines; contains the timing bugs |
-| `src/ui/manifest/schema.ts` | Zod schema for the entire manifest | 1300+ lines; strict, cross-validated |
-| `src/ui/manifest/compiler.ts` | `compileManifest` pipeline | Validates + transforms |
-| `src/ui/manifest/auth.tsx` | Bespoke auth renderer (~1000 lines) | **Deleted in Phase 1** |
-| `src/ui/manifest/component-registry.tsx` | `registerComponent`, `resolveComponent` | ~100 lines |
-| `src/ui/components/register.ts` | `registerBuiltInComponents()` — 69 builtins | 600 lines |
-| `src/ui/components/layout/layout/component.tsx` | Layout shell with 5 hardcoded variants | Gets a registry in Phase 3 |
-| `src/ui/components/layout/nav/component.tsx` | Nav with icon-string rendering bug | Fixed in Phase 0 |
-| `src/ui/tokens/resolve.ts` | `resolveTokens()` → CSS string | Used synchronously in Phase 0 |
-| `src/ui/tokens/flavors.ts` | 8 built-in flavors | Extended via `defineFlavor` |
-| `src/ui/actions/executor.ts` | Action dispatcher + registry | Extended in Phase 5 |
-| `src/ui/actions/types.ts` | Action config union | Extended in Phase 5 |
-| `src/ui/context/page-context.ts` | Per-route Jotai registry | Used as-is |
-| `src/ui/context/app-context.ts` | Global atom registry | Used as-is |
-| `src/ui/context/from-ref.ts` | `resolveFromRef()` | Made canonical in Phase 6 |
-| `src/vite/index.ts` | `snapshotApp()` + SSR plugins | Documented + used by init in Phase 9 |
-| `src/cli/commands/init.ts` | `snapshot init` scaffold | Rewritten in Phase 9 |
+| Path                                            | What                                        | Notes                                 |
+| ----------------------------------------------- | ------------------------------------------- | ------------------------------------- |
+| `src/ui/manifest/app.tsx`                       | `ManifestApp` boot + provider tree          | 1600+ lines; contains the timing bugs |
+| `src/ui/manifest/schema.ts`                     | Zod schema for the entire manifest          | 1300+ lines; strict, cross-validated  |
+| `src/ui/manifest/compiler.ts`                   | `compileManifest` pipeline                  | Validates + transforms                |
+| `src/ui/manifest/auth.tsx`                      | Bespoke auth renderer (~1000 lines)         | **Deleted in Phase 1**                |
+| `src/ui/manifest/component-registry.tsx`        | `registerComponent`, `resolveComponent`     | ~100 lines                            |
+| `src/ui/components/register.ts`                 | `registerBuiltInComponents()` — 69 builtins | 600 lines                             |
+| `src/ui/components/layout/layout/component.tsx` | Layout shell with 5 hardcoded variants      | Gets a registry in Phase 3            |
+| `src/ui/components/layout/nav/component.tsx`    | Nav with icon-string rendering bug          | Fixed in Phase 0                      |
+| `src/ui/tokens/resolve.ts`                      | `resolveTokens()` → CSS string              | Used synchronously in Phase 0         |
+| `src/ui/tokens/flavors.ts`                      | 8 built-in flavors                          | Extended via `defineFlavor`           |
+| `src/ui/actions/executor.ts`                    | Action dispatcher + registry                | Extended in Phase 5                   |
+| `src/ui/actions/types.ts`                       | Action config union                         | Extended in Phase 5                   |
+| `src/ui/context/page-context.ts`                | Per-route Jotai registry                    | Used as-is                            |
+| `src/ui/context/app-context.ts`                 | Global atom registry                        | Used as-is                            |
+| `src/ui/context/from-ref.ts`                    | `resolveFromRef()`                          | Made canonical in Phase 6             |
+| `src/vite/index.ts`                             | `snapshotApp()` + SSR plugins               | Documented + used by init in Phase 9  |
+| `src/cli/commands/init.ts`                      | `snapshot init` scaffold                    | Rewritten in Phase 9                  |
 
 ### 3.3 Consumer shape — before and after
 
@@ -261,20 +275,20 @@ No other files. No `App.tsx`. No `main.tsx`. No `.css`. No component directories
 
 Already enforced by `snapshot/CLAUDE.md` and `docs/engineering-rules.md`. This spec adds nothing new — it operationalizes what already exists.
 
-| # | Rule | Enforcement |
-|---|---|---|
-| R1 | Manifest is the only source of truth | Spec phase exit criteria |
-| R2 | No snowflakes — every concept has one code path | CI grep for `route.id ===` and similar |
-| R3 | Tokens are the only styling surface | CI grep for hex/rgb/rgba/raw px in `src/ui/components/**` |
-| R4 | Defaults render presentably on minimal config | Playground + visual regression |
-| R5 | Components closed over their config (no React props) | Schema tests |
-| R6 | Actions are a closed vocabulary | Schema validation; no dynamic dispatch |
-| R7 | One code path per concept | Code review + lint |
-| R8 | Pre-production: delete freely, no compat shims | No version gates in code |
-| R9 | SSR-safe components (`renderToStaticMarkup` test mandatory) | Per-component test file |
-| R10 | Dogfooding drives completeness (`budget-fe`) | Consumer CI fails on new `.tsx`/`.ts`/`.css` files |
-| R11 | WCAG 2.1 AA baseline for every component | axe-core in component tests |
-| R12 | Every component in the playground with full state showcase | Playground CI check |
+| #   | Rule                                                        | Enforcement                                               |
+| --- | ----------------------------------------------------------- | --------------------------------------------------------- |
+| R1  | Manifest is the only source of truth                        | Spec phase exit criteria                                  |
+| R2  | No snowflakes — every concept has one code path             | CI grep for `route.id ===` and similar                    |
+| R3  | Tokens are the only styling surface                         | CI grep for hex/rgb/rgba/raw px in `src/ui/components/**` |
+| R4  | Defaults render presentably on minimal config               | Playground + visual regression                            |
+| R5  | Components closed over their config (no React props)        | Schema tests                                              |
+| R6  | Actions are a closed vocabulary                             | Schema validation; no dynamic dispatch                    |
+| R7  | One code path per concept                                   | Code review + lint                                        |
+| R8  | Pre-production: delete freely, no compat shims              | No version gates in code                                  |
+| R9  | SSR-safe components (`renderToStaticMarkup` test mandatory) | Per-component test file                                   |
+| R10 | Dogfooding drives completeness (`budget-fe`)                | Consumer CI fails on new `.tsx`/`.ts`/`.css` files        |
+| R11 | WCAG 2.1 AA baseline for every component                    | axe-core in component tests                               |
+| R12 | Every component in the playground with full state showcase  | Playground CI check                                       |
 
 ---
 
@@ -295,8 +309,8 @@ export function bootBuiltins(): void {
   registerBuiltInComponents();
   registerBuiltInFlavors();
   registerBuiltInActions();
-  registerBuiltInLayouts();   // added in Phase 3
-  registerBuiltInGuards();    // added in Phase 8
+  registerBuiltInLayouts(); // added in Phase 3
+  registerBuiltInGuards(); // added in Phase 8
 }
 ```
 
@@ -304,7 +318,7 @@ Call from the **first statement** of `ManifestApp`:
 
 ```tsx
 export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
-  bootBuiltins();  // ← before anything else
+  bootBuiltins(); // ← before anything else
   const compiledManifest = useMemo(() => compileManifest(manifest), [manifest]);
   // ...
 }
@@ -319,6 +333,7 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
 Replace the `useLayoutEffect`-based injection at `src/ui/manifest/app.tsx:1582-1587`:
 
 **Before:**
+
 ```tsx
 useLayoutEffect(() => {
   if (compiledManifest.theme) {
@@ -329,16 +344,18 @@ useLayoutEffect(() => {
 ```
 
 **After:**
+
 ```tsx
 const tokenCss = useMemo(
   () => resolveTokens(compiledManifest.theme ?? {}),
   [compiledManifest.theme],
 );
 // Inside the JSX tree:
-<style id="snapshot-tokens" dangerouslySetInnerHTML={{ __html: tokenCss }} />
+<style id="snapshot-tokens" dangerouslySetInnerHTML={{ __html: tokenCss }} />;
 ```
 
 Two behavior changes:
+
 1. Token CSS is always injected, even if `theme` is omitted — `resolveTokens({})` returns defaults.
 2. The style tag is part of the render tree, so SSR output includes it and first paint is styled.
 
@@ -347,21 +364,27 @@ Two behavior changes:
 `src/ui/components/layout/nav/component.tsx:76-80`:
 
 **Before:**
+
 ```tsx
-{item.icon && (
-  <span data-nav-icon="" aria-hidden="true">
-    {item.icon}
-  </span>
-)}
+{
+  item.icon && (
+    <span data-nav-icon="" aria-hidden="true">
+      {item.icon}
+    </span>
+  );
+}
 ```
 
 **After:**
+
 ```tsx
-{item.icon && (
-  <span data-nav-icon="" aria-hidden="true">
-    <Icon name={item.icon} size={16} />
-  </span>
-)}
+{
+  item.icon && (
+    <span data-nav-icon="" aria-hidden="true">
+      <Icon name={item.icon} size={16} />
+    </span>
+  );
+}
 ```
 
 Match the user menu pattern at line 276 which already does this correctly. Both should use the same `renderIcon(name)` helper extracted to `src/ui/icons/render.ts` so this bug cannot be reintroduced.
@@ -468,6 +491,7 @@ Phase 0 adds the lint. It will **not pass** until Phase 1 lands — that's inten
 Delete the entire file (~1000 lines). Delete every import of it.
 
 **Expected breakage:**
+
 - `ManifestApp.tsx` will have unresolved imports for `resolveAuthScreen`, `ManifestAuthScreen`, etc.
 - Any route declared in `auth.screens` will have no renderer and 404.
 - Login, register, MFA, password reset screens stop working in `budget-fe`.
@@ -557,12 +581,12 @@ export function mergeFragment(
 ): ManifestConfig {
   return {
     ...base,
-    routes:    mergeRoutesById(fragment.routes ?? [], base.routes),
-    theme:     deepMerge(fragment.theme,    base.theme),
+    routes: mergeRoutesById(fragment.routes ?? [], base.routes),
+    theme: deepMerge(fragment.theme, base.theme),
     resources: mergeByKey(fragment.resources, base.resources),
-    state:     mergeByKey(fragment.state,     base.state),
-    i18n:      mergeI18n(fragment.i18n,       base.i18n),
-    overlays:  mergeByKey(fragment.overlays,  base.overlays),
+    state: mergeByKey(fragment.state, base.state),
+    i18n: mergeI18n(fragment.i18n, base.i18n),
+    overlays: mergeByKey(fragment.overlays, base.overlays),
   };
 }
 
@@ -572,12 +596,13 @@ function mergeRoutesById(
 ): RouteConfig[] {
   const byId = new Map<string, RouteConfig>();
   for (const r of fragmentRoutes) byId.set(r.id, r);
-  for (const r of appRoutes)      byId.set(r.id, r);  // app wins
+  for (const r of appRoutes) byId.set(r.id, r); // app wins
   return [...byId.values()];
 }
 ```
 
 **Rules:**
+
 - `routes`: merged by `id`. App's route with the same id wins entirely. Fragment routes the app doesn't mention are included as-is.
 - `theme`, `resources`, `state`, `overlays`, `i18n`: deep-merged, app wins at every key collision.
 - `navigation`: not merged (nav is too opinionated — the app owns it entirely).
@@ -588,13 +613,24 @@ function mergeRoutesById(
 Rewrite `authScreenConfigSchema.screens` from array to object:
 
 ```ts
-const authScreensSchema = z.record(
-  z.enum(["login", "register", "forgot-password", "reset-password", "verify-email", "mfa", "sso-callback"]),
-  z.union([z.literal("default"), z.literal(false)]),
-).optional();
+const authScreensSchema = z
+  .record(
+    z.enum([
+      "login",
+      "register",
+      "forgot-password",
+      "reset-password",
+      "verify-email",
+      "mfa",
+      "sso-callback",
+    ]),
+    z.union([z.literal("default"), z.literal(false)]),
+  )
+  .optional();
 ```
 
 Usage:
+
 ```json
 "auth": {
   "screens": {
@@ -636,55 +672,137 @@ export const defaultAuthFragment: ManifestFragment = {
       layout: { type: "centered" },
       meta: { title: "{i18n:auth.login.title}" },
       content: [
-        { type: "stack", gap: "lg", maxWidth: "sm", children: [
-          { type: "heading", text: "{app.title}", level: 1, align: "center" },
-          { type: "text", value: "{i18n:auth.login.subtitle}", variant: "muted", align: "center" },
-          {
-            type: "oauth-buttons",
-            providers: { from: "auth.providers" },
-            onSuccess: [{ type: "navigate-external", to: "{$last.url}" }],
-            visibleWhen: "defined(auth.providers)"
-          },
-          { type: "divider", label: "{i18n:common.or}", visibleWhen: "defined(auth.providers)" },
-          {
-            type: "auto-form",
-            submit: "/auth/login",
-            method: "POST",
-            fields: [
-              { name: "email", type: "email", label: "{i18n:auth.email}",
-                required: true, autoComplete: "email" },
-              { name: "password", type: "password", label: "{i18n:auth.password}",
-                required: true, autoComplete: "current-password",
-                inlineAction: { label: "{i18n:auth.forgot}", to: "/forgot-password" } }
-            ],
-            submitLabel: "{i18n:auth.login.submit}",
-            onSuccess: [{ type: "navigate", to: "{auth.redirects.afterLogin}" }],
-            onError:   [{ type: "toast", level: "error", message: "{$last.error.message}" }]
-          },
-          { type: "link", to: "/register", text: "{i18n:auth.login.signupPrompt}", align: "center" }
-        ]}
-      ]
+        {
+          type: "stack",
+          gap: "lg",
+          maxWidth: "sm",
+          children: [
+            { type: "heading", text: "{app.title}", level: 1, align: "center" },
+            {
+              type: "text",
+              value: "{i18n:auth.login.subtitle}",
+              variant: "muted",
+              align: "center",
+            },
+            {
+              type: "oauth-buttons",
+              providers: { from: "auth.providers" },
+              onSuccess: [{ type: "navigate-external", to: "{$last.url}" }],
+              visibleWhen: "defined(auth.providers)",
+            },
+            {
+              type: "divider",
+              label: "{i18n:common.or}",
+              visibleWhen: "defined(auth.providers)",
+            },
+            {
+              type: "auto-form",
+              submit: "/auth/login",
+              method: "POST",
+              fields: [
+                {
+                  name: "email",
+                  type: "email",
+                  label: "{i18n:auth.email}",
+                  required: true,
+                  autoComplete: "email",
+                },
+                {
+                  name: "password",
+                  type: "password",
+                  label: "{i18n:auth.password}",
+                  required: true,
+                  autoComplete: "current-password",
+                  inlineAction: {
+                    label: "{i18n:auth.forgot}",
+                    to: "/forgot-password",
+                  },
+                },
+              ],
+              submitLabel: "{i18n:auth.login.submit}",
+              onSuccess: [
+                { type: "navigate", to: "{auth.redirects.afterLogin}" },
+              ],
+              onError: [
+                {
+                  type: "toast",
+                  level: "error",
+                  message: "{$last.error.message}",
+                },
+              ],
+            },
+            {
+              type: "link",
+              to: "/register",
+              text: "{i18n:auth.login.signupPrompt}",
+              align: "center",
+            },
+          ],
+        },
+      ],
     },
-    { id: "register",        path: "/register",        layout: { type: "centered" }, content: [/*...*/] },
-    { id: "forgot-password", path: "/forgot-password", layout: { type: "centered" }, content: [/*...*/] },
-    { id: "reset-password",  path: "/reset-password",  layout: { type: "centered" }, content: [/*...*/] },
-    { id: "verify-email",    path: "/verify-email",    layout: { type: "centered" }, content: [/*...*/] },
-    { id: "mfa",             path: "/mfa",             layout: { type: "centered" }, content: [/*...*/] },
-    { id: "sso-callback",    path: "/auth/callback",   layout: { type: "centered" }, content: [/*...*/] }
+    {
+      id: "register",
+      path: "/register",
+      layout: { type: "centered" },
+      content: [
+        /*...*/
+      ],
+    },
+    {
+      id: "forgot-password",
+      path: "/forgot-password",
+      layout: { type: "centered" },
+      content: [
+        /*...*/
+      ],
+    },
+    {
+      id: "reset-password",
+      path: "/reset-password",
+      layout: { type: "centered" },
+      content: [
+        /*...*/
+      ],
+    },
+    {
+      id: "verify-email",
+      path: "/verify-email",
+      layout: { type: "centered" },
+      content: [
+        /*...*/
+      ],
+    },
+    {
+      id: "mfa",
+      path: "/mfa",
+      layout: { type: "centered" },
+      content: [
+        /*...*/
+      ],
+    },
+    {
+      id: "sso-callback",
+      path: "/auth/callback",
+      layout: { type: "centered" },
+      content: [
+        /*...*/
+      ],
+    },
   ],
   i18n: {
     en: {
-      "auth.login.title":         "Sign in",
-      "auth.login.subtitle":      "Welcome back",
-      "auth.login.submit":        "Sign in",
-      "auth.login.signupPrompt":  "Don't have an account? Sign up",
-      "auth.email":               "Email",
-      "auth.password":            "Password",
-      "auth.forgot":              "Forgot?",
-      "common.or":                "or",
+      "auth.login.title": "Sign in",
+      "auth.login.subtitle": "Welcome back",
+      "auth.login.submit": "Sign in",
+      "auth.login.signupPrompt": "Don't have an account? Sign up",
+      "auth.email": "Email",
+      "auth.password": "Password",
+      "auth.forgot": "Forgot?",
+      "common.or": "or",
       /* ...every string referenced above, full English catalog... */
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -703,29 +821,49 @@ export const defaultFeedbackFragment: ManifestFragment = {
       layout: { type: "centered" },
       meta: { title: "{i18n:feedback.notFound.title}" },
       content: [
-        { type: "stack", align: "center", gap: "md", children: [
-          { type: "heading", text: "404", level: 1 },
-          { type: "text", value: "{i18n:feedback.notFound.message}" },
-          { type: "button", label: "{i18n:feedback.notFound.home}",
-            onClick: [{ type: "navigate", to: "{app.home}" }] }
-        ]}
-      ]
+        {
+          type: "stack",
+          align: "center",
+          gap: "md",
+          children: [
+            { type: "heading", text: "404", level: 1 },
+            { type: "text", value: "{i18n:feedback.notFound.message}" },
+            {
+              type: "button",
+              label: "{i18n:feedback.notFound.home}",
+              onClick: [{ type: "navigate", to: "{app.home}" }],
+            },
+          ],
+        },
+      ],
     },
     {
       id: "error",
       path: "/_error",
       layout: { type: "centered" },
       content: [
-        { type: "stack", align: "center", gap: "md", children: [
-          { type: "heading", text: "{i18n:feedback.error.title}", level: 1 },
-          { type: "text", value: "{from:error.message}", variant: "muted" },
-          { type: "button", label: "{i18n:feedback.error.retry}",
-            onClick: [{ type: "refresh" }] }
-        ]}
-      ]
-    }
+        {
+          type: "stack",
+          align: "center",
+          gap: "md",
+          children: [
+            { type: "heading", text: "{i18n:feedback.error.title}", level: 1 },
+            { type: "text", value: "{from:error.message}", variant: "muted" },
+            {
+              type: "button",
+              label: "{i18n:feedback.error.retry}",
+              onClick: [{ type: "refresh" }],
+            },
+          ],
+        },
+      ],
+    },
   ],
-  i18n: { en: { /* ... */ } }
+  i18n: {
+    en: {
+      /* ... */
+    },
+  },
 };
 ```
 
@@ -735,17 +873,19 @@ export const defaultFeedbackFragment: ManifestFragment = {
 
 ```ts
 export function compileManifest(manifest: ManifestConfig): CompiledManifest {
-  const withEnv    = resolveEnvRefs(manifest);
+  const withEnv = resolveEnvRefs(manifest);
   const withFragments = applyDefaultFragments(withEnv);
-  const validated  = manifestConfigSchema.parse(withFragments);
-  const resolved   = resolveCrossReferences(validated);
+  const validated = manifestConfigSchema.parse(withFragments);
+  const resolved = resolveCrossReferences(validated);
   return Object.freeze(resolved);
 }
 
 function applyDefaultFragments(m: ManifestConfig): ManifestConfig {
   let out = m;
-  if (shouldIncludeAuthFragment(m))     out = mergeFragment(out, buildAuthFragment(m));
-  if (shouldIncludeFeedbackFragment(m)) out = mergeFragment(out, defaultFeedbackFragment);
+  if (shouldIncludeAuthFragment(m))
+    out = mergeFragment(out, buildAuthFragment(m));
+  if (shouldIncludeFeedbackFragment(m))
+    out = mergeFragment(out, defaultFeedbackFragment);
   return out;
 }
 ```
@@ -806,13 +946,34 @@ export function resolveLayout(name: string): LayoutDef | undefined {
 }
 
 export function registerBuiltInLayouts(): void {
-  registerLayout("blank",     { schema: blankLayoutSchema,     component: BlankLayout });
-  registerLayout("centered",  { schema: centeredLayoutSchema,  component: CenteredLayout });
-  registerLayout("sidebar",   { schema: sidebarLayoutSchema,   component: SidebarLayout });
-  registerLayout("topbar",    { schema: topbarLayoutSchema,    component: TopbarLayout });
-  registerLayout("split",     { schema: splitLayoutSchema,     component: SplitLayout });
-  registerLayout("dashboard", { schema: dashboardLayoutSchema, component: DashboardLayout });
-  registerLayout("focused",   { schema: focusedLayoutSchema,   component: FocusedLayout });
+  registerLayout("blank", {
+    schema: blankLayoutSchema,
+    component: BlankLayout,
+  });
+  registerLayout("centered", {
+    schema: centeredLayoutSchema,
+    component: CenteredLayout,
+  });
+  registerLayout("sidebar", {
+    schema: sidebarLayoutSchema,
+    component: SidebarLayout,
+  });
+  registerLayout("topbar", {
+    schema: topbarLayoutSchema,
+    component: TopbarLayout,
+  });
+  registerLayout("split", {
+    schema: splitLayoutSchema,
+    component: SplitLayout,
+  });
+  registerLayout("dashboard", {
+    schema: dashboardLayoutSchema,
+    component: DashboardLayout,
+  });
+  registerLayout("focused", {
+    schema: focusedLayoutSchema,
+    component: FocusedLayout,
+  });
 }
 ```
 
@@ -849,23 +1010,23 @@ Update `routeConfigSchema` in `src/ui/manifest/schema.ts`:
 
 ```ts
 const layoutRefSchema = z.union([
-  z.string(),  // "centered"
+  z.string(), // "centered"
   z.object({
     type: z.string(),
     tokens: z.record(z.string(), z.string()).optional(),
     className: z.string().optional(),
     style: z.record(z.string(), z.unknown()).optional(),
     // plus any per-layout fields via discriminated union
-  })
+  }),
 ]);
 
 const routeConfigSchema = z.object({
   id: z.string(),
   path: z.string(),
-  layout: layoutRefSchema.optional(),  // falls back to app.defaultLayout
+  layout: layoutRefSchema.optional(), // falls back to app.defaultLayout
   content: z.union([
-    z.array(componentConfigSchema),           // fills "main" slot
-    z.record(z.string(), z.array(componentConfigSchema)),  // named slots
+    z.array(componentConfigSchema), // fills "main" slot
+    z.record(z.string(), z.array(componentConfigSchema)), // named slots
   ]),
   guard: z.string().optional(),
   meta: routeMetaSchema.optional(),
@@ -877,14 +1038,17 @@ const routeConfigSchema = z.object({
 `src/ui/layouts/centered/component.tsx`:
 
 ```tsx
-'use client';
+"use client";
 import type { ReactNode } from "react";
 import type { CenteredLayoutConfig } from "./schema";
 
 export function CenteredLayout({
   config,
   children,
-}: { config: CenteredLayoutConfig; children: ReactNode }) {
+}: {
+  config: CenteredLayoutConfig;
+  children: ReactNode;
+}) {
   return (
     <div
       data-snapshot-layout="centered"
@@ -969,6 +1133,7 @@ Layouts receive a `slots` prop instead of plain `children` when the route uses t
 Each gets a directory under the correct group, following the file conventions in `snapshot/CLAUDE.md`:
 
 **Layout primitives** (`src/ui/components/layout/`)
+
 - `stack` — vertical flex with token-driven gap, align, justify, maxWidth
 - `column` — vertical flex container (row synonym for consistency)
 - `grid` — CSS grid with responsive `cols: { default: 1, md: 2, lg: 3 }`
@@ -978,12 +1143,14 @@ Each gets a directory under the correct group, following the file conventions in
 - `section` — titled content region with optional collapse
 
 **Content primitives** (`src/ui/components/content/`)
+
 - `heading` — `h1`–`h6` with align, variant, color token
 - `text` — paragraph with size/weight/color/variant (`default`, `muted`, `subtle`)
 - `link` — first-class navigation primitive with `to`, `external`, `download` modes
 - `code` — inline code (separate from `code-block`)
 
 **Form primitives** (`src/ui/components/forms/`)
+
 - `oauth-buttons` — renders branded buttons per provider from `auth.providers`, dispatches `navigate-external` with the computed provider start URL
 - Form field additions (extend `auto-form` schema):
   - Password field gains built-in visibility toggle (component-level, not opt-in)
@@ -993,6 +1160,7 @@ Each gets a directory under the correct group, following the file conventions in
   - `combobox`, `tag-input`, `slider`, `color` field types
 
 **Overlay primitive**
+
 - `confirm-dialog` — alias over modal with `confirm`/`cancel` action targets
 
 ### 9.2 Component schema base
@@ -1019,7 +1187,7 @@ Every component schema uses `extendComponentSchema({ ... })` instead of raw `z.o
 ### 9.3 `oauth-buttons` implementation
 
 ```tsx
-'use client';
+"use client";
 import { useManifestAuth } from "../../../manifest/runtime";
 import { useActionExecutor } from "../../../actions/executor";
 import { renderIcon } from "../../../icons/render";
@@ -1035,18 +1203,30 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
   if (providers.length === 0) return null;
 
   return (
-    <div data-snapshot-component="oauth-buttons" style={{
-      display: "flex", flexDirection: "column", gap: "var(--sn-spacing-sm)"
-    }}>
+    <div
+      data-snapshot-component="oauth-buttons"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--sn-spacing-sm)",
+      }}
+    >
       {providers.map(([name, p]) => (
         <button
           key={name}
           type="button"
-          onClick={() => execute([
-            { type: "navigate-external", to: p.startUrl ?? `/auth/${name}/start` }
-          ])}
+          onClick={() =>
+            execute([
+              {
+                type: "navigate-external",
+                to: p.startUrl ?? `/auth/${name}/start`,
+              },
+            ])
+          }
           style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             gap: "var(--sn-spacing-sm)",
             padding: "var(--sn-spacing-md) var(--sn-spacing-lg)",
             background: "var(--sn-color-card)",
@@ -1056,7 +1236,8 @@ export function OAuthButtons({ config }: { config: OAuthButtonsConfig }) {
             cursor: "pointer",
             fontSize: "var(--sn-font-size-sm)",
             fontWeight: "var(--sn-font-weight-medium)" as any,
-            transition: "background var(--sn-duration-fast) var(--sn-ease-default)",
+            transition:
+              "background var(--sn-duration-fast) var(--sn-ease-default)",
           }}
         >
           {renderIcon(p.icon ?? name, 18)}
@@ -1099,17 +1280,17 @@ Tokens referenced: all canonical.
 
 Added to `src/ui/actions/handlers/`:
 
-| Action | Config |
-|---|---|
-| `navigate-external` | `{ to: string, target?: "_self" \| "_blank" }` |
-| `copy` | `{ text: string, onSuccess?: Action[] }` |
-| `emit` | `{ event: string, payload?: unknown }` |
-| `submit-form` | `{ formId: string }` |
-| `reset-form` | `{ formId: string }` |
-| `set-theme` | `{ flavor?: string, mode?: "light" \| "dark" \| "system" }` |
-| `log` | `{ level: string, message: string, data?: unknown }` |
-| `open-drawer` | `{ id: string, payload?: unknown }` |
-| `close-drawer` | `{ id: string, result?: unknown }` |
+| Action              | Config                                                      |
+| ------------------- | ----------------------------------------------------------- |
+| `navigate-external` | `{ to: string, target?: "_self" \| "_blank" }`              |
+| `copy`              | `{ text: string, onSuccess?: Action[] }`                    |
+| `emit`              | `{ event: string, payload?: unknown }`                      |
+| `submit-form`       | `{ formId: string }`                                        |
+| `reset-form`        | `{ formId: string }`                                        |
+| `set-theme`         | `{ flavor?: string, mode?: "light" \| "dark" \| "system" }` |
+| `log`               | `{ level: string, message: string, data?: unknown }`        |
+| `open-drawer`       | `{ id: string, payload?: unknown }`                         |
+| `close-drawer`      | `{ id: string, result?: unknown }`                          |
 
 Existing `open-modal`/`close-modal` already handle drawers internally — split them for clarity.
 
@@ -1235,15 +1416,17 @@ Every component that fetches data uses one hook:
 
 ```ts
 // src/ui/components/_base/use-component-data.ts
-export function useComponentData<T>(
-  dataConfig: DataConfig,
-): { data: T | null; loading: boolean; error: Error | null };
+export function useComponentData<T>(dataConfig: DataConfig): {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+};
 
 type DataConfig =
-  | { resource: string }                     // named resource
-  | { endpoint: string; method?: string }    // inline endpoint
-  | { from: string }                         // from-ref
-  | { value: unknown };                      // literal
+  | { resource: string } // named resource
+  | { endpoint: string; method?: string } // inline endpoint
+  | { from: string } // from-ref
+  | { value: unknown }; // literal
 ```
 
 Every existing component currently fetches data somehow. Audit every component and replace bespoke fetching with `useComponentData`. **One code path per concept.**
@@ -1463,7 +1646,10 @@ my-app/
 ```html
 <!doctype html>
 <html lang="en">
-  <head><meta charset="UTF-8" /><title>My App</title></head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>My App</title>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="virtual:snapshot-entry"></script>
@@ -1500,6 +1686,7 @@ Also adds `snapshot preview` (wraps `vite preview`).
 ### 14.3 Document `snapshotApp()` properly
 
 Currently the Vite plugin exists but is undocumented. Add `docs/cli/vite-plugin.md` with:
+
 - What it does
 - How to use it
 - Virtual entry module
@@ -1698,14 +1885,14 @@ New file `playground/reference-manifest.json` — exercises every primitive, eve
 
 ### 18.1 Track map
 
-| Track | Phases | Owns files | Can run in parallel with |
-|---|---|---|---|
-| **Runtime** | 0, 1, 6, 8, 11 | `src/ui/manifest/app.tsx`, `src/ui/manifest/boot-builtins.ts`, `src/ui/context/**`, `src/vite/**` | Components after Phase 2 |
-| **Compiler** | 2, 7 | `src/ui/manifest/schema.ts`, `src/ui/manifest/compiler.ts`, `src/ui/manifest/merge.ts`, `src/ui/manifest/defaults/**`, `src/ui/manifest/guard-registry.ts` | Components after Phase 2 |
-| **Components** | 3, 4, 10 | `src/ui/components/**`, `src/ui/layouts/**`, `src/ui/icons/**` | Runtime after Phase 2 |
-| **Actions** | 5 | `src/ui/actions/**`, `src/ui/expressions/**` | Everything |
-| **CLI** | 9 | `src/cli/**`, `src/vite/**` (init-only) | Everything after Phase 2 |
-| **CI** | 12 | `scripts/**`, `.github/**`, `playground/**` | Everything |
+| Track          | Phases         | Owns files                                                                                                                                                 | Can run in parallel with |
+| -------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| **Runtime**    | 0, 1, 6, 8, 11 | `src/ui/manifest/app.tsx`, `src/ui/manifest/boot-builtins.ts`, `src/ui/context/**`, `src/vite/**`                                                          | Components after Phase 2 |
+| **Compiler**   | 2, 7           | `src/ui/manifest/schema.ts`, `src/ui/manifest/compiler.ts`, `src/ui/manifest/merge.ts`, `src/ui/manifest/defaults/**`, `src/ui/manifest/guard-registry.ts` | Components after Phase 2 |
+| **Components** | 3, 4, 10       | `src/ui/components/**`, `src/ui/layouts/**`, `src/ui/icons/**`                                                                                             | Runtime after Phase 2    |
+| **Actions**    | 5              | `src/ui/actions/**`, `src/ui/expressions/**`                                                                                                               | Everything               |
+| **CLI**        | 9              | `src/cli/**`, `src/vite/**` (init-only)                                                                                                                    | Everything after Phase 2 |
+| **CI**         | 12             | `scripts/**`, `.github/**`, `playground/**`                                                                                                                | Everything               |
 
 ### 18.2 Hard dependencies
 
@@ -1753,6 +1940,7 @@ For an implementing agent picking up a phase:
 This spec is done when all of the following are true on `main`:
 
 **Code invariants:**
+
 - [ ] `src/ui/manifest/auth.tsx` does not exist
 - [ ] `grep -r "route\.id ===" src/ui/manifest/` returns zero hits
 - [ ] `grep -r "resolveAuthScreen" src/` returns zero hits
@@ -1763,17 +1951,20 @@ This spec is done when all of the following are true on `main`:
 - [ ] Every flavor passes contrast CI
 
 **Consumer invariants:**
+
 - [ ] `budget-fe/src/` does not contain any `.tsx`, `.ts`, or `.css` file (optional `custom-components.ts` only if needed)
 - [ ] `budget-fe/snapshot.manifest.json` is the sole source of truth for budget-fe's behavior
 - [ ] `budget-fe` login/register/forgot-password/mfa all work from the default auth fragment
 - [ ] `budget-fe` dashboard renders with a beautiful sidebar, themed nav, working icons, stat cards, data table
 
 **CI invariants:**
+
 - [ ] Visual regression runs on every PR
 - [ ] Dogfooding CI green
 - [ ] `bun run typecheck && bun run format:check && bun run build && bun test` pass on `main`
 
 **Documentation invariants:**
+
 - [ ] `docs/getting-started.md` walks a new user through `snapshot init` → working app in under 5 minutes
 - [ ] `docs/components.md` lists every component with a config example
 - [ ] `docs/actions.md` lists every action with a config example
@@ -1786,33 +1977,43 @@ This spec is done when all of the following are true on `main`:
 ## 20. Risks & Open Questions
 
 ### R1 — Performance of a fully reactive manifest runtime
+
 Every from-ref is a Jotai subscription. A page with 500 components might create 500 atoms. Needs benchmarking as component library use grows. **Mitigation:** batch subscriptions per component, use selector atoms, measure with real consumer (`budget-fe` + stress manifest).
 
 ### R2 — SSR vs. runtime-only manifest sections
+
 Fragments merge at compile time, but user-specific content (auth state, feature flags, realtime) resolves at runtime. The SSR boundary needs a clean "static compile + runtime bind" split. **Mitigation:** two-pass compile — static pass produces the serializable compiled manifest; runtime pass binds dynamic values on hydration. Covered in Phase 6 data binding work.
 
 ### R3 — Type safety for manifest authors
+
 JSON gives no editor completion. **Mitigation:** generate a JSON Schema from the Zod schemas, publish at `@lastshotlabs/snapshot/schema.json`, point consumers at it via `"$schema"` in their manifest. Future: VS Code extension for hover docs + inline validation. Not in this spec's scope.
 
 ### R4 — Bundle size
+
 Complete component library is heavy. **Mitigation:** tree-shaking via per-component entry points; `bootBuiltins()` only registers what the compiled manifest references (compile-time pruning). Vite plugin can inject a manifest-specific `bootBuiltins` during build that excludes unused components. Not in Phase 0; revisit in Phase 9.
 
 ### R5 — Migration path for existing apps
+
 Not a concern per R8 — pre-production, no external consumers. `budget-fe` is the only consumer and migrates in lockstep. Each phase's exit criteria include a `budget-fe` smoke test.
 
 ### R6 — Where does truly custom CSS live?
+
 **Answer:** nowhere. Tokens + per-instance overrides + custom components cover every case. If a real-world need surfaces that tokens can't express (specific animation keyframes, advanced pseudo-selectors), it becomes a component-level feature (`animation: "pulse"` as a token-driven option), not a CSS escape hatch. Revisit only if `budget-fe` surfaces a real need.
 
 ### R7 — Component sprawl
+
 With 69 components already and more to add, risk of bloat. **Mitigation:** every new component must justify itself with a real use case from a real consumer. `budget-fe` drives the roadmap. No speculative primitives.
 
 ### R8 — OAuth URL contract with slingshot-auth
+
 Current bespoke `auth.tsx` and slingshot-auth disagree on the OAuth URL shape. Phase 7 standardizes on `/auth/{provider}/start` and `/auth/{provider}/callback`. **Requires slingshot-auth change.** Track as a cross-repo dependency.
 
 ### R9 — Guard execution in SSR
+
 Guards run before rendering a route. Under SSR, the guard must run during server rendering — it can read the request (cookies, headers) via the SSR bridge. **Mitigation:** guard signatures receive a context object that works in both client and server modes; current code already handles this for the existing route guards. Verify in Phase 7.
 
 ### R10 — Fragment merging edge cases
+
 - Two fragments contributing routes with the same id — fragment merge order determines winner, currently last-wins.
 - Fragment contributing `theme.overrides.colors.primary` while app sets it too — app wins, documented.
 - App declaring `auth.screens: { login: false }` while providing no login route — login is simply absent; unauthenticated redirects to `/login` will 404. **Mitigation:** cross-reference validator warns (not errors) when a redirect target doesn't resolve to any route.

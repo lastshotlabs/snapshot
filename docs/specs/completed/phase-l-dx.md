@@ -2,13 +2,13 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | L.1 | Manifest Hot Reload — HMR for manifest changes | Not started | Vite |
-> | L.2 | Validation Error Overlay — browser overlay for manifest errors | Not started | Vite |
-> | L.3 | Component Inspector — Alt+click dev mode inspector | Not started | Runtime |
-> | L.4 | CLI Scaffolding — `snapshot add-page`, `snapshot add-resource`, `snapshot preview` | Not started | CLI |
-> | L.5 | JSON Schema for IDE — autocomplete + inline docs | Not started | Schema |
+> | Phase | Title                                                                              | Status      | Track   |
+> | ----- | ---------------------------------------------------------------------------------- | ----------- | ------- |
+> | L.1   | Manifest Hot Reload — HMR for manifest changes                                     | Not started | Vite    |
+> | L.2   | Validation Error Overlay — browser overlay for manifest errors                     | Not started | Vite    |
+> | L.3   | Component Inspector — Alt+click dev mode inspector                                 | Not started | Runtime |
+> | L.4   | CLI Scaffolding — `snapshot add-page`, `snapshot add-resource`, `snapshot preview` | Not started | CLI     |
+> | L.5   | JSON Schema for IDE — autocomplete + inline docs                                   | Not started | Schema  |
 >
 > **Priority:** P2 — improves developer velocity, not blocking features.
 > **Depends on:** Phase A (CSS Foundation), Phase I (Presets — for `add-page` scaffolding).
@@ -53,36 +53,36 @@ Developing with Snapshot requires:
 
 ### Vite Plugin (WORKS — no manifest HMR)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/vite/index.ts` | 995 | `snapshotApp()` plugin: virtual entry imports manifest as JSON module. Vite's default behavior for `.json` changes is full page reload. No `handleHotUpdate` hook. |
-| `src/vite/index.ts:141-164` | 24 | `configureServer()` middleware: serves HTML shell for `/` and `/index.html`. No error overlay middleware. |
+| File                        | Lines | What Exists                                                                                                                                                        |
+| --------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/vite/index.ts`         | 995   | `snapshotApp()` plugin: virtual entry imports manifest as JSON module. Vite's default behavior for `.json` changes is full page reload. No `handleHotUpdate` hook. |
+| `src/vite/index.ts:141-164` | 24    | `configureServer()` middleware: serves HTML shell for `/` and `/index.html`. No error overlay middleware.                                                          |
 
 ### CLI (PARTIAL)
 
-| File | What Exists |
-|---|---|
-| `src/cli/commands/init.ts` | `snapshot init` — scaffolds new project. |
-| `src/cli/commands/sync.ts` | `snapshot sync` — generates typed API client from OpenAPI. |
-| `src/cli/commands/manifest/init.ts` | `snapshot manifest init` — generates starter manifest. |
+| File                                    | What Exists                                                                                            |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `src/cli/commands/init.ts`              | `snapshot init` — scaffolds new project.                                                               |
+| `src/cli/commands/sync.ts`              | `snapshot sync` — generates typed API client from OpenAPI.                                             |
+| `src/cli/commands/manifest/init.ts`     | `snapshot manifest init` — generates starter manifest.                                                 |
 | `src/cli/commands/manifest/validate.ts` | `snapshot manifest validate` — validates manifest against schema. Reports Zod errors with field paths. |
-| `src/cli/commands/dev.ts` | `snapshot dev` — starts Vite dev server. |
-| `src/cli/commands/build.ts` | `snapshot build` — production build. |
-| `src/cli/commands/preview.ts` | `snapshot preview` — serves production build. |
+| `src/cli/commands/dev.ts`               | `snapshot dev` — starts Vite dev server.                                                               |
+| `src/cli/commands/build.ts`             | `snapshot build` — production build.                                                                   |
+| `src/cli/commands/preview.ts`           | `snapshot preview` — serves production build.                                                          |
 
 **Missing:** `snapshot add-page`, `snapshot add-resource`.
 
 ### Manifest Schema (Zod only — no JSON Schema)
 
-| File | What Exists |
-|---|---|
+| File                        | What Exists                                        |
+| --------------------------- | -------------------------------------------------- |
 | `src/ui/manifest/schema.ts` | All schemas defined in Zod. No JSON Schema export. |
 
 ### ManifestApp (NO inspector)
 
-| File | What Exists |
-|---|---|
-| `src/ui/manifest/app.tsx` | No dev mode inspector. No Alt+click handler. |
+| File                                            | What Exists                                                                                |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `src/ui/manifest/app.tsx`                       | No dev mode inspector. No Alt+click handler.                                               |
 | `src/ui/components/_base/component-wrapper.tsx` | Adds `data-snapshot-component={type}` attribute. This is the hook for inspector targeting. |
 
 ---
@@ -101,16 +101,16 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/vite/index.ts` | Vite plugin | 995 |
-| `src/cli/commands/init.ts` | CLI init command | ~100 |
-| `src/cli/commands/manifest/validate.ts` | CLI validate command | 80 |
-| `src/cli/index.ts` | CLI entry point | ~20 |
-| `src/ui/manifest/schema.ts` | All Zod schemas | ~1400 |
-| `src/ui/manifest/app.tsx` | ManifestApp | 1764 |
-| `src/ui/manifest/compiler.ts` | compileManifest() | ~600 |
-| `src/ui/components/_base/component-wrapper.tsx` | ComponentWrapper | 181 |
+| Path                                            | What                 | Lines |
+| ----------------------------------------------- | -------------------- | ----- |
+| `src/vite/index.ts`                             | Vite plugin          | 995   |
+| `src/cli/commands/init.ts`                      | CLI init command     | ~100  |
+| `src/cli/commands/manifest/validate.ts`         | CLI validate command | 80    |
+| `src/cli/index.ts`                              | CLI entry point      | ~20   |
+| `src/ui/manifest/schema.ts`                     | All Zod schemas      | ~1400 |
+| `src/ui/manifest/app.tsx`                       | ManifestApp          | 1764  |
+| `src/ui/manifest/compiler.ts`                   | compileManifest()    | ~600  |
+| `src/ui/components/_base/component-wrapper.tsx` | ComponentWrapper     | 181   |
 
 ---
 
@@ -234,14 +234,14 @@ change needed. Verify.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                               |
+| ------ | -------------------------------------------------------------------------------------------------- |
 | Modify | `src/vite/index.ts` — add `handleHotUpdate` to `snapshotApp()`, update virtual entry with HMR code |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                | What                                                                                                                                  |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/vite/__tests__/plugin.test.ts` | Add tests: `handleHotUpdate` returns empty array for manifest file, returns undefined for non-manifest files, sends custom HMR event. |
 
 ### Exit Criteria
@@ -269,7 +269,7 @@ a link to docs.
 **1. Create `src/ui/manifest/error-overlay.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import React from "react";
 
@@ -289,7 +289,10 @@ interface ErrorOverlayProps {
  * Development-only error overlay for manifest validation failures.
  * Styled to match Vite's error overlay appearance.
  */
-export function ManifestErrorOverlay({ errors, manifestFile }: ErrorOverlayProps) {
+export function ManifestErrorOverlay({
+  errors,
+  manifestFile,
+}: ErrorOverlayProps) {
   return (
     <div
       data-snapshot-error-overlay=""
@@ -299,29 +302,34 @@ export function ManifestErrorOverlay({ errors, manifestFile }: ErrorOverlayProps
         zIndex: 99999,
         backgroundColor: "rgba(0, 0, 0, 0.85)",
         color: "#e8e8e8",
-        fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        fontFamily:
+          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
         fontSize: "14px",
         overflow: "auto",
         padding: "2rem",
       }}
     >
       <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          marginBottom: "1.5rem",
-        }}>
-          <span style={{
-            backgroundColor: "#ff5555",
-            color: "#fff",
-            padding: "0.25rem 0.75rem",
-            borderRadius: "4px",
-            fontWeight: 700,
-            fontSize: "12px",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-          }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <span
+            style={{
+              backgroundColor: "#ff5555",
+              color: "#fff",
+              padding: "0.25rem 0.75rem",
+              borderRadius: "4px",
+              fontWeight: 700,
+              fontSize: "12px",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
             Manifest Error
           </span>
           <span style={{ color: "#888" }}>
@@ -329,8 +337,11 @@ export function ManifestErrorOverlay({ errors, manifestFile }: ErrorOverlayProps
           </span>
         </div>
 
-        <div style={{ color: "#ff8888", fontSize: "16px", marginBottom: "1rem" }}>
-          {errors.length} validation error{errors.length > 1 ? "s" : ""} in manifest
+        <div
+          style={{ color: "#ff8888", fontSize: "16px", marginBottom: "1rem" }}
+        >
+          {errors.length} validation error{errors.length > 1 ? "s" : ""} in
+          manifest
         </div>
 
         {errors.map((error, i) => (
@@ -344,7 +355,13 @@ export function ManifestErrorOverlay({ errors, manifestFile }: ErrorOverlayProps
               marginBottom: "0.75rem",
             }}
           >
-            <div style={{ color: "#ffaa88", marginBottom: "0.5rem", fontWeight: 600 }}>
+            <div
+              style={{
+                color: "#ffaa88",
+                marginBottom: "0.5rem",
+                fontWeight: 600,
+              }}
+            >
               {error.path || "(root)"}
             </div>
             <div style={{ color: "#e8e8e8", marginBottom: "0.25rem" }}>
@@ -376,7 +393,9 @@ export function ManifestErrorOverlay({ errors, manifestFile }: ErrorOverlayProps
           <button
             type="button"
             onClick={() => {
-              const overlay = document.querySelector("[data-snapshot-error-overlay]");
+              const overlay = document.querySelector(
+                "[data-snapshot-error-overlay]",
+              );
               if (overlay) overlay.remove();
             }}
             style={{
@@ -408,7 +427,12 @@ import { ZodError } from "zod";
 function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
   const [compileResult, setCompileResult] = useState<{
     compiled?: CompiledManifest;
-    errors?: Array<{ path: string; message: string; expected?: string; received?: string }>;
+    errors?: Array<{
+      path: string;
+      message: string;
+      expected?: string;
+      received?: string;
+    }>;
   }>(() => {
     try {
       return { compiled: compileManifest(manifest) };
@@ -458,15 +482,15 @@ because `ManifestApp` catches the `ZodError`.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/error-overlay.tsx` |
+| Action | Path                                                                         |
+| ------ | ---------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/error-overlay.tsx`                                          |
 | Modify | `src/ui/manifest/app.tsx` — catch compile errors, render overlay in dev mode |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                        | What                                                                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `src/ui/manifest/__tests__/error-overlay.test.tsx` (create) | Tests: renders error count, renders field paths, renders expected/received, dismiss button removes overlay, docs link present. |
 
 ### Exit Criteria
@@ -496,7 +520,7 @@ and its available actions.
 **1. Create `src/ui/manifest/inspector.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 
@@ -520,13 +544,16 @@ export function ComponentInspector() {
 
     // Find closest snapshot component
     const target = e.target as HTMLElement;
-    const componentEl = target.closest("[data-snapshot-component]") as HTMLElement | null;
+    const componentEl = target.closest(
+      "[data-snapshot-component]",
+    ) as HTMLElement | null;
     if (!componentEl) return;
 
     e.preventDefault();
     e.stopPropagation();
 
-    const type = componentEl.getAttribute("data-snapshot-component") ?? "unknown";
+    const type =
+      componentEl.getAttribute("data-snapshot-component") ?? "unknown";
     const id = componentEl.getAttribute("data-snapshot-id") ?? undefined;
 
     // Read config from data attribute (stored as JSON)
@@ -575,37 +602,49 @@ export function ComponentInspector() {
         maxHeight: "380px",
         overflow: "auto",
         backgroundColor: "var(--sn-color-surface, #fff)",
-        border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-lg, 0.5rem)",
         boxShadow: "var(--sn-shadow-xl, 0 20px 25px -5px rgba(0,0,0,.1))",
         zIndex: 99998,
-        fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        fontFamily:
+          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
         fontSize: "12px",
         color: "var(--sn-color-foreground, #111)",
       }}
     >
       {/* Header */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "0.5rem 0.75rem",
-        borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-        backgroundColor: "var(--sn-color-muted, #f9fafb)",
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "0.5rem 0.75rem",
+          borderBottom:
+            "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+          backgroundColor: "var(--sn-color-muted, #f9fafb)",
+        }}
+      >
         <div>
-          <span style={{
-            backgroundColor: "var(--sn-color-primary, #2563eb)",
-            color: "var(--sn-color-primary-foreground, #fff)",
-            padding: "0.125rem 0.5rem",
-            borderRadius: "var(--sn-radius-sm, 0.25rem)",
-            fontSize: "11px",
-            fontWeight: 600,
-          }}>
+          <span
+            style={{
+              backgroundColor: "var(--sn-color-primary, #2563eb)",
+              color: "var(--sn-color-primary-foreground, #fff)",
+              padding: "0.125rem 0.5rem",
+              borderRadius: "var(--sn-radius-sm, 0.25rem)",
+              fontSize: "11px",
+              fontWeight: 600,
+            }}
+          >
             {inspected.type}
           </span>
           {inspected.id && (
-            <span style={{ marginLeft: "0.5rem", color: "var(--sn-color-muted-foreground, #6b7280)" }}>
+            <span
+              style={{
+                marginLeft: "0.5rem",
+                color: "var(--sn-color-muted-foreground, #6b7280)",
+              }}
+            >
               #{inspected.id}
             </span>
           )}
@@ -630,29 +669,33 @@ export function ComponentInspector() {
 
       {/* Config */}
       <div style={{ padding: "0.75rem" }}>
-        <div style={{
-          fontWeight: 600,
-          marginBottom: "0.25rem",
-          color: "var(--sn-color-muted-foreground, #6b7280)",
-          fontSize: "10px",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-        }}>
+        <div
+          style={{
+            fontWeight: 600,
+            marginBottom: "0.25rem",
+            color: "var(--sn-color-muted-foreground, #6b7280)",
+            fontSize: "10px",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          }}
+        >
           Config
         </div>
-        <pre style={{
-          margin: 0,
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-word",
-          fontSize: "11px",
-          lineHeight: 1.5,
-          color: "var(--sn-color-foreground, #111)",
-          backgroundColor: "var(--sn-color-muted, #f9fafb)",
-          padding: "0.5rem",
-          borderRadius: "var(--sn-radius-sm, 0.25rem)",
-          maxHeight: "250px",
-          overflow: "auto",
-        }}>
+        <pre
+          style={{
+            margin: 0,
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            fontSize: "11px",
+            lineHeight: 1.5,
+            color: "var(--sn-color-foreground, #111)",
+            backgroundColor: "var(--sn-color-muted, #f9fafb)",
+            padding: "0.5rem",
+            borderRadius: "var(--sn-radius-sm, 0.25rem)",
+            maxHeight: "250px",
+            overflow: "auto",
+          }}
+        >
           {JSON.stringify(inspected.config, null, 2)}
         </pre>
       </div>
@@ -692,21 +735,23 @@ return (
 import { ComponentInspector } from "./inspector";
 
 // In ManifestApp render, after the router:
-{import.meta.env?.DEV && <ComponentInspector />}
+{
+  import.meta.env?.DEV && <ComponentInspector />;
+}
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/inspector.tsx` |
+| Action | Path                                                                                    |
+| ------ | --------------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/inspector.tsx`                                                         |
 | Modify | `src/ui/components/_base/component-wrapper.tsx` — store config as data attribute in dev |
-| Modify | `src/ui/manifest/app.tsx` — mount ComponentInspector in dev mode |
+| Modify | `src/ui/manifest/app.tsx` — mount ComponentInspector in dev mode                        |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                    | What                                                                                                                                                                                  |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/inspector.test.tsx` (create) | Tests: Alt+click on component element opens inspector, inspector shows component type and id, inspector shows config JSON, close button hides inspector, non-Alt click does not open. |
 
 ### Exit Criteria
@@ -728,6 +773,7 @@ import { ComponentInspector } from "./inspector";
 ### Goal
 
 Add CLI commands for common development tasks:
+
 - `snapshot add-page` — add a page definition to the manifest.
 - `snapshot add-resource` — add a resource (API endpoint group) to the manifest.
 - `snapshot validate` — alias for `snapshot manifest validate` (already exists).
@@ -771,7 +817,9 @@ export default class AddPage extends Command {
 
     // Read existing manifest
     if (!fs.existsSync(manifestPath)) {
-      log.error(`Manifest not found: ${flags.manifest}. Run 'snapshot init' first.`);
+      log.error(
+        `Manifest not found: ${flags.manifest}. Run 'snapshot init' first.`,
+      );
       outro("Aborted.");
       this.exit(1);
       return;
@@ -780,33 +828,51 @@ export default class AddPage extends Command {
     const manifestRaw = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
     // Prompt for missing values
-    const routePath = flags.path ?? await text({
-      message: "Route path:",
-      placeholder: "/users",
-      validate: (value) => {
-        if (!value.startsWith("/")) return "Path must start with /";
-        return undefined;
-      },
-    });
-    if (typeof routePath === "symbol") { this.exit(0); return; }
+    const routePath =
+      flags.path ??
+      (await text({
+        message: "Route path:",
+        placeholder: "/users",
+        validate: (value) => {
+          if (!value.startsWith("/")) return "Path must start with /";
+          return undefined;
+        },
+      }));
+    if (typeof routePath === "symbol") {
+      this.exit(0);
+      return;
+    }
 
-    const title = flags.title ?? await text({
-      message: "Page title:",
-      placeholder: "Users",
-    });
-    if (typeof title === "symbol") { this.exit(0); return; }
+    const title =
+      flags.title ??
+      (await text({
+        message: "Page title:",
+        placeholder: "Users",
+      }));
+    if (typeof title === "symbol") {
+      this.exit(0);
+      return;
+    }
 
-    const preset = flags.preset ?? await select({
-      message: "Page preset:",
-      options: [
-        { label: "CRUD — Table with create/edit/delete", value: "crud" },
-        { label: "Dashboard — Stats, charts, activity feed", value: "dashboard" },
-        { label: "Settings — Tabbed forms", value: "settings" },
-        { label: "Auth — Login/register screen", value: "auth" },
-        { label: "Blank — Empty page", value: "blank" },
-      ],
-    });
-    if (typeof preset === "symbol") { this.exit(0); return; }
+    const preset =
+      flags.preset ??
+      (await select({
+        message: "Page preset:",
+        options: [
+          { label: "CRUD — Table with create/edit/delete", value: "crud" },
+          {
+            label: "Dashboard — Stats, charts, activity feed",
+            value: "dashboard",
+          },
+          { label: "Settings — Tabbed forms", value: "settings" },
+          { label: "Auth — Login/register screen", value: "auth" },
+          { label: "Blank — Empty page", value: "blank" },
+        ],
+      }));
+    if (typeof preset === "symbol") {
+      this.exit(0);
+      return;
+    }
 
     // Build route config
     const route: Record<string, unknown> = {
@@ -815,9 +881,7 @@ export default class AddPage extends Command {
 
     if (preset === "blank") {
       route.title = title;
-      route.content = [
-        { type: "heading", text: title, level: 1 },
-      ];
+      route.content = [{ type: "heading", text: title, level: 1 }];
     } else {
       route.preset = preset;
       route.presetConfig = buildPresetConfig(preset as string, title as string);
@@ -865,7 +929,10 @@ export default class AddPage extends Command {
         label: title,
         path: routePath,
       });
-      fs.writeFileSync(manifestPath, JSON.stringify(manifestRaw, null, 2) + "\n");
+      fs.writeFileSync(
+        manifestPath,
+        JSON.stringify(manifestRaw, null, 2) + "\n",
+      );
       log.success(`Added "${title}" to navigation`);
     }
 
@@ -873,7 +940,10 @@ export default class AddPage extends Command {
   }
 }
 
-function buildPresetConfig(preset: string, title: string): Record<string, unknown> {
+function buildPresetConfig(
+  preset: string,
+  title: string,
+): Record<string, unknown> {
   switch (preset) {
     case "crud":
       return {
@@ -888,7 +958,12 @@ function buildPresetConfig(preset: string, title: string): Record<string, unknow
       return {
         title,
         stats: [
-          { label: "Total", endpoint: "GET /api/stats/total", valueKey: "count", format: "number" },
+          {
+            label: "Total",
+            endpoint: "GET /api/stats/total",
+            valueKey: "count",
+            format: "number",
+          },
         ],
       };
     case "settings":
@@ -924,7 +999,8 @@ import process from "node:process";
 import { intro, log, outro, text, multiselect } from "@clack/prompts";
 
 export default class AddResource extends Command {
-  static override description = "Add a resource (API endpoint group) to the manifest";
+  static override description =
+    "Add a resource (API endpoint group) to the manifest";
   static override examples = [
     "<%= config.bin %> add-resource",
     "<%= config.bin %> add-resource --name users --base /api/users",
@@ -945,7 +1021,9 @@ export default class AddResource extends Command {
     intro("@lastshotlabs/snapshot add-resource");
 
     if (!fs.existsSync(manifestPath)) {
-      log.error(`Manifest not found: ${flags.manifest}. Run 'snapshot init' first.`);
+      log.error(
+        `Manifest not found: ${flags.manifest}. Run 'snapshot init' first.`,
+      );
       outro("Aborted.");
       this.exit(1);
       return;
@@ -953,19 +1031,29 @@ export default class AddResource extends Command {
 
     const manifestRaw = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
-    const name = flags.name ?? await text({
-      message: "Resource name:",
-      placeholder: "users",
-      validate: (v) => v.length === 0 ? "Required" : undefined,
-    });
-    if (typeof name === "symbol") { this.exit(0); return; }
+    const name =
+      flags.name ??
+      (await text({
+        message: "Resource name:",
+        placeholder: "users",
+        validate: (v) => (v.length === 0 ? "Required" : undefined),
+      }));
+    if (typeof name === "symbol") {
+      this.exit(0);
+      return;
+    }
 
-    const base = flags.base ?? await text({
-      message: "Base API path:",
-      placeholder: `/api/${name}`,
-      initialValue: `/api/${name}`,
-    });
-    if (typeof base === "symbol") { this.exit(0); return; }
+    const base =
+      flags.base ??
+      (await text({
+        message: "Base API path:",
+        placeholder: `/api/${name}`,
+        initialValue: `/api/${name}`,
+      }));
+    if (typeof base === "symbol") {
+      this.exit(0);
+      return;
+    }
 
     const operations = await multiselect({
       message: "Operations to include:",
@@ -973,12 +1061,23 @@ export default class AddResource extends Command {
         { label: "List (GET /)", value: "list", hint: `GET ${base}` },
         { label: "Get (GET /:id)", value: "get", hint: `GET ${base}/:id` },
         { label: "Create (POST /)", value: "create", hint: `POST ${base}` },
-        { label: "Update (PUT /:id)", value: "update", hint: `PUT ${base}/:id` },
-        { label: "Delete (DELETE /:id)", value: "delete", hint: `DELETE ${base}/:id` },
+        {
+          label: "Update (PUT /:id)",
+          value: "update",
+          hint: `PUT ${base}/:id`,
+        },
+        {
+          label: "Delete (DELETE /:id)",
+          value: "delete",
+          hint: `DELETE ${base}/:id`,
+        },
       ],
       initialValues: ["list", "get", "create", "update", "delete"],
     });
-    if (typeof operations === "symbol") { this.exit(0); return; }
+    if (typeof operations === "symbol") {
+      this.exit(0);
+      return;
+    }
 
     // Build resource config
     const resource: Record<string, unknown> = {};
@@ -1001,7 +1100,9 @@ export default class AddResource extends Command {
 
     fs.writeFileSync(manifestPath, JSON.stringify(manifestRaw, null, 2) + "\n");
 
-    log.success(`Added resource "${name}" with ${(operations as string[]).length} operations`);
+    log.success(
+      `Added resource "${name}" with ${(operations as string[]).length} operations`,
+    );
     outro("Done!");
   }
 }
@@ -1009,17 +1110,17 @@ export default class AddResource extends Command {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/cli/commands/add-page.ts` |
+| Action | Path                               |
+| ------ | ---------------------------------- |
+| Create | `src/cli/commands/add-page.ts`     |
 | Create | `src/cli/commands/add-resource.ts` |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/cli/__tests__/add-page.test.ts` (create) | Tests: adds route to manifest JSON, builds correct preset config for each type, detects duplicate paths, adds nav item when requested. |
-| `src/cli/__tests__/add-resource.test.ts` (create) | Tests: adds resource to manifest JSON, builds correct endpoint patterns, handles existing resources. |
+| File                                              | What                                                                                                                                   |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/cli/__tests__/add-page.test.ts` (create)     | Tests: adds route to manifest JSON, builds correct preset config for each type, detects duplicate paths, adds nav item when requested. |
+| `src/cli/__tests__/add-resource.test.ts` (create) | Tests: adds resource to manifest JSON, builds correct endpoint patterns, handles existing resources.                                   |
 
 ### Exit Criteria
 
@@ -1041,6 +1142,7 @@ export default class AddResource extends Command {
 ### Goal
 
 Generate and publish a JSON Schema for `snapshot.manifest.json` that enables:
+
 - VS Code autocomplete and IntelliSense.
 - Inline docs on hover.
 - Red underlines for invalid fields.
@@ -1058,7 +1160,8 @@ import process from "node:process";
 import { intro, log, outro } from "@clack/prompts";
 
 export default class ManifestSchema extends Command {
-  static override description = "Generate JSON Schema for snapshot.manifest.json";
+  static override description =
+    "Generate JSON Schema for snapshot.manifest.json";
   static override examples = [
     "<%= config.bin %> manifest schema",
     "<%= config.bin %> manifest schema --output schema.json",
@@ -1077,12 +1180,15 @@ export default class ManifestSchema extends Command {
 
     intro("@lastshotlabs/snapshot manifest schema");
 
-    const { generateJsonSchema } = await import("../../../ui/manifest/json-schema.js");
+    const { generateJsonSchema } =
+      await import("../../../ui/manifest/json-schema.js");
     const schema = generateJsonSchema();
 
     fs.writeFileSync(outputPath, JSON.stringify(schema, null, 2) + "\n");
     log.success(`JSON Schema written to ${flags.output}`);
-    log.info('Add "$schema": "./snapshot.schema.json" to your manifest for IDE support.');
+    log.info(
+      'Add "$schema": "./snapshot.schema.json" to your manifest for IDE support.',
+    );
     outro("Done!");
   }
 }
@@ -1135,6 +1241,7 @@ Update `src/cli/templates/manifest-init.ts` to include the `$schema` key:
 **4. Add `zod-to-json-schema` as optional peer dependency:**
 
 In `package.json`:
+
 ```json
 {
   "optionalDependencies": {
@@ -1145,19 +1252,19 @@ In `package.json`:
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/json-schema.ts` |
-| Create | `src/cli/commands/manifest/schema.ts` |
+| Action | Path                                                                       |
+| ------ | -------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/json-schema.ts`                                           |
+| Create | `src/cli/commands/manifest/schema.ts`                                      |
 | Modify | `src/cli/templates/manifest-init.ts` — add `$schema` to generated manifest |
-| Modify | `package.json` — add `zod-to-json-schema` as optional dependency |
+| Modify | `package.json` — add `zod-to-json-schema` as optional dependency           |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                     | What                                                                                                                                                                               |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/json-schema.test.ts` (create) | Tests: `generateJsonSchema()` returns valid JSON Schema, schema has correct `$schema` URI, schema has properties for all top-level manifest keys (app, routes, auth, theme, etc.). |
-| `src/cli/__tests__/manifest-schema.test.ts` (create) | Tests: command writes file, output is valid JSON, output has `$schema` key. |
+| `src/cli/__tests__/manifest-schema.test.ts` (create)     | Tests: command writes file, output is valid JSON, output has `$schema` key.                                                                                                        |
 
 ### Exit Criteria
 
@@ -1180,11 +1287,11 @@ In `package.json`:
 
 Three independent tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| Vite | L.1, L.2 | `src/vite/index.ts`, `src/ui/manifest/error-overlay.tsx` |
-| Runtime | L.3 | `src/ui/manifest/inspector.tsx`, `src/ui/components/_base/component-wrapper.tsx` |
-| CLI | L.4, L.5 | `src/cli/commands/add-page.ts`, `src/cli/commands/add-resource.ts`, `src/cli/commands/manifest/schema.ts`, `src/ui/manifest/json-schema.ts` |
+| Track   | Phases   | Files Owned                                                                                                                                 |
+| ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vite    | L.1, L.2 | `src/vite/index.ts`, `src/ui/manifest/error-overlay.tsx`                                                                                    |
+| Runtime | L.3      | `src/ui/manifest/inspector.tsx`, `src/ui/components/_base/component-wrapper.tsx`                                                            |
+| CLI     | L.4, L.5 | `src/cli/commands/add-page.ts`, `src/cli/commands/add-resource.ts`, `src/cli/commands/manifest/schema.ts`, `src/ui/manifest/json-schema.ts` |
 
 ### File Conflicts
 
@@ -1223,12 +1330,12 @@ base: main
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|---|---|
-| HMR manifest re-import may not work with all Vite configurations | Fall back to `import.meta.hot.invalidate()` (full reload) on any error |
+| Risk                                                                  | Mitigation                                                                                       |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| HMR manifest re-import may not work with all Vite configurations      | Fall back to `import.meta.hot.invalidate()` (full reload) on any error                           |
 | `zod-to-json-schema` may produce incomplete schema for complex unions | Hand-verify the generated schema against a real manifest; supplement missing properties manually |
-| Inspector data attribute (`data-snapshot-config`) adds bytes to DOM | Only inject in dev mode via `import.meta.env.DEV` |
-| CLI commands modifying manifest may produce invalid JSON | Always re-parse and re-serialize with `JSON.stringify(parsed, null, 2)` |
+| Inspector data attribute (`data-snapshot-config`) adds bytes to DOM   | Only inject in dev mode via `import.meta.env.DEV`                                                |
+| CLI commands modifying manifest may produce invalid JSON              | Always re-parse and re-serialize with `JSON.stringify(parsed, null, 2)`                          |
 
 ---
 

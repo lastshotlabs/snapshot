@@ -1,7 +1,13 @@
 // @vitest-environment happy-dom
 import React, { useRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { RichInputBase, type RichInputBaseHandle } from "../standalone";
 
 afterEach(cleanup);

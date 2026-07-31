@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -53,7 +53,8 @@ function getVariantStyles(
       return isBgColor
         ? {
             backgroundColor: "transparent",
-            border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
             color: `var(--sn-color-${color}-foreground)`,
           }
         : {

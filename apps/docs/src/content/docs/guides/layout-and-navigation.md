@@ -5,7 +5,12 @@ draft: false
 ---
 
 ```tsx
-import { LayoutBase, NavBase, CardBase, GridBase } from "@lastshotlabs/snapshot/ui";
+import {
+  LayoutBase,
+  NavBase,
+  CardBase,
+  GridBase,
+} from "@lastshotlabs/snapshot/ui";
 
 function AppShell({ children }) {
   return (
@@ -42,14 +47,14 @@ Wraps your page content with nav, header, sidebar, main, and footer regions.
 
 **Variants:**
 
-| Variant | Description |
-|---------|-------------|
-| `sidebar` | Nav on the left, content on the right |
-| `top-nav` | Nav on top, content below |
-| `stacked` | Vertical stack: header, sidebar, main, footer |
-| `minimal` | Centered single column |
-| `centered` | Centered, max-width constrained |
-| `full-width` | No constraints, full viewport |
+| Variant      | Description                                   |
+| ------------ | --------------------------------------------- |
+| `sidebar`    | Nav on the left, content on the right         |
+| `top-nav`    | Nav on top, content below                     |
+| `stacked`    | Vertical stack: header, sidebar, main, footer |
+| `minimal`    | Centered single column                        |
+| `centered`   | Centered, max-width constrained               |
+| `full-width` | No constraints, full viewport                 |
 
 **Layout slots** for advanced composition:
 
@@ -79,10 +84,15 @@ Main navigation component supporting sidebar and top-nav layouts.
   items={[
     { label: "Dashboard", path: "/", icon: "home" },
     { label: "Users", path: "/users", icon: "users", badge: "12" },
-    { label: "Reports", path: "/reports", icon: "bar-chart", children: [
-      { label: "Revenue", path: "/reports/revenue" },
-      { label: "Growth", path: "/reports/growth" },
-    ]},
+    {
+      label: "Reports",
+      path: "/reports",
+      icon: "bar-chart",
+      children: [
+        { label: "Revenue", path: "/reports/revenue" },
+        { label: "Growth", path: "/reports/growth" },
+      ],
+    },
     { label: "Settings", path: "/settings", icon: "settings" },
   ]}
   collapsible
@@ -109,16 +119,16 @@ Main navigation component supporting sidebar and top-nav layouts.
 
 ### Nav item shape
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `label` | `string` | Display text |
-| `path` | `string` | Navigation path |
-| `icon` | `string` | Icon name |
-| `badge` | `string` | Badge text |
-| `disabled` | `boolean` | Disable the item |
-| `active` | `boolean` | Force active state |
-| `visible` | `boolean` | Show/hide the item |
-| `children` | `NavBaseItem[]` | Nested sub-items |
+| Prop       | Type            | Description        |
+| ---------- | --------------- | ------------------ |
+| `label`    | `string`        | Display text       |
+| `path`     | `string`        | Navigation path    |
+| `icon`     | `string`        | Icon name          |
+| `badge`    | `string`        | Badge text         |
+| `disabled` | `boolean`       | Disable the item   |
+| `active`   | `boolean`       | Force active state |
+| `visible`  | `boolean`       | Show/hide the item |
+| `children` | `NavBaseItem[]` | Nested sub-items   |
 
 ## NavLinkBase
 
@@ -134,7 +144,7 @@ import { NavLinkBase } from "@lastshotlabs/snapshot/ui";
   badge="12"
   active={pathname === "/users"}
   onNavigate={(path) => router.push(path)}
-/>
+/>;
 ```
 
 ## NavUserMenuBase
@@ -151,11 +161,19 @@ import { NavUserMenuBase } from "@lastshotlabs/snapshot/ui";
   showAvatar
   showName
   items={[
-    { label: "Profile", icon: "user", onClick: () => (window.location.href = "/profile") },
-    { label: "Settings", icon: "settings", onClick: () => (window.location.href = "/settings") },
+    {
+      label: "Profile",
+      icon: "user",
+      onClick: () => (window.location.href = "/profile"),
+    },
+    {
+      label: "Settings",
+      icon: "settings",
+      onClick: () => (window.location.href = "/settings"),
+    },
     { label: "Sign out", icon: "log-out", onClick: () => logout() },
   ]}
-/>
+/>;
 ```
 
 ## Grid layout
@@ -171,14 +189,16 @@ import { GridBase } from "@lastshotlabs/snapshot/ui";
   <CardBase title="Revenue">$48,200</CardBase>
   <CardBase title="Users">1,234</CardBase>
   <CardBase title="Orders">567</CardBase>
-</GridBase>
+</GridBase>;
 ```
 
 **Responsive columns:** Pass a string for responsive grid:
 
 ```tsx
 <GridBase columns="repeat(auto-fill, minmax(300px, 1fr))" gap="lg">
-  {items.map((item) => <CardBase key={item.id} title={item.name} />)}
+  {items.map((item) => (
+    <CardBase key={item.id} title={item.name} />
+  ))}
 </GridBase>
 ```
 
@@ -222,7 +242,7 @@ import { ContainerBase } from "@lastshotlabs/snapshot/ui";
 <ContainerBase maxWidth="lg" padding="xl">
   <h1>Page Title</h1>
   <p>Content is centered and constrained.</p>
-</ContainerBase>
+</ContainerBase>;
 ```
 
 **Max-width presets:** `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `full`, `prose`
@@ -236,7 +256,7 @@ import { BoxBase } from "@lastshotlabs/snapshot/ui";
 
 <BoxBase as="section" className="hero-section">
   <h1>Welcome</h1>
-</BoxBase>
+</BoxBase>;
 ```
 
 **HTML tags:** `div`, `section`, `article`, `aside`, `header`, `footer`, `main`, `nav`, `span`
@@ -252,7 +272,7 @@ import { SectionBase } from "@lastshotlabs/snapshot/ui";
 
 <SectionBase height="screen" align="center" justify="center">
   <h1>Full-height hero</h1>
-</SectionBase>
+</SectionBase>;
 ```
 
 ### SpacerBase
@@ -266,7 +286,7 @@ import { SpacerBase } from "@lastshotlabs/snapshot/ui";
   <Header />
   <SpacerBase size="xl" />
   <Content />
-</ColumnBase>
+</ColumnBase>;
 ```
 
 **Spacing tokens:** `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`
@@ -286,7 +306,7 @@ import { SplitPaneBase } from "@lastshotlabs/snapshot/ui";
   minSize={200}
   first={<Sidebar />}
   second={<MainContent />}
-/>
+/>;
 ```
 
 ### CollapsibleBase
@@ -302,7 +322,7 @@ import { CollapsibleBase } from "@lastshotlabs/snapshot/ui";
   duration="normal"
 >
   <p>Hidden content that expands on click.</p>
-</CollapsibleBase>
+</CollapsibleBase>;
 ```
 
 ## Mobile-responsive navigation
@@ -310,7 +330,13 @@ import { CollapsibleBase } from "@lastshotlabs/snapshot/ui";
 For mobile, collapse the sidebar into a hamburger menu using `DrawerBase`:
 
 ```tsx
-import { DrawerBase, IconButtonBase, LayoutBase, NavBase, RowBase } from "@lastshotlabs/snapshot/ui";
+import {
+  DrawerBase,
+  IconButtonBase,
+  LayoutBase,
+  NavBase,
+  RowBase,
+} from "@lastshotlabs/snapshot/ui";
 import { useState, useEffect } from "react";
 
 const NAV_ITEMS = [
@@ -329,9 +355,16 @@ function ResponsiveShell({ children }: { children: React.ReactNode }) {
         <RowBase
           justify="between"
           align="center"
-          style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--sn-color-border)" }}
+          style={{
+            padding: "0.75rem 1rem",
+            borderBottom: "1px solid var(--sn-color-border)",
+          }}
         >
-          <IconButtonBase icon="menu" ariaLabel="Open menu" onClick={() => setMobileOpen(true)} />
+          <IconButtonBase
+            icon="menu"
+            ariaLabel="Open menu"
+            onClick={() => setMobileOpen(true)}
+          />
           <span style={{ fontWeight: 600 }}>My App</span>
           <span style={{ width: 40 }} />
         </RowBase>
@@ -345,7 +378,10 @@ function ResponsiveShell({ children }: { children: React.ReactNode }) {
           <NavBase
             variant="sidebar"
             items={NAV_ITEMS}
-            onNavigate={(path) => { window.location.href = path; setMobileOpen(false); }}
+            onNavigate={(path) => {
+              window.location.href = path;
+              setMobileOpen(false);
+            }}
           />
         </DrawerBase>
         <div style={{ padding: "1rem" }}>{children}</div>
@@ -356,7 +392,14 @@ function ResponsiveShell({ children }: { children: React.ReactNode }) {
   return (
     <LayoutBase
       variant="sidebar"
-      nav={<NavBase variant="sidebar" logo={{ text: "My App", path: "/" }} items={NAV_ITEMS} collapsible />}
+      nav={
+        <NavBase
+          variant="sidebar"
+          logo={{ text: "My App", path: "/" }}
+          items={NAV_ITEMS}
+          collapsible
+        />
+      }
     >
       {children}
     </LayoutBase>
@@ -366,7 +409,7 @@ function ResponsiveShell({ children }: { children: React.ReactNode }) {
 // Simple media query hook
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false,
   );
 
   useEffect(() => {
@@ -413,16 +456,32 @@ function App() {
             userName={user?.name}
             userAvatar={user?.avatarUrl}
             items={[
-              { label: "Settings", icon: "settings", onClick: () => (window.location.href = "/settings") },
+              {
+                label: "Settings",
+                icon: "settings",
+                onClick: () => (window.location.href = "/settings"),
+              },
               { label: "Sign out", icon: "log-out", onClick: () => logout() },
             ]}
           />
         </RowBase>
         <SpacerBase size="lg" />
         <GridBase columns={3} gap="md">
-          <StatCardBase label="Revenue" value="$48K" trend={{ direction: "up", value: "+12%" }} />
-          <StatCardBase label="Users" value="1,234" trend={{ direction: "up", value: "+5%" }} />
-          <StatCardBase label="Orders" value="567" trend={{ direction: "down", value: "-3%" }} />
+          <StatCardBase
+            label="Revenue"
+            value="$48K"
+            trend={{ direction: "up", value: "+12%" }}
+          />
+          <StatCardBase
+            label="Users"
+            value="1,234"
+            trend={{ direction: "up", value: "+5%" }}
+          />
+          <StatCardBase
+            label="Orders"
+            value="567"
+            trend={{ direction: "down", value: "-3%" }}
+          />
         </GridBase>
       </ContainerBase>
     </LayoutBase>
@@ -432,22 +491,22 @@ function App() {
 
 ## All layout components
 
-| Component | Description |
-|-----------|-------------|
-| `LayoutBase` | App shell with 6 layout variants |
-| `NavBase` | Sidebar and top-nav navigation |
-| `NavLinkBase` | Individual nav link |
-| `NavUserMenuBase` | User dropdown menu |
-| `GridBase` | CSS Grid container |
-| `RowBase` | Flex row |
-| `ColumnBase` | Flex column |
-| `CardBase` | Styled card |
-| `ContainerBase` | Centered max-width wrapper |
-| `BoxBase` | Generic element wrapper |
-| `SectionBase` | Full-width section |
-| `SpacerBase` | Spacing element |
-| `SplitPaneBase` | Resizable split panes |
-| `CollapsibleBase` | Expand/collapse |
+| Component         | Description                      |
+| ----------------- | -------------------------------- |
+| `LayoutBase`      | App shell with 6 layout variants |
+| `NavBase`         | Sidebar and top-nav navigation   |
+| `NavLinkBase`     | Individual nav link              |
+| `NavUserMenuBase` | User dropdown menu               |
+| `GridBase`        | CSS Grid container               |
+| `RowBase`         | Flex row                         |
+| `ColumnBase`      | Flex column                      |
+| `CardBase`        | Styled card                      |
+| `ContainerBase`   | Centered max-width wrapper       |
+| `BoxBase`         | Generic element wrapper          |
+| `SectionBase`     | Full-width section               |
+| `SpacerBase`      | Spacing element                  |
+| `SplitPaneBase`   | Resizable split panes            |
+| `CollapsibleBase` | Expand/collapse                  |
 
 ## Next steps
 

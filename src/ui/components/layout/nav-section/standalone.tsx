@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, type CSSProperties, type ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -90,19 +90,26 @@ export function NavSectionBase({
         <div
           role={collapsible ? "button" : undefined}
           tabIndex={collapsible ? 0 : undefined}
-          onClick={collapsible ? () => setIsCollapsed((value) => !value) : undefined}
-          onKeyDown={collapsible ? (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              setIsCollapsed((value) => !value);
-            }
-          } : undefined}
+          onClick={
+            collapsible ? () => setIsCollapsed((value) => !value) : undefined
+          }
+          onKeyDown={
+            collapsible
+              ? (e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIsCollapsed((value) => !value);
+                  }
+                }
+              : undefined
+          }
           aria-expanded={collapsible ? showItems : undefined}
           style={{
             display: "flex",
             alignItems: "center",
             width: "100%",
-            padding: "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
+            padding:
+              "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
             fontSize: "var(--sn-font-size-xs, 0.75rem)",
             fontWeight: "var(--sn-font-weight-semibold, 600)" as any,
             textTransform: "uppercase" as const,

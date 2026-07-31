@@ -383,7 +383,8 @@ export function LocationInputField({
     surfaceId: `${rootId}-results`,
     implementationBase: {
       position: "absolute",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "md",
       bg: "var(--sn-color-card, #ffffff)",
       shadow: "lg",

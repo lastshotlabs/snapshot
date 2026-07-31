@@ -2,15 +2,15 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | E.1 | Expression Language | Not started | Expressions |
-> | E.2 | Computed State | Not started | State |
-> | E.3 | URL State Sync | Not started | State |
-> | E.4 | Persistent State | Not started | State |
-> | E.5 | Client-Side Filter/Sort | Not started | Data |
-> | E.6 | Branch Action | Not started | Actions |
-> | E.7 | For-Each Action | Not started | Actions |
+> | Phase | Title                   | Status      | Track       |
+> | ----- | ----------------------- | ----------- | ----------- |
+> | E.1   | Expression Language     | Not started | Expressions |
+> | E.2   | Computed State          | Not started | State       |
+> | E.3   | URL State Sync          | Not started | State       |
+> | E.4   | Persistent State        | Not started | State       |
+> | E.5   | Client-Side Filter/Sort | Not started | Data        |
+> | E.6   | Branch Action           | Not started | Actions     |
+> | E.7   | For-Each Action         | Not started | Actions     |
 >
 > **Priority:** P1 — enables dynamic, reactive UIs without custom code.
 > **Depends on:** Phase A (CSS Foundation), Phase D (Interactivity — D.4/D.5 for form field expressions).
@@ -60,43 +60,43 @@ Snapshot has a robust data binding system (`from-ref` with 14 transforms, `resol
 
 ### Expression Parser
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/expressions/parser.ts` | ~200 | Tokenizer + recursive-descent parser. Supports: `\|\|`, `&&`, `==`, `!=`, `>=`, `<=`, `>`, `<`, `!`. Built-in functions: `defined(ref)`, `empty(ref)`, `length(ref)`. Returns AST, evaluates against context. Never uses `eval()`. |
-| `src/ui/expressions/template.ts` | ~100 | `resolveTemplate()` — replaces `{ref}` placeholders in strings with context values. |
-| `src/ui/expressions/use-expression.ts` | ~30 | `useExpression()` hook — evaluates an expression string in React context. |
+| File                                   | Lines | What Exists                                                                                                                                                                                                                        |
+| -------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/expressions/parser.ts`         | ~200  | Tokenizer + recursive-descent parser. Supports: `\|\|`, `&&`, `==`, `!=`, `>=`, `<=`, `>`, `<`, `!`. Built-in functions: `defined(ref)`, `empty(ref)`, `length(ref)`. Returns AST, evaluates against context. Never uses `eval()`. |
+| `src/ui/expressions/template.ts`       | ~100  | `resolveTemplate()` — replaces `{ref}` placeholders in strings with context values.                                                                                                                                                |
+| `src/ui/expressions/use-expression.ts` | ~30   | `useExpression()` hook — evaluates an expression string in React context.                                                                                                                                                          |
 
 ### State System
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/context/providers.tsx` | ~150 | `AppContextProvider`, `PageContextProvider`. Creates Jotai atom registries. |
-| `src/ui/context/registry.ts` | ~100 | `AtomRegistry` — maps string IDs to Jotai atoms. `get(id)`, `set(id, value)`. |
-| `src/ui/context/from-ref.ts` | ~200 | `resolveFromRef()` — resolves `{ from: "id" }` refs with 14 transforms: uppercase, lowercase, trim, length, number, boolean, string, json, keys, values, first, last, count, sum, join, split, default. |
-| `src/ui/context/hooks.ts` | ~80 | `usePublish()`, `useSubscribe()`, `useResolveFrom()`. |
-| `src/ui/state/hooks.ts` | ~60 | `useStateValue()`, `useSetStateValue()`. |
-| `src/ui/state/registry.ts` | ~50 | State atom registry. |
-| `src/ui/state/types.ts` | ~30 | State types. |
+| File                           | Lines | What Exists                                                                                                                                                                                             |
+| ------------------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/context/providers.tsx` | ~150  | `AppContextProvider`, `PageContextProvider`. Creates Jotai atom registries.                                                                                                                             |
+| `src/ui/context/registry.ts`   | ~100  | `AtomRegistry` — maps string IDs to Jotai atoms. `get(id)`, `set(id, value)`.                                                                                                                           |
+| `src/ui/context/from-ref.ts`   | ~200  | `resolveFromRef()` — resolves `{ from: "id" }` refs with 14 transforms: uppercase, lowercase, trim, length, number, boolean, string, json, keys, values, first, last, count, sum, join, split, default. |
+| `src/ui/context/hooks.ts`      | ~80   | `usePublish()`, `useSubscribe()`, `useResolveFrom()`.                                                                                                                                                   |
+| `src/ui/state/hooks.ts`        | ~60   | `useStateValue()`, `useSetStateValue()`.                                                                                                                                                                |
+| `src/ui/state/registry.ts`     | ~50   | State atom registry.                                                                                                                                                                                    |
+| `src/ui/state/types.ts`        | ~30   | State types.                                                                                                                                                                                            |
 
 ### Policy Expressions
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/policies/evaluate.ts` | ~100 | `evaluatePolicy()` — evaluates policy expressions for guard/visibility logic. |
-| `src/ui/policies/types.ts` | ~20 | `PolicyExpr` type. |
+| File                          | Lines | What Exists                                                                   |
+| ----------------------------- | ----- | ----------------------------------------------------------------------------- |
+| `src/ui/policies/evaluate.ts` | ~100  | `evaluatePolicy()` — evaluates policy expressions for guard/visibility logic. |
+| `src/ui/policies/types.ts`    | ~20   | `PolicyExpr` type.                                                            |
 
 ### Data Components
 
-| File | What |
-|---|---|
+| File                                              | What                                                                                  |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `src/ui/components/data/data-table/component.tsx` | Data table with server-side pagination, sort, and search. No client-side filter/sort. |
-| `src/ui/components/navigation/tabs/component.tsx` | Tab component. No URL sync. |
+| `src/ui/components/navigation/tabs/component.tsx` | Tab component. No URL sync.                                                           |
 
 ### Action Executor
 
-| File | What |
-|---|---|
-| `src/ui/actions/executor.ts` | Handles 17 action types. No `branch` or `for-each`. |
+| File                         | What                                                                |
+| ---------------------------- | ------------------------------------------------------------------- |
+| `src/ui/actions/executor.ts` | Handles 17 action types. No `branch` or `for-each`.                 |
 | `src/ui/workflows/engine.ts` | Workflow engine with step execution. Separate from action executor. |
 
 ---
@@ -115,20 +115,20 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/expressions/parser.ts` | Expression tokenizer + parser + evaluator | ~200 |
-| `src/ui/expressions/template.ts` | Template string resolver | ~100 |
-| `src/ui/expressions/use-expression.ts` | Expression React hook | ~30 |
-| `src/ui/context/from-ref.ts` | FromRef resolver with 14 transforms | ~200 |
-| `src/ui/context/registry.ts` | Jotai atom registry | ~100 |
-| `src/ui/context/hooks.ts` | Context hooks (publish, subscribe, resolveFrom) | ~80 |
-| `src/ui/state/hooks.ts` | State value hooks | ~60 |
-| `src/ui/policies/evaluate.ts` | Policy expression evaluator | ~100 |
-| `src/ui/actions/executor.ts` | Action executor (17 types) | ~400 |
-| `src/ui/actions/types.ts` | Action type definitions | ~200 |
-| `src/ui/manifest/schema.ts` | All manifest schemas | ~1400 |
-| `src/ui/workflows/engine.ts` | Workflow step engine | ~300 |
+| Path                                   | What                                            | Lines |
+| -------------------------------------- | ----------------------------------------------- | ----- |
+| `src/ui/expressions/parser.ts`         | Expression tokenizer + parser + evaluator       | ~200  |
+| `src/ui/expressions/template.ts`       | Template string resolver                        | ~100  |
+| `src/ui/expressions/use-expression.ts` | Expression React hook                           | ~30   |
+| `src/ui/context/from-ref.ts`           | FromRef resolver with 14 transforms             | ~200  |
+| `src/ui/context/registry.ts`           | Jotai atom registry                             | ~100  |
+| `src/ui/context/hooks.ts`              | Context hooks (publish, subscribe, resolveFrom) | ~80   |
+| `src/ui/state/hooks.ts`                | State value hooks                               | ~60   |
+| `src/ui/policies/evaluate.ts`          | Policy expression evaluator                     | ~100  |
+| `src/ui/actions/executor.ts`           | Action executor (17 types)                      | ~400  |
+| `src/ui/actions/types.ts`              | Action type definitions                         | ~200  |
+| `src/ui/manifest/schema.ts`            | All manifest schemas                            | ~1400 |
+| `src/ui/workflows/engine.ts`           | Workflow step engine                            | ~300  |
 
 ---
 
@@ -168,7 +168,12 @@ type AstNode =
   | { type: "unary"; operator: "!" | "-"; operand: AstNode }
   | { type: "binary"; operator: string; left: AstNode; right: AstNode }
   // new
-  | { type: "ternary"; condition: AstNode; consequent: AstNode; alternate: AstNode }
+  | {
+      type: "ternary";
+      condition: AstNode;
+      consequent: AstNode;
+      alternate: AstNode;
+    }
   | {
       type: "method-call";
       object: AstNode;
@@ -209,15 +214,29 @@ Add tokens for: `+`, `-`, `*`, `/`, `%`, `?`, `:`, `.`, `,`, `(`, `)`.
 
 ```ts
 const OPERATOR_TOKENS = [
-  "||", "&&", "==", "!=", ">=", "<=", ">", "<", "!",
-  "+", "-", "*", "/", "%",  // arithmetic
-  "?", ":",                  // ternary
+  "||",
+  "&&",
+  "==",
+  "!=",
+  ">=",
+  "<=",
+  ">",
+  "<",
+  "!",
+  "+",
+  "-",
+  "*",
+  "/",
+  "%", // arithmetic
+  "?",
+  ":", // ternary
 ];
 ```
 
 **2. Extend parser:**
 
 Precedence (low to high):
+
 1. Ternary (`? :`)
 2. Logical OR (`||`)
 3. Logical AND (`&&`)
@@ -230,18 +249,30 @@ Precedence (low to high):
 10. Primary (literals, refs, parenthesized)
 
 ```ts
-function parseTernary(tokens: Token[], pos: number, ctx: ExpressionContext): { node: AstNode; pos: number } {
+function parseTernary(
+  tokens: Token[],
+  pos: number,
+  ctx: ExpressionContext,
+): { node: AstNode; pos: number } {
   let { node: condition, pos: nextPos } = parseOr(tokens, pos, ctx);
 
   if (tokens[nextPos]?.value === "?") {
     nextPos += 1; // skip ?
-    const { node: consequent, pos: afterCons } = parseTernary(tokens, nextPos, ctx);
+    const { node: consequent, pos: afterCons } = parseTernary(
+      tokens,
+      nextPos,
+      ctx,
+    );
 
     if (tokens[afterCons]?.value !== ":") {
       throw new Error("Expected ':' in ternary expression");
     }
 
-    const { node: alternate, pos: afterAlt } = parseTernary(tokens, afterCons + 1, ctx);
+    const { node: alternate, pos: afterAlt } = parseTernary(
+      tokens,
+      afterCons + 1,
+      ctx,
+    );
     return {
       node: { type: "ternary", condition, consequent, alternate },
       pos: afterAlt,
@@ -255,7 +286,10 @@ function parseTernary(tokens: Token[], pos: number, ctx: ExpressionContext): { n
 **3. Add safe builtins allowlist:**
 
 ```ts
-const SAFE_BUILTINS: Record<string, Record<string, (...args: unknown[]) => unknown>> = {
+const SAFE_BUILTINS: Record<
+  string,
+  Record<string, (...args: unknown[]) => unknown>
+> = {
   Math: {
     floor: (x: unknown) => Math.floor(Number(x)),
     ceil: (x: unknown) => Math.ceil(Number(x)),
@@ -265,15 +299,21 @@ const SAFE_BUILTINS: Record<string, Record<string, (...args: unknown[]) => unkno
     max: (...args: unknown[]) => Math.max(...args.map(Number)),
   },
   String: {
-    includes: (str: unknown, search: unknown) => String(str).includes(String(search)),
-    startsWith: (str: unknown, search: unknown) => String(str).startsWith(String(search)),
-    endsWith: (str: unknown, search: unknown) => String(str).endsWith(String(search)),
+    includes: (str: unknown, search: unknown) =>
+      String(str).includes(String(search)),
+    startsWith: (str: unknown, search: unknown) =>
+      String(str).startsWith(String(search)),
+    endsWith: (str: unknown, search: unknown) =>
+      String(str).endsWith(String(search)),
     toLowerCase: (str: unknown) => String(str).toLowerCase(),
     toUpperCase: (str: unknown) => String(str).toUpperCase(),
     trim: (str: unknown) => String(str).trim(),
     length: (str: unknown) => String(str).length,
     slice: (str: unknown, start: unknown, end?: unknown) =>
-      String(str).slice(Number(start), end !== undefined ? Number(end) : undefined),
+      String(str).slice(
+        Number(start),
+        end !== undefined ? Number(end) : undefined,
+      ),
   },
 };
 ```
@@ -284,9 +324,15 @@ In `src/ui/context/from-ref.ts` or `src/ui/context/hooks.ts`, when resolving a v
 check for the `expr` key:
 
 ```ts
-function resolveValue(config: unknown, context: ResolveFromRefContext): unknown {
+function resolveValue(
+  config: unknown,
+  context: ResolveFromRefContext,
+): unknown {
   if (config && typeof config === "object" && "expr" in config) {
-    return evaluateExpression((config as { expr: string }).expr, buildExprContext(context));
+    return evaluateExpression(
+      (config as { expr: string }).expr,
+      buildExprContext(context),
+    );
   }
   if (config && typeof config === "object" && "from" in config) {
     return resolveFromRef(config as FromRef, context);
@@ -297,12 +343,12 @@ function resolveValue(config: unknown, context: ResolveFromRefContext): unknown 
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/expressions/parser.ts` — arithmetic, ternary, method calls, builtins |
+| Action | Path                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
+| Modify | `src/ui/expressions/parser.ts` — arithmetic, ternary, method calls, builtins        |
 | Modify | `src/ui/context/from-ref.ts` — handle `{ expr: "..." }` alongside `{ from: "..." }` |
-| Modify | `src/ui/context/hooks.ts` — `useResolveFrom` handles expr |
-| Modify | `src/ui/manifest/schema.ts` — add `exprSchema` |
+| Modify | `src/ui/context/hooks.ts` — `useResolveFrom` handles expr                           |
+| Modify | `src/ui/manifest/schema.ts` — add `exprSchema`                                      |
 
 ### Documentation Impact
 
@@ -312,11 +358,11 @@ function resolveValue(config: unknown, context: ResolveFromRefContext): unknown 
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/expressions/__tests__/parser.test.ts` | Add: arithmetic (`2 + 3` = 5, `price * qty`), ternary (`x > 0 ? 'yes' : 'no'`), modulo, builtins (`Math.floor(3.7)` = 3, `String.includes('hello', 'ell')` = true), precedence (2 + 3 * 4 = 14). |
-| `src/ui/context/__tests__/from-ref.test.ts` | Add: `{ expr: "a + b" }` resolves with context values. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `exprSchema` validates `{ expr: "..." }`. |
+| File                                          | What                                                                                                                                                                                              |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/expressions/__tests__/parser.test.ts` | Add: arithmetic (`2 + 3` = 5, `price * qty`), ternary (`x > 0 ? 'yes' : 'no'`), modulo, builtins (`Math.floor(3.7)` = 3, `String.includes('hello', 'ell')` = true), precedence (2 + 3 \* 4 = 14). |
+| `src/ui/context/__tests__/from-ref.test.ts`   | Add: `{ expr: "a + b" }` resolves with context values.                                                                                                                                            |
+| `src/ui/manifest/__tests__/schema.test.ts`    | Add: `exprSchema` validates `{ expr: "..." }`.                                                                                                                                                    |
 
 ### Exit Criteria
 
@@ -374,6 +420,7 @@ export const stateDefinitionSchema = z.union([
 **1. Update `src/ui/state/registry.ts`:**
 
 When a state definition has `compute`, create a Jotai `atom((get) => ...)` that:
+
 - Parses `{ref}` references in the compute string.
 - Subscribes to each referenced atom via `get(atomRegistry.get(ref))`.
 - Evaluates the expression with current values.
@@ -419,19 +466,19 @@ call `createComputedAtom`. For simple defs, create regular atoms.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/state/registry.ts` — add `createComputedAtom()` |
-| Modify | `src/ui/state/types.ts` — add computed state types |
-| Modify | `src/ui/context/providers.tsx` — register computed atoms |
+| Action | Path                                                                             |
+| ------ | -------------------------------------------------------------------------------- |
+| Modify | `src/ui/state/registry.ts` — add `createComputedAtom()`                          |
+| Modify | `src/ui/state/types.ts` — add computed state types                               |
+| Modify | `src/ui/context/providers.tsx` — register computed atoms                         |
 | Modify | `src/ui/manifest/schema.ts` — add `computedStateSchema`, `stateDefinitionSchema` |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/state/__tests__/registry.test.ts` | Add: computed atom evaluates expression, re-evaluates when dependency changes, circular detection. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: computed state validates, simple state validates. |
+| File                                       | What                                                                                               |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `src/ui/state/__tests__/registry.test.ts`  | Add: computed atom evaluates expression, re-evaluates when dependency changes, circular detection. |
+| `src/ui/manifest/__tests__/schema.test.ts` | Add: computed state validates, simple state validates.                                             |
 
 ### Exit Criteria
 
@@ -478,7 +525,7 @@ For tabs: `urlSync: true` syncs `activeTab`.
 **1. Create `src/ui/hooks/use-url-sync.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useCallback, useRef } from "react";
 
@@ -531,7 +578,8 @@ export function useUrlSync(options: UseUrlSyncOptions): void {
 
   // Write to URL on state change
   useEffect(() => {
-    if (!enabled || !isInitialized.current || typeof window === "undefined") return;
+    if (!enabled || !isInitialized.current || typeof window === "undefined")
+      return;
 
     const url = new URL(window.location.href);
     for (const [stateKey, paramName] of Object.entries(params)) {
@@ -581,22 +629,22 @@ export function useUrlSync(options: UseUrlSyncOptions): void {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/hooks/use-url-sync.ts` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `urlSync` |
+| Action | Path                                                                  |
+| ------ | --------------------------------------------------------------------- |
+| Create | `src/ui/hooks/use-url-sync.ts`                                        |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `urlSync`         |
 | Modify | `src/ui/components/data/data-table/component.tsx` — wire `useUrlSync` |
-| Modify | `src/ui/components/navigation/tabs/schema.ts` — add `urlSync` |
+| Modify | `src/ui/components/navigation/tabs/schema.ts` — add `urlSync`         |
 | Modify | `src/ui/components/navigation/tabs/component.tsx` — wire `useUrlSync` |
-| Modify | `src/ui.ts` — export `useUrlSync` |
+| Modify | `src/ui.ts` — export `useUrlSync`                                     |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/hooks/__tests__/use-url-sync.test.ts` (create) | Tests: reads params from URL on mount, writes state to URL, handles popstate, does nothing when disabled. |
-| `src/ui/components/data/data-table/__tests__/schema.test.ts` | Add: `urlSync: true` accepted. |
-| `src/ui/components/navigation/tabs/__tests__/schema.test.ts` | Add: `urlSync: true` accepted. |
+| File                                                         | What                                                                                                      |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `src/ui/hooks/__tests__/use-url-sync.test.ts` (create)       | Tests: reads params from URL on mount, writes state to URL, handles popstate, does nothing when disabled. |
+| `src/ui/components/data/data-table/__tests__/schema.test.ts` | Add: `urlSync: true` accepted.                                                                            |
+| `src/ui/components/navigation/tabs/__tests__/schema.test.ts` | Add: `urlSync: true` accepted.                                                                            |
 
 ### Exit Criteria
 
@@ -626,7 +674,7 @@ z.object({
   defaultValue: z.unknown(),
   /** Persist this state value to browser storage. */
   persist: z.enum(["localStorage", "sessionStorage"]).optional(),
-})
+});
 ```
 
 ### Implementation
@@ -634,13 +682,16 @@ z.object({
 **1. Create `src/ui/state/persist.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 /**
  * Read a state value from browser storage.
  * Returns undefined if not found or on SSR.
  */
-export function readPersistedState(key: string, storage: "localStorage" | "sessionStorage"): unknown {
+export function readPersistedState(
+  key: string,
+  storage: "localStorage" | "sessionStorage",
+): unknown {
   if (typeof window === "undefined") return undefined;
   try {
     const raw = window[storage].getItem(`sn-state:${key}`);
@@ -654,7 +705,11 @@ export function readPersistedState(key: string, storage: "localStorage" | "sessi
  * Write a state value to browser storage.
  * No-op on SSR.
  */
-export function writePersistedState(key: string, value: unknown, storage: "localStorage" | "sessionStorage"): void {
+export function writePersistedState(
+  key: string,
+  value: unknown,
+  storage: "localStorage" | "sessionStorage",
+): void {
   if (typeof window === "undefined") return;
   try {
     window[storage].setItem(`sn-state:${key}`, JSON.stringify(value));
@@ -666,7 +721,10 @@ export function writePersistedState(key: string, value: unknown, storage: "local
 /**
  * Remove a state value from browser storage.
  */
-export function clearPersistedState(key: string, storage: "localStorage" | "sessionStorage"): void {
+export function clearPersistedState(
+  key: string,
+  storage: "localStorage" | "sessionStorage",
+): void {
   if (typeof window === "undefined") return;
   try {
     window[storage].removeItem(`sn-state:${key}`);
@@ -679,7 +737,7 @@ export function clearPersistedState(key: string, storage: "localStorage" | "sess
 **2. Create `src/ui/state/use-persisted-atom.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import { useAtom } from "jotai";
@@ -720,19 +778,19 @@ export function usePersistedAtom<T>(
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/state/persist.ts` |
-| Create | `src/ui/state/use-persisted-atom.ts` |
-| Modify | `src/ui/state/hooks.ts` — integrate persistence |
+| Action | Path                                                           |
+| ------ | -------------------------------------------------------------- |
+| Create | `src/ui/state/persist.ts`                                      |
+| Create | `src/ui/state/use-persisted-atom.ts`                           |
+| Modify | `src/ui/state/hooks.ts` — integrate persistence                |
 | Modify | `src/ui/context/providers.tsx` — read persisted initial values |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/state/__tests__/persist.test.ts` (create) | Tests: read/write/clear with mock storage, SSR returns undefined, handles parse errors. |
-| `src/ui/state/__tests__/use-persisted-atom.test.ts` (create) | Tests: reads initial from storage, writes on change, handles missing key. |
+| File                                                         | What                                                                                    |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `src/ui/state/__tests__/persist.test.ts` (create)            | Tests: read/write/clear with mock storage, SSR returns undefined, handles parse errors. |
+| `src/ui/state/__tests__/use-persisted-atom.test.ts` (create) | Tests: reads initial from storage, writes on change, handles missing key.               |
 
 ### Exit Criteria
 
@@ -764,9 +822,26 @@ export const clientFilterSchema = z.object({
   /** The field/key to filter on. */
   field: z.string(),
   /** Filter operator. */
-  operator: z.enum(["equals", "contains", "startsWith", "endsWith", "gt", "lt", "gte", "lte", "in", "notEquals"]),
+  operator: z.enum([
+    "equals",
+    "contains",
+    "startsWith",
+    "endsWith",
+    "gt",
+    "lt",
+    "gte",
+    "lte",
+    "in",
+    "notEquals",
+  ]),
   /** The value to filter against. Can be a literal or a FromRef. */
-  value: z.union([z.string(), z.number(), z.boolean(), z.array(z.unknown()), fromRefSchema]),
+  value: z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.array(z.unknown()),
+    fromRefSchema,
+  ]),
 });
 
 /**
@@ -794,7 +869,17 @@ import { getNestedValue } from "../../context/utils";
 
 export interface ClientFilter {
   field: string;
-  operator: "equals" | "contains" | "startsWith" | "endsWith" | "gt" | "lt" | "gte" | "lte" | "in" | "notEquals";
+  operator:
+    | "equals"
+    | "contains"
+    | "startsWith"
+    | "endsWith"
+    | "gt"
+    | "lt"
+    | "gte"
+    | "lte"
+    | "in"
+    | "notEquals";
   value: unknown;
 }
 
@@ -815,7 +900,10 @@ export function applyClientFilters<T extends Record<string, unknown>>(
   );
 }
 
-function matchesFilter(item: Record<string, unknown>, filter: ClientFilter): boolean {
+function matchesFilter(
+  item: Record<string, unknown>,
+  filter: ClientFilter,
+): boolean {
   const fieldValue = getNestedValue(item, filter.field);
   const filterValue = filter.value;
 
@@ -876,18 +964,18 @@ function compareValues(a: unknown, b: unknown): number {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/client-data-ops.ts` |
+| Action | Path                                                                             |
+| ------ | -------------------------------------------------------------------------------- |
+| Create | `src/ui/components/_base/client-data-ops.ts`                                     |
 | Modify | `src/ui/components/data/data-table/schema.ts` — add `clientFilter`, `clientSort` |
-| Modify | `src/ui/components/data/data-table/component.tsx` — apply filters/sorts |
-| Modify | `src/ui/components/data/list/schema.ts` — add `clientFilter`, `clientSort` |
-| Modify | `src/ui/components/data/list/component.tsx` — apply filters/sorts |
+| Modify | `src/ui/components/data/data-table/component.tsx` — apply filters/sorts          |
+| Modify | `src/ui/components/data/list/schema.ts` — add `clientFilter`, `clientSort`       |
+| Modify | `src/ui/components/data/list/component.tsx` — apply filters/sorts                |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                 | What                                                                                           |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/client-data-ops.test.ts` (create) | Tests: each filter operator, multi-filter AND, sort asc/desc, multi-sort, nested field access. |
 
 ### Exit Criteria
@@ -945,15 +1033,15 @@ case "branch": {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                             |
+| ------ | -------------------------------------------------------------------------------- |
 | Modify | `src/ui/actions/types.ts` — add `BranchAction`, add `"branch"` to `ACTION_TYPES` |
-| Modify | `src/ui/actions/executor.ts` — handle `branch` |
+| Modify | `src/ui/actions/executor.ts` — handle `branch`                                   |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                        | What                                                                                                    |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `src/ui/actions/__tests__/executor.test.ts` | Add: branch executes `then` when true, executes `else` when false, skips `else` when missing and false. |
 
 ### Exit Criteria
@@ -1030,15 +1118,15 @@ case "for-each": {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
 | Modify | `src/ui/actions/types.ts` — add `ForEachAction`, add `"for-each"` to `ACTION_TYPES` |
-| Modify | `src/ui/actions/executor.ts` — handle `for-each` |
+| Modify | `src/ui/actions/executor.ts` — handle `for-each`                                    |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                        | What                                                                                                                          |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/actions/__tests__/executor.test.ts` | Add: for-each executes action per item, provides item/index/items context, fires onComplete, empty array skips to onComplete. |
 
 ### Exit Criteria
@@ -1058,12 +1146,12 @@ case "for-each": {
 
 Three independent tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| Expressions | E.1 | `src/ui/expressions/parser.ts`, `src/ui/context/from-ref.ts` (expr key handling) |
-| State | E.2, E.3, E.4 | `src/ui/state/*`, `src/ui/hooks/use-url-sync.ts`, `src/ui/context/providers.tsx` |
-| Data | E.5 | `src/ui/components/_base/client-data-ops.ts`, data-table/list schemas |
-| Actions | E.6, E.7 | `src/ui/actions/executor.ts`, `src/ui/actions/types.ts` |
+| Track       | Phases        | Files Owned                                                                      |
+| ----------- | ------------- | -------------------------------------------------------------------------------- |
+| Expressions | E.1           | `src/ui/expressions/parser.ts`, `src/ui/context/from-ref.ts` (expr key handling) |
+| State       | E.2, E.3, E.4 | `src/ui/state/*`, `src/ui/hooks/use-url-sync.ts`, `src/ui/context/providers.tsx` |
+| Data        | E.5           | `src/ui/components/_base/client-data-ops.ts`, data-table/list schemas            |
+| Actions     | E.6, E.7      | `src/ui/actions/executor.ts`, `src/ui/actions/types.ts`                          |
 
 ### Why Tracks Are Independent
 
@@ -1115,12 +1203,12 @@ base: main
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|---|---|
-| Expression parser complexity | Extensive parser tests with precedence edge cases. |
+| Risk                         | Mitigation                                             |
+| ---------------------------- | ------------------------------------------------------ |
+| Expression parser complexity | Extensive parser tests with precedence edge cases.     |
 | Computed state circular deps | Detect cycles at registration time, throw clear error. |
-| URL sync race conditions | Use ref flag to prevent write-back on initial read. |
-| Storage quota exceeded | Catch errors silently in persist.ts. |
+| URL sync race conditions     | Use ref flag to prevent write-back on initial read.    |
+| Storage quota exceeded       | Catch errors silently in persist.ts.                   |
 
 ---
 

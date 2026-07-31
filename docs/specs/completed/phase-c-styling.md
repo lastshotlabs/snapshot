@@ -2,13 +2,13 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | C.1 | Animation Declarations from Config | Not started | Schema + Wrapper |
-> | C.2 | Glass / Backdrop Blur Shorthand | Not started | Schema + Wrapper |
-> | C.3 | Background Gradients (standalone) | Not started | Schema + Wrapper |
-> | C.4 | Custom Scrollbar Theming | Not started | Tokens |
-> | C.5 | Transition Shorthand | Not started | Schema + Wrapper |
+> | Phase | Title                              | Status      | Track            |
+> | ----- | ---------------------------------- | ----------- | ---------------- |
+> | C.1   | Animation Declarations from Config | Not started | Schema + Wrapper |
+> | C.2   | Glass / Backdrop Blur Shorthand    | Not started | Schema + Wrapper |
+> | C.3   | Background Gradients (standalone)  | Not started | Schema + Wrapper |
+> | C.4   | Custom Scrollbar Theming           | Not started | Tokens           |
+> | C.5   | Transition Shorthand               | Not started | Schema + Wrapper |
 >
 > **Priority:** P1 — visual polish.
 > **Depends on:** Phase A (CSS Foundation — Tailwind bridge must be active).
@@ -35,13 +35,13 @@ the same visual quality as hand-crafted CSS — because it generates the same CS
 
 ## What Already Exists on Main
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/manifest/schema.ts` | 1598 | `baseComponentConfigSchema` with `className`, `style`, `tokens` props |
-| `src/ui/tokens/resolve.ts` | 957 | `resolveFrameworkStyles()` includes 6 keyframes: `sn-fade`, `sn-fade-up`, `sn-fade-down`, `sn-slide-left`, `sn-slide-right`, `sn-scale` |
-| `src/ui/components/_base/component-wrapper.tsx` | 181 | Wraps all components, applies `data-snapshot-component`, token overrides |
-| `src/ui/components/_base/button-styles.ts` | 162 | `BUTTON_INTERACTIVE_CSS` — pattern for hover/focus CSS via data attributes |
-| `src/ui/tokens/tailwind-bridge.ts` | 56 | Bridges `--sn-*` to Tailwind `@theme` (Tailwind `className` works in manifest) |
+| File                                            | Lines | What It Does                                                                                                                            |
+| ----------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/schema.ts`                     | 1598  | `baseComponentConfigSchema` with `className`, `style`, `tokens` props                                                                   |
+| `src/ui/tokens/resolve.ts`                      | 957   | `resolveFrameworkStyles()` includes 6 keyframes: `sn-fade`, `sn-fade-up`, `sn-fade-down`, `sn-slide-left`, `sn-slide-right`, `sn-scale` |
+| `src/ui/components/_base/component-wrapper.tsx` | 181   | Wraps all components, applies `data-snapshot-component`, token overrides                                                                |
+| `src/ui/components/_base/button-styles.ts`      | 162   | `BUTTON_INTERACTIVE_CSS` — pattern for hover/focus CSS via data attributes                                                              |
+| `src/ui/tokens/tailwind-bridge.ts`              | 56    | Bridges `--sn-*` to Tailwind `@theme` (Tailwind `className` works in manifest)                                                          |
 
 ### Existing Animation Keyframes (resolve.ts lines 930-954)
 
@@ -57,6 +57,7 @@ the same visual quality as hand-crafted CSS — because it generates the same CS
 ### What className Already Enables
 
 With Phase A's Tailwind bridge, consumers can already do:
+
 ```jsonc
 { "className": "hover:shadow-xl hover:scale-105 transition-all duration-200" }
 ```
@@ -69,17 +70,18 @@ don't need to know Tailwind to get visual polish.
 ## Developer Context
 
 ### Build & Test Commands
+
 ```sh
 bun run typecheck && bun run format:check && bun run build && bun test
 ```
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/manifest/schema.ts` | Base component schema — add new props here | 1598 |
-| `src/ui/components/_base/component-wrapper.tsx` | Apply new props as styles here | 181 |
-| `src/ui/tokens/resolve.ts` | Framework CSS — add keyframes, scrollbar rules | 957 |
+| Path                                            | What                                           | Lines |
+| ----------------------------------------------- | ---------------------------------------------- | ----- |
+| `src/ui/manifest/schema.ts`                     | Base component schema — add new props here     | 1598  |
+| `src/ui/components/_base/component-wrapper.tsx` | Apply new props as styles here                 | 181   |
+| `src/ui/tokens/resolve.ts`                      | Framework CSS — add keyframes, scrollbar rules | 957   |
 
 ---
 
@@ -145,12 +147,23 @@ const EASING_MAP: Record<string, string> = {
   spring: "var(--sn-ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1))",
 };
 
-function resolveAnimationStyle(animation: AnimationConfig, childIndex?: number): React.CSSProperties {
-  const duration = typeof animation.duration === "number"
-    ? `${animation.duration}ms`
-    : DURATION_MAP[animation.duration ?? "normal"];
-  const easing = EASING_MAP[animation.easing as string] ?? animation.easing ?? EASING_MAP.default;
-  const delay = (animation.delay ?? 0) + (childIndex != null && animation.stagger ? childIndex * animation.stagger : 0);
+function resolveAnimationStyle(
+  animation: AnimationConfig,
+  childIndex?: number,
+): React.CSSProperties {
+  const duration =
+    typeof animation.duration === "number"
+      ? `${animation.duration}ms`
+      : DURATION_MAP[animation.duration ?? "normal"];
+  const easing =
+    EASING_MAP[animation.easing as string] ??
+    animation.easing ??
+    EASING_MAP.default;
+  const delay =
+    (animation.delay ?? 0) +
+    (childIndex != null && animation.stagger
+      ? childIndex * animation.stagger
+      : 0);
 
   return {
     animation: `sn-${animation.enter} ${duration} ${easing} ${delay}ms both`,
@@ -164,8 +177,13 @@ Add `sn-bounce` to `resolveFrameworkStyles()`:
 
 ```css
 @keyframes sn-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 ```
 
@@ -190,11 +208,11 @@ ComponentWrapper reads `--sn-stagger-index` for delay calculation if parent has 
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/manifest/schema.ts` | Add `animation` to `baseComponentConfigSchema` |
-| `src/ui/components/_base/component-wrapper.tsx` | Apply animation style |
-| `src/ui/tokens/resolve.ts` | Add `sn-bounce` keyframe |
+| File                                            | Change                                         |
+| ----------------------------------------------- | ---------------------------------------------- |
+| `src/ui/manifest/schema.ts`                     | Add `animation` to `baseComponentConfigSchema` |
+| `src/ui/components/_base/component-wrapper.tsx` | Apply animation style                          |
+| `src/ui/tokens/resolve.ts`                      | Add `sn-bounce` keyframe                       |
 
 ### Tests
 
@@ -246,18 +264,20 @@ const glassStyle: React.CSSProperties | undefined = config.glass
   ? {
       backdropFilter: "blur(12px)",
       WebkitBackdropFilter: "blur(12px)",
-      background: "color-mix(in oklch, var(--sn-color-card, #fff) 80%, transparent)",
-      border: "1px solid color-mix(in oklch, var(--sn-color-border, #e5e7eb) 50%, transparent)",
+      background:
+        "color-mix(in oklch, var(--sn-color-card, #fff) 80%, transparent)",
+      border:
+        "1px solid color-mix(in oklch, var(--sn-color-border, #e5e7eb) 50%, transparent)",
     }
   : undefined;
 ```
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/manifest/schema.ts` | Add `glass` to `baseComponentConfigSchema` |
-| `src/ui/components/_base/component-wrapper.tsx` | Apply glass styles |
+| File                                            | Change                                     |
+| ----------------------------------------------- | ------------------------------------------ |
+| `src/ui/manifest/schema.ts`                     | Add `glass` to `baseComponentConfigSchema` |
+| `src/ui/components/_base/component-wrapper.tsx` | Apply glass styles                         |
 
 ### Exit Criteria
 
@@ -302,7 +322,9 @@ In `ComponentWrapper`:
 ```typescript
 const bgStyle = resolveBackgroundStyle(config.background);
 
-function resolveBackgroundStyle(bg: string | { gradient: GradientConfig } | undefined): React.CSSProperties | undefined {
+function resolveBackgroundStyle(
+  bg: string | { gradient: GradientConfig } | undefined,
+): React.CSSProperties | undefined {
   if (!bg) return undefined;
   if (typeof bg === "string") return { background: bg };
   return { backgroundImage: buildGradientCSS(bg.gradient) };
@@ -358,7 +380,8 @@ Add to `resolveFrameworkStyles()` or generate in `resolveTokens()` component tok
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--sn-scrollbar-thumb, var(--sn-color-muted)) var(--sn-scrollbar-track, transparent);
+  scrollbar-color: var(--sn-scrollbar-thumb, var(--sn-color-muted))
+    var(--sn-scrollbar-track, transparent);
 }
 ```
 
@@ -366,10 +389,10 @@ Generate `--sn-scrollbar-*` vars in `resolveTokens()` from `config.components.sc
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/manifest/schema.ts` | Add `scrollbar` to component tokens schema |
-| `src/ui/tokens/resolve.ts` | Generate `--sn-scrollbar-*` CSS vars + scrollbar CSS rules |
+| File                        | Change                                                     |
+| --------------------------- | ---------------------------------------------------------- |
+| `src/ui/manifest/schema.ts` | Add `scrollbar` to component tokens schema                 |
+| `src/ui/tokens/resolve.ts`  | Generate `--sn-scrollbar-*` CSS vars + scrollbar CSS rules |
 
 ### Exit Criteria
 
@@ -419,16 +442,25 @@ const TRANSITION_PROPERTY_MAP: Record<string, string> = {
   transform: "transform",
 };
 
-function resolveTransitionStyle(transition: TransitionConfig): React.CSSProperties {
-  const property = typeof transition === "string"
-    ? TRANSITION_PROPERTY_MAP[transition]
-    : TRANSITION_PROPERTY_MAP[transition.property] ?? transition.property;
-  const duration = typeof transition === "string"
-    ? DURATION_MAP.fast
-    : (typeof transition.duration === "number" ? `${transition.duration}ms` : DURATION_MAP[transition.duration ?? "fast"]);
-  const easing = typeof transition === "string"
-    ? EASING_MAP.default
-    : (EASING_MAP[transition.easing as string] ?? transition.easing ?? EASING_MAP.default);
+function resolveTransitionStyle(
+  transition: TransitionConfig,
+): React.CSSProperties {
+  const property =
+    typeof transition === "string"
+      ? TRANSITION_PROPERTY_MAP[transition]
+      : (TRANSITION_PROPERTY_MAP[transition.property] ?? transition.property);
+  const duration =
+    typeof transition === "string"
+      ? DURATION_MAP.fast
+      : typeof transition.duration === "number"
+        ? `${transition.duration}ms`
+        : DURATION_MAP[transition.duration ?? "fast"];
+  const easing =
+    typeof transition === "string"
+      ? EASING_MAP.default
+      : (EASING_MAP[transition.easing as string] ??
+        transition.easing ??
+        EASING_MAP.default);
 
   return { transition: `${property} ${duration} ${easing}` };
 }
@@ -447,10 +479,10 @@ function resolveTransitionStyle(transition: TransitionConfig): React.CSSProperti
 
 ### Track Overview
 
-| Track | Phases | Files Owned |
-|---|---|---|
+| Track                | Phases             | Files Owned                                                                  |
+| -------------------- | ------------------ | ---------------------------------------------------------------------------- |
 | **Schema + Wrapper** | C.1, C.2, C.3, C.5 | `src/ui/manifest/schema.ts`, `src/ui/components/_base/component-wrapper.tsx` |
-| **Tokens** | C.4 | `src/ui/tokens/resolve.ts` |
+| **Tokens**           | C.4                | `src/ui/tokens/resolve.ts`                                                   |
 
 ### Internal Sequencing
 

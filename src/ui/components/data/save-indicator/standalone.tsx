@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -107,7 +107,8 @@ export function SaveIndicatorBase({
     },
     componentSurface: className || style ? { className, style } : undefined,
     itemSurface: slots?.root,
-    activeStates: status === "saving" ? ["active"] : status === "error" ? ["invalid"] : [],
+    activeStates:
+      status === "saving" ? ["active"] : status === "error" ? ["invalid"] : [],
   });
   const iconSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-icon`,
@@ -144,7 +145,8 @@ export function SaveIndicatorBase({
             ...(iconSurface.style ?? {}),
             ...(spinning
               ? {
-                  animation: "sn-save-spin var(--sn-duration-slow, 1s) linear infinite",
+                  animation:
+                    "sn-save-spin var(--sn-duration-slow, 1s) linear infinite",
                 }
               : {}),
           }}

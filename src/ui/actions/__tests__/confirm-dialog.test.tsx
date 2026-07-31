@@ -1,7 +1,13 @@
 // @vitest-environment happy-dom
 import React, { useState } from "react";
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { Provider } from "jotai/react";
 import { ConfirmDialog, useConfirmManager } from "../confirm";
 

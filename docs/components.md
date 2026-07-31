@@ -49,12 +49,12 @@ export function SettingsCard() {
 
 Most components accept:
 
-| Prop | Purpose |
-| --- | --- |
-| `className` | Add a root class |
-| `style` | Add root inline styles |
-| `slots` | Style named internal pieces |
-| `id` | Stabilize generated surface IDs |
+| Prop        | Purpose                         |
+| ----------- | ------------------------------- |
+| `className` | Add a root class                |
+| `style`     | Add root inline styles          |
+| `slots`     | Style named internal pieces     |
+| `id`        | Stabilize generated surface IDs |
 
 ```tsx
 <ButtonBase
@@ -72,7 +72,11 @@ Most components accept:
 ## Forms
 
 ```tsx
-import { InputControl, SelectControl, TextareaControl } from "@lastshotlabs/snapshot/ui";
+import {
+  InputControl,
+  SelectControl,
+  TextareaControl,
+} from "@lastshotlabs/snapshot/ui";
 
 function ProfileForm() {
   const [name, setName] = useState("");

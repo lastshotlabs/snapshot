@@ -9,10 +9,21 @@ A complete chat application with room selection, live messages, typing indicator
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
 import {
-  LayoutBase, NavBase, ColumnBase, RowBase, SpacerBase,
-  ChatWindowBase, MessageThreadBase, TypingIndicatorBase,
-  PresenceIndicatorBase, InputField, ButtonBase, AlertBase,
-  AvatarBase, BadgeBase, SplitPaneBase,
+  LayoutBase,
+  NavBase,
+  ColumnBase,
+  RowBase,
+  SpacerBase,
+  ChatWindowBase,
+  MessageThreadBase,
+  TypingIndicatorBase,
+  PresenceIndicatorBase,
+  InputField,
+  ButtonBase,
+  AlertBase,
+  AvatarBase,
+  BadgeBase,
+  SplitPaneBase,
 } from "@lastshotlabs/snapshot/ui";
 import { useState, useCallback, useRef, useEffect } from "react";
 
@@ -87,9 +98,7 @@ export function ChatApp() {
             // Key forces full remount when switching rooms — clears messages, typing, etc.
             <ChatRoom key={activeRoom} roomId={activeRoom} currentUser={user} />
           }
-          second={
-            <OnlineUsers roomId={activeRoom} />
-          }
+          second={<OnlineUsers roomId={activeRoom} />}
         />
       </LayoutBase>
     </snap.QueryProvider>
@@ -98,12 +107,22 @@ export function ChatApp() {
 
 // ── Chat Room ─────────────────────────────────────────────────────────────
 
-function ChatRoom({ roomId, currentUser }: { roomId: string; currentUser: { name: string; avatarUrl?: string } }) {
+function ChatRoom({
+  roomId,
+  currentUser,
+}: {
+  roomId: string;
+  currentUser: { name: string; avatarUrl?: string };
+}) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [typingUsers, setTypingUsers] = useState<{ name: string; avatar?: string }[]>([]);
+  const [typingUsers, setTypingUsers] = useState<
+    { name: string; avatar?: string }[]
+  >([]);
   const [input, setInput] = useState("");
   const { send, isConnected } = snap.useSocket();
-  const typingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const typingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(
+    new Map(),
+  );
   const typingSent = useRef(false);
   const typingTimeout = useRef<ReturnType<typeof setTimeout>>();
 
@@ -111,34 +130,50 @@ function ChatRoom({ roomId, currentUser }: { roomId: string; currentUser: { name
   snap.useRoom(`chat:${roomId}`);
 
   // Listen for new messages
-  snap.useRoomEvent(`chat:${roomId}`, "message", useCallback((msg: Message) => {
-    setMessages((prev) => [...prev, msg]);
-  }, []));
+  snap.useRoomEvent(
+    `chat:${roomId}`,
+    "message",
+    useCallback((msg: Message) => {
+      setMessages((prev) => [...prev, msg]);
+    }, []),
+  );
 
   // Listen for typing events — auto-expire after 3 seconds of silence
-  snap.useRoomEvent(`chat:${roomId}`, "typing", useCallback(({ user, isTyping }: TypingEvent) => {
-    // Don't show self as typing
-    if (user.name === currentUser.name) return;
+  snap.useRoomEvent(
+    `chat:${roomId}`,
+    "typing",
+    useCallback(
+      ({ user, isTyping }: TypingEvent) => {
+        // Don't show self as typing
+        if (user.name === currentUser.name) return;
 
-    // Clear any existing timer for this user
-    const existing = typingTimers.current.get(user.name);
-    if (existing) clearTimeout(existing);
+        // Clear any existing timer for this user
+        const existing = typingTimers.current.get(user.name);
+        if (existing) clearTimeout(existing);
 
-    if (isTyping) {
-      setTypingUsers((prev) => {
-        if (prev.some((u) => u.name === user.name)) return prev;
-        return [...prev, user];
-      });
-      // Auto-remove after 3 seconds if no new typing event
-      typingTimers.current.set(user.name, setTimeout(() => {
-        setTypingUsers((prev) => prev.filter((u) => u.name !== user.name));
-        typingTimers.current.delete(user.name);
-      }, 3000));
-    } else {
-      setTypingUsers((prev) => prev.filter((u) => u.name !== user.name));
-      typingTimers.current.delete(user.name);
-    }
-  }, [currentUser.name]));
+        if (isTyping) {
+          setTypingUsers((prev) => {
+            if (prev.some((u) => u.name === user.name)) return prev;
+            return [...prev, user];
+          });
+          // Auto-remove after 3 seconds if no new typing event
+          typingTimers.current.set(
+            user.name,
+            setTimeout(() => {
+              setTypingUsers((prev) =>
+                prev.filter((u) => u.name !== user.name),
+              );
+              typingTimers.current.delete(user.name);
+            }, 3000),
+          );
+        } else {
+          setTypingUsers((prev) => prev.filter((u) => u.name !== user.name));
+          typingTimers.current.delete(user.name);
+        }
+      },
+      [currentUser.name],
+    ),
+  );
 
   // Cleanup timers on unmount
   useEffect(() => {
@@ -210,12 +245,17 @@ function ChatRoom({ roomId, currentUser }: { roomId: string; currentUser: { name
           />
         }
         typingSlot={
-          typingUsers.length > 0
-            ? <TypingIndicatorBase users={typingUsers} maxDisplay={3} />
-            : null
+          typingUsers.length > 0 ? (
+            <TypingIndicatorBase users={typingUsers} maxDisplay={3} />
+          ) : null
         }
         inputSlot={
-          <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendMessage();
+            }}
+          >
             <RowBase gap="sm" align="center">
               <InputField
                 value={input}
@@ -244,29 +284,44 @@ function OnlineUsers({ roomId }: { roomId: string }) {
 
   snap.useRoom(`presence:${roomId}`);
 
-  snap.useRoomEvent(`presence:${roomId}`, "update", useCallback((event: PresenceEvent) => {
-    setUsers((prev) => {
-      const without = prev.filter((u) => u.userId !== event.userId);
-      if (event.status === "offline") return without;
-      return [...without, event];
-    });
-  }, []));
+  snap.useRoomEvent(
+    `presence:${roomId}`,
+    "update",
+    useCallback((event: PresenceEvent) => {
+      setUsers((prev) => {
+        const without = prev.filter((u) => u.userId !== event.userId);
+        if (event.status === "offline") return without;
+        return [...without, event];
+      });
+    }, []),
+  );
 
   const online = users.filter((u) => u.status === "online");
   const away = users.filter((u) => u.status === "away");
 
   return (
-    <ColumnBase gap="md" style={{ padding: "1rem", borderLeft: "1px solid var(--sn-color-border)" }}>
-      <h3 style={{ fontSize: "0.875rem", textTransform: "uppercase", color: "var(--sn-color-muted-foreground)" }}>
+    <ColumnBase
+      gap="md"
+      style={{
+        padding: "1rem",
+        borderLeft: "1px solid var(--sn-color-border)",
+      }}
+    >
+      <h3
+        style={{
+          fontSize: "0.875rem",
+          textTransform: "uppercase",
+          color: "var(--sn-color-muted-foreground)",
+        }}
+      >
         Online — {online.length}
       </h3>
       {online.map((user) => (
         <RowBase key={user.userId} gap="sm" align="center">
           <PresenceIndicatorBase status="online" showDot size="sm" />
-          {user.avatar
-            ? <AvatarBase src={user.avatar} name={user.name} size="sm" />
-            : null
-          }
+          {user.avatar ? (
+            <AvatarBase src={user.avatar} name={user.name} size="sm" />
+          ) : null}
           <span style={{ fontSize: "0.875rem" }}>{user.name}</span>
         </RowBase>
       ))}
@@ -274,13 +329,26 @@ function OnlineUsers({ roomId }: { roomId: string }) {
       {away.length > 0 && (
         <>
           <SpacerBase size="sm" />
-          <h3 style={{ fontSize: "0.875rem", textTransform: "uppercase", color: "var(--sn-color-muted-foreground)" }}>
+          <h3
+            style={{
+              fontSize: "0.875rem",
+              textTransform: "uppercase",
+              color: "var(--sn-color-muted-foreground)",
+            }}
+          >
             Away — {away.length}
           </h3>
           {away.map((user) => (
             <RowBase key={user.userId} gap="sm" align="center">
               <PresenceIndicatorBase status="away" showDot size="sm" />
-              <span style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground)" }}>{user.name}</span>
+              <span
+                style={{
+                  fontSize: "0.875rem",
+                  color: "var(--sn-color-muted-foreground)",
+                }}
+              >
+                {user.name}
+              </span>
             </RowBase>
           ))}
         </>
@@ -305,9 +373,9 @@ function OnlineUsers({ roomId }: { roomId: string }) {
 
 The app subscribes to two rooms per channel:
 
-| Room | Purpose |
-|------|---------|
-| `chat:{roomId}` | Messages and typing events |
+| Room                | Purpose                            |
+| ------------------- | ---------------------------------- |
+| `chat:{roomId}`     | Messages and typing events         |
 | `presence:{roomId}` | Online/away/offline status updates |
 
 This separation keeps presence updates from interfering with message delivery.
@@ -319,7 +387,9 @@ Replace the local `useState` messages with Snapshot's community hooks for server
 ```tsx
 function PersistentChatRoom({ roomId }: { roomId: string }) {
   const { data: thread } = snap.useContainerThreads({ containerId: roomId });
-  const { data: replies } = snap.useThreadReplies({ threadId: thread?.items[0]?.id ?? "" });
+  const { data: replies } = snap.useThreadReplies({
+    threadId: thread?.items[0]?.id ?? "",
+  });
   const { mutate: createReply } = snap.useCreateReply();
 
   // Merge persisted replies with live WebSocket messages for real-time + persistence

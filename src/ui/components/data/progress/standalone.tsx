@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useId } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -363,7 +363,7 @@ export function ProgressBase({
     >
       {isIndeterminate ? <SurfaceStyles css={indeterminateBarCss} /> : null}
 
-      {(label || (showValue && percentage !== undefined)) ? (
+      {label || (showValue && percentage !== undefined) ? (
         <div
           data-snapshot-id={`${rootId}-label-row`}
           className={labelRowSurface.className}

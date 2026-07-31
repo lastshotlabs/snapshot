@@ -2,14 +2,14 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | G.1 | Route Transitions | Not started | Routing |
-> | G.2 | Preloading | Not started | Routing |
-> | G.3 | Nested Layouts | Not started | Routing |
-> | G.4 | Breadcrumb Auto-Generation | Not started | Components |
-> | G.5 | Deep Linking | Not started | State |
-> | G.6 | Error Routes | Not started | Routing |
+> | Phase | Title                      | Status      | Track      |
+> | ----- | -------------------------- | ----------- | ---------- |
+> | G.1   | Route Transitions          | Not started | Routing    |
+> | G.2   | Preloading                 | Not started | Routing    |
+> | G.3   | Nested Layouts             | Not started | Routing    |
+> | G.4   | Breadcrumb Auto-Generation | Not started | Components |
+> | G.5   | Deep Linking               | Not started | State      |
+> | G.6   | Error Routes               | Not started | Routing    |
 >
 > **Priority:** P1 — completes the routing story for production-quality navigation.
 > **Depends on:** Phase A (CSS Foundation), Phase B (Layout).
@@ -60,47 +60,47 @@ Snapshot has a functional manifest-driven router but lacks polish for production
 
 ### Router
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/manifest/router.ts` | ~100 | `normalizePathname()`, `matchRoutePath()`, `resolveRouteMatch()`. Pattern matching with `{param}` extraction. No nested route resolution. |
-| `src/ui/manifest/app.tsx` | ~600 | `ManifestApp` — compiles manifest, matches route, renders `PageRenderer` inside `RouteRuntimeProvider`. Instant route changes. |
-| `src/ui/manifest/schema.ts` | ~1400 | `routeConfigSchema`: `path`, `page`, `layout`, `guard`, `enter`, `leave`, `preload`. No `children`, no `transition`. |
-| `src/ui/manifest/types.ts` | ~200 | `CompiledRoute`, `ManifestAppProps`, `CompiledManifest`. No nested route types. |
-| `src/ui/manifest/renderer.tsx` | ~300 | `PageRenderer`, `ComponentRenderer`. Renders page content. No transition wrapper. |
-| `src/ui/manifest/runtime.tsx` | ~300 | `ManifestRuntimeProvider`, `RouteRuntimeProvider`. Provides route context. |
+| File                           | Lines | What Exists                                                                                                                               |
+| ------------------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/router.ts`    | ~100  | `normalizePathname()`, `matchRoutePath()`, `resolveRouteMatch()`. Pattern matching with `{param}` extraction. No nested route resolution. |
+| `src/ui/manifest/app.tsx`      | ~600  | `ManifestApp` — compiles manifest, matches route, renders `PageRenderer` inside `RouteRuntimeProvider`. Instant route changes.            |
+| `src/ui/manifest/schema.ts`    | ~1400 | `routeConfigSchema`: `path`, `page`, `layout`, `guard`, `enter`, `leave`, `preload`. No `children`, no `transition`.                      |
+| `src/ui/manifest/types.ts`     | ~200  | `CompiledRoute`, `ManifestAppProps`, `CompiledManifest`. No nested route types.                                                           |
+| `src/ui/manifest/renderer.tsx` | ~300  | `PageRenderer`, `ComponentRenderer`. Renders page content. No transition wrapper.                                                         |
+| `src/ui/manifest/runtime.tsx`  | ~300  | `ManifestRuntimeProvider`, `RouteRuntimeProvider`. Provides route context.                                                                |
 
 ### PrefetchLink Component
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/navigation/prefetch-link/` | ~80 | Registered component. Renders `<a>` with hover-based JS/CSS prefetching via the Vite prefetch manifest. |
+| File                                          | Lines | What Exists                                                                                             |
+| --------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/navigation/prefetch-link/` | ~80   | Registered component. Renders `<a>` with hover-based JS/CSS prefetching via the Vite prefetch manifest. |
 
 ### Prefetch Infrastructure
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/vite/prefetch.ts` | ~140 | `buildPrefetchManifest()` — maps routes to JS/CSS chunks for `<link rel="prefetch">`. |
+| File                   | Lines | What Exists                                                                           |
+| ---------------------- | ----- | ------------------------------------------------------------------------------------- |
+| `src/vite/prefetch.ts` | ~140  | `buildPrefetchManifest()` — maps routes to JS/CSS chunks for `<link rel="prefetch">`. |
 
 ### Breadcrumb Component
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/navigation/breadcrumb/` | ~100 | Registered component. Schema accepts `items: [{ label, href, icon }]`. No auto-generation. |
+| File                                       | Lines | What Exists                                                                                |
+| ------------------------------------------ | ----- | ------------------------------------------------------------------------------------------ |
+| `src/ui/components/navigation/breadcrumb/` | ~100  | Registered component. Schema accepts `items: [{ label, href, icon }]`. No auto-generation. |
 
 ### Feedback Components
 
-| File | What |
-|---|---|
-| `src/ui/components/feedback/default-error/` | Error page component. |
-| `src/ui/components/feedback/default-not-found/` | 404 page component. |
-| `src/ui/components/feedback/default-loading/` | Loading spinner component. |
-| `src/ui/components/feedback/default-offline/` | Offline banner component. |
+| File                                            | What                       |
+| ----------------------------------------------- | -------------------------- |
+| `src/ui/components/feedback/default-error/`     | Error page component.      |
+| `src/ui/components/feedback/default-not-found/` | 404 page component.        |
+| `src/ui/components/feedback/default-loading/`   | Loading spinner component. |
+| `src/ui/components/feedback/default-offline/`   | Offline banner component.  |
 
 ### Modal/Drawer
 
-| File | What |
-|---|---|
-| `src/ui/components/overlay/modal/` | Modal component. No URL param binding. |
+| File                                | What                                    |
+| ----------------------------------- | --------------------------------------- |
+| `src/ui/components/overlay/modal/`  | Modal component. No URL param binding.  |
 | `src/ui/components/overlay/drawer/` | Drawer component. No URL param binding. |
 
 ---
@@ -119,19 +119,19 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/manifest/router.ts` | Route matching | ~100 |
-| `src/ui/manifest/app.tsx` | ManifestApp (router + renderer) | ~600 |
-| `src/ui/manifest/schema.ts` | All manifest schemas | ~1400 |
-| `src/ui/manifest/renderer.tsx` | Page/component renderer | ~300 |
-| `src/ui/manifest/runtime.tsx` | Runtime providers | ~300 |
-| `src/ui/manifest/types.ts` | Compiled manifest types | ~200 |
-| `src/ui/manifest/structural.tsx` | Structural components (row, heading, etc.) | ~500 |
-| `src/ui/components/navigation/prefetch-link/` | PrefetchLink component | ~80 |
-| `src/ui/components/navigation/breadcrumb/` | Breadcrumb component | ~100 |
-| `src/ui/components/overlay/modal/` | Modal component | ~200 |
-| `src/vite/prefetch.ts` | Asset prefetch manifest builder | ~140 |
+| Path                                          | What                                       | Lines |
+| --------------------------------------------- | ------------------------------------------ | ----- |
+| `src/ui/manifest/router.ts`                   | Route matching                             | ~100  |
+| `src/ui/manifest/app.tsx`                     | ManifestApp (router + renderer)            | ~600  |
+| `src/ui/manifest/schema.ts`                   | All manifest schemas                       | ~1400 |
+| `src/ui/manifest/renderer.tsx`                | Page/component renderer                    | ~300  |
+| `src/ui/manifest/runtime.tsx`                 | Runtime providers                          | ~300  |
+| `src/ui/manifest/types.ts`                    | Compiled manifest types                    | ~200  |
+| `src/ui/manifest/structural.tsx`              | Structural components (row, heading, etc.) | ~500  |
+| `src/ui/components/navigation/prefetch-link/` | PrefetchLink component                     | ~80   |
+| `src/ui/components/navigation/breadcrumb/`    | Breadcrumb component                       | ~100  |
+| `src/ui/components/overlay/modal/`            | Modal component                            | ~200  |
+| `src/vite/prefetch.ts`                        | Asset prefetch manifest builder            | ~140  |
 
 ---
 
@@ -189,7 +189,7 @@ export const routeTransitionSchema = z.object({
 **1. Create `src/ui/manifest/transition-wrapper.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -234,8 +234,14 @@ function resolveKeyframeName(name: string): string {
 /**
  * Wraps page content with CSS enter/exit animations on route changes.
  */
-export function TransitionWrapper({ config, routeKey, children }: TransitionWrapperProps) {
-  const [phase, setPhase] = useState<"entering" | "visible" | "exiting">("entering");
+export function TransitionWrapper({
+  config,
+  routeKey,
+  children,
+}: TransitionWrapperProps) {
+  const [phase, setPhase] = useState<"entering" | "visible" | "exiting">(
+    "entering",
+  );
   const prevRouteKey = useRef(routeKey);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -250,11 +256,12 @@ export function TransitionWrapper({ config, routeKey, children }: TransitionWrap
 
   if (!config) return <>{children}</>;
 
-  const animationName = phase === "entering"
-    ? resolveKeyframeName(config.enter)
-    : phase === "exiting"
-      ? resolveKeyframeName(config.exit)
-      : "none";
+  const animationName =
+    phase === "entering"
+      ? resolveKeyframeName(config.enter)
+      : phase === "exiting"
+        ? resolveKeyframeName(config.exit)
+        : "none";
 
   return (
     <>
@@ -263,9 +270,10 @@ export function TransitionWrapper({ config, routeKey, children }: TransitionWrap
         ref={containerRef}
         data-snapshot-transition={phase}
         style={{
-          animation: animationName !== "none"
-            ? `${animationName} ${config.duration}ms ${config.easing} forwards`
-            : "none",
+          animation:
+            animationName !== "none"
+              ? `${animationName} ${config.duration}ms ${config.easing} forwards`
+              : "none",
         }}
       >
         {children}
@@ -280,20 +288,23 @@ export function TransitionWrapper({ config, routeKey, children }: TransitionWrap
 Wrap `PageRenderer` with `TransitionWrapper`:
 
 ```tsx
-<TransitionWrapper config={currentRoute.transition} routeKey={currentRoute.path}>
+<TransitionWrapper
+  config={currentRoute.transition}
+  routeKey={currentRoute.path}
+>
   <PageRenderer page={currentRoute.page} />
 </TransitionWrapper>
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/transition-wrapper.tsx` |
+| Action | Path                                                                                        |
+| ------ | ------------------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/transition-wrapper.tsx`                                                    |
 | Modify | `src/ui/manifest/schema.ts` — add `routeTransitionSchema`, add `transition` to route config |
-| Modify | `src/ui/manifest/types.ts` — add `transition` to `CompiledRoute` |
-| Modify | `src/ui/manifest/app.tsx` — wrap PageRenderer in TransitionWrapper |
-| Modify | `src/ui/manifest/compiler.ts` — include `transition` in compiled route |
+| Modify | `src/ui/manifest/types.ts` — add `transition` to `CompiledRoute`                            |
+| Modify | `src/ui/manifest/app.tsx` — wrap PageRenderer in TransitionWrapper                          |
+| Modify | `src/ui/manifest/compiler.ts` — include `transition` in compiled route                      |
 
 ### Documentation Impact
 
@@ -302,10 +313,10 @@ Wrap `PageRenderer` with `TransitionWrapper`:
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                             | What                                                                                                                |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/transition-wrapper.test.tsx` (create) | Tests: renders children, applies enter animation on mount, resolves built-in names, no wrapper when config missing. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `transition` config validates, defaults correct. |
+| `src/ui/manifest/__tests__/schema.test.ts`                       | Add: `transition` config validates, defaults correct.                                                               |
 
 ### Exit Criteria
 
@@ -390,7 +401,10 @@ useEffect(() => {
 /**
  * Prefetch a route's resources: JS chunks, CSS, and optionally API data.
  */
-export function prefetchRoute(path: string, prefetchManifest: PrefetchManifest): void {
+export function prefetchRoute(
+  path: string,
+  prefetchManifest: PrefetchManifest,
+): void {
   const resources = prefetchManifest[path];
   if (!resources) return;
 
@@ -414,19 +428,19 @@ export function prefetchRoute(path: string, prefetchManifest: PrefetchManifest):
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/prefetch-routes.ts` |
-| Modify | `src/ui/components/navigation/prefetch-link/schema.ts` — add `preload` |
+| Action | Path                                                                                    |
+| ------ | --------------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/prefetch-routes.ts`                                                    |
+| Modify | `src/ui/components/navigation/prefetch-link/schema.ts` — add `preload`                  |
 | Modify | `src/ui/components/navigation/prefetch-link/component.tsx` — visible + eager strategies |
-| Modify | `src/ui/manifest/schema.ts` — add `preloadStrategySchema` |
+| Modify | `src/ui/manifest/schema.ts` — add `preloadStrategySchema`                               |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/manifest/__tests__/prefetch-routes.test.ts` (create) | Tests: creates prefetch link elements, skips unknown routes, deduplicates. |
-| `src/ui/components/navigation/prefetch-link/__tests__/schema.test.ts` | Add: `preload` values accepted. |
+| File                                                                  | What                                                                       |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `src/ui/manifest/__tests__/prefetch-routes.test.ts` (create)          | Tests: creates prefetch link elements, skips unknown routes, deduplicates. |
+| `src/ui/components/navigation/prefetch-link/__tests__/schema.test.ts` | Add: `preload` values accepted.                                            |
 
 ### Exit Criteria
 
@@ -489,7 +503,10 @@ export const outletComponentSchema = z.object({
 Flatten nested routes into a route table with full paths:
 
 ```ts
-function compileRoutes(routes: RouteConfig[], parentPath: string = ""): CompiledRoute[] {
+function compileRoutes(
+  routes: RouteConfig[],
+  parentPath: string = "",
+): CompiledRoute[] {
   const compiled: CompiledRoute[] = [];
 
   for (const route of routes) {
@@ -498,7 +515,9 @@ function compileRoutes(routes: RouteConfig[], parentPath: string = ""): Compiled
       ...compileRoute(route),
       path: fullPath,
       parentPath: parentPath || null,
-      children: route.children ? compileRoutes(route.children, fullPath) : undefined,
+      children: route.children
+        ? compileRoutes(route.children, fullPath)
+        : undefined,
     });
 
     // Also add child routes to the flat list
@@ -531,12 +550,22 @@ export interface RouteMatch {
 **3. Register `outlet` in `src/ui/manifest/structural.tsx`:**
 
 ```tsx
-function OutletComponent({ config }: { config: { fallback?: ComponentConfig[] } }) {
+function OutletComponent({
+  config,
+}: {
+  config: { fallback?: ComponentConfig[] };
+}) {
   const { childRoute } = useRouteRuntime();
 
   if (!childRoute) {
     if (config.fallback) {
-      return <>{config.fallback.map((c, i) => <ComponentRenderer key={i} config={c} />)}</>;
+      return (
+        <>
+          {config.fallback.map((c, i) => (
+            <ComponentRenderer key={i} config={c} />
+          ))}
+        </>
+      );
     }
     return null;
   }
@@ -549,24 +578,24 @@ function OutletComponent({ config }: { config: { fallback?: ComponentConfig[] } 
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                                     |
+| ------ | -------------------------------------------------------------------------------------------------------- |
 | Modify | `src/ui/manifest/schema.ts` — make `routeConfigSchema` recursive (children), add `outletComponentSchema` |
-| Modify | `src/ui/manifest/compiler.ts` — flatten nested routes |
-| Modify | `src/ui/manifest/router.ts` — nested route matching, `RouteMatch` type |
-| Modify | `src/ui/manifest/structural.tsx` — add `OutletComponent` |
-| Modify | `src/ui/manifest/types.ts` — `childRoute` on `CompiledRoute`, `RouteMatch` |
-| Modify | `src/ui/manifest/runtime.tsx` — provide `childRoute` in route runtime |
-| Modify | `src/ui/manifest/app.tsx` — render parent + child routes |
-| Modify | `src/ui/manifest/component-registry.tsx` — register `outlet` component |
+| Modify | `src/ui/manifest/compiler.ts` — flatten nested routes                                                    |
+| Modify | `src/ui/manifest/router.ts` — nested route matching, `RouteMatch` type                                   |
+| Modify | `src/ui/manifest/structural.tsx` — add `OutletComponent`                                                 |
+| Modify | `src/ui/manifest/types.ts` — `childRoute` on `CompiledRoute`, `RouteMatch`                               |
+| Modify | `src/ui/manifest/runtime.tsx` — provide `childRoute` in route runtime                                    |
+| Modify | `src/ui/manifest/app.tsx` — render parent + child routes                                                 |
+| Modify | `src/ui/manifest/component-registry.tsx` — register `outlet` component                                   |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/manifest/__tests__/router.test.ts` | Add: nested route matching, parent + child resolution, params from both levels. |
-| `src/ui/manifest/__tests__/compiler.test.ts` | Add: nested routes flatten correctly, full paths computed. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `children` array accepted, `outlet` component validates. |
+| File                                         | What                                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------------------- |
+| `src/ui/manifest/__tests__/router.test.ts`   | Add: nested route matching, parent + child resolution, params from both levels. |
+| `src/ui/manifest/__tests__/compiler.test.ts` | Add: nested routes flatten correctly, full paths computed.                      |
+| `src/ui/manifest/__tests__/schema.test.ts`   | Add: `children` array accepted, `outlet` component validates.                   |
 
 ### Exit Criteria
 
@@ -598,11 +627,13 @@ export const breadcrumbAutoConfigSchema = z.object({
   /** Enable auto-generation from route hierarchy. */
   auto: z.boolean().default(false),
   /** Home breadcrumb item (always first). */
-  home: z.object({
-    label: z.string().default("Home"),
-    icon: z.string().optional(),
-    href: z.string().default("/"),
-  }).optional(),
+  home: z
+    .object({
+      label: z.string().default("Home"),
+      icon: z.string().optional(),
+      href: z.string().default("/"),
+    })
+    .optional(),
   /** Separator between breadcrumb items. Default: "/". */
   separator: z.string().default("/"),
   /** Label overrides for specific route paths. */
@@ -661,9 +692,10 @@ export function generateBreadcrumbs(
 
     // Try to find a route for this path
     const route = allRoutes.find((r) => r.path === currentPath);
-    const label = config.labels?.[currentPath]
-      ?? route?.page?.title
-      ?? formatSegment(segments[i]!);
+    const label =
+      config.labels?.[currentPath] ??
+      route?.page?.title ??
+      formatSegment(segments[i]!);
 
     items.push({
       label,
@@ -680,25 +712,29 @@ export function generateBreadcrumbs(
  * "user-settings" → "User Settings"
  */
 function formatSegment(segment: string): string {
-  return segment
-    .replace(/[-_]/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return segment.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 ```
 
 **2. Create `src/ui/hooks/use-auto-breadcrumbs.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useMemo } from "react";
 import { useRouteRuntime, useManifestRuntime } from "../manifest/runtime";
-import { generateBreadcrumbs, type BreadcrumbAutoConfig, type BreadcrumbItem } from "../manifest/breadcrumbs";
+import {
+  generateBreadcrumbs,
+  type BreadcrumbAutoConfig,
+  type BreadcrumbItem,
+} from "../manifest/breadcrumbs";
 
 /**
  * Hook that returns auto-generated breadcrumb items for the current route.
  */
-export function useAutoBreadcrumbs(config: BreadcrumbAutoConfig | undefined): BreadcrumbItem[] {
+export function useAutoBreadcrumbs(
+  config: BreadcrumbAutoConfig | undefined,
+): BreadcrumbItem[] {
   const routeRuntime = useRouteRuntime();
   const manifestRuntime = useManifestRuntime();
 
@@ -718,21 +754,21 @@ are provided and `auto: true` is in the app config.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/breadcrumbs.ts` |
-| Create | `src/ui/hooks/use-auto-breadcrumbs.ts` |
+| Action | Path                                                                                            |
+| ------ | ----------------------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/breadcrumbs.ts`                                                                |
+| Create | `src/ui/hooks/use-auto-breadcrumbs.ts`                                                          |
 | Modify | `src/ui/manifest/schema.ts` — add `breadcrumbAutoConfigSchema`, add `breadcrumbs` to app config |
-| Modify | `src/ui/manifest/types.ts` — add `breadcrumbs` to compiled manifest app |
-| Modify | `src/ui/components/navigation/breadcrumb/component.tsx` — auto-breadcrumb fallback |
-| Modify | `src/ui/components/navigation/breadcrumb/schema.ts` — allow empty `items` when auto is enabled |
+| Modify | `src/ui/manifest/types.ts` — add `breadcrumbs` to compiled manifest app                         |
+| Modify | `src/ui/components/navigation/breadcrumb/component.tsx` — auto-breadcrumb fallback              |
+| Modify | `src/ui/components/navigation/breadcrumb/schema.ts` — allow empty `items` when auto is enabled  |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/manifest/__tests__/breadcrumbs.test.ts` (create) | Tests: generates from route path, includes home, uses label overrides, formats segments, marks current. |
-| `src/ui/components/navigation/breadcrumb/__tests__/schema.test.ts` | Add: accepts empty items. |
+| File                                                               | What                                                                                                    |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/__tests__/breadcrumbs.test.ts` (create)           | Tests: generates from route path, includes home, uses label overrides, formats segments, marks current. |
+| `src/ui/components/navigation/breadcrumb/__tests__/schema.test.ts` | Add: accepts empty items.                                                                               |
 
 ### Exit Criteria
 
@@ -803,21 +839,21 @@ modal with `urlParam`, the URL is updated.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/components/overlay/modal/schema.ts` — add `urlParam` |
-| Modify | `src/ui/components/overlay/modal/component.tsx` — URL sync |
+| Action | Path                                                          |
+| ------ | ------------------------------------------------------------- |
+| Modify | `src/ui/components/overlay/modal/schema.ts` — add `urlParam`  |
+| Modify | `src/ui/components/overlay/modal/component.tsx` — URL sync    |
 | Modify | `src/ui/components/overlay/drawer/schema.ts` — add `urlParam` |
-| Modify | `src/ui/components/overlay/drawer/component.tsx` — URL sync |
-| Modify | `src/ui/actions/modal-manager.ts` — pass urlParam context |
+| Modify | `src/ui/components/overlay/drawer/component.tsx` — URL sync   |
+| Modify | `src/ui/actions/modal-manager.ts` — pass urlParam context     |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/overlay/modal/__tests__/component.test.tsx` | Add: urlParam adds to URL, removes on close, opens from URL on mount. |
-| `src/ui/components/overlay/drawer/__tests__/component.test.tsx` | Add: same urlParam tests. |
-| `src/ui/components/overlay/modal/__tests__/schema.test.ts` | Add: `urlParam` accepted. |
+| File                                                            | What                                                                  |
+| --------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `src/ui/components/overlay/modal/__tests__/component.test.tsx`  | Add: urlParam adds to URL, removes on close, opens from URL on mount. |
+| `src/ui/components/overlay/drawer/__tests__/component.test.tsx` | Add: same urlParam tests.                                             |
+| `src/ui/components/overlay/modal/__tests__/schema.test.ts`      | Add: `urlParam` accepted.                                             |
 
 ### Exit Criteria
 
@@ -856,6 +892,7 @@ Fix any gaps discovered during verification.
 **2. Fix any gaps:**
 
 Common gaps to check:
+
 - NotFound may not render the consumer's custom `notFound` config (may use hardcoded default).
 - Error boundary may not use the consumer's `error` config.
 - Custom action on error page (e.g., "Go Home" button) may not work.
@@ -865,20 +902,20 @@ configs for buttons.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify (if needed) | `src/ui/manifest/app.tsx` — verify notFound/error rendering |
-| Modify (if needed) | `src/ui/components/feedback/default-not-found/component.tsx` — verify token usage, actions |
-| Modify (if needed) | `src/ui/components/feedback/default-error/component.tsx` — verify token usage, actions |
+| Action             | Path                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| Modify (if needed) | `src/ui/manifest/app.tsx` — verify notFound/error rendering                                  |
+| Modify (if needed) | `src/ui/components/feedback/default-not-found/component.tsx` — verify token usage, actions   |
+| Modify (if needed) | `src/ui/components/feedback/default-error/component.tsx` — verify token usage, actions       |
 | Modify (if needed) | `src/ui/components/_base/component-wrapper.tsx` — verify error boundary uses manifest config |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/manifest/__tests__/app.test.tsx` | Add: unknown route renders notFound page, error in component renders error page. |
-| `src/ui/components/feedback/__tests__/default-not-found.test.tsx` | Verify: renders with config, action button works. |
-| `src/ui/components/feedback/__tests__/default-error.test.tsx` | Verify: renders with error message, retry action works. |
+| File                                                              | What                                                                             |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `src/ui/manifest/__tests__/app.test.tsx`                          | Add: unknown route renders notFound page, error in component renders error page. |
+| `src/ui/components/feedback/__tests__/default-not-found.test.tsx` | Verify: renders with config, action button works.                                |
+| `src/ui/components/feedback/__tests__/default-error.test.tsx`     | Verify: renders with error message, retry action works.                          |
 
 ### Exit Criteria
 
@@ -899,11 +936,11 @@ configs for buttons.
 
 Three tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| Routing | G.1, G.2, G.3, G.6 | `src/ui/manifest/transition-wrapper.tsx`, `src/ui/manifest/prefetch-routes.ts`, router/compiler/app modifications |
-| Components | G.4 | `src/ui/manifest/breadcrumbs.ts`, `src/ui/hooks/use-auto-breadcrumbs.ts`, breadcrumb component |
-| State | G.5 | Modal/drawer URL param logic |
+| Track      | Phases             | Files Owned                                                                                                       |
+| ---------- | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Routing    | G.1, G.2, G.3, G.6 | `src/ui/manifest/transition-wrapper.tsx`, `src/ui/manifest/prefetch-routes.ts`, router/compiler/app modifications |
+| Components | G.4                | `src/ui/manifest/breadcrumbs.ts`, `src/ui/hooks/use-auto-breadcrumbs.ts`, breadcrumb component                    |
+| State      | G.5                | Modal/drawer URL param logic                                                                                      |
 
 ### Why Tracks Are Independent
 
@@ -956,12 +993,12 @@ base: main
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|---|---|
-| G.1 transition flicker on SSR | Content renders statically on server; animation starts in useEffect on client. |
-| G.3 nested routes complexity | Comprehensive router tests for 3+ levels of nesting, wildcard params, index routes. |
-| G.4 breadcrumb param resolution | Test with dynamic segments like `{userId}`. |
-| G.5 URL param collisions | Namespace modal params or validate uniqueness at compile time. |
+| Risk                            | Mitigation                                                                          |
+| ------------------------------- | ----------------------------------------------------------------------------------- |
+| G.1 transition flicker on SSR   | Content renders statically on server; animation starts in useEffect on client.      |
+| G.3 nested routes complexity    | Comprehensive router tests for 3+ levels of nesting, wildcard params, index routes. |
+| G.4 breadcrumb param resolution | Test with dynamic segments like `{userId}`.                                         |
+| G.5 URL param collisions        | Namespace modal params or validate uniqueness at compile time.                      |
 
 ---
 

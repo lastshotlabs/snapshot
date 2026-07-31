@@ -47,7 +47,8 @@ export function DefaultNotFoundBase({
   slots,
 }: DefaultNotFoundBaseProps) {
   const rootId = id ?? "not-found";
-  const componentSurface = className || style ? { className, style } : undefined;
+  const componentSurface =
+    className || style ? { className, style } : undefined;
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,

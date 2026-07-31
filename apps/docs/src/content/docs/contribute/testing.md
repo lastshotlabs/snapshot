@@ -27,15 +27,15 @@ modified surface.
 
 ## Which Tests Match Which Contract
 
-| Surface | What to prove | Current source-backed patterns |
-| --- | --- | --- |
-| SDK bootstrap | factory defaults, auth contract, realtime bootstrap | `src/create-snapshot.test.tsx`, `src/auth/__tests__/contract.test.ts` |
-| Actions and workflows | observable state and effect behavior | `src/ui/actions/__tests__`, `src/ui/workflows/__tests__` |
-| Component schema contract | accepted config, rejected config, defaults, refs, slots, states | component `schema.test.ts` files |
-| Component runtime contract | rendered output, events, state publishing, SSR safety | component `component.test.tsx` files |
-| SSR contract | response shape, shell injection, render chain, cache and state serialization | `src/ssr/__tests__` |
-| Vite and sync | plugin hooks, sync triggers, build output | `src/vite/__tests__` |
-| CLI and scaffold | sync output and generated template expectations | `src/cli/__tests__` |
+| Surface                    | What to prove                                                                | Current source-backed patterns                                        |
+| -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| SDK bootstrap              | factory defaults, auth contract, realtime bootstrap                          | `src/create-snapshot.test.tsx`, `src/auth/__tests__/contract.test.ts` |
+| Actions and workflows      | observable state and effect behavior                                         | `src/ui/actions/__tests__`, `src/ui/workflows/__tests__`              |
+| Component schema contract  | accepted config, rejected config, defaults, refs, slots, states              | component `schema.test.ts` files                                      |
+| Component runtime contract | rendered output, events, state publishing, SSR safety                        | component `component.test.tsx` files                                  |
+| SSR contract               | response shape, shell injection, render chain, cache and state serialization | `src/ssr/__tests__`                                                   |
+| Vite and sync              | plugin hooks, sync triggers, build output                                    | `src/vite/__tests__`                                                  |
+| CLI and scaffold           | sync output and generated template expectations                              | `src/cli/__tests__`                                                   |
 
 ## Context Helpers
 

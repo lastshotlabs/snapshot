@@ -1,6 +1,14 @@
-'use client';
+"use client";
 
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import { Extension } from "@tiptap/core";
@@ -30,12 +38,37 @@ interface ToolbarItem {
 const ALL_TOOLBAR_ITEMS: ToolbarItem[] = [
   { name: "bold", icon: "bold", label: "Bold", action: "toggleBold" },
   { name: "italic", icon: "italic", label: "Italic", action: "toggleItalic" },
-  { name: "underline", icon: "underline", label: "Underline", action: "toggleUnderline" },
-  { name: "strike", icon: "strikethrough", label: "Strikethrough", action: "toggleStrike" },
+  {
+    name: "underline",
+    icon: "underline",
+    label: "Underline",
+    action: "toggleUnderline",
+  },
+  {
+    name: "strike",
+    icon: "strikethrough",
+    label: "Strikethrough",
+    action: "toggleStrike",
+  },
   { name: "code", icon: "code", label: "Inline code", action: "toggleCode" },
-  { name: "code-block", icon: "terminal", label: "Code block", action: "toggleCodeBlock" },
-  { name: "bullet-list", icon: "list", label: "Bullet list", action: "toggleBulletList" },
-  { name: "ordered-list", icon: "list-ordered", label: "Numbered list", action: "toggleOrderedList" },
+  {
+    name: "code-block",
+    icon: "terminal",
+    label: "Code block",
+    action: "toggleCodeBlock",
+  },
+  {
+    name: "bullet-list",
+    icon: "list",
+    label: "Bullet list",
+    action: "toggleBulletList",
+  },
+  {
+    name: "ordered-list",
+    icon: "list-ordered",
+    label: "Numbered list",
+    action: "toggleOrderedList",
+  },
   { name: "link", icon: "link", label: "Insert link", action: "setLink" },
 ];
 
@@ -50,10 +83,11 @@ const ALL_TOOLBAR_ITEMS: ToolbarItem[] = [
  * empty string that consumers might mistake for an empty document.
  */
 function readMarkdown(editor: unknown): string | undefined {
-  const storage = (editor as { storage?: Record<string, unknown> } | null)?.storage?.[
-    'markdown'
-  ] as { getMarkdown?: () => string } | undefined;
-  return typeof storage?.getMarkdown === 'function' ? storage.getMarkdown() : undefined;
+  const storage = (editor as { storage?: Record<string, unknown> } | null)
+    ?.storage?.["markdown"] as { getMarkdown?: () => string } | undefined;
+  return typeof storage?.getMarkdown === "function"
+    ? storage.getMarkdown()
+    : undefined;
 }
 
 function createSendOnEnterExtension(onSend: () => void) {
@@ -62,7 +96,11 @@ function createSendOnEnterExtension(onSend: () => void) {
     addKeyboardShortcuts() {
       return {
         Enter: ({ editor }) => {
-          if (editor.isActive("bulletList") || editor.isActive("orderedList") || editor.isActive("codeBlock")) {
+          if (
+            editor.isActive("bulletList") ||
+            editor.isActive("orderedList") ||
+            editor.isActive("codeBlock")
+          ) {
             return false;
           }
           onSend();
@@ -131,7 +169,9 @@ export interface RichInputBaseProps {
    * `onKeyDown({ event })` via `forwardRef` so the suggestion plugin
    * can forward arrow / Enter keys.
    */
-  renderMentionList?: ComponentType<MentionListProps & React.RefAttributes<MentionListHandle>>;
+  renderMentionList?: ComponentType<
+    MentionListProps & React.RefAttributes<MentionListHandle>
+  >;
 
   /**
    * Override the mention serialization format. Defaults to slingshot's
@@ -201,28 +241,44 @@ export interface RichInputBaseHandle {
  * />
  * ```
  */
-export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>(function RichInputBase({
-  id,
-  placeholder,
-  defaultValue,
-  value,
-  readonly = false,
-  features = ["bold", "italic", "underline", "strike", "code", "code-block", "link", "bullet-list", "ordered-list"],
-  sendOnEnter = true,
-  maxLength,
-  minHeight,
-  maxHeight,
-  showSendButton = false,
-  emitMarkdown = false,
-  onMentionSearch,
-  renderMentionList,
-  serializeMention,
-  onSend,
-  onChange,
-  className,
-  style,
-  slots,
-}: RichInputBaseProps, ref) {
+export const RichInputBase = forwardRef<
+  RichInputBaseHandle,
+  RichInputBaseProps
+>(function RichInputBase(
+  {
+    id,
+    placeholder,
+    defaultValue,
+    value,
+    readonly = false,
+    features = [
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "code",
+      "code-block",
+      "link",
+      "bullet-list",
+      "ordered-list",
+    ],
+    sendOnEnter = true,
+    maxLength,
+    minHeight,
+    maxHeight,
+    showSendButton = false,
+    emitMarkdown = false,
+    onMentionSearch,
+    renderMentionList,
+    serializeMention,
+    onSend,
+    onChange,
+    className,
+    style,
+    slots,
+  }: RichInputBaseProps,
+  ref,
+) {
   const [charCount, setCharCount] = useState(0);
   /**
    * Edge affordance for the formatting strip.
@@ -234,7 +290,10 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
    * would dim a control for no reason.
    */
   const formattingScrollRef = useRef<HTMLDivElement | null>(null);
-  const [stripEdges, setStripEdges] = useState<{ start: boolean; end: boolean }>({
+  const [stripEdges, setStripEdges] = useState<{
+    start: boolean;
+    end: boolean;
+  }>({
     start: false,
     end: false,
   });
@@ -290,16 +349,23 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       hardBreak: {},
       underline: featuresSet.has("underline") ? {} : false,
       link: featuresSet.has("link")
-        ? { openOnClick: false, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }
+        ? {
+            openOnClick: false,
+            HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
+          }
         : false,
     }),
     // Markdown extension: registered when `emitMarkdown` is on. Provides
     // `editor.storage.markdown.getMarkdown()` and a richer markdown
     // round-trip on `setContent`. Costs ~70 KB raw (markdown-it +
     // prosemirror-markdown) so we leave it off by default.
-    ...(emitMarkdown ? [Markdown.configure({ html: false, transformPastedText: true })] : []),
+    ...(emitMarkdown
+      ? [Markdown.configure({ html: false, transformPastedText: true })]
+      : []),
     ...(mentionExtension ? [mentionExtension] : []),
-    ...(sendOnEnter && onSend ? [createSendOnEnterExtension(() => sendRef.current())] : []),
+    ...(sendOnEnter && onSend
+      ? [createSendOnEnterExtension(() => sendRef.current())]
+      : []),
   ] as unknown as NonNullable<Parameters<typeof useEditor>[0]["extensions"]>;
 
   const editor = useEditor({
@@ -318,7 +384,11 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       const text = instance.getText();
       setCharCount(text.length);
       const markdown = emitMarkdown ? readMarkdown(instance) : undefined;
-      onChange?.({ html, text, ...(markdown !== undefined ? { markdown } : {}) });
+      onChange?.({
+        html,
+        text,
+        ...(markdown !== undefined ? { markdown } : {}),
+      });
     },
   });
 
@@ -374,7 +444,9 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
 
   sendRef.current = handleSend;
 
-  const toolbarItems = ALL_TOOLBAR_ITEMS.filter((item) => featuresSet.has(item.name));
+  const toolbarItems = ALL_TOOLBAR_ITEMS.filter((item) =>
+    featuresSet.has(item.name),
+  );
   const isOverLimit = maxLength !== undefined && charCount > maxLength;
   const isEmpty = charCount === 0;
 
@@ -391,7 +463,11 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       editor
         .chain()
         .focus()
-        .insertContent({ type: "text", text: url, marks: [{ type: "link", attrs: { href: url } }] })
+        .insertContent({
+          type: "text",
+          text: url,
+          marks: [{ type: "link", attrs: { href: url } }],
+        })
         // Drop the link mark so text typed AFTER the URL isn't also linked.
         .unsetMark("link")
         .insertContent(" ")
@@ -409,27 +485,50 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       } else {
         setLinkUrl("");
         setShowLinkInput(true);
-        linkFocusTimerRef.current = setTimeout(() => linkInputRef.current?.focus(), 10);
+        linkFocusTimerRef.current = setTimeout(
+          () => linkInputRef.current?.focus(),
+          10,
+        );
       }
       return;
     }
     switch (item.action) {
-      case "toggleBold": editor.chain().focus().toggleBold().run(); break;
-      case "toggleItalic": editor.chain().focus().toggleItalic().run(); break;
-      case "toggleUnderline": editor.chain().focus().toggleUnderline().run(); break;
-      case "toggleStrike": editor.chain().focus().toggleStrike().run(); break;
-      case "toggleCode": editor.chain().focus().toggleCode().run(); break;
-      case "toggleCodeBlock": editor.chain().focus().toggleCodeBlock().run(); break;
-      case "toggleBulletList": editor.chain().focus().toggleBulletList().run(); break;
-      case "toggleOrderedList": editor.chain().focus().toggleOrderedList().run(); break;
+      case "toggleBold":
+        editor.chain().focus().toggleBold().run();
+        break;
+      case "toggleItalic":
+        editor.chain().focus().toggleItalic().run();
+        break;
+      case "toggleUnderline":
+        editor.chain().focus().toggleUnderline().run();
+        break;
+      case "toggleStrike":
+        editor.chain().focus().toggleStrike().run();
+        break;
+      case "toggleCode":
+        editor.chain().focus().toggleCode().run();
+        break;
+      case "toggleCodeBlock":
+        editor.chain().focus().toggleCodeBlock().run();
+        break;
+      case "toggleBulletList":
+        editor.chain().focus().toggleBulletList().run();
+        break;
+      case "toggleOrderedList":
+        editor.chain().focus().toggleOrderedList().run();
+        break;
     }
   };
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
     implementationBase: {
-      display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "md",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      borderRadius: "md",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       bg: "var(--sn-color-card, #ffffff)",
     },
     componentSurface: className || style ? { className, style } : undefined,
@@ -437,43 +536,129 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
   });
   const editorAreaSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-editorArea`,
-    implementationBase: { position: "relative", flex: "1", overflow: "auto", style: { minHeight: minHeight ?? "2.5rem", maxHeight: maxHeight ?? "12rem" } },
+    implementationBase: {
+      position: "relative",
+      flex: "1",
+      overflow: "auto",
+      style: {
+        minHeight: minHeight ?? "2.5rem",
+        maxHeight: maxHeight ?? "12rem",
+      },
+    },
     componentSurface: slots?.editorArea,
   });
   const editorContentSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-editorContent`,
-    implementationBase: { paddingY: "sm", paddingX: "md", fontSize: "sm", color: "var(--sn-color-foreground, #111827)", style: { lineHeight: "var(--sn-leading-relaxed, 1.625)" } },
+    implementationBase: {
+      paddingY: "sm",
+      paddingX: "md",
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #111827)",
+      style: { lineHeight: "var(--sn-leading-relaxed, 1.625)" },
+    },
     componentSurface: slots?.editorContent,
   });
   const placeholderSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-placeholder`,
-    implementationBase: { fontSize: "sm", color: "var(--sn-color-muted-foreground, #9ca3af)", style: { position: "absolute", top: "var(--sn-spacing-sm, 0.5rem)", left: "var(--sn-spacing-md, 1rem)", pointerEvents: "none" } },
+    implementationBase: {
+      fontSize: "sm",
+      color: "var(--sn-color-muted-foreground, #9ca3af)",
+      style: {
+        position: "absolute",
+        top: "var(--sn-spacing-sm, 0.5rem)",
+        left: "var(--sn-spacing-md, 1rem)",
+        pointerEvents: "none",
+      },
+    },
     componentSurface: slots?.placeholder,
   });
   const linkBarSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-linkBar`,
-    implementationBase: { display: "flex", alignItems: "center", gap: "xs", paddingY: "xs", paddingX: "sm", bg: "var(--sn-color-secondary, #f9fafb)", style: { borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" } },
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "xs",
+      paddingY: "xs",
+      paddingX: "sm",
+      bg: "var(--sn-color-secondary, #f9fafb)",
+      style: {
+        borderTop:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
     componentSurface: slots?.linkBar,
   });
-  const linkIconSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-linkIcon`, implementationBase: { color: "var(--sn-color-muted-foreground, #6b7280)" }, componentSurface: slots?.linkIcon });
+  const linkIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-linkIcon`,
+    implementationBase: { color: "var(--sn-color-muted-foreground, #6b7280)" },
+    componentSurface: slots?.linkIcon,
+  });
   const linkInputSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-linkInput`,
-    implementationBase: { flex: "1", fontSize: "sm", color: "var(--sn-color-foreground, #111827)", focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" }, style: { border: "none", outline: "none", backgroundColor: "transparent", padding: "var(--sn-spacing-xs, 0.25rem)", minWidth: 0 } },
+    implementationBase: {
+      flex: "1",
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #111827)",
+      focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      style: {
+        border: "none",
+        outline: "none",
+        backgroundColor: "transparent",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+        minWidth: 0,
+      },
+    },
     componentSurface: slots?.linkInput,
   });
   const linkCloseSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-linkCloseButton`,
-    implementationBase: { display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--sn-color-muted-foreground, #6b7280)", hover: { bg: "var(--sn-color-accent, #f3f4f6)" }, focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" }, style: { border: "none", background: "none", padding: "var(--sn-spacing-xs, 0.25rem)" } },
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      hover: { bg: "var(--sn-color-accent, #f3f4f6)" },
+      focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      style: {
+        border: "none",
+        background: "none",
+        padding: "var(--sn-spacing-xs, 0.25rem)",
+      },
+    },
     componentSurface: slots?.linkCloseButton,
   });
   const toolbarSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-toolbar`,
-    implementationBase: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: "sm", paddingY: "xs", paddingX: "sm", style: { borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" } },
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: "sm",
+      paddingY: "xs",
+      paddingX: "sm",
+      style: {
+        borderTop:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
     componentSurface: slots?.toolbar,
   });
   // Single tight row that scrolls horizontally if the buttons overflow (narrow
   // mobile) instead of wrapping to an ugly second row or getting spread out.
-  const formattingGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-formattingGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "2xs", flexWrap: "nowrap", flex: "1", minWidth: "0", style: { overflowX: "auto", scrollbarWidth: "none" } }, componentSurface: slots?.formattingGroup });
+  const formattingGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-formattingGroup`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "2xs",
+      flexWrap: "nowrap",
+      flex: "1",
+      minWidth: "0",
+      style: { overflowX: "auto", scrollbarWidth: "none" },
+    },
+    componentSurface: slots?.formattingGroup,
+  });
   useEffect(() => {
     const el = formattingScrollRef.current;
     if (!el) return;
@@ -489,7 +674,9 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
     measure();
     el.addEventListener("scroll", measure, { passive: true });
     const observer =
-      typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(measure)
+        : null;
     observer?.observe(el);
     return () => {
       el.removeEventListener("scroll", measure);
@@ -508,21 +695,40 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
       ? `linear-gradient(to right, ${stripEdges.start ? "transparent 0, black 16px" : "black 0"}, ${stripEdges.end ? "black calc(100% - 16px), transparent 100%" : "black 100%"})`
       : undefined;
 
-  const statusGroupSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-statusGroup`, implementationBase: { display: "flex", alignItems: "center", gap: "sm" }, componentSurface: slots?.statusGroup });
+  const statusGroupSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-statusGroup`,
+    implementationBase: { display: "flex", alignItems: "center", gap: "sm" },
+    componentSurface: slots?.statusGroup,
+  });
   const counterSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-counter`,
-    implementationBase: { fontSize: "xs", color: isOverLimit ? "var(--sn-color-destructive, #ef4444)" : "var(--sn-color-muted-foreground, #9ca3af)" },
+    implementationBase: {
+      fontSize: "xs",
+      color: isOverLimit
+        ? "var(--sn-color-destructive, #ef4444)"
+        : "var(--sn-color-muted-foreground, #9ca3af)",
+    },
     componentSurface: slots?.counter,
     activeStates: isOverLimit ? ["invalid"] : [],
   });
   const sendButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-sendButton`,
     implementationBase: {
-      display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "full",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "full",
       cursor: readonly || !charCount || isOverLimit ? "not-allowed" : "pointer",
-      color: charCount > 0 && !isOverLimit ? "var(--sn-color-primary-foreground, #ffffff)" : "var(--sn-color-muted-foreground, #9ca3af)",
-      bg: charCount > 0 && !isOverLimit ? "var(--sn-color-primary, #2563eb)" : "transparent",
-      hover: readonly || !charCount || isOverLimit ? undefined : { opacity: 0.9 },
+      color:
+        charCount > 0 && !isOverLimit
+          ? "var(--sn-color-primary-foreground, #ffffff)"
+          : "var(--sn-color-muted-foreground, #9ca3af)",
+      bg:
+        charCount > 0 && !isOverLimit
+          ? "var(--sn-color-primary, #2563eb)"
+          : "transparent",
+      hover:
+        readonly || !charCount || isOverLimit ? undefined : { opacity: 0.9 },
       focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
       style: { width: "2rem", height: "2rem", padding: 0, border: "none" },
     },
@@ -531,29 +737,98 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
 
   return (
     <>
-      <div data-snapshot-component="rich-input" data-testid="rich-input" data-snapshot-id={rootId} className={rootSurface.className} style={rootSurface.style}>
-        <div data-snapshot-id={`${rootId}-editorArea`} className={editorAreaSurface.className} style={editorAreaSurface.style}>
+      <div
+        data-snapshot-component="rich-input"
+        data-testid="rich-input"
+        data-snapshot-id={rootId}
+        className={rootSurface.className}
+        style={rootSurface.style}
+      >
+        <div
+          data-snapshot-id={`${rootId}-editorArea`}
+          className={editorAreaSurface.className}
+          style={editorAreaSurface.style}
+        >
           {placeholder && isEmpty ? (
-            <div data-snapshot-id={`${rootId}-placeholder`} className={placeholderSurface.className} style={placeholderSurface.style}>{placeholder}</div>
+            <div
+              data-snapshot-id={`${rootId}-placeholder`}
+              className={placeholderSurface.className}
+              style={placeholderSurface.style}
+            >
+              {placeholder}
+            </div>
           ) : null}
-          <EditorContent editor={editor} data-snapshot-id={`${rootId}-editorContent`} style={editorContentSurface.style} className={editorContentSurface.className} data-testid="rich-input-editor" />
+          <EditorContent
+            editor={editor}
+            data-snapshot-id={`${rootId}-editorContent`}
+            style={editorContentSurface.style}
+            className={editorContentSurface.className}
+            data-testid="rich-input-editor"
+          />
         </div>
 
         {showLinkInput ? (
-          <div data-snapshot-id={`${rootId}-linkBar`} className={linkBarSurface.className} style={linkBarSurface.style}>
-            <span data-snapshot-id={`${rootId}-linkIcon`} className={linkIconSurface.className} style={linkIconSurface.style}><Icon name="link" size={14} /></span>
-            <InputControl inputRef={linkInputRef} type="url" value={linkUrl} onChangeText={setLinkUrl} onKeyDown={(e) => {
-              if (e.key === "Enter" && linkUrl.trim()) { e.preventDefault(); applyLink(linkUrl); setShowLinkInput(false); setLinkUrl(""); }
-              if (e.key === "Escape") { setShowLinkInput(false); setLinkUrl(""); editor?.chain().focus().run(); }
-            }} placeholder="Paste URL and press Enter..." surfaceId={`${rootId}-linkInput`} surfaceConfig={linkInputSurface.resolvedConfigForWrapper} testId="rich-input-link-input" />
-            <ButtonControl type="button" ariaLabel="Close link input" onClick={() => { applyLink(linkUrl); setShowLinkInput(false); setLinkUrl(""); }} surfaceId={`${rootId}-linkCloseButton`} surfaceConfig={linkCloseSurface.resolvedConfigForWrapper} variant="ghost" size="icon">
+          <div
+            data-snapshot-id={`${rootId}-linkBar`}
+            className={linkBarSurface.className}
+            style={linkBarSurface.style}
+          >
+            <span
+              data-snapshot-id={`${rootId}-linkIcon`}
+              className={linkIconSurface.className}
+              style={linkIconSurface.style}
+            >
+              <Icon name="link" size={14} />
+            </span>
+            <InputControl
+              inputRef={linkInputRef}
+              type="url"
+              value={linkUrl}
+              onChangeText={setLinkUrl}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && linkUrl.trim()) {
+                  e.preventDefault();
+                  applyLink(linkUrl);
+                  setShowLinkInput(false);
+                  setLinkUrl("");
+                }
+                if (e.key === "Escape") {
+                  setShowLinkInput(false);
+                  setLinkUrl("");
+                  editor?.chain().focus().run();
+                }
+              }}
+              placeholder="Paste URL and press Enter..."
+              surfaceId={`${rootId}-linkInput`}
+              surfaceConfig={linkInputSurface.resolvedConfigForWrapper}
+              testId="rich-input-link-input"
+            />
+            <ButtonControl
+              type="button"
+              ariaLabel="Close link input"
+              onClick={() => {
+                applyLink(linkUrl);
+                setShowLinkInput(false);
+                setLinkUrl("");
+              }}
+              surfaceId={`${rootId}-linkCloseButton`}
+              surfaceConfig={linkCloseSurface.resolvedConfigForWrapper}
+              variant="ghost"
+              size="icon"
+            >
               <Icon name="x" size={14} />
             </ButtonControl>
           </div>
         ) : null}
 
-        {(toolbarItems.length > 0 || showSendButton) ? (
-          <div role="toolbar" data-testid="rich-input-toolbar" data-snapshot-id={`${rootId}-toolbar`} className={toolbarSurface.className} style={toolbarSurface.style}>
+        {toolbarItems.length > 0 || showSendButton ? (
+          <div
+            role="toolbar"
+            data-testid="rich-input-toolbar"
+            data-snapshot-id={`${rootId}-toolbar`}
+            className={toolbarSurface.className}
+            style={toolbarSurface.style}
+          >
             <div
               ref={formattingScrollRef}
               data-snapshot-id={`${rootId}-formattingGroup`}
@@ -562,41 +837,107 @@ export const RichInputBase = forwardRef<RichInputBaseHandle, RichInputBaseProps>
               className={formattingGroupSurface.className}
               style={
                 stripMask
-                  ? { ...formattingGroupSurface.style, maskImage: stripMask, WebkitMaskImage: stripMask }
+                  ? {
+                      ...formattingGroupSurface.style,
+                      maskImage: stripMask,
+                      WebkitMaskImage: stripMask,
+                    }
                   : formattingGroupSurface.style
               }
             >
               {toolbarItems.map((item, index) => {
-                const active = editor?.isActive(item.name === "bullet-list" ? "bulletList" : item.name === "ordered-list" ? "orderedList" : item.name === "code-block" ? "codeBlock" : item.name) ?? false;
+                const active =
+                  editor?.isActive(
+                    item.name === "bullet-list"
+                      ? "bulletList"
+                      : item.name === "ordered-list"
+                        ? "orderedList"
+                        : item.name === "code-block"
+                          ? "codeBlock"
+                          : item.name,
+                  ) ?? false;
                 const buttonSurface = resolveSurfacePresentation({
                   surfaceId: `${rootId}-toolbarButton-${index}`,
                   implementationBase: {
-                    display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "sm",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "sm",
                     cursor: readonly ? "not-allowed" : "pointer",
-                    color: active ? "var(--sn-color-primary, #2563eb)" : "var(--sn-color-muted-foreground, #9ca3af)",
-                    bg: active ? "var(--sn-color-accent, #eff6ff)" : "transparent",
-                    hover: readonly ? undefined : { bg: active ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 10%, transparent)" : "var(--sn-color-accent, #f3f4f6)", color: "var(--sn-color-foreground, #111827)" },
-                    focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
-                    style: { width: "2rem", height: "2rem", padding: 0, border: "none", opacity: readonly ? 0.5 : 1 },
+                    color: active
+                      ? "var(--sn-color-primary, #2563eb)"
+                      : "var(--sn-color-muted-foreground, #9ca3af)",
+                    bg: active
+                      ? "var(--sn-color-accent, #eff6ff)"
+                      : "transparent",
+                    hover: readonly
+                      ? undefined
+                      : {
+                          bg: active
+                            ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 10%, transparent)"
+                            : "var(--sn-color-accent, #f3f4f6)",
+                          color: "var(--sn-color-foreground, #111827)",
+                        },
+                    focus: {
+                      ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+                    },
+                    style: {
+                      width: "2rem",
+                      height: "2rem",
+                      padding: 0,
+                      border: "none",
+                      opacity: readonly ? 0.5 : 1,
+                    },
                   },
                   componentSurface: slots?.toolbarButton,
                   activeStates: active ? ["active"] : [],
                 });
                 return (
                   <div key={item.name}>
-                    <ButtonControl type="button" onClick={() => handleToolbarAction(item)} title={item.label} ariaLabel={item.label} disabled={readonly} surfaceId={`${rootId}-toolbarButton-${index}`} surfaceConfig={buttonSurface.resolvedConfigForWrapper} variant="ghost" size="icon" activeStates={active ? ["active"] : []}>
+                    <ButtonControl
+                      type="button"
+                      onClick={() => handleToolbarAction(item)}
+                      title={item.label}
+                      ariaLabel={item.label}
+                      disabled={readonly}
+                      surfaceId={`${rootId}-toolbarButton-${index}`}
+                      surfaceConfig={buttonSurface.resolvedConfigForWrapper}
+                      variant="ghost"
+                      size="icon"
+                      activeStates={active ? ["active"] : []}
+                    >
                       <Icon name={item.icon} size={16} />
                     </ButtonControl>
                   </div>
                 );
               })}
             </div>
-            <div data-snapshot-id={`${rootId}-statusGroup`} className={statusGroupSurface.className} style={statusGroupSurface.style}>
+            <div
+              data-snapshot-id={`${rootId}-statusGroup`}
+              className={statusGroupSurface.className}
+              style={statusGroupSurface.style}
+            >
               {maxLength !== undefined ? (
-                <span data-snapshot-id={`${rootId}-counter`} className={counterSurface.className} style={counterSurface.style}>{charCount}/{maxLength}</span>
+                <span
+                  data-snapshot-id={`${rootId}-counter`}
+                  className={counterSurface.className}
+                  style={counterSurface.style}
+                >
+                  {charCount}/{maxLength}
+                </span>
               ) : null}
               {showSendButton ? (
-                <ButtonControl type="button" onClick={handleSend} disabled={readonly || !charCount || isOverLimit} ariaLabel="Send message" surfaceId={`${rootId}-sendButton`} surfaceConfig={sendButtonSurface.resolvedConfigForWrapper} variant="ghost" size="icon" testId="rich-input-send">
+                <ButtonControl
+                  type="button"
+                  onClick={handleSend}
+                  disabled={readonly || !charCount || isOverLimit}
+                  ariaLabel="Send message"
+                  surfaceId={`${rootId}-sendButton`}
+                  surfaceConfig={sendButtonSurface.resolvedConfigForWrapper}
+                  variant="ghost"
+                  size="icon"
+                  testId="rich-input-send"
+                >
                   <Icon name="send" size={16} />
                 </ButtonControl>
               ) : null}

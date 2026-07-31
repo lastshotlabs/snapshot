@@ -53,9 +53,18 @@ export function LoginPage() {
   }
 
   return (
-    <form onSubmit={(event) => { event.preventDefault(); void submit(); }}>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        void submit();
+      }}
+    >
       <InputControl value={email} onChangeText={setEmail} type="email" />
-      <InputControl value={password} onChangeText={setPassword} type="password" />
+      <InputControl
+        value={password}
+        onChangeText={setPassword}
+        type="password"
+      />
       <ButtonBase type="submit" label="Sign in" disabled={login.isPending} />
     </form>
   );

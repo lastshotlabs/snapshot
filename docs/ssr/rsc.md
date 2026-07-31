@@ -14,15 +14,12 @@ RSC in Snapshot is opt-in. Enable it by setting `rsc: true` in `snapshotSsr()`.
 
 ```ts
 // vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { snapshotSsr } from '@lastshotlabs/snapshot/vite';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { snapshotSsr } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    snapshotSsr({ rsc: true }),
-  ],
+  plugins: [react(), snapshotSsr({ rsc: true })],
 });
 ```
 
@@ -52,17 +49,13 @@ Add `'use client'` as the first line of any component that:
 
 ```tsx
 // src/components/LikeButton.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export function LikeButton({ initialCount }: { initialCount: number }) {
   const [count, setCount] = useState(initialCount);
-  return (
-    <button onClick={() => setCount(c => c + 1)}>
-      ♥ {count}
-    </button>
-  );
+  return <button onClick={() => setCount((c) => c + 1)}>♥ {count}</button>;
 }
 ```
 
@@ -70,8 +63,10 @@ In the **server build**, this file is replaced with a stub:
 
 ```ts
 // Auto-generated RSC server stub — do not edit.
-import { createClientReference } from 'react-server-dom-webpack/server';
-export const LikeButton = createClientReference('src/components/LikeButton.tsx#LikeButton');
+import { createClientReference } from "react-server-dom-webpack/server";
+export const LikeButton = createClientReference(
+  "src/components/LikeButton.tsx#LikeButton",
+);
 ```
 
 In the **client build**, the file ships unchanged. The browser receives the real component code and hydrates it.
@@ -99,11 +94,11 @@ After `vite build --ssr`, Snapshot writes `rsc-manifest.json` to your server out
 
 ```ts
 // server/middleware/ssr.ts
-import { readFileSync } from 'node:fs';
-import type { RscManifest } from '@lastshotlabs/snapshot/ssr';
+import { readFileSync } from "node:fs";
+import type { RscManifest } from "@lastshotlabs/snapshot/ssr";
 
 const rscManifest: RscManifest = JSON.parse(
-  readFileSync('./dist/server/rsc-manifest.json', 'utf-8'),
+  readFileSync("./dist/server/rsc-manifest.json", "utf-8"),
 );
 ```
 
@@ -114,8 +109,8 @@ const rscManifest: RscManifest = JSON.parse(
 Pass the loaded manifest to `renderPage()` via the `rscOptions` parameter:
 
 ```ts
-import { renderPage } from '@lastshotlabs/snapshot/ssr';
-import type { RscOptions } from '@lastshotlabs/snapshot/ssr';
+import { renderPage } from "@lastshotlabs/snapshot/ssr";
+import type { RscOptions } from "@lastshotlabs/snapshot/ssr";
 
 const rscOptions: RscOptions = { manifest: rscManifest };
 
@@ -139,7 +134,7 @@ Server components never appear in the browser JS bundle. A component like this:
 // src/components/PostBody.tsx
 // No 'use client' directive — this is a server component.
 
-import { db } from '../db';
+import { db } from "../db";
 
 export async function PostBody({ slug }: { slug: string }) {
   const post = await db.posts.findBySlug(slug);

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useMemo } from "react";
 import type { SlotOverrides } from "../../_base/types";

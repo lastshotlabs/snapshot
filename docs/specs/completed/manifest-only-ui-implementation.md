@@ -27,6 +27,7 @@
 ---
 
 <a id="a-phase-0"></a>
+
 ## A. Phase 0 — Foundation Fixes (expanded)
 
 ### A.1 Nav icon rendering fix
@@ -34,25 +35,32 @@
 **File:** `src/ui/components/layout/nav/component.tsx`
 
 **Current code (lines 76-80):**
+
 ```tsx
-{item.icon && (
-  <span data-nav-icon="" aria-hidden="true">
-    {item.icon}
-  </span>
-)}
+{
+  item.icon && (
+    <span data-nav-icon="" aria-hidden="true">
+      {item.icon}
+    </span>
+  );
+}
 ```
 
 **Replacement:**
+
 ```tsx
-{item.icon && (
-  <span data-nav-icon="" aria-hidden="true">
-    <Icon name={item.icon} size={16} />
-  </span>
-)}
+{
+  item.icon && (
+    <span data-nav-icon="" aria-hidden="true">
+      <Icon name={item.icon} size={16} />
+    </span>
+  );
+}
 ```
 
 **Import to add:** The `Icon` component is already imported in the same file (used at line 276 for
 user menu items). Verify import exists; if not, add:
+
 ```tsx
 import { Icon } from "../../icons/icon";
 ```
@@ -65,6 +73,7 @@ import { Icon } from "../../icons/icon";
 
 **Current behavior:** The `useNav` hook at `src/ui/components/layout/nav/hook.ts:97` accepts
 `pathname: string` as a parameter. Active state is computed as:
+
 ```ts
 const isActive = item.path
   ? pathname === item.path || pathname.startsWith(item.path + "/")
@@ -78,25 +87,27 @@ which is an SSR bug.
 **The fix has two parts:**
 
 1. **Remove `window.location.pathname` from render body.** Replace with `useState` + `useEffect`:
+
 ```tsx
-const [currentPath, setCurrentPath] = useState(pathname ?? '/');
+const [currentPath, setCurrentPath] = useState(pathname ?? "/");
 useEffect(() => {
   if (!pathname) {
     setCurrentPath(window.location.pathname);
     const handler = () => setCurrentPath(window.location.pathname);
-    window.addEventListener('popstate', handler);
-    return () => window.removeEventListener('popstate', handler);
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
   }
 }, [pathname]);
 ```
 
 2. **In `ManifestApp`, pass pathname to Nav.** Wherever the nav is rendered inside the manifest
-router, pass the current route path. The manifest router uses `history.pushState` (see
-executor.ts:327-345) and dispatches `popstate` — the above listener catches it.
+   router, pass the current route path. The manifest router uses `history.pushState` (see
+   executor.ts:327-345) and dispatches `popstate` — the above listener catches it.
 
 ### A.3 Nav defaults when minimally configured
 
 **Current behavior with minimal config (`{ type: "nav", items: [...] }`):**
+
 - No logo section renders (config.logo is undefined)
 - User menu renders if user is authenticated BUT has no menu items
 - No header/brand visible
@@ -109,9 +120,11 @@ manifest's `app.title`:
 // Inside Nav component, access manifest context:
 const manifest = useManifestRuntime(); // already available via context
 
-const effectiveLogo = config.logo ?? (manifest?.app?.title
-  ? { text: manifest.app.title, path: manifest.app.home ?? '/' }
-  : undefined);
+const effectiveLogo =
+  config.logo ??
+  (manifest?.app?.title
+    ? { text: manifest.app.title, path: manifest.app.home ?? "/" }
+    : undefined);
 ```
 
 Then render `effectiveLogo` instead of `config.logo` at lines 329-378. This ensures a minimal
@@ -123,6 +136,7 @@ avatar + name by default when user is authenticated.
 ### A.4 Token injection — synchronous rendering
 
 **Current code in `app.tsx:1582-1587`:**
+
 ```tsx
 useLayoutEffect(() => {
   if (compiledManifest.theme) {
@@ -133,6 +147,7 @@ useLayoutEffect(() => {
 ```
 
 **Replacement:** Move to a `useMemo` + inline `<style>` tag:
+
 ```tsx
 // After compiledManifest is computed:
 const tokenCss = useMemo(
@@ -142,12 +157,9 @@ const tokenCss = useMemo(
 
 // Inside the JSX return, as the FIRST child:
 <>
-  <style
-    id="snapshot-tokens"
-    dangerouslySetInnerHTML={{ __html: tokenCss }}
-  />
+  <style id="snapshot-tokens" dangerouslySetInnerHTML={{ __html: tokenCss }} />
   {/* rest of the provider tree */}
-</>
+</>;
 ```
 
 **Why `resolveTokens({})` not `resolveTokens(undefined)`:** `resolveTokens` with an empty
@@ -163,6 +175,7 @@ value even if the manifest omits `theme` entirely.
 `bootBuiltins()` function.
 
 **Create `src/ui/manifest/boot-builtins.ts`:**
+
 ```ts
 import { registerBuiltInComponents } from "../components/register";
 import { registerBuiltInFlavors } from "../tokens/flavors";
@@ -189,6 +202,7 @@ export function resetBootBuiltins(): void {
 
 **Call site:** First statement of `ManifestApp` in `app.tsx`, before the `useMemo` that
 calls `compileManifest`:
+
 ```tsx
 export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
   bootBuiltins(); // MUST be before compileManifest
@@ -200,6 +214,7 @@ export function ManifestApp({ manifest, apiUrl }: ManifestAppProps) {
 ---
 
 <a id="b-phase-2-auth-screens"></a>
+
 ## B. Phase 2 — All 7 Default Auth Screen Fragments
 
 These are the complete `content` arrays for every auth screen. Each screen uses only
@@ -213,7 +228,10 @@ public component types that exist (or are added in Phase 4). Every string is an 
   "id": "login",
   "path": "/login",
   "layouts": [{ "type": "centered" }],
-  "guard": { "authenticated": false, "redirectTo": "{auth.redirects.afterLogin}" },
+  "guard": {
+    "authenticated": false,
+    "redirectTo": "{auth.redirects.afterLogin}"
+  },
   "title": "{i18n:auth.login.title}",
   "content": [
     {
@@ -222,17 +240,31 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "align": "stretch",
       "maxWidth": "sm",
       "children": [
-        { "type": "heading", "text": "{auth.branding.title}", "level": 1, "align": "center",
-          "fallback": "{app.title}" },
-        { "type": "text", "value": "{i18n:auth.login.description}", "variant": "muted",
-          "align": "center" },
+        {
+          "type": "heading",
+          "text": "{auth.branding.title}",
+          "level": 1,
+          "align": "center",
+          "fallback": "{app.title}"
+        },
+        {
+          "type": "text",
+          "value": "{i18n:auth.login.description}",
+          "variant": "muted",
+          "align": "center"
+        },
         {
           "type": "oauth-buttons",
           "visibleWhen": "defined(auth.providers)",
-          "onSuccess": [{ "type": "navigate", "to": "{auth.redirects.afterLogin}" }]
+          "onSuccess": [
+            { "type": "navigate", "to": "{auth.redirects.afterLogin}" }
+          ]
         },
-        { "type": "divider", "label": "{i18n:common.or}",
-          "visibleWhen": "defined(auth.providers)" },
+        {
+          "type": "divider",
+          "label": "{i18n:common.or}",
+          "visibleWhen": "defined(auth.providers)"
+        },
         {
           "type": "auto-form",
           "id": "login-form",
@@ -264,15 +296,26 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "submitLoadingLabel": "{i18n:auth.action.sign_in.loading}",
           "on": {
             "success": [
-              { "type": "api", "method": "GET", "endpoint": "{auth.contract.endpoints.me}",
+              {
+                "type": "api",
+                "method": "GET",
+                "endpoint": "{auth.contract.endpoints.me}",
                 "onSuccess": [
-                  { "type": "set-value", "target": "global.user", "value": "{context.result}" },
+                  {
+                    "type": "set-value",
+                    "target": "global.user",
+                    "value": "{context.result}"
+                  },
                   { "type": "navigate", "to": "{auth.redirects.afterLogin}" }
                 ]
               }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
@@ -281,12 +324,20 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "label": "{i18n:auth.label.passkey_button}",
           "visibleWhen": "defined(auth.passkey)",
           "onSuccess": [
-            { "type": "set-value", "target": "global.user", "value": "{context.result}" },
+            {
+              "type": "set-value",
+              "target": "global.user",
+              "value": "{context.result}"
+            },
             { "type": "navigate", "to": "{auth.redirects.afterLogin}" }
           ]
         },
-        { "type": "link", "to": "/register", "text": "{i18n:auth.link.create_account}",
-          "align": "center" }
+        {
+          "type": "link",
+          "to": "/register",
+          "text": "{i18n:auth.link.create_account}",
+          "align": "center"
+        }
       ]
     }
   ]
@@ -309,17 +360,31 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "align": "stretch",
       "maxWidth": "sm",
       "children": [
-        { "type": "heading", "text": "{auth.branding.title}", "level": 1, "align": "center",
-          "fallback": "{app.title}" },
-        { "type": "text", "value": "{i18n:auth.register.description}", "variant": "muted",
-          "align": "center" },
+        {
+          "type": "heading",
+          "text": "{auth.branding.title}",
+          "level": 1,
+          "align": "center",
+          "fallback": "{app.title}"
+        },
+        {
+          "type": "text",
+          "value": "{i18n:auth.register.description}",
+          "variant": "muted",
+          "align": "center"
+        },
         {
           "type": "oauth-buttons",
           "visibleWhen": "defined(auth.providers)",
-          "onSuccess": [{ "type": "navigate", "to": "{auth.redirects.afterRegister}" }]
+          "onSuccess": [
+            { "type": "navigate", "to": "{auth.redirects.afterRegister}" }
+          ]
         },
-        { "type": "divider", "label": "{i18n:common.or}",
-          "visibleWhen": "defined(auth.providers)" },
+        {
+          "type": "divider",
+          "label": "{i18n:common.or}",
+          "visibleWhen": "defined(auth.providers)"
+        },
         {
           "type": "auto-form",
           "id": "register-form",
@@ -354,20 +419,35 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "submitLoadingLabel": "{i18n:auth.action.create_account.loading}",
           "on": {
             "success": [
-              { "type": "api", "method": "GET", "endpoint": "{auth.contract.endpoints.me}",
+              {
+                "type": "api",
+                "method": "GET",
+                "endpoint": "{auth.contract.endpoints.me}",
                 "onSuccess": [
-                  { "type": "set-value", "target": "global.user", "value": "{context.result}" },
+                  {
+                    "type": "set-value",
+                    "target": "global.user",
+                    "value": "{context.result}"
+                  },
                   { "type": "navigate", "to": "{auth.redirects.afterRegister}" }
                 ]
               }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
-        { "type": "link", "to": "/login", "text": "{i18n:auth.link.sign_in}",
-          "align": "center" }
+        {
+          "type": "link",
+          "to": "/login",
+          "text": "{i18n:auth.link.sign_in}",
+          "align": "center"
+        }
       ]
     }
   ]
@@ -390,10 +470,18 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "align": "stretch",
       "maxWidth": "sm",
       "children": [
-        { "type": "heading", "text": "{i18n:auth.forgot_password.title}", "level": 1,
-          "align": "center" },
-        { "type": "text", "value": "{i18n:auth.forgot_password.description}",
-          "variant": "muted", "align": "center" },
+        {
+          "type": "heading",
+          "text": "{i18n:auth.forgot_password.title}",
+          "level": 1,
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "value": "{i18n:auth.forgot_password.description}",
+          "variant": "muted",
+          "align": "center"
+        },
         {
           "type": "auto-form",
           "id": "forgot-password-form",
@@ -413,16 +501,27 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "submitLoadingLabel": "{i18n:auth.action.send_reset_link.loading}",
           "on": {
             "success": [
-              { "type": "toast", "variant": "success",
-                "message": "{i18n:auth.message.forgot_password_sent}" }
+              {
+                "type": "toast",
+                "variant": "success",
+                "message": "{i18n:auth.message.forgot_password_sent}"
+              }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
-        { "type": "link", "to": "/login", "text": "{i18n:auth.link.back_to_sign_in}",
-          "align": "center" }
+        {
+          "type": "link",
+          "to": "/login",
+          "text": "{i18n:auth.link.back_to_sign_in}",
+          "align": "center"
+        }
       ]
     }
   ]
@@ -444,10 +543,18 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "align": "stretch",
       "maxWidth": "sm",
       "children": [
-        { "type": "heading", "text": "{i18n:auth.reset_password.title}", "level": 1,
-          "align": "center" },
-        { "type": "text", "value": "{i18n:auth.reset_password.description}",
-          "variant": "muted", "align": "center" },
+        {
+          "type": "heading",
+          "text": "{i18n:auth.reset_password.title}",
+          "level": 1,
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "value": "{i18n:auth.reset_password.description}",
+          "variant": "muted",
+          "align": "center"
+        },
         {
           "type": "alert",
           "variant": "warning",
@@ -480,16 +587,27 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "submitLoadingLabel": "{i18n:auth.action.reset_password.loading}",
           "on": {
             "success": [
-              { "type": "toast", "variant": "success",
-                "message": "{i18n:auth.message.password_reset}" }
+              {
+                "type": "toast",
+                "variant": "success",
+                "message": "{i18n:auth.message.password_reset}"
+              }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
-        { "type": "link", "to": "/login", "text": "{i18n:auth.link.back_to_sign_in}",
-          "align": "center" }
+        {
+          "type": "link",
+          "to": "/login",
+          "text": "{i18n:auth.link.back_to_sign_in}",
+          "align": "center"
+        }
       ]
     }
   ]
@@ -511,10 +629,18 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "align": "stretch",
       "maxWidth": "sm",
       "children": [
-        { "type": "heading", "text": "{i18n:auth.verify_email.title}", "level": 1,
-          "align": "center" },
-        { "type": "text", "value": "{i18n:auth.verify_email.description}",
-          "variant": "muted", "align": "center" },
+        {
+          "type": "heading",
+          "text": "{i18n:auth.verify_email.title}",
+          "level": 1,
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "value": "{i18n:auth.verify_email.description}",
+          "variant": "muted",
+          "align": "center"
+        },
         {
           "type": "auto-form",
           "id": "verify-email-auto",
@@ -532,11 +658,18 @@ public component types that exist (or are added in Phase 4). Every string is an 
           ],
           "on": {
             "success": [
-              { "type": "toast", "variant": "success",
-                "message": "{i18n:auth.message.email_verified}" }
+              {
+                "type": "toast",
+                "variant": "success",
+                "message": "{i18n:auth.message.email_verified}"
+              }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
@@ -560,16 +693,27 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "submitLoadingLabel": "{i18n:auth.action.resend_verification.loading}",
           "on": {
             "success": [
-              { "type": "toast", "variant": "success",
-                "message": "{i18n:auth.message.verification_sent}" }
+              {
+                "type": "toast",
+                "variant": "success",
+                "message": "{i18n:auth.message.verification_sent}"
+              }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
-        { "type": "link", "to": "/login", "text": "{i18n:auth.link.continue_to_sign_in}",
-          "align": "center" }
+        {
+          "type": "link",
+          "to": "/login",
+          "text": "{i18n:auth.link.continue_to_sign_in}",
+          "align": "center"
+        }
       ]
     }
   ]
@@ -591,10 +735,18 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "align": "stretch",
       "maxWidth": "sm",
       "children": [
-        { "type": "heading", "text": "{i18n:auth.mfa.title}", "level": 1,
-          "align": "center" },
-        { "type": "text", "value": "{i18n:auth.mfa.description}",
-          "variant": "muted", "align": "center" },
+        {
+          "type": "heading",
+          "text": "{i18n:auth.mfa.title}",
+          "level": 1,
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "value": "{i18n:auth.mfa.description}",
+          "variant": "muted",
+          "align": "center"
+        },
         {
           "type": "alert",
           "variant": "warning",
@@ -635,21 +787,40 @@ public component types that exist (or are added in Phase 4). Every string is an 
           "submitLoadingLabel": "{i18n:auth.action.verify.loading}",
           "on": {
             "success": [
-              { "type": "api", "method": "GET", "endpoint": "{auth.contract.endpoints.me}",
+              {
+                "type": "api",
+                "method": "GET",
+                "endpoint": "{auth.contract.endpoints.me}",
                 "onSuccess": [
-                  { "type": "set-value", "target": "global.pendingMfaChallenge", "value": null },
-                  { "type": "set-value", "target": "global.user", "value": "{context.result}" },
+                  {
+                    "type": "set-value",
+                    "target": "global.pendingMfaChallenge",
+                    "value": null
+                  },
+                  {
+                    "type": "set-value",
+                    "target": "global.user",
+                    "value": "{context.result}"
+                  },
                   { "type": "navigate", "to": "{auth.redirects.afterMfa}" }
                 ]
               }
             ],
             "error": [
-              { "type": "toast", "variant": "error", "message": "{context.error.message}" }
+              {
+                "type": "toast",
+                "variant": "error",
+                "message": "{context.error.message}"
+              }
             ]
           }
         },
-        { "type": "link", "to": "/login", "text": "{i18n:auth.link.back_to_sign_in}",
-          "align": "center" }
+        {
+          "type": "link",
+          "to": "/login",
+          "text": "{i18n:auth.link.back_to_sign_in}",
+          "align": "center"
+        }
       ]
     }
   ]
@@ -672,8 +843,12 @@ public component types that exist (or are added in Phase 4). Every string is an 
       "maxWidth": "sm",
       "children": [
         { "type": "spinner", "size": "lg" },
-        { "type": "text", "value": "{i18n:auth.sso_callback.message}", "variant": "muted",
-          "align": "center" }
+        {
+          "type": "text",
+          "value": "{i18n:auth.sso_callback.message}",
+          "variant": "muted",
+          "align": "center"
+        }
       ]
     }
   ],
@@ -683,17 +858,35 @@ public component types that exist (or are added in Phase 4). Every string is an 
         "type": "api",
         "method": "POST",
         "endpoint": "{auth.contract.endpoints.oauthCallback}",
-        "body": { "code": "{route.query.code}", "state": "{route.query.state}" },
+        "body": {
+          "code": "{route.query.code}",
+          "state": "{route.query.state}"
+        },
         "onSuccess": [
-          { "type": "api", "method": "GET", "endpoint": "{auth.contract.endpoints.me}",
+          {
+            "type": "api",
+            "method": "GET",
+            "endpoint": "{auth.contract.endpoints.me}",
             "onSuccess": [
-              { "type": "set-value", "target": "global.user", "value": "{context.result}" },
-              { "type": "navigate", "to": "{auth.redirects.afterLogin}", "replace": true }
+              {
+                "type": "set-value",
+                "target": "global.user",
+                "value": "{context.result}"
+              },
+              {
+                "type": "navigate",
+                "to": "{auth.redirects.afterLogin}",
+                "replace": true
+              }
             ]
           }
         ],
         "onError": [
-          { "type": "toast", "variant": "error", "message": "{context.error.message}" },
+          {
+            "type": "toast",
+            "variant": "error",
+            "message": "{context.error.message}"
+          },
           { "type": "navigate", "to": "/login", "replace": true }
         ]
       }
@@ -705,6 +898,7 @@ public component types that exist (or are added in Phase 4). Every string is an 
 ---
 
 <a id="c-phase-3"></a>
+
 ## C. Phase 3 — Layout Registry + Centered Layout
 
 ### C.1 Where to insert layout resolution in the renderer
@@ -716,6 +910,7 @@ render. The layout is currently applied inside the `Layout` component based on
 
 **Change:** Instead of the switch, call `resolveLayout(layoutName)` from the registry.
 The switch becomes:
+
 ```tsx
 const layoutDef = resolveLayout(layoutName);
 if (!layoutDef) {
@@ -729,11 +924,13 @@ return <LayoutComponent config={layoutConfig} children={children} />;
 ### C.2 The `routeConfigSchema.layouts` field
 
 **Current schema** (`schema.ts:1056-1081`):
+
 ```ts
-layouts: z.array(routeLayoutSchema).optional()
+layouts: z.array(routeLayoutSchema).optional();
 ```
 
 Where `routeLayoutSchema` is:
+
 ```ts
 z.union([
   layoutSchema,  // z.enum(["sidebar", "top-nav", "stacked", "minimal", "full-width"])
@@ -750,7 +947,7 @@ let the layout registry handle unknown names with a runtime warning.
 **File:** `src/ui/layouts/centered/component.tsx`
 
 ```tsx
-'use client';
+"use client";
 
 import type { ReactNode, CSSProperties } from "react";
 
@@ -803,30 +1000,39 @@ export function CenteredLayout({
 ```
 
 **Schema:** `src/ui/layouts/centered/schema.ts`
+
 ```ts
 import { z } from "zod";
 
-export const centeredLayoutSchema = z.object({
-  maxWidth: z.enum(["xs", "sm", "md", "lg"]).default("sm"),
-  showBranding: z.boolean().default(false),
-}).strict();
+export const centeredLayoutSchema = z
+  .object({
+    maxWidth: z.enum(["xs", "sm", "md", "lg"]).default("sm"),
+    showBranding: z.boolean().default(false),
+  })
+  .strict();
 ```
 
 ---
 
 <a id="d-phase-4-component-schemas"></a>
+
 ## D. Phase 4 — Every New Component Schema
 
 ### D.1 `stack` — vertical flex container
 
 **Schema:**
+
 ```ts
 export const stackSchema = extendComponentSchema({
   type: z.literal("stack"),
   children: z.array(componentConfigSchema).min(1),
-  gap: z.enum(["none", "2xs", "xs", "sm", "md", "lg", "xl", "2xl"]).default("md"),
+  gap: z
+    .enum(["none", "2xs", "xs", "sm", "md", "lg", "xl", "2xl"])
+    .default("md"),
   align: z.enum(["stretch", "start", "center", "end"]).default("stretch"),
-  justify: z.enum(["start", "center", "end", "between", "around"]).default("start"),
+  justify: z
+    .enum(["start", "center", "end", "between", "around"])
+    .default("start"),
   maxWidth: z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "full"]).optional(),
   padding: z.enum(["none", "sm", "md", "lg", "xl"]).optional(),
 }).strict();
@@ -838,6 +1044,7 @@ max-width from `--sn-container-{maxWidth}`, margin `0 auto` when maxWidth is set
 ### D.2 `heading` — h1-h6
 
 **Schema:**
+
 ```ts
 export const headingSchema = extendComponentSchema({
   type: z.literal("heading"),
@@ -857,18 +1064,22 @@ If `text` resolves to empty and `fallback` is set, render `fallback` instead.
 ### D.3 `text` — paragraph
 
 **Schema:**
+
 ```ts
 export const textSchema = extendComponentSchema({
   type: z.literal("text"),
   value: z.string(),
   variant: z.enum(["default", "muted", "subtle"]).default("default"),
   size: z.enum(["xs", "sm", "md", "lg"]).default("md"),
-  weight: z.enum(["light", "normal", "medium", "semibold", "bold"]).default("normal"),
+  weight: z
+    .enum(["light", "normal", "medium", "semibold", "bold"])
+    .default("normal"),
   align: z.enum(["left", "center", "right"]).default("left"),
 }).strict();
 ```
 
 **Render:** `<p>` with:
+
 - `color`: default → `--sn-color-foreground`, muted → `--sn-color-muted-foreground`,
   subtle → `--sn-color-muted-foreground` with `--sn-opacity-muted`
 - `fontSize`: `--sn-font-size-{size}`
@@ -878,6 +1089,7 @@ export const textSchema = extendComponentSchema({
 ### D.4 `link` — navigation primitive
 
 **Schema:**
+
 ```ts
 export const linkSchema = extendComponentSchema({
   type: z.literal("link"),
@@ -897,6 +1109,7 @@ button styling for button variant. `textAlign` from `align`, `display: block` wh
 ### D.5 `divider` — with optional label
 
 **Schema:**
+
 ```ts
 export const dividerSchema = extendComponentSchema({
   type: z.literal("divider"),
@@ -908,10 +1121,13 @@ export const dividerSchema = extendComponentSchema({
 **Render:** `<div role="separator">`. Horizontal: `borderTop: var(--sn-border-thin) solid
 var(--sn-color-border)`. When `label` is present, flex layout with the label centered
 between two lines:
+
 ```html
 <div style="display:flex; align-items:center; gap:var(--sn-spacing-md)">
   <div style="flex:1; height:0; borderTop:..." />
-  <span style="color:var(--sn-color-muted-foreground); fontSize:var(--sn-font-size-xs)">
+  <span
+    style="color:var(--sn-color-muted-foreground); fontSize:var(--sn-font-size-xs)"
+  >
     {label}
   </span>
   <div style="flex:1; height:0; borderTop:..." />
@@ -921,6 +1137,7 @@ between two lines:
 ### D.6 `oauth-buttons` — branded OAuth provider buttons
 
 **Schema:**
+
 ```ts
 export const oauthButtonsSchema = extendComponentSchema({
   type: z.literal("oauth-buttons"),
@@ -930,6 +1147,7 @@ export const oauthButtonsSchema = extendComponentSchema({
 ```
 
 **Behavior:**
+
 1. Read `auth.providers` from manifest runtime context (via `useManifestRuntime()`)
 2. Filter to OAuth-type providers only
 3. If no OAuth providers, render nothing (return null)
@@ -946,6 +1164,7 @@ doesn't specify it, fall back to `/auth/{provider}/start`.
 ### D.7 `passkey-button` — WebAuthn login
 
 **Schema:**
+
 ```ts
 export const passkeyButtonSchema = extendComponentSchema({
   type: z.literal("passkey-button"),
@@ -955,6 +1174,7 @@ export const passkeyButtonSchema = extendComponentSchema({
 ```
 
 **Behavior:**
+
 1. Check `isPasskeySupported()` (from `src/auth/passkey.ts`) — if not supported, return null
 2. Render secondary-styled button
 3. On click: call `startPasskeyAuthentication()` → on success, POST credentials to
@@ -994,6 +1214,7 @@ This is a mechanical refactor — search for `z.object({` in every `schema.ts` u
 ---
 
 <a id="e-phase-5-action-handlers"></a>
+
 ## E. Phase 5 — Every New Action Handler
 
 **Current state:** All 11 action handlers are inline switch cases in
@@ -1003,15 +1224,17 @@ the same switch. (Extracting to separate files is a cleanup that can happen late
 ### E.1 `navigate-external`
 
 **Config schema:**
+
 ```ts
 interface NavigateExternalAction {
   type: "navigate-external";
-  to: string;           // URL with {param} interpolation
-  target?: "_self" | "_blank";  // default: "_self"
+  to: string; // URL with {param} interpolation
+  target?: "_self" | "_blank"; // default: "_self"
 }
 ```
 
 **Handler (in executor.ts switch):**
+
 ```ts
 case "navigate-external": {
   const url = resolveTemplate(builtin.to, templateContext);
@@ -1028,15 +1251,17 @@ case "navigate-external": {
 ### E.2 `copy`
 
 **Config schema:**
+
 ```ts
 interface CopyAction {
   type: "copy";
-  text: string;          // text to copy, with {param} interpolation
+  text: string; // text to copy, with {param} interpolation
   onSuccess?: ActionConfig | ActionConfig[];
 }
 ```
 
 **Handler:**
+
 ```ts
 case "copy": {
   const text = resolveTemplate(builtin.text, templateContext);
@@ -1051,15 +1276,17 @@ case "copy": {
 ### E.3 `emit`
 
 **Config schema:**
+
 ```ts
 interface EmitAction {
   type: "emit";
-  event: string;         // custom event name
-  payload?: unknown;     // arbitrary payload
+  event: string; // custom event name
+  payload?: unknown; // arbitrary payload
 }
 ```
 
 **Handler:**
+
 ```ts
 case "emit": {
   const eventName = resolveTemplate(builtin.event, templateContext);
@@ -1075,14 +1302,16 @@ Components can listen via `useEffect(() => { window.addEventListener('snapshot:e
 ### E.4 `submit-form`
 
 **Config schema:**
+
 ```ts
 interface SubmitFormAction {
   type: "submit-form";
-  formId: string;        // id of the auto-form component
+  formId: string; // id of the auto-form component
 }
 ```
 
 **Handler:**
+
 ```ts
 case "submit-form": {
   // Dispatch a custom event that auto-form listens for
@@ -1099,6 +1328,7 @@ The `auto-form` component registers a listener in a `useEffect` for
 ### E.5 `reset-form`
 
 **Config schema:**
+
 ```ts
 interface ResetFormAction {
   type: "reset-form";
@@ -1111,15 +1341,17 @@ interface ResetFormAction {
 ### E.6 `set-theme`
 
 **Config schema:**
+
 ```ts
 interface SetThemeAction {
   type: "set-theme";
-  flavor?: string;       // flavor name from registry
+  flavor?: string; // flavor name from registry
   mode?: "light" | "dark" | "system";
 }
 ```
 
 **Handler:**
+
 ```ts
 case "set-theme": {
   if (builtin.flavor) {
@@ -1146,16 +1378,18 @@ case "set-theme": {
 ### E.7 `log`
 
 **Config schema:**
+
 ```ts
 interface LogAction {
   type: "log";
   level: "info" | "warn" | "error" | "debug";
-  message: string;       // with {param} interpolation
+  message: string; // with {param} interpolation
   data?: Record<string, unknown>;
 }
 ```
 
 **Handler:**
+
 ```ts
 case "log": {
   const msg = resolveTemplate(builtin.message, templateContext);
@@ -1187,6 +1421,7 @@ The spec should NOT add these as separate actions. Remove from the gap list.
 ---
 
 <a id="f-phase-6-data-binding"></a>
+
 ## F. Phase 6 — Data Binding Migration
 
 ### F.1 Current state
@@ -1199,7 +1434,7 @@ detail-card). The hook signature:
 function useComponentData(
   dataConfig: string | FromRef | ResourceRef,
   params?: Record<string, unknown | FromRef>,
-): ComponentDataResult
+): ComponentDataResult;
 ```
 
 ### F.2 What Phase 6 actually needs to do
@@ -1230,6 +1465,7 @@ executor file for backwards compat during the transition, then delete the re-exp
 ---
 
 <a id="g-phase-7-guards"></a>
+
 ## G. Phase 7 — Guard Implementations
 
 ### G.1 Current guard mechanism
@@ -1238,13 +1474,16 @@ Guards already exist at `src/routing/loaders.ts`. The `createLoaders()` factory 
 `{ protectedBeforeLoad, guestBeforeLoad }` using TanStack Router's `beforeLoad` pattern.
 
 The manifest route schema already has:
+
 ```ts
 guard: z.object({
   authenticated: z.boolean().optional(),
   roles: z.array(z.string()).optional(),
   policy: z.string().min(1).optional(),
   redirectTo: z.string().startsWith("/").optional(),
-}).strict().optional()
+})
+  .strict()
+  .optional();
 ```
 
 ### G.2 What Phase 7 actually needs
@@ -1260,14 +1499,14 @@ function buildRouteGuard(guard: RouteGuard, snapshot: SnapshotInstance) {
       // Reuse existing protectedBeforeLoad logic
       const user = await fetchUser(snapshot.api, snapshot.queryClient);
       if (!user) {
-        throw redirect({ to: guard.redirectTo ?? '/login' });
+        throw redirect({ to: guard.redirectTo ?? "/login" });
       }
       // Role check
       if (guard.roles?.length) {
         const userRoles = [...(user.roles ?? []), user.role].filter(Boolean);
-        const hasRole = guard.roles.some(r => userRoles.includes(r));
+        const hasRole = guard.roles.some((r) => userRoles.includes(r));
         if (!hasRole) {
-          throw redirect({ to: guard.redirectTo ?? '/' });
+          throw redirect({ to: guard.redirectTo ?? "/" });
         }
       }
       // Policy check
@@ -1275,7 +1514,7 @@ function buildRouteGuard(guard: RouteGuard, snapshot: SnapshotInstance) {
         const policies = compiledManifest.raw.policies ?? {};
         const expr = policies[guard.policy];
         if (expr && !evaluatePolicy(expr, { user })) {
-          throw redirect({ to: guard.redirectTo ?? '/' });
+          throw redirect({ to: guard.redirectTo ?? "/" });
         }
       }
     }
@@ -1283,7 +1522,7 @@ function buildRouteGuard(guard: RouteGuard, snapshot: SnapshotInstance) {
       // Inverse: redirect authenticated users away (guest guard)
       const user = await fetchUser(snapshot.api, snapshot.queryClient);
       if (user) {
-        throw redirect({ to: guard.redirectTo ?? '/' });
+        throw redirect({ to: guard.redirectTo ?? "/" });
       }
     }
   };
@@ -1302,6 +1541,7 @@ headers in SSR mode.
 ---
 
 <a id="h-phase-8-enterprise"></a>
+
 ## H. Phase 8 — i18n / Realtime / Observability Runtime Detail
 
 ### H.1 i18n runtime
@@ -1314,8 +1554,13 @@ implemented.
 
 1. **`{i18n:key}` template syntax** inside string fields. The template resolver
    (`src/ui/expressions/template.ts`) recognizes `{i18n:auth.login.title}` and calls:
+
    ```ts
-   function resolveI18nRef(key: string, locale: string, catalogs: I18nCatalogs): string {
+   function resolveI18nRef(
+     key: string,
+     locale: string,
+     catalogs: I18nCatalogs,
+   ): string {
      const catalog = catalogs[locale] ?? catalogs[defaultLocale];
      return catalog?.[key] ?? catalogs[defaultLocale]?.[key] ?? key;
    }
@@ -1367,6 +1612,7 @@ notifications exist (Phase H3).
 ---
 
 <a id="i-compiler-pipeline"></a>
+
 ## I. Compiler Pipeline Insertion Points
 
 ### I.1 Current pipeline (from `compiler.ts:564-700`)
@@ -1426,14 +1672,14 @@ export function mergeFragment(
   base: ManifestConfig,
   fragment: ManifestFragment,
 ): ManifestConfig {
-  const baseRouteIds = new Set((base.routes ?? []).map(r => r.id));
+  const baseRouteIds = new Set((base.routes ?? []).map((r) => r.id));
 
   return {
     ...base,
     routes: [
       ...(base.routes ?? []),
       // Only include fragment routes whose ids aren't already in the base
-      ...(fragment.routes ?? []).filter(r => !baseRouteIds.has(r.id)),
+      ...(fragment.routes ?? []).filter((r) => !baseRouteIds.has(r.id)),
     ],
     theme: deepMerge(fragment.theme, base.theme),
     resources: { ...(fragment.resources ?? {}), ...(base.resources ?? {}) },
@@ -1452,8 +1698,17 @@ function deepMerge<T extends Record<string, unknown>>(
   if (!override) return base;
   const result = { ...base } as Record<string, unknown>;
   for (const [key, val] of Object.entries(override)) {
-    if (val && typeof val === "object" && !Array.isArray(val) && result[key] && typeof result[key] === "object") {
-      result[key] = deepMerge(result[key] as Record<string, unknown>, val as Record<string, unknown>);
+    if (
+      val &&
+      typeof val === "object" &&
+      !Array.isArray(val) &&
+      result[key] &&
+      typeof result[key] === "object"
+    ) {
+      result[key] = deepMerge(
+        result[key] as Record<string, unknown>,
+        val as Record<string, unknown>,
+      );
     } else {
       result[key] = val;
     }
@@ -1485,15 +1740,16 @@ function buildAuthFragment(manifest: ManifestConfig): ManifestFragment {
   if (!screens) return { routes: [] };
 
   // Filter default auth routes to only those requested
-  const requestedScreens = typeof screens === "object" && !Array.isArray(screens)
-    ? Object.entries(screens)
-        .filter(([, mode]) => mode === "default")
-        .map(([name]) => name)
-    : screens; // backwards compat: array form means all are "default"
+  const requestedScreens =
+    typeof screens === "object" && !Array.isArray(screens)
+      ? Object.entries(screens)
+          .filter(([, mode]) => mode === "default")
+          .map(([name]) => name)
+      : screens; // backwards compat: array form means all are "default"
 
   return {
-    routes: defaultAuthFragment.routes?.filter(r =>
-      requestedScreens.includes(r.id)
+    routes: defaultAuthFragment.routes?.filter((r) =>
+      requestedScreens.includes(r.id),
     ),
     i18n: defaultAuthFragment.i18n,
   };
@@ -1503,29 +1759,42 @@ function buildAuthFragment(manifest: ManifestConfig): ManifestFragment {
 ---
 
 <a id="j-auto-form-extensions"></a>
+
 ## J. Auto-Form Schema Extensions
 
 ### J.1 Current field schema (from audit)
 
 ```ts
 // src/ui/components/forms/auto-form/schema.ts:48-91
-export const fieldConfigSchema = z.object({
-  name: z.string(),
-  type: z.enum(["text", "email", "password", "number", "textarea", "select", "checkbox", "date", "file"]),
-  label: z.string().optional(),
-  placeholder: z.string().optional(),
-  required: z.boolean().optional(),
-  validation: fieldValidationSchema.optional(),
-  options: z.union([z.array(fieldOptionSchema), dataSourceSchema]).optional(),
-  labelField: z.string().optional(),
-  valueField: z.string().optional(),
-  default: z.unknown().optional(),
-  disabled: z.boolean().optional(),
-  helperText: z.string().optional(),
-  span: z.number().int().min(1).max(12).optional(),
-  dependsOn: dependsOnSchema.optional(),
-  visible: z.boolean().optional(),
-}).strict();
+export const fieldConfigSchema = z
+  .object({
+    name: z.string(),
+    type: z.enum([
+      "text",
+      "email",
+      "password",
+      "number",
+      "textarea",
+      "select",
+      "checkbox",
+      "date",
+      "file",
+    ]),
+    label: z.string().optional(),
+    placeholder: z.string().optional(),
+    required: z.boolean().optional(),
+    validation: fieldValidationSchema.optional(),
+    options: z.union([z.array(fieldOptionSchema), dataSourceSchema]).optional(),
+    labelField: z.string().optional(),
+    valueField: z.string().optional(),
+    default: z.unknown().optional(),
+    disabled: z.boolean().optional(),
+    helperText: z.string().optional(),
+    span: z.number().int().min(1).max(12).optional(),
+    dependsOn: dependsOnSchema.optional(),
+    visible: z.boolean().optional(),
+  })
+  .strict();
 ```
 
 ### J.2 Fields to add
@@ -1533,38 +1802,58 @@ export const fieldConfigSchema = z.object({
 Replace `.strict()` with a passthrough approach, or add these fields inside the object:
 
 ```ts
-export const fieldConfigSchema = z.object({
-  // --- existing fields (keep all) ---
-  name: z.string(),
-  type: z.enum(["text", "email", "password", "number", "textarea", "select",
-                 "checkbox", "date", "file",
-                 // NEW field types:
-                 "time", "datetime", "radio-group", "switch", "slider",
-                 "color", "combobox", "tag-input"]),
-  label: z.string().optional(),
-  placeholder: z.string().optional(),
-  required: z.boolean().optional(),
-  validation: fieldValidationSchema.optional(),
-  options: z.union([z.array(fieldOptionSchema), dataSourceSchema]).optional(),
-  labelField: z.string().optional(),
-  valueField: z.string().optional(),
-  default: z.unknown().optional(),
-  disabled: z.boolean().optional(),
-  helperText: z.string().optional(),
-  span: z.number().int().min(1).max(12).optional(),
-  dependsOn: dependsOnSchema.optional(),
-  visible: z.boolean().optional(),
+export const fieldConfigSchema = z
+  .object({
+    // --- existing fields (keep all) ---
+    name: z.string(),
+    type: z.enum([
+      "text",
+      "email",
+      "password",
+      "number",
+      "textarea",
+      "select",
+      "checkbox",
+      "date",
+      "file",
+      // NEW field types:
+      "time",
+      "datetime",
+      "radio-group",
+      "switch",
+      "slider",
+      "color",
+      "combobox",
+      "tag-input",
+    ]),
+    label: z.string().optional(),
+    placeholder: z.string().optional(),
+    required: z.boolean().optional(),
+    validation: fieldValidationSchema.optional(),
+    options: z.union([z.array(fieldOptionSchema), dataSourceSchema]).optional(),
+    labelField: z.string().optional(),
+    valueField: z.string().optional(),
+    default: z.unknown().optional(),
+    disabled: z.boolean().optional(),
+    helperText: z.string().optional(),
+    span: z.number().int().min(1).max(12).optional(),
+    dependsOn: dependsOnSchema.optional(),
+    visible: z.boolean().optional(),
 
-  // --- NEW fields ---
-  autoComplete: z.string().optional(),
-  visibleWhen: z.string().optional(),
-  inlineAction: z.object({
-    label: z.string(),
-    to: z.string(),
-  }).strict().optional(),
-  readOnly: z.boolean().optional(),
-  description: z.string().optional(),
-}).strict();
+    // --- NEW fields ---
+    autoComplete: z.string().optional(),
+    visibleWhen: z.string().optional(),
+    inlineAction: z
+      .object({
+        label: z.string(),
+        to: z.string(),
+      })
+      .strict()
+      .optional(),
+    readOnly: z.boolean().optional(),
+    description: z.string().optional(),
+  })
+  .strict();
 ```
 
 ### J.3 Auto-form level additions
@@ -1573,10 +1862,10 @@ export const fieldConfigSchema = z.object({
 export const autoFormConfigSchema = extendComponentSchema({
   type: z.literal("auto-form"),
   // ... existing fields ...
-  submitLoadingLabel: z.string().optional(),         // NEW: "Signing in..."
-  autoSubmit: z.boolean().optional(),                // NEW: submit on mount
-  autoSubmitWhen: z.string().optional(),             // NEW: expression that triggers auto-submit
-  layout: z.enum(["vertical", "horizontal", "grid"]).default("vertical"),  // NEW
+  submitLoadingLabel: z.string().optional(), // NEW: "Signing in..."
+  autoSubmit: z.boolean().optional(), // NEW: submit on mount
+  autoSubmitWhen: z.string().optional(), // NEW: expression that triggers auto-submit
+  layout: z.enum(["vertical", "horizontal", "grid"]).default("vertical"), // NEW
 }).strict();
 ```
 
@@ -1628,13 +1917,23 @@ password field gets the toggle automatically.
 When a field has `inlineAction`, render the label row as:
 
 ```tsx
-<div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "baseline",
+  }}
+>
   <label>{field.label}</label>
   <button
     type="button"
-    onClick={() => executeAction({ type: "navigate", to: field.inlineAction.to })}
+    onClick={() =>
+      executeAction({ type: "navigate", to: field.inlineAction.to })
+    }
     style={{
-      background: "none", border: "none", cursor: "pointer",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
       color: "var(--sn-color-primary)",
       fontSize: "var(--sn-font-size-xs)",
     }}
@@ -1647,6 +1946,7 @@ When a field has `inlineAction`, render the label row as:
 ---
 
 <a id="k-expression-parser"></a>
+
 ## K. Expression Language Parser
 
 ### K.1 Grammar (formal)
@@ -1698,15 +1998,15 @@ Total: ~200 lines. Exhaustively tested with:
 
 ```ts
 // True cases
-evaluateExpression("defined(auth.providers)", ctx)              // providers exist
-evaluateExpression("empty(route.query.token)", ctx)             // no token param
-evaluateExpression("global.user.role == 'admin'", ctx)          // role check
-evaluateExpression("length(items) > 0", ctx)                    // array has items
-evaluateExpression("defined(auth.passkey) && !empty(global.user)", ctx)  // compound
+evaluateExpression("defined(auth.providers)", ctx); // providers exist
+evaluateExpression("empty(route.query.token)", ctx); // no token param
+evaluateExpression("global.user.role == 'admin'", ctx); // role check
+evaluateExpression("length(items) > 0", ctx); // array has items
+evaluateExpression("defined(auth.passkey) && !empty(global.user)", ctx); // compound
 
 // False cases
-evaluateExpression("defined(nonexistent.path)", ctx)            // undefined ref
-evaluateExpression("1 > 2", ctx)                                // math
+evaluateExpression("defined(nonexistent.path)", ctx); // undefined ref
+evaluateExpression("1 > 2", ctx); // math
 ```
 
 ### K.4 Where it's used
@@ -1719,6 +2019,7 @@ evaluateExpression("1 > 2", ctx)                                // math
 ---
 
 <a id="l-i18n-catalog"></a>
+
 ## L. Default i18n Catalog (English)
 
 ```ts
@@ -1730,13 +2031,16 @@ export const defaultEnglishCatalog: Record<string, string> = {
   "auth.register.title": "Create account",
   "auth.register.description": "Create your account to get started.",
   "auth.forgot_password.title": "Forgot password",
-  "auth.forgot_password.description": "Enter your email and we'll send a reset link.",
+  "auth.forgot_password.description":
+    "Enter your email and we'll send a reset link.",
   "auth.reset_password.title": "Reset password",
   "auth.reset_password.description": "Choose a new password for your account.",
   "auth.verify_email.title": "Verify email",
-  "auth.verify_email.description": "Confirm your email address to finish setup.",
+  "auth.verify_email.description":
+    "Confirm your email address to finish setup.",
   "auth.mfa.title": "Two-factor verification",
-  "auth.mfa.description": "Enter the verification code from your authentication method.",
+  "auth.mfa.description":
+    "Enter the verification code from your authentication method.",
   "auth.sso_callback.title": "Signing in...",
   "auth.sso_callback.message": "Completing sign-in, please wait.",
 
@@ -1781,7 +2085,8 @@ export const defaultEnglishCatalog: Record<string, string> = {
   "auth.label.resend": "Resend code",
 
   // Auth messages
-  "auth.message.forgot_password_sent": "If that email is registered, you will receive a reset link shortly.",
+  "auth.message.forgot_password_sent":
+    "If that email is registered, you will receive a reset link shortly.",
   "auth.message.password_reset": "Your password has been reset.",
   "auth.message.email_verified": "Your email has been verified.",
   "auth.message.verification_sent": "Verification email sent.",
@@ -1789,8 +2094,10 @@ export const defaultEnglishCatalog: Record<string, string> = {
 
   // Auth errors
   "auth.error.reset_link_missing_token": "This reset link is missing a token.",
-  "auth.error.verify_link_missing_token": "This verification link is missing a token.",
-  "auth.error.no_active_challenge": "There is no active verification challenge.",
+  "auth.error.verify_link_missing_token":
+    "This verification link is missing a token.",
+  "auth.error.no_active_challenge":
+    "There is no active verification challenge.",
 
   // Common
   "common.or": "or",
@@ -1815,7 +2122,7 @@ export const defaultEnglishCatalog: Record<string, string> = {
 
 ```ts
 // src/ui/manifest/schema.ts:943
-screens: z.array(authScreenNameSchema).min(1)
+screens: z.array(authScreenNameSchema).min(1);
 ```
 
 Where `authScreenNameSchema` is an enum of `"login" | "register" | "forgot-password" |
@@ -1825,30 +2132,40 @@ Where `authScreenNameSchema` is an enum of `"login" | "register" | "forgot-passw
 
 ```ts
 const authScreenModeSchema = z.union([
-  z.literal("default"),  // use framework default fragment
-  z.literal(false),      // do not create this route
+  z.literal("default"), // use framework default fragment
+  z.literal(false), // do not create this route
 ]);
 
-const authScreensSchema = z.union([
-  // New object form (preferred):
-  z.record(
-    z.enum(["login", "register", "forgot-password", "reset-password",
-            "verify-email", "mfa", "sso-callback"]),
-    authScreenModeSchema,
-  ),
-  // Legacy array form (backwards compat — treat all as "default"):
-  z.array(authScreenNameSchema),
-]).optional();  // no longer .min(1)
+const authScreensSchema = z
+  .union([
+    // New object form (preferred):
+    z.record(
+      z.enum([
+        "login",
+        "register",
+        "forgot-password",
+        "reset-password",
+        "verify-email",
+        "mfa",
+        "sso-callback",
+      ]),
+      authScreenModeSchema,
+    ),
+    // Legacy array form (backwards compat — treat all as "default"):
+    z.array(authScreenNameSchema),
+  ])
+  .optional(); // no longer .min(1)
 ```
 
 In the fragment builder, normalize the legacy array form:
+
 ```ts
 function normalizeAuthScreens(
   screens: string[] | Record<string, "default" | false> | undefined,
 ): Record<string, "default" | false> {
   if (!screens) return {};
   if (Array.isArray(screens)) {
-    return Object.fromEntries(screens.map(s => [s, "default" as const]));
+    return Object.fromEntries(screens.map((s) => [s, "default" as const]));
   }
   return screens;
 }
@@ -1858,25 +2175,25 @@ function normalizeAuthScreens(
 
 ## N. Summary: Every Gap Closed
 
-| Gap from review | Where addressed |
-|---|---|
-| All 7 auth screen content arrays | Appendix B (B.1–B.7) |
-| stack, heading, text, link, divider, oauth-buttons schemas | Appendix D (D.1–D.8) |
-| New action handler config + behavior | Appendix E (E.1–E.7) |
-| Data binding migration per component | Appendix F — mostly already done; F.2 is the audit |
-| Guard implementation detail | Appendix G (G.1–G.3) |
-| compileManifest insertion point | Appendix I (I.1–I.4) |
-| auto-form schema extensions | Appendix J (J.1–J.5) |
-| Expression parser detail | Appendix K (K.1–K.4) |
-| Nav icon fix | Appendix A.1 |
-| Nav active-state wiring | Appendix A.2 |
-| Nav defaults (logo from app.title) | Appendix A.3 |
-| Token synchronous injection | Appendix A.4 |
-| i18n runtime detail | Appendix H.1 |
-| Realtime runtime detail | Appendix H.2 (already done) |
-| Observability runtime detail | Appendix H.3 |
-| Default i18n catalog | Appendix L |
-| auth.screens schema migration | Appendix M |
+| Gap from review                                            | Where addressed                                    |
+| ---------------------------------------------------------- | -------------------------------------------------- |
+| All 7 auth screen content arrays                           | Appendix B (B.1–B.7)                               |
+| stack, heading, text, link, divider, oauth-buttons schemas | Appendix D (D.1–D.8)                               |
+| New action handler config + behavior                       | Appendix E (E.1–E.7)                               |
+| Data binding migration per component                       | Appendix F — mostly already done; F.2 is the audit |
+| Guard implementation detail                                | Appendix G (G.1–G.3)                               |
+| compileManifest insertion point                            | Appendix I (I.1–I.4)                               |
+| auto-form schema extensions                                | Appendix J (J.1–J.5)                               |
+| Expression parser detail                                   | Appendix K (K.1–K.4)                               |
+| Nav icon fix                                               | Appendix A.1                                       |
+| Nav active-state wiring                                    | Appendix A.2                                       |
+| Nav defaults (logo from app.title)                         | Appendix A.3                                       |
+| Token synchronous injection                                | Appendix A.4                                       |
+| i18n runtime detail                                        | Appendix H.1                                       |
+| Realtime runtime detail                                    | Appendix H.2 (already done)                        |
+| Observability runtime detail                               | Appendix H.3                                       |
+| Default i18n catalog                                       | Appendix L                                         |
+| auth.screens schema migration                              | Appendix M                                         |
 
 ---
 

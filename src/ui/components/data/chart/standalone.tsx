@@ -1,6 +1,11 @@
-'use client';
+"use client";
 
-import { cloneElement, useMemo, type ReactElement, type ReactNode } from "react";
+import {
+  cloneElement,
+  useMemo,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import {
@@ -334,10 +339,7 @@ export function ChartBase({
     componentSurface: slots?.grid,
   });
 
-  const chartClick = (
-    payload: Record<string, unknown>,
-    seriesKey?: string,
-  ) => {
+  const chartClick = (payload: Record<string, unknown>, seriesKey?: string) => {
     onPointClick?.(payload, seriesKey);
   };
 
@@ -383,8 +385,9 @@ export function ChartBase({
           const seriesKey =
             typeof entry.dataKey === "string" ? entry.dataKey : undefined;
           const divisor =
-            (seriesKey ? seriesConfigByKey.get(seriesKey)?.divisor : undefined) ??
-            series[0]?.divisor;
+            (seriesKey
+              ? seriesConfigByKey.get(seriesKey)?.divisor
+              : undefined) ?? series[0]?.divisor;
           return (
             <div key={`${entry.name ?? "series"}-${index}`}>
               <span style={{ color: entry.color }}>
@@ -663,9 +666,7 @@ export function ChartBase({
             data={rows}
             margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
           >
-            {!isSparkline && showGrid ? (
-              <CartesianGrid {...gridStyle} />
-            ) : null}
+            {!isSparkline && showGrid ? <CartesianGrid {...gridStyle} /> : null}
             {!isSparkline ? (
               <>
                 <XAxis
@@ -682,7 +683,9 @@ export function ChartBase({
                   tickFormatter={(value) =>
                     typeof value === "number" && Number.isFinite(value)
                       ? formatCompactValue(value, { divisor: yAxisDivisor })
-                      : String(formatChartValue(value, { divisor: yAxisDivisor }))
+                      : String(
+                          formatChartValue(value, { divisor: yAxisDivisor }),
+                        )
                   }
                 />
               </>
@@ -692,7 +695,10 @@ export function ChartBase({
               cursor={
                 chartType === "bar"
                   ? { fill: "var(--sn-color-muted, #f3f4f6)", opacity: 0.35 }
-                  : { stroke: "var(--sn-color-border, #e5e7eb)", strokeDasharray: "4 4" }
+                  : {
+                      stroke: "var(--sn-color-border, #e5e7eb)",
+                      strokeDasharray: "4 4",
+                    }
               }
               formatter={(value, _name, item) =>
                 formatChartValue(value, {
@@ -734,7 +740,9 @@ export function ChartBase({
                           <Cell
                             key={`cell-${i}`}
                             fill={
-                              typeof row._color === "string" ? row._color : color
+                              typeof row._color === "string"
+                                ? row._color
+                                : color
                             }
                           />
                         ))
@@ -802,7 +810,8 @@ export function ChartBase({
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
             marginBottom: "var(--sn-spacing-sm, 0.5rem)",
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
             borderRadius: "var(--sn-radius-md, 0.375rem)",
             backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
           }}
@@ -820,23 +829,23 @@ export function ChartBase({
           aspectRatio,
         }}
       >
-        {isLoading ? (
-          loadingContent ?? (
-            <div
-              data-chart-loading=""
-              style={{
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--sn-color-muted-foreground, #6b7280)",
-                fontSize: "var(--sn-font-size-sm, 0.875rem)",
-              }}
-            >
-              Loading...
-            </div>
-          )
-        ) : null}
+        {isLoading
+          ? (loadingContent ?? (
+              <div
+                data-chart-loading=""
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "var(--sn-color-muted-foreground, #6b7280)",
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                }}
+              >
+                Loading...
+              </div>
+            ))
+          : null}
 
         {error ? (
           <div

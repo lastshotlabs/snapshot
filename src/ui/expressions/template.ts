@@ -73,20 +73,23 @@ function resolveNumberTemplate(
     return undefined;
   }
 
-  const options = rawOptions.reduce<Intl.NumberFormatOptions>((result, option) => {
-    const [key, rawValue] = option.split(":");
-    if (!key || !rawValue) {
+  const options = rawOptions.reduce<Intl.NumberFormatOptions>(
+    (result, option) => {
+      const [key, rawValue] = option.split(":");
+      if (!key || !rawValue) {
+        return result;
+      }
+
+      if (key === "style") {
+        result.style = rawValue as Intl.NumberFormatOptions["style"];
+      } else if (key === "currency") {
+        result.currency = rawValue;
+      }
+
       return result;
-    }
-
-    if (key === "style") {
-      result.style = rawValue as Intl.NumberFormatOptions["style"];
-    } else if (key === "currency") {
-      result.currency = rawValue;
-    }
-
-    return result;
-  }, {});
+    },
+    {},
+  );
 
   return new Intl.NumberFormat(locale, options).format(Number(value));
 }

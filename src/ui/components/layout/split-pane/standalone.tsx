@@ -1,6 +1,12 @@
-'use client';
+"use client";
 
-import { useCallback, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import {

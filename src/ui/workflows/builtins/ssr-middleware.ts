@@ -41,7 +41,7 @@ export function redirect(
   const ssr = requireSsrContext("redirect", ctx);
   if (ssr.response.rewrite) {
     throw new Error(
-      'Cannot set redirect because rewrite is already set for this middleware run.',
+      "Cannot set redirect because rewrite is already set for this middleware run.",
     );
   }
 
@@ -58,7 +58,7 @@ export function rewrite(config: { url: string }, ctx: SsrActionContext): void {
   const ssr = requireSsrContext("rewrite", ctx);
   if (ssr.response.redirect) {
     throw new Error(
-      'Cannot set rewrite because redirect is already set for this middleware run.',
+      "Cannot set rewrite because redirect is already set for this middleware run.",
     );
   }
 
@@ -79,7 +79,10 @@ export function setHeader(
 /**
  * Halt middleware execution and skip route rendering.
  */
-export function halt(_config: Record<string, never>, ctx: SsrActionContext): void {
+export function halt(
+  _config: Record<string, never>,
+  ctx: SsrActionContext,
+): void {
   const ssr = requireSsrContext("halt", ctx);
   ssr.response.halt = true;
 }

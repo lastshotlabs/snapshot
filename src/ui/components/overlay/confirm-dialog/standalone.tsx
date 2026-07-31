@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -18,7 +18,12 @@ export interface ConfirmDialogBaseProps {
   /** Cancel button label. */
   cancelLabel?: string;
   /** Confirm button variant. */
-  confirmVariant?: "default" | "destructive" | "secondary" | "outline" | "ghost";
+  confirmVariant?:
+    | "default"
+    | "destructive"
+    | "secondary"
+    | "outline"
+    | "ghost";
   /** Cancel button variant. */
   cancelVariant?: "default" | "destructive" | "secondary" | "outline" | "ghost";
   /** Whether the dialog is open. */

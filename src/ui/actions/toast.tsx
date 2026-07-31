@@ -71,10 +71,7 @@ export function useToastManager(): ToastManager {
         id,
         message: options.message,
         variant,
-        duration:
-          options.duration ??
-          options.undo?.duration ??
-          4000,
+        duration: options.duration ?? options.undo?.duration ?? 4000,
         icon: options.icon,
         color: options.color,
         action: options.action,

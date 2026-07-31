@@ -61,10 +61,7 @@ function getFontWeights(
   return fontRole.weights;
 }
 
-function getGoogleFontImport(
-  family: string,
-  weights?: number[],
-): string {
+function getGoogleFontImport(family: string, weights?: number[]): string {
   const encoded = family.replace(/\s+/g, "+");
   const normalizedWeights =
     weights && weights.length > 0
@@ -512,9 +509,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       );
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -538,9 +533,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       );
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -554,9 +547,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       lines.push(`  --sn-input-variant: ${components.input.variant};`);
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -579,9 +570,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       lines.push(`  --sn-modal-animation: ${components.modal.animation};`);
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -598,7 +587,16 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
    *   "xs sm"    → var(--sn-spacing-xs) var(--sn-spacing-sm)
    *   raw CSS    → passed through as-is
    */
-  const SPACING_TOKENS = new Set(["2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"]);
+  const SPACING_TOKENS = new Set([
+    "2xs",
+    "xs",
+    "sm",
+    "md",
+    "lg",
+    "xl",
+    "2xl",
+    "3xl",
+  ]);
   function resolveSpacingRef(value: string): string {
     const trimmed = value.trim();
     // Already raw CSS (contains parens, px, rem, etc.)
@@ -642,9 +640,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       );
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -657,9 +653,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       lines.push(`  --sn-toast-animation: ${components.toast.animation};`);
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -685,9 +679,7 @@ function generateComponentTokenCss(components: ComponentTokens): string[] {
       );
     }
     if (lines.length > 0) {
-      blocks.push(
-        `:root {\n${lines.join("\n")}\n}`,
-      );
+      blocks.push(`:root {\n${lines.join("\n")}\n}`);
     }
   }
 
@@ -716,7 +708,12 @@ export function resolveTokens(config: ThemeConfig = {}): string {
   // 1. Load base flavor — register any inline flavor definitions first
   if (config.flavors) {
     for (const [name, def] of Object.entries(config.flavors)) {
-      const d = def as { extends: string; displayName?: string; colors?: ThemeColors; [k: string]: unknown };
+      const d = def as {
+        extends: string;
+        displayName?: string;
+        colors?: ThemeColors;
+        [k: string]: unknown;
+      };
       defineFlavorWithExtension(name, d.extends, d);
     }
   }
@@ -969,7 +966,10 @@ export function resolveTokens(config: ThemeConfig = {}): string {
         .split(",")[0]!
         .trim()
         .replace(/^['"]|['"]$/g, "");
-      if (KNOWN_GOOGLE_FONTS.has(firstName) && !seenGoogleFonts.has(firstName)) {
+      if (
+        KNOWN_GOOGLE_FONTS.has(firstName) &&
+        !seenGoogleFonts.has(firstName)
+      ) {
         seenGoogleFonts.add(firstName);
         fontImports.push(getGoogleFontImport(firstName));
       }
@@ -979,7 +979,9 @@ export function resolveTokens(config: ThemeConfig = {}): string {
     if (fontRole.source === "google") {
       if (!seenGoogleFonts.has(fontRole.family)) {
         seenGoogleFonts.add(fontRole.family);
-        fontImports.push(getGoogleFontImport(fontRole.family, fontRole.weights));
+        fontImports.push(
+          getGoogleFontImport(fontRole.family, fontRole.weights),
+        );
       }
       continue;
     }
@@ -1028,12 +1030,8 @@ export function resolveTokens(config: ThemeConfig = {}): string {
 export function resolveFrameworkStyles(options?: {
   respectReducedMotion?: boolean;
 }): string {
-  const allComponentSelector = [
-    ...new Set(ALL_COMPONENT_TYPES),
-  ]
-    .map(
-    (type) => `[data-snapshot-component="${type}"]`,
-  )
+  const allComponentSelector = [...new Set(ALL_COMPONENT_TYPES)]
+    .map((type) => `[data-snapshot-component="${type}"]`)
     .join(",\n");
   const surfaceSelector = SURFACE_COMPONENT_TYPES.map(
     (type) => `[data-snapshot-component="${type}"]`,

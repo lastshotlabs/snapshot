@@ -54,10 +54,7 @@ export class AtomRegistryImpl implements AtomRegistry {
     this.store = store ?? createStore();
   }
 
-  register(
-    id: string,
-    atomOverride?: StateAtom,
-  ): StateAtom {
+  register(id: string, atomOverride?: StateAtom): StateAtom {
     const existing = this.atoms.get(id);
     if (existing && !atomOverride) return existing;
     if (existing && atomOverride) {

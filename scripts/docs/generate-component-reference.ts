@@ -129,7 +129,9 @@ function kindOf(symbol: ts.Symbol, checker: ts.TypeChecker): string {
 
 function docOf(symbol: ts.Symbol, checker: ts.TypeChecker): string {
   const target = resolveSymbol(symbol, checker);
-  return ts.displayPartsToString(target.getDocumentationComment(checker)).trim();
+  return ts
+    .displayPartsToString(target.getDocumentationComment(checker))
+    .trim();
 }
 
 function getExports(
@@ -163,7 +165,10 @@ function getExports(
 function isReactComponentExport(entry: ExportSummary): boolean {
   if (!/^[A-Z]/.test(entry.name)) return false;
   if (entry.kind !== "component" && entry.kind !== "value") return false;
-  return entry.source.endsWith("standalone.tsx") || entry.source.endsWith("control.tsx");
+  return (
+    entry.source.endsWith("standalone.tsx") ||
+    entry.source.endsWith("control.tsx")
+  );
 }
 
 function typeToString(
@@ -304,7 +309,10 @@ function extractComponentInfo(
 function renderExportsTable(exports: ExportSummary[]): string {
   if (exports.length === 0) return "";
 
-  const lines = ["| Export | Kind | Source | Summary |", "| --- | --- | --- | --- |"];
+  const lines = [
+    "| Export | Kind | Source | Summary |",
+    "| --- | --- | --- | --- |",
+  ];
   for (const summary of exports) {
     lines.push(
       `| \`${escapeCell(summary.name)}\` | ${escapeCell(summary.kind)} | \`${escapeCell(summary.source)}\` | ${escapeCell(summary.doc)} |`,
@@ -319,7 +327,10 @@ function renderPropsTable(props: PropInfo[]): string {
     return "This component does not expose a documented standalone prop object.";
   }
 
-  const lines = ["| Prop | Type | Required | Summary |", "| --- | --- | --- | --- |"];
+  const lines = [
+    "| Prop | Type | Required | Summary |",
+    "| --- | --- | --- | --- |",
+  ];
   for (const prop of props) {
     lines.push(
       `| \`${escapeCell(prop.name)}\` | \`${escapeCell(prop.type)}\` | ${prop.required ? "Yes" : "No"} | ${escapeCell(prop.doc)} |`,
@@ -345,7 +356,9 @@ export async function generateComponentReference(): Promise<void> {
   }
 
   for (const list of byDomain.values()) {
-    list.sort((left, right) => left.relativeDir.localeCompare(right.relativeDir));
+    list.sort((left, right) =>
+      left.relativeDir.localeCompare(right.relativeDir),
+    );
   }
 
   const orderedDomains = DOMAIN_ORDER.filter((domain) => byDomain.has(domain));
@@ -362,7 +375,9 @@ export async function generateComponentReference(): Promise<void> {
     if (!domainComponents?.length) continue;
 
     const label = DOMAIN_LABELS[domain] ?? titleCase(domain);
-    toc.push(`- [${label}](#${label.toLowerCase().replace(/\s+/g, "-")}) (${domainComponents.length})`);
+    toc.push(
+      `- [${label}](#${label.toLowerCase().replace(/\s+/g, "-")}) (${domainComponents.length})`,
+    );
     totalComponents += domainComponents.length;
 
     const sectionLines = [`## ${label}`, ""];

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -97,7 +97,8 @@ export function NavLogoBase({
     surfaceId: `${rootId}-label`,
     implementationBase: {
       fontSize: "var(--sn-font-size-lg, 1.125rem)",
-      fontWeight: "var(--sn-font-weight-semibold, 600)" as CSSProperties["fontWeight"],
+      fontWeight:
+        "var(--sn-font-weight-semibold, 600)" as CSSProperties["fontWeight"],
       whiteSpace: "nowrap",
     },
     componentSurface: slots?.label,

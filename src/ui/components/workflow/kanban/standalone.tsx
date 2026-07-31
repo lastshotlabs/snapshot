@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, {
   useState,
@@ -70,9 +70,18 @@ export interface KanbanBaseProps {
   /** Called when a card is clicked. */
   onCardClick?: (item: Record<string, unknown>) => void;
   /** Called after drag-and-drop reorder. */
-  onReorder?: (payload: { id: string | number; columnKey: string; position: number; item: Record<string, unknown> }) => void;
+  onReorder?: (payload: {
+    id: string | number;
+    columnKey: string;
+    position: number;
+    item: Record<string, unknown>;
+  }) => void;
   /** Called when items change via DnD (for publish). */
-  onDndChange?: (payload: { movedItem: Record<string, unknown>; targetColumn: string; position: number }) => void;
+  onDndChange?: (payload: {
+    movedItem: Record<string, unknown>;
+    targetColumn: string;
+    position: number;
+  }) => void;
   /** className applied to the root wrapper. */
   className?: string;
   /** Inline style applied to the root wrapper. */
@@ -83,8 +92,7 @@ export interface KanbanBaseProps {
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-const colorVar = (color: string): string =>
-  `var(--sn-color-${color}, #2563eb)`;
+const colorVar = (color: string): string => `var(--sn-color-${color}, #2563eb)`;
 
 const priorityColorMap: Record<string, string> = {
   high: "var(--sn-color-destructive, #ef4444)",
@@ -92,9 +100,7 @@ const priorityColorMap: Record<string, string> = {
   low: "var(--sn-color-info, #3b82f6)",
 };
 
-function asSurfaceConfig(
-  value: unknown,
-): Record<string, unknown> | undefined {
+function asSurfaceConfig(value: unknown): Record<string, unknown> | undefined {
   return value && typeof value === "object"
     ? (value as Record<string, unknown>)
     : undefined;
@@ -296,11 +302,7 @@ function CardContent({
       borderRadius: "sm",
       padding: "sm",
       shadow: "sm",
-      cursor: sortable
-        ? "grab"
-        : onCardClick
-          ? "pointer"
-          : "default",
+      cursor: sortable ? "grab" : onCardClick ? "pointer" : "default",
       hover: {
         shadow: "md",
       },
@@ -374,11 +376,7 @@ function CardContent({
         className={cardSurface.className}
         role={onCardClick ? "button" : undefined}
         tabIndex={onCardClick ? 0 : undefined}
-        onClick={
-          onCardClick
-            ? () => onCardClick(item)
-            : undefined
-        }
+        onClick={onCardClick ? () => onCardClick(item) : undefined}
         onKeyDown={
           onCardClick
             ? (e: React.KeyboardEvent) => {

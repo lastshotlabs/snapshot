@@ -209,7 +209,9 @@ export function ContextMenuBase({
             if (event.key === "ArrowDown" || event.key === "ArrowUp") {
               event.preventDefault();
               const menuItems = Array.from(
-                event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]'),
+                event.currentTarget.querySelectorAll<HTMLElement>(
+                  '[role="menuitem"]',
+                ),
               );
               if (menuItems.length === 0) return;
               const currentIndex = menuItems.indexOf(
@@ -217,9 +219,11 @@ export function ContextMenuBase({
               );
               let nextIndex: number;
               if (event.key === "ArrowDown") {
-                nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+                nextIndex =
+                  currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
               } else {
-                nextIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+                nextIndex =
+                  currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
               }
               menuItems[nextIndex]?.focus();
             }

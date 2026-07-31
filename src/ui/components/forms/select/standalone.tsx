@@ -1,9 +1,14 @@
-'use client';
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { useSnapshotId } from "../../_base/use-snapshot-id";
-import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler } from "react";
+import type {
+  CSSProperties,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  MouseEventHandler,
+} from "react";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { SelectControl } from "./control";
@@ -92,7 +97,9 @@ export function SelectField({
   style,
   slots,
 }: SelectFieldProps) {
-  const [internalValue, setInternalValue] = useState(controlledValue ?? defaultValue);
+  const [internalValue, setInternalValue] = useState(
+    controlledValue ?? defaultValue,
+  );
   const value = controlledValue ?? internalValue;
 
   useEffect(() => {

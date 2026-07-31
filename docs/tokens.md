@@ -45,16 +45,16 @@ export function SnapshotStyles() {
 
 ## Built-In Flavors
 
-| Flavor | Description |
-| --- | --- |
-| `neutral` | Clean professional default |
-| `slate` | Soft neutral palette |
-| `midnight` | Dark-first palette |
-| `violet` | Saturated violet palette |
-| `rose` | Warm red/pink palette |
-| `emerald` | Green palette |
-| `ocean` | Blue/teal palette |
-| `sunset` | Orange/amber palette |
+| Flavor     | Description                |
+| ---------- | -------------------------- |
+| `neutral`  | Clean professional default |
+| `slate`    | Soft neutral palette       |
+| `midnight` | Dark-first palette         |
+| `violet`   | Saturated violet palette   |
+| `rose`     | Warm red/pink palette      |
+| `emerald`  | Green palette              |
+| `ocean`    | Blue/teal palette          |
+| `sunset`   | Orange/amber palette       |
 
 ## Code-Registered Flavors
 
@@ -136,7 +136,10 @@ Apply the `dark` class to the document root to use dark variables.
 ## Tailwind Bridge
 
 ```ts
-import { generateTailwindBridge, resolveTokens } from "@lastshotlabs/snapshot/ui";
+import {
+  generateTailwindBridge,
+  resolveTokens,
+} from "@lastshotlabs/snapshot/ui";
 
 export const snapshotCss = resolveTokens({ flavor: "neutral" });
 export const tailwindBridge = generateTailwindBridge();

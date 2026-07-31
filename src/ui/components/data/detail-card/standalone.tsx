@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -18,7 +18,19 @@ export interface DetailCardBaseField {
   /** The field value to render. */
   value: unknown;
   /** Display format for the value. */
-  format?: "text" | "boolean" | "date" | "datetime" | "number" | "currency" | "badge" | "email" | "url" | "link" | "image" | "list";
+  format?:
+    | "text"
+    | "boolean"
+    | "date"
+    | "datetime"
+    | "number"
+    | "currency"
+    | "badge"
+    | "email"
+    | "url"
+    | "link"
+    | "image"
+    | "list";
   /** Whether the value can be copied to clipboard. */
   copyable?: boolean;
   /** Divisor for currency formatting (e.g. 100 for cents-to-dollars). */
@@ -155,20 +167,28 @@ function FormattedFieldValue({
         );
         break;
       case "date":
-        content = <span>{new Date(value as string | number).toLocaleDateString()}</span>;
+        content = (
+          <span>{new Date(value as string | number).toLocaleDateString()}</span>
+        );
         break;
       case "datetime":
-        content = <span>{new Date(value as string | number).toLocaleString()}</span>;
+        content = (
+          <span>{new Date(value as string | number).toLocaleString()}</span>
+        );
         break;
       case "number":
         content = <span>{Number(value).toLocaleString()}</span>;
         break;
       case "currency": {
         const divisor = field.divisor;
-        const adjusted = divisor && divisor !== 1 ? Number(value) / divisor : Number(value);
+        const adjusted =
+          divisor && divisor !== 1 ? Number(value) / divisor : Number(value);
         content = (
           <span>
-            {adjusted.toLocaleString(undefined, { style: "currency", currency: "USD" })}
+            {adjusted.toLocaleString(undefined, {
+              style: "currency",
+              currency: "USD",
+            })}
           </span>
         );
         break;
@@ -223,15 +243,19 @@ function FormattedFieldValue({
         );
         break;
       case "list":
-        content = Array.isArray(value)
-          ? <span>{value.join(", ")}</span>
-          : <span>{String(value)}</span>;
+        content = Array.isArray(value) ? (
+          <span>{value.join(", ")}</span>
+        ) : (
+          <span>{String(value)}</span>
+        );
         break;
       case "text":
       default:
-        content = Array.isArray(value)
-          ? <span>{value.map((e) => String(e)).join(", ")}</span>
-          : <span>{String(value)}</span>;
+        content = Array.isArray(value) ? (
+          <span>{value.map((e) => String(e)).join(", ")}</span>
+        ) : (
+          <span>{String(value)}</span>
+        );
         break;
     }
   }
@@ -307,7 +331,11 @@ function FieldRow({
   const copyButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-copy-button-${fieldIndex}`,
     implementationBase: {
-      style: { minHeight: "1.5rem", padding: "0.125rem 0.375rem", fontSize: "var(--sn-font-size-xs, 0.75rem)" },
+      style: {
+        minHeight: "1.5rem",
+        padding: "0.125rem 0.375rem",
+        fontSize: "var(--sn-font-size-xs, 0.75rem)",
+      },
     },
     componentSurface: componentSlots?.copyButton,
     itemSurface: field.slots?.copyButton,
@@ -378,17 +406,31 @@ function DetailCardSkeleton({
   });
   const skeletonRowSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-skeleton-row`,
-    implementationBase: { display: "flex", gap: "md", style: { marginBottom: "var(--sn-spacing-sm, 0.5rem)" } },
+    implementationBase: {
+      display: "flex",
+      gap: "md",
+      style: { marginBottom: "var(--sn-spacing-sm, 0.5rem)" },
+    },
     componentSurface: componentSlots?.skeletonRow,
   });
   const skeletonLabelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-skeleton-label`,
-    implementationBase: { width: "6rem", height: "1rem", borderRadius: "sm", bg: "var(--sn-color-muted, #e5e7eb)" },
+    implementationBase: {
+      width: "6rem",
+      height: "1rem",
+      borderRadius: "sm",
+      bg: "var(--sn-color-muted, #e5e7eb)",
+    },
     componentSurface: componentSlots?.skeletonLabel,
   });
   const skeletonValueSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-skeleton-value`,
-    implementationBase: { flex: "1", height: "1rem", borderRadius: "sm", bg: "var(--sn-color-muted, #e5e7eb)" },
+    implementationBase: {
+      flex: "1",
+      height: "1rem",
+      borderRadius: "sm",
+      bg: "var(--sn-color-muted, #e5e7eb)",
+    },
     componentSurface: componentSlots?.skeletonValue,
   });
 
@@ -465,37 +507,62 @@ export function DetailCardBase({
   const panelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-panel`,
     implementationBase: {
-      display: "flex", flexDirection: "column", gap: "md",
-      border: "var(--sn-card-border, 1px solid #e5e7eb)", borderRadius: "lg",
+      display: "flex",
+      flexDirection: "column",
+      gap: "md",
+      border: "var(--sn-card-border, 1px solid #e5e7eb)",
+      borderRadius: "lg",
       padding: "var(--sn-card-padding, var(--sn-spacing-lg, 1.5rem))",
-      style: { boxShadow: "var(--sn-card-shadow, 0 1px 3px rgba(0,0,0,0.1))", backgroundColor: "var(--sn-color-surface, #ffffff)" },
+      style: {
+        boxShadow: "var(--sn-card-shadow, 0 1px 3px rgba(0,0,0,0.1))",
+        backgroundColor: "var(--sn-color-surface, #ffffff)",
+      },
     },
     componentSurface: slots?.panel,
   });
   const headerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-header`,
     implementationBase: {
-      display: "flex", justifyContent: "space-between", alignItems: "center", gap: "sm",
-      style: { paddingBottom: "var(--sn-spacing-sm, 0.5rem)", borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" },
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "sm",
+      style: {
+        paddingBottom: "var(--sn-spacing-sm, 0.5rem)",
+        borderBottom:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
     },
     componentSurface: slots?.header,
   });
   const titleSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-title`,
     implementationBase: {
-      color: "var(--sn-color-foreground, #111827)", fontSize: "var(--sn-font-size-lg, 1.125rem)", fontWeight: 600,
+      color: "var(--sn-color-foreground, #111827)",
+      fontSize: "var(--sn-font-size-lg, 1.125rem)",
+      fontWeight: 600,
       style: { margin: 0 },
     },
     componentSurface: slots?.title,
   });
   const actionsSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-actions`,
-    implementationBase: { display: "flex", justifyContent: "end", flexWrap: "wrap", gap: "xs" },
+    implementationBase: {
+      display: "flex",
+      justifyContent: "end",
+      flexWrap: "wrap",
+      gap: "xs",
+    },
     componentSurface: slots?.actions,
   });
   const fieldsSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-fields`,
-    implementationBase: { display: "flex", flexDirection: "column", gap: "sm", style: { margin: 0 } },
+    implementationBase: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "sm",
+      style: { margin: 0 },
+    },
     componentSurface: slots?.fields,
   });
   const loadingSurface = resolveSurfacePresentation({
@@ -531,7 +598,9 @@ export function DetailCardBase({
           className={loadingSurface.className}
           style={loadingSurface.style}
         >
-          {loadingContent ?? <DetailCardSkeleton rootId={rootId} componentSlots={slots} />}
+          {loadingContent ?? (
+            <DetailCardSkeleton rootId={rootId} componentSlots={slots} />
+          )}
         </div>
       ) : error ? (
         <div
@@ -571,7 +640,9 @@ export function DetailCardBase({
                 >
                   {title}
                 </h3>
-              ) : <span />}
+              ) : (
+                <span />
+              )}
               {actions && actions.length > 0 ? (
                 <div
                   data-snapshot-id={`${rootId}-actions`}

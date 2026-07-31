@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, DragEvent, KeyboardEvent } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -78,7 +78,12 @@ function FileRow({
   const fileNameSurface = resolveSurfacePresentation({
     surfaceId: `${itemId}-fileName`,
     implementationBase: {
-      style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" },
+      style: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        display: "block",
+      },
     },
     componentSurface: slots?.fileName,
   });
@@ -129,7 +134,8 @@ function FileRow({
         left: 0,
         height: "2px",
         width: `${entry.progress}%`,
-        transition: "width var(--sn-duration-fast, 200ms) var(--sn-ease-default, ease)",
+        transition:
+          "width var(--sn-duration-fast, 200ms) var(--sn-ease-default, ease)",
       },
     },
     componentSurface: slots?.progress,
@@ -145,20 +151,41 @@ function FileRow({
         className={itemSurface.className}
         style={itemSurface.style}
       >
-        <span aria-hidden="true" data-snapshot-id={`${itemId}-status`} className={statusSurface.className} style={statusSurface.style}>
+        <span
+          aria-hidden="true"
+          data-snapshot-id={`${itemId}-status`}
+          className={statusSurface.className}
+          style={statusSurface.style}
+        >
           {statusSymbol}
         </span>
-        <span data-snapshot-id={`${itemId}-fileInfo`} className={fileInfoSurface.className} style={fileInfoSurface.style}>
-          <span data-snapshot-id={`${itemId}-fileName`} className={fileNameSurface.className} style={fileNameSurface.style}>
+        <span
+          data-snapshot-id={`${itemId}-fileInfo`}
+          className={fileInfoSurface.className}
+          style={fileInfoSurface.style}
+        >
+          <span
+            data-snapshot-id={`${itemId}-fileName`}
+            className={fileNameSurface.className}
+            style={fileNameSurface.style}
+          >
             {entry.file.name}
           </span>
           {entry.errorMessage ? (
-            <span data-snapshot-id={`${itemId}-error`} className={errorSurface.className} style={errorSurface.style}>
+            <span
+              data-snapshot-id={`${itemId}-error`}
+              className={errorSurface.className}
+              style={errorSurface.style}
+            >
               {entry.errorMessage}
             </span>
           ) : null}
         </span>
-        <span data-snapshot-id={`${itemId}-size`} className={sizeSurface.className} style={sizeSurface.style}>
+        <span
+          data-snapshot-id={`${itemId}-size`}
+          className={sizeSurface.className}
+          style={sizeSurface.style}
+        >
           {formatFileSize(entry.file.size)}
         </span>
         <ButtonControl
@@ -391,11 +418,16 @@ export function FileUploaderBase({
             fontSize: "sm",
             fontWeight: "semibold",
             cursor: "pointer",
-            border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             bg: "var(--sn-color-card, #ffffff)",
             color: "var(--sn-color-foreground, #111827)",
-            hover: { bg: "var(--sn-color-accent, var(--sn-color-muted, #f1f5f9))" },
-            focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+            hover: {
+              bg: "var(--sn-color-accent, var(--sn-color-muted, #f1f5f9))",
+            },
+            focus: {
+              ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+            },
             style: { fontFamily: "inherit" },
           }
         : {
@@ -404,11 +436,16 @@ export function FileUploaderBase({
             borderRadius: "sm",
             fontSize: "xs",
             cursor: "pointer",
-            border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            border:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             bg: "var(--sn-color-card, #ffffff)",
             color: "var(--sn-color-foreground, #111827)",
-            hover: { bg: "var(--sn-color-accent, var(--sn-color-muted, #f1f5f9))" },
-            focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+            hover: {
+              bg: "var(--sn-color-accent, var(--sn-color-muted, #f1f5f9))",
+            },
+            focus: {
+              ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+            },
             style: { fontFamily: "inherit" },
           },
     componentSurface: slots?.trigger,
@@ -466,12 +503,18 @@ export function FileUploaderBase({
   });
   const dropzoneLabelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-dropzoneLabel`,
-    implementationBase: { fontSize: "sm", color: "var(--sn-color-foreground, #111827)" },
+    implementationBase: {
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #111827)",
+    },
     componentSurface: slots?.dropzoneLabel,
   });
   const dropzoneDescriptionSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-dropzoneDescription`,
-    implementationBase: { fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)" },
+    implementationBase: {
+      fontSize: "xs",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    },
     componentSurface: slots?.dropzoneDescription,
   });
   const listSurface = resolveSurfacePresentation({
@@ -503,28 +546,29 @@ export function FileUploaderBase({
     />
   );
 
-  const fileList = files.length > 0 ? (
-    <>
-      <div
-        data-testid="file-uploader-list"
-        data-snapshot-id={`${rootId}-list`}
-        className={listSurface.className}
-        style={listSurface.style}
-      >
-        {files.map((entry, index) => (
-          <FileRow
-            key={entry.id}
-            entry={entry}
-            index={index}
-            rootId={rootId}
-            onRemove={removeFile}
-            slots={slots}
-          />
-        ))}
-      </div>
-      <SurfaceStyles css={listSurface.scopedCss} />
-    </>
-  ) : null;
+  const fileList =
+    files.length > 0 ? (
+      <>
+        <div
+          data-testid="file-uploader-list"
+          data-snapshot-id={`${rootId}-list`}
+          className={listSurface.className}
+          style={listSurface.style}
+        >
+          {files.map((entry, index) => (
+            <FileRow
+              key={entry.id}
+              entry={entry}
+              index={index}
+              rootId={rootId}
+              onRemove={removeFile}
+              slots={slots}
+            />
+          ))}
+        </div>
+        <SurfaceStyles css={listSurface.scopedCss} />
+      </>
+    ) : null;
 
   const compactSelectedText =
     files.length > 0
@@ -554,7 +598,12 @@ export function FileUploaderBase({
             size="sm"
             surfaceConfig={triggerSurface.resolvedConfigForWrapper}
           >
-            <span aria-hidden="true" data-snapshot-id={`${rootId}-triggerIcon`} className={triggerIconSurface.className} style={triggerIconSurface.style}>
+            <span
+              aria-hidden="true"
+              data-snapshot-id={`${rootId}-triggerIcon`}
+              className={triggerIconSurface.className}
+              style={triggerIconSurface.style}
+            >
               {"\u2191"}
             </span>
             <span>{resolvedLabel}</span>
@@ -591,7 +640,11 @@ export function FileUploaderBase({
             Choose file
           </ButtonControl>
           {compactSelectedText ? (
-            <span data-snapshot-id={`${rootId}-selectedText`} className={selectedTextSurface.className} style={selectedTextSurface.style}>
+            <span
+              data-snapshot-id={`${rootId}-selectedText`}
+              className={selectedTextSurface.className}
+              style={selectedTextSurface.style}
+            >
               {compactSelectedText}
             </span>
           ) : null}
@@ -635,14 +688,27 @@ export function FileUploaderBase({
           className={dropzoneSurface.className}
           style={dropzoneSurface.style}
         >
-          <span aria-hidden="true" data-snapshot-id={`${rootId}-dropzoneIcon`} className={dropzoneIconSurface.className} style={dropzoneIconSurface.style}>
+          <span
+            aria-hidden="true"
+            data-snapshot-id={`${rootId}-dropzoneIcon`}
+            className={dropzoneIconSurface.className}
+            style={dropzoneIconSurface.style}
+          >
             {"\u2191"}
           </span>
-          <span data-snapshot-id={`${rootId}-dropzoneLabel`} className={dropzoneLabelSurface.className} style={dropzoneLabelSurface.style}>
+          <span
+            data-snapshot-id={`${rootId}-dropzoneLabel`}
+            className={dropzoneLabelSurface.className}
+            style={dropzoneLabelSurface.style}
+          >
             {resolvedLabel}
           </span>
           {description ? (
-            <span data-snapshot-id={`${rootId}-dropzoneDescription`} className={dropzoneDescriptionSurface.className} style={dropzoneDescriptionSurface.style}>
+            <span
+              data-snapshot-id={`${rootId}-dropzoneDescription`}
+              className={dropzoneDescriptionSurface.className}
+              style={dropzoneDescriptionSurface.style}
+            >
               {description}
             </span>
           ) : null}

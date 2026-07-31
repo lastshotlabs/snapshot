@@ -101,9 +101,7 @@ export function describeType(schema: z.ZodType, depth = 0): string {
         : String(def.value);
 
     case "ZodEnum":
-      return (def.values as string[])
-        .map((v: string) => `"${v}"`)
-        .join(" | ");
+      return (def.values as string[]).map((v: string) => `"${v}"`).join(" | ");
 
     case "ZodNativeEnum":
       return "enum";
@@ -207,9 +205,7 @@ export function describeType(schema: z.ZodType, depth = 0): string {
 
 // ── Object field extraction ──────────────────────────────────────────────────
 
-function getObjectShape(
-  schema: z.ZodType,
-): Record<string, z.ZodType> | null {
+function getObjectShape(schema: z.ZodType): Record<string, z.ZodType> | null {
   const raw = unwrapEffects(schema);
   const def = getDef(raw);
   if (getTypeName(raw) !== "ZodObject") return null;
@@ -387,7 +383,10 @@ export function extractUnionVariants(
 // ── Markdown formatting ──────────────────────────────────────────────────────
 
 function escapeCell(value: string): string {
-  return value.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
+  return value
+    .replace(/\|/g, "\\|")
+    .replace(/\r?\n+/g, " ")
+    .trim();
 }
 
 function formatDefault(value: unknown): string {
@@ -452,9 +451,7 @@ export function fieldsToMarkdownSections(
       parts.push("");
       parts.push(`${heading} \`${path}\``);
       parts.push("");
-      parts.push(
-        fieldsToMarkdownSections(f.children, path, headingLevel + 1),
-      );
+      parts.push(fieldsToMarkdownSections(f.children, path, headingLevel + 1));
     }
   }
 

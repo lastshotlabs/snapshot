@@ -24,7 +24,8 @@ const PAGES: Array<{
   {
     key: "overview",
     label: "Overview",
-    description: "Cards, badges, layout, and actions composed with plain props.",
+    description:
+      "Cards, badges, layout, and actions composed with plain props.",
   },
   {
     key: "data",
@@ -125,7 +126,9 @@ function OverviewPage() {
             },
             {
               label: "Billing",
-              content: <p>Billing content can fetch, mutate, or render freely.</p>,
+              content: (
+                <p>Billing content can fetch, mutate, or render freely.</p>
+              ),
             },
             {
               label: "Security",
@@ -261,8 +264,12 @@ function FeedbackPage() {
       <ShowcaseSection title="Alerts">
         <ColumnBase gap="sm">
           <AlertBase severity="success">Deployment finished.</AlertBase>
-          <AlertBase severity="warning">Usage is near the plan limit.</AlertBase>
-          <AlertBase severity="error">Payment method requires attention.</AlertBase>
+          <AlertBase severity="warning">
+            Usage is near the plan limit.
+          </AlertBase>
+          <AlertBase severity="error">
+            Payment method requires attention.
+          </AlertBase>
         </ColumnBase>
       </ShowcaseSection>
 

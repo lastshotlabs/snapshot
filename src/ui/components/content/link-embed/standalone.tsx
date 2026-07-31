@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useMemo } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -42,12 +42,22 @@ function MediaFrame({
 }) {
   const mediaSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-media`,
-    implementationBase: { borderRadius: "md", overflow: "hidden", ...frameBase },
+    implementationBase: {
+      borderRadius: "md",
+      overflow: "hidden",
+      ...frameBase,
+    },
     componentSurface: slots?.media,
   });
   return (
     <>
-      <div data-snapshot-id={`${rootId}-media`} className={mediaSurface.className} style={mediaSurface.style}>{children}</div>
+      <div
+        data-snapshot-id={`${rootId}-media`}
+        className={mediaSurface.className}
+        style={mediaSurface.style}
+      >
+        {children}
+      </div>
       <SurfaceStyles css={mediaSurface.scopedCss} />
     </>
   );
@@ -77,53 +87,183 @@ function EmbedFrame({
   });
   return (
     <>
-      <iframe src={src} title={title} allow={allow} allowFullScreen={allowFullScreen} data-snapshot-id={`${rootId}-embed-frame`} className={frameSurface.className} style={frameSurface.style} />
+      <iframe
+        src={src}
+        title={title}
+        allow={allow}
+        allowFullScreen={allowFullScreen}
+        data-snapshot-id={`${rootId}-embed-frame`}
+        className={frameSurface.className}
+        style={frameSurface.style}
+      />
       <SurfaceStyles css={frameSurface.scopedCss} />
     </>
   );
 }
 
-function YouTubeEmbed({ rootId, info, aspectRatio, slots }: { rootId: string; info: PlatformInfo; aspectRatio: string; slots?: SlotOverrides }) {
+function YouTubeEmbed({
+  rootId,
+  info,
+  aspectRatio,
+  slots,
+}: {
+  rootId: string;
+  info: PlatformInfo;
+  aspectRatio: string;
+  slots?: SlotOverrides;
+}) {
   return (
-    <MediaFrame rootId={rootId} frameBase={{ position: "relative", width: "100%", aspectRatio, bg: "var(--sn-color-foreground, #000)" }} slots={slots}>
-      <EmbedFrame rootId={rootId} title="YouTube video" src={info.embedUrl} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen frameBase={{ position: "absolute", inset: 0, width: "100%", height: "100%", style: { border: "none" } }} slots={slots} />
+    <MediaFrame
+      rootId={rootId}
+      frameBase={{
+        position: "relative",
+        width: "100%",
+        aspectRatio,
+        bg: "var(--sn-color-foreground, #000)",
+      }}
+      slots={slots}
+    >
+      <EmbedFrame
+        rootId={rootId}
+        title="YouTube video"
+        src={info.embedUrl}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        frameBase={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          style: { border: "none" },
+        }}
+        slots={slots}
+      />
     </MediaFrame>
   );
 }
 
-function InstagramEmbed({ rootId, info, slots }: { rootId: string; info: PlatformInfo; slots?: SlotOverrides }) {
+function InstagramEmbed({
+  rootId,
+  info,
+  slots,
+}: {
+  rootId: string;
+  info: PlatformInfo;
+  slots?: SlotOverrides;
+}) {
   return (
-    <MediaFrame rootId={rootId} frameBase={{ maxWidth: "min(540px, 100%)" }} slots={slots}>
-      <EmbedFrame rootId={rootId} title="Instagram post" src={info.embedUrl} allowFullScreen frameBase={{ width: "100%", minHeight: "500px", bg: "var(--sn-color-card, #ffffff)", style: { border: "none" } }} slots={slots} />
+    <MediaFrame
+      rootId={rootId}
+      frameBase={{ maxWidth: "min(540px, 100%)" }}
+      slots={slots}
+    >
+      <EmbedFrame
+        rootId={rootId}
+        title="Instagram post"
+        src={info.embedUrl}
+        allowFullScreen
+        frameBase={{
+          width: "100%",
+          minHeight: "500px",
+          bg: "var(--sn-color-card, #ffffff)",
+          style: { border: "none" },
+        }}
+        slots={slots}
+      />
     </MediaFrame>
   );
 }
 
-function TikTokEmbed({ rootId, info, slots }: { rootId: string; info: PlatformInfo; slots?: SlotOverrides }) {
+function TikTokEmbed({
+  rootId,
+  info,
+  slots,
+}: {
+  rootId: string;
+  info: PlatformInfo;
+  slots?: SlotOverrides;
+}) {
   return (
-    <MediaFrame rootId={rootId} frameBase={{ maxWidth: "min(325px, 100%)" }} slots={slots}>
-      <EmbedFrame rootId={rootId} title="TikTok video" src={info.embedUrl} allowFullScreen frameBase={{ width: "100%", height: "min(750px, 80vh)", bg: "var(--sn-color-card, #ffffff)", style: { border: "none" } }} slots={slots} />
+    <MediaFrame
+      rootId={rootId}
+      frameBase={{ maxWidth: "min(325px, 100%)" }}
+      slots={slots}
+    >
+      <EmbedFrame
+        rootId={rootId}
+        title="TikTok video"
+        src={info.embedUrl}
+        allowFullScreen
+        frameBase={{
+          width: "100%",
+          height: "min(750px, 80vh)",
+          bg: "var(--sn-color-card, #ffffff)",
+          style: { border: "none" },
+        }}
+        slots={slots}
+      />
     </MediaFrame>
   );
 }
 
-function TwitterEmbed({ rootId, info, slots }: { rootId: string; info: PlatformInfo; slots?: SlotOverrides }) {
+function TwitterEmbed({
+  rootId,
+  info,
+  slots,
+}: {
+  rootId: string;
+  info: PlatformInfo;
+  slots?: SlotOverrides;
+}) {
   return (
-    <MediaFrame rootId={rootId} frameBase={{ maxWidth: "min(550px, 100%)" }} slots={slots}>
-      <EmbedFrame rootId={rootId} title="Tweet" src={info.embedUrl} frameBase={{ width: "100%", minHeight: "250px", bg: "var(--sn-color-card, #ffffff)", style: { border: "none" } }} slots={slots} />
+    <MediaFrame
+      rootId={rootId}
+      frameBase={{ maxWidth: "min(550px, 100%)" }}
+      slots={slots}
+    >
+      <EmbedFrame
+        rootId={rootId}
+        title="Tweet"
+        src={info.embedUrl}
+        frameBase={{
+          width: "100%",
+          minHeight: "250px",
+          bg: "var(--sn-color-card, #ffffff)",
+          style: { border: "none" },
+        }}
+        slots={slots}
+      />
     </MediaFrame>
   );
 }
 
-function GifEmbed({ rootId, url, slots }: { rootId: string; url: string; slots?: SlotOverrides }) {
+function GifEmbed({
+  rootId,
+  url,
+  slots,
+}: {
+  rootId: string;
+  url: string;
+  slots?: SlotOverrides;
+}) {
   const imageSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-gif-image`,
     implementationBase: { width: "100%", height: "auto", display: "block" },
     componentSurface: slots?.gifImage,
   });
   return (
-    <MediaFrame rootId={rootId} frameBase={{ maxWidth: "min(400px, 100%)" }} slots={slots}>
-      <img src={url} alt="GIF" data-snapshot-id={`${rootId}-gif-image`} className={imageSurface.className} style={imageSurface.style} />
+    <MediaFrame
+      rootId={rootId}
+      frameBase={{ maxWidth: "min(400px, 100%)" }}
+      slots={slots}
+    >
+      <img
+        src={url}
+        alt="GIF"
+        data-snapshot-id={`${rootId}-gif-image`}
+        className={imageSurface.className}
+        style={imageSurface.style}
+      />
       <SurfaceStyles css={imageSurface.scopedCss} />
     </MediaFrame>
   );
@@ -135,7 +275,17 @@ function sanitizeOEmbed(html: string) {
     .replace(/\son\w+="[^"]*"/g, "");
 }
 
-function GenericCard({ rootId, url, meta, slots }: { rootId: string; url: string; meta?: LinkEmbedMeta; slots?: SlotOverrides }) {
+function GenericCard({
+  rootId,
+  url,
+  meta,
+  slots,
+}: {
+  rootId: string;
+  url: string;
+  meta?: LinkEmbedMeta;
+  slots?: SlotOverrides;
+}) {
   const siteName = meta?.siteName;
   const title = meta?.title;
   const description = meta?.description;
@@ -143,7 +293,8 @@ function GenericCard({ rootId, url, meta, slots }: { rootId: string; url: string
     surfaceId: `${rootId}-card`,
     implementationBase: {
       display: "flex",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "md",
       overflow: "hidden",
       bg: "var(--sn-color-card, #ffffff)",
@@ -157,19 +308,109 @@ function GenericCard({ rootId, url, meta, slots }: { rootId: string; url: string
     },
     componentSurface: slots?.card,
   });
-  const thumbnailSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-thumbnail`, implementationBase: { style: { width: "clamp(80px, 25%, 120px)", minHeight: "80px", flexShrink: 0, backgroundImage: meta?.image ? `url(${meta.image})` : undefined, backgroundSize: "cover", backgroundPosition: "center" } }, componentSurface: slots?.thumbnail });
-  const contentSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-content`, implementationBase: { flex: "1", display: "flex", flexDirection: "column", justifyContent: "center", gap: "2xs", padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)", minWidth: 0 }, componentSurface: slots?.content });
-  const siteMetaSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-siteMeta`, implementationBase: { display: "flex", alignItems: "center", gap: "xs" }, componentSurface: slots?.siteMeta });
-  const faviconSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-favicon`, implementationBase: { width: "14px", height: "14px", borderRadius: "var(--sn-radius-xs, 2px)" }, componentSurface: slots?.favicon });
-  const siteNameSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-site-name`, implementationBase: { fontSize: "var(--sn-font-size-xs, 0.75rem)", color: "var(--sn-color-muted-foreground, #6b7280)", letterSpacing: "var(--sn-tracking-wide, 0.05em)", style: { textTransform: "uppercase" } }, componentSurface: slots?.siteName });
-  const titleSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-title`, implementationBase: { fontSize: "sm", fontWeight: "semibold", color: "var(--sn-color-info, #3b82f6)", style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" } }, componentSurface: slots?.title });
-  const descriptionSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-description`, implementationBase: { fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)", style: { overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" } }, componentSurface: slots?.description });
-  const urlSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-url`, implementationBase: { fontSize: "xs", color: "var(--sn-color-info, #3b82f6)", style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" } }, componentSurface: slots?.url });
+  const thumbnailSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-thumbnail`,
+    implementationBase: {
+      style: {
+        width: "clamp(80px, 25%, 120px)",
+        minHeight: "80px",
+        flexShrink: 0,
+        backgroundImage: meta?.image ? `url(${meta.image})` : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      },
+    },
+    componentSurface: slots?.thumbnail,
+  });
+  const contentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-content`,
+    implementationBase: {
+      flex: "1",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: "2xs",
+      padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 1rem)",
+      minWidth: 0,
+    },
+    componentSurface: slots?.content,
+  });
+  const siteMetaSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-siteMeta`,
+    implementationBase: { display: "flex", alignItems: "center", gap: "xs" },
+    componentSurface: slots?.siteMeta,
+  });
+  const faviconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-favicon`,
+    implementationBase: {
+      width: "14px",
+      height: "14px",
+      borderRadius: "var(--sn-radius-xs, 2px)",
+    },
+    componentSurface: slots?.favicon,
+  });
+  const siteNameSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-site-name`,
+    implementationBase: {
+      fontSize: "var(--sn-font-size-xs, 0.75rem)",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      letterSpacing: "var(--sn-tracking-wide, 0.05em)",
+      style: { textTransform: "uppercase" },
+    },
+    componentSurface: slots?.siteName,
+  });
+  const titleSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-title`,
+    implementationBase: {
+      fontSize: "sm",
+      fontWeight: "semibold",
+      color: "var(--sn-color-info, #3b82f6)",
+      style: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+    },
+    componentSurface: slots?.title,
+  });
+  const descriptionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-description`,
+    implementationBase: {
+      fontSize: "xs",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+      },
+    },
+    componentSurface: slots?.description,
+  });
+  const urlSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-url`,
+    implementationBase: {
+      fontSize: "xs",
+      color: "var(--sn-color-info, #3b82f6)",
+      style: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+    },
+    componentSurface: slots?.url,
+  });
 
   if (meta?.html) {
     return (
       <>
-        <div data-snapshot-id={`${rootId}-card`} className={cardSurface.className} style={cardSurface.style} dangerouslySetInnerHTML={{ __html: sanitizeOEmbed(meta.html) }} />
+        <div
+          data-snapshot-id={`${rootId}-card`}
+          className={cardSurface.className}
+          style={cardSurface.style}
+          dangerouslySetInnerHTML={{ __html: sanitizeOEmbed(meta.html) }}
+        />
         <SurfaceStyles css={cardSurface.scopedCss} />
       </>
     );
@@ -177,18 +418,79 @@ function GenericCard({ rootId, url, meta, slots }: { rootId: string; url: string
 
   return (
     <>
-      <a href={url} target="_blank" rel="noopener noreferrer" data-snapshot-id={`${rootId}-card`} className={cardSurface.className} style={cardSurface.style}>
-        {meta?.image ? <div data-snapshot-id={`${rootId}-thumbnail`} className={thumbnailSurface.className} style={thumbnailSurface.style} /> : null}
-        <div data-snapshot-id={`${rootId}-content`} className={contentSurface.className} style={contentSurface.style}>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-snapshot-id={`${rootId}-card`}
+        className={cardSurface.className}
+        style={cardSurface.style}
+      >
+        {meta?.image ? (
+          <div
+            data-snapshot-id={`${rootId}-thumbnail`}
+            className={thumbnailSurface.className}
+            style={thumbnailSurface.style}
+          />
+        ) : null}
+        <div
+          data-snapshot-id={`${rootId}-content`}
+          className={contentSurface.className}
+          style={contentSurface.style}
+        >
           {siteName || meta?.favicon ? (
-            <div data-snapshot-id={`${rootId}-siteMeta`} className={siteMetaSurface.className} style={siteMetaSurface.style}>
-              {meta?.favicon ? <img src={meta.favicon} alt="" data-snapshot-id={`${rootId}-favicon`} className={faviconSurface.className} style={faviconSurface.style} /> : null}
-              {siteName ? <span data-snapshot-id={`${rootId}-site-name`} className={siteNameSurface.className} style={siteNameSurface.style}>{siteName}</span> : null}
+            <div
+              data-snapshot-id={`${rootId}-siteMeta`}
+              className={siteMetaSurface.className}
+              style={siteMetaSurface.style}
+            >
+              {meta?.favicon ? (
+                <img
+                  src={meta.favicon}
+                  alt=""
+                  data-snapshot-id={`${rootId}-favicon`}
+                  className={faviconSurface.className}
+                  style={faviconSurface.style}
+                />
+              ) : null}
+              {siteName ? (
+                <span
+                  data-snapshot-id={`${rootId}-site-name`}
+                  className={siteNameSurface.className}
+                  style={siteNameSurface.style}
+                >
+                  {siteName}
+                </span>
+              ) : null}
             </div>
           ) : null}
-          {title ? <div data-snapshot-id={`${rootId}-title`} className={titleSurface.className} style={titleSurface.style}>{title}</div> : null}
-          {description ? <div data-snapshot-id={`${rootId}-description`} className={descriptionSurface.className} style={descriptionSurface.style}>{description}</div> : null}
-          {!title ? <div data-snapshot-id={`${rootId}-url`} className={urlSurface.className} style={urlSurface.style}>{url}</div> : null}
+          {title ? (
+            <div
+              data-snapshot-id={`${rootId}-title`}
+              className={titleSurface.className}
+              style={titleSurface.style}
+            >
+              {title}
+            </div>
+          ) : null}
+          {description ? (
+            <div
+              data-snapshot-id={`${rootId}-description`}
+              className={descriptionSurface.className}
+              style={descriptionSurface.style}
+            >
+              {description}
+            </div>
+          ) : null}
+          {!title ? (
+            <div
+              data-snapshot-id={`${rootId}-url`}
+              className={urlSurface.className}
+              style={urlSurface.style}
+            >
+              {url}
+            </div>
+          ) : null}
         </div>
       </a>
       <SurfaceStyles css={cardSurface.scopedCss} />
@@ -275,12 +577,29 @@ export function LinkEmbedBase({
         className={rootSurface.className}
         style={rootSurface.style}
       >
-        {allowIframe && platformInfo?.platform === "youtube" ? <YouTubeEmbed rootId={rootId} info={platformInfo} aspectRatio={aspectRatio} slots={slots} /> : null}
-        {allowIframe && platformInfo?.platform === "instagram" ? <InstagramEmbed rootId={rootId} info={platformInfo} slots={slots} /> : null}
-        {allowIframe && platformInfo?.platform === "tiktok" ? <TikTokEmbed rootId={rootId} info={platformInfo} slots={slots} /> : null}
-        {allowIframe && platformInfo?.platform === "twitter" ? <TwitterEmbed rootId={rootId} info={platformInfo} slots={slots} /> : null}
-        {platformInfo?.platform === "gif" ? <GifEmbed rootId={rootId} url={platformInfo.embedUrl} slots={slots} /> : null}
-        {!platformInfo || (!allowIframe && platformInfo.platform !== "gif") ? <GenericCard rootId={rootId} url={url} meta={meta} slots={slots} /> : null}
+        {allowIframe && platformInfo?.platform === "youtube" ? (
+          <YouTubeEmbed
+            rootId={rootId}
+            info={platformInfo}
+            aspectRatio={aspectRatio}
+            slots={slots}
+          />
+        ) : null}
+        {allowIframe && platformInfo?.platform === "instagram" ? (
+          <InstagramEmbed rootId={rootId} info={platformInfo} slots={slots} />
+        ) : null}
+        {allowIframe && platformInfo?.platform === "tiktok" ? (
+          <TikTokEmbed rootId={rootId} info={platformInfo} slots={slots} />
+        ) : null}
+        {allowIframe && platformInfo?.platform === "twitter" ? (
+          <TwitterEmbed rootId={rootId} info={platformInfo} slots={slots} />
+        ) : null}
+        {platformInfo?.platform === "gif" ? (
+          <GifEmbed rootId={rootId} url={platformInfo.embedUrl} slots={slots} />
+        ) : null}
+        {!platformInfo || (!allowIframe && platformInfo.platform !== "gif") ? (
+          <GenericCard rootId={rootId} url={url} meta={meta} slots={slots} />
+        ) : null}
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
     </>

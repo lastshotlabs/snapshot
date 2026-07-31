@@ -29,7 +29,13 @@
       ]
     },
     "realtime-and-integrations": {
-      "sources": ["src/community", "src/webhooks", "src/ws", "src/sse", "src/push"],
+      "sources": [
+        "src/community",
+        "src/webhooks",
+        "src/ws",
+        "src/sse",
+        "src/push"
+      ],
       "docs": [
         "README.md",
         "docs/api-cheatsheet.md",

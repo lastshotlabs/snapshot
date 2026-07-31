@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { setDomRef } from "../../_base/dom-ref";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -63,16 +63,19 @@ export function TextareaControl({
     className || style
       ? {
           ...(itemSurfaceConfig ?? {}),
-          className: [
-            typeof itemSurfaceConfig?.className === "string"
-              ? itemSurfaceConfig.className
-              : undefined,
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined,
+          className:
+            [
+              typeof itemSurfaceConfig?.className === "string"
+                ? itemSurfaceConfig.className
+                : undefined,
+              className,
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined,
           style: {
-            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
+            ...((itemSurfaceConfig?.style as
+              | Record<string, unknown>
+              | undefined) ?? {}),
             ...(style ?? {}),
           },
         }
@@ -89,7 +92,8 @@ export function TextareaControl({
         lineHeight: "var(--sn-leading-normal, 1.5)",
         color: "var(--sn-color-foreground, #111827)",
         backgroundColor: "var(--sn-color-background, #ffffff)",
-        border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
         borderRadius: "var(--sn-radius-md, 0.375rem)",
         outline: "none",
         resize,

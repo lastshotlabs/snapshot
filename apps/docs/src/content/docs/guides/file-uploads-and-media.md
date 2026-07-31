@@ -6,7 +6,11 @@ draft: false
 
 ```tsx
 import { useState } from "react";
-import { FileUploaderBase, SnapshotImageBase, CardBase } from "@lastshotlabs/snapshot/ui";
+import {
+  FileUploaderBase,
+  SnapshotImageBase,
+  CardBase,
+} from "@lastshotlabs/snapshot/ui";
 
 interface UploadFileEntry {
   file: File;
@@ -23,7 +27,13 @@ function AvatarUploader() {
   return (
     <CardBase title="Upload Avatar">
       {preview && (
-        <SnapshotImageBase src={preview} alt="Preview" width={200} height={200} placeholder="skeleton" />
+        <SnapshotImageBase
+          src={preview}
+          alt="Preview"
+          width={200}
+          height={200}
+          placeholder="skeleton"
+        />
       )}
       <FileUploaderBase
         variant="dropzone"
@@ -36,7 +46,9 @@ function AvatarUploader() {
           const file = newFiles[0];
           if (file) {
             setPreview(URL.createObjectURL(file));
-            setFiles([{ file, id: crypto.randomUUID(), status: "pending", progress: 0 }]);
+            setFiles([
+              { file, id: crypto.randomUUID(), status: "pending", progress: 0 },
+            ]);
           }
         }}
         onFileRemoved={(id) => {
@@ -117,11 +129,19 @@ function DocumentUploader() {
       try {
         await uploadToServer(entry.file);
         setFiles((prev) =>
-          prev.map((f) => f.id === entry.id ? { ...f, status: "completed", progress: 100 } : f)
+          prev.map((f) =>
+            f.id === entry.id
+              ? { ...f, status: "completed", progress: 100 }
+              : f,
+          ),
         );
       } catch {
         setFiles((prev) =>
-          prev.map((f) => f.id === entry.id ? { ...f, status: "error", errorMessage: "Upload failed" } : f)
+          prev.map((f) =>
+            f.id === entry.id
+              ? { ...f, status: "error", errorMessage: "Upload failed" }
+              : f,
+          ),
         );
       }
     }
@@ -136,7 +156,9 @@ function DocumentUploader() {
       maxSize={20 * 1024 * 1024}
       files={files}
       onFilesAdded={handleUpload}
-      onFileRemoved={(id) => setFiles((prev) => prev.filter((f) => f.id !== id))}
+      onFileRemoved={(id) =>
+        setFiles((prev) => prev.filter((f) => f.id !== id))
+      }
     />
   );
 }
@@ -144,27 +166,27 @@ function DocumentUploader() {
 
 Each `UploadFileEntry` has:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `file` | `File` | The native File object |
-| `id` | `string` | Unique identifier |
-| `status` | `"pending" \| "uploading" \| "completed" \| "error"` | Upload state |
-| `progress` | `number` | Progress percentage (0-100) |
-| `errorMessage` | `string?` | Error text if status is `"error"` |
+| Field          | Type                                                 | Description                       |
+| -------------- | ---------------------------------------------------- | --------------------------------- |
+| `file`         | `File`                                               | The native File object            |
+| `id`           | `string`                                             | Unique identifier                 |
+| `status`       | `"pending" \| "uploading" \| "completed" \| "error"` | Upload state                      |
+| `progress`     | `number`                                             | Progress percentage (0-100)       |
+| `errorMessage` | `string?`                                            | Error text if status is `"error"` |
 
 ### Props reference
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `"dropzone" \| "button" \| "compact"` | `"dropzone"` | Visual variant |
-| `label` | `string` | — | Label text |
-| `description` | `string` | — | Description below label |
-| `accept` | `string` | — | Accepted file types |
-| `maxFiles` | `number` | `1` | Maximum number of files |
-| `maxSize` | `number` | — | Maximum file size in bytes |
-| `files` | `UploadFileEntry[]` | — | Controlled file entries |
-| `onFilesAdded` | `(files: File[]) => void` | — | Called when files are added |
-| `onFileRemoved` | `(id: string) => void` | — | Called when a file is removed |
+| Prop            | Type                                  | Default      | Description                   |
+| --------------- | ------------------------------------- | ------------ | ----------------------------- |
+| `variant`       | `"dropzone" \| "button" \| "compact"` | `"dropzone"` | Visual variant                |
+| `label`         | `string`                              | —            | Label text                    |
+| `description`   | `string`                              | —            | Description below label       |
+| `accept`        | `string`                              | —            | Accepted file types           |
+| `maxFiles`      | `number`                              | `1`          | Maximum number of files       |
+| `maxSize`       | `number`                              | —            | Maximum file size in bytes    |
+| `files`         | `UploadFileEntry[]`                   | —            | Controlled file entries       |
+| `onFilesAdded`  | `(files: File[]) => void`             | —            | Called when files are added   |
+| `onFileRemoved` | `(id: string) => void`                | —            | Called when a file is removed |
 
 ## Images
 
@@ -184,7 +206,7 @@ import { SnapshotImageBase } from "@lastshotlabs/snapshot/ui";
   format="webp"
   placeholder="blur"
   sizes="(max-width: 768px) 100vw, 800px"
-/>
+/>;
 ```
 
 Use `priority` for above-the-fold images to skip lazy loading:
@@ -200,18 +222,18 @@ Use `priority` for above-the-fold images to skip lazy loading:
 />
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `src` | `string` | **required** | Image URL |
-| `alt` | `string` | **required** | Alt text |
-| `width` | `number` | **required** | Display width in px |
-| `height` | `number` | — | Display height in px |
-| `quality` | `number` | `75` | Output quality (1-100) |
-| `format` | `"avif" \| "webp" \| "jpeg" \| "png" \| "original"` | `"original"` | Output format |
-| `placeholder` | `"blur" \| "empty" \| "skeleton"` | `"empty"` | Loading placeholder |
-| `priority` | `boolean` | `false` | Preload the image |
-| `sizes` | `string` | — | Responsive sizes attribute |
-| `aspectRatio` | `string` | — | CSS aspect ratio override |
+| Prop          | Type                                                | Default      | Description                |
+| ------------- | --------------------------------------------------- | ------------ | -------------------------- |
+| `src`         | `string`                                            | **required** | Image URL                  |
+| `alt`         | `string`                                            | **required** | Alt text                   |
+| `width`       | `number`                                            | **required** | Display width in px        |
+| `height`      | `number`                                            | —            | Display height in px       |
+| `quality`     | `number`                                            | `75`         | Output quality (1-100)     |
+| `format`      | `"avif" \| "webp" \| "jpeg" \| "png" \| "original"` | `"original"` | Output format              |
+| `placeholder` | `"blur" \| "empty" \| "skeleton"`                   | `"empty"`    | Loading placeholder        |
+| `priority`    | `boolean`                                           | `false`      | Preload the image          |
+| `sizes`       | `string`                                            | —            | Responsive sizes attribute |
+| `aspectRatio` | `string`                                            | —            | CSS aspect ratio override  |
 
 ## Video
 
@@ -229,7 +251,7 @@ import { VideoBase } from "@lastshotlabs/snapshot/ui";
   autoPlay={false}
   loop={false}
   muted={false}
-/>
+/>;
 ```
 
 When `autoPlay` is set, `muted` defaults to `true` (required by most browsers for autoplay):
@@ -238,14 +260,14 @@ When `autoPlay` is set, `muted` defaults to `true` (required by most browsers fo
 <VideoBase src="/videos/background.mp4" autoPlay loop />
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `src` | `string` | **required** | Video source URL |
-| `poster` | `string` | — | Poster image URL |
-| `controls` | `boolean` | `true` | Show playback controls |
-| `autoPlay` | `boolean` | — | Auto-play on mount |
-| `loop` | `boolean` | — | Loop playback |
-| `muted` | `boolean` | `true` if autoPlay | Mute audio |
+| Prop       | Type      | Default            | Description            |
+| ---------- | --------- | ------------------ | ---------------------- |
+| `src`      | `string`  | **required**       | Video source URL       |
+| `poster`   | `string`  | —                  | Poster image URL       |
+| `controls` | `boolean` | `true`             | Show playback controls |
+| `autoPlay` | `boolean` | —                  | Auto-play on mount     |
+| `loop`     | `boolean` | —                  | Loop playback          |
+| `muted`    | `boolean` | `true` if autoPlay | Mute audio             |
 
 ## Carousel
 
@@ -257,10 +279,25 @@ Slide carousel with auto-play, arrow navigation, and dot indicators. Pauses on h
 import { CarouselBase, SnapshotImageBase } from "@lastshotlabs/snapshot/ui";
 
 <CarouselBase autoPlay interval={5000} showArrows showDots>
-  <SnapshotImageBase src="/slides/1.jpg" alt="Slide 1" width={800} height={400} />
-  <SnapshotImageBase src="/slides/2.jpg" alt="Slide 2" width={800} height={400} />
-  <SnapshotImageBase src="/slides/3.jpg" alt="Slide 3" width={800} height={400} />
-</CarouselBase>
+  <SnapshotImageBase
+    src="/slides/1.jpg"
+    alt="Slide 1"
+    width={800}
+    height={400}
+  />
+  <SnapshotImageBase
+    src="/slides/2.jpg"
+    alt="Slide 2"
+    width={800}
+    height={400}
+  />
+  <SnapshotImageBase
+    src="/slides/3.jpg"
+    alt="Slide 3"
+    width={800}
+    height={400}
+  />
+</CarouselBase>;
 ```
 
 Children can be any React elements — not just images:
@@ -273,13 +310,13 @@ Children can be any React elements — not just images:
 </CarouselBase>
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode[]` | **required** | Slide elements |
-| `autoPlay` | `boolean` | — | Auto-advance slides |
-| `interval` | `number` | `5000` | Auto-advance interval in ms |
-| `showArrows` | `boolean` | `true` | Show prev/next arrows |
-| `showDots` | `boolean` | `true` | Show dot indicators |
+| Prop         | Type          | Default      | Description                 |
+| ------------ | ------------- | ------------ | --------------------------- |
+| `children`   | `ReactNode[]` | **required** | Slide elements              |
+| `autoPlay`   | `boolean`     | —            | Auto-advance slides         |
+| `interval`   | `number`      | `5000`       | Auto-advance interval in ms |
+| `showArrows` | `boolean`     | `true`       | Show prev/next arrows       |
+| `showDots`   | `boolean`     | `true`       | Show dot indicators         |
 
 ## Embeds
 
@@ -294,7 +331,7 @@ import { EmbedBase } from "@lastshotlabs/snapshot/ui";
   url="https://www.youtube.com/embed/dQw4w9WgXcQ"
   aspectRatio="16/9"
   title="Video embed"
-/>
+/>;
 ```
 
 ### LinkEmbedBase
@@ -314,7 +351,7 @@ import { LinkEmbedBase } from "@lastshotlabs/snapshot/ui";
   }}
   allowIframe
   maxWidth="600px"
-/>
+/>;
 ```
 
 ## Rich text
@@ -344,17 +381,17 @@ function PostEditor() {
 }
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `content` | `string` | — | Markdown content |
-| `onChange` | `(content: string) => void` | — | Content change handler |
-| `placeholder` | `string` | — | Placeholder text |
-| `readonly` | `boolean` | — | Read-only mode |
-| `mode` | `"edit" \| "preview" \| "split"` | `"edit"` | Editor mode |
-| `toolbar` | `boolean \| string[]` | — | Toolbar config |
-| `minHeight` | `string` | — | Minimum editor height |
-| `maxHeight` | `string` | — | Maximum editor height |
-| `renderPreview` | `(content: string) => ReactNode` | — | Custom preview renderer |
+| Prop            | Type                             | Default  | Description             |
+| --------------- | -------------------------------- | -------- | ----------------------- |
+| `content`       | `string`                         | —        | Markdown content        |
+| `onChange`      | `(content: string) => void`      | —        | Content change handler  |
+| `placeholder`   | `string`                         | —        | Placeholder text        |
+| `readonly`      | `boolean`                        | —        | Read-only mode          |
+| `mode`          | `"edit" \| "preview" \| "split"` | `"edit"` | Editor mode             |
+| `toolbar`       | `boolean \| string[]`            | —        | Toolbar config          |
+| `minHeight`     | `string`                         | —        | Minimum editor height   |
+| `maxHeight`     | `string`                         | —        | Maximum editor height   |
+| `renderPreview` | `(content: string) => ReactNode` | —        | Custom preview renderer |
 
 ### RichInputBase
 
@@ -371,7 +408,7 @@ import { RichInputBase } from "@lastshotlabs/snapshot/ui";
   showSendButton
   onSend={({ html, text }) => sendMessage(text)}
   onChange={({ text }) => updateDraft(text)}
-/>
+/>;
 ```
 
 ### MarkdownBase
@@ -381,7 +418,7 @@ Render Markdown content with syntax highlighting and Snapshot design tokens:
 ```tsx
 import { MarkdownBase } from "@lastshotlabs/snapshot/ui";
 
-<MarkdownBase content={markdownString} maxHeight="400px" />
+<MarkdownBase content={markdownString} maxHeight="400px" />;
 ```
 
 ### CodeBlockBase
@@ -398,7 +435,7 @@ import { CodeBlockBase } from "@lastshotlabs/snapshot/ui";
   showCopy
   showLineNumbers
   maxHeight="300px"
-/>
+/>;
 ```
 
 ### CompareViewBase
@@ -415,18 +452,18 @@ import { CompareViewBase } from "@lastshotlabs/snapshot/ui";
   rightLabel="After"
   showLineNumbers
   maxHeight="400px"
-/>
+/>;
 ```
 
 ## Other content components
 
-| Component | Description |
-|-----------|-------------|
-| `BannerBase` | Announcement banners |
-| `HeadingBase` | Styled headings |
-| `LinkBase` | Styled links |
-| `TextBase` | Styled text |
-| `TimelineBase` | Vertical timeline |
+| Component      | Description          |
+| -------------- | -------------------- |
+| `BannerBase`   | Announcement banners |
+| `HeadingBase`  | Styled headings      |
+| `LinkBase`     | Styled links         |
+| `TextBase`     | Styled text          |
+| `TimelineBase` | Vertical timeline    |
 
 ## Next steps
 

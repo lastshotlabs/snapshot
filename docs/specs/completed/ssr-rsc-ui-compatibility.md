@@ -2,12 +2,12 @@
 
 > **Status**
 >
-> | Phase | Title                                     | Status      | Track            |
-> | ----- | ----------------------------------------- | ----------- | ---------------- |
-> | A     | Component SSR/RSC audit and fix           | Not started | A — Components   |
-> | B     | Thread RSC through the framework renderer | Not started | B — Renderer     |
-> | C     | Config composition table and fixes        | Not started | B — Renderer     |
-> | D     | Manifest config surface for RSC           | Not started | B — Renderer     |
+> | Phase | Title                                     | Status      | Track          |
+> | ----- | ----------------------------------------- | ----------- | -------------- |
+> | A     | Component SSR/RSC audit and fix           | Not started | A — Components |
+> | B     | Thread RSC through the framework renderer | Not started | B — Renderer   |
+> | C     | Config composition table and fixes        | Not started | B — Renderer   |
+> | D     | Manifest config surface for RSC           | Not started | B — Renderer   |
 
 ---
 
@@ -62,40 +62,41 @@ Vite plugin. On paper, RSC is supported. In practice, it has never been wired en
 
 ### What works
 
-| What                                    | File(s)                                                    | Notes                                           |
-| --------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------- |
-| `renderPage()` with full RSC two-pass   | `src/ssr/render.ts` (lines 92–231)                        | Complete and correct. No changes needed here.   |
-| `RscOptions` / `RscManifest` types      | `src/ssr/rsc.ts`, exported from `src/ssr/index.ts`        | Types are correct and exported.                 |
-| `rscTransform()` Vite plugin            | `src/vite/rsc-transform.ts`                               | Writes `rsc-manifest.json`. No changes needed.  |
-| `snapshotSsr({ rsc: true })` Vite option | `src/vite/index.ts` `SnapshotSsrOptions.rsc`             | Flag exists. Build side is wired.               |
-| RSC documentation                       | `docs/ssr/rsc.md`                                         | Accurate but describes the ideal, not reality.  |
+| What                                     | File(s)                                            | Notes                                          |
+| ---------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
+| `renderPage()` with full RSC two-pass    | `src/ssr/render.ts` (lines 92–231)                 | Complete and correct. No changes needed here.  |
+| `RscOptions` / `RscManifest` types       | `src/ssr/rsc.ts`, exported from `src/ssr/index.ts` | Types are correct and exported.                |
+| `rscTransform()` Vite plugin             | `src/vite/rsc-transform.ts`                        | Writes `rsc-manifest.json`. No changes needed. |
+| `snapshotSsr({ rsc: true })` Vite option | `src/vite/index.ts` `SnapshotSsrOptions.rsc`       | Flag exists. Build side is wired.              |
+| RSC documentation                        | `docs/ssr/rsc.md`                                  | Accurate but describes the ideal, not reality. |
 
 ### What is partial / broken
 
-| What                                       | File(s)                                                           | Gap                                                                   |
-| ------------------------------------------ | ----------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `createReactRenderer()` RSC threading     | `src/ssr/renderer.ts` line 307                                   | `SnapshotSsrConfig` has no `rscOptions`. 8 call sites pass nothing.   |
-| `createManifestRenderer()` RSC threading  | `src/ssr/manifest-renderer.ts` line 283                          | `ManifestSsrConfig` has no `rscOptions`. 1 call site passes nothing.  |
-| Component `'use client'` directives       | All 69 `src/ui/components/**/component.tsx` files                | Zero files have `'use client'`. All use hooks.                        |
-| `save-indicator` render-body DOM access   | `src/ui/components/data/save-indicator/component.tsx` lines 16–21 | `ensureStyles()` calls `document.createElement` in render body.      |
-| `nav` render-body `window` access         | `src/ui/components/layout/nav/component.tsx` line 297            | `window.location.pathname` read synchronously with `typeof` guard.   |
-| SSG + RSC composition                     | `src/vite/index.ts` lines 562–608 (SSG spawn)                   | slingshot-ssg spawn never passes `--rsc-manifest`.                      |
-| Manifest-addressable RSC                  | `src/ssr/types.ts` `ManifestSsrConfig`                          | No `ssr.rsc` field in the manifest config type or schema.             |
+| What                                     | File(s)                                                           | Gap                                                                  |
+| ---------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `createReactRenderer()` RSC threading    | `src/ssr/renderer.ts` line 307                                    | `SnapshotSsrConfig` has no `rscOptions`. 8 call sites pass nothing.  |
+| `createManifestRenderer()` RSC threading | `src/ssr/manifest-renderer.ts` line 283                           | `ManifestSsrConfig` has no `rscOptions`. 1 call site passes nothing. |
+| Component `'use client'` directives      | All 69 `src/ui/components/**/component.tsx` files                 | Zero files have `'use client'`. All use hooks.                       |
+| `save-indicator` render-body DOM access  | `src/ui/components/data/save-indicator/component.tsx` lines 16–21 | `ensureStyles()` calls `document.createElement` in render body.      |
+| `nav` render-body `window` access        | `src/ui/components/layout/nav/component.tsx` line 297             | `window.location.pathname` read synchronously with `typeof` guard.   |
+| SSG + RSC composition                    | `src/vite/index.ts` lines 562–608 (SSG spawn)                     | slingshot-ssg spawn never passes `--rsc-manifest`.                   |
+| Manifest-addressable RSC                 | `src/ssr/types.ts` `ManifestSsrConfig`                            | No `ssr.rsc` field in the manifest config type or schema.            |
 
 ### Component execution context audit
 
 Every `component.tsx` file was checked. None begin with `'use client'`. Representative sample:
 
-| Component file                                | Hooks used                         | Browser API in render body?                                  |
-| --------------------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
-| `layout/nav/component.tsx`                    | `useNav`, `useActionExecutor`      | YES — `window.location.pathname` at line 297 (guarded)       |
-| `overlay/modal/component.tsx`                 | `useModal`, `useRef`, `useState`, `useEffect`, `useCallback` | No                              |
-| `data/data-table/component.tsx`               | `useMemo`, `useState`, `useCallback`, `useDataTable` | No                             |
-| `data/save-indicator/component.tsx`           | `useSubscribe`                     | YES — `document.createElement` via `ensureStyles()` at line 51 |
-| `overlay/context-menu/component.tsx`          | `useState`, `useCallback`, `useEffect`, `useRef` | `window.innerWidth/Height` inside `useEffect` — OK        |
-| `communication/reaction-bar/component.tsx`    | hooks                              | `document.addEventListener` inside `useEffect` — OK          |
+| Component file                             | Hooks used                                                   | Browser API in render body?                                    |
+| ------------------------------------------ | ------------------------------------------------------------ | -------------------------------------------------------------- |
+| `layout/nav/component.tsx`                 | `useNav`, `useActionExecutor`                                | YES — `window.location.pathname` at line 297 (guarded)         |
+| `overlay/modal/component.tsx`              | `useModal`, `useRef`, `useState`, `useEffect`, `useCallback` | No                                                             |
+| `data/data-table/component.tsx`            | `useMemo`, `useState`, `useCallback`, `useDataTable`         | No                                                             |
+| `data/save-indicator/component.tsx`        | `useSubscribe`                                               | YES — `document.createElement` via `ensureStyles()` at line 51 |
+| `overlay/context-menu/component.tsx`       | `useState`, `useCallback`, `useEffect`, `useRef`             | `window.innerWidth/Height` inside `useEffect` — OK             |
+| `communication/reaction-bar/component.tsx` | hooks                                                        | `document.addEventListener` inside `useEffect` — OK            |
 
 The two render-body violations are:
+
 1. `save-indicator` — `ensureStyles()` is called at line 51 directly in the render function body, not in a `useEffect`. It calls `document.createElement` and `document.head.appendChild`. Fix: move `ensureStyles()` call into a `useEffect`.
 2. `nav` — `window.location.pathname` at line 297 is called during render (guarded by `typeof window !== "undefined"`). The guard prevents crashes but makes the initial render produce `/` on the server, then re-render client-side. Fix: move to `useEffect` with a state variable initialized to `"/"`.
 
@@ -114,16 +115,16 @@ bun run test        # vitest — component rendering tests must pass
 
 ### Key files
 
-| File                                            | What it does                                                              | Lines |
-| ----------------------------------------------- | ------------------------------------------------------------------------- | ----- |
-| `src/ssr/render.ts`                             | `renderPage()` — the SSR/RSC render function. No changes needed.         | 264   |
-| `src/ssr/renderer.ts`                           | `createReactRenderer()` — 8 `renderPage()` call sites. Needs `rscOptions`. | ~1010 |
-| `src/ssr/manifest-renderer.ts`                  | `createManifestRenderer()` — 1 `renderPage()` call site. Needs `rscOptions`. | ~290 |
-| `src/ssr/types.ts`                              | `SnapshotSsrConfig` (line 164), `ManifestSsrConfig` (line 432). Both need `rscOptions` field. | ~470 |
-| `src/vite/index.ts`                             | `snapshotSsr()` — SSG spawn (lines 562–608) needs `--rsc-manifest` arg.  | ~640  |
-| `src/ui/components/**/component.tsx`            | 69 files — all need `'use client'` as line 1.                            | varies |
-| `src/ui/components/data/save-indicator/component.tsx` | Render-body `document` access at line 51.                         | ~80   |
-| `src/ui/components/layout/nav/component.tsx`    | Render-body `window` access at line 297.                                 | 467   |
+| File                                                  | What it does                                                                                  | Lines  |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
+| `src/ssr/render.ts`                                   | `renderPage()` — the SSR/RSC render function. No changes needed.                              | 264    |
+| `src/ssr/renderer.ts`                                 | `createReactRenderer()` — 8 `renderPage()` call sites. Needs `rscOptions`.                    | ~1010  |
+| `src/ssr/manifest-renderer.ts`                        | `createManifestRenderer()` — 1 `renderPage()` call site. Needs `rscOptions`.                  | ~290   |
+| `src/ssr/types.ts`                                    | `SnapshotSsrConfig` (line 164), `ManifestSsrConfig` (line 432). Both need `rscOptions` field. | ~470   |
+| `src/vite/index.ts`                                   | `snapshotSsr()` — SSG spawn (lines 562–608) needs `--rsc-manifest` arg.                       | ~640   |
+| `src/ui/components/**/component.tsx`                  | 69 files — all need `'use client'` as line 1.                                                 | varies |
+| `src/ui/components/data/save-indicator/component.tsx` | Render-body `document` access at line 51.                                                     | ~80    |
+| `src/ui/components/layout/nav/component.tsx`          | Render-body `window` access at line 297.                                                      | 467    |
 
 ---
 
@@ -154,7 +155,7 @@ context and none crash during server-side `renderToStaticMarkup`.
 One of two forms, as the very first line of the file:
 
 ```ts
-'use client';
+"use client";
 ```
 
 or, for a component that has no hooks and no browser APIs:
@@ -188,7 +189,7 @@ export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
 Correct:
 
 ```tsx
-'use client';
+"use client";
 
 export function SaveIndicator({ config }: { config: SaveIndicatorConfig }) {
   const status = useSubscribe(config.status) as string;
@@ -311,6 +312,7 @@ src/ui/components/workflow/status-tracker/component.tsx
 ```
 
 Also add `'use client'` to:
+
 - `src/ui/components/_base/component-wrapper.tsx` — uses `React.Component` error boundary class
   (class components are client components) and `Suspense` boundary management
 - `src/ui/context/providers.tsx` — `AppContextProvider` and `PageContextProvider` wrap Jotai
@@ -371,7 +373,7 @@ slingshot-ssr.
 
 The field goes after `renderTimeoutMs`. No other fields change.
 
-```ts
+````ts
 export interface SnapshotSsrConfig {
   snapshot?: SnapshotInstance<Record<string, unknown>>;
   resolveComponent: (
@@ -399,12 +401,12 @@ export interface SnapshotSsrConfig {
    */
   rscOptions?: RscOptions;
 }
-```
+````
 
 Import `RscOptions` at the top of `types.ts`:
 
 ```ts
-import type { RscOptions } from './rsc';
+import type { RscOptions } from "./rsc";
 ```
 
 #### `ManifestSsrConfig` — add `rscOptions` field
@@ -415,7 +417,9 @@ Same pattern. The field goes after `getUser`:
 export interface ManifestSsrConfig {
   manifest: ManifestConfig;
   preloadResolvers?: Record<string, ManifestPreloadResolver>;
-  getUser?: (headers: Headers) => Promise<{ id: string; roles: string[] } | null>;
+  getUser?: (
+    headers: Headers,
+  ) => Promise<{ id: string; roles: string[] } | null>;
 
   /**
    * RSC manifest loaded from `rsc-manifest.json`.
@@ -493,7 +497,13 @@ return renderPage(element, requestContext, populatedShell);
 Changes to:
 
 ```ts
-return renderPage(element, requestContext, populatedShell, undefined, rscOptions);
+return renderPage(
+  element,
+  requestContext,
+  populatedShell,
+  undefined,
+  rscOptions,
+);
 ```
 
 Pass `undefined` for `timeoutMs` to use the default (5000ms), since `ManifestSsrConfig` does
@@ -525,16 +535,16 @@ and which are unsupported. Fix the one combination that requires a code change: 
 
 ### Composition table
 
-| Combination                                    | Works today? | After this spec? | Notes                                                                                                                                              |
-| ---------------------------------------------- | ------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rsc: true` only (standard SSR + RSC)          | No           | Yes (Phase B)    | Requires Phase B (renderer threading) + Phase A (components). Build side already works. Consumer must load `rsc-manifest.json` and pass to renderer. |
-| `rsc: true` + `ssg: true`                      | No           | Yes (Phase C)    | slingshot-ssg spawn must receive `--rsc-manifest` path. See fix below.                                                                               |
-| `rsc: true` + `ppr: true`                      | No           | Partially        | PPR uses `renderPprPage()` which calls `renderToReadableStream` directly — not `renderPage()`. RSC two-pass is not composed into PPR. Out of scope for this spec. |
-| `rsc: true` + `target: 'edge-cloudflare'`      | No           | No (unsupported) | Edge runtimes lack `AsyncLocalStorage`. Snapshot's `cache()` primitive uses it. Attempting RSC on Cloudflare will silently fall back to standard SSR or throw. Document the limitation — do not attempt to fix it here. |
-| `rsc: true` + `target: 'edge-deno'`            | No           | Yes (Phase B)    | Deno supports `AsyncLocalStorage` via Node compat. Same fix as standard RSC. No extra changes. |
-| `rsc: true` + `serverActions: true`            | Yes (build)  | Yes              | Both are Vite transform-level. `serverActionsTransform()` and `rscTransform()` operate on different directive strings (`'use server'` vs `'use client'`). They compose cleanly. No conflicts. |
-| `ssg: true` only                               | Yes          | Yes              | Unaffected by this spec.                                                                                                                           |
-| `ppr: true` only                               | Yes          | Yes              | Unaffected by this spec.                                                                                                                           |
+| Combination                               | Works today? | After this spec? | Notes                                                                                                                                                                                                                   |
+| ----------------------------------------- | ------------ | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rsc: true` only (standard SSR + RSC)     | No           | Yes (Phase B)    | Requires Phase B (renderer threading) + Phase A (components). Build side already works. Consumer must load `rsc-manifest.json` and pass to renderer.                                                                    |
+| `rsc: true` + `ssg: true`                 | No           | Yes (Phase C)    | slingshot-ssg spawn must receive `--rsc-manifest` path. See fix below.                                                                                                                                                  |
+| `rsc: true` + `ppr: true`                 | No           | Partially        | PPR uses `renderPprPage()` which calls `renderToReadableStream` directly — not `renderPage()`. RSC two-pass is not composed into PPR. Out of scope for this spec.                                                       |
+| `rsc: true` + `target: 'edge-cloudflare'` | No           | No (unsupported) | Edge runtimes lack `AsyncLocalStorage`. Snapshot's `cache()` primitive uses it. Attempting RSC on Cloudflare will silently fall back to standard SSR or throw. Document the limitation — do not attempt to fix it here. |
+| `rsc: true` + `target: 'edge-deno'`       | No           | Yes (Phase B)    | Deno supports `AsyncLocalStorage` via Node compat. Same fix as standard RSC. No extra changes.                                                                                                                          |
+| `rsc: true` + `serverActions: true`       | Yes (build)  | Yes              | Both are Vite transform-level. `serverActionsTransform()` and `rscTransform()` operate on different directive strings (`'use server'` vs `'use client'`). They compose cleanly. No conflicts.                           |
+| `ssg: true` only                          | Yes          | Yes              | Unaffected by this spec.                                                                                                                                                                                                |
+| `ppr: true` only                          | Yes          | Yes              | Unaffected by this spec.                                                                                                                                                                                                |
 
 ### Fix: `ssg: true` + `rsc: true` — pass RSC manifest to slingshot-ssg
 
@@ -598,10 +608,10 @@ and `ppr: true` are set:
 ```ts
 if (opts.rsc && opts.ppr) {
   console.warn(
-    '[snapshot-ssr] Warning: rsc: true and ppr: true are set simultaneously. ' +
-    'RSC two-pass rendering is not composed with PPR shells. ' +
-    'RSC will apply to non-PPR routes only. ' +
-    'See docs/specs/ssr-rsc-ui-compatibility.md for details.'
+    "[snapshot-ssr] Warning: rsc: true and ppr: true are set simultaneously. " +
+      "RSC two-pass rendering is not composed with PPR shells. " +
+      "RSC will apply to non-PPR routes only. " +
+      "See docs/specs/ssr-rsc-ui-compatibility.md for details.",
   );
 }
 ```
@@ -615,12 +625,12 @@ The `AsyncLocalStorage` limitation on Cloudflare Workers is a documented constra
 `target: 'edge-cloudflare'` are set:
 
 ```ts
-if (opts.rsc && opts.target === 'edge-cloudflare') {
+if (opts.rsc && opts.target === "edge-cloudflare") {
   console.warn(
-    '[snapshot-ssr] Warning: rsc: true with target: edge-cloudflare is not supported. ' +
-    'Cloudflare Workers do not support AsyncLocalStorage, which is required by the ' +
-    'Snapshot cache() primitive used inside server components. ' +
-    'RSC will be disabled at runtime. Use target: node or target: edge-deno instead.'
+    "[snapshot-ssr] Warning: rsc: true with target: edge-cloudflare is not supported. " +
+      "Cloudflare Workers do not support AsyncLocalStorage, which is required by the " +
+      "Snapshot cache() primitive used inside server components. " +
+      "RSC will be disabled at runtime. Use target: node or target: edge-deno instead.",
   );
 }
 ```
@@ -712,10 +722,12 @@ if (!rscOptions && config.manifest.ssr?.rsc) {
   // Load rsc-manifest.json from the path declared in the manifest.
   const manifestPath = path.resolve(
     process.cwd(),
-    config.manifest.ssr.rscManifestPath ?? './dist/server/rsc-manifest.json',
+    config.manifest.ssr.rscManifestPath ?? "./dist/server/rsc-manifest.json",
   );
   try {
-    const rscManifest = JSON.parse(readFileSync(manifestPath, 'utf-8')) as RscManifest;
+    const rscManifest = JSON.parse(
+      readFileSync(manifestPath, "utf-8"),
+    ) as RscManifest;
     rscOptions = Object.freeze({ manifest: rscManifest });
   } catch (err) {
     console.error(
@@ -733,9 +745,9 @@ This auto-loading happens once at renderer construction (not per request). The l
 The `import` at the top of `manifest-renderer.ts` needs:
 
 ```ts
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import type { RscManifest } from './rsc';
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import type { RscManifest } from "./rsc";
 ```
 
 Verify whether `path` and `readFileSync` are already imported; add only what is missing.
@@ -755,7 +767,7 @@ the one that needs auto-loading because manifest-first apps should not need any 
 Update `docs/ssr/rsc.md` — add a section "Enabling RSC from the manifest" after the current
 "Enabling RSC" section:
 
-```markdown
+````markdown
 ## Enabling RSC from the manifest
 
 If you are using the manifest renderer (`createManifestRenderer()`), you can enable RSC
@@ -769,12 +781,14 @@ directly from `snapshot.manifest.json` without changing any TypeScript:
   }
 }
 ```
+````
 
 The manifest renderer will automatically load the RSC manifest from `rscManifestPath`
 at server startup and pass it to `renderPage()`. No code changes required.
 
 You still need `snapshotSsr({ rsc: true })` in your `vite.config.ts` for the build to
 generate `rsc-manifest.json` and apply the RSC transform.
+
 ```
 
 ### Exit criteria — Phase D
@@ -889,3 +903,4 @@ For an agent executing either track:
   config composition table)
 - [ ] No `any` casts introduced; no casts other than at the `react-server-dom-webpack` boundary
   which already uses `as unknown as T` per Rule 5
+```

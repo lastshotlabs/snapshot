@@ -1,4 +1,3 @@
-
 export type ModalConfig = Record<string, unknown>;
 
 /**

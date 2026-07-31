@@ -402,7 +402,9 @@ export function MultiSelectField({
   }, [optionsProp, search]);
 
   const selectedLabels = useMemo(() => {
-    const optionMap = new Map(optionsProp.map((option) => [option.value, option.label]));
+    const optionMap = new Map(
+      optionsProp.map((option) => [option.value, option.label]),
+    );
     return selected.map((value) => ({
       value,
       label: optionMap.get(value) ?? value,
@@ -492,7 +494,8 @@ export function MultiSelectField({
     surfaceId: `${rootId}-dropdown`,
     implementationBase: {
       position: "absolute",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
       borderRadius: "md",
       bg: "var(--sn-color-popover, #ffffff)",
       color: "var(--sn-color-popover-foreground, #111827)",
@@ -529,7 +532,8 @@ export function MultiSelectField({
       fontSize: "sm",
       color: "var(--sn-color-foreground, #111827)",
       bg: "var(--sn-color-background, #ffffff)",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
       borderRadius: "sm",
       focus: {
         ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",

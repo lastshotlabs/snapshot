@@ -19,11 +19,20 @@ function CreateUserModal({ open, onClose, onSave }) {
       onClose={onClose}
       footer={[
         { label: "Cancel", variant: "outline", onClick: onClose },
-        { label: "Save", variant: "default", onClick: () => onSave({ name, email }) },
+        {
+          label: "Save",
+          variant: "default",
+          onClick: () => onSave({ name, email }),
+        },
       ]}
     >
       <InputField label="Name" value={name} onChange={setName} />
-      <InputField label="Email" type="email" value={email} onChange={setEmail} />
+      <InputField
+        label="Email"
+        type="email"
+        value={email}
+        onChange={setEmail}
+      />
     </ModalBase>
   );
 }
@@ -52,6 +61,7 @@ Full-screen centered dialog with backdrop, focus trap, and footer actions.
 **Sizes:** `sm`, `md`, `lg`, `xl`, `full`
 
 **Props:**
+
 - `open` / `onClose` -- controlled visibility
 - `title` -- header text
 - `footer` -- array of `{ label, variant, onClick }`
@@ -78,7 +88,7 @@ import { DrawerBase } from "@lastshotlabs/snapshot/ui";
   ]}
 >
   <DetailCardBase data={selectedUser} fields={userFields} />
-</DrawerBase>
+</DrawerBase>;
 ```
 
 **Sides:** `left`, `right`
@@ -97,11 +107,14 @@ import { ConfirmDialogBase } from "@lastshotlabs/snapshot/ui";
   description="This action cannot be undone. Are you sure you want to delete this user?"
   open={showConfirm}
   onClose={() => setShowConfirm(false)}
-  onConfirm={() => { deleteUser(userId); setShowConfirm(false); }}
+  onConfirm={() => {
+    deleteUser(userId);
+    setShowConfirm(false);
+  }}
   confirmLabel="Delete"
   confirmVariant="destructive"
   cancelLabel="Cancel"
-/>
+/>;
 ```
 
 ## CommandPaletteBase
@@ -137,7 +150,7 @@ import { CommandPaletteBase } from "@lastshotlabs/snapshot/ui";
     window.location.href = `/${item.id}`;
     setIsOpen(false);
   }}
-/>
+/>;
 ```
 
 For controlled search with async results:
@@ -169,7 +182,7 @@ import { DropdownMenuBase } from "@lastshotlabs/snapshot/ui";
     { type: "item", label: "Delete", icon: "trash", destructive: true },
   ]}
   onSelect={(item) => handleAction(item.label)}
-/>
+/>;
 ```
 
 **Item types:** `item` (clickable), `separator` (divider line)
@@ -194,7 +207,7 @@ import { ContextMenuBase } from "@lastshotlabs/snapshot/ui";
   <div style={{ padding: "2rem", border: "1px dashed gray" }}>
     Right-click this area
   </div>
-</ContextMenuBase>
+</ContextMenuBase>;
 ```
 
 ## PopoverBase
@@ -212,9 +225,19 @@ import { PopoverBase } from "@lastshotlabs/snapshot/ui";
   placement="bottom"
   width="300px"
 >
-  <SelectField label="Status" options={statusOptions} value={status} onChange={setStatus} />
-  <SelectField label="Priority" options={priorityOptions} value={priority} onChange={setPriority} />
-</PopoverBase>
+  <SelectField
+    label="Status"
+    options={statusOptions}
+    value={status}
+    onChange={setStatus}
+  />
+  <SelectField
+    label="Priority"
+    options={priorityOptions}
+    value={priority}
+    onChange={setPriority}
+  />
+</PopoverBase>;
 ```
 
 ## HoverCardBase
@@ -234,7 +257,7 @@ import { HoverCardBase } from "@lastshotlabs/snapshot/ui";
 >
   <AvatarBase src={user.avatar} name={user.name} size="lg" />
   <p>{user.bio}</p>
-</HoverCardBase>
+</HoverCardBase>;
 ```
 
 ## Composition patterns
@@ -279,18 +302,35 @@ function UserTable() {
         rows={data?.items ?? []}
         isLoading={isLoading}
         rowActions={[
-          { label: "Edit", icon: "edit", onAction: (row) => setEditUser(row as User) },
+          {
+            label: "Edit",
+            icon: "edit",
+            onAction: (row) => setEditUser(row as User),
+          },
         ]}
       />
       <ModalBase
         title="Edit User"
         open={editUser !== null}
-        onClose={() => { setEditUser(null); setDraft(null); updateMutation.reset(); }}
+        onClose={() => {
+          setEditUser(null);
+          setDraft(null);
+          updateMutation.reset();
+        }}
         footer={[
-          { label: "Cancel", variant: "outline", onClick: () => { setEditUser(null); setDraft(null); } },
+          {
+            label: "Cancel",
+            variant: "outline",
+            onClick: () => {
+              setEditUser(null);
+              setDraft(null);
+            },
+          },
           {
             label: updateMutation.isPending ? "Saving..." : "Save",
-            onClick: () => { if (active) updateMutation.mutate(active); },
+            onClick: () => {
+              if (active) updateMutation.mutate(active);
+            },
             disabled: updateMutation.isPending,
           },
         ]}
@@ -298,10 +338,20 @@ function UserTable() {
         {active && (
           <ColumnBase gap="md">
             {updateMutation.error && (
-              <AlertBase severity="error">{(updateMutation.error as Error).message}</AlertBase>
+              <AlertBase severity="error">
+                {(updateMutation.error as Error).message}
+              </AlertBase>
             )}
-            <InputField label="Name" value={active.name} onChange={(v) => setDraft({ ...active, name: v })} />
-            <InputField label="Email" value={active.email} onChange={(v) => setDraft({ ...active, email: v })} />
+            <InputField
+              label="Name"
+              value={active.name}
+              onChange={(v) => setDraft({ ...active, name: v })}
+            />
+            <InputField
+              label="Email"
+              value={active.email}
+              onChange={(v) => setDraft({ ...active, email: v })}
+            />
           </ColumnBase>
         )}
       </ModalBase>
@@ -315,7 +365,11 @@ function UserTable() {
 `ConfirmDialogBase` auto-closes after the confirm button is clicked. Start the mutation in `onConfirm` and let the table refresh via query invalidation:
 
 ```tsx
-function DeleteButton({ userId, userName, onDeleted }: {
+function DeleteButton({
+  userId,
+  userName,
+  onDeleted,
+}: {
   userId: string;
   userName: string;
   onDeleted: () => void;
@@ -329,7 +383,11 @@ function DeleteButton({ userId, userName, onDeleted }: {
 
   return (
     <>
-      <ButtonBase label="Delete" variant="destructive" onClick={() => setShowConfirm(true)} />
+      <ButtonBase
+        label="Delete"
+        variant="destructive"
+        onClick={() => setShowConfirm(true)}
+      />
       <ConfirmDialogBase
         title="Delete User"
         description={`Are you sure you want to delete ${userName}? This action cannot be undone.`}
@@ -340,7 +398,9 @@ function DeleteButton({ userId, userName, onDeleted }: {
         confirmVariant="destructive"
       />
       {deleteMutation.error && (
-        <AlertBase severity="error">{(deleteMutation.error as Error).message}</AlertBase>
+        <AlertBase severity="error">
+          {(deleteMutation.error as Error).message}
+        </AlertBase>
       )}
     </>
   );
@@ -373,9 +433,16 @@ function CreateUserFlow() {
       <ModalBase
         title="Create User"
         open={open}
-        onClose={() => { setOpen(false); createMutation.reset(); }}
+        onClose={() => {
+          setOpen(false);
+          createMutation.reset();
+        }}
         footer={[
-          { label: "Cancel", variant: "outline", onClick: () => setOpen(false) },
+          {
+            label: "Cancel",
+            variant: "outline",
+            onClick: () => setOpen(false),
+          },
           {
             label: createMutation.isPending ? "Creating..." : "Create",
             onClick: () => createMutation.mutate({ name, email }),
@@ -385,10 +452,18 @@ function CreateUserFlow() {
       >
         <ColumnBase gap="md">
           {createMutation.error && (
-            <AlertBase severity="error">{(createMutation.error as Error).message}</AlertBase>
+            <AlertBase severity="error">
+              {(createMutation.error as Error).message}
+            </AlertBase>
           )}
           <InputField label="Name" value={name} onChange={setName} required />
-          <InputField label="Email" type="email" value={email} onChange={setEmail} required />
+          <InputField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            required
+          />
         </ColumnBase>
       </ModalBase>
     </>
@@ -398,16 +473,16 @@ function CreateUserFlow() {
 
 ## All overlay components
 
-| Component | Description |
-|-----------|-------------|
-| `ModalBase` | Centered dialog with footer actions |
-| `DrawerBase` | Slide-in side panel |
-| `ConfirmDialogBase` | Confirmation dialog |
-| `CommandPaletteBase` | Spotlight-style command search |
-| `DropdownMenuBase` | Button-triggered dropdown menu |
-| `ContextMenuBase` | Right-click context menu |
-| `PopoverBase` | Floating panel with trigger |
-| `HoverCardBase` | Hover-activated floating card |
+| Component            | Description                         |
+| -------------------- | ----------------------------------- |
+| `ModalBase`          | Centered dialog with footer actions |
+| `DrawerBase`         | Slide-in side panel                 |
+| `ConfirmDialogBase`  | Confirmation dialog                 |
+| `CommandPaletteBase` | Spotlight-style command search      |
+| `DropdownMenuBase`   | Button-triggered dropdown menu      |
+| `ContextMenuBase`    | Right-click context menu            |
+| `PopoverBase`        | Floating panel with trigger         |
+| `HoverCardBase`      | Hover-activated floating card       |
 
 ## Next steps
 

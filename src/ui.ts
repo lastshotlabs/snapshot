@@ -159,8 +159,15 @@ export {
   CUSTOM_EMOJI_CSS,
 } from "./ui/components/communication/emoji-picker/custom-emoji";
 export type { CustomEmoji } from "./ui/components/communication/emoji-picker/custom-emoji";
-export { detectPlatform, PLATFORM_COLORS, PLATFORM_NAMES } from "./ui/components/content/link-embed/platform";
-export type { Platform, PlatformInfo } from "./ui/components/content/link-embed/platform";
+export {
+  detectPlatform,
+  PLATFORM_COLORS,
+  PLATFORM_NAMES,
+} from "./ui/components/content/link-embed/platform";
+export type {
+  Platform,
+  PlatformInfo,
+} from "./ui/components/content/link-embed/platform";
 
 // Standalone components
 export * from "./ui/components/_base/component-group/standalone";

@@ -30,12 +30,12 @@ export function ReplyComposer() {
 
 Common styling props:
 
-| Prop | Purpose |
-| --- | --- |
-| `className` | Add a class to the component root |
-| `style` | Add inline root styles |
-| `slots` | Target named internal pieces when the component supports slots |
-| `id` | Stabilize generated surface IDs for scoped styles |
+| Prop        | Purpose                                                        |
+| ----------- | -------------------------------------------------------------- |
+| `className` | Add a class to the component root                              |
+| `style`     | Add inline root styles                                         |
+| `slots`     | Target named internal pieces when the component supports slots |
+| `id`        | Stabilize generated surface IDs for scoped styles              |
 
 ## Slots
 
@@ -174,9 +174,7 @@ function ThemeToggle() {
   const { theme, toggle } = snapshot.useTheme();
 
   return (
-    <button onClick={toggle}>
-      {theme === "dark" ? "Light" : "Dark"}
-    </button>
+    <button onClick={toggle}>{theme === "dark" ? "Light" : "Dark"}</button>
   );
 }
 ```
@@ -187,7 +185,10 @@ Snapshot components work with Tailwind classes through `className` and `slots`.
 When you want Tailwind utilities backed by Snapshot tokens, generate a bridge:
 
 ```ts
-import { generateTailwindBridge, resolveTokens } from "@lastshotlabs/snapshot/ui";
+import {
+  generateTailwindBridge,
+  resolveTokens,
+} from "@lastshotlabs/snapshot/ui";
 
 const theme = {
   flavor: "neutral",

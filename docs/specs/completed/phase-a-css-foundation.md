@@ -2,14 +2,14 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | A.1 | Expand `resolveFrameworkStyles()` to cover all 76 components | Not started | CSS |
-> | A.2 | Audit & fix component inline style / token var mismatches | Not started | Components |
-> | A.3 | Budget-fe migration to `snapshotApp()` plugin | Not started | Dogfood |
-> | A.4 | Tailwind bridge completeness | Not started | CSS |
-> | A.5 | Font loading from manifest config | Not started | CSS |
-> | A.6 | Dark mode edge cases | Not started | Runtime |
+> | Phase | Title                                                        | Status      | Track      |
+> | ----- | ------------------------------------------------------------ | ----------- | ---------- |
+> | A.1   | Expand `resolveFrameworkStyles()` to cover all 76 components | Not started | CSS        |
+> | A.2   | Audit & fix component inline style / token var mismatches    | Not started | Components |
+> | A.3   | Budget-fe migration to `snapshotApp()` plugin                | Not started | Dogfood    |
+> | A.4   | Tailwind bridge completeness                                 | Not started | CSS        |
+> | A.5   | Font loading from manifest config                            | Not started | CSS        |
+> | A.6   | Dark mode edge cases                                         | Not started | Runtime    |
 >
 > **Priority:** P0 — this unblocks all visual quality work.
 > **Depends on:** Nothing (first spec in the chain).
@@ -50,44 +50,45 @@ unpolished because:
 
 ### Framework CSS Pipeline (WORKS)
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/tokens/resolve.ts` | 957 | `resolveTokens()` generates all `--sn-*` CSS vars. `resolveFrameworkStyles()` generates CSS reset + component styles (lines 750-956). |
-| `src/ui/manifest/app.tsx` | 1764 | `ManifestApp` injects both token CSS (`<style id="snapshot-tokens">`) and framework CSS (`<style id="snapshot-framework">`) at lines 1714-1723. Has `DarkModeManager` at line 1724. |
-| `src/ui/components/_base/component-wrapper.tsx` | 181 | Adds `data-snapshot-component={type}` attribute to every component (line 155). This is the CSS hook. |
-| `src/ui/tokens/tailwind-bridge.ts` | 56 | `generateTailwindBridge()` maps `--sn-*` vars to Tailwind `@theme` vars. |
+| File                                            | Lines | What It Does                                                                                                                                                                        |
+| ----------------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/tokens/resolve.ts`                      | 957   | `resolveTokens()` generates all `--sn-*` CSS vars. `resolveFrameworkStyles()` generates CSS reset + component styles (lines 750-956).                                               |
+| `src/ui/manifest/app.tsx`                       | 1764  | `ManifestApp` injects both token CSS (`<style id="snapshot-tokens">`) and framework CSS (`<style id="snapshot-framework">`) at lines 1714-1723. Has `DarkModeManager` at line 1724. |
+| `src/ui/components/_base/component-wrapper.tsx` | 181   | Adds `data-snapshot-component={type}` attribute to every component (line 155). This is the CSS hook.                                                                                |
+| `src/ui/tokens/tailwind-bridge.ts`              | 56    | `generateTailwindBridge()` maps `--sn-*` vars to Tailwind `@theme` vars.                                                                                                            |
 
 ### Vite Plugin (WORKS)
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/vite/index.ts` | 995 | `snapshotApp()` plugin (lines 63-165): auto-injects `@tailwindcss/vite`, creates virtual entry module with `ManifestApp`, creates virtual CSS module with Tailwind bridge, serves HTML shell. |
+| File                | Lines | What It Does                                                                                                                                                                                  |
+| ------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/vite/index.ts` | 995   | `snapshotApp()` plugin (lines 63-165): auto-injects `@tailwindcss/vite`, creates virtual entry module with `ManifestApp`, creates virtual CSS module with Tailwind bridge, serves HTML shell. |
 
 ### Component Styling (WORKS — but inline-only)
 
 All 76 components use `var(--sn-*)` token CSS vars in inline styles. Example from
 `stat-card/component.tsx`:
+
 ```tsx
-padding: "var(--sn-card-padding, var(--sn-spacing-lg, 1.5rem))"
+padding: "var(--sn-card-padding, var(--sn-spacing-lg, 1.5rem))";
 ```
 
 Components use `ComponentWrapper` which adds `data-snapshot-component` for CSS targeting.
 
 ### Boot System (WORKS)
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/manifest/boot-builtins.ts` | 40 | `bootBuiltins()` registers all 76 components, 9 flavors, layouts, guards. Idempotent. Called by `ManifestApp` before render. |
-| `src/ui/components/register.ts` | ~600 | `registerBuiltInComponents()` pairs each component with its Zod schema. |
+| File                               | Lines | What It Does                                                                                                                 |
+| ---------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/boot-builtins.ts` | 40    | `bootBuiltins()` registers all 76 components, 9 flavors, layouts, guards. Idempotent. Called by `ManifestApp` before render. |
+| `src/ui/components/register.ts`    | ~600  | `registerBuiltInComponents()` pairs each component with its Zod schema.                                                      |
 
 ### Budget-FE (PARTIAL — needs migration)
 
-| File | Lines | Problem |
-|---|---|---|
-| `budget-fe/src/main.tsx` | 14 | Manual entry point. Should not exist — `snapshotApp()` plugin handles this. |
-| `budget-fe/vite.config.ts` | 17 | Uses `@vitejs/plugin-react` instead of `snapshotApp()`. No Tailwind, no auto-entry. |
-| `budget-fe/index.html` | 15 | Manual HTML with dark mode script hack. Plugin generates this. |
-| `budget-fe/snapshot.manifest.json` | 1308 | The manifest. No changes needed. |
+| File                               | Lines | Problem                                                                             |
+| ---------------------------------- | ----- | ----------------------------------------------------------------------------------- |
+| `budget-fe/src/main.tsx`           | 14    | Manual entry point. Should not exist — `snapshotApp()` plugin handles this.         |
+| `budget-fe/vite.config.ts`         | 17    | Uses `@vitejs/plugin-react` instead of `snapshotApp()`. No Tailwind, no auto-entry. |
+| `budget-fe/index.html`             | 15    | Manual HTML with dark mode script hack. Plugin generates this.                      |
+| `budget-fe/snapshot.manifest.json` | 1308  | The manifest. No changes needed.                                                    |
 
 ---
 
@@ -105,19 +106,20 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/tokens/resolve.ts` | Token + framework CSS generation | 957 |
-| `src/ui/manifest/app.tsx` | ManifestApp — injects CSS, manages providers | 1764 |
-| `src/ui/components/_base/component-wrapper.tsx` | Adds `data-snapshot-component` attr | 181 |
-| `src/ui/tokens/tailwind-bridge.ts` | Tailwind v4 `@theme` bridge | 56 |
-| `src/vite/index.ts` | `snapshotApp()` plugin | 995 |
-| `src/ui/components/_base/button-styles.ts` | Shared button inline styles + CSS | 162 |
-| `playground/src/styles.css` | Reference CSS (what polish looks like) | 1031 |
+| Path                                            | What                                         | Lines |
+| ----------------------------------------------- | -------------------------------------------- | ----- |
+| `src/ui/tokens/resolve.ts`                      | Token + framework CSS generation             | 957   |
+| `src/ui/manifest/app.tsx`                       | ManifestApp — injects CSS, manages providers | 1764  |
+| `src/ui/components/_base/component-wrapper.tsx` | Adds `data-snapshot-component` attr          | 181   |
+| `src/ui/tokens/tailwind-bridge.ts`              | Tailwind v4 `@theme` bridge                  | 56    |
+| `src/vite/index.ts`                             | `snapshotApp()` plugin                       | 995   |
+| `src/ui/components/_base/button-styles.ts`      | Shared button inline styles + CSS            | 162   |
+| `playground/src/styles.css`                     | Reference CSS (what polish looks like)       | 1031  |
 
 ### Consumer Shape
 
 **Before (budget-fe today):**
+
 ```
 budget-fe/
   src/main.tsx              ← MUST DELETE
@@ -128,6 +130,7 @@ budget-fe/
 ```
 
 **After (budget-fe target):**
+
 ```
 budget-fe/
   vite.config.ts            ← uses snapshotApp()
@@ -168,6 +171,7 @@ Today only 5 types are covered. After this phase, all 76 are.
 ### What Exists (lines 750-956 of `resolve.ts`)
 
 Currently covered:
+
 - `[data-snapshot-component="data-table"]` — 45 lines (border, radius, thead, th, td, pagination, bulk actions)
 - `[data-snapshot-component="stat-card"]` — 7 lines (card styling)
 - `[data-snapshot-component="form"]` — 73 lines (fields, inputs, focus, checkbox, submit)
@@ -222,7 +226,9 @@ uncovered component type. Rules must:
   color: var(--sn-color-muted-foreground, #667085);
   border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: color var(--sn-duration-fast, 150ms), border-color var(--sn-duration-fast, 150ms);
+  transition:
+    color var(--sn-duration-fast, 150ms),
+    border-color var(--sn-duration-fast, 150ms);
 }
 [data-snapshot-component="tabs"] [data-tab-trigger][data-active] {
   color: var(--sn-color-foreground, #111);
@@ -272,7 +278,7 @@ uncovered component type. Rules must:
   background: var(--sn-color-card, #fff);
   border: 1px solid var(--sn-color-border, #e5e7eb);
   border-radius: var(--sn-radius-lg, 0.75rem);
-  box-shadow: var(--sn-shadow-xl, 0 20px 25px -5px rgba(0,0,0,0.1));
+  box-shadow: var(--sn-shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
 }
 [data-snapshot-component="modal"] [data-modal-header] {
   padding: var(--sn-spacing-lg, 1.5rem);
@@ -291,7 +297,7 @@ uncovered component type. Rules must:
 [data-snapshot-component="drawer"] [data-drawer-content] {
   background: var(--sn-color-card, #fff);
   border-left: 1px solid var(--sn-color-border, #e5e7eb);
-  box-shadow: var(--sn-shadow-xl, 0 20px 25px -5px rgba(0,0,0,0.1));
+  box-shadow: var(--sn-shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
 }
 
 /* ── Alert ────────────────────────────────────────────────────────────── */
@@ -382,7 +388,8 @@ uncovered component type. Rules must:
   height: 100%;
   border-radius: var(--sn-radius-full, 9999px);
   background: var(--sn-color-primary, #2563eb);
-  transition: width var(--sn-duration-normal, 300ms) var(--sn-ease-default, ease);
+  transition: width var(--sn-duration-normal, 300ms)
+    var(--sn-ease-default, ease);
 }
 
 /* ── Skeleton ─────────────────────────────────────────────────────────── */
@@ -394,8 +401,13 @@ uncovered component type. Rules must:
   animation: sn-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 @keyframes sn-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* ── Tooltip ──────────────────────────────────────────────────────────── */
@@ -415,7 +427,7 @@ uncovered component type. Rules must:
   background: var(--sn-color-card, #fff);
   border: 1px solid var(--sn-color-border, #e5e7eb);
   border-radius: var(--sn-radius-md, 0.375rem);
-  box-shadow: var(--sn-shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1));
+  box-shadow: var(--sn-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
   padding: var(--sn-spacing-xs, 0.25rem);
   z-index: var(--sn-z-index-dropdown, 10);
   min-width: 10rem;
@@ -465,7 +477,7 @@ uncovered component type. Rules must:
   border: 1px solid var(--sn-color-border, #e5e7eb);
   border-radius: var(--sn-radius-md, 0.375rem);
   padding: var(--sn-spacing-md, 1rem);
-  box-shadow: var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.1));
+  box-shadow: var(--sn-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
   cursor: grab;
 }
 
@@ -548,12 +560,18 @@ uncovered component type. Rules must:
   text-align: center;
   color: var(--sn-color-muted-foreground, #667085);
   cursor: pointer;
-  transition: border-color var(--sn-duration-fast, 150ms), background var(--sn-duration-fast, 150ms);
+  transition:
+    border-color var(--sn-duration-fast, 150ms),
+    background var(--sn-duration-fast, 150ms);
 }
 [data-snapshot-component="file-uploader"] [data-dropzone]:hover,
 [data-snapshot-component="file-uploader"] [data-dropzone][data-drag-active] {
   border-color: var(--sn-color-primary, #2563eb);
-  background: color-mix(in oklch, var(--sn-color-primary, #2563eb) 5%, transparent);
+  background: color-mix(
+    in oklch,
+    var(--sn-color-primary, #2563eb) 5%,
+    transparent
+  );
 }
 
 /* ── Pricing table ────────────────────────────────────────────────────── */
@@ -588,8 +606,13 @@ uncovered component type. Rules must:
 [data-snapshot-component="notification-feed"] [data-notification-item]:hover {
   background: var(--sn-color-muted, #f1f5f9);
 }
-[data-snapshot-component="notification-feed"] [data-notification-item][data-unread] {
-  background: color-mix(in oklch, var(--sn-color-primary, #2563eb) 5%, transparent);
+[data-snapshot-component="notification-feed"]
+  [data-notification-item][data-unread] {
+  background: color-mix(
+    in oklch,
+    var(--sn-color-primary, #2563eb) 5%,
+    transparent
+  );
 }
 
 /* ── Tree view ────────────────────────────────────────────────────────── */
@@ -635,30 +658,31 @@ If a component doesn't emit sub-element data attributes, add them in phase A.2.
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
+| File                       | Change                                                    |
+| -------------------------- | --------------------------------------------------------- |
 | `src/ui/tokens/resolve.ts` | Add ~300 lines of CSS rules to `resolveFrameworkStyles()` |
 
 ### Files to Verify (data attributes present)
 
-| File | Verify |
-|---|---|
-| `src/ui/components/navigation/tabs/component.tsx` | `data-tab-list`, `data-tab-trigger`, `data-tab-content`, `data-active` |
-| `src/ui/components/navigation/accordion/component.tsx` | `data-accordion-trigger`, `data-accordion-content` |
-| `src/ui/components/overlay/modal/component.tsx` | `data-modal-overlay`, `data-modal-content`, `data-modal-header`, `data-modal-body`, `data-modal-footer` |
-| `src/ui/components/overlay/drawer/component.tsx` | `data-drawer-content` |
-| `src/ui/components/data/list/component.tsx` | `data-list-item` |
-| `src/ui/components/workflow/kanban/component.tsx` | `data-kanban-column`, `data-kanban-card` |
-| All components | `data-snapshot-component` (via ComponentWrapper — already present) |
+| File                                                   | Verify                                                                                                  |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/navigation/tabs/component.tsx`      | `data-tab-list`, `data-tab-trigger`, `data-tab-content`, `data-active`                                  |
+| `src/ui/components/navigation/accordion/component.tsx` | `data-accordion-trigger`, `data-accordion-content`                                                      |
+| `src/ui/components/overlay/modal/component.tsx`        | `data-modal-overlay`, `data-modal-content`, `data-modal-header`, `data-modal-body`, `data-modal-footer` |
+| `src/ui/components/overlay/drawer/component.tsx`       | `data-drawer-content`                                                                                   |
+| `src/ui/components/data/list/component.tsx`            | `data-list-item`                                                                                        |
+| `src/ui/components/workflow/kanban/component.tsx`      | `data-kanban-column`, `data-kanban-card`                                                                |
+| All components                                         | `data-snapshot-component` (via ComponentWrapper — already present)                                      |
 
 ### Tests
 
-| File | What to Test |
-|---|---|
+| File                                      | What to Test                                                             |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
 | `src/ui/tokens/__tests__/resolve.test.ts` | `resolveFrameworkStyles()` contains selectors for all 76 component types |
-| `src/ui/manifest/__tests__/app.test.tsx` | Framework CSS is injected into `<style id="snapshot-framework">` |
+| `src/ui/manifest/__tests__/app.test.tsx`  | Framework CSS is injected into `<style id="snapshot-framework">`         |
 
 Add to `resolve.test.ts`:
+
 ```typescript
 describe("resolveFrameworkStyles", () => {
   const css = resolveFrameworkStyles();
@@ -669,13 +693,34 @@ describe("resolveFrameworkStyles", () => {
 
   it("includes all major component types", () => {
     const requiredComponents = [
-      "data-table", "stat-card", "form", "detail-card",
-      "badge", "tabs", "accordion", "modal", "drawer",
-      "alert", "avatar", "breadcrumb", "list", "empty-state",
-      "progress", "skeleton", "tooltip", "dropdown-menu",
-      "kanban", "calendar", "timeline", "chat-window",
-      "code-block", "rich-text-editor", "file-uploader",
-      "pricing-table", "notification-feed", "tree-view",
+      "data-table",
+      "stat-card",
+      "form",
+      "detail-card",
+      "badge",
+      "tabs",
+      "accordion",
+      "modal",
+      "drawer",
+      "alert",
+      "avatar",
+      "breadcrumb",
+      "list",
+      "empty-state",
+      "progress",
+      "skeleton",
+      "tooltip",
+      "dropdown-menu",
+      "kanban",
+      "calendar",
+      "timeline",
+      "chat-window",
+      "code-block",
+      "rich-text-editor",
+      "file-uploader",
+      "pricing-table",
+      "notification-feed",
+      "tree-view",
     ];
     for (const type of requiredComponents) {
       expect(css).toContain(`data-snapshot-component="${type}"`);
@@ -718,11 +763,13 @@ For each component type, verify that sub-elements use `data-*` attributes. If mi
 add them. Example fix:
 
 **Before (tabs/component.tsx):**
+
 ```tsx
 <div className="tab-list" role="tablist">
 ```
 
 **After:**
+
 ```tsx
 <div data-tab-list="" role="tablist">
 ```
@@ -732,27 +779,28 @@ add them. Example fix:
 For every component added in A.1, verify these data attributes exist in its
 `component.tsx`:
 
-| Component | Required Attributes |
-|---|---|
-| tabs | `data-tab-list`, `data-tab-trigger`, `data-tab-content`, `data-active` |
-| accordion | `data-accordion-trigger`, `data-accordion-content` |
-| modal | `data-modal-overlay`, `data-modal-content`, `data-modal-header`, `data-modal-body`, `data-modal-footer` |
-| drawer | `data-drawer-content` |
-| dropdown-menu | `data-menu-content`, `data-menu-item`, `data-menu-separator` |
-| list | `data-list-item` |
-| kanban | `data-kanban-column`, `data-kanban-card` |
-| tree-view | `data-tree-node`, `data-selected` |
-| rich-text-editor | `data-editor-toolbar`, `data-editor-content` |
-| file-uploader | `data-dropzone`, `data-drag-active` |
-| pricing-table | `data-pricing-card`, `data-featured` |
-| notification-feed | `data-notification-item`, `data-unread` |
-| tooltip | `data-tooltip-content` |
-| progress | `data-progress-bar` |
-| avatar | `data-avatar-fallback` |
+| Component         | Required Attributes                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------- |
+| tabs              | `data-tab-list`, `data-tab-trigger`, `data-tab-content`, `data-active`                                  |
+| accordion         | `data-accordion-trigger`, `data-accordion-content`                                                      |
+| modal             | `data-modal-overlay`, `data-modal-content`, `data-modal-header`, `data-modal-body`, `data-modal-footer` |
+| drawer            | `data-drawer-content`                                                                                   |
+| dropdown-menu     | `data-menu-content`, `data-menu-item`, `data-menu-separator`                                            |
+| list              | `data-list-item`                                                                                        |
+| kanban            | `data-kanban-column`, `data-kanban-card`                                                                |
+| tree-view         | `data-tree-node`, `data-selected`                                                                       |
+| rich-text-editor  | `data-editor-toolbar`, `data-editor-content`                                                            |
+| file-uploader     | `data-dropzone`, `data-drag-active`                                                                     |
+| pricing-table     | `data-pricing-card`, `data-featured`                                                                    |
+| notification-feed | `data-notification-item`, `data-unread`                                                                 |
+| tooltip           | `data-tooltip-content`                                                                                  |
+| progress          | `data-progress-bar`                                                                                     |
+| avatar            | `data-avatar-fallback`                                                                                  |
 
 ### Files to Modify
 
 Every component listed above — its `component.tsx` file. Exact paths follow the pattern:
+
 ```
 src/ui/components/{group}/{component-name}/component.tsx
 ```
@@ -778,6 +826,7 @@ Budget-fe uses the `snapshotApp()` Vite plugin, deletes `src/main.tsx` and the m
 **Step 1: Update `budget-fe/vite.config.ts`**
 
 Replace:
+
 ```ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -804,6 +853,7 @@ export default defineConfig({
 ```
 
 With:
+
 ```ts
 import { defineConfig } from "vite";
 import { snapshotApp } from "@lastshotlabs/snapshot/vite";
@@ -854,17 +904,17 @@ If build mode is broken, fix the plugin to also generate a virtual HTML entry fo
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `budget-fe/vite.config.ts` | Switch to `snapshotApp()` plugin |
-| `budget-fe/src/main.tsx` | DELETE |
-| `budget-fe/index.html` | DELETE |
-| `budget-fe/package.json` | Remove `@vitejs/plugin-react`, add `@tailwindcss/vite` |
+| File                       | Change                                                 |
+| -------------------------- | ------------------------------------------------------ |
+| `budget-fe/vite.config.ts` | Switch to `snapshotApp()` plugin                       |
+| `budget-fe/src/main.tsx`   | DELETE                                                 |
+| `budget-fe/index.html`     | DELETE                                                 |
+| `budget-fe/package.json`   | Remove `@vitejs/plugin-react`, add `@tailwindcss/vite` |
 
 ### Files to Verify
 
-| File | Verify |
-|---|---|
+| File                | Verify                                           |
+| ------------------- | ------------------------------------------------ |
 | `src/vite/index.ts` | `snapshotApp()` works in both dev and build mode |
 
 ### Exit Criteria
@@ -992,14 +1042,14 @@ export function generateTailwindBridge(): string {
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
+| File                               | Change                             |
+| ---------------------------------- | ---------------------------------- |
 | `src/ui/tokens/tailwind-bridge.ts` | Expand to map all canonical tokens |
 
 ### Tests
 
-| File | What to Test |
-|---|---|
+| File                                              | What to Test                                        |
+| ------------------------------------------------- | --------------------------------------------------- |
 | `src/ui/tokens/__tests__/tailwind-bridge.test.ts` | CREATE: bridge output contains all token categories |
 
 ### Exit Criteria
@@ -1020,11 +1070,14 @@ rules in the token CSS output.
 ### What Exists
 
 `resolveTokens()` already handles Google Font imports (lines 710-717 of `resolve.ts`):
+
 ```typescript
 if (config.overrides?.font?.sans) {
   const fontName = config.overrides.font.sans;
   if (KNOWN_GOOGLE_FONTS.includes(fontName)) {
-    fontImports.push(`@import url('https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap');`);
+    fontImports.push(
+      `@import url('https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap');`,
+    );
   }
 }
 ```
@@ -1049,7 +1102,7 @@ for (const [role, fontConfig] of Object.entries(resolvedFont)) {
     // Simple font name — check Google Fonts
     if (KNOWN_GOOGLE_FONTS.includes(fontConfig)) {
       fontImports.push(
-        `@import url('https://fonts.googleapis.com/css2?family=${fontConfig.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap');`
+        `@import url('https://fonts.googleapis.com/css2?family=${fontConfig.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap');`,
       );
     }
   } else if (fontConfig && typeof fontConfig === "object") {
@@ -1057,7 +1110,7 @@ for (const [role, fontConfig] of Object.entries(resolvedFont)) {
     if (fontConfig.source === "google") {
       const weights = fontConfig.weights?.join(";") ?? "300;400;500;600;700";
       fontImports.push(
-        `@import url('https://fonts.googleapis.com/css2?family=${fontConfig.family.replace(/ /g, "+")}:wght@${weights}&display=swap');`
+        `@import url('https://fonts.googleapis.com/css2?family=${fontConfig.family.replace(/ /g, "+")}:wght@${weights}&display=swap');`,
       );
     } else if (fontConfig.source === "url" && fontConfig.url) {
       fontFaces.push(`@font-face {
@@ -1088,11 +1141,11 @@ const fontSourceSchema = z.union([
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/tokens/resolve.ts` | Expand font loading logic in `resolveTokens()` |
+| File                        | Change                                            |
+| --------------------------- | ------------------------------------------------- |
+| `src/ui/tokens/resolve.ts`  | Expand font loading logic in `resolveTokens()`    |
 | `src/ui/manifest/schema.ts` | Add `fontSourceSchema` for structured font config |
-| `src/ui/tokens/types.ts` | Update `FontConfig` type if needed |
+| `src/ui/tokens/types.ts`    | Update `FontConfig` type if needed                |
 
 ### Exit Criteria
 
@@ -1159,8 +1212,8 @@ function getSnapshotAppHtml(entryId: string): string {
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
+| File                | Change                                                          |
+| ------------------- | --------------------------------------------------------------- |
 | `src/vite/index.ts` | Add dark mode flash prevention script to `getSnapshotAppHtml()` |
 
 ### Exit Criteria
@@ -1177,12 +1230,12 @@ function getSnapshotAppHtml(entryId: string): string {
 
 ### Track Overview
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| **CSS** | A.1, A.4, A.5 | `src/ui/tokens/resolve.ts`, `src/ui/tokens/tailwind-bridge.ts` |
-| **Components** | A.2 | `src/ui/components/*/component.tsx` (data attribute additions only) |
-| **Runtime** | A.6 | `src/vite/index.ts` (dark mode script), `src/ui/manifest/app.tsx` (DarkModeManager) |
-| **Dogfood** | A.3 | `budget-fe/*` (no snapshot files) |
+| Track          | Phases        | Files Owned                                                                         |
+| -------------- | ------------- | ----------------------------------------------------------------------------------- |
+| **CSS**        | A.1, A.4, A.5 | `src/ui/tokens/resolve.ts`, `src/ui/tokens/tailwind-bridge.ts`                      |
+| **Components** | A.2           | `src/ui/components/*/component.tsx` (data attribute additions only)                 |
+| **Runtime**    | A.6           | `src/vite/index.ts` (dark mode script), `src/ui/manifest/app.tsx` (DarkModeManager) |
+| **Dogfood**    | A.3           | `budget-fe/*` (no snapshot files)                                                   |
 
 ### Why Tracks Don't Conflict
 

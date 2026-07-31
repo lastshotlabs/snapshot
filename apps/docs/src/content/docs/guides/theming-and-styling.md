@@ -44,15 +44,15 @@ Tokens are resolved from code with `resolveTokens()` and compiled to CSS custom 
 resolveTokens({
   overrides: {
     colors: {
-      primary: "#3b82f6",      // --sn-color-primary
-      accent: "#8b5cf6",       // --sn-color-accent
-      background: "#ffffff",   // --sn-color-background
-      surface: "#f8fafc",      // --sn-color-surface
-      muted: "#94a3b8",        // --sn-color-muted
-      border: "#e2e8f0",       // --sn-color-border
-      success: "#10b981",      // --sn-color-success
-      warning: "#f59e0b",      // --sn-color-warning
-      error: "#ef4444",        // --sn-color-error
+      primary: "#3b82f6", // --sn-color-primary
+      accent: "#8b5cf6", // --sn-color-accent
+      background: "#ffffff", // --sn-color-background
+      surface: "#f8fafc", // --sn-color-surface
+      muted: "#94a3b8", // --sn-color-muted
+      border: "#e2e8f0", // --sn-color-border
+      success: "#10b981", // --sn-color-success
+      warning: "#f59e0b", // --sn-color-warning
+      error: "#ef4444", // --sn-color-error
     },
   },
 });
@@ -64,15 +64,15 @@ Each color automatically generates a foreground pair (`--sn-color-primary-foregr
 
 Spacing tokens are used by `gap`, `padding`, and spacing props throughout all components:
 
-| Token | CSS Variable | Default |
-|-------|-------------|---------|
+| Token | CSS Variable       | Default   |
+| ----- | ------------------ | --------- |
 | `2xs` | `--sn-spacing-2xs` | `0.25rem` |
-| `xs` | `--sn-spacing-xs` | `0.5rem` |
-| `sm` | `--sn-spacing-sm` | `0.75rem` |
-| `md` | `--sn-spacing-md` | `1rem` |
-| `lg` | `--sn-spacing-lg` | `1.5rem` |
-| `xl` | `--sn-spacing-xl` | `2rem` |
-| `2xl` | `--sn-spacing-2xl` | `3rem` |
+| `xs`  | `--sn-spacing-xs`  | `0.5rem`  |
+| `sm`  | `--sn-spacing-sm`  | `0.75rem` |
+| `md`  | `--sn-spacing-md`  | `1rem`    |
+| `lg`  | `--sn-spacing-lg`  | `1.5rem`  |
+| `xl`  | `--sn-spacing-xl`  | `2rem`    |
+| `2xl` | `--sn-spacing-2xl` | `3rem`    |
 
 ### Border radius
 
@@ -90,8 +90,8 @@ resolveTokens({
 resolveTokens({
   overrides: {
     font: {
-      sans: "Inter",                          // --sn-font-sans
-      mono: "JetBrains Mono",                 // --sn-font-mono
+      sans: "Inter", // --sn-font-sans
+      mono: "JetBrains Mono", // --sn-font-mono
       display: { family: "Outfit", weights: [400, 700] }, // --sn-font-display
     },
   },
@@ -122,16 +122,16 @@ Every standalone component accepts a `slots` prop for targeting sub-elements.
 
 Most components share these patterns:
 
-| Slot | Target |
-|------|--------|
-| `root` | Outermost wrapper element |
-| `label` | Text label element |
-| `icon` | Icon element |
-| `title` | Title text |
-| `subtitle` | Subtitle text |
-| `content` | Main content area |
-| `header` | Header region |
-| `footer` | Footer region |
+| Slot       | Target                    |
+| ---------- | ------------------------- |
+| `root`     | Outermost wrapper element |
+| `label`    | Text label element        |
+| `icon`     | Icon element              |
+| `title`    | Title text                |
+| `subtitle` | Subtitle text             |
+| `content`  | Main content area         |
+| `header`   | Header region             |
+| `footer`   | Footer region             |
 
 Each component documents its available slot names in its props interface.
 
@@ -172,7 +172,7 @@ const { theme, set, toggle } = snap.useTheme();
   icon={theme === "dark" ? "sun" : "moon"}
   variant="ghost"
   onClick={toggle}
-/>
+/>;
 ```
 
 `useTheme` adds/removes the `.dark` class on `<html>`. All token CSS variables have dark-mode overrides that activate automatically.
@@ -288,7 +288,9 @@ Use CSS media queries via className or inline styles:
   gap="md"
   className="responsive-grid"
 >
-  {items.map((item) => <CardBase key={item.id} title={item.name} />)}
+  {items.map((item) => (
+    <CardBase key={item.id} title={item.name} />
+  ))}
 </GridBase>
 ```
 

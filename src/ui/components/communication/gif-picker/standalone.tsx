@@ -1,6 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useMemo, useCallback, useEffect, type CSSProperties } from "react";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  type CSSProperties,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { Icon } from "../../../icons/icon";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -81,51 +87,267 @@ export function GifPickerBase({
     [onSelect],
   );
 
-  const rootSurface = resolveSurfacePresentation({ surfaceId: rootId, implementationBase: { width: "100%", maxWidth: "400px", overflow: "hidden", borderRadius: "md", border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)", bg: "var(--sn-color-card, #ffffff)" }, componentSurface: className || style ? { className, style } : undefined, itemSurface: slots?.root });
-  const searchSectionSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-searchSection`, implementationBase: { padding: "xs", style: { borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" } }, componentSurface: slots?.searchSection });
-  const searchShellSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-searchShell`, implementationBase: { display: "flex", alignItems: "center", gap: "xs", paddingY: "xs", paddingX: "sm", borderRadius: "sm", bg: "var(--sn-color-secondary, #f3f4f6)" }, componentSurface: slots?.searchShell });
-  const searchIconSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-searchIcon`, implementationBase: { color: "var(--sn-color-muted-foreground, #6b7280)", style: { flexShrink: 0 } }, componentSurface: slots?.searchIcon });
-  const searchInputSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-searchInput`, implementationBase: { width: "100%", fontSize: "sm", color: "var(--sn-color-foreground, #111827)", focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" }, style: { border: "none", outline: "none", background: "transparent", padding: 0, minWidth: 0, fontFamily: "inherit" } }, componentSurface: slots?.searchInput });
-  const contentSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-content`, implementationBase: { overflow: "auto", padding: "xs", style: { maxHeight } }, componentSurface: slots?.content });
-  const loadingStateSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-loadingState`, implementationBase: { display: "flex", alignItems: "center", justifyContent: "center", gap: "xs", padding: "lg", textAlign: "center", color: "var(--sn-color-muted-foreground, #6b7280)" }, componentSurface: slots?.loadingState });
-  const loadingIconSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-loadingIcon`, implementationBase: { color: "var(--sn-color-muted-foreground, #6b7280)", style: { display: "inline-flex", flexShrink: 0 } }, componentSurface: slots?.loadingIcon });
-  const emptyStateSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-emptyState`, implementationBase: { padding: "lg", textAlign: "center", fontSize: "sm", color: "var(--sn-color-muted-foreground, #6b7280)" }, componentSurface: slots?.emptyState });
-  const gridSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-grid`, implementationBase: { display: "grid", gap: "sm", style: { gridTemplateColumns: `repeat(${columns}, 1fr)` } }, componentSurface: slots?.grid });
-  const attributionSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-attribution`, implementationBase: { paddingY: "xs", paddingX: "sm", textAlign: "center", fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)", style: { borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" } }, componentSurface: slots?.attribution });
+  const rootSurface = resolveSurfacePresentation({
+    surfaceId: rootId,
+    implementationBase: {
+      width: "100%",
+      maxWidth: "400px",
+      overflow: "hidden",
+      borderRadius: "md",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      bg: "var(--sn-color-card, #ffffff)",
+    },
+    componentSurface: className || style ? { className, style } : undefined,
+    itemSurface: slots?.root,
+  });
+  const searchSectionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-searchSection`,
+    implementationBase: {
+      padding: "xs",
+      style: {
+        borderBottom:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    componentSurface: slots?.searchSection,
+  });
+  const searchShellSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-searchShell`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      gap: "xs",
+      paddingY: "xs",
+      paddingX: "sm",
+      borderRadius: "sm",
+      bg: "var(--sn-color-secondary, #f3f4f6)",
+    },
+    componentSurface: slots?.searchShell,
+  });
+  const searchIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-searchIcon`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: { flexShrink: 0 },
+    },
+    componentSurface: slots?.searchIcon,
+  });
+  const searchInputSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-searchInput`,
+    implementationBase: {
+      width: "100%",
+      fontSize: "sm",
+      color: "var(--sn-color-foreground, #111827)",
+      focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+      style: {
+        border: "none",
+        outline: "none",
+        background: "transparent",
+        padding: 0,
+        minWidth: 0,
+        fontFamily: "inherit",
+      },
+    },
+    componentSurface: slots?.searchInput,
+  });
+  const contentSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-content`,
+    implementationBase: {
+      overflow: "auto",
+      padding: "xs",
+      style: { maxHeight },
+    },
+    componentSurface: slots?.content,
+  });
+  const loadingStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loadingState`,
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "xs",
+      padding: "lg",
+      textAlign: "center",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    },
+    componentSurface: slots?.loadingState,
+  });
+  const loadingIconSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-loadingIcon`,
+    implementationBase: {
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: { display: "inline-flex", flexShrink: 0 },
+    },
+    componentSurface: slots?.loadingIcon,
+  });
+  const emptyStateSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-emptyState`,
+    implementationBase: {
+      padding: "lg",
+      textAlign: "center",
+      fontSize: "sm",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    },
+    componentSurface: slots?.emptyState,
+  });
+  const gridSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-grid`,
+    implementationBase: {
+      display: "grid",
+      gap: "sm",
+      style: { gridTemplateColumns: `repeat(${columns}, 1fr)` },
+    },
+    componentSurface: slots?.grid,
+  });
+  const attributionSurface = resolveSurfacePresentation({
+    surfaceId: `${rootId}-attribution`,
+    implementationBase: {
+      paddingY: "xs",
+      paddingX: "sm",
+      textAlign: "center",
+      fontSize: "xs",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+      style: {
+        borderTop:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      },
+    },
+    componentSurface: slots?.attribution,
+  });
 
   return (
     <>
-      <div data-snapshot-component="gif-picker" data-testid="gif-picker" data-snapshot-id={rootId} aria-label="GIF picker" className={rootSurface.className} style={rootSurface.style}>
-        <div data-snapshot-id={`${rootId}-searchSection`} className={searchSectionSurface.className} style={searchSectionSurface.style}>
-          <div data-snapshot-id={`${rootId}-searchShell`} className={searchShellSurface.className} style={searchShellSurface.style}>
-            <span aria-hidden="true" data-snapshot-id={`${rootId}-searchIcon`} className={searchIconSurface.className} style={searchIconSurface.style}><Icon name="search" size={14} /></span>
-            <InputControl testId="gif-search" surfaceId={`${rootId}-searchInput`} type="text" placeholder={placeholder} value={search} onChangeText={setSearch} surfaceConfig={searchInputSurface.resolvedConfigForWrapper} />
+      <div
+        data-snapshot-component="gif-picker"
+        data-testid="gif-picker"
+        data-snapshot-id={rootId}
+        aria-label="GIF picker"
+        className={rootSurface.className}
+        style={rootSurface.style}
+      >
+        <div
+          data-snapshot-id={`${rootId}-searchSection`}
+          className={searchSectionSurface.className}
+          style={searchSectionSurface.style}
+        >
+          <div
+            data-snapshot-id={`${rootId}-searchShell`}
+            className={searchShellSurface.className}
+            style={searchShellSurface.style}
+          >
+            <span
+              aria-hidden="true"
+              data-snapshot-id={`${rootId}-searchIcon`}
+              className={searchIconSurface.className}
+              style={searchIconSurface.style}
+            >
+              <Icon name="search" size={14} />
+            </span>
+            <InputControl
+              testId="gif-search"
+              surfaceId={`${rootId}-searchInput`}
+              type="text"
+              placeholder={placeholder}
+              value={search}
+              onChangeText={setSearch}
+              surfaceConfig={searchInputSurface.resolvedConfigForWrapper}
+            />
           </div>
         </div>
 
-        <div data-snapshot-id={`${rootId}-content`} className={contentSurface.className} style={contentSurface.style}>
+        <div
+          data-snapshot-id={`${rootId}-content`}
+          className={contentSurface.className}
+          style={contentSurface.style}
+        >
           {loading ? (
-            <div data-snapshot-id={`${rootId}-loadingState`} className={loadingStateSurface.className} style={loadingStateSurface.style}>
-              <span aria-hidden="true" data-snapshot-id={`${rootId}-loadingIcon`} className={loadingIconSurface.className} style={loadingIconSurface.style}><Icon name="loader" size={20} /></span>
+            <div
+              data-snapshot-id={`${rootId}-loadingState`}
+              className={loadingStateSurface.className}
+              style={loadingStateSurface.style}
+            >
+              <span
+                aria-hidden="true"
+                data-snapshot-id={`${rootId}-loadingIcon`}
+                className={loadingIconSurface.className}
+                style={loadingIconSurface.style}
+              >
+                <Icon name="loader" size={20} />
+              </span>
               <span>Loading GIFs</span>
             </div>
           ) : null}
 
           {!loading && gifs.length === 0 ? (
-            <div data-snapshot-id={`${rootId}-emptyState`} className={emptyStateSurface.className} style={emptyStateSurface.style}>
+            <div
+              data-snapshot-id={`${rootId}-emptyState`}
+              className={emptyStateSurface.className}
+              style={emptyStateSurface.style}
+            >
               {search ? "No GIFs found" : "Search for GIFs"}
             </div>
           ) : null}
 
           {!loading && gifs.length > 0 ? (
-            <div data-snapshot-id={`${rootId}-grid`} className={gridSurface.className} style={gridSurface.style}>
+            <div
+              data-snapshot-id={`${rootId}-grid`}
+              className={gridSurface.className}
+              style={gridSurface.style}
+            >
               {gifs.map((gif) => {
-                const itemSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-item-${gif.id}`, implementationBase: { display: "block", overflow: "hidden", borderRadius: "sm", cursor: "pointer", bg: "var(--sn-color-muted, #f3f4f6)", hover: { shadow: "sm" }, focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" }, style: { padding: 0, border: "none", lineHeight: 0 } }, componentSurface: slots?.item });
-                const imageSurface = resolveSurfacePresentation({ surfaceId: `${rootId}-item-${gif.id}-image`, implementationBase: { style: { width: "100%", height: "auto", display: "block", minHeight: "60px", objectFit: "cover", transition: "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)" }, hover: { scale: 1.03 } }, componentSurface: slots?.image });
+                const itemSurface = resolveSurfacePresentation({
+                  surfaceId: `${rootId}-item-${gif.id}`,
+                  implementationBase: {
+                    display: "block",
+                    overflow: "hidden",
+                    borderRadius: "sm",
+                    cursor: "pointer",
+                    bg: "var(--sn-color-muted, #f3f4f6)",
+                    hover: { shadow: "sm" },
+                    focus: {
+                      ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+                    },
+                    style: { padding: 0, border: "none", lineHeight: 0 },
+                  },
+                  componentSurface: slots?.item,
+                });
+                const imageSurface = resolveSurfacePresentation({
+                  surfaceId: `${rootId}-item-${gif.id}-image`,
+                  implementationBase: {
+                    style: {
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      minHeight: "60px",
+                      objectFit: "cover",
+                      transition:
+                        "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+                    },
+                    hover: { scale: 1.03 },
+                  },
+                  componentSurface: slots?.image,
+                });
                 return (
                   <div key={gif.id}>
-                    <ButtonControl type="button" onClick={() => handleSelect(gif)} title={gif.title} ariaLabel={gif.title ?? "Select GIF"} surfaceId={`${rootId}-item-${gif.id}`} surfaceConfig={itemSurface.resolvedConfigForWrapper} variant="ghost" size="sm">
-                      <img src={gif.preview ?? gif.url} alt={gif.title ?? "GIF"} loading="lazy" data-snapshot-id={`${rootId}-item-${gif.id}-image`} className={imageSurface.className} style={imageSurface.style} />
+                    <ButtonControl
+                      type="button"
+                      onClick={() => handleSelect(gif)}
+                      title={gif.title}
+                      ariaLabel={gif.title ?? "Select GIF"}
+                      surfaceId={`${rootId}-item-${gif.id}`}
+                      surfaceConfig={itemSurface.resolvedConfigForWrapper}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      <img
+                        src={gif.preview ?? gif.url}
+                        alt={gif.title ?? "GIF"}
+                        loading="lazy"
+                        data-snapshot-id={`${rootId}-item-${gif.id}-image`}
+                        className={imageSurface.className}
+                        style={imageSurface.style}
+                      />
                     </ButtonControl>
                     <SurfaceStyles css={itemSurface.scopedCss} />
                     <SurfaceStyles css={imageSurface.scopedCss} />
@@ -136,7 +358,15 @@ export function GifPickerBase({
           ) : null}
         </div>
 
-        {attribution ? <div data-snapshot-id={`${rootId}-attribution`} className={attributionSurface.className} style={attributionSurface.style}>{attribution}</div> : null}
+        {attribution ? (
+          <div
+            data-snapshot-id={`${rootId}-attribution`}
+            className={attributionSurface.className}
+            style={attributionSurface.style}
+          >
+            {attribution}
+          </div>
+        ) : null}
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={searchSectionSurface.scopedCss} />

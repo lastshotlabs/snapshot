@@ -337,7 +337,9 @@ export function staticParamsPlugin(opts: StaticParamsPluginOptions): Plugin {
         // a real misconfiguration and gets a warning.
         const message = err instanceof Error ? err.message : String(err);
         const isOptionalMissing =
-          /cannot find package|err_module_not_found|module not found/i.test(message);
+          /cannot find package|err_module_not_found|module not found/i.test(
+            message,
+          );
         if (!isOptionalMissing) {
           console.warn(
             "[snapshot-static-params] Failed to generate static-params.json:",

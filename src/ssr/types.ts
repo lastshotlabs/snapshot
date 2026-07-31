@@ -71,7 +71,11 @@ export interface ServerRouteMatchShape {
    * Used at build time by the static-params scanner to enumerate all concrete
    * URL paths for pre-rendering. Not called at request time.
    */
-  readonly generateStaticParams?: ((ctx: unknown) => Promise<Record<string, string>[]> | Record<string, string>[]) | undefined;
+  readonly generateStaticParams?:
+    | ((
+        ctx: unknown,
+      ) => Promise<Record<string, string>[]> | Record<string, string>[])
+    | undefined;
   /**
    * Optional module loader supplied by the route source (e.g. the
    * slingshot-ssr-tanstack adapter pairs `<route>.tsx` with

@@ -1,6 +1,12 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import { Icon } from "../../../icons/index";
@@ -192,7 +198,9 @@ export function FilterBarBase({
     (key: string, value: string) => {
       const current = filterState[key];
       if (!current) return false;
-      return Array.isArray(current) ? current.includes(value) : current === value;
+      return Array.isArray(current)
+        ? current.includes(value)
+        : current === value;
     },
     [filterState],
   );
@@ -314,8 +322,7 @@ export function FilterBarBase({
       alignItems: "center",
       gap: "var(--sn-spacing-2xs, 0.125rem)",
       style: {
-        padding:
-          "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+        padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
         fontSize: "var(--sn-font-size-xs, 0.75rem)",
         backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
         color: "var(--sn-color-secondary-foreground, #111)",
@@ -548,16 +555,14 @@ export function FilterBarBase({
                                 "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-sm, 0.5rem)",
                               border: "none",
                               fontSize: "var(--sn-font-size-sm, 0.875rem)",
-                              color:
-                                "var(--sn-color-popover-foreground, #111)",
+                              color: "var(--sn-color-popover-foreground, #111)",
                               textAlign: "left",
                               whiteSpace: "nowrap",
                             },
                             states: {
                               active: {
                                 style: {
-                                  background:
-                                    "var(--sn-color-accent, #f3f4f6)",
+                                  background: "var(--sn-color-accent, #f3f4f6)",
                                 },
                               },
                             },
@@ -597,9 +602,7 @@ export function FilterBarBase({
                             {option.label}
                           </span>
                         </ButtonControl>
-                        <SurfaceStyles
-                          css={optionIndicatorSurface.scopedCss}
-                        />
+                        <SurfaceStyles css={optionIndicatorSurface.scopedCss} />
                         <SurfaceStyles css={optionLabelSurface.scopedCss} />
                       </React.Fragment>
                     );

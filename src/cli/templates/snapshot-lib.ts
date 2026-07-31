@@ -5,23 +5,23 @@ export function generateSnapshotLib(config: ScaffoldConfig): string {
     config.webSocket || config.sse
       ? `
   ${
-      config.webSocket
-        ? `
+    config.webSocket
+      ? `
   ws: {
     url: import.meta.env.VITE_WS_URL,
     reconnectOnLogin: true,
     reconnectOnFocus: true,
   },`
-        : ""
-    }${
-      config.sse
-        ? `
+      : ""
+  }${
+    config.sse
+      ? `
   sse: {
     // Add /__sse/ endpoint keys here.
     endpoints: {},
   },`
-        : ""
-    }
+      : ""
+  }
 `
       : "";
 

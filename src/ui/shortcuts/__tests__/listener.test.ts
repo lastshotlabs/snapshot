@@ -45,8 +45,12 @@ describe("registerShortcuts", () => {
       executor,
     );
 
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "g", bubbles: true }));
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "d", bubbles: true }));
+    window.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "g", bubbles: true }),
+    );
+    window.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "d", bubbles: true }),
+    );
 
     expect(executor).toHaveBeenCalledWith({
       type: "navigate",
@@ -66,9 +70,13 @@ describe("registerShortcuts", () => {
       executor,
     );
 
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "g", bubbles: true }));
+    window.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "g", bubbles: true }),
+    );
     vi.advanceTimersByTime(1500);
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "d", bubbles: true }));
+    window.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "d", bubbles: true }),
+    );
 
     expect(executor).not.toHaveBeenCalled();
     cleanup();

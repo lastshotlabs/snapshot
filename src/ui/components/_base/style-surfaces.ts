@@ -81,12 +81,15 @@ function mergeSurfaceFields(
   if (base.states || override.states) {
     const states: Partial<Record<RuntimeSurfaceState, SurfaceConfig>> = {};
     const names = new Set<RuntimeSurfaceState>([
-      ...Object.keys(base.states ?? {}) as RuntimeSurfaceState[],
-      ...Object.keys(override.states ?? {}) as RuntimeSurfaceState[],
+      ...(Object.keys(base.states ?? {}) as RuntimeSurfaceState[]),
+      ...(Object.keys(override.states ?? {}) as RuntimeSurfaceState[]),
     ]);
 
     for (const name of names) {
-      states[name] = mergeSurfaceFields(base.states?.[name], override.states?.[name]);
+      states[name] = mergeSurfaceFields(
+        base.states?.[name],
+        override.states?.[name],
+      );
     }
 
     merged.states = states;
@@ -95,7 +98,9 @@ function mergeSurfaceFields(
   return merged;
 }
 
-function stripStateMap(config: SurfaceConfig | undefined): SurfaceConfig | undefined {
+function stripStateMap(
+  config: SurfaceConfig | undefined,
+): SurfaceConfig | undefined {
   if (!config) {
     return undefined;
   }
@@ -146,7 +151,9 @@ export function mergeClassNames(
 }
 
 export function mergeStyles(
-  ...styles: Array<Record<string, string | number> | CSSProperties | undefined | null>
+  ...styles: Array<
+    Record<string, string | number> | CSSProperties | undefined | null
+  >
 ): Record<string, string | number> | undefined {
   const merged = Object.assign({}, ...styles.filter(Boolean));
   return Object.keys(merged).length > 0 ? merged : undefined;
@@ -214,7 +221,9 @@ export function resolveSurfacePresentation(params: {
 } {
   const resolved = resolveSurfaceConfig(params);
   const wrapperConfig = resolved.resolvedConfigForWrapper;
-  const styleProps = wrapperConfig ? resolveStyleProps(wrapperConfig) : undefined;
+  const styleProps = wrapperConfig
+    ? resolveStyleProps(wrapperConfig)
+    : undefined;
   const scopedCss =
     params.surfaceId && wrapperConfig
       ? [

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useMemo, useCallback, type CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -257,7 +257,9 @@ function DetailsSection({
                 className={valueSurface.className}
                 style={valueSurface.style}
               >
-                {typeof value === "object" ? JSON.stringify(value) : String(value)}
+                {typeof value === "object"
+                  ? JSON.stringify(value)
+                  : String(value)}
               </span>
             </div>
           ))
@@ -307,7 +309,9 @@ export function AuditLogBase({
   const rootId = id ?? "audit-log";
   const pageSize = pagination === false ? Infinity : pagination;
 
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+    {},
+  );
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
   const [visibleCount, setVisibleCount] = useState(pageSize);
 
@@ -409,7 +413,8 @@ export function AuditLogBase({
       paddingY: "sm",
       paddingX: "lg",
       borderRadius: "md",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
       bg: "var(--sn-color-card, #fff)",
       color: "var(--sn-color-foreground, #111827)",
       cursor: "pointer",
@@ -464,7 +469,9 @@ export function AuditLogBase({
                 <div key={filter.field}>
                   <SelectControl
                     value={activeFilters[filter.field] ?? ""}
-                    onChangeValue={(value) => handleFilterChange(filter.field, value)}
+                    onChangeValue={(value) =>
+                      handleFilterChange(filter.field, value)
+                    }
                     ariaLabel={filter.label}
                     surfaceId={`${rootId}-filter-${filter.field}`}
                     surfaceConfig={filterSurface.resolvedConfigForWrapper}
@@ -680,7 +687,9 @@ export function AuditLogBase({
                             ariaExpanded={isExpanded}
                             onClick={() => toggleDetails(index)}
                             surfaceId={`${rootId}-entry-${entryId}-toggleButton`}
-                            surfaceConfig={toggleButtonSurface.resolvedConfigForWrapper}
+                            surfaceConfig={
+                              toggleButtonSurface.resolvedConfigForWrapper
+                            }
                             variant="ghost"
                             size="sm"
                           >

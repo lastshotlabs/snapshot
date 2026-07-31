@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -64,7 +64,7 @@ export function CardBase({
   children,
 }: CardBaseProps) {
   const gap = useResponsiveValue(gapProp);
-  const resolvedGap = gap ? GAP_MAP[gap] ?? gap : GAP_MAP.md;
+  const resolvedGap = gap ? (GAP_MAP[gap] ?? gap) : GAP_MAP.md;
   const backgroundStyle = resolveComponentBackgroundStyle(background);
   const rootId = id ?? "card";
 
@@ -138,7 +138,7 @@ export function CardBase({
       className={rootSurface.className}
       style={rootSurface.style}
     >
-      {(title || subtitle) ? (
+      {title || subtitle ? (
         <div
           data-snapshot-id={`${rootId}-header`}
           className={headerSurface.className}
