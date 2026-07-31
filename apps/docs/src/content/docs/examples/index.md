@@ -88,10 +88,9 @@ export const Route = createFileRoute("/settings")({
 ```tsx
 import {
   ConfirmDialog,
-  ToastContainer,
   useConfirmManager,
-  useToastManager,
-} from "@lastshotlabs/snapshot/ui";
+} from "@lastshotlabs/snapshot/ui/confirm";
+import { ToastContainer, useToastManager } from "@lastshotlabs/snapshot/ui";
 
 function DeleteAccountButton() {
   const confirm = useConfirmManager();

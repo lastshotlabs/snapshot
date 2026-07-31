@@ -11,7 +11,7 @@ Generated from `src/ui.ts`.
 - [Tokens & Flavors](#tokens-flavors) (19)
 - [Context & Data Binding](#context-data-binding) (11)
 - [State Runtime](#state-runtime) (15)
-- [Actions](#actions) (15)
+- [Actions](#actions) (16)
 - [Components — Data](#components-data) (61)
 - [Components — Forms](#components-forms) (83)
 - [Components — Communication](#components-communication) (23)
@@ -113,6 +113,7 @@ Generated from `src/ui.ts`.
 | `ConfirmDialog`                    | function  | `src/ui/actions/confirm.tsx`                                             | Render the global confirmation dialog for requests queued through `useConfirmManager`.                                                                                                                                                                                                                                                                                                                                        |
 | `ConfirmDialogBase`                | function  | `src/ui/components/overlay/confirm-dialog/standalone.tsx`                | Standalone ConfirmDialog — a confirmation dialog built on ModalBase with plain React props. Works with plain React props.                                                                                                                                                                                                                                                                                                     |
 | `ConfirmDialogBaseProps`           | interface | `src/ui/components/overlay/confirm-dialog/standalone.tsx`                | Props accepted by the ConfirmDialogBase standalone component.                                                                                                                                                                                                                                                                                                                                                                 |
+| `ConfirmDialogProps`               | interface | `src/ui/actions/confirm.tsx`                                             | Style overrides accepted by the global confirmation dialog.                                                                                                                                                                                                                                                                                                                                                                   |
 | `ConfirmManager`                   | interface | `src/ui/actions/confirm.tsx`                                             | Imperative API for opening a confirmation dialog from app actions or custom UI.                                                                                                                                                                                                                                                                                                                                               |
 | `ConfirmOptions`                   | typealias | `src/ui/actions/confirm.tsx`                                             | Options accepted when opening a confirmation dialog.                                                                                                                                                                                                                                                                                                                                                                          |
 | `ConfirmRequest`                   | interface | `src/ui/actions/confirm.tsx`                                             | Internal confirm-dialog request stored in the atom-backed manager queue.                                                                                                                                                                                                                                                                                                                                                      |
@@ -923,27 +924,28 @@ Serialize and store a persisted state value, ignoring browser storage failures.
 
 ## Actions
 
-| Export              | Kind      | Description                                                                                                                                                                  |
-| ------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ConfirmDialog`     | function  | Render the global confirmation dialog for requests queued through `useConfirmManager`.                                                                                       |
-| `ConfirmManager`    | interface | Imperative API for opening a confirmation dialog from app actions or custom UI.                                                                                              |
-| `ConfirmOptions`    | typealias | Options accepted when opening a confirmation dialog.                                                                                                                         |
-| `ConfirmRequest`    | interface | Internal confirm-dialog request stored in the atom-backed manager queue.                                                                                                     |
-| `debounceAction`    | function  | Debounce async or sync action execution by key and resolve all pending callers with the final invocation result.                                                             |
-| `interpolate`       | function  | Replace `{key}` placeholders with values from context. Supports nested paths: `{user.name}`, `{result.id}`. Missing keys are preserved as-is: `{unknown}` stays `{unknown}`. |
-| `ModalManager`      | interface | Return type of useModalManager.                                                                                                                                              |
-| `ShowToastOptions`  | interface | User-facing toast options accepted by the toast manager.                                                                                                                     |
-| `throttleAction`    | function  | Throttle async or sync action execution by key and drop calls inside the active throttle window.                                                                             |
-| `ToastContainer`    | function  | Render the active toast queue.                                                                                                                                               |
-| `ToastItem`         | interface | Resolved toast entry stored in the runtime queue.                                                                                                                            |
-| `ToastManager`      | interface | Imperative API for enqueueing and dismissing transient toast messages.                                                                                                       |
-| `useConfirmManager` | function  | Return the shared confirmation manager for the current Snapshot UI tree.                                                                                                     |
-| `useModalManager`   | function  | Hook to manage modal open/close state via a Jotai atom stack. Provides open, close, isOpen, and the current stack.                                                           |
-| `useToastManager`   | function  | Return the toast manager.                                                                                                                                                    |
+| Export               | Kind      | Description                                                                                                                                                                  |
+| -------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ConfirmDialog`      | function  | Render the global confirmation dialog for requests queued through `useConfirmManager`.                                                                                       |
+| `ConfirmDialogProps` | interface | Style overrides accepted by the global confirmation dialog.                                                                                                                  |
+| `ConfirmManager`     | interface | Imperative API for opening a confirmation dialog from app actions or custom UI.                                                                                              |
+| `ConfirmOptions`     | typealias | Options accepted when opening a confirmation dialog.                                                                                                                         |
+| `ConfirmRequest`     | interface | Internal confirm-dialog request stored in the atom-backed manager queue.                                                                                                     |
+| `debounceAction`     | function  | Debounce async or sync action execution by key and resolve all pending callers with the final invocation result.                                                             |
+| `interpolate`        | function  | Replace `{key}` placeholders with values from context. Supports nested paths: `{user.name}`, `{result.id}`. Missing keys are preserved as-is: `{unknown}` stays `{unknown}`. |
+| `ModalManager`       | interface | Return type of useModalManager.                                                                                                                                              |
+| `ShowToastOptions`   | interface | User-facing toast options accepted by the toast manager.                                                                                                                     |
+| `throttleAction`     | function  | Throttle async or sync action execution by key and drop calls inside the active throttle window.                                                                             |
+| `ToastContainer`     | function  | Render the active toast queue.                                                                                                                                               |
+| `ToastItem`          | interface | Resolved toast entry stored in the runtime queue.                                                                                                                            |
+| `ToastManager`       | interface | Imperative API for enqueueing and dismissing transient toast messages.                                                                                                       |
+| `useConfirmManager`  | function  | Return the shared confirmation manager for the current Snapshot UI tree.                                                                                                     |
+| `useModalManager`    | function  | Hook to manage modal open/close state via a Jotai atom stack. Provides open, close, isOpen, and the current stack.                                                           |
+| `useToastManager`    | function  | Return the toast manager.                                                                                                                                                    |
 
 ### Details
 
-#### `ConfirmDialog() => ReactNode`
+#### `ConfirmDialog({ className, style, slots, }?: ConfirmDialogProps) => ReactNode`
 
 Render the global confirmation dialog for requests queued through `useConfirmManager`.
 

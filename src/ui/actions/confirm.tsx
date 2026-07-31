@@ -1,9 +1,10 @@
 import { atom } from "jotai";
 import { useAtom } from "jotai/react";
 import { useCallback, useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { SurfaceStyles } from "../components/_base/surface-styles";
 import { resolveSurfacePresentation } from "../components/_base/style-surfaces";
+import type { SlotOverrides } from "../components/_base/types";
 import { ButtonControl } from "../components/forms/button";
 import { InputControl } from "../components/forms/input";
 
@@ -29,6 +30,28 @@ export interface ConfirmManager {
   show: (options: ConfirmOptions) => Promise<boolean>;
 }
 
+/** Style overrides accepted by the global confirmation dialog. */
+export interface ConfirmDialogProps {
+  /** Class name applied to the full-screen overlay. */
+  className?: string;
+  /** Inline styles applied to the full-screen overlay. */
+  style?: CSSProperties;
+  /** Per-surface styling for apps that do not use Snapshot's token palette. */
+  slots?: SlotOverrides<
+    | "overlay"
+    | "dialog"
+    | "header"
+    | "title"
+    | "description"
+    | "inputGroup"
+    | "inputLabel"
+    | "input"
+    | "actions"
+    | "cancelButton"
+    | "confirmButton"
+  >;
+}
+
 /** Return the shared confirmation manager for the current Snapshot UI tree. */
 export function useConfirmManager(): ConfirmManager {
   const [, setConfirm] = useAtom(confirmAtom);
@@ -45,7 +68,11 @@ export function useConfirmManager(): ConfirmManager {
 }
 
 /** Render the global confirmation dialog for requests queued through `useConfirmManager`. */
-export function ConfirmDialog(): ReactNode {
+export function ConfirmDialog({
+  className,
+  style,
+  slots,
+}: ConfirmDialogProps = {}): ReactNode {
   const [request, setRequest] = useAtom(confirmAtom);
   const [inputValue, setInputValue] = useState("");
 
@@ -77,6 +104,8 @@ export function ConfirmDialog(): ReactNode {
           "color-mix(in oklch, var(--sn-color-foreground, #111) 30%, transparent)",
       },
     },
+    componentSurface: className || style ? { className, style } : undefined,
+    itemSurface: slots?.overlay,
   });
   const dialogSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-dialog",
@@ -94,6 +123,7 @@ export function ConfirmDialog(): ReactNode {
         padding: "var(--sn-spacing-lg, 1.5rem)",
       },
     },
+    itemSurface: slots?.dialog,
   });
   const headerSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-header",
@@ -101,6 +131,7 @@ export function ConfirmDialog(): ReactNode {
       display: "grid",
       gap: "var(--sn-spacing-xs, 0.25rem)",
     },
+    itemSurface: slots?.header,
   });
   const titleSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-title",
@@ -111,6 +142,7 @@ export function ConfirmDialog(): ReactNode {
         margin: 0,
       },
     },
+    itemSurface: slots?.title,
   });
   const descriptionSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-description",
@@ -121,6 +153,7 @@ export function ConfirmDialog(): ReactNode {
         margin: 0,
       },
     },
+    itemSurface: slots?.description,
   });
   const inputGroupSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-input-group",
@@ -128,6 +161,7 @@ export function ConfirmDialog(): ReactNode {
       display: "grid",
       gap: "var(--sn-spacing-xs, 0.25rem)",
     },
+    itemSurface: slots?.inputGroup,
   });
   const inputLabelSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-input-label",
@@ -135,6 +169,7 @@ export function ConfirmDialog(): ReactNode {
       fontSize: "sm",
       fontWeight: "medium",
     },
+    itemSurface: slots?.inputLabel,
   });
   const actionsSurface = resolveSurfacePresentation({
     surfaceId: "snapshot-confirm-actions",
@@ -143,6 +178,7 @@ export function ConfirmDialog(): ReactNode {
       justifyContent: "flex-end",
       gap: "var(--sn-spacing-sm, 0.5rem)",
     },
+    itemSurface: slots?.actions,
   });
 
   const handleConfirm = () => {
@@ -162,10 +198,12 @@ export function ConfirmDialog(): ReactNode {
     <>
       <div
         data-snapshot-confirm=""
+        data-snapshot-id="snapshot-confirm-overlay"
         className={overlaySurface.className}
         style={overlaySurface.style}
       >
         <div
+          data-snapshot-id="snapshot-confirm-dialog"
           role="alertdialog"
           aria-modal="true"
           aria-labelledby="snapshot-confirm-title"
@@ -173,9 +211,14 @@ export function ConfirmDialog(): ReactNode {
           className={dialogSurface.className}
           style={dialogSurface.style}
         >
-          <div className={headerSurface.className} style={headerSurface.style}>
+          <div
+            data-snapshot-id="snapshot-confirm-header"
+            className={headerSurface.className}
+            style={headerSurface.style}
+          >
             <h2
               id="snapshot-confirm-title"
+              data-snapshot-id="snapshot-confirm-title"
               className={titleSurface.className}
               style={titleSurface.style}
             >
@@ -184,6 +227,7 @@ export function ConfirmDialog(): ReactNode {
             {description ? (
               <p
                 id="snapshot-confirm-description"
+                data-snapshot-id="snapshot-confirm-description"
                 className={descriptionSurface.className}
                 style={descriptionSurface.style}
               >
@@ -194,11 +238,13 @@ export function ConfirmDialog(): ReactNode {
 
           {requiresInput ? (
             <div
+              data-snapshot-id="snapshot-confirm-input-group"
               className={inputGroupSurface.className}
               style={inputGroupSurface.style}
             >
               <label
                 htmlFor="snapshot-confirm-input"
+                data-snapshot-id="snapshot-confirm-input-label"
                 className={inputLabelSurface.className}
                 style={inputLabelSurface.style}
               >
@@ -210,11 +256,14 @@ export function ConfirmDialog(): ReactNode {
                 value={inputValue}
                 onChangeText={setInputValue}
                 ariaLabel={`Type ${request.requireInput} to confirm`}
+                surfaceId="snapshot-confirm-input"
+                surfaceConfig={slots?.input}
               />
             </div>
           ) : null}
 
           <div
+            data-snapshot-id="snapshot-confirm-actions"
             className={actionsSurface.className}
             style={actionsSurface.style}
           >
@@ -222,7 +271,9 @@ export function ConfirmDialog(): ReactNode {
               onClick={handleCancel}
               type="button"
               variant="outline"
-              size="sm"
+              size="lg"
+              surfaceId="snapshot-confirm-cancel"
+              itemSurfaceConfig={slots?.cancelButton}
             >
               {request.cancelLabel ?? "Cancel"}
             </ButtonControl>
@@ -231,7 +282,9 @@ export function ConfirmDialog(): ReactNode {
               type="button"
               disabled={!isInputValid}
               variant={isDestructive ? "destructive" : "default"}
-              size="sm"
+              size="lg"
+              surfaceId="snapshot-confirm-submit"
+              itemSurfaceConfig={slots?.confirmButton}
             >
               {request.confirmLabel ?? "Confirm"}
             </ButtonControl>
