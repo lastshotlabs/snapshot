@@ -20,7 +20,8 @@
     "src/ui/button.ts",
     "src/ui/card.ts",
     "src/ui/input.ts",
-    "src/ui/icon.ts"
+    "src/ui/icon.ts",
+    "src/ui/tokens/index.ts"
   ],
   "exclude": ["node_modules", "dist", "dist-types"]
 }

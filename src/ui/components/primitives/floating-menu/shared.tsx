@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useCallback,
@@ -258,7 +258,8 @@ export function FloatingPanel({
       background: "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
       color:
         "var(--sn-color-popover-foreground, var(--sn-color-card-foreground, #111827))",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "var(--sn-radius-lg, 0.75rem)",
       boxShadow:
         "var(--sn-shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1))",

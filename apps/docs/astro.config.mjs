@@ -40,7 +40,10 @@ export default defineConfig({
               label: "Theming and Styling",
               link: "/guides/theming-and-styling/",
             },
-            { label: "Community and Chat", link: "/guides/community-and-chat/" },
+            {
+              label: "Community and Chat",
+              link: "/guides/community-and-chat/",
+            },
             { label: "Realtime", link: "/guides/realtime/" },
             {
               label: "File Uploads and Media",

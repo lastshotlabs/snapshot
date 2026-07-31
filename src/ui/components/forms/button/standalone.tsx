@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
 import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { useSnapshotId } from "../../_base/use-snapshot-id";
 import { renderIcon } from "../../../icons/render";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation, extractSurfaceConfig } from "../../_base/style-surfaces";
+import {
+  resolveSurfacePresentation,
+  extractSurfaceConfig,
+} from "../../_base/style-surfaces";
 import { ButtonControl } from "./control";
 
 // ── Standalone Props ──────────────────────────────────────────────────────────
@@ -18,7 +21,13 @@ export interface ButtonBaseProps {
   /** Icon name displayed before the label. */
   icon?: string;
   /** Visual variant. */
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   /** Size of the button. */
   size?: "sm" | "md" | "lg" | "icon";
   /** Disabled state. */

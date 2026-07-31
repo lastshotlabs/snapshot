@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -66,7 +66,7 @@ export function GridBase({
     implementationBase: {
       display: "grid",
       width: "100%",
-      gap: gap ? GAP_MAP[gap] ?? gap : undefined,
+      gap: gap ? (GAP_MAP[gap] ?? gap) : undefined,
       style: {
         gridTemplateAreas: resolvedAreas?.map((row) => `"${row}"`).join(" "),
         gridTemplateColumns:

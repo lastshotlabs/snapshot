@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -135,7 +135,8 @@ export function CodeBlockBase({
     surfaceId: rootId,
     implementationBase: {
       borderRadius: "md",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       bg: "var(--sn-color-card, #ffffff)",
       overflow: "hidden",
     },
@@ -287,106 +288,105 @@ export function CodeBlockBase({
         className={rootSurface.className}
         style={rootSurface.style}
       >
-      {/* Title bar */}
-      {hasTitleBar && (
-        <div
-          data-snapshot-id={`${rootId}-titleBar`}
-          data-testid="code-block-titlebar"
-          className={titleBarSurface.className}
-          style={titleBarSurface.style}
-        >
+        {/* Title bar */}
+        {hasTitleBar && (
           <div
-            data-snapshot-id={`${rootId}-titleMeta`}
-            className={titleMetaSurface.className}
-            style={titleMetaSurface.style}
+            data-snapshot-id={`${rootId}-titleBar`}
+            data-testid="code-block-titlebar"
+            className={titleBarSurface.className}
+            style={titleBarSurface.style}
           >
-            {title && (
-              <span
-                data-snapshot-id={`${rootId}-title`}
-                data-testid="code-block-title"
-                className={titleSurface.className}
-                style={titleSurface.style}
-              >
-                {title}
-              </span>
-            )}
-            {language && (
-              <span
-                data-snapshot-id={`${rootId}-language`}
-                data-testid="code-block-language"
-                className={languageSurface.className}
-                style={languageSurface.style}
-              >
-                {language}
-              </span>
-            )}
-          </div>
-
-        </div>
-      )}
-
-      {/* Code area */}
-      <div
-        data-snapshot-id={`${rootId}-body`}
-        className={bodySurface.className}
-        style={bodySurface.style}
-      >
-        {showCopy && (
-          <ButtonControl
-            type="button"
-            onClick={() => void handleCopy()}
-            testId="code-block-copy"
-            variant="ghost"
-            size="icon"
-            surfaceId={`${rootId}-copyButton`}
-            surfaceConfig={copyButtonSurface.resolvedConfigForWrapper}
-            ariaLabel={copyLabel}
-            title={copyLabel}
-          >
-            <Icon name={copied ? "check" : "copy"} size={14} />
-          </ButtonControl>
-        )}
-        <pre
-          data-snapshot-id={`${rootId}-pre`}
-          className={preSurface.className}
-          style={preSurface.style}
-        >
-          {/* Line numbers */}
-          {showLineNumbers && (
             <div
-              data-snapshot-id={`${rootId}-lineNumbers`}
-              data-testid="code-block-line-numbers"
-              aria-hidden="true"
-              className={lineNumbersSurface.className}
-              style={lineNumbersSurface.style}
+              data-snapshot-id={`${rootId}-titleMeta`}
+              className={titleMetaSurface.className}
+              style={titleMetaSurface.style}
             >
-              {lines.map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
+              {title && (
+                <span
+                  data-snapshot-id={`${rootId}-title`}
+                  data-testid="code-block-title"
+                  className={titleSurface.className}
+                  style={titleSurface.style}
+                >
+                  {title}
+                </span>
+              )}
+              {language && (
+                <span
+                  data-snapshot-id={`${rootId}-language`}
+                  data-testid="code-block-language"
+                  className={languageSurface.className}
+                  style={languageSurface.style}
+                >
+                  {language}
+                </span>
+              )}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Code content */}
-          {highlightedHtml ? (
-            <code
-              data-snapshot-id={`${rootId}-code`}
-              data-testid="code-block-code"
-              className={codeSurface.className}
-              style={codeSurface.style}
-              dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-            />
-          ) : (
-            <code
-              data-snapshot-id={`${rootId}-code`}
-              data-testid="code-block-code"
-              className={codeSurface.className}
-              style={codeSurface.style}
+        {/* Code area */}
+        <div
+          data-snapshot-id={`${rootId}-body`}
+          className={bodySurface.className}
+          style={bodySurface.style}
+        >
+          {showCopy && (
+            <ButtonControl
+              type="button"
+              onClick={() => void handleCopy()}
+              testId="code-block-copy"
+              variant="ghost"
+              size="icon"
+              surfaceId={`${rootId}-copyButton`}
+              surfaceConfig={copyButtonSurface.resolvedConfigForWrapper}
+              ariaLabel={copyLabel}
+              title={copyLabel}
             >
-              {code}
-            </code>
+              <Icon name={copied ? "check" : "copy"} size={14} />
+            </ButtonControl>
           )}
-        </pre>
-      </div>
+          <pre
+            data-snapshot-id={`${rootId}-pre`}
+            className={preSurface.className}
+            style={preSurface.style}
+          >
+            {/* Line numbers */}
+            {showLineNumbers && (
+              <div
+                data-snapshot-id={`${rootId}-lineNumbers`}
+                data-testid="code-block-line-numbers"
+                aria-hidden="true"
+                className={lineNumbersSurface.className}
+                style={lineNumbersSurface.style}
+              >
+                {lines.map((_, i) => (
+                  <div key={i}>{i + 1}</div>
+                ))}
+              </div>
+            )}
+
+            {/* Code content */}
+            {highlightedHtml ? (
+              <code
+                data-snapshot-id={`${rootId}-code`}
+                data-testid="code-block-code"
+                className={codeSurface.className}
+                style={codeSurface.style}
+                dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+              />
+            ) : (
+              <code
+                data-snapshot-id={`${rootId}-code`}
+                data-testid="code-block-code"
+                className={codeSurface.className}
+                style={codeSurface.style}
+              >
+                {code}
+              </code>
+            )}
+          </pre>
+        </div>
       </div>
       <SurfaceStyles css={rootSurface.scopedCss} />
       <SurfaceStyles css={titleBarSurface.scopedCss} />

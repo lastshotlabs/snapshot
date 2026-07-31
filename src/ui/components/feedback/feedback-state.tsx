@@ -12,7 +12,13 @@ export interface FeedbackStateAction {
   /** Button label text. */
   label: string;
   /** Visual variant forwarded to `ButtonControl`. */
-  variant?: "default" | "secondary" | "ghost" | "outline" | "destructive" | "link";
+  variant?:
+    | "default"
+    | "secondary"
+    | "ghost"
+    | "outline"
+    | "destructive"
+    | "link";
   /** Click handler. */
   onClick: () => void;
 }

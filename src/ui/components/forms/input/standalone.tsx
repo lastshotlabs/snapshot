@@ -1,12 +1,21 @@
-'use client';
+"use client";
 
 import { useCallback, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { useSnapshotId } from "../../_base/use-snapshot-id";
-import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler, ReactNode } from "react";
+import type {
+  CSSProperties,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  MouseEventHandler,
+  ReactNode,
+} from "react";
 import { Icon } from "../../../icons/index";
 import { SurfaceStyles } from "../../_base/surface-styles";
-import { resolveSurfacePresentation, extractSurfaceConfig } from "../../_base/style-surfaces";
+import {
+  resolveSurfacePresentation,
+  extractSurfaceConfig,
+} from "../../_base/style-surfaces";
 import { InputControl } from "./control";
 
 // ── Standalone Props ──────────────────────────────────────────────────────────
@@ -326,9 +335,7 @@ export function InputField({
           surfaceConfig={slots?.control}
           activeStates={resolvedStates}
           style={
-            icon
-              ? { paddingLeft: "var(--sn-spacing-2xl, 2.25rem)" }
-              : undefined
+            icon ? { paddingLeft: "var(--sn-spacing-2xl, 2.25rem)" } : undefined
           }
           testId="input-control"
         />

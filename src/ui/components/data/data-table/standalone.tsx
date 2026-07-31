@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -170,18 +170,54 @@ export interface DataTableBaseProps {
 // ── Formatting helpers ──────────────────────────────────────────────────────
 
 const BADGE_COLOR_MAP: Record<string, { bg: string; fg: string }> = {
-  blue: { bg: "var(--sn-color-info, #3b82f6)", fg: "var(--sn-color-info-foreground, #fff)" },
-  green: { bg: "var(--sn-color-success, #22c55e)", fg: "var(--sn-color-success-foreground, #fff)" },
-  red: { bg: "var(--sn-color-destructive, #dc2626)", fg: "var(--sn-color-destructive-foreground, #fff)" },
-  gray: { bg: "var(--sn-color-muted, #e5e7eb)", fg: "var(--sn-color-muted-foreground, #6b7280)" },
-  yellow: { bg: "var(--sn-color-warning, #d97706)", fg: "var(--sn-color-warning-foreground, #fff)" },
-  success: { bg: "var(--sn-color-success, #22c55e)", fg: "var(--sn-color-success-foreground, #fff)" },
-  warning: { bg: "var(--sn-color-warning, #d97706)", fg: "var(--sn-color-warning-foreground, #fff)" },
-  info: { bg: "var(--sn-color-info, #3b82f6)", fg: "var(--sn-color-info-foreground, #fff)" },
-  destructive: { bg: "var(--sn-color-destructive, #dc2626)", fg: "var(--sn-color-destructive-foreground, #fff)" },
-  muted: { bg: "var(--sn-color-muted, #e5e7eb)", fg: "var(--sn-color-muted-foreground, #6b7280)" },
-  primary: { bg: "var(--sn-color-primary, #2563eb)", fg: "var(--sn-color-primary-foreground, #fff)" },
-  secondary: { bg: "var(--sn-color-secondary, #f3f4f6)", fg: "var(--sn-color-secondary-foreground, #111827)" },
+  blue: {
+    bg: "var(--sn-color-info, #3b82f6)",
+    fg: "var(--sn-color-info-foreground, #fff)",
+  },
+  green: {
+    bg: "var(--sn-color-success, #22c55e)",
+    fg: "var(--sn-color-success-foreground, #fff)",
+  },
+  red: {
+    bg: "var(--sn-color-destructive, #dc2626)",
+    fg: "var(--sn-color-destructive-foreground, #fff)",
+  },
+  gray: {
+    bg: "var(--sn-color-muted, #e5e7eb)",
+    fg: "var(--sn-color-muted-foreground, #6b7280)",
+  },
+  yellow: {
+    bg: "var(--sn-color-warning, #d97706)",
+    fg: "var(--sn-color-warning-foreground, #fff)",
+  },
+  success: {
+    bg: "var(--sn-color-success, #22c55e)",
+    fg: "var(--sn-color-success-foreground, #fff)",
+  },
+  warning: {
+    bg: "var(--sn-color-warning, #d97706)",
+    fg: "var(--sn-color-warning-foreground, #fff)",
+  },
+  info: {
+    bg: "var(--sn-color-info, #3b82f6)",
+    fg: "var(--sn-color-info-foreground, #fff)",
+  },
+  destructive: {
+    bg: "var(--sn-color-destructive, #dc2626)",
+    fg: "var(--sn-color-destructive-foreground, #fff)",
+  },
+  muted: {
+    bg: "var(--sn-color-muted, #e5e7eb)",
+    fg: "var(--sn-color-muted-foreground, #6b7280)",
+  },
+  primary: {
+    bg: "var(--sn-color-primary, #2563eb)",
+    fg: "var(--sn-color-primary-foreground, #fff)",
+  },
+  secondary: {
+    bg: "var(--sn-color-secondary, #f3f4f6)",
+    fg: "var(--sn-color-secondary-foreground, #111827)",
+  },
 };
 
 function getFieldValue(row: Record<string, unknown>, path: string): unknown {
@@ -198,28 +234,41 @@ function formatCellValue(
   // Apply prefix/suffix
   const addPrefixSuffix = (content: React.ReactNode): React.ReactNode => {
     if (!column.prefix && !column.suffix) return content;
-    return <>{column.prefix}{content}{column.suffix}</>;
+    return (
+      <>
+        {column.prefix}
+        {content}
+        {column.suffix}
+      </>
+    );
   };
 
   switch (column.format) {
     case "date": {
       try {
-        return addPrefixSuffix(new Intl.DateTimeFormat().format(new Date(String(value))));
+        return addPrefixSuffix(
+          new Intl.DateTimeFormat().format(new Date(String(value))),
+        );
       } catch {
         return addPrefixSuffix(String(value));
       }
     }
     case "number": {
-      if (typeof value === "number") return addPrefixSuffix(new Intl.NumberFormat().format(value));
+      if (typeof value === "number")
+        return addPrefixSuffix(new Intl.NumberFormat().format(value));
       return addPrefixSuffix(String(value));
     }
     case "currency": {
       const numericValue = typeof value === "number" ? value : Number(value);
       if (!Number.isNaN(numericValue)) {
         const divisor = column.divisor;
-        const adjusted = divisor && divisor !== 1 ? numericValue / divisor : numericValue;
+        const adjusted =
+          divisor && divisor !== 1 ? numericValue / divisor : numericValue;
         return addPrefixSuffix(
-          new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(adjusted),
+          new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: "USD",
+          }).format(adjusted),
         );
       }
       return addPrefixSuffix(String(value));
@@ -233,7 +282,8 @@ function formatCellValue(
           data-color={colorName}
           style={{
             display: "inline-block",
-            padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+            padding:
+              "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
             borderRadius: "var(--sn-radius-full, 9999px)",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             backgroundColor: colors.bg,
@@ -247,26 +297,53 @@ function formatCellValue(
     case "boolean":
       return value ? "\u2713" : "\u2717";
     case "avatar": {
-      const src = column.avatarField && row
-        ? String(getFieldValue(row, column.avatarField) ?? "")
-        : "";
+      const src =
+        column.avatarField && row
+          ? String(getFieldValue(row, column.avatarField) ?? "")
+          : "";
       const name = String(value);
-      const initials = name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
+      const initials = name
+        .split(/\s+/)
+        .map((w) => w[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
       return (
-        <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-xs, 0.25rem)",
+          }}
+        >
           {src ? (
             <img
               src={src}
               alt={name}
-              style={{ width: "1.5rem", height: "1.5rem", borderRadius: "var(--sn-radius-full, 9999px)", objectFit: "cover" }}
+              style={{
+                width: "1.5rem",
+                height: "1.5rem",
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                objectFit: "cover",
+              }}
             />
           ) : (
-            <span style={{
-              width: "1.5rem", height: "1.5rem", borderRadius: "var(--sn-radius-full, 9999px)",
-              backgroundColor: "var(--sn-color-primary, #2563eb)", color: "var(--sn-color-primary-foreground, #fff)",
-              display: "inline-flex", alignItems: "center", justifyContent: "center",
-              fontSize: "var(--sn-font-size-xs, 0.625rem)", fontWeight: "var(--sn-font-weight-semibold, 600)" as unknown as number,
-            }}>
+            <span
+              style={{
+                width: "1.5rem",
+                height: "1.5rem",
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                backgroundColor: "var(--sn-color-primary, #2563eb)",
+                color: "var(--sn-color-primary-foreground, #fff)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "var(--sn-font-size-xs, 0.625rem)",
+                fontWeight:
+                  "var(--sn-font-weight-semibold, 600)" as unknown as number,
+              }}
+            >
               {initials || "?"}
             </span>
           )}
@@ -277,19 +354,44 @@ function formatCellValue(
     case "progress": {
       const pct = typeof value === "number" ? value : Number(value) || 0;
       return (
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--sn-spacing-sm, 0.5rem)" }}>
-          <div style={{
-            flex: 1, height: "var(--sn-spacing-2xs, 0.375rem)", backgroundColor: "var(--sn-color-muted, #e5e7eb)",
-            borderRadius: "var(--sn-radius-full, 9999px)", overflow: "hidden",
-          }}>
-            <div style={{
-              width: `${Math.min(100, Math.max(0, pct))}%`, height: "100%",
-              backgroundColor: pct >= 100 ? "var(--sn-color-success, #22c55e)" : "var(--sn-color-primary, #2563eb)",
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--sn-spacing-sm, 0.5rem)",
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              height: "var(--sn-spacing-2xs, 0.375rem)",
+              backgroundColor: "var(--sn-color-muted, #e5e7eb)",
               borderRadius: "var(--sn-radius-full, 9999px)",
-              transition: "width var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
-            }} />
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${Math.min(100, Math.max(0, pct))}%`,
+                height: "100%",
+                backgroundColor:
+                  pct >= 100
+                    ? "var(--sn-color-success, #22c55e)"
+                    : "var(--sn-color-primary, #2563eb)",
+                borderRadius: "var(--sn-radius-full, 9999px)",
+                transition:
+                  "width var(--sn-duration-normal, 250ms) var(--sn-ease-out, ease-out)",
+              }}
+            />
           </div>
-          <span style={{ fontSize: "var(--sn-font-size-xs, 0.75rem)", color: "var(--sn-color-muted-foreground, #6b7280)", minWidth: "2.5em", textAlign: "right" }}>
+          <span
+            style={{
+              fontSize: "var(--sn-font-size-xs, 0.75rem)",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              minWidth: "2.5em",
+              textAlign: "right",
+            }}
+          >
             {Math.round(pct)}%
           </span>
         </div>
@@ -297,15 +399,19 @@ function formatCellValue(
     }
     case "link": {
       const url = String(value);
-      const text = column.linkTextField && row
-        ? String(getFieldValue(row, column.linkTextField) ?? url)
-        : url;
+      const text =
+        column.linkTextField && row
+          ? String(getFieldValue(row, column.linkTextField) ?? url)
+          : url;
       return (
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "var(--sn-color-info, #3b82f6)", textDecoration: "underline" }}
+          style={{
+            color: "var(--sn-color-info, #3b82f6)",
+            textDecoration: "underline",
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {text}
@@ -314,11 +420,16 @@ function formatCellValue(
     }
     case "code":
       return (
-        <code style={{
-          fontFamily: "var(--sn-font-mono, monospace)", fontSize: "var(--sn-font-size-xs, 0.75rem)",
-          backgroundColor: "var(--sn-color-secondary, #f3f4f6)", padding: "var(--sn-spacing-2xs, 0.0625rem) var(--sn-spacing-xs, 0.25rem)",
-          borderRadius: "var(--sn-radius-sm, 0.25rem)",
-        }}>
+        <code
+          style={{
+            fontFamily: "var(--sn-font-mono, monospace)",
+            fontSize: "var(--sn-font-size-xs, 0.75rem)",
+            backgroundColor: "var(--sn-color-secondary, #f3f4f6)",
+            padding:
+              "var(--sn-spacing-2xs, 0.0625rem) var(--sn-spacing-xs, 0.25rem)",
+            borderRadius: "var(--sn-radius-sm, 0.25rem)",
+          }}
+        >
           {String(value)}
         </code>
       );
@@ -394,7 +505,8 @@ export function DataTableBase({
     surfaceId: `${rootId}-root`,
     implementationBase: {
       overflow: "hidden",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "var(--sn-radius-md, 0.5rem)",
       bg: "var(--sn-color-card, #ffffff)",
     },
@@ -420,10 +532,13 @@ export function DataTableBase({
     });
   };
 
-  const allSelected = rows.length > 0 && selection && rows.every((row) => {
-    const rowId = row[rowIdField];
-    return rowId != null && selection.has(rowId as string | number);
-  });
+  const allSelected =
+    rows.length > 0 &&
+    selection &&
+    rows.every((row) => {
+      const rowId = row[rowIdField];
+      return rowId != null && selection.has(rowId as string | number);
+    });
 
   return (
     <div
@@ -434,14 +549,18 @@ export function DataTableBase({
       style={rootSurface.style}
     >
       {/* Toolbar: search + bulk actions + live banner */}
-      {(searchable || hasNewData || (bulkActions && selectedRows && selectedRows.length > 0)) && (
+      {(searchable ||
+        hasNewData ||
+        (bulkActions && selectedRows && selectedRows.length > 0)) && (
         <div
           style={{
             display: "flex",
             alignItems: "center",
             gap: "var(--sn-spacing-sm, 0.5rem)",
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-            borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            borderBottom:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
           }}
         >
           {searchable && (
@@ -458,24 +577,47 @@ export function DataTableBase({
           )}
 
           {bulkActions && selectedRows && selectedRows.length > 0 && (
-            <div role="toolbar" aria-label="Bulk actions" style={{ display: "flex", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+            <div
+              role="toolbar"
+              aria-label="Bulk actions"
+              style={{ display: "flex", gap: "var(--sn-spacing-xs, 0.25rem)" }}
+            >
               {bulkActions.map((action, index) => (
                 <ButtonControl
                   key={`${action.label}-${index}`}
-                  variant={action.variant === "destructive" ? "destructive" : "outline"}
+                  variant={
+                    action.variant === "destructive" ? "destructive" : "outline"
+                  }
                   size="sm"
                   onClick={() => action.onAction(selectedRows)}
                 >
                   {action.icon ? <Icon name={action.icon} size={14} /> : null}
-                  <span>{action.label.replace("{count}", String(selectedRows.length))}</span>
+                  <span>
+                    {action.label.replace(
+                      "{count}",
+                      String(selectedRows.length),
+                    )}
+                  </span>
                 </ButtonControl>
               ))}
             </div>
           )}
 
           {hasNewData && (
-            <div style={{ display: "flex", alignItems: "center", gap: "var(--sn-spacing-xs, 0.25rem)", marginLeft: "auto" }}>
-              <span style={{ fontSize: "var(--sn-font-size-sm, 0.875rem)", color: "var(--sn-color-muted-foreground, #6b7280)" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--sn-spacing-xs, 0.25rem)",
+                marginLeft: "auto",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "var(--sn-font-size-sm, 0.875rem)",
+                  color: "var(--sn-color-muted-foreground, #6b7280)",
+                }}
+              >
                 New data available
               </span>
               <ButtonControl variant="outline" size="sm" onClick={onRefresh}>
@@ -490,8 +632,8 @@ export function DataTableBase({
       {toolbarContent}
 
       {/* Loading */}
-      {isLoading && (
-        loadingContent ?? (
+      {isLoading &&
+        (loadingContent ?? (
           <div
             data-testid="data-table-loading"
             style={{
@@ -502,12 +644,12 @@ export function DataTableBase({
           >
             Loading...
           </div>
-        )
-      )}
+        ))}
 
       {/* Error */}
-      {!isLoading && error && (
-        errorContent ?? (
+      {!isLoading &&
+        error &&
+        (errorContent ?? (
           <div
             data-testid="data-table-error"
             role="alert"
@@ -519,12 +661,13 @@ export function DataTableBase({
           >
             {error}
           </div>
-        )
-      )}
+        ))}
 
       {/* Empty */}
-      {!isLoading && !error && rows.length === 0 && (
-        emptyContent ?? (
+      {!isLoading &&
+        !error &&
+        rows.length === 0 &&
+        (emptyContent ?? (
           <div
             data-testid="data-table-empty"
             style={{
@@ -535,8 +678,7 @@ export function DataTableBase({
           >
             {emptyMessage}
           </div>
-        )
-      )}
+        ))}
 
       {/* Table */}
       {!isLoading && !error && rows.length > 0 && (
@@ -551,39 +693,47 @@ export function DataTableBase({
             <thead>
               <tr
                 style={{
-                  borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+                  borderBottom:
+                    "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
                   backgroundColor: "var(--sn-color-muted, #f9fafb)",
                 }}
               >
-                {selectable && (() => {
-                  const selectSurface = resolveHeaderCellSurface(
-                    `${rootId}-header-cell-select`,
-                    { padding: cellPadding, width: "40px", textAlign: "center" },
-                  );
-                  return (
-                    <th
-                      data-snapshot-id={`${rootId}-header-cell-select`}
-                      className={selectSurface.className}
-                      style={selectSurface.style}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={allSelected}
-                        onChange={onToggleAll}
-                        aria-label="Select all rows"
-                      />
-                    </th>
-                  );
-                })()}
+                {selectable &&
+                  (() => {
+                    const selectSurface = resolveHeaderCellSurface(
+                      `${rootId}-header-cell-select`,
+                      {
+                        padding: cellPadding,
+                        width: "40px",
+                        textAlign: "center",
+                      },
+                    );
+                    return (
+                      <th
+                        data-snapshot-id={`${rootId}-header-cell-select`}
+                        className={selectSurface.className}
+                        style={selectSurface.style}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={allSelected}
+                          onChange={onToggleAll}
+                          aria-label="Select all rows"
+                        />
+                      </th>
+                    );
+                  })()}
                 {columns.map((col) => {
                   const headerSurface = resolveHeaderCellSurface(
                     `${rootId}-header-cell-${col.field}`,
                     {
                       padding: cellPadding,
                       textAlign: col.align ?? "left",
-                      fontWeight: "var(--sn-font-weight-semibold, 600)" as unknown as number,
+                      fontWeight:
+                        "var(--sn-font-weight-semibold, 600)" as unknown as number,
                       color: "var(--sn-color-muted-foreground, #6b7280)",
-                      cursor: col.sortable && onSortChange ? "pointer" : undefined,
+                      cursor:
+                        col.sortable && onSortChange ? "pointer" : undefined,
                       userSelect: "none",
                       width: col.width,
                       whiteSpace: "nowrap",
@@ -595,13 +745,37 @@ export function DataTableBase({
                       data-snapshot-id={`${rootId}-header-cell-${col.field}`}
                       className={headerSurface.className}
                       style={headerSurface.style}
-                      onClick={col.sortable && onSortChange ? () => onSortChange(col.field) : undefined}
-                      aria-sort={col.sortable ? (sort?.column === col.field ? (sort.direction === "asc" ? "ascending" : "descending") : "none") : undefined}
+                      onClick={
+                        col.sortable && onSortChange
+                          ? () => onSortChange(col.field)
+                          : undefined
+                      }
+                      aria-sort={
+                        col.sortable
+                          ? sort?.column === col.field
+                            ? sort.direction === "asc"
+                              ? "ascending"
+                              : "descending"
+                            : "none"
+                          : undefined
+                      }
                     >
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--sn-spacing-2xs, 0.125rem)" }}>
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "var(--sn-spacing-2xs, 0.125rem)",
+                        }}
+                      >
                         {col.label}
                         {col.sortable && sort?.column === col.field && (
-                          <span aria-label={sort.direction === "asc" ? "sorted ascending" : "sorted descending"}>
+                          <span
+                            aria-label={
+                              sort.direction === "asc"
+                                ? "sorted ascending"
+                                : "sorted descending"
+                            }
+                          >
                             {sort.direction === "asc" ? "\u25B2" : "\u25BC"}
                           </span>
                         )}
@@ -609,21 +783,33 @@ export function DataTableBase({
                     </th>
                   );
                 })}
-                {rowActions && rowActions.length > 0 && (() => {
-                  const actionsSurface = resolveHeaderCellSurface(
-                    `${rootId}-header-cell-actions`,
-                    { padding: cellPadding, width: "auto", textAlign: "right" },
-                  );
-                  return (
-                    <th
-                      data-snapshot-id={`${rootId}-header-cell-actions`}
-                      className={actionsSurface.className}
-                      style={actionsSurface.style}
-                    >
-                      <span style={{ color: "var(--sn-color-muted-foreground, #6b7280)" }}>Actions</span>
-                    </th>
-                  );
-                })()}
+                {rowActions &&
+                  rowActions.length > 0 &&
+                  (() => {
+                    const actionsSurface = resolveHeaderCellSurface(
+                      `${rootId}-header-cell-actions`,
+                      {
+                        padding: cellPadding,
+                        width: "auto",
+                        textAlign: "right",
+                      },
+                    );
+                    return (
+                      <th
+                        data-snapshot-id={`${rootId}-header-cell-actions`}
+                        className={actionsSurface.className}
+                        style={actionsSurface.style}
+                      >
+                        <span
+                          style={{
+                            color: "var(--sn-color-muted-foreground, #6b7280)",
+                          }}
+                        >
+                          Actions
+                        </span>
+                      </th>
+                    );
+                  })()}
               </tr>
             </thead>
             <tbody>
@@ -636,19 +822,28 @@ export function DataTableBase({
                     data-testid="data-table-row"
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                     style={{
-                      borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+                      borderBottom:
+                        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
                       cursor: onRowClick ? "pointer" : undefined,
                       backgroundColor: isSelected
                         ? "color-mix(in oklch, var(--sn-color-primary, #2563eb) 5%, var(--sn-color-card, #fff))"
-                        : hoverable && hoveredRowIndex === rowIndex && !isSelected
+                        : hoverable &&
+                            hoveredRowIndex === rowIndex &&
+                            !isSelected
                           ? "var(--sn-color-accent, #f3f4f6)"
                           : striped && rowIndex % 2 === 1
                             ? "var(--sn-color-muted, #f9fafb)"
                             : undefined,
-                      transition: hoverable ? "background-color var(--sn-duration-fast, 150ms)" : undefined,
+                      transition: hoverable
+                        ? "background-color var(--sn-duration-fast, 150ms)"
+                        : undefined,
                     }}
-                    onMouseEnter={hoverable ? () => setHoveredRowIndex(rowIndex) : undefined}
-                    onMouseLeave={hoverable ? () => setHoveredRowIndex(null) : undefined}
+                    onMouseEnter={
+                      hoverable ? () => setHoveredRowIndex(rowIndex) : undefined
+                    }
+                    onMouseLeave={
+                      hoverable ? () => setHoveredRowIndex(null) : undefined
+                    }
                   >
                     {selectable && (
                       <td style={{ padding: cellPadding, textAlign: "center" }}>
@@ -678,7 +873,13 @@ export function DataTableBase({
                     })}
                     {rowActions && rowActions.length > 0 && (
                       <td style={{ padding: cellPadding, textAlign: "right" }}>
-                        <div style={{ display: "flex", gap: "var(--sn-spacing-2xs, 0.125rem)", justifyContent: "flex-end" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "var(--sn-spacing-2xs, 0.125rem)",
+                            justifyContent: "flex-end",
+                          }}
+                        >
                           {rowActions.map((action, actionIndex) => (
                             <ButtonControl
                               key={`${action.label}-${actionIndex}`}
@@ -690,7 +891,9 @@ export function DataTableBase({
                                 action.onAction(row);
                               }}
                             >
-                              {action.icon ? <Icon name={action.icon} size={14} /> : null}
+                              {action.icon ? (
+                                <Icon name={action.icon} size={14} />
+                              ) : null}
                               <span>{action.label}</span>
                             </ButtonControl>
                           ))}
@@ -714,8 +917,10 @@ export function DataTableBase({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
-            borderTop: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            borderTop:
+              "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
             fontSize: "var(--sn-font-size-sm, 0.875rem)",
             color: "var(--sn-color-muted-foreground, #6b7280)",
             ...paginationSurface.style,
@@ -724,7 +929,9 @@ export function DataTableBase({
           <span>
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
-          <div style={{ display: "flex", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+          <div
+            style={{ display: "flex", gap: "var(--sn-spacing-xs, 0.25rem)" }}
+          >
             <ButtonControl
               variant="outline"
               size="sm"

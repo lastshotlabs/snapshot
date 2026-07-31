@@ -2,13 +2,13 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> | ----- | ----- | ------ | ----- |
-> | A | Release-Clean Build and Type Surface | Not started | A — Build |
-> | B | SSR Request and Render Contract Hardening | Not started | B — Runtime |
-> | C | Universal Styling Contract Normalization | Not started | C — UI Contract |
-> | D | Next.js Parity Matrix and Conformance | Not started | B — Runtime |
-> | E | Docs, Examples, and Certification | Not started | D — Docs |
+> | Phase | Title                                     | Status      | Track           |
+> | ----- | ----------------------------------------- | ----------- | --------------- |
+> | A     | Release-Clean Build and Type Surface      | Not started | A — Build       |
+> | B     | SSR Request and Render Contract Hardening | Not started | B — Runtime     |
+> | C     | Universal Styling Contract Normalization  | Not started | C — UI Contract |
+> | D     | Next.js Parity Matrix and Conformance     | Not started | B — Runtime     |
+> | E     | Docs, Examples, and Certification         | Not started | D — Docs        |
 >
 > **Priority:** P0
 >
@@ -26,14 +26,14 @@ Synced status note:
 
 Authoritative phase map for implementing agents:
 
-| Phase | Title | Track |
-| ----- | ----- | ----- |
-| A | Release-Clean Build and Type Surface | A |
-| B | SSR Request and Render Contract Hardening | B |
-| C | SSG Contract and Build Integration Hardening | B |
-| D | Universal Styling Contract Normalization | C |
-| E | Next.js Parity Matrix and Conformance | B |
-| F | Docs, Examples, and Certification | D |
+| Phase | Title                                        | Track |
+| ----- | -------------------------------------------- | ----- |
+| A     | Release-Clean Build and Type Surface         | A     |
+| B     | SSR Request and Render Contract Hardening    | B     |
+| C     | SSG Contract and Build Integration Hardening | B     |
+| D     | Universal Styling Contract Normalization     | C     |
+| E     | Next.js Parity Matrix and Conformance        | B     |
+| F     | Docs, Examples, and Certification            | D     |
 
 Authoritative product bar for implementing agents:
 
@@ -110,28 +110,28 @@ Snapshot claims to provide an equivalent capability.
 
 ### Audited current strengths
 
-| Area | File(s) | Current state |
-| ---- | ------- | ------------- |
-| Stream timeout lifecycle | `src/ssr/render.ts` | Abort timeout now survives until stream completion/cancel. |
-| Request header propagation | `src/ssr/renderer.ts` | `load()` receives real request headers when `bsCtx.request` or `bsCtx.req` exists. |
-| Not-found status behavior | `src/ssr/renderer.ts` | `notFound` returns `404` HTML shell and preserves `headTags` and assets. |
-| Style shorthand safety | `src/ui/components/_base/style-props.ts` | Simple backgrounds normalize to `backgroundColor`; complex shorthands stay `background`. |
-| Chart SSR safety | `src/ui/components/data/chart/component.tsx` | Server path renders charts with explicit dimensions instead of `ResponsiveContainer`. |
-| RSC option threading surface | `src/ssr/types.ts` | `SnapshotSsrConfig` and `ManifestSsrConfig` already expose `rscOptions?: RscOptions`. |
-| SSG runner wiring | `src/vite/index.ts` | `snapshotSsr({ ssg: true })` spawns `slingshot-ssg` and already forwards `--rsc-manifest` when `rsc: true`. |
-| Static params artifact generation | `src/vite/index.ts` | `staticParamsPlugin()` writes `static-params.json` for routes that export `generateStaticParams`. |
-| Audited SSR/styling test slice | `src/ssr/__tests__`, `_base/__tests__`, chart tests | 176 tests passed across 23 files in the audited slice. |
+| Area                              | File(s)                                             | Current state                                                                                               |
+| --------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Stream timeout lifecycle          | `src/ssr/render.ts`                                 | Abort timeout now survives until stream completion/cancel.                                                  |
+| Request header propagation        | `src/ssr/renderer.ts`                               | `load()` receives real request headers when `bsCtx.request` or `bsCtx.req` exists.                          |
+| Not-found status behavior         | `src/ssr/renderer.ts`                               | `notFound` returns `404` HTML shell and preserves `headTags` and assets.                                    |
+| Style shorthand safety            | `src/ui/components/_base/style-props.ts`            | Simple backgrounds normalize to `backgroundColor`; complex shorthands stay `background`.                    |
+| Chart SSR safety                  | `src/ui/components/data/chart/component.tsx`        | Server path renders charts with explicit dimensions instead of `ResponsiveContainer`.                       |
+| RSC option threading surface      | `src/ssr/types.ts`                                  | `SnapshotSsrConfig` and `ManifestSsrConfig` already expose `rscOptions?: RscOptions`.                       |
+| SSG runner wiring                 | `src/vite/index.ts`                                 | `snapshotSsr({ ssg: true })` spawns `slingshot-ssg` and already forwards `--rsc-manifest` when `rsc: true`. |
+| Static params artifact generation | `src/vite/index.ts`                                 | `staticParamsPlugin()` writes `static-params.json` for routes that export `generateStaticParams`.           |
+| Audited SSR/styling test slice    | `src/ssr/__tests__`, `_base/__tests__`, chart tests | 176 tests passed across 23 files in the audited slice.                                                      |
 
 ### Audited current blockers
 
-| Area | File(s) | Gap |
-| ---- | ------- | --- |
-| DTS/build blocker | `src/ui/components/data/chart/schema.ts`, `src/ui/components/data/stat-card/schema.ts`, `src/ui/components/navigation/tree-view/schema.ts` | `bun run build` fails with `TS7056` because the inferred schema export types are too large to serialize. |
-| Explicit SSR request contract | `src/ssr/renderer.ts`, `src/ssr/manifest-renderer.ts`, adapter boundary upstream of Snapshot | Request extraction still relies on structural probing of `bsCtx`. |
-| SSG conformance and usage docs | `src/vite/index.ts`, `apps/docs/src/content/docs/integrate/ssr-rsc.md`, `apps/docs/src/content/docs/reference/vite.md` | SSG exists in code, but the docs do not yet provide a clear, end-to-end usage guide or parity status. |
-| Universal layout styling contract | `src/ui/components/layout/layout/schema.ts` | Layout uses custom `slots: z.array(layoutSlotSchema)` semantics instead of reserving `slots` for universal style surfaces. |
-| Full-suite certification | repo-wide test suite | The audited slice is green, but full-suite completion still needs a clean end-to-end pass. |
-| Formatting baseline | repo-wide | `bun run format:check` fails on a large pre-existing formatting backlog. |
+| Area                              | File(s)                                                                                                                                    | Gap                                                                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| DTS/build blocker                 | `src/ui/components/data/chart/schema.ts`, `src/ui/components/data/stat-card/schema.ts`, `src/ui/components/navigation/tree-view/schema.ts` | `bun run build` fails with `TS7056` because the inferred schema export types are too large to serialize.                   |
+| Explicit SSR request contract     | `src/ssr/renderer.ts`, `src/ssr/manifest-renderer.ts`, adapter boundary upstream of Snapshot                                               | Request extraction still relies on structural probing of `bsCtx`.                                                          |
+| SSG conformance and usage docs    | `src/vite/index.ts`, `apps/docs/src/content/docs/integrate/ssr-rsc.md`, `apps/docs/src/content/docs/reference/vite.md`                     | SSG exists in code, but the docs do not yet provide a clear, end-to-end usage guide or parity status.                      |
+| Universal layout styling contract | `src/ui/components/layout/layout/schema.ts`                                                                                                | Layout uses custom `slots: z.array(layoutSlotSchema)` semantics instead of reserving `slots` for universal style surfaces. |
+| Full-suite certification          | repo-wide test suite                                                                                                                       | The audited slice is green, but full-suite completion still needs a clean end-to-end pass.                                 |
+| Formatting baseline               | repo-wide                                                                                                                                  | `bun run format:check` fails on a large pre-existing formatting backlog.                                                   |
 
 ### Current build and docs reality
 
@@ -163,19 +163,19 @@ bun run docs:ci
 
 ### Key files
 
-| File | What it does | Line count | Notes |
-| ---- | ------------ | ---------- | ----- |
-| `src/ssr/render.ts` | streaming SSR and RSC render body | 410 | timeout semantics are already improved and must remain invariant |
-| `src/ssr/renderer.ts` | file-based SSR runtime | 1268 | request extraction is still partly structural |
-| `src/ssr/manifest-renderer.ts` | manifest SSR runtime | 1159 | must follow the same request/status/head semantics as file-based SSR |
-| `src/ssr/types.ts` | public and internal SSR contract types | 470 | the correct place for any new request-envelope type |
-| `src/vite/index.ts` | SSR/Vite integration surface | 1117 | update only if parity work changes public integration semantics |
-| `src/ui/components/_base/style-props.ts` | universal style prop resolution | 519 | current shorthand fix is correct and should be treated as baseline |
-| `src/ui/components/layout/layout/schema.ts` | layout config contract | 30 | currently mixes semantic area declaration with visual slot semantics |
-| `src/ui/components/layout/layout/component.tsx` | built-in layout runtime | 519 | existing layout tests already live next to this file |
-| `src/ui/components/data/chart/schema.ts` | one of the current DTS blockers | 99 | must be fixed without eroding consumer typing |
-| `src/ui/components/data/stat-card/schema.ts` | one of the current DTS blockers | 95 | same requirement as chart |
-| `src/ui/components/navigation/tree-view/schema.ts` | one of the current DTS blockers | 116 | same requirement as chart |
+| File                                               | What it does                           | Line count | Notes                                                                |
+| -------------------------------------------------- | -------------------------------------- | ---------- | -------------------------------------------------------------------- |
+| `src/ssr/render.ts`                                | streaming SSR and RSC render body      | 410        | timeout semantics are already improved and must remain invariant     |
+| `src/ssr/renderer.ts`                              | file-based SSR runtime                 | 1268       | request extraction is still partly structural                        |
+| `src/ssr/manifest-renderer.ts`                     | manifest SSR runtime                   | 1159       | must follow the same request/status/head semantics as file-based SSR |
+| `src/ssr/types.ts`                                 | public and internal SSR contract types | 470        | the correct place for any new request-envelope type                  |
+| `src/vite/index.ts`                                | SSR/Vite integration surface           | 1117       | update only if parity work changes public integration semantics      |
+| `src/ui/components/_base/style-props.ts`           | universal style prop resolution        | 519        | current shorthand fix is correct and should be treated as baseline   |
+| `src/ui/components/layout/layout/schema.ts`        | layout config contract                 | 30         | currently mixes semantic area declaration with visual slot semantics |
+| `src/ui/components/layout/layout/component.tsx`    | built-in layout runtime                | 519        | existing layout tests already live next to this file                 |
+| `src/ui/components/data/chart/schema.ts`           | one of the current DTS blockers        | 99         | must be fixed without eroding consumer typing                        |
+| `src/ui/components/data/stat-card/schema.ts`       | one of the current DTS blockers        | 95         | same requirement as chart                                            |
+| `src/ui/components/navigation/tree-view/schema.ts` | one of the current DTS blockers        | 116        | same requirement as chart                                            |
 
 ### Current pattern that must be replaced
 
@@ -513,8 +513,8 @@ contract between Snapshot and slingshot-ssg.
 }
 ```
 
-  - rationale: `snapshotSsr({ ssg: true })` runs the `slingshot-ssg` spawn from the client
-    build's `closeBundle`, so `dist/server/entry-server.js` must already exist
+- rationale: `snapshotSsr({ ssg: true })` runs the `slingshot-ssg` spawn from the client
+  build's `closeBundle`, so `dist/server/entry-server.js` must already exist
 - define and test warning behavior
   - missing `slingshot-ssg` binary
   - non-zero `slingshot-ssg` exit code
@@ -719,18 +719,18 @@ Each row also needs:
 
 ### Recommended parity ownership table
 
-| Parity row | Status source | Owner tests |
-| ---------- | ------------- | ----------- |
-| request semantics | `reference/ssr.md` | `src/ssr/__tests__/conformance/request-semantics.test.ts`, `src/ssr/__tests__/renderer.test.tsx` |
-| redirect and status semantics | `reference/ssr.md` | `src/ssr/__tests__/conformance/status-semantics.test.ts` |
-| route convention semantics | parity document | `src/ssr/__tests__/renderer.test.tsx` |
-| head and metadata semantics | `integrate/ssr-rsc.md`, `reference/ssr.md` | `src/ssr/__tests__/head.test.ts`, `src/ssr/__tests__/conformance/streaming-semantics.test.ts` |
-| streaming and Suspense semantics | parity document | `src/ssr/__tests__/render-page.test.tsx`, `src/ssr/__tests__/render-timeout.test.ts`, `src/ssr/__tests__/conformance/streaming-semantics.test.ts` |
-| cache, draft mode, revalidation, and static params semantics | `reference/ssr.md`, `reference/vite.md` | `src/ssr/__tests__/cache.test.ts`, `src/ssr/__tests__/ppr-cache.test.ts`, `src/vite/__tests__/plugin.test.ts` |
-| SSG build and prerender semantics | `integrate/ssr-rsc.md`, `reference/vite.md`, parity document | `src/vite/__tests__/ssg.test.ts`, `src/vite/__tests__/plugin.test.ts` |
-| RSC semantics | `integrate/ssr-rsc.md`, `reference/vite.md` | `src/ssr/__tests__/rsc.test.ts`, `src/ssr/__tests__/manifest-renderer-rsc.test.ts`, `src/vite/__tests__/rsc-transform.test.ts`, `src/vite/__tests__/ssg.test.ts` |
-| PPR semantics | parity document | `src/ssr/__tests__/ppr.test.tsx`, `src/ssr/__tests__/ppr-render.test.tsx`, `src/ssr/__tests__/ppr-cache.test.ts` |
-| manifest-renderer parity with file-based SSR | parity document | `src/ssr/__tests__/manifest-renderer-rsc.test.ts`, `src/ssr/__tests__/conformance/request-semantics.test.ts`, `src/ssr/__tests__/conformance/status-semantics.test.ts` |
+| Parity row                                                   | Status source                                                | Owner tests                                                                                                                                                            |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| request semantics                                            | `reference/ssr.md`                                           | `src/ssr/__tests__/conformance/request-semantics.test.ts`, `src/ssr/__tests__/renderer.test.tsx`                                                                       |
+| redirect and status semantics                                | `reference/ssr.md`                                           | `src/ssr/__tests__/conformance/status-semantics.test.ts`                                                                                                               |
+| route convention semantics                                   | parity document                                              | `src/ssr/__tests__/renderer.test.tsx`                                                                                                                                  |
+| head and metadata semantics                                  | `integrate/ssr-rsc.md`, `reference/ssr.md`                   | `src/ssr/__tests__/head.test.ts`, `src/ssr/__tests__/conformance/streaming-semantics.test.ts`                                                                          |
+| streaming and Suspense semantics                             | parity document                                              | `src/ssr/__tests__/render-page.test.tsx`, `src/ssr/__tests__/render-timeout.test.ts`, `src/ssr/__tests__/conformance/streaming-semantics.test.ts`                      |
+| cache, draft mode, revalidation, and static params semantics | `reference/ssr.md`, `reference/vite.md`                      | `src/ssr/__tests__/cache.test.ts`, `src/ssr/__tests__/ppr-cache.test.ts`, `src/vite/__tests__/plugin.test.ts`                                                          |
+| SSG build and prerender semantics                            | `integrate/ssr-rsc.md`, `reference/vite.md`, parity document | `src/vite/__tests__/ssg.test.ts`, `src/vite/__tests__/plugin.test.ts`                                                                                                  |
+| RSC semantics                                                | `integrate/ssr-rsc.md`, `reference/vite.md`                  | `src/ssr/__tests__/rsc.test.ts`, `src/ssr/__tests__/manifest-renderer-rsc.test.ts`, `src/vite/__tests__/rsc-transform.test.ts`, `src/vite/__tests__/ssg.test.ts`       |
+| PPR semantics                                                | parity document                                              | `src/ssr/__tests__/ppr.test.tsx`, `src/ssr/__tests__/ppr-render.test.tsx`, `src/ssr/__tests__/ppr-cache.test.ts`                                                       |
+| manifest-renderer parity with file-based SSR                 | parity document                                              | `src/ssr/__tests__/manifest-renderer-rsc.test.ts`, `src/ssr/__tests__/conformance/request-semantics.test.ts`, `src/ssr/__tests__/conformance/status-semantics.test.ts` |
 
 ### Explicit non-goals
 
@@ -839,12 +839,12 @@ bun run docs:ci
 
 ### Track overview
 
-| Track | Phases | File ownership |
-| ----- | ------ | -------------- |
-| A | A | chart/stat-card/tree-view schema and types only |
-| B | B, C, E | `src/ssr/**`, `src/vite/**`, SSR/SSG docs, conformance tests |
-| C | D | layout schema/runtime, universal styling docs/tests |
-| D | F | public docs and certification pass |
+| Track | Phases  | File ownership                                               |
+| ----- | ------- | ------------------------------------------------------------ |
+| A     | A       | chart/stat-card/tree-view schema and types only              |
+| B     | B, C, E | `src/ssr/**`, `src/vite/**`, SSR/SSG docs, conformance tests |
+| C     | D       | layout schema/runtime, universal styling docs/tests          |
+| D     | F       | public docs and certification pass                           |
 
 ### Dependency order
 
@@ -855,21 +855,21 @@ bun run docs:ci
 
 ### Per-track sequencing table
 
-| Track | Step 1 | Step 2 | Step 3 |
-| ----- | ------ | ------ | ------ |
-| A | reduce schema serialization complexity | restore exact exported config typing | run `typecheck` and `build` |
-| B | add request envelope type and fallback order | harden `snapshotSsr()` and slingshot-ssg integration semantics | add conformance tests and update SSR/SSG docs/JSDoc |
-| C | introduce `areas` plus legacy normalization | update layout runtime and slot-contract tests | update styling docs and deprecation language |
-| D | publish parity matrix and examples | verify docs wording matches actual test-backed status | run final certification commands |
+| Track | Step 1                                       | Step 2                                                         | Step 3                                              |
+| ----- | -------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------- |
+| A     | reduce schema serialization complexity       | restore exact exported config typing                           | run `typecheck` and `build`                         |
+| B     | add request envelope type and fallback order | harden `snapshotSsr()` and slingshot-ssg integration semantics | add conformance tests and update SSR/SSG docs/JSDoc |
+| C     | introduce `areas` plus legacy normalization  | update layout runtime and slot-contract tests                  | update styling docs and deprecation language        |
+| D     | publish parity matrix and examples           | verify docs wording matches actual test-backed status          | run final certification commands                    |
 
 ### Risk mitigation by track
 
-| Track | Main risk | Mitigation |
-| ----- | --------- | ---------- |
-| A | build passes but consumer types silently degrade | verify exported config types remain exact and add focused component tests |
-| B | request-envelope or SSG claims land without adapter/runner clarity, leaving false confidence | keep legacy fallback covered, test slingshot-ssg handoff explicitly, and mark parity rows `partial` until upstream behavior is proven |
-| C | layout migration breaks existing manifests | accept legacy semantic `slots` during transition and test normalization explicitly |
-| D | docs over-claim parity before runtime is proven | require matrix rows, owner tests, and `docs:ci` before sign-off |
+| Track | Main risk                                                                                    | Mitigation                                                                                                                            |
+| ----- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| A     | build passes but consumer types silently degrade                                             | verify exported config types remain exact and add focused component tests                                                             |
+| B     | request-envelope or SSG claims land without adapter/runner clarity, leaving false confidence | keep legacy fallback covered, test slingshot-ssg handoff explicitly, and mark parity rows `partial` until upstream behavior is proven |
+| C     | layout migration breaks existing manifests                                                   | accept legacy semantic `slots` during transition and test normalization explicitly                                                    |
+| D     | docs over-claim parity before runtime is proven                                              | require matrix rows, owner tests, and `docs:ci` before sign-off                                                                       |
 
 ### Branch strategy
 

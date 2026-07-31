@@ -6,8 +6,8 @@
 // Client build: replaces each exported function with a stub that calls
 //   __callServerAction__ at runtime, routing the invocation to the server over HTTP.
 
-import path from 'node:path';
-import type { Plugin } from 'vite';
+import path from "node:path";
+import type { Plugin } from "vite";
 
 // ─── AST-free export scanner ──────────────────────────────────────────────────
 // We avoid pulling in a full parser (acorn/babel) as a hard dependency.
@@ -66,9 +66,9 @@ function extractExportedFunctions(code: string): string[] {
 function inferModuleName(fileId: string, projectRoot: string): string {
   const rel = path.relative(projectRoot, fileId);
   // Strip extension.
-  const withoutExt = rel.replace(/\.[^.]+$/, '');
+  const withoutExt = rel.replace(/\.[^.]+$/, "");
   // Normalise to forward slashes.
-  return withoutExt.replace(/\\/g, '/');
+  return withoutExt.replace(/\\/g, "/");
 }
 
 // ─── Client stub generator ────────────────────────────────────────────────────
@@ -89,13 +89,13 @@ function buildClientStub(exportNames: string[], moduleName: string): string {
         `  return __callServerAction__(${JSON.stringify(name)}, ${JSON.stringify(moduleName)}, args);\n` +
         `}`,
     )
-    .join('\n\n');
+    .join("\n\n");
 
   return [
     `import { __callServerAction__ } from '@lastshotlabs/snapshot/ssr';`,
-    '',
+    "",
     stubs,
-  ].join('\n');
+  ].join("\n");
 }
 
 // ─── Plugin ───────────────────────────────────────────────────────────────────
@@ -131,7 +131,7 @@ export function serverActionsTransform(): Plugin {
   let isSsrBuild = false;
 
   return {
-    name: 'snapshot-server-actions',
+    name: "snapshot-server-actions",
 
     configResolved(resolvedConfig) {
       projectRoot = resolvedConfig.root;
@@ -144,7 +144,7 @@ export function serverActionsTransform(): Plugin {
       // Only transform TypeScript/JavaScript source files.
       if (!/\.[cm]?[jt]sx?$/.test(id)) return null;
       // Virtual modules and node_modules are excluded.
-      if (id.includes('\0') || id.includes('/node_modules/')) return null;
+      if (id.includes("\0") || id.includes("/node_modules/")) return null;
 
       // Check for 'use server' directive at the top of the file.
       // The directive must appear before any other code (only comments/whitespace allowed before it).

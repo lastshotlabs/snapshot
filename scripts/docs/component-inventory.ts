@@ -39,7 +39,9 @@ export function collectComponentDirectories(): ComponentDirectoryRecord[] {
 
   return dirs
     .map((absoluteDir) => {
-      const relativeDir = path.relative(componentsRoot, absoluteDir).replace(/\\/g, "/");
+      const relativeDir = path
+        .relative(componentsRoot, absoluteDir)
+        .replace(/\\/g, "/");
       const [domain, ...parts] = relativeDir.split("/");
       const componentName = parts.join("/");
       const testsDir = path.join(absoluteDir, "__tests__");
@@ -61,7 +63,9 @@ export function collectComponentDirectories(): ComponentDirectoryRecord[] {
         hasComponentTest: tests.some((name) =>
           /component\.test\.(ts|tsx)$/.test(name),
         ),
-        hasSchemaTest: tests.some((name) => /schema\.test\.(ts|tsx)$/.test(name)),
+        hasSchemaTest: tests.some((name) =>
+          /schema\.test\.(ts|tsx)$/.test(name),
+        ),
       } satisfies ComponentDirectoryRecord;
     })
     .filter((record) => Boolean(record.domain) && Boolean(record.componentName))

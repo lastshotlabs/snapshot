@@ -8,8 +8,11 @@ draft: false
 import { useState } from "react";
 import { createSnapshot } from "@lastshotlabs/snapshot";
 import {
-  ChatWindowBase, MessageThreadBase, TypingIndicatorBase,
-  InputField, ButtonBase,
+  ChatWindowBase,
+  MessageThreadBase,
+  TypingIndicatorBase,
+  InputField,
+  ButtonBase,
 } from "@lastshotlabs/snapshot/ui";
 
 const snap = createSnapshot({ apiUrl: "/api" });
@@ -96,12 +99,14 @@ function ForumChannel({ containerId }: { containerId: string }) {
         ))}
       </ul>
 
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        createThread({ containerId, title, body });
-        setTitle("");
-        setBody("");
-      }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          createThread({ containerId, title, body });
+          setTitle("");
+          setBody("");
+        }}
+      >
         <InputField label="Title" value={title} onChange={setTitle} />
         <InputField label="Body" value={body} onChange={setBody} />
         <ButtonBase label="Post Thread" type="submit" disabled={isPending} />
@@ -135,13 +140,21 @@ function ThreadDetail({ threadId }: { threadId: string }) {
         sortOrder="oldest"
         emptyText="No replies yet — be the first!"
         inputSlot={
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            if (!body.trim()) return;
-            createReply({ threadId, body });
-            setBody("");
-          }} style={{ display: "flex", gap: "0.5rem" }}>
-            <InputField label="" value={body} onChange={setBody} placeholder="Write a reply..." />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!body.trim()) return;
+              createReply({ threadId, body });
+              setBody("");
+            }}
+            style={{ display: "flex", gap: "0.5rem" }}
+          >
+            <InputField
+              label=""
+              value={body}
+              onChange={setBody}
+              placeholder="Write a reply..."
+            />
             <ButtonBase label="Reply" type="submit" disabled={isPending} />
           </form>
         }
@@ -181,7 +194,13 @@ const { mutate: deleteThread } = snap.useDeleteThread();
 ```tsx
 import { ReactionBarBase } from "@lastshotlabs/snapshot/ui";
 
-function ThreadReactions({ threadId, containerId }: { threadId: string; containerId: string }) {
+function ThreadReactions({
+  threadId,
+  containerId,
+}: {
+  threadId: string;
+  containerId: string;
+}) {
   const { data: reactions } = snap.useThreadReactions(threadId);
   const { mutate: addReaction } = snap.useAddThreadReaction();
   const { mutate: removeReaction } = snap.useRemoveThreadReaction();
@@ -206,7 +225,9 @@ function ThreadReactions({ threadId, containerId }: { threadId: string; containe
         if (wasActive) removeReaction({ threadId, containerId, emoji });
         else addReaction({ threadId, containerId, emoji });
       }}
-      onEmojiSelect={({ emoji }) => addReaction({ threadId, containerId, emoji })}
+      onEmojiSelect={({ emoji }) =>
+        addReaction({ threadId, containerId, emoji })
+      }
     />
   );
 }
@@ -239,16 +260,16 @@ Container for chat UI with slots for thread, input, and typing indicator:
 />
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | — | Header title |
-| `subtitle` | `string` | — | Header subtitle |
-| `height` | `string` | `"clamp(300px, 70vh, 500px)"` | Chat window height |
-| `showHeader` | `boolean` | `true` | Show header bar |
-| `threadSlot` | `ReactNode` | **required** | Message thread content |
-| `inputSlot` | `ReactNode` | **required** | Input area content |
-| `typingSlot` | `ReactNode` | — | Typing indicator content |
-| `showTypingIndicator` | `boolean` | `true` | Show typing area |
+| Prop                  | Type        | Default                       | Description              |
+| --------------------- | ----------- | ----------------------------- | ------------------------ |
+| `title`               | `string`    | —                             | Header title             |
+| `subtitle`            | `string`    | —                             | Header subtitle          |
+| `height`              | `string`    | `"clamp(300px, 70vh, 500px)"` | Chat window height       |
+| `showHeader`          | `boolean`   | `true`                        | Show header bar          |
+| `threadSlot`          | `ReactNode` | **required**                  | Message thread content   |
+| `inputSlot`           | `ReactNode` | **required**                  | Input area content       |
+| `typingSlot`          | `ReactNode` | —                             | Typing indicator content |
+| `showTypingIndicator` | `boolean`   | `true`                        | Show typing area         |
 
 ### MessageThreadBase
 
@@ -257,8 +278,18 @@ Scrollable message list with avatars, date separators, auto-scroll, and consecut
 ```tsx
 <MessageThreadBase
   messages={[
-    { id: "1", author: { name: "Alice", avatar: "/alice.jpg" }, content: "Hello!", timestamp: "2026-01-15T10:00:00Z" },
-    { id: "2", author: { name: "Bob" }, content: "Hi there!", timestamp: "2026-01-15T10:01:00Z" },
+    {
+      id: "1",
+      author: { name: "Alice", avatar: "/alice.jpg" },
+      content: "Hello!",
+      timestamp: "2026-01-15T10:00:00Z",
+    },
+    {
+      id: "2",
+      author: { name: "Bob" },
+      content: "Hi there!",
+      timestamp: "2026-01-15T10:01:00Z",
+    },
   ]}
   showTimestamps
   groupByDate
@@ -266,20 +297,20 @@ Scrollable message list with avatars, date separators, auto-scroll, and consecut
 />
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `messages` | `Record<string, unknown>[]` | `[]` | Message records |
-| `contentField` | `string` | `"content"` | Field name for message body |
-| `authorNameField` | `string` | `"author.name"` | Field name for author name |
-| `authorAvatarField` | `string` | `"author.avatar"` | Field name for avatar URL |
-| `timestampField` | `string` | `"timestamp"` | Field name for timestamp |
-| `showTimestamps` | `boolean` | `true` | Show timestamps |
-| `groupByDate` | `boolean` | `true` | Group messages by date |
-| `loading` | `boolean` | `false` | Show skeleton state |
-| `error` | `ReactNode` | — | Error message |
-| `emptyText` | `string` | `"No messages yet"` | Empty state text |
-| `maxHeight` | `string` | — | Scrollable area max height |
-| `onMessageClick` | `(msg) => void` | — | Message click handler |
+| Prop                | Type                        | Default             | Description                 |
+| ------------------- | --------------------------- | ------------------- | --------------------------- |
+| `messages`          | `Record<string, unknown>[]` | `[]`                | Message records             |
+| `contentField`      | `string`                    | `"content"`         | Field name for message body |
+| `authorNameField`   | `string`                    | `"author.name"`     | Field name for author name  |
+| `authorAvatarField` | `string`                    | `"author.avatar"`   | Field name for avatar URL   |
+| `timestampField`    | `string`                    | `"timestamp"`       | Field name for timestamp    |
+| `showTimestamps`    | `boolean`                   | `true`              | Show timestamps             |
+| `groupByDate`       | `boolean`                   | `true`              | Group messages by date      |
+| `loading`           | `boolean`                   | `false`             | Show skeleton state         |
+| `error`             | `ReactNode`                 | —                   | Error message               |
+| `emptyText`         | `string`                    | `"No messages yet"` | Empty state text            |
+| `maxHeight`         | `string`                    | —                   | Scrollable area max height  |
+| `onMessageClick`    | `(msg) => void`             | —                   | Message click handler       |
 
 ### CommentSectionBase
 
@@ -290,25 +321,30 @@ import { CommentSectionBase } from "@lastshotlabs/snapshot/ui";
 
 <CommentSectionBase
   comments={[
-    { id: "1", author: { name: "Alice" }, content: "Great work!", timestamp: "2026-01-15T10:00:00Z" },
+    {
+      id: "1",
+      author: { name: "Alice" },
+      content: "Great work!",
+      timestamp: "2026-01-15T10:00:00Z",
+    },
   ]}
   sortOrder="newest"
   showDelete
   onDelete={(comment) => deleteReply({ replyId: comment.id as string })}
   inputSlot={<ReplyInput />}
-/>
+/>;
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `comments` | `Record<string, unknown>[]` | `[]` | Comment records |
-| `sortOrder` | `"newest" \| "oldest"` | `"newest"` | Sort direction |
-| `showDelete` | `boolean` | `false` | Show delete button |
-| `onDelete` | `(comment) => void` | — | Delete handler |
-| `inputSlot` | `ReactNode` | — | Input area at bottom |
-| `loading` | `boolean` | `false` | Show skeleton state |
-| `error` | `ReactNode` | — | Error message |
-| `emptyText` | `string` | `"No comments yet"` | Empty state text |
+| Prop         | Type                        | Default             | Description          |
+| ------------ | --------------------------- | ------------------- | -------------------- |
+| `comments`   | `Record<string, unknown>[]` | `[]`                | Comment records      |
+| `sortOrder`  | `"newest" \| "oldest"`      | `"newest"`          | Sort direction       |
+| `showDelete` | `boolean`                   | `false`             | Show delete button   |
+| `onDelete`   | `(comment) => void`         | —                   | Delete handler       |
+| `inputSlot`  | `ReactNode`                 | —                   | Input area at bottom |
+| `loading`    | `boolean`                   | `false`             | Show skeleton state  |
+| `error`      | `ReactNode`                 | —                   | Error message        |
+| `emptyText`  | `string`                    | `"No comments yet"` | Empty state text     |
 
 ## Presence and typing
 
@@ -320,12 +356,9 @@ Shows animated dots with user names. Pass an empty array to hide automatically:
 import { TypingIndicatorBase } from "@lastshotlabs/snapshot/ui";
 
 <TypingIndicatorBase
-  users={[
-    { name: "Alice", avatar: "/alice.jpg" },
-    { name: "Bob" },
-  ]}
+  users={[{ name: "Alice", avatar: "/alice.jpg" }, { name: "Bob" }]}
   maxDisplay={3}
-/>
+/>;
 // Renders: "Alice and Bob are typing" with bouncing dots
 ```
 
@@ -336,7 +369,13 @@ Shows user status with a colored dot and label. Supports `"online"`, `"offline"`
 ```tsx
 import { PresenceIndicatorBase } from "@lastshotlabs/snapshot/ui";
 
-<PresenceIndicatorBase status="online" label="Alice" size="md" showDot showLabel />
+<PresenceIndicatorBase
+  status="online"
+  label="Alice"
+  size="md"
+  showDot
+  showLabel
+/>;
 ```
 
 ### Combining presence with a member list
@@ -348,7 +387,10 @@ function MemberList({ containerId }: { containerId: string }) {
   return (
     <ul>
       {members?.map((member) => (
-        <li key={member.id} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <li
+          key={member.id}
+          style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+        >
           <PresenceIndicatorBase
             status={member.isOnline ? "online" : "offline"}
             label={member.name}
@@ -380,7 +422,7 @@ import { ReactionBarBase } from "@lastshotlabs/snapshot/ui";
   showAddButton
   onReactionClick={(emoji, wasActive) => toggleReaction(emoji, wasActive)}
   onEmojiSelect={({ emoji }) => addReaction(emoji)}
-/>
+/>;
 ```
 
 ### EmojiPickerBase
@@ -394,7 +436,7 @@ import { EmojiPickerBase } from "@lastshotlabs/snapshot/ui";
   perRow={8}
   maxHeight="300px"
   onSelect={({ emoji, name }) => insertEmoji(emoji)}
-/>
+/>;
 ```
 
 ## Moderation
@@ -416,8 +458,12 @@ function ModerationPanel() {
       <h2>Open Reports</h2>
       {reports?.items.map((report) => (
         <CardBase key={report.id} title={`Report: ${report.targetType}`}>
-          <p><strong>Reason:</strong> {report.reason}</p>
-          <p><strong>Status:</strong> {report.status}</p>
+          <p>
+            <strong>Reason:</strong> {report.reason}
+          </p>
+          <p>
+            <strong>Status:</strong> {report.status}
+          </p>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <ButtonBase
               label="Resolve"
@@ -525,7 +571,12 @@ function ThreadSearch({ containerId }: { containerId: string }) {
 
   return (
     <div>
-      <InputField label="Search" value={query} onChange={setQuery} placeholder="Search threads..." />
+      <InputField
+        label="Search"
+        value={query}
+        onChange={setQuery}
+        placeholder="Search threads..."
+      />
       {isLoading && <p>Searching...</p>}
       {results?.threads?.items.map((thread) => (
         <div key={thread.id}>
@@ -539,17 +590,17 @@ function ThreadSearch({ containerId }: { containerId: string }) {
 
 ## All community hooks
 
-| Domain | Hooks |
-|--------|-------|
-| Containers | `useContainers`, `useContainer`, `useCreateContainer`, `useUpdateContainer`, `useDeleteContainer` |
-| Threads | `useContainerThreads`, `useContainerThread`, `useCreateThread`, `useUpdateThread`, `useDeleteThread`, `usePublishThread`, `useLockThread`, `usePinThread`, `useUnpinThread` |
-| Replies | `useThreadReplies`, `useReply`, `useCreateReply`, `useUpdateReply`, `useDeleteReply` |
-| Reactions | `useThreadReactions`, `useAddThreadReaction`, `useRemoveThreadReaction`, `useReplyReactions`, `useAddReplyReaction`, `useRemoveReplyReaction` |
-| Moderation | `useContainerMembers`, `useContainerModerators`, `useContainerOwners`, `useAddMember`, `useRemoveMember`, `useAssignModerator`, `useRemoveModerator`, `useAssignOwner`, `useRemoveOwner` |
-| Reports | `useReports`, `useReport`, `useCreateReport`, `useResolveReport`, `useDismissReport` |
-| Bans | `useBans`, `useCheckBan`, `useCreateBan`, `useRemoveBan` |
-| Notifications | `useNotifications`, `useNotificationsUnreadCount`, `useMarkNotificationRead`, `useMarkAllNotificationsRead` |
-| Search | `useSearchThreads`, `useSearchReplies` |
+| Domain        | Hooks                                                                                                                                                                                    |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Containers    | `useContainers`, `useContainer`, `useCreateContainer`, `useUpdateContainer`, `useDeleteContainer`                                                                                        |
+| Threads       | `useContainerThreads`, `useContainerThread`, `useCreateThread`, `useUpdateThread`, `useDeleteThread`, `usePublishThread`, `useLockThread`, `usePinThread`, `useUnpinThread`              |
+| Replies       | `useThreadReplies`, `useReply`, `useCreateReply`, `useUpdateReply`, `useDeleteReply`                                                                                                     |
+| Reactions     | `useThreadReactions`, `useAddThreadReaction`, `useRemoveThreadReaction`, `useReplyReactions`, `useAddReplyReaction`, `useRemoveReplyReaction`                                            |
+| Moderation    | `useContainerMembers`, `useContainerModerators`, `useContainerOwners`, `useAddMember`, `useRemoveMember`, `useAssignModerator`, `useRemoveModerator`, `useAssignOwner`, `useRemoveOwner` |
+| Reports       | `useReports`, `useReport`, `useCreateReport`, `useResolveReport`, `useDismissReport`                                                                                                     |
+| Bans          | `useBans`, `useCheckBan`, `useCreateBan`, `useRemoveBan`                                                                                                                                 |
+| Notifications | `useNotifications`, `useNotificationsUnreadCount`, `useMarkNotificationRead`, `useMarkAllNotificationsRead`                                                                              |
+| Search        | `useSearchThreads`, `useSearchReplies`                                                                                                                                                   |
 
 ## Next steps
 

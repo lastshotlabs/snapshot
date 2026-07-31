@@ -74,18 +74,18 @@ Once scaffolded, Tailwind utilities work exactly as expected:
 
 All the semantic color names from the scaffold theme are available as Tailwind utilities:
 
-| Utility prefix | CSS variable | Use for |
-|----------------|-------------|---------|
-| `bg-background` / `text-background` | `--background` | Page background |
-| `bg-foreground` / `text-foreground` | `--foreground` | Primary text |
-| `bg-card` / `text-card-foreground` | `--card` | Card surfaces |
-| `bg-primary` / `text-primary-foreground` | `--primary` | Primary actions |
-| `bg-secondary` / `text-secondary-foreground` | `--secondary` | Secondary surfaces |
-| `bg-muted` / `text-muted-foreground` | `--muted` | Muted text, subtle backgrounds |
-| `bg-accent` / `text-accent-foreground` | `--accent` | Hover states |
-| `bg-destructive` / `text-destructive` | `--destructive` | Error states |
-| `border-border` | `--border` | Default borders |
-| `ring-ring` | `--ring` | Focus rings |
+| Utility prefix                               | CSS variable    | Use for                        |
+| -------------------------------------------- | --------------- | ------------------------------ |
+| `bg-background` / `text-background`          | `--background`  | Page background                |
+| `bg-foreground` / `text-foreground`          | `--foreground`  | Primary text                   |
+| `bg-card` / `text-card-foreground`           | `--card`        | Card surfaces                  |
+| `bg-primary` / `text-primary-foreground`     | `--primary`     | Primary actions                |
+| `bg-secondary` / `text-secondary-foreground` | `--secondary`   | Secondary surfaces             |
+| `bg-muted` / `text-muted-foreground`         | `--muted`       | Muted text, subtle backgrounds |
+| `bg-accent` / `text-accent-foreground`       | `--accent`      | Hover states                   |
+| `bg-destructive` / `text-destructive`        | `--destructive` | Error states                   |
+| `border-border`                              | `--border`      | Default borders                |
+| `ring-ring`                                  | `--ring`        | Focus rings                    |
 
 ### Border radius
 
@@ -145,7 +145,7 @@ To change the color palette, edit the CSS variables in `globals.css`:
 ```css
 @layer base {
   :root {
-    --primary: oklch(0.52 0.24 285);          /* violet */
+    --primary: oklch(0.52 0.24 285); /* violet */
     --primary-foreground: oklch(0.98 0 0);
     /* ... other colors */
   }
@@ -174,9 +174,7 @@ tokens directly:
 
 ```tsx
 // Match a stat-card's surface color in custom code
-<div style={{ backgroundColor: "var(--sn-color-card)" }}>
-  ...
-</div>
+<div style={{ backgroundColor: "var(--sn-color-card)" }}>...</div>
 ```
 
 If you want Tailwind utility access to `--sn-*` tokens, add them to the `@theme` block
@@ -232,7 +230,8 @@ import { resolveTokens } from "@lastshotlabs/snapshot/ui";
 
 // Read the current --primary value and pass it as an override
 const primaryColor = getComputedStyle(document.documentElement)
-  .getPropertyValue("--primary").trim();
+  .getPropertyValue("--primary")
+  .trim();
 
 const snCss = resolveTokens({
   flavor: "neutral",

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { createElement, type CSSProperties, type ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -11,7 +11,16 @@ export interface BoxBaseProps {
   /** Unique identifier for surface scoping. */
   id?: string;
   /** HTML element to render (default: "div"). */
-  as?: "div" | "section" | "article" | "aside" | "header" | "footer" | "main" | "nav" | "span";
+  as?:
+    | "div"
+    | "section"
+    | "article"
+    | "aside"
+    | "header"
+    | "footer"
+    | "main"
+    | "nav"
+    | "span";
   /** className applied to the root wrapper. */
   className?: string;
   /** Inline style applied to the root wrapper. */

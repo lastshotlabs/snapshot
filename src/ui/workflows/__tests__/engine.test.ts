@@ -315,8 +315,11 @@ describe("runWorkflow", () => {
                           String(
                             context["user"] &&
                               typeof context["user"] === "object" &&
-                              "role" in (context["user"] as Record<string, unknown>)
-                              ? (context["user"] as Record<string, unknown>)["role"]
+                              "role" in
+                                (context["user"] as Record<string, unknown>)
+                              ? (context["user"] as Record<string, unknown>)[
+                                  "role"
+                                ]
                               : "",
                           ),
                         )
@@ -390,12 +393,10 @@ describe("runWorkflow", () => {
           ) {
             return (
               (
-                (
-                  (context["auth"] as Record<string, unknown> | undefined)
-                    ?.result as Record<string, unknown> | undefined
-                )?.user as Record<string, unknown> | undefined
-              )?.role
-            );
+                (context["auth"] as Record<string, unknown> | undefined)
+                  ?.result as Record<string, unknown> | undefined
+              )?.user as Record<string, unknown> | undefined
+            )?.role;
           }
 
           if (typeof value === "string") {
@@ -404,12 +405,10 @@ describe("runWorkflow", () => {
               String(
                 (
                   (
-                    (
-                      (context["auth"] as Record<string, unknown> | undefined)
-                        ?.result as Record<string, unknown> | undefined
-                    )?.user as Record<string, unknown> | undefined
-                  )?.id ?? ""
-                ),
+                    (context["auth"] as Record<string, unknown> | undefined)
+                      ?.result as Record<string, unknown> | undefined
+                  )?.user as Record<string, unknown> | undefined
+                )?.id ?? "",
               ),
             );
           }

@@ -497,15 +497,19 @@ export function resolveInteractiveCSS(
 ): string | null {
   const rules: string[] = [];
   const sel = `[data-snapshot-id="${id}"]`;
-  const important = (declaration: string): string => `${declaration} !important`;
+  const important = (declaration: string): string =>
+    `${declaration} !important`;
 
   if (hover) {
     const props: string[] = [];
-    if (hover.bg) props.push(important(`background: ${resolveColor(hover.bg)}`));
-    if (hover.color) props.push(important(`color: ${resolveColor(hover.color)}`));
+    if (hover.bg)
+      props.push(important(`background: ${resolveColor(hover.bg)}`));
+    if (hover.color)
+      props.push(important(`color: ${resolveColor(hover.color)}`));
     if (hover.shadow)
       props.push(important(`box-shadow: ${resolveShadow(hover.shadow)}`));
-    if (hover.opacity != null) props.push(important(`opacity: ${hover.opacity}`));
+    if (hover.opacity != null)
+      props.push(important(`opacity: ${hover.opacity}`));
     if (hover.transform || hover.scale != null) {
       const parts: string[] = [];
       if (hover.transform) parts.push(hover.transform as string);
@@ -514,13 +518,21 @@ export function resolveInteractiveCSS(
     }
     if (hover.border) props.push(important(`border: ${hover.border}`));
     if (hover.borderRadius)
-      props.push(important(`border-radius: ${resolveRadius(hover.borderRadius)}`));
+      props.push(
+        important(`border-radius: ${resolveRadius(hover.borderRadius)}`),
+      );
     if (hover.textDecoration)
       props.push(important(`text-decoration: ${hover.textDecoration}`));
     if (hover.textDecorationColor)
-      props.push(important(`text-decoration-color: ${hover.textDecorationColor}`));
+      props.push(
+        important(`text-decoration-color: ${hover.textDecorationColor}`),
+      );
     if (hover.textDecorationThickness)
-      props.push(important(`text-decoration-thickness: ${hover.textDecorationThickness}`));
+      props.push(
+        important(
+          `text-decoration-thickness: ${hover.textDecorationThickness}`,
+        ),
+      );
     if (props.length)
       rules.push(
         `${sel}:hover { ${props.join("; ")}; transition: all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease); }`,
@@ -529,8 +541,10 @@ export function resolveInteractiveCSS(
 
   if (focus) {
     const props: string[] = [];
-    if (focus.bg) props.push(important(`background: ${resolveColor(focus.bg)}`));
-    if (focus.color) props.push(important(`color: ${resolveColor(focus.color)}`));
+    if (focus.bg)
+      props.push(important(`background: ${resolveColor(focus.bg)}`));
+    if (focus.color)
+      props.push(important(`color: ${resolveColor(focus.color)}`));
     if (focus.shadow)
       props.push(important(`box-shadow: ${resolveShadow(focus.shadow)}`));
     if (focus.ring === true)
@@ -552,8 +566,10 @@ export function resolveInteractiveCSS(
 
   if (active) {
     const props: string[] = [];
-    if (active.bg) props.push(important(`background: ${resolveColor(active.bg)}`));
-    if (active.color) props.push(important(`color: ${resolveColor(active.color)}`));
+    if (active.bg)
+      props.push(important(`background: ${resolveColor(active.bg)}`));
+    if (active.color)
+      props.push(important(`color: ${resolveColor(active.color)}`));
     if (active.transform || active.scale != null) {
       const parts: string[] = [];
       if (active.transform) parts.push(active.transform as string);

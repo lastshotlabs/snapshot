@@ -22,37 +22,37 @@ snapshot init [name] [dir] [flags]
 
 ### Arguments
 
-| Argument | Description |
-|----------|-------------|
-| `name` | Project name (becomes the page `<title>` and `package.json` name). Prompted if omitted. |
-| `dir` | Output directory. Defaults to `./<package-name>`. |
+| Argument | Description                                                                             |
+| -------- | --------------------------------------------------------------------------------------- |
+| `name`   | Project name (becomes the page `<title>` and `package.json` name). Prompted if omitted. |
+| `dir`    | Output directory. Defaults to `./<package-name>`.                                       |
 
 ### Flags
 
-| Flag | Description |
-|------|-------------|
-| `-y, --yes` | Skip all prompts. Uses the defaults listed below. |
+| Flag               | Description                                              |
+| ------------------ | -------------------------------------------------------- |
+| `-y, --yes`        | Skip all prompts. Uses the defaults listed below.        |
 | `--template admin` | Scaffold the admin template instead of the standard app. |
-| `--no-git` | Skip `git init` at the end of scaffolding. |
+| `--no-git`         | Skip `git init` at the end of scaffolding.               |
 
 ### Interactive prompts
 
 When run without `--yes`, the scaffold walks you through:
 
-| Prompt | Options | Default |
-|--------|---------|---------|
-| **Security profile** | `hardened` (recommended), `prototype` (local dev only) | `hardened` |
-| **Layout** | `minimal` (bare shell), `top-nav` (header + links), `sidebar` (collapsible sidebar) | `top-nav` |
-| **Theme** | `default` (neutral), `dark`, `minimal` (slate, small radius), `vibrant` (violet, saturated) | `default` |
-| **Auth pages?** | yes / no | yes |
-| **MFA pages?** | yes / no (only asked if auth pages = yes) | no |
-| **Passkey pages?** | yes / no (only asked if auth pages = yes) | no |
-| **shadcn components** | multiselect from the full list | recommended set |
-| **WebSocket support?** | yes / no | yes |
-| **Community pages?** | yes / no | no |
-| **SSE onramp?** | yes / no | no |
-| **slingshot-mail plugin?** | yes / no | no |
-| **Git init?** | yes / no | yes |
+| Prompt                     | Options                                                                                     | Default         |
+| -------------------------- | ------------------------------------------------------------------------------------------- | --------------- |
+| **Security profile**       | `hardened` (recommended), `prototype` (local dev only)                                      | `hardened`      |
+| **Layout**                 | `minimal` (bare shell), `top-nav` (header + links), `sidebar` (collapsible sidebar)         | `top-nav`       |
+| **Theme**                  | `default` (neutral), `dark`, `minimal` (slate, small radius), `vibrant` (violet, saturated) | `default`       |
+| **Auth pages?**            | yes / no                                                                                    | yes             |
+| **MFA pages?**             | yes / no (only asked if auth pages = yes)                                                   | no              |
+| **Passkey pages?**         | yes / no (only asked if auth pages = yes)                                                   | no              |
+| **shadcn components**      | multiselect from the full list                                                              | recommended set |
+| **WebSocket support?**     | yes / no                                                                                    | yes             |
+| **Community pages?**       | yes / no                                                                                    | no              |
+| **SSE onramp?**            | yes / no                                                                                    | no              |
+| **slingshot-mail plugin?** | yes / no                                                                                    | no              |
+| **Git init?**              | yes / no                                                                                    | yes             |
 
 **`--yes` defaults:**
 Security = `hardened`, layout = `top-nav`, theme = `default`, auth pages = yes, MFA = yes,
@@ -184,16 +184,16 @@ snapshot sync [flags]
 
 ### Flags
 
-| Flag | Description |
-|------|-------------|
-| `--api <url>` | Fetch OpenAPI schema from a running API (e.g. `http://localhost:3000`) |
-| `--file <path>` | Read OpenAPI schema from a local JSON file (e.g. `./schema.json`) |
-| `-w, --watch` | Re-run sync whenever the schema file changes (only works with `--file`) |
-| `--zod` | Generate Zod validators alongside mutation hooks |
-| `--api-dir <path>` | Override the API implementation output directory |
-| `--hooks-dir <path>` | Override the React Query hooks output directory |
-| `--types-path <path>` | Override the TypeScript types output path |
-| `--snapshot-import <name>` | Override the import alias for `@lib/snapshot` |
+| Flag                       | Description                                                             |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `--api <url>`              | Fetch OpenAPI schema from a running API (e.g. `http://localhost:3000`)  |
+| `--file <path>`            | Read OpenAPI schema from a local JSON file (e.g. `./schema.json`)       |
+| `-w, --watch`              | Re-run sync whenever the schema file changes (only works with `--file`) |
+| `--zod`                    | Generate Zod validators alongside mutation hooks                        |
+| `--api-dir <path>`         | Override the API implementation output directory                        |
+| `--hooks-dir <path>`       | Override the React Query hooks output directory                         |
+| `--types-path <path>`      | Override the TypeScript types output path                               |
+| `--snapshot-import <name>` | Override the import alias for `@lib/snapshot`                           |
 
 Either `--api` or `--file` is required. `--api` fetches `/openapi.json` from the URL.
 
@@ -233,8 +233,7 @@ export interface CreateUserBody {
 
 ```ts
 // src/api/users.ts
-export const getUsers = (api: ApiClient) => () =>
-  api.get<User[]>("/users");
+export const getUsers = (api: ApiClient) => () => api.get<User[]>("/users");
 
 export const createUser = (api: ApiClient) => (body: CreateUserBody) =>
   api.post<User>("/users", body);
@@ -310,12 +309,12 @@ output. `snapshot init` generates it with the app scaffold.
 }
 ```
 
-| Field | Default | Description |
-|-------|---------|-------------|
-| `apiDir` | `src/api` | Where to write the typed API functions |
-| `hooksDir` | `src/hooks/api` | Where to write the React Query hooks |
-| `typesPath` | `src/types/api.ts` | Where to write the TypeScript interfaces |
-| `snapshotImport` | `@lib/snapshot` | Import alias for the snapshot instance in generated hooks |
+| Field            | Default            | Description                                               |
+| ---------------- | ------------------ | --------------------------------------------------------- |
+| `apiDir`         | `src/api`          | Where to write the typed API functions                    |
+| `hooksDir`       | `src/hooks/api`    | Where to write the React Query hooks                      |
+| `typesPath`      | `src/types/api.ts` | Where to write the TypeScript interfaces                  |
+| `snapshotImport` | `@lib/snapshot`    | Import alias for the snapshot instance in generated hooks |
 
 All paths are relative to the project root.
 
@@ -367,12 +366,12 @@ from the CLI instead — the Vite plugin's file watcher can't poll remote URLs.
 
 Scaffolded apps read these from `.env`:
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `VITE_API_URL` | Yes | Base URL of your slingshot backend (e.g. `http://localhost:3001`) |
-| `VITE_WS_URL` | If WebSocket selected | Full WebSocket endpoint URL (e.g. `ws://localhost:3001/chat`) |
-| `VITE_BEARER_TOKEN` | Prototype mode only | API bearer token for prototype security profile |
-| `VITE_ALLOW_PROTOTYPE_DEPLOYMENT` | Optional | Set to `true` to allow prototype-mode app on non-localhost origin |
+| Variable                          | Required              | Description                                                       |
+| --------------------------------- | --------------------- | ----------------------------------------------------------------- |
+| `VITE_API_URL`                    | Yes                   | Base URL of your slingshot backend (e.g. `http://localhost:3001`) |
+| `VITE_WS_URL`                     | If WebSocket selected | Full WebSocket endpoint URL (e.g. `ws://localhost:3001/chat`)     |
+| `VITE_BEARER_TOKEN`               | Prototype mode only   | API bearer token for prototype security profile                   |
+| `VITE_ALLOW_PROTOTYPE_DEPLOYMENT` | Optional              | Set to `true` to allow prototype-mode app on non-localhost origin |
 
 Copy `.env` to `.env.local` for local overrides — `.env.local` is gitignored.
 

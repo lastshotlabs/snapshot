@@ -52,11 +52,11 @@ function App() {
 
 ## Reference
 
-| Need | Where to go |
-| --- | --- |
-| Runtime API | [SDK Reference](/reference/sdk/) |
-| UI exports | [UI Reference](/reference/ui/) |
-| Components | [Component Reference](/reference/components/) |
-| Vite plugins | [Vite Reference](/reference/vite/) |
-| SSR helpers | [SSR Reference](/reference/ssr/) |
-| CLI | [CLI Reference](/reference/cli/) |
+| Need         | Where to go                                   |
+| ------------ | --------------------------------------------- |
+| Runtime API  | [SDK Reference](/reference/sdk/)              |
+| UI exports   | [UI Reference](/reference/ui/)                |
+| Components   | [Component Reference](/reference/components/) |
+| Vite plugins | [Vite Reference](/reference/vite/)            |
+| SSR helpers  | [SSR Reference](/reference/ssr/)              |
+| CLI          | [CLI Reference](/reference/cli/)              |

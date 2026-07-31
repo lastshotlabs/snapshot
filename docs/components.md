@@ -1,34 +1,29 @@
 # Components
 
-Snapshot UI exports standalone React components from
-`@lastshotlabs/snapshot/ui`. They are regular components with typed props,
-event handlers, `className`, `style`, and component-specific slot overrides.
+Snapshot UI exports standalone React components from focused
+`@lastshotlabs/snapshot/ui/<name>` subpaths. They are regular components with
+typed props, event handlers, `className`, `style`, and component-specific slot
+overrides.
 
 ## Imports
 
 ```tsx
-import {
-  ButtonBase,
-  CardBase,
-  DataTableBase,
-  ModalBase,
-  NavBase,
-  RichInputBase,
-} from "@lastshotlabs/snapshot/ui";
-```
-
-Focused bundles:
-
-```ts
+import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { CardBase } from "@lastshotlabs/snapshot/ui/card";
+import { DataTableBase } from "@lastshotlabs/snapshot/ui/data-table";
+import { ModalBase } from "@lastshotlabs/snapshot/ui/modal";
+import { NavBase } from "@lastshotlabs/snapshot/ui/nav";
 import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
-import { EmojiPickerBase } from "@lastshotlabs/snapshot/ui/emoji-picker";
-import { GifPickerBase } from "@lastshotlabs/snapshot/ui/gif-picker";
 ```
+
+The compatibility `@lastshotlabs/snapshot/ui` barrel re-exports the whole
+catalog and requires every optional UI peer. Prefer subpaths for normal use.
 
 ## Basic Usage
 
 ```tsx
-import { ButtonBase, CardBase } from "@lastshotlabs/snapshot/ui";
+import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { CardBase } from "@lastshotlabs/snapshot/ui/card";
 
 export function SettingsCard() {
   return (
@@ -49,12 +44,12 @@ export function SettingsCard() {
 
 Most components accept:
 
-| Prop | Purpose |
-| --- | --- |
-| `className` | Add a root class |
-| `style` | Add root inline styles |
-| `slots` | Style named internal pieces |
-| `id` | Stabilize generated surface IDs |
+| Prop        | Purpose                         |
+| ----------- | ------------------------------- |
+| `className` | Add a root class                |
+| `style`     | Add root inline styles          |
+| `slots`     | Style named internal pieces     |
+| `id`        | Stabilize generated surface IDs |
 
 ```tsx
 <ButtonBase
@@ -72,7 +67,11 @@ Most components accept:
 ## Forms
 
 ```tsx
-import { InputControl, SelectControl, TextareaControl } from "@lastshotlabs/snapshot/ui";
+import {
+  InputControl,
+  SelectControl,
+  TextareaControl,
+} from "@lastshotlabs/snapshot/ui";
 
 function ProfileForm() {
   const [name, setName] = useState("");

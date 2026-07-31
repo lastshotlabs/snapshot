@@ -100,10 +100,7 @@ export function createPosthogProvider(): AnalyticsProvider {
       const posthog = (
         window as unknown as {
           posthog?: {
-            identify?: (
-              id: string,
-              props?: Record<string, unknown>,
-            ) => void;
+            identify?: (id: string, props?: Record<string, unknown>) => void;
           };
         }
       )?.posthog;

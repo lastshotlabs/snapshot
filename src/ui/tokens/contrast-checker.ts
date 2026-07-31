@@ -42,10 +42,7 @@ function getThemeColorValue(
  * Warn when theme color pairs fail WCAG AA contrast.
  */
 export function validateContrast(theme: ThemeConfig | undefined): void {
-  if (
-    typeof process !== "undefined" &&
-    process.env.NODE_ENV === "production"
-  ) {
+  if (typeof process !== "undefined" && process.env.NODE_ENV === "production") {
     return;
   }
 

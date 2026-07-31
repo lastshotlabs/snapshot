@@ -57,10 +57,9 @@ function initializeRegistryState(
         : typeof config.persist === "object"
           ? { storage: config.persist.storage, key: config.persist.key ?? id }
           : null;
-    const persistedValue =
-      persistConfig?.storage
-        ? readPersistedState(persistConfig.key, persistConfig.storage)
-        : undefined;
+    const persistedValue = persistConfig?.storage
+      ? readPersistedState(persistConfig.key, persistConfig.storage)
+      : undefined;
 
     if (persistedValue !== undefined) {
       registry.store.set(atom, persistedValue);

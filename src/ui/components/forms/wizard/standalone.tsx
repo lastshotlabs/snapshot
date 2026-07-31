@@ -183,24 +183,67 @@ function StandaloneWizardFieldRenderer({
   const placeholder = field.placeholder;
   const fieldId = `sn-wizard-field-${stepIndex}-${field.name}`;
   const hasError = showError && Boolean(error);
-  const describedBy = [
-    description ? `${fieldId}-description` : null,
-    helperText ? `${fieldId}-helper` : null,
-    hasError && error ? `${fieldId}-error` : null,
-  ]
-    .filter(Boolean)
-    .join(" ") || undefined;
+  const describedBy =
+    [
+      description ? `${fieldId}-description` : null,
+      helperText ? `${fieldId}-helper` : null,
+      hasError && error ? `${fieldId}-error` : null,
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined;
   const activeStates = [
     ...(hasError ? (["invalid"] as const) : []),
     ...(field.disabled ? (["disabled"] as const) : []),
   ];
-  const fieldSurface = resolveFieldSurface(rootId, stepIndex, field, "field", activeStates);
-  const labelSurface = resolveFieldSurface(rootId, stepIndex, field, "label", activeStates);
-  const descriptionSurface = resolveFieldSurface(rootId, stepIndex, field, "description", []);
-  const inputSurface = resolveFieldSurface(rootId, stepIndex, field, "input", activeStates);
-  const helperSurface = resolveFieldSurface(rootId, stepIndex, field, "helper", []);
-  const errorSurface = resolveFieldSurface(rootId, stepIndex, field, "error", hasError ? ["invalid"] : []);
-  const requiredIndicatorSurface = resolveFieldSurface(rootId, stepIndex, field, "requiredIndicator", []);
+  const fieldSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "field",
+    activeStates,
+  );
+  const labelSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "label",
+    activeStates,
+  );
+  const descriptionSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "description",
+    [],
+  );
+  const inputSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "input",
+    activeStates,
+  );
+  const helperSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "helper",
+    [],
+  );
+  const errorSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "error",
+    hasError ? ["invalid"] : [],
+  );
+  const requiredIndicatorSurface = resolveFieldSurface(
+    rootId,
+    stepIndex,
+    field,
+    "requiredIndicator",
+    [],
+  );
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
@@ -320,7 +363,11 @@ function StandaloneWizardFieldRenderer({
         <InputControl
           inputId={fieldId}
           name={field.name}
-          type={(field.type === "datetime" ? "datetime-local" : field.type) as Parameters<typeof InputControl>[0]["type"]}
+          type={
+            (field.type === "datetime"
+              ? "datetime-local"
+              : field.type) as Parameters<typeof InputControl>[0]["type"]
+          }
           value={(value as string) ?? ""}
           disabled={field.disabled}
           ariaInvalid={hasError}
@@ -1059,9 +1106,7 @@ export function WizardBase({
             }}
             surfaceId={`${rootId}-${wizard.isLastStep ? "submitButton" : "nextButton"}`}
             surfaceConfig={
-              wizard.isLastStep
-                ? slots?.submitButton
-                : slots?.nextButton
+              wizard.isLastStep ? slots?.submitButton : slots?.nextButton
             }
             activeStates={
               wizard.isSubmitting || wizard.isAnimating ? ["disabled"] : []

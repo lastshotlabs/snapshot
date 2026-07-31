@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { ReactNode } from "react";
 
@@ -6,13 +6,15 @@ export interface CenteredLayoutConfig {
   maxWidth?: "xs" | "sm" | "md" | "lg";
 }
 
-const MAX_WIDTH_MAP: Record<NonNullable<CenteredLayoutConfig["maxWidth"]>, string> =
-  {
-    xs: "var(--sn-container-xs, 20rem)",
-    sm: "var(--sn-container-sm, 28rem)",
-    md: "var(--sn-container-md, 32rem)",
-    lg: "var(--sn-container-lg, 40rem)",
-  };
+const MAX_WIDTH_MAP: Record<
+  NonNullable<CenteredLayoutConfig["maxWidth"]>,
+  string
+> = {
+  xs: "var(--sn-container-xs, 20rem)",
+  sm: "var(--sn-container-sm, 28rem)",
+  md: "var(--sn-container-md, 32rem)",
+  lg: "var(--sn-container-lg, 40rem)",
+};
 
 export function CenteredLayout({
   config,
@@ -43,8 +45,7 @@ export function CenteredLayout({
           maxWidth: MAX_WIDTH_MAP[maxWidth],
           padding: "var(--sn-spacing-2xl, 2rem)",
           background: "var(--sn-color-card, var(--sn-color-background))",
-          color:
-            "var(--sn-color-card-foreground, var(--sn-color-foreground))",
+          color: "var(--sn-color-card-foreground, var(--sn-color-foreground))",
           borderRadius: "var(--sn-radius-lg, 0.75rem)",
           border:
             "var(--sn-border-thin, 1px) solid var(--sn-color-border, currentColor)",

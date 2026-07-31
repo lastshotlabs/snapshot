@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -250,8 +250,7 @@ export function TabsBase({
         nextPos =
           currentPos === -1 ? 0 : (currentPos + 1) % enabledIndices.length;
       } else {
-        nextPos =
-          currentPos <= 0 ? enabledIndices.length - 1 : currentPos - 1;
+        nextPos = currentPos <= 0 ? enabledIndices.length - 1 : currentPos - 1;
       }
       const nextIndex = enabledIndices[nextPos]!;
 
@@ -325,10 +324,12 @@ export function TabsBase({
                 onClick={() => setActiveTab(index)}
                 surfaceId={`${rootId}-tab-${index}`}
                 surfaceConfig={tabSurface.resolvedConfigForWrapper}
-                activeStates={[
-                  ...(isActive ? ["selected", "current"] : []),
-                  ...(tab.disabled ? ["disabled"] : []),
-                ] as Array<"selected" | "current" | "disabled">}
+                activeStates={
+                  [
+                    ...(isActive ? ["selected", "current"] : []),
+                    ...(tab.disabled ? ["disabled"] : []),
+                  ] as Array<"selected" | "current" | "disabled">
+                }
               >
                 {tab.icon ? (
                   <span

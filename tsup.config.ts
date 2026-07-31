@@ -1,5 +1,6 @@
 import { defineConfig } from "tsup";
 import pkg from "./package.json" assert { type: "json" };
+import { componentTsupEntries } from "./scripts/component-entries.mjs";
 
 export default defineConfig([
   // SDK entry point
@@ -27,25 +28,16 @@ export default defineConfig([
       copyFileSync("src/push/sw.js", "dist/sw.js");
     },
   },
-  // UI entry point (standalone components and tokens).
+  // UI entry points (standalone components and tokens).
   //
-  // The main `./ui` barrel re-exports every component. Subpath entries
-  // below (`./ui/rich-input`, `./ui/emoji-picker`, `./ui/gif-picker`)
-  // bundle just the slice they name, so consumers that import only one
-  // surface don't drag the whole tree into their bundle. Each subpath
-  // gets its own `dist/ui/<name>.{js,cjs}` produced by tsup.
+  // The main `./ui` barrel remains for compatibility. The generated
+  // per-component entries let consumers import only the surface they use.
   {
     entry: {
       ui: "src/ui.ts",
-      "ui/rich-input": "src/ui/rich-input.ts",
-      "ui/emoji-picker": "src/ui/emoji-picker.ts",
-      "ui/gif-picker": "src/ui/gif-picker.ts",
-      "ui/markdown": "src/ui/markdown.ts",
-      "ui/link-embed": "src/ui/link-embed.ts",
-      "ui/button": "src/ui/button.ts",
-      "ui/card": "src/ui/card.ts",
-      "ui/input": "src/ui/input.ts",
+      ...componentTsupEntries(),
       "ui/icon": "src/ui/icon.ts",
+      "ui/tokens": "src/ui/tokens/index.ts",
     },
     format: ["esm", "cjs"],
     dts: false,
@@ -79,6 +71,7 @@ export default defineConfig([
     bundle: true,
     noExternal: [],
     external: [
+      "@clack/prompts",
       "@oclif/core",
       "node:fs",
       "node:fs/promises",
@@ -109,8 +102,9 @@ export default defineConfig([
     target: "node20",
     platform: "node",
     bundle: true,
-    noExternal: ["@clack/prompts"],
+    noExternal: [],
     external: [
+      "@clack/prompts",
       "@oclif/core",
       "node:fs",
       "node:fs/promises",
@@ -160,8 +154,9 @@ export default defineConfig([
     target: "node20",
     platform: "node",
     bundle: true,
-    noExternal: ["@clack/prompts"],
+    noExternal: [],
     external: [
+      "@clack/prompts",
       "@tailwindcss/vite",
       "vite",
       "node:fs",

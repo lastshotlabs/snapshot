@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useCallback,
@@ -128,7 +128,8 @@ export function FloatingMenuBase({
   }, [controlledOpen]);
 
   const rootId = id ?? "floating-menu";
-  const componentSurface = className || style ? { className, style } : undefined;
+  const componentSurface =
+    className || style ? { className, style } : undefined;
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
@@ -207,7 +208,8 @@ export function FloatingMenuBase({
         event.preventDefault();
         const currentPosition = actionableIndices.indexOf(focusedIndex);
         const nextPosition =
-          currentPosition === -1 || currentPosition >= actionableIndices.length - 1
+          currentPosition === -1 ||
+          currentPosition >= actionableIndices.length - 1
             ? 0
             : currentPosition + 1;
         setFocusedIndex(actionableIndices[nextPosition] ?? -1);

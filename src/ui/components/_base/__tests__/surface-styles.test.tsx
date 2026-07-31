@@ -11,7 +11,9 @@
 // dedup and matches by href during hydration, keeping both sides identical.
 import { describe, it, expect, vi, afterEach } from "vitest";
 
-(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+(
+  globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
+).IS_REACT_ACT_ENVIRONMENT = true;
 import { act } from "react";
 import { renderToString } from "react-dom/server";
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
@@ -31,7 +33,9 @@ afterEach(async () => {
   }
   container?.remove();
   container = null;
-  document.head.querySelectorAll('style[data-precedence="sn-component"]').forEach((el) => el.remove());
+  document.head
+    .querySelectorAll('style[data-precedence="sn-component"]')
+    .forEach((el) => el.remove());
 });
 
 describe("SurfaceStyles", () => {
@@ -63,7 +67,9 @@ describe("SurfaceStyles", () => {
         </div>,
       );
     });
-    const tags = document.querySelectorAll('style[data-precedence="sn-component"]');
+    const tags = document.querySelectorAll(
+      'style[data-precedence="sn-component"]',
+    );
     expect(tags.length).toBe(2);
     const contents = [...tags].map((t) => t.textContent);
     expect(contents).toContain(CSS_A);
@@ -84,7 +90,9 @@ describe("SurfaceStyles", () => {
     container.innerHTML = renderToString(tree);
     document.body.appendChild(container);
 
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
     const onRecoverableError = vi.fn();
     await act(async () => {
       root = hydrateRoot(container!, tree, { onRecoverableError });
@@ -100,7 +108,9 @@ describe("SurfaceStyles", () => {
     consoleError.mockRestore();
 
     // The stylesheet survives hydration, hoisted and deduped.
-    expect(document.querySelectorAll('style[data-precedence="sn-component"]').length).toBe(1);
+    expect(
+      document.querySelectorAll('style[data-precedence="sn-component"]').length,
+    ).toBe(1);
     expect(container!.textContent).toContain("before");
     expect(container!.textContent).toContain("after");
   });

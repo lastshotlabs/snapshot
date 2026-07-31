@@ -19,7 +19,14 @@ export interface InlineEditFieldProps {
   /** Placeholder shown when value is empty. */
   placeholder?: string;
   /** HTML input type used when editing. */
-  inputType?: "text" | "email" | "password" | "number" | "url" | "tel" | "search";
+  inputType?:
+    | "text"
+    | "email"
+    | "password"
+    | "number"
+    | "url"
+    | "tel"
+    | "search";
   /** Whether pressing Escape cancels the edit and reverts the value. */
   cancelOnEscape?: boolean;
   /** CSS font-size applied to both display text and the editing input. */
@@ -152,7 +159,8 @@ export function InlineEditField({
       style: {
         background: "none",
         border: "var(--sn-border-default, 1px) solid transparent",
-        padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+        padding:
+          "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
         textAlign: "left",
         transition:
           "border-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease), background-color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
@@ -216,7 +224,8 @@ export function InlineEditField({
         lineHeight: "var(--sn-leading-normal, 1.5)",
         border:
           "var(--sn-border-default, 1px) solid var(--sn-color-ring, #2563eb)",
-        padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
+        padding:
+          "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-xs, 0.25rem)",
         outline: "none",
         width: "100%",
         minWidth: "60px",

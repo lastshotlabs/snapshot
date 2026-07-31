@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -85,7 +85,8 @@ export function OAuthButtonsBase({
   const autoRedirectFormRef = useRef<HTMLFormElement | null>(null);
   const rootId = id ?? "oauth-buttons";
   const hasProviders = providers.length > 0;
-  const componentSurface = className || style ? { className, style } : undefined;
+  const componentSurface =
+    className || style ? { className, style } : undefined;
 
   useEffect(() => {
     if (
@@ -125,8 +126,13 @@ export function OAuthButtonsBase({
     }
 
     return () => {
-      if (autoRedirectFormRef.current && autoRedirectFormRef.current.parentNode) {
-        autoRedirectFormRef.current.parentNode.removeChild(autoRedirectFormRef.current);
+      if (
+        autoRedirectFormRef.current &&
+        autoRedirectFormRef.current.parentNode
+      ) {
+        autoRedirectFormRef.current.parentNode.removeChild(
+          autoRedirectFormRef.current,
+        );
         autoRedirectFormRef.current = null;
       }
     };
@@ -225,7 +231,9 @@ export function OAuthButtonsBase({
                 variant="outline"
                 size="sm"
                 ariaLabel={provider.label}
-                ariaDescribedBy={provider.description ? descriptionId : undefined}
+                ariaDescribedBy={
+                  provider.description ? descriptionId : undefined
+                }
                 ariaHasPopup={false}
                 onClick={() => {
                   if (onProviderClick) {
@@ -244,10 +252,7 @@ export function OAuthButtonsBase({
                   className={providerIconSurface.className}
                   style={providerIconSurface.style}
                 >
-                  {renderIcon(
-                    PROVIDER_ICON_MAP[provider.name] ?? "globe",
-                    16,
-                  )}
+                  {renderIcon(PROVIDER_ICON_MAP[provider.name] ?? "globe", 16)}
                 </span>
                 <span
                   data-snapshot-id={`${rootId}-provider-label-${index}`}

@@ -24,7 +24,10 @@ const SESSION_HINT_KEY = "snapshot:session-hint";
 
 function readSessionHint(): boolean {
   try {
-    return typeof localStorage !== "undefined" && localStorage.getItem(SESSION_HINT_KEY) === "1";
+    return (
+      typeof localStorage !== "undefined" &&
+      localStorage.getItem(SESSION_HINT_KEY) === "1"
+    );
   } catch {
     return false;
   }

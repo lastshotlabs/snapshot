@@ -2,18 +2,18 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | D.1 | Global Keyboard Shortcuts | Not started | Shortcuts |
-> | D.2 | Generic Drag and Drop | Not started | DnD |
-> | D.3 | Scroll Behaviors | Not started | Runtime |
-> | D.4 | Form Field Dependencies | Not started | Forms |
-> | D.5 | Client-Side Validation | Not started | Forms |
-> | D.6 | Debounce/Throttle | Not started | Actions |
-> | D.7 | Context Menus | Not started | Components |
-> | D.8 | Clipboard Action | Not started | Actions |
-> | D.9 | Polling | Not started | Runtime |
-> | D.10 | Enhanced Confirm | Not started | Actions |
+> | Phase | Title                     | Status      | Track      |
+> | ----- | ------------------------- | ----------- | ---------- |
+> | D.1   | Global Keyboard Shortcuts | Not started | Shortcuts  |
+> | D.2   | Generic Drag and Drop     | Not started | DnD        |
+> | D.3   | Scroll Behaviors          | Not started | Runtime    |
+> | D.4   | Form Field Dependencies   | Not started | Forms      |
+> | D.5   | Client-Side Validation    | Not started | Forms      |
+> | D.6   | Debounce/Throttle         | Not started | Actions    |
+> | D.7   | Context Menus             | Not started | Components |
+> | D.8   | Clipboard Action          | Not started | Actions    |
+> | D.9   | Polling                   | Not started | Runtime    |
+> | D.10  | Enhanced Confirm          | Not started | Actions    |
 >
 > **Priority:** P1 — unlocks real application interactivity beyond CRUD.
 > **Depends on:** Phase A (CSS Foundation), Phase B (Layout).
@@ -69,46 +69,46 @@ need richer interactivity:
 
 ### Shortcuts Module
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/shortcuts/index.ts` | ~50 | `registerShortcuts()` — accepts a map, calls `parseShortcut()`, attaches `keydown` listener. |
-| `src/ui/shortcuts/parse.ts` | ~80 | `parseShortcut()` — parses `"ctrl+k"` strings into `{ key, ctrl, alt, shift, meta }`. |
-| `src/ui/shortcuts/listener.ts` | ~60 | Global keydown handler that matches events to registered shortcuts. |
-| `src/ui/shortcuts/types.ts` | ~20 | `Shortcut` and `ShortcutMap` types. |
+| File                           | Lines | What Exists                                                                                  |
+| ------------------------------ | ----- | -------------------------------------------------------------------------------------------- |
+| `src/ui/shortcuts/index.ts`    | ~50   | `registerShortcuts()` — accepts a map, calls `parseShortcut()`, attaches `keydown` listener. |
+| `src/ui/shortcuts/parse.ts`    | ~80   | `parseShortcut()` — parses `"ctrl+k"` strings into `{ key, ctrl, alt, shift, meta }`.        |
+| `src/ui/shortcuts/listener.ts` | ~60   | Global keydown handler that matches events to registered shortcuts.                          |
+| `src/ui/shortcuts/types.ts`    | ~20   | `Shortcut` and `ShortcutMap` types.                                                          |
 
 ### Drag and Drop
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/hooks/use-drag-drop.ts` | ~200 | Wraps `@dnd-kit/core`: `DndContext`, `SortableContext`, `useSortable`, `arrayMove`, sensors. Used by kanban and tree-view. |
+| File                            | Lines | What Exists                                                                                                                |
+| ------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/hooks/use-drag-drop.ts` | ~200  | Wraps `@dnd-kit/core`: `DndContext`, `SortableContext`, `useSortable`, `arrayMove`, sensors. Used by kanban and tree-view. |
 
 ### Action Executor
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/actions/executor.ts` | ~400 | `useActionExecutor()` handles 17 action types: navigate, navigate-external, api, open-modal, close-modal, refresh, set-value, download, copy, emit, submit-form, reset-form, set-theme, confirm, toast, log, track, run-workflow. |
-| `src/ui/actions/types.ts` | ~200 | `ACTION_TYPES` const array, per-type interfaces, `ActionConfig` union. |
-| `src/ui/actions/confirm.ts` | ~80 | `useConfirmManager()` — renders a confirm dialog with title, message, confirm/cancel. |
+| File                         | Lines | What Exists                                                                                                                                                                                                                       |
+| ---------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/actions/executor.ts` | ~400  | `useActionExecutor()` handles 17 action types: navigate, navigate-external, api, open-modal, close-modal, refresh, set-value, download, copy, emit, submit-form, reset-form, set-theme, confirm, toast, log, track, run-workflow. |
+| `src/ui/actions/types.ts`    | ~200  | `ACTION_TYPES` const array, per-type interfaces, `ActionConfig` union.                                                                                                                                                            |
+| `src/ui/actions/confirm.ts`  | ~80   | `useConfirmManager()` — renders a confirm dialog with title, message, confirm/cancel.                                                                                                                                             |
 
 ### Form Components
 
-| File | What |
-|---|---|
-| `src/ui/components/forms/auto-form/schema.ts` | Field schemas with `type`, `label`, `defaultValue`, `placeholder`. No `visible`, `required` as FromRef, no `validate`. |
-| `src/ui/components/forms/auto-form/component.tsx` | Renders fields, handles submission via action executor. |
+| File                                              | What                                                                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/auto-form/schema.ts`     | Field schemas with `type`, `label`, `defaultValue`, `placeholder`. No `visible`, `required` as FromRef, no `validate`. |
+| `src/ui/components/forms/auto-form/component.tsx` | Renders fields, handles submission via action executor.                                                                |
 
 ### Context Menu Component
 
-| File | What |
-|---|---|
+| File                                      | What                                                                            |
+| ----------------------------------------- | ------------------------------------------------------------------------------- |
 | `src/ui/components/overlay/context-menu/` | Registered component with schema. Standalone — not attached to data components. |
 
 ### Data Components (no polling, no infinite scroll)
 
-| File | What |
-|---|---|
-| `src/ui/components/data/data-table/schema.ts` | `pagination` with `pageSize`, `showPageSize`. No `infinite`. |
-| `src/ui/components/data/list/schema.ts` | List component. No `draggable`, `onReorder`, `contextMenu`, `poll`. |
+| File                                          | What                                                                |
+| --------------------------------------------- | ------------------------------------------------------------------- |
+| `src/ui/components/data/data-table/schema.ts` | `pagination` with `pageSize`, `showPageSize`. No `infinite`.        |
+| `src/ui/components/data/list/schema.ts`       | List component. No `draggable`, `onReorder`, `contextMenu`, `poll`. |
 
 ---
 
@@ -126,20 +126,20 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/shortcuts/index.ts` | Shortcut registration | ~50 |
-| `src/ui/shortcuts/parse.ts` | Shortcut string parser | ~80 |
-| `src/ui/hooks/use-drag-drop.ts` | DnD hook wrapping @dnd-kit | ~200 |
-| `src/ui/actions/executor.ts` | Action executor (17 types) | ~400 |
-| `src/ui/actions/types.ts` | Action type definitions | ~200 |
-| `src/ui/actions/confirm.ts` | Confirm dialog manager | ~80 |
-| `src/ui/components/forms/auto-form/schema.ts` | Auto-form field schemas | ~300 |
-| `src/ui/components/data/data-table/schema.ts` | DataTable schema | ~100 |
-| `src/ui/components/data/list/schema.ts` | List schema | ~80 |
-| `src/ui/components/overlay/context-menu/schema.ts` | Context menu schema | ~60 |
-| `src/ui/manifest/schema.ts` | All manifest schemas | ~1400 |
-| `src/ui/manifest/app.tsx` | ManifestApp | ~600 |
+| Path                                               | What                       | Lines |
+| -------------------------------------------------- | -------------------------- | ----- |
+| `src/ui/shortcuts/index.ts`                        | Shortcut registration      | ~50   |
+| `src/ui/shortcuts/parse.ts`                        | Shortcut string parser     | ~80   |
+| `src/ui/hooks/use-drag-drop.ts`                    | DnD hook wrapping @dnd-kit | ~200  |
+| `src/ui/actions/executor.ts`                       | Action executor (17 types) | ~400  |
+| `src/ui/actions/types.ts`                          | Action type definitions    | ~200  |
+| `src/ui/actions/confirm.ts`                        | Confirm dialog manager     | ~80   |
+| `src/ui/components/forms/auto-form/schema.ts`      | Auto-form field schemas    | ~300  |
+| `src/ui/components/data/data-table/schema.ts`      | DataTable schema           | ~100  |
+| `src/ui/components/data/list/schema.ts`            | List schema                | ~80   |
+| `src/ui/components/overlay/context-menu/schema.ts` | Context menu schema        | ~60   |
+| `src/ui/manifest/schema.ts`                        | All manifest schemas       | ~1400 |
+| `src/ui/manifest/app.tsx`                          | ManifestApp                | ~600  |
 
 ---
 
@@ -227,9 +227,19 @@ interface ChordState {
 // Track in-progress chord sequences
 const activeChords = new Map<string, ChordState>();
 
-function handleChordKeydown(event: KeyboardEvent, registeredChords: Map<string, { shortcuts: Shortcut[]; callback: () => void }>): boolean {
+function handleChordKeydown(
+  event: KeyboardEvent,
+  registeredChords: Map<
+    string,
+    { shortcuts: Shortcut[]; callback: () => void }
+  >,
+): boolean {
   for (const [id, { shortcuts, callback }] of registeredChords) {
-    const state = activeChords.get(id) ?? { sequence: shortcuts, currentIndex: 0, timer: null };
+    const state = activeChords.get(id) ?? {
+      sequence: shortcuts,
+      currentIndex: 0,
+      timer: null,
+    };
     const expected = shortcuts[state.currentIndex];
 
     if (matchesShortcut(event, expected)) {
@@ -267,14 +277,14 @@ useEffect(() => {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/shortcuts/parse.ts` — add `parseChord()` |
-| Modify | `src/ui/shortcuts/listener.ts` — chord detection with timeout |
-| Modify | `src/ui/shortcuts/types.ts` — chord-related types |
+| Action | Path                                                                                   |
+| ------ | -------------------------------------------------------------------------------------- |
+| Modify | `src/ui/shortcuts/parse.ts` — add `parseChord()`                                       |
+| Modify | `src/ui/shortcuts/listener.ts` — chord detection with timeout                          |
+| Modify | `src/ui/shortcuts/types.ts` — chord-related types                                      |
 | Modify | `src/ui/manifest/schema.ts` — add `shortcutsConfigSchema`, add `shortcuts` to manifest |
-| Modify | `src/ui/manifest/app.tsx` — register shortcuts from manifest |
-| Modify | `src/ui/manifest/types.ts` — add `shortcuts` to `CompiledManifest` |
+| Modify | `src/ui/manifest/app.tsx` — register shortcuts from manifest                           |
+| Modify | `src/ui/manifest/types.ts` — add `shortcuts` to `CompiledManifest`                     |
 
 ### Documentation Impact
 
@@ -283,11 +293,11 @@ useEffect(() => {
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/shortcuts/__tests__/parse.test.ts` | Tests: `parseChord("g then d")` returns two shortcuts, single combo returns one-element array, case-insensitive `then`. |
-| `src/ui/shortcuts/__tests__/listener.test.ts` | Tests: chord timeout resets, chord completes on final key, single shortcut fires immediately. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add tests: `shortcuts` config validates, shortcut with action array accepted. |
+| File                                          | What                                                                                                                    |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/shortcuts/__tests__/parse.test.ts`    | Tests: `parseChord("g then d")` returns two shortcuts, single combo returns one-element array, case-insensitive `then`. |
+| `src/ui/shortcuts/__tests__/listener.test.ts` | Tests: chord timeout resets, chord completes on final key, single shortcut fires immediately.                           |
+| `src/ui/manifest/__tests__/schema.test.ts`    | Add tests: `shortcuts` config validates, shortcut with action array accepted.                                           |
 
 ### Exit Criteria
 
@@ -344,7 +354,7 @@ export const reorderConfigSchema = z.object({
 **1. Create `src/ui/components/_base/use-reorderable.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useState, useCallback } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -352,23 +362,40 @@ import type { DragEndEvent } from "@dnd-kit/core";
 
 export interface UseReorderableOptions {
   items: unknown[];
-  onReorder?: (context: { oldIndex: number; newIndex: number; item: unknown; items: unknown[] }) => void;
+  onReorder?: (context: {
+    oldIndex: number;
+    newIndex: number;
+    item: unknown;
+    items: unknown[];
+  }) => void;
 }
 
 export function useReorderable({ items, onReorder }: UseReorderableOptions) {
   const [orderedItems, setOrderedItems] = useState(items);
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id) return;
 
-    const oldIndex = orderedItems.findIndex((_, i) => String(i) === String(active.id));
-    const newIndex = orderedItems.findIndex((_, i) => String(i) === String(over.id));
+      const oldIndex = orderedItems.findIndex(
+        (_, i) => String(i) === String(active.id),
+      );
+      const newIndex = orderedItems.findIndex(
+        (_, i) => String(i) === String(over.id),
+      );
 
-    const newItems = arrayMove(orderedItems, oldIndex, newIndex);
-    setOrderedItems(newItems);
-    onReorder?.({ oldIndex, newIndex, item: orderedItems[oldIndex], items: newItems });
-  }, [orderedItems, onReorder]);
+      const newItems = arrayMove(orderedItems, oldIndex, newIndex);
+      setOrderedItems(newItems);
+      onReorder?.({
+        oldIndex,
+        newIndex,
+        item: orderedItems[oldIndex],
+        items: newItems,
+      });
+    },
+    [orderedItems, onReorder],
+  );
 
   return { orderedItems, handleDragEnd };
 }
@@ -385,21 +412,21 @@ Same pattern — wrap table rows in sortable context when `draggable: true`.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/use-reorderable.ts` |
-| Modify | `src/ui/components/data/list/schema.ts` — add reorder props |
-| Modify | `src/ui/components/data/list/component.tsx` — DnD wrapper |
+| Action | Path                                                              |
+| ------ | ----------------------------------------------------------------- |
+| Create | `src/ui/components/_base/use-reorderable.ts`                      |
+| Modify | `src/ui/components/data/list/schema.ts` — add reorder props       |
+| Modify | `src/ui/components/data/list/component.tsx` — DnD wrapper         |
 | Modify | `src/ui/components/data/data-table/schema.ts` — add reorder props |
-| Modify | `src/ui/components/data/data-table/component.tsx` — DnD wrapper |
+| Modify | `src/ui/components/data/data-table/component.tsx` — DnD wrapper   |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                 | What                                                                                           |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/use-reorderable.test.ts` (create) | Tests: drag end reorders items, no-op when dropped on same position, fires onReorder callback. |
-| `src/ui/components/data/list/__tests__/schema.test.ts` | Add: `draggable: true` accepted, `onReorder` action accepted. |
-| `src/ui/components/data/data-table/__tests__/schema.test.ts` | Add: `draggable: true` accepted. |
+| `src/ui/components/data/list/__tests__/schema.test.ts`               | Add: `draggable: true` accepted, `onReorder` action accepted.                                  |
+| `src/ui/components/data/data-table/__tests__/schema.test.ts`         | Add: `draggable: true` accepted.                                                               |
 
 ### Exit Criteria
 
@@ -456,7 +483,7 @@ export interface ScrollToAction {
 **1. Create `src/ui/hooks/use-infinite-scroll.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useRef, useCallback } from "react";
 
@@ -518,23 +545,23 @@ case "scroll-to": {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/hooks/use-infinite-scroll.ts` |
+| Action | Path                                                                                  |
+| ------ | ------------------------------------------------------------------------------------- |
+| Create | `src/ui/hooks/use-infinite-scroll.ts`                                                 |
 | Modify | `src/ui/actions/types.ts` — add `ScrollToAction`, add `"scroll-to"` to `ACTION_TYPES` |
-| Modify | `src/ui/actions/executor.ts` — handle `scroll-to` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `infinite` to pagination |
-| Modify | `src/ui/components/data/data-table/component.tsx` — sentinel element when infinite |
-| Modify | `src/ui/components/data/list/schema.ts` — add `infinite` to pagination |
-| Modify | `src/ui/components/data/list/component.tsx` — sentinel element |
-| Modify | `src/ui.ts` — export `useInfiniteScroll` |
+| Modify | `src/ui/actions/executor.ts` — handle `scroll-to`                                     |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `infinite` to pagination          |
+| Modify | `src/ui/components/data/data-table/component.tsx` — sentinel element when infinite    |
+| Modify | `src/ui/components/data/list/schema.ts` — add `infinite` to pagination                |
+| Modify | `src/ui/components/data/list/component.tsx` — sentinel element                        |
+| Modify | `src/ui.ts` — export `useInfiniteScroll`                                              |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                          | What                                                                                    |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `src/ui/hooks/__tests__/use-infinite-scroll.test.ts` (create) | Tests: observer created, loadNextPage called when sentinel visible, no-op when loading. |
-| `src/ui/actions/__tests__/executor.test.ts` | Add: scroll-to action finds element and scrolls. |
+| `src/ui/actions/__tests__/executor.test.ts`                   | Add: scroll-to action finds element and scrolls.                                        |
 
 ### Exit Criteria
 
@@ -580,7 +607,7 @@ required: fieldDependencySchema.optional(),
 **1. Create `src/ui/components/forms/auto-form/use-field-deps.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useMemo } from "react";
 import { useResolveFrom } from "../../../context/index";
@@ -604,7 +631,8 @@ export function useFieldDeps(
 
   return useMemo(() => {
     const visible = resolveDep(visibleConfig, resolveFrom, formState) ?? true;
-    const required = resolveDep(requiredConfig, resolveFrom, formState) ?? false;
+    const required =
+      resolveDep(requiredConfig, resolveFrom, formState) ?? false;
     return { visible: Boolean(visible), required: Boolean(required) };
   }, [visibleConfig, requiredConfig, formState, resolveFrom]);
 }
@@ -626,19 +654,19 @@ function resolveDep(
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/forms/auto-form/use-field-deps.ts` |
-| Modify | `src/ui/components/forms/auto-form/schema.ts` — add `visible`, `required` as `fieldDependencySchema` |
+| Action | Path                                                                                                        |
+| ------ | ----------------------------------------------------------------------------------------------------------- |
+| Create | `src/ui/components/forms/auto-form/use-field-deps.ts`                                                       |
+| Modify | `src/ui/components/forms/auto-form/schema.ts` — add `visible`, `required` as `fieldDependencySchema`        |
 | Modify | `src/ui/components/forms/auto-form/component.tsx` — call `useFieldDeps`, skip hidden fields, apply required |
-| Modify | `src/ui/components/forms/auto-form/types.ts` — updated types |
+| Modify | `src/ui/components/forms/auto-form/types.ts` — updated types                                                |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/forms/auto-form/__tests__/use-field-deps.test.ts` (create) | Tests: boolean visible, FromRef visible, expr visible, required defaults to false. |
-| `src/ui/components/forms/auto-form/__tests__/schema.test.ts` | Add: `visible: { from: "toggle" }` accepted, `required: { expr: "role == 'admin'" }` accepted. |
+| File                                                                          | What                                                                                           |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/auto-form/__tests__/use-field-deps.test.ts` (create) | Tests: boolean visible, FromRef visible, expr visible, required defaults to false.             |
+| `src/ui/components/forms/auto-form/__tests__/schema.test.ts`                  | Add: `visible: { from: "toggle" }` accepted, `required: { expr: "role == 'admin'" }` accepted. |
 
 ### Exit Criteria
 
@@ -665,17 +693,35 @@ export const fieldValidationSchema = z.object({
   /** Field is required. */
   required: z.union([z.boolean(), z.string()]).optional(),
   /** Minimum string length. */
-  minLength: z.union([z.number().int().nonnegative(), z.object({ value: z.number(), message: z.string() })]).optional(),
+  minLength: z
+    .union([
+      z.number().int().nonnegative(),
+      z.object({ value: z.number(), message: z.string() }),
+    ])
+    .optional(),
   /** Maximum string length. */
-  maxLength: z.union([z.number().int().positive(), z.object({ value: z.number(), message: z.string() })]).optional(),
+  maxLength: z
+    .union([
+      z.number().int().positive(),
+      z.object({ value: z.number(), message: z.string() }),
+    ])
+    .optional(),
   /** Regex pattern the value must match. */
-  pattern: z.union([z.string(), z.object({ value: z.string(), message: z.string() })]).optional(),
+  pattern: z
+    .union([z.string(), z.object({ value: z.string(), message: z.string() })])
+    .optional(),
   /** Minimum numeric value. */
-  min: z.union([z.number(), z.object({ value: z.number(), message: z.string() })]).optional(),
+  min: z
+    .union([z.number(), z.object({ value: z.number(), message: z.string() })])
+    .optional(),
   /** Maximum numeric value. */
-  max: z.union([z.number(), z.object({ value: z.number(), message: z.string() })]).optional(),
+  max: z
+    .union([z.number(), z.object({ value: z.number(), message: z.string() })])
+    .optional(),
   /** Value must equal another field's value. Useful for password confirmation. */
-  equals: z.union([z.string(), z.object({ field: z.string(), message: z.string() })]).optional(),
+  equals: z
+    .union([z.string(), z.object({ field: z.string(), message: z.string() })])
+    .optional(),
 });
 ```
 
@@ -716,7 +762,9 @@ export function validateField(
   // required
   if (rules.required) {
     if (value === undefined || value === null || strValue.trim() === "") {
-      return typeof rules.required === "string" ? rules.required : "This field is required";
+      return typeof rules.required === "string"
+        ? rules.required
+        : "This field is required";
     }
   }
 
@@ -738,8 +786,10 @@ export function validateField(
 
   // pattern
   if (rules.pattern !== undefined) {
-    const patternStr = typeof rules.pattern === "string" ? rules.pattern : rules.pattern.value;
-    const patternMsg = typeof rules.pattern === "object" ? rules.pattern.message : null;
+    const patternStr =
+      typeof rules.pattern === "string" ? rules.pattern : rules.pattern.value;
+    const patternMsg =
+      typeof rules.pattern === "object" ? rules.pattern.message : null;
     if (!new RegExp(patternStr).test(strValue)) {
       return patternMsg ?? `Invalid format`;
     }
@@ -757,8 +807,10 @@ export function validateField(
 
   // equals
   if (rules.equals !== undefined) {
-    const field = typeof rules.equals === "string" ? rules.equals : rules.equals.field;
-    const eqMsg = typeof rules.equals === "object" ? rules.equals.message : null;
+    const field =
+      typeof rules.equals === "string" ? rules.equals : rules.equals.field;
+    const eqMsg =
+      typeof rules.equals === "object" ? rules.equals.message : null;
     if (value !== formValues[field]) {
       return eqMsg ?? `Must match ${field}`;
     }
@@ -767,7 +819,10 @@ export function validateField(
   return null;
 }
 
-function unpackRule(rule: number | { value: number; message: string }, _name: string): { val: number; msg: string | null } {
+function unpackRule(
+  rule: number | { value: number; message: string },
+  _name: string,
+): { val: number; msg: string | null } {
   if (typeof rule === "number") return { val: rule, msg: null };
   return { val: rule.value, msg: rule.message };
 }
@@ -793,19 +848,19 @@ messages inline under each field using `--sn-color-destructive` token.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/forms/auto-form/validate.ts` |
-| Modify | `src/ui/components/forms/auto-form/schema.ts` — add `validate` to field schemas |
+| Action | Path                                                                                    |
+| ------ | --------------------------------------------------------------------------------------- |
+| Create | `src/ui/components/forms/auto-form/validate.ts`                                         |
+| Modify | `src/ui/components/forms/auto-form/schema.ts` — add `validate` to field schemas         |
 | Modify | `src/ui/components/forms/auto-form/component.tsx` — validate before submit, show errors |
-| Modify | `src/ui/components/forms/auto-form/types.ts` — validation types |
+| Modify | `src/ui/components/forms/auto-form/types.ts` — validation types                         |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                    | What                                                                                            |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `src/ui/components/forms/auto-form/__tests__/validate.test.ts` (create) | Tests: required fails on empty, minLength/maxLength, pattern, min/max, equals, custom messages. |
-| `src/ui/components/forms/auto-form/__tests__/schema.test.ts` | Add: validate object accepted on fields. |
+| `src/ui/components/forms/auto-form/__tests__/schema.test.ts`            | Add: validate object accepted on fields.                                                        |
 
 ### Exit Criteria
 
@@ -860,10 +915,13 @@ const throttleTimers = new Map<string, number>();
 export function debounceAction(key: string, fn: () => void, ms: number): void {
   const existing = debounceTimers.get(key);
   if (existing) clearTimeout(existing);
-  debounceTimers.set(key, setTimeout(() => {
-    debounceTimers.delete(key);
-    fn();
-  }, ms));
+  debounceTimers.set(
+    key,
+    setTimeout(() => {
+      debounceTimers.delete(key);
+      fn();
+    }, ms),
+  );
 }
 
 /**
@@ -885,18 +943,18 @@ from the action type + target. Wrap the execution.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/actions/timing.ts` |
+| Action | Path                                                                  |
+| ------ | --------------------------------------------------------------------- |
+| Create | `src/ui/actions/timing.ts`                                            |
 | Modify | `src/ui/actions/types.ts` — add `debounce`, `throttle` to base action |
-| Modify | `src/ui/actions/executor.ts` — debounce/throttle wrapper |
+| Modify | `src/ui/actions/executor.ts` — debounce/throttle wrapper              |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                               | What                                                                                                            |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | `src/ui/actions/__tests__/timing.test.ts` (create) | Tests: debounce delays, debounce resets on re-trigger, throttle drops fast calls, throttle allows after window. |
-| `src/ui/actions/__tests__/executor.test.ts` | Add: action with `debounce: 300` delays execution. |
+| `src/ui/actions/__tests__/executor.test.ts`        | Add: action with `debounce: 300` delays execution.                                                              |
 
 ### Exit Criteria
 
@@ -943,25 +1001,30 @@ export const contextMenuItemSchema = z.object({
 
 ```tsx
 // Wrap each row in an onContextMenu handler:
-const handleContextMenu = useCallback((event: React.MouseEvent, rowData: unknown) => {
-  event.preventDefault();
-  setContextMenuState({
-    x: event.clientX,
-    y: event.clientY,
-    rowData,
-  });
-}, []);
+const handleContextMenu = useCallback(
+  (event: React.MouseEvent, rowData: unknown) => {
+    event.preventDefault();
+    setContextMenuState({
+      x: event.clientX,
+      y: event.clientY,
+      rowData,
+    });
+  },
+  [],
+);
 
 // Render context menu portal when open:
-{contextMenuState && (
-  <ContextMenuPortal
-    x={contextMenuState.x}
-    y={contextMenuState.y}
-    items={config.contextMenu}
-    context={contextMenuState.rowData}
-    onClose={() => setContextMenuState(null)}
-  />
-)}
+{
+  contextMenuState && (
+    <ContextMenuPortal
+      x={contextMenuState.x}
+      y={contextMenuState.y}
+      items={config.contextMenu}
+      context={contextMenuState.rowData}
+      onClose={() => setContextMenuState(null)}
+    />
+  );
+}
 ```
 
 **3. Create `src/ui/components/_base/context-menu-portal.tsx`:**
@@ -971,20 +1034,20 @@ Closes on click-outside or Escape.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/context-menu-portal.tsx` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `contextMenu` |
+| Action | Path                                                                    |
+| ------ | ----------------------------------------------------------------------- |
+| Create | `src/ui/components/_base/context-menu-portal.tsx`                       |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `contextMenu`       |
 | Modify | `src/ui/components/data/data-table/component.tsx` — right-click handler |
-| Modify | `src/ui/components/data/list/schema.ts` — add `contextMenu` |
-| Modify | `src/ui/components/data/list/component.tsx` — right-click handler |
+| Modify | `src/ui/components/data/list/schema.ts` — add `contextMenu`             |
+| Modify | `src/ui/components/data/list/component.tsx` — right-click handler       |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                      | What                                                                    |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/context-menu-portal.test.tsx` (create) | Tests: renders at coordinates, closes on Escape, fires action on click. |
-| `src/ui/components/data/data-table/__tests__/schema.test.ts` | Add: `contextMenu` array accepted. |
+| `src/ui/components/data/data-table/__tests__/schema.test.ts`              | Add: `contextMenu` array accepted.                                      |
 
 ### Exit Criteria
 
@@ -1034,15 +1097,15 @@ case "copy-to-clipboard": {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                                 |
+| ------ | ---------------------------------------------------------------------------------------------------- |
 | Modify | `src/ui/actions/types.ts` — add `CopyToClipboardAction`, add `"copy-to-clipboard"` to `ACTION_TYPES` |
-| Modify | `src/ui/actions/executor.ts` — handle `copy-to-clipboard` |
+| Modify | `src/ui/actions/executor.ts` — handle `copy-to-clipboard`                                            |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                        | What                                                                          |
+| ------------------------------------------- | ----------------------------------------------------------------------------- |
 | `src/ui/actions/__tests__/executor.test.ts` | Add: copy-to-clipboard writes to clipboard mock, toast shown when configured. |
 
 ### Exit Criteria
@@ -1078,7 +1141,7 @@ export const pollConfigSchema = z.object({
 **1. Create `src/ui/hooks/use-poll.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useRef } from "react";
 
@@ -1097,7 +1160,12 @@ export interface UsePollOptions {
  * Periodically calls onPoll at the given interval.
  * Respects document visibility when pauseWhenHidden is true.
  */
-export function usePoll({ interval, pauseWhenHidden, onPoll, enabled }: UsePollOptions): void {
+export function usePoll({
+  interval,
+  pauseWhenHidden,
+  onPoll,
+  enabled,
+}: UsePollOptions): void {
   const onPollRef = useRef(onPoll);
   onPollRef.current = onPoll;
 
@@ -1149,20 +1217,20 @@ if `poll` config exists, call `usePoll({ onPoll: refetch, ... })`.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/hooks/use-poll.ts` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `poll` |
-| Modify | `src/ui/components/data/list/schema.ts` — add `poll` |
-| Modify | `src/ui/components/data/chart/schema.ts` — add `poll` |
-| Modify | `src/ui/components/data/stat-card/schema.ts` — add `poll` |
+| Action | Path                                                                  |
+| ------ | --------------------------------------------------------------------- |
+| Create | `src/ui/hooks/use-poll.ts`                                            |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `poll`            |
+| Modify | `src/ui/components/data/list/schema.ts` — add `poll`                  |
+| Modify | `src/ui/components/data/chart/schema.ts` — add `poll`                 |
+| Modify | `src/ui/components/data/stat-card/schema.ts` — add `poll`             |
 | Modify | `src/ui/components/_base/use-component-data.ts` — integrate `usePoll` |
-| Modify | `src/ui.ts` — export `usePoll` |
+| Modify | `src/ui.ts` — export `usePoll`                                        |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                               | What                                                                                       |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `src/ui/hooks/__tests__/use-poll.test.ts` (create) | Tests: calls onPoll at interval, stops on unmount, pauses when hidden, resumes on visible. |
 
 ### Exit Criteria
@@ -1217,6 +1285,7 @@ export interface ConfirmAction {
 **1. Update `src/ui/actions/confirm.ts`:**
 
 Extend the confirm dialog renderer to support:
+
 - `variant: "destructive"` — confirm button uses `--sn-color-destructive`.
 - `requireInput` — render an input field. Confirm button disabled until input matches.
 - Custom labels.
@@ -1229,27 +1298,28 @@ const isInputValid = !config.requireInput || inputValue === config.requireInput;
 <button
   disabled={!isInputValid}
   style={{
-    backgroundColor: config.variant === "destructive"
-      ? "var(--sn-color-destructive)"
-      : "var(--sn-color-primary)",
+    backgroundColor:
+      config.variant === "destructive"
+        ? "var(--sn-color-destructive)"
+        : "var(--sn-color-primary)",
   }}
   onClick={handleConfirm}
 >
   {config.confirmLabel ?? "Confirm"}
-</button>
+</button>;
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/actions/types.ts` — expand `ConfirmAction` interface |
+| Action | Path                                                               |
+| ------ | ------------------------------------------------------------------ |
+| Modify | `src/ui/actions/types.ts` — expand `ConfirmAction` interface       |
 | Modify | `src/ui/actions/confirm.ts` — variant, requireInput, custom labels |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                       | What                                                                                               |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | `src/ui/actions/__tests__/confirm.test.ts` | Add: destructive variant styling, requireInput blocks confirm until match, custom labels rendered. |
 
 ### Exit Criteria
@@ -1270,13 +1340,13 @@ const isInputValid = !config.requireInput || inputValue === config.requireInput;
 
 Five independent tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| Shortcuts | D.1 | `src/ui/shortcuts/*`, manifest schema (shortcuts key) |
-| DnD | D.2 | `src/ui/components/_base/use-reorderable.ts`, list/data-table DnD wiring |
-| Runtime | D.3, D.9 | `src/ui/hooks/use-infinite-scroll.ts`, `src/ui/hooks/use-poll.ts` |
-| Forms | D.4, D.5 | `src/ui/components/forms/auto-form/use-field-deps.ts`, `validate.ts` |
-| Actions | D.6, D.7, D.8, D.10 | `src/ui/actions/timing.ts`, `context-menu-portal.tsx`, executor extensions |
+| Track     | Phases              | Files Owned                                                                |
+| --------- | ------------------- | -------------------------------------------------------------------------- |
+| Shortcuts | D.1                 | `src/ui/shortcuts/*`, manifest schema (shortcuts key)                      |
+| DnD       | D.2                 | `src/ui/components/_base/use-reorderable.ts`, list/data-table DnD wiring   |
+| Runtime   | D.3, D.9            | `src/ui/hooks/use-infinite-scroll.ts`, `src/ui/hooks/use-poll.ts`          |
+| Forms     | D.4, D.5            | `src/ui/components/forms/auto-form/use-field-deps.ts`, `validate.ts`       |
+| Actions   | D.6, D.7, D.8, D.10 | `src/ui/actions/timing.ts`, `context-menu-portal.tsx`, executor extensions |
 
 ### File Conflicts
 
@@ -1346,12 +1416,12 @@ phase-d-actions      (D.6, D.7, D.8, D.10)
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|---|---|
+| Risk                                               | Mitigation                                                        |
+| -------------------------------------------------- | ----------------------------------------------------------------- |
 | D.3 IntersectionObserver not available in test env | Mock IntersectionObserver in test setup (already common pattern). |
-| D.5 validation edge cases | Extensive unit tests for each rule type. |
-| D.7 context menu positioning at viewport edges | Clamp coordinates to viewport bounds in portal. |
-| D.9 polling memory leaks | Cleanup in useEffect return. Test with fake timers. |
+| D.5 validation edge cases                          | Extensive unit tests for each rule type.                          |
+| D.7 context menu positioning at viewport edges     | Clamp coordinates to viewport bounds in portal.                   |
+| D.9 polling memory leaks                           | Cleanup in useEffect return. Test with fake timers.               |
 
 ---
 

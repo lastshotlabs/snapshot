@@ -198,9 +198,7 @@ export function SliderField({
         borderRadius: "var(--sn-radius-full, 9999px)",
         backgroundColor: "var(--sn-color-primary, #2563eb)",
         left: range ? `${trackStart}%` : "0%",
-        width: range
-          ? `${trackEnd - trackStart}%`
-          : `${singleTrackWidth}%`,
+        width: range ? `${trackEnd - trackStart}%` : `${singleTrackWidth}%`,
       },
     },
     componentSurface: slots?.fill,
@@ -304,13 +302,17 @@ export function SliderField({
             <>
               <InputControl
                 type="range"
+                ariaLabel={label ? `${label} minimum` : "Minimum value"}
                 min={String(min)}
                 max={String(max)}
                 step={step}
                 value={String(rangeValue[0])}
                 disabled={disabled}
                 onChangeText={(nextRawValue) => {
-                  const nextValue = Math.min(Number(nextRawValue), rangeValue[1]);
+                  const nextValue = Math.min(
+                    Number(nextRawValue),
+                    rangeValue[1],
+                  );
                   const updated: [number, number] = [nextValue, rangeValue[1]];
                   setRangeValue(updated);
                   triggerChange(updated);
@@ -321,13 +323,17 @@ export function SliderField({
               />
               <InputControl
                 type="range"
+                ariaLabel={label ? `${label} maximum` : "Maximum value"}
                 min={String(min)}
                 max={String(max)}
                 step={step}
                 value={String(rangeValue[1])}
                 disabled={disabled}
                 onChangeText={(nextRawValue) => {
-                  const nextValue = Math.max(Number(nextRawValue), rangeValue[0]);
+                  const nextValue = Math.max(
+                    Number(nextRawValue),
+                    rangeValue[0],
+                  );
                   const updated: [number, number] = [rangeValue[0], nextValue];
                   setRangeValue(updated);
                   triggerChange(updated);
@@ -340,6 +346,7 @@ export function SliderField({
           ) : (
             <InputControl
               type="range"
+              ariaLabel={label ?? "Value"}
               min={String(min)}
               max={String(max)}
               step={step}

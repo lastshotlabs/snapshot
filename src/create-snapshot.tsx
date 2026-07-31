@@ -443,12 +443,12 @@ export function createSnapshot<
   const mfaHooks = createMfaHooks({
     api,
     storage: tokenStorage,
-      config: {
-        auth: runtimeAuthMode,
-        homePath: homeScreenPath,
-        staleTime: config.cache?.staleTime,
-        mfa: config.auth?.mfa,
-      },
+    config: {
+      auth: runtimeAuthMode,
+      homePath: homeScreenPath,
+      staleTime: config.cache?.staleTime,
+      mfa: config.auth?.mfa,
+    },
     contract,
     pendingMfaChallengeAtom,
     onLoginSuccess: () => {
@@ -504,16 +504,17 @@ export function createSnapshot<
   });
 
   // ── Routing ─────────────────────────────────────────────────────────────────
-  const { protectedBeforeLoad, guestBeforeLoad, protect, guest } = createLoaders(
-    {
-      loginPath: loaderLoginPath,
-      homePath: homeScreenPath,
-      onUnauthenticated: createAuthCallback("unauthenticated"),
-      staleTime: config.cache?.staleTime,
-    },
-    api,
-    contract,
-  );
+  const { protectedBeforeLoad, guestBeforeLoad, protect, guest } =
+    createLoaders(
+      {
+        loginPath: loaderLoginPath,
+        homePath: homeScreenPath,
+        onUnauthenticated: createAuthCallback("unauthenticated"),
+        staleTime: config.cache?.staleTime,
+      },
+      api,
+      contract,
+    );
 
   // ── Auth error formatter ────────────────────────────────────────────────────
   const boundFormatAuthError = createAuthErrorFormatter();

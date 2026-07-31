@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -6,7 +6,10 @@ import { useSnapshotId } from "../../_base/use-snapshot-id";
 import { renderIcon } from "../../../icons/render";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
-import { getButtonStyle, BUTTON_INTERACTIVE_CSS } from "../../_base/button-styles";
+import {
+  getButtonStyle,
+  BUTTON_INTERACTIVE_CSS,
+} from "../../_base/button-styles";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -186,9 +189,10 @@ export function LinkBase({
     },
     componentSurface: className || style ? { className, style } : undefined,
     itemSurface: slots?.root,
-    activeStates: [isCurrent ? "current" : undefined, isDisabled ? "disabled" : undefined].filter(
-      Boolean,
-    ) as Array<"current" | "disabled">,
+    activeStates: [
+      isCurrent ? "current" : undefined,
+      isDisabled ? "disabled" : undefined,
+    ].filter(Boolean) as Array<"current" | "disabled">,
   });
   const labelSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-label`,

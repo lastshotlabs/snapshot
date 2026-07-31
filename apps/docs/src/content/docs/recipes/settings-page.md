@@ -9,9 +9,20 @@ A complete settings page with tabs for profile editing, password changes, notifi
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
 import {
-  TabsBase, CardBase, ColumnBase, RowBase, SpacerBase,
-  InputField, TextareaField, SwitchField, ButtonBase,
-  DataTableBase, ConfirmDialogBase, ModalBase, ContainerBase, AlertBase,
+  TabsBase,
+  CardBase,
+  ColumnBase,
+  RowBase,
+  SpacerBase,
+  InputField,
+  TextareaField,
+  SwitchField,
+  ButtonBase,
+  DataTableBase,
+  ConfirmDialogBase,
+  ModalBase,
+  ContainerBase,
+  AlertBase,
 } from "@lastshotlabs/snapshot/ui";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -69,8 +80,19 @@ function ProfileTab() {
         <AlertBase severity="error">{updateProfile.error.message}</AlertBase>
       )}
       <InputField label="Full name" value={name} onChange={setName} />
-      <InputField label="Email" type="email" value={email} onChange={setEmail} />
-      <TextareaField label="Bio" value={bio} onChange={setBio} maxLength={300} rows={3} />
+      <InputField
+        label="Email"
+        type="email"
+        value={email}
+        onChange={setEmail}
+      />
+      <TextareaField
+        label="Bio"
+        value={bio}
+        onChange={setBio}
+        maxLength={300}
+        rows={3}
+      />
       <RowBase justify="end">
         <ButtonBase
           label={updateProfile.isPending ? "Saving..." : "Save changes"}
@@ -85,7 +107,13 @@ function ProfileTab() {
 // ── Password Tab ──────────────────────────────────────────────────────────
 
 function PasswordTab() {
-  const { mutate: setPassword, isPending, isSuccess, error, reset } = snap.useSetPassword();
+  const {
+    mutate: setPassword,
+    isPending,
+    isSuccess,
+    error,
+    reset,
+  } = snap.useSetPassword();
   const [current, setCurrent] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -109,9 +137,24 @@ function PasswordTab() {
   return (
     <CardBase title="Change Password" gap="md">
       {isSuccess && <AlertBase severity="success">Password updated</AlertBase>}
-      {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
-      <InputField label="Current password" type="password" value={current} onChange={(v) => { setCurrent(v); reset(); }} />
-      <InputField label="New password" type="password" value={newPwd} onChange={setNewPwd} />
+      {error && (
+        <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>
+      )}
+      <InputField
+        label="Current password"
+        type="password"
+        value={current}
+        onChange={(v) => {
+          setCurrent(v);
+          reset();
+        }}
+      />
+      <InputField
+        label="New password"
+        type="password"
+        value={newPwd}
+        onChange={setNewPwd}
+      />
       <InputField
         label="Confirm new password"
         type="password"
@@ -153,7 +196,7 @@ function NotificationsTab() {
     onSuccess: (_, vars) => {
       queryClient.setQueryData<NotificationPrefs>(
         ["/settings/notifications"],
-        (old) => old ? { ...old, ...vars } : old,
+        (old) => (old ? { ...old, ...vars } : old),
       );
     },
   });
@@ -264,7 +307,10 @@ function AccountTab() {
 
   return (
     <CardBase title="Danger Zone" gap="md">
-      <p>Permanently delete your account and all associated data. This cannot be undone.</p>
+      <p>
+        Permanently delete your account and all associated data. This cannot be
+        undone.
+      </p>
       <ButtonBase
         label="Delete account"
         variant="destructive"
@@ -274,10 +320,20 @@ function AccountTab() {
       <ModalBase
         title="Delete Account"
         open={showConfirm}
-        onClose={() => { setShowConfirm(false); setPassword(""); }}
+        onClose={() => {
+          setShowConfirm(false);
+          setPassword("");
+        }}
         size="sm"
         footer={[
-          { label: "Cancel", variant: "outline", onClick: () => { setShowConfirm(false); setPassword(""); } },
+          {
+            label: "Cancel",
+            variant: "outline",
+            onClick: () => {
+              setShowConfirm(false);
+              setPassword("");
+            },
+          },
           {
             label: isPending ? "Deleting..." : "Delete my account",
             variant: "destructive",
@@ -288,9 +344,14 @@ function AccountTab() {
       >
         <ColumnBase gap="md">
           <p style={{ color: "var(--sn-color-muted-foreground)" }}>
-            This action is permanent and cannot be undone. All your data will be deleted.
+            This action is permanent and cannot be undone. All your data will be
+            deleted.
           </p>
-          {error && <AlertBase severity="error">{snap.formatAuthError(error)}</AlertBase>}
+          {error && (
+            <AlertBase severity="error">
+              {snap.formatAuthError(error)}
+            </AlertBase>
+          )}
           <InputField
             label="Enter your password to confirm"
             type="password"
@@ -316,11 +377,11 @@ function AccountTab() {
 
 ## API contract
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| PATCH | `/auth/profile` | Update user profile |
-| GET | `/settings/notifications` | Fetch notification preferences |
-| PATCH | `/settings/notifications` | Update notification preferences |
+| Method | Endpoint                  | Purpose                         |
+| ------ | ------------------------- | ------------------------------- |
+| PATCH  | `/auth/profile`           | Update user profile             |
+| GET    | `/settings/notifications` | Fetch notification preferences  |
+| PATCH  | `/settings/notifications` | Update notification preferences |
 
 Session and account deletion endpoints are handled by Snapshot's built-in auth hooks.
 

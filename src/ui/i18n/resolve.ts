@@ -40,7 +40,9 @@ function matchLocale(
     return undefined;
   }
 
-  return locales.find((locale) => normalizeLocale(locale).split("-")[0] === base);
+  return locales.find(
+    (locale) => normalizeLocale(locale).split("-")[0] === base,
+  );
 }
 
 function parseAcceptLanguage(header: string | undefined): string[] {
@@ -63,11 +65,12 @@ function parseAcceptLanguage(header: string | undefined): string[] {
     .map((entry) => entry.tag);
 }
 
-function getNestedString(
-  value: unknown,
-  key: string,
-): string | undefined {
-  if (value && typeof value === "object" && key in (value as Record<string, unknown>)) {
+function getNestedString(value: unknown, key: string): string | undefined {
+  if (
+    value &&
+    typeof value === "object" &&
+    key in (value as Record<string, unknown>)
+  ) {
     const direct = (value as Record<string, unknown>)[key];
     return typeof direct === "string" ? direct : undefined;
   }
@@ -215,7 +218,9 @@ export function resolveTRef(
       : undefined);
 
   if (resolved == null) {
-    devWarn(`[snapshot:i18n] Missing translation key "${ref.t}" for "${locale}"`);
+    devWarn(
+      `[snapshot:i18n] Missing translation key "${ref.t}" for "${locale}"`,
+    );
     return ref.t;
   }
 
@@ -244,10 +249,9 @@ export function resolveI18nRefs<T>(
 
     if (input && typeof input === "object") {
       return Object.fromEntries(
-        Object.entries(input as Record<string, unknown>).map(([key, nested]) => [
-          key,
-          resolve(nested),
-        ]),
+        Object.entries(input as Record<string, unknown>).map(
+          ([key, nested]) => [key, resolve(nested)],
+        ),
       );
     }
 

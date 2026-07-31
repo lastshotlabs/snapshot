@@ -90,8 +90,7 @@ export function ConfirmDialog(): ReactNode {
         border:
           "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
-        boxShadow:
-          "var(--sn-shadow-xl, 0 25px 50px -12px rgba(0,0,0,0.25))",
+        boxShadow: "var(--sn-shadow-xl, 0 25px 50px -12px rgba(0,0,0,0.25))",
         padding: "var(--sn-spacing-lg, 1.5rem)",
       },
     },
@@ -215,7 +214,10 @@ export function ConfirmDialog(): ReactNode {
             </div>
           ) : null}
 
-          <div className={actionsSurface.className} style={actionsSurface.style}>
+          <div
+            className={actionsSurface.className}
+            style={actionsSurface.style}
+          >
             <ButtonControl
               onClick={handleCancel}
               type="button"

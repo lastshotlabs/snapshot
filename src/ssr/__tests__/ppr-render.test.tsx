@@ -19,7 +19,8 @@ const HEAD_HTML =
   '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n</head>\n<body>\n<div id="root">\n';
 
 const CACHED_SHELL: PprCacheEntry = {
-  shellHtml: '<div id="page"><h1>Hello PPR</h1><div id="fallback">Loading…</div></div>',
+  shellHtml:
+    '<div id="page"><h1>Hello PPR</h1><div id="fallback">Loading…</div></div>',
   cachedAt: Date.now(),
 };
 
@@ -61,34 +62,46 @@ describe("renderPprPage", () => {
 
   describe("with a cached shell (PPR fast path)", () => {
     it("returns a Response with status 200", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       expect(response.status).toBe(200);
     });
 
     it("sets Content-Type to text/html", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       expect(response.headers.get("content-type")).toContain("text/html");
     });
 
     it("sets Transfer-Encoding to chunked", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       expect(response.headers.get("transfer-encoding")).toBe("chunked");
     });
 
     it("sets X-Ppr: shell header to signal PPR serving", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       expect(response.headers.get("x-ppr")).toBe("shell");
     });
 
     it("response body contains the pre-computed shell HTML", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       const text = await response.text();
       // The shell HTML should appear in the body (after the <head>)
       expect(text).toContain("Hello PPR");
     });
 
     it("response body contains the head HTML as the first content", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       const text = await response.text();
       expect(text).toContain("UTF-8");
       // Head should appear before shell content
@@ -98,7 +111,9 @@ describe("renderPprPage", () => {
     });
 
     it("response body contains React hydration scripts", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       const text = await response.text();
       // React's renderToReadableStream emits inline script tags for Suspense resolution
       // At minimum, the response should be non-trivial HTML
@@ -106,7 +121,9 @@ describe("renderPprPage", () => {
     });
 
     it("response body is a ReadableStream (not null)", async () => {
-      const response = await renderPprPage(makeOptions({ shell: CACHED_SHELL }));
+      const response = await renderPprPage(
+        makeOptions({ shell: CACHED_SHELL }),
+      );
       expect(response.body).not.toBeNull();
     });
   });

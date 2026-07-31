@@ -455,10 +455,12 @@ export function useResolveFrom<T extends Record<string, unknown>>(
 
     if (value && typeof value === "object") {
       return Object.fromEntries(
-        Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
-          key,
-          applyExpressions(nested, path ? `${path}.${key}` : key),
-        ]),
+        Object.entries(value as Record<string, unknown>).map(
+          ([key, nested]) => [
+            key,
+            applyExpressions(nested, path ? `${path}.${key}` : key),
+          ],
+        ),
       );
     }
 

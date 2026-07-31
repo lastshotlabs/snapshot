@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, type RefObject } from "react";
 
@@ -13,7 +13,9 @@ const FOCUSABLE_SELECTOR = [
 ].join(", ");
 
 function getFocusableElements(root: HTMLElement): HTMLElement[] {
-  return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+  return Array.from(
+    root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+  ).filter(
     (element) =>
       !element.hasAttribute("disabled") &&
       element.getAttribute("aria-hidden") !== "true",

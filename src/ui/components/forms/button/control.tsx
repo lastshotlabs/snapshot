@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import { setDomRef } from "../../_base/dom-ref";
-import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
+import {
+  BUTTON_INTERACTIVE_CSS,
+  getButtonStyle,
+} from "../../_base/button-styles";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import type { ButtonControlProps } from "./types";
 
-function normalizeButtonStyle(style: CSSProperties | undefined): CSSProperties | undefined {
+function normalizeButtonStyle(
+  style: CSSProperties | undefined,
+): CSSProperties | undefined {
   if (!style) {
     return undefined;
   }
@@ -131,19 +136,22 @@ export function ButtonControl({
     className || style
       ? {
           ...(itemSurfaceConfig ?? {}),
-          className: [
-            typeof itemSurfaceConfig?.className === "string"
-              ? itemSurfaceConfig.className
-              : undefined,
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined,
+          className:
+            [
+              typeof itemSurfaceConfig?.className === "string"
+                ? itemSurfaceConfig.className
+                : undefined,
+              className,
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined,
           style: {
-            ...((itemSurfaceConfig?.style as Record<string, unknown> | undefined) ?? {}),
+            ...((itemSurfaceConfig?.style as
+              | Record<string, unknown>
+              | undefined) ?? {}),
             ...(style ?? {}),
           },
-      }
+        }
       : itemSurfaceConfig;
   const normalizedSurfaceConfig = omitButtonInteractionOverrides(surfaceConfig);
   const normalizedItemSurfaceConfig = omitButtonInteractionOverrides(
@@ -204,7 +212,9 @@ export function ButtonControl({
         data-disabled={resolvedStates.has("disabled") ? "true" : undefined}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}
-        aria-invalid={ariaInvalid ?? (resolvedStates.has("invalid") || undefined)}
+        aria-invalid={
+          ariaInvalid ?? (resolvedStates.has("invalid") || undefined)
+        }
         aria-live={ariaLive}
         aria-pressed={ariaPressed}
         aria-checked={ariaChecked}

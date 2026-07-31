@@ -133,7 +133,8 @@ describe("createReactRenderer — render() returns Response", () => {
   it("returns a 404 html shell for notFound() results", async () => {
     const renderer = createReactRenderer({
       resolveComponent: async () =>
-        (() => React.createElement("div", null, "ignored")) as React.ComponentType<
+        (() =>
+          React.createElement("div", null, "ignored")) as React.ComponentType<
           Record<string, unknown>
         >,
     });
@@ -277,16 +278,13 @@ describe("createReactRenderer — renderChain structural contract", () => {
   it("renderChain rejects when the page module cannot be imported", async () => {
     const renderer = createReactRenderer({
       resolveComponent: async () =>
-        (() =>
-          React.createElement(
-            "div",
-            null,
-            "page",
-          )) as React.ComponentType<Record<string, unknown>>,
+        (() => React.createElement("div", null, "page")) as React.ComponentType<
+          Record<string, unknown>
+        >,
     });
 
     const chain = {
-      layouts: [] as typeof fakeMatch[],
+      layouts: [] as (typeof fakeMatch)[],
       page: fakeMatch,
       slots: undefined,
       intercepted: undefined,

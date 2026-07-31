@@ -8,7 +8,7 @@
 // server, mirror it here in the same commit.
 
 /** Storage format hint for body text. */
-export type ContentFormat = 'plain' | 'markdown';
+export type ContentFormat = "plain" | "markdown";
 
 /** Reference to an uploaded asset (image, audio, video, file). */
 export interface AssetRef {
@@ -133,7 +133,7 @@ export interface ThreadResponse {
   readonly title: string;
   readonly body?: string;
   readonly format: ContentFormat;
-  readonly status: 'draft' | 'published' | 'deleted';
+  readonly status: "draft" | "published" | "deleted";
   readonly pinned: boolean;
   readonly locked: boolean;
   readonly score: number;
@@ -144,7 +144,7 @@ export interface ThreadResponse {
    */
   readonly reactionSummary?: unknown;
   readonly mentions?: readonly string[];
-  readonly broadcastMentions?: readonly ('everyone' | 'here')[];
+  readonly broadcastMentions?: readonly ("everyone" | "here")[];
   readonly mentionedRoleIds?: readonly string[];
   readonly attachments?: readonly AssetRef[];
   readonly embeds?: readonly EmbedData[];
@@ -181,7 +181,7 @@ export interface CreateThreadBody {
 export interface CreateThreadBodyExtended extends CreateThreadBody {
   readonly format?: ContentFormat;
   readonly mentions?: readonly string[];
-  readonly broadcastMentions?: readonly ('everyone' | 'here')[];
+  readonly broadcastMentions?: readonly ("everyone" | "here")[];
   readonly mentionedRoleIds?: readonly string[];
   readonly attachments?: readonly AssetRef[];
   readonly tagIds?: readonly string[];
@@ -219,11 +219,11 @@ export interface ReplyResponse {
   readonly authorId: string;
   readonly body: string;
   readonly format: ContentFormat;
-  readonly status: 'published' | 'deleted';
+  readonly status: "published" | "deleted";
   readonly score: number;
   readonly reactionSummary?: unknown;
   readonly mentions?: readonly string[];
-  readonly broadcastMentions?: readonly ('everyone' | 'here')[];
+  readonly broadcastMentions?: readonly ("everyone" | "here")[];
   readonly mentionedRoleIds?: readonly string[];
   readonly attachments?: readonly AssetRef[];
   readonly embeds?: readonly EmbedData[];
@@ -256,7 +256,7 @@ export interface CreateReplyBody {
 export interface CreateReplyBodyExtended extends CreateReplyBody {
   readonly format?: ContentFormat;
   readonly mentions?: readonly string[];
-  readonly broadcastMentions?: readonly ('everyone' | 'here')[];
+  readonly broadcastMentions?: readonly ("everyone" | "here")[];
   readonly mentionedRoleIds?: readonly string[];
   readonly attachments?: readonly AssetRef[];
   readonly parentId?: string;
@@ -294,10 +294,10 @@ export interface ReactionResponse {
   id: string;
   tenantId?: string | null;
   targetId: string;
-  targetType: 'thread' | 'reply';
+  targetType: "thread" | "reply";
   containerId?: string | null;
   userId: string;
-  type: 'upvote' | 'downvote' | 'emoji';
+  type: "upvote" | "downvote" | "emoji";
   /**
    * Emoji string when `type === 'emoji'`. Some response shapes surface this
    * under `emoji`; the entity's canonical column is `value`. Read both

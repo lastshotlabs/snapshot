@@ -81,7 +81,9 @@ describe("community list hooks — cursor pagination", () => {
     );
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     const path = calls[0]?.path ?? "";
-    expect(path).toBe("/community/containers?limit=10&cursor=c-abc&sortDir=asc");
+    expect(path).toBe(
+      "/community/containers?limit=10&cursor=c-abc&sortDir=asc",
+    );
     expect(path).not.toContain("page");
     expect(path).not.toContain("pageSize");
   });
@@ -198,19 +200,22 @@ describe("thread moderation — HTTP method correctness", () => {
     ["useUnlockThread", "unlock", { locked: false }],
     ["usePinThread", "pin", { pinned: true }],
     ["useUnpinThread", "unpin", { pinned: false }],
-  ])("%s uses PATCH — fieldUpdate ops are not POST", async (hook, op, patchBody) => {
-    const useHook = hooks[hook as keyof typeof hooks] as () => {
-      mutate: (v: { threadId: string; containerId: string }) => void;
-    };
-    const { result } = renderHook(() => useHook(), { wrapper });
-    result.current.mutate({ threadId: "t1", containerId: "c1" });
-    await waitFor(() => expect(calls).toHaveLength(1));
-    expect(calls[0]).toMatchObject({
-      method: "PATCH",
-      path: `/community/threads/${op}`,
-      body: { id: "t1", ...patchBody },
-    });
-  });
+  ])(
+    "%s uses PATCH — fieldUpdate ops are not POST",
+    async (hook, op, patchBody) => {
+      const useHook = hooks[hook as keyof typeof hooks] as () => {
+        mutate: (v: { threadId: string; containerId: string }) => void;
+      };
+      const { result } = renderHook(() => useHook(), { wrapper });
+      result.current.mutate({ threadId: "t1", containerId: "c1" });
+      await waitFor(() => expect(calls).toHaveLength(1));
+      expect(calls[0]).toMatchObject({
+        method: "PATCH",
+        path: `/community/threads/${op}`,
+        body: { id: "t1", ...patchBody },
+      });
+    },
+  );
 });
 
 describe("useCheckBan — derived from the ban list", () => {
@@ -226,7 +231,9 @@ describe("useCheckBan — derived from the ban list", () => {
 
   it("reports an active ban", async () => {
     getPayload = {
-      items: [{ id: "b1", userId: "u1", createdAt: "2026-07-01T00:00:00.000Z" }],
+      items: [
+        { id: "b1", userId: "u1", createdAt: "2026-07-01T00:00:00.000Z" },
+      ],
       hasMore: false,
     };
     const { result } = renderHook(() => hooks.useCheckBan("u1"), { wrapper });

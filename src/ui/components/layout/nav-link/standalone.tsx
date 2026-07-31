@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -83,9 +83,11 @@ export function NavLinkBase({
       fontSize: "var(--sn-font-size-sm, 0.875rem)",
       justifyContent: "var(--sn-nav-link-justify, flex-start)",
       transition: "background 0.15s, color 0.15s",
-      hover: disabled ? {} : {
-        bg: "var(--sn-color-accent)",
-      },
+      hover: disabled
+        ? {}
+        : {
+            bg: "var(--sn-color-accent)",
+          },
       states: {
         current: {
           bg: "var(--sn-color-accent)",

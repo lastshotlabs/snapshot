@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useRef, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -20,7 +20,13 @@ export interface PopoverBaseProps {
   /** Trigger icon name. */
   triggerIcon?: string;
   /** Trigger button variant. */
-  triggerVariant?: "default" | "destructive" | "secondary" | "outline" | "ghost" | "link";
+  triggerVariant?:
+    | "default"
+    | "destructive"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "link";
   /** Title displayed inside the popover. */
   title?: string;
   /** Description text displayed below the title. */
@@ -224,7 +230,13 @@ export function PopoverBase({
               className={headerSurface.className}
               style={headerSurface.style}
             >
-              <div style={{ display: "grid", gap: "var(--sn-spacing-sm, 0.5rem)", flex: 1 }}>
+              <div
+                style={{
+                  display: "grid",
+                  gap: "var(--sn-spacing-sm, 0.5rem)",
+                  flex: 1,
+                }}
+              >
                 {title ? (
                   <div
                     data-snapshot-id={`${rootId}-title`}

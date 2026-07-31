@@ -1,6 +1,12 @@
-'use client';
+"use client";
 
-import { useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { renderIcon } from "../../../icons/render";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -72,31 +78,32 @@ export function NavDropdownBase({
   const containerRef = useRef<HTMLDivElement>(null);
   const rootId = id ?? "nav-dropdown";
 
-  const mergedPanelSlot = useMemo<Record<string, unknown>>(
-    () => {
-      const panelSlot = (slots?.panel as Record<string, unknown> | undefined) ?? {};
-      const panelSlotStyle = (panelSlot.style as Record<string, unknown> | undefined) ?? {};
+  const mergedPanelSlot = useMemo<Record<string, unknown>>(() => {
+    const panelSlot =
+      (slots?.panel as Record<string, unknown> | undefined) ?? {};
+    const panelSlotStyle =
+      (panelSlot.style as Record<string, unknown> | undefined) ?? {};
 
-      return {
-        bg: "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
-        opacity: 1,
-        border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
-        borderRadius: "lg",
-        shadow: "lg",
-        ...panelSlot,
-        style: {
-          backgroundColor: "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
-          width: "max-content",
-          maxWidth: "min(22rem, calc(100vw - 1rem))",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          backdropFilter: "none",
-          ...panelSlotStyle,
-        },
-      };
-    },
-    [slots?.panel],
-  );
+    return {
+      bg: "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
+      opacity: 1,
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      borderRadius: "lg",
+      shadow: "lg",
+      ...panelSlot,
+      style: {
+        backgroundColor:
+          "var(--sn-color-popover, var(--sn-color-card, #ffffff))",
+        width: "max-content",
+        maxWidth: "min(22rem, calc(100vw - 1rem))",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        backdropFilter: "none",
+        ...panelSlotStyle,
+      },
+    };
+  }, [slots?.panel]);
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
     implementationBase: {
@@ -151,8 +158,12 @@ export function NavDropdownBase({
       data-snapshot-id={`${rootId}-root`}
       className={rootSurface.className}
       style={rootSurface.style}
-      onPointerEnter={triggerMode === "hover" ? () => setIsOpen(true) : undefined}
-      onPointerLeave={triggerMode === "hover" ? () => setIsOpen(false) : undefined}
+      onPointerEnter={
+        triggerMode === "hover" ? () => setIsOpen(true) : undefined
+      }
+      onPointerLeave={
+        triggerMode === "hover" ? () => setIsOpen(false) : undefined
+      }
     >
       <FloatingMenuStyles />
       <ButtonControl

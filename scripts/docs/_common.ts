@@ -51,7 +51,10 @@ export function isDocumentedSource(sourcePath: string): boolean {
 }
 
 export function escapeCell(value: string): string {
-  return value.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
+  return value
+    .replace(/\|/g, "\\|")
+    .replace(/\r?\n+/g, " ")
+    .trim();
 }
 
 export function markdownPage(

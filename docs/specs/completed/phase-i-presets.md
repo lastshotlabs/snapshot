@@ -2,12 +2,12 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | I.1 | CrudPage preset — full CRUD wiring | Not started | Presets |
-> | I.2 | DashboardPage preset — charts + activity feed | Not started | Presets |
-> | I.3 | SettingsPage preset — auto-save + explicit submit | Not started | Presets |
-> | I.4 | AuthPage preset — formalize auth screens | Not started | Presets |
+> | Phase | Title                                             | Status      | Track   |
+> | ----- | ------------------------------------------------- | ----------- | ------- |
+> | I.1   | CrudPage preset — full CRUD wiring                | Not started | Presets |
+> | I.2   | DashboardPage preset — charts + activity feed     | Not started | Presets |
+> | I.3   | SettingsPage preset — auto-save + explicit submit | Not started | Presets |
+> | I.4   | AuthPage preset — formalize auth screens          | Not started | Presets |
 >
 > **Priority:** P1 — unlocks rapid app scaffolding from minimal manifest config.
 > **Depends on:** Phase A (CSS Foundation).
@@ -50,39 +50,39 @@ well as TypeScript helpers used in `defineManifest()`, but:
 
 ### Preset Factories (COMPLETE — TypeScript API)
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/presets/index.ts` | 37 | Re-exports `crudPage`, `dashboardPage`, `settingsPage` + all types. |
-| `src/ui/presets/types.ts` | 247 | Full type definitions: `CrudPageOptions`, `DashboardPageOptions`, `SettingsPageOptions`, plus `ColumnDef`, `FormDef`, `FormFieldDef`, `FilterDef`, `StatDef`, `SettingsSectionDef`. |
-| `src/ui/presets/crud-page.ts` | 271 | Factory: heading + create button + data-table + modal + drawer + delete action. Maps columns, form fields, row actions. Uses `slugify()` for IDs. |
-| `src/ui/presets/dashboard-page.ts` | 130 | Factory: heading + stat-card row + optional activity list. Maps `StatDef` to stat-card config with trend/format/icon. |
-| `src/ui/presets/settings-page.ts` | 151 | Factory: heading + tabs with one form per section. Maps `SettingsSectionDef` to tab + AutoForm. |
+| File                               | Lines | What It Does                                                                                                                                                                        |
+| ---------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/presets/index.ts`          | 37    | Re-exports `crudPage`, `dashboardPage`, `settingsPage` + all types.                                                                                                                 |
+| `src/ui/presets/types.ts`          | 247   | Full type definitions: `CrudPageOptions`, `DashboardPageOptions`, `SettingsPageOptions`, plus `ColumnDef`, `FormDef`, `FormFieldDef`, `FilterDef`, `StatDef`, `SettingsSectionDef`. |
+| `src/ui/presets/crud-page.ts`      | 271   | Factory: heading + create button + data-table + modal + drawer + delete action. Maps columns, form fields, row actions. Uses `slugify()` for IDs.                                   |
+| `src/ui/presets/dashboard-page.ts` | 130   | Factory: heading + stat-card row + optional activity list. Maps `StatDef` to stat-card config with trend/format/icon.                                                               |
+| `src/ui/presets/settings-page.ts`  | 151   | Factory: heading + tabs with one form per section. Maps `SettingsSectionDef` to tab + AutoForm.                                                                                     |
 
 ### Preset Tests (COMPLETE)
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/presets/__tests__/crud-page.test.ts` | 198 | Validates output against `pageConfigSchema`. Tests minimal/full options, column mapping, modal/drawer generation, slug prefixes, toggle-to-checkbox mapping. |
-| `src/ui/presets/__tests__/dashboard-page.test.ts` | 194 | Validates stat cards, trend mapping, activity list, icon propagation, span=3 grid. |
-| `src/ui/presets/__tests__/settings-page.test.ts` | 272 | Validates tabs, form fields, submit endpoints, data endpoints, method defaults, icons. |
+| File                                              | Lines | What It Does                                                                                                                                                 |
+| ------------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/ui/presets/__tests__/crud-page.test.ts`      | 198   | Validates output against `pageConfigSchema`. Tests minimal/full options, column mapping, modal/drawer generation, slug prefixes, toggle-to-checkbox mapping. |
+| `src/ui/presets/__tests__/dashboard-page.test.ts` | 194   | Validates stat cards, trend mapping, activity list, icon propagation, span=3 grid.                                                                           |
+| `src/ui/presets/__tests__/settings-page.test.ts`  | 272   | Validates tabs, form fields, submit endpoints, data endpoints, method defaults, icons.                                                                       |
 
 ### Compiler (NO preset expansion)
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/manifest/compiler.ts` | ~600 | `compileManifest()` parses, resolves env refs, resolves flavors, builds routes. Does NOT check for `preset` key. |
+| File                          | Lines | What It Does                                                                                                     |
+| ----------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/compiler.ts` | ~600  | `compileManifest()` parses, resolves env refs, resolves flavors, builds routes. Does NOT check for `preset` key. |
 
 ### Auth Fragment (PARTIAL)
 
-| File | What |
-|---|---|
-| `src/ui/manifest/defaults/auth.ts` | `buildDefaultAuthFragment()` — generates auth routes from `manifest.auth` config. Not a preset factory. |
-| `src/ui/manifest/schema.ts:1067-1139` | `authScreenConfigSchema` — has `branding.logo`, `branding.title`, `branding.description`. |
+| File                                  | What                                                                                                    |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/defaults/auth.ts`    | `buildDefaultAuthFragment()` — generates auth routes from `manifest.auth` config. Not a preset factory. |
+| `src/ui/manifest/schema.ts:1067-1139` | `authScreenConfigSchema` — has `branding.logo`, `branding.title`, `branding.description`.               |
 
 ### UI Entry Point (EXPORTS presets)
 
-| File | Lines |
-|---|---|
+| File                | Lines                                                                         |
+| ------------------- | ----------------------------------------------------------------------------- |
 | `src/ui.ts:630-643` | Exports `crudPage`, `dashboardPage`, `settingsPage` + all types from presets. |
 
 ---
@@ -101,20 +101,21 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/presets/types.ts` | Preset option types | 247 |
-| `src/ui/presets/crud-page.ts` | CrudPage factory | 271 |
-| `src/ui/presets/dashboard-page.ts` | DashboardPage factory | 130 |
-| `src/ui/presets/settings-page.ts` | SettingsPage factory | 151 |
-| `src/ui/presets/index.ts` | Re-exports | 37 |
-| `src/ui/manifest/compiler.ts` | `compileManifest()` | ~600 |
-| `src/ui/manifest/schema.ts` | Manifest Zod schemas | ~1400 |
-| `src/ui.ts` | UI entry point | 688 |
+| Path                               | What                  | Lines |
+| ---------------------------------- | --------------------- | ----- |
+| `src/ui/presets/types.ts`          | Preset option types   | 247   |
+| `src/ui/presets/crud-page.ts`      | CrudPage factory      | 271   |
+| `src/ui/presets/dashboard-page.ts` | DashboardPage factory | 130   |
+| `src/ui/presets/settings-page.ts`  | SettingsPage factory  | 151   |
+| `src/ui/presets/index.ts`          | Re-exports            | 37    |
+| `src/ui/manifest/compiler.ts`      | `compileManifest()`   | ~600  |
+| `src/ui/manifest/schema.ts`        | Manifest Zod schemas  | ~1400 |
+| `src/ui.ts`                        | UI entry point        | 688   |
 
 ### Consumer Shape
 
 **Before (TypeScript only):**
+
 ```ts
 import { crudPage, defineManifest } from "@lastshotlabs/snapshot/ui";
 
@@ -133,6 +134,7 @@ export default defineManifest({
 ```
 
 **After (JSON manifest):**
+
 ```json
 {
   "routes": [
@@ -151,8 +153,18 @@ export default defineManifest({
         ],
         "createForm": {
           "fields": [
-            { "key": "name", "type": "text", "label": "Name", "required": true },
-            { "key": "email", "type": "email", "label": "Email", "required": true }
+            {
+              "key": "name",
+              "type": "text",
+              "label": "Name",
+              "required": true
+            },
+            {
+              "key": "email",
+              "type": "email",
+              "label": "Email",
+              "required": true
+            }
           ]
         }
       }
@@ -188,6 +200,7 @@ config. Add Zod schema for JSON manifest preset expansion. Wire preset expansion
 ### The API
 
 **JSON manifest usage:**
+
 ```json
 {
   "routes": [
@@ -208,25 +221,55 @@ config. Add Zod schema for JSON manifest preset expansion. Wire preset expansion
         ],
         "createForm": {
           "fields": [
-            { "key": "description", "type": "text", "label": "Description", "required": true },
-            { "key": "amount", "type": "number", "label": "Amount", "required": true },
-            { "key": "category", "type": "select", "label": "Category", "options": [
-              { "label": "Food", "value": "food" },
-              { "label": "Transport", "value": "transport" }
-            ]}
+            {
+              "key": "description",
+              "type": "text",
+              "label": "Description",
+              "required": true
+            },
+            {
+              "key": "amount",
+              "type": "number",
+              "label": "Amount",
+              "required": true
+            },
+            {
+              "key": "category",
+              "type": "select",
+              "label": "Category",
+              "options": [
+                { "label": "Food", "value": "food" },
+                { "label": "Transport", "value": "transport" }
+              ]
+            }
           ]
         },
         "updateForm": {
           "fields": [
-            { "key": "description", "type": "text", "label": "Description", "required": true },
-            { "key": "amount", "type": "number", "label": "Amount", "required": true }
+            {
+              "key": "description",
+              "type": "text",
+              "label": "Description",
+              "required": true
+            },
+            {
+              "key": "amount",
+              "type": "number",
+              "label": "Amount",
+              "required": true
+            }
           ]
         },
         "filters": [
-          { "key": "category", "label": "Category", "type": "select", "options": [
-            { "label": "Food", "value": "food" },
-            { "label": "Transport", "value": "transport" }
-          ]},
+          {
+            "key": "category",
+            "label": "Category",
+            "type": "select",
+            "options": [
+              { "label": "Food", "value": "food" },
+              { "label": "Transport", "value": "transport" }
+            ]
+          },
           { "key": "search", "label": "Search", "type": "text" }
         ],
         "pagination": { "pageSize": 25 },
@@ -242,6 +285,7 @@ config. Add Zod schema for JSON manifest preset expansion. Wire preset expansion
 ```
 
 **TypeScript usage (enhanced):**
+
 ```ts
 const page = crudPage({
   title: "Transactions",
@@ -286,6 +330,7 @@ export interface EmptyStateDef {
 ```
 
 Update `CrudPageOptions`:
+
 ```ts
 export interface CrudPageOptions {
   // ... existing fields ...
@@ -302,55 +347,99 @@ Add preset schema to `src/ui/presets/schemas.ts` (new file):
 import { z } from "zod";
 
 /** Zod schema for the CRUD preset config used in JSON manifests. */
-export const crudPresetConfigSchema = z.object({
-  title: z.string().min(1),
-  listEndpoint: z.string().min(1),
-  createEndpoint: z.string().optional(),
-  updateEndpoint: z.string().optional(),
-  deleteEndpoint: z.string().optional(),
-  columns: z.array(z.object({
-    key: z.string().min(1),
-    label: z.string().min(1),
-    badge: z.boolean().optional(),
-    format: z.enum(["date", "currency", "number", "boolean"]).optional(),
-  })).min(1),
-  createForm: z.object({
-    fields: z.array(z.object({
-      key: z.string().min(1),
-      type: z.enum(["text", "email", "password", "number", "select", "textarea", "toggle"]),
-      label: z.string().min(1),
-      required: z.boolean().optional(),
-      options: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
-      placeholder: z.string().optional(),
-    })),
-  }).optional(),
-  updateForm: z.object({
-    fields: z.array(z.object({
-      key: z.string().min(1),
-      type: z.enum(["text", "email", "password", "number", "select", "textarea", "toggle"]),
-      label: z.string().min(1),
-      required: z.boolean().optional(),
-      options: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
-      placeholder: z.string().optional(),
-    })),
-  }).optional(),
-  filters: z.array(z.object({
-    key: z.string().min(1),
-    label: z.string().min(1),
-    type: z.enum(["select", "text"]),
-    options: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
-  })).optional(),
-  pagination: z.object({
-    pageSize: z.number().int().positive().optional(),
-    type: z.enum(["offset", "cursor"]).optional(),
-  }).optional(),
-  emptyState: z.object({
+export const crudPresetConfigSchema = z
+  .object({
     title: z.string().min(1),
-    description: z.string().optional(),
-    icon: z.string().optional(),
-  }).optional(),
-  id: z.string().optional(),
-}).strict();
+    listEndpoint: z.string().min(1),
+    createEndpoint: z.string().optional(),
+    updateEndpoint: z.string().optional(),
+    deleteEndpoint: z.string().optional(),
+    columns: z
+      .array(
+        z.object({
+          key: z.string().min(1),
+          label: z.string().min(1),
+          badge: z.boolean().optional(),
+          format: z.enum(["date", "currency", "number", "boolean"]).optional(),
+        }),
+      )
+      .min(1),
+    createForm: z
+      .object({
+        fields: z.array(
+          z.object({
+            key: z.string().min(1),
+            type: z.enum([
+              "text",
+              "email",
+              "password",
+              "number",
+              "select",
+              "textarea",
+              "toggle",
+            ]),
+            label: z.string().min(1),
+            required: z.boolean().optional(),
+            options: z
+              .array(z.object({ label: z.string(), value: z.string() }))
+              .optional(),
+            placeholder: z.string().optional(),
+          }),
+        ),
+      })
+      .optional(),
+    updateForm: z
+      .object({
+        fields: z.array(
+          z.object({
+            key: z.string().min(1),
+            type: z.enum([
+              "text",
+              "email",
+              "password",
+              "number",
+              "select",
+              "textarea",
+              "toggle",
+            ]),
+            label: z.string().min(1),
+            required: z.boolean().optional(),
+            options: z
+              .array(z.object({ label: z.string(), value: z.string() }))
+              .optional(),
+            placeholder: z.string().optional(),
+          }),
+        ),
+      })
+      .optional(),
+    filters: z
+      .array(
+        z.object({
+          key: z.string().min(1),
+          label: z.string().min(1),
+          type: z.enum(["select", "text"]),
+          options: z
+            .array(z.object({ label: z.string(), value: z.string() }))
+            .optional(),
+        }),
+      )
+      .optional(),
+    pagination: z
+      .object({
+        pageSize: z.number().int().positive().optional(),
+        type: z.enum(["offset", "cursor"]).optional(),
+      })
+      .optional(),
+    emptyState: z
+      .object({
+        title: z.string().min(1),
+        description: z.string().optional(),
+        icon: z.string().optional(),
+      })
+      .optional(),
+    id: z.string().optional(),
+  })
+  .strict();
 
 export type CrudPresetConfig = z.infer<typeof crudPresetConfigSchema>;
 ```
@@ -380,6 +469,7 @@ if (options.filters && options.filters.length > 0) {
 ```
 
 Update pagination config to use `options.pagination`:
+
 ```ts
 const tableConfig: Record<string, unknown> = {
   type: "data-table",
@@ -391,7 +481,8 @@ const tableConfig: Record<string, unknown> = {
     pageSize: options.pagination?.pageSize ?? 20,
   },
   searchable: true,
-  emptyMessage: options.emptyState?.title ?? `No ${options.title.toLowerCase()} yet`,
+  emptyMessage:
+    options.emptyState?.title ?? `No ${options.title.toLowerCase()} yet`,
 };
 ```
 
@@ -413,14 +504,29 @@ import type { PageConfig } from "../manifest/types";
 
 export type PresetName = "crud" | "dashboard" | "settings" | "auth";
 
-const PRESET_REGISTRY: Record<PresetName, {
-  schema: z.ZodType;
-  factory: (config: unknown) => PageConfig;
-}> = {
-  crud: { schema: crudPresetConfigSchema, factory: crudPage as (c: unknown) => PageConfig },
-  dashboard: { schema: dashboardPresetConfigSchema, factory: dashboardPage as (c: unknown) => PageConfig },
-  settings: { schema: settingsPresetConfigSchema, factory: settingsPage as (c: unknown) => PageConfig },
-  auth: { schema: authPresetConfigSchema, factory: authPage as (c: unknown) => PageConfig },
+const PRESET_REGISTRY: Record<
+  PresetName,
+  {
+    schema: z.ZodType;
+    factory: (config: unknown) => PageConfig;
+  }
+> = {
+  crud: {
+    schema: crudPresetConfigSchema,
+    factory: crudPage as (c: unknown) => PageConfig,
+  },
+  dashboard: {
+    schema: dashboardPresetConfigSchema,
+    factory: dashboardPage as (c: unknown) => PageConfig,
+  },
+  settings: {
+    schema: settingsPresetConfigSchema,
+    factory: settingsPage as (c: unknown) => PageConfig,
+  },
+  auth: {
+    schema: authPresetConfigSchema,
+    factory: authPage as (c: unknown) => PageConfig,
+  },
 };
 
 /**
@@ -428,10 +534,15 @@ const PRESET_REGISTRY: Record<PresetName, {
  * Validates the presetConfig against the preset's Zod schema.
  * Throws a ZodError if validation fails.
  */
-export function expandPreset(preset: string, presetConfig: unknown): PageConfig {
+export function expandPreset(
+  preset: string,
+  presetConfig: unknown,
+): PageConfig {
   const entry = PRESET_REGISTRY[preset as PresetName];
   if (!entry) {
-    throw new Error(`Unknown preset "${preset}". Valid presets: ${Object.keys(PRESET_REGISTRY).join(", ")}`);
+    throw new Error(
+      `Unknown preset "${preset}". Valid presets: ${Object.keys(PRESET_REGISTRY).join(", ")}`,
+    );
   }
   const validated = entry.schema.parse(presetConfig);
   return entry.factory(validated);
@@ -464,33 +575,35 @@ for (const route of manifest.routes) {
 Add `preset` and `presetConfig` fields to `routeConfigSchema`:
 
 ```ts
-export const routeConfigSchema = z.object({
-  // ... existing fields ...
-  preset: z.string().optional(),
-  presetConfig: z.record(z.unknown()).optional(),
-}).refine(
-  (data) => {
-    // Must have either content or preset, not both
-    if (data.preset && data.content) return false;
-    if (!data.preset && !data.content) return false;
-    return true;
-  },
-  { message: "Route must have either 'content' or 'preset', not both" },
-);
+export const routeConfigSchema = z
+  .object({
+    // ... existing fields ...
+    preset: z.string().optional(),
+    presetConfig: z.record(z.unknown()).optional(),
+  })
+  .refine(
+    (data) => {
+      // Must have either content or preset, not both
+      if (data.preset && data.content) return false;
+      if (!data.preset && !data.content) return false;
+      return true;
+    },
+    { message: "Route must have either 'content' or 'preset', not both" },
+  );
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/presets/schemas.ts` |
-| Create | `src/ui/presets/expand.ts` |
+| Action | Path                                                                                       |
+| ------ | ------------------------------------------------------------------------------------------ |
+| Create | `src/ui/presets/schemas.ts`                                                                |
+| Create | `src/ui/presets/expand.ts`                                                                 |
 | Modify | `src/ui/presets/types.ts` — add `PaginationDef`, `EmptyStateDef`, update `CrudPageOptions` |
-| Modify | `src/ui/presets/crud-page.ts` — add filter-bar, pagination config, empty state |
-| Modify | `src/ui/presets/index.ts` — re-export new types and schemas |
-| Modify | `src/ui/manifest/schema.ts` — add `preset`/`presetConfig` to route schema |
-| Modify | `src/ui/manifest/compiler.ts` — call `expandPreset()` during compilation |
-| Modify | `src/ui.ts` — export new schemas and `expandPreset` |
+| Modify | `src/ui/presets/crud-page.ts` — add filter-bar, pagination config, empty state             |
+| Modify | `src/ui/presets/index.ts` — re-export new types and schemas                                |
+| Modify | `src/ui/manifest/schema.ts` — add `preset`/`presetConfig` to route schema                  |
+| Modify | `src/ui/manifest/compiler.ts` — call `expandPreset()` during compilation                   |
+| Modify | `src/ui.ts` — export new schemas and `expandPreset`                                        |
 
 ### Documentation Impact
 
@@ -499,12 +612,12 @@ export const routeConfigSchema = z.object({
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/presets/__tests__/crud-page.test.ts` | Add tests: filter-bar generation, pagination config override, custom empty state. |
-| `src/ui/presets/__tests__/schemas.test.ts` (create) | Schema validation: valid/invalid crud configs, required fields, strict mode. |
-| `src/ui/presets/__tests__/expand.test.ts` (create) | `expandPreset()` with each preset name, unknown preset error, schema validation error. |
-| `src/ui/manifest/__tests__/compiler.test.ts` | Add test: manifest with `preset: "crud"` compiles to valid routes. |
+| File                                                | What                                                                                   |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `src/ui/presets/__tests__/crud-page.test.ts`        | Add tests: filter-bar generation, pagination config override, custom empty state.      |
+| `src/ui/presets/__tests__/schemas.test.ts` (create) | Schema validation: valid/invalid crud configs, required fields, strict mode.           |
+| `src/ui/presets/__tests__/expand.test.ts` (create)  | `expandPreset()` with each preset name, unknown preset error, schema validation error. |
+| `src/ui/manifest/__tests__/compiler.test.ts`        | Add test: manifest with `preset: "crud"` compiles to valid routes.                     |
 
 ### Exit Criteria
 
@@ -570,6 +683,7 @@ export interface ActivityFeedDef {
 ```
 
 Update `DashboardPageOptions`:
+
 ```ts
 export interface DashboardPageOptions {
   title: string;
@@ -613,9 +727,13 @@ if (options.charts && options.charts.length > 0) {
 }
 
 // Activity feed — support both new and deprecated API
-const activityConfig = options.activityFeed ?? (options.recentActivity ? {
-  endpoint: options.recentActivity,
-} : undefined);
+const activityConfig =
+  options.activityFeed ??
+  (options.recentActivity
+    ? {
+        endpoint: options.recentActivity,
+      }
+    : undefined);
 
 if (activityConfig) {
   content.push({
@@ -637,55 +755,73 @@ if (activityConfig) {
 Add `dashboardPresetConfigSchema` to `src/ui/presets/schemas.ts`:
 
 ```ts
-export const dashboardPresetConfigSchema = z.object({
-  title: z.string().min(1),
-  stats: z.array(z.object({
-    label: z.string().min(1),
-    endpoint: z.string().min(1),
-    valueKey: z.string().min(1),
-    format: z.enum(["number", "currency", "percent"]).optional(),
-    trend: z.object({
-      key: z.string().min(1),
-      positive: z.enum(["up", "down"]).optional(),
-    }).optional(),
-    icon: z.string().optional(),
-  })).min(1),
-  charts: z.array(z.object({
-    variant: z.enum(["line", "bar", "area", "pie", "donut"]),
-    endpoint: z.string().min(1),
-    title: z.string().optional(),
-    series: z.array(z.object({
-      field: z.string().min(1),
-      label: z.string().optional(),
-      color: z.string().optional(),
-    })).optional(),
-    span: z.number().int().min(1).max(12).optional(),
-  })).optional(),
-  activityFeed: z.object({
-    endpoint: z.string().min(1),
-    limit: z.number().int().positive().optional(),
-    title: z.string().optional(),
-  }).optional(),
-  id: z.string().optional(),
-}).strict();
+export const dashboardPresetConfigSchema = z
+  .object({
+    title: z.string().min(1),
+    stats: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          endpoint: z.string().min(1),
+          valueKey: z.string().min(1),
+          format: z.enum(["number", "currency", "percent"]).optional(),
+          trend: z
+            .object({
+              key: z.string().min(1),
+              positive: z.enum(["up", "down"]).optional(),
+            })
+            .optional(),
+          icon: z.string().optional(),
+        }),
+      )
+      .min(1),
+    charts: z
+      .array(
+        z.object({
+          variant: z.enum(["line", "bar", "area", "pie", "donut"]),
+          endpoint: z.string().min(1),
+          title: z.string().optional(),
+          series: z
+            .array(
+              z.object({
+                field: z.string().min(1),
+                label: z.string().optional(),
+                color: z.string().optional(),
+              }),
+            )
+            .optional(),
+          span: z.number().int().min(1).max(12).optional(),
+        }),
+      )
+      .optional(),
+    activityFeed: z
+      .object({
+        endpoint: z.string().min(1),
+        limit: z.number().int().positive().optional(),
+        title: z.string().optional(),
+      })
+      .optional(),
+    id: z.string().optional(),
+  })
+  .strict();
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                         |
+| ------ | -------------------------------------------------------------------------------------------- |
 | Modify | `src/ui/presets/types.ts` — add `ChartDef`, `ActivityFeedDef`, update `DashboardPageOptions` |
-| Modify | `src/ui/presets/dashboard-page.ts` — add chart row, update activity feed |
-| Modify | `src/ui/presets/schemas.ts` — add `dashboardPresetConfigSchema` |
-| Modify | `src/ui/presets/index.ts` — export new types |
-| Modify | `src/ui.ts` — export new types |
+| Modify | `src/ui/presets/dashboard-page.ts` — add chart row, update activity feed                     |
+| Modify | `src/ui/presets/schemas.ts` — add `dashboardPresetConfigSchema`                              |
+| Modify | `src/ui/presets/index.ts` — export new types                                                 |
+| Modify | `src/ui.ts` — export new types                                                               |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                              | What                                                                                                               |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `src/ui/presets/__tests__/dashboard-page.test.ts` | Add tests: charts row generation, chart span defaults, activity feed with limit, deprecated recentActivity compat. |
-| `src/ui/presets/__tests__/schemas.test.ts` | Add dashboard schema validation tests. |
+| `src/ui/presets/__tests__/schemas.test.ts`        | Add dashboard schema validation tests.                                                                             |
 
 ### Exit Criteria
 
@@ -770,7 +906,13 @@ function mapSection(section: SettingsSectionDef): Record<string, unknown> {
   const tab: Record<string, unknown> = {
     label: section.label,
     content: section.autoSave
-      ? [formConfig, { type: "save-indicator", id: `${slugify(section.label)}-save-status` }]
+      ? [
+          formConfig,
+          {
+            type: "save-indicator",
+            id: `${slugify(section.label)}-save-status`,
+          },
+        ]
       : [formConfig],
   };
 
@@ -785,44 +927,62 @@ function mapSection(section: SettingsSectionDef): Record<string, unknown> {
 Add `settingsPresetConfigSchema` to `src/ui/presets/schemas.ts`:
 
 ```ts
-export const settingsPresetConfigSchema = z.object({
-  title: z.string().min(1),
-  sections: z.array(z.object({
-    label: z.string().min(1),
-    submitEndpoint: z.string().min(1),
-    method: z.enum(["POST", "PUT", "PATCH"]).optional(),
-    dataEndpoint: z.string().optional(),
-    fields: z.array(z.object({
-      key: z.string().min(1),
-      type: z.enum(["text", "email", "password", "number", "select", "textarea", "toggle"]),
-      label: z.string().min(1),
-      required: z.boolean().optional(),
-      options: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
-      placeholder: z.string().optional(),
-    })),
-    submitLabel: z.string().optional(),
-    icon: z.string().optional(),
-    autoSave: z.boolean().optional(),
-    autoSaveDelay: z.number().int().positive().optional(),
-  })).min(1),
-  id: z.string().optional(),
-}).strict();
+export const settingsPresetConfigSchema = z
+  .object({
+    title: z.string().min(1),
+    sections: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          submitEndpoint: z.string().min(1),
+          method: z.enum(["POST", "PUT", "PATCH"]).optional(),
+          dataEndpoint: z.string().optional(),
+          fields: z.array(
+            z.object({
+              key: z.string().min(1),
+              type: z.enum([
+                "text",
+                "email",
+                "password",
+                "number",
+                "select",
+                "textarea",
+                "toggle",
+              ]),
+              label: z.string().min(1),
+              required: z.boolean().optional(),
+              options: z
+                .array(z.object({ label: z.string(), value: z.string() }))
+                .optional(),
+              placeholder: z.string().optional(),
+            }),
+          ),
+          submitLabel: z.string().optional(),
+          icon: z.string().optional(),
+          autoSave: z.boolean().optional(),
+          autoSaveDelay: z.number().int().positive().optional(),
+        }),
+      )
+      .min(1),
+    id: z.string().optional(),
+  })
+  .strict();
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
 | Modify | `src/ui/presets/types.ts` — add `autoSave`, `autoSaveDelay` to `SettingsSectionDef` |
-| Modify | `src/ui/presets/settings-page.ts` — auto-save mode in `mapSection()` |
-| Modify | `src/ui/presets/schemas.ts` — add `settingsPresetConfigSchema` |
+| Modify | `src/ui/presets/settings-page.ts` — auto-save mode in `mapSection()`                |
+| Modify | `src/ui/presets/schemas.ts` — add `settingsPresetConfigSchema`                      |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                             | What                                                                                                                   |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/presets/__tests__/settings-page.test.ts` | Add tests: auto-save section has no submitLabel, auto-save section has save-indicator, autoSaveDelay defaults to 1000. |
-| `src/ui/presets/__tests__/schemas.test.ts` | Add settings schema validation tests. |
+| `src/ui/presets/__tests__/schemas.test.ts`       | Add settings schema validation tests.                                                                                  |
 
 ### Exit Criteria
 
@@ -876,7 +1036,12 @@ export interface AuthBrandingDef {
  */
 export interface AuthPageOptions {
   /** Which auth screen to generate. */
-  screen: "login" | "register" | "forgot-password" | "reset-password" | "verify-email";
+  screen:
+    | "login"
+    | "register"
+    | "forgot-password"
+    | "reset-password"
+    | "verify-email";
   /** Branding configuration. */
   branding?: AuthBrandingDef;
   /** OAuth providers to show buttons for. */
@@ -905,7 +1070,10 @@ import type { PageConfig } from "../manifest/types";
 import type { AuthPageOptions } from "./types";
 
 function slugify(title: string): string {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /**
@@ -1003,10 +1171,25 @@ export function authPage(options: AuthPageOptions): PageConfig {
   };
 }
 
-function buildLoginForm(slug: string, options: AuthPageOptions): Record<string, unknown> {
+function buildLoginForm(
+  slug: string,
+  options: AuthPageOptions,
+): Record<string, unknown> {
   const fields: Record<string, unknown>[] = [
-    { name: "email", type: "email", label: "Email", required: true, placeholder: "you@example.com" },
-    { name: "password", type: "password", label: "Password", required: true, placeholder: "••••••••" },
+    {
+      name: "email",
+      type: "email",
+      label: "Email",
+      required: true,
+      placeholder: "you@example.com",
+    },
+    {
+      name: "password",
+      type: "password",
+      label: "Password",
+      required: true,
+      placeholder: "••••••••",
+    },
   ];
 
   const form: Record<string, unknown> = {
@@ -1028,27 +1211,46 @@ function buildLoginForm(slug: string, options: AuthPageOptions): Record<string, 
     children: [
       { type: "heading", text: "Sign In", level: 2, align: "center" },
       form,
-      ...(options.oauthProviders?.length ? [{
-        type: "oauth-buttons",
-        providers: options.oauthProviders,
-      }] : []),
-      ...(options.passkey ? [{
-        type: "passkey-button",
-        mode: "login",
-      }] : []),
+      ...(options.oauthProviders?.length
+        ? [
+            {
+              type: "oauth-buttons",
+              providers: options.oauthProviders,
+            },
+          ]
+        : []),
+      ...(options.passkey
+        ? [
+            {
+              type: "passkey-button",
+              mode: "login",
+            },
+          ]
+        : []),
       {
         type: "row",
         justify: "between",
         children: [
-          { type: "link", text: "Create account", href: options.redirects?.register ?? "/auth/register" },
-          { type: "link", text: "Forgot password?", href: options.redirects?.forgotPassword ?? "/auth/forgot-password" },
+          {
+            type: "link",
+            text: "Create account",
+            href: options.redirects?.register ?? "/auth/register",
+          },
+          {
+            type: "link",
+            text: "Forgot password?",
+            href: options.redirects?.forgotPassword ?? "/auth/forgot-password",
+          },
         ],
       },
     ],
   };
 }
 
-function buildRegisterForm(slug: string, options: AuthPageOptions): Record<string, unknown> {
+function buildRegisterForm(
+  slug: string,
+  options: AuthPageOptions,
+): Record<string, unknown> {
   return {
     type: "card",
     id: `${slug}-card`,
@@ -1061,34 +1263,62 @@ function buildRegisterForm(slug: string, options: AuthPageOptions): Record<strin
         method: "POST",
         fields: [
           { name: "email", type: "email", label: "Email", required: true },
-          { name: "password", type: "password", label: "Password", required: true },
-          { name: "confirmPassword", type: "password", label: "Confirm Password", required: true },
+          {
+            name: "password",
+            type: "password",
+            label: "Password",
+            required: true,
+          },
+          {
+            name: "confirmPassword",
+            type: "password",
+            label: "Confirm Password",
+            required: true,
+          },
         ],
         submitLabel: "Create Account",
-        onSuccess: { type: "navigate", path: options.redirects?.afterRegister ?? "/auth/verify-email" },
+        onSuccess: {
+          type: "navigate",
+          path: options.redirects?.afterRegister ?? "/auth/verify-email",
+        },
       },
-      ...(options.oauthProviders?.length ? [{
-        type: "oauth-buttons",
-        providers: options.oauthProviders,
-      }] : []),
+      ...(options.oauthProviders?.length
+        ? [
+            {
+              type: "oauth-buttons",
+              providers: options.oauthProviders,
+            },
+          ]
+        : []),
       {
         type: "row",
         justify: "center",
         children: [
-          { type: "link", text: "Already have an account? Sign in", href: options.redirects?.login ?? "/auth/login" },
+          {
+            type: "link",
+            text: "Already have an account? Sign in",
+            href: options.redirects?.login ?? "/auth/login",
+          },
         ],
       },
     ],
   };
 }
 
-function buildForgotPasswordForm(slug: string, options: AuthPageOptions): Record<string, unknown> {
+function buildForgotPasswordForm(
+  slug: string,
+  options: AuthPageOptions,
+): Record<string, unknown> {
   return {
     type: "card",
     id: `${slug}-card`,
     children: [
       { type: "heading", text: "Forgot Password", level: 2, align: "center" },
-      { type: "text", text: "Enter your email address and we'll send you a reset link.", align: "center" },
+      {
+        type: "text",
+        text: "Enter your email address and we'll send you a reset link.",
+        align: "center",
+      },
       {
         type: "form",
         id: `${slug}-form`,
@@ -1098,20 +1328,31 @@ function buildForgotPasswordForm(slug: string, options: AuthPageOptions): Record
           { name: "email", type: "email", label: "Email", required: true },
         ],
         submitLabel: "Send Reset Link",
-        onSuccess: { type: "toast", message: "Reset link sent. Check your email.", variant: "success" },
+        onSuccess: {
+          type: "toast",
+          message: "Reset link sent. Check your email.",
+          variant: "success",
+        },
       },
       {
         type: "row",
         justify: "center",
         children: [
-          { type: "link", text: "Back to sign in", href: options.redirects?.login ?? "/auth/login" },
+          {
+            type: "link",
+            text: "Back to sign in",
+            href: options.redirects?.login ?? "/auth/login",
+          },
         ],
       },
     ],
   };
 }
 
-function buildResetPasswordForm(slug: string, _options: AuthPageOptions): Record<string, unknown> {
+function buildResetPasswordForm(
+  slug: string,
+  _options: AuthPageOptions,
+): Record<string, unknown> {
   return {
     type: "card",
     id: `${slug}-card`,
@@ -1123,8 +1364,18 @@ function buildResetPasswordForm(slug: string, _options: AuthPageOptions): Record
         submit: "auth:resetPassword",
         method: "POST",
         fields: [
-          { name: "password", type: "password", label: "New Password", required: true },
-          { name: "confirmPassword", type: "password", label: "Confirm Password", required: true },
+          {
+            name: "password",
+            type: "password",
+            label: "New Password",
+            required: true,
+          },
+          {
+            name: "confirmPassword",
+            type: "password",
+            label: "Confirm Password",
+            required: true,
+          },
         ],
         submitLabel: "Reset Password",
         onSuccess: { type: "navigate", path: "/auth/login" },
@@ -1133,13 +1384,20 @@ function buildResetPasswordForm(slug: string, _options: AuthPageOptions): Record
   };
 }
 
-function buildVerifyEmailForm(slug: string, _options: AuthPageOptions): Record<string, unknown> {
+function buildVerifyEmailForm(
+  slug: string,
+  _options: AuthPageOptions,
+): Record<string, unknown> {
   return {
     type: "card",
     id: `${slug}-card`,
     children: [
       { type: "heading", text: "Verify Your Email", level: 2, align: "center" },
-      { type: "text", text: "We've sent a verification email. Click the link in the email to verify your account.", align: "center" },
+      {
+        type: "text",
+        text: "We've sent a verification email. Click the link in the email to verify your account.",
+        align: "center",
+      },
       {
         type: "button",
         label: "Resend Verification Email",
@@ -1148,7 +1406,11 @@ function buildVerifyEmailForm(slug: string, _options: AuthPageOptions): Record<s
           type: "api",
           method: "POST",
           endpoint: "auth:resendVerification",
-          onSuccess: { type: "toast", message: "Verification email sent.", variant: "success" },
+          onSuccess: {
+            type: "toast",
+            message: "Verification email sent.",
+            variant: "success",
+          },
         },
       },
     ],
@@ -1159,48 +1421,62 @@ function buildVerifyEmailForm(slug: string, _options: AuthPageOptions): Record<s
 Add `authPresetConfigSchema` to `src/ui/presets/schemas.ts`:
 
 ```ts
-export const authPresetConfigSchema = z.object({
-  screen: z.enum(["login", "register", "forgot-password", "reset-password", "verify-email"]),
-  branding: z.object({
-    logo: z.string().optional(),
-    appName: z.string().optional(),
-    tagline: z.string().optional(),
-    background: z.object({
-      image: z.string().optional(),
-      color: z.string().optional(),
-      position: z.string().optional(),
-    }).optional(),
-  }).optional(),
-  oauthProviders: z.array(z.string()).optional(),
-  passkey: z.boolean().optional(),
-  redirects: z.object({
-    afterLogin: z.string().optional(),
-    afterRegister: z.string().optional(),
-    forgotPassword: z.string().optional(),
-    login: z.string().optional(),
-    register: z.string().optional(),
-  }).optional(),
-  id: z.string().optional(),
-}).strict();
+export const authPresetConfigSchema = z
+  .object({
+    screen: z.enum([
+      "login",
+      "register",
+      "forgot-password",
+      "reset-password",
+      "verify-email",
+    ]),
+    branding: z
+      .object({
+        logo: z.string().optional(),
+        appName: z.string().optional(),
+        tagline: z.string().optional(),
+        background: z
+          .object({
+            image: z.string().optional(),
+            color: z.string().optional(),
+            position: z.string().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+    oauthProviders: z.array(z.string()).optional(),
+    passkey: z.boolean().optional(),
+    redirects: z
+      .object({
+        afterLogin: z.string().optional(),
+        afterRegister: z.string().optional(),
+        forgotPassword: z.string().optional(),
+        login: z.string().optional(),
+        register: z.string().optional(),
+      })
+      .optional(),
+    id: z.string().optional(),
+  })
+  .strict();
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/presets/auth-page.ts` |
-| Modify | `src/ui/presets/types.ts` — add `AuthBrandingDef`, `AuthPageOptions` |
-| Modify | `src/ui/presets/schemas.ts` — add `authPresetConfigSchema` |
-| Modify | `src/ui/presets/expand.ts` — register auth preset |
-| Modify | `src/ui/presets/index.ts` — export `authPage` + types |
+| Action | Path                                                                  |
+| ------ | --------------------------------------------------------------------- |
+| Create | `src/ui/presets/auth-page.ts`                                         |
+| Modify | `src/ui/presets/types.ts` — add `AuthBrandingDef`, `AuthPageOptions`  |
+| Modify | `src/ui/presets/schemas.ts` — add `authPresetConfigSchema`            |
+| Modify | `src/ui/presets/expand.ts` — register auth preset                     |
+| Modify | `src/ui/presets/index.ts` — export `authPage` + types                 |
 | Modify | `src/ui.ts` — export `authPage`, `AuthPageOptions`, `AuthBrandingDef` |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                  | What                                                                                                                                                              |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/presets/__tests__/auth-page.test.ts` (create) | Tests: each screen variant generates valid PageConfig, branding props propagate, OAuth buttons included when configured, passkey button included, redirect paths. |
-| `src/ui/presets/__tests__/schemas.test.ts` | Add auth schema validation tests. |
+| `src/ui/presets/__tests__/schemas.test.ts`            | Add auth schema validation tests.                                                                                                                                 |
 
 ### Exit Criteria
 
@@ -1225,12 +1501,12 @@ Single track — **Presets**. All phases modify the same file set.
 
 ### Internal Sequencing
 
-| Phase | Depends On | Why |
-|---|---|---|
-| I.1 | Nothing | Creates the preset expansion infrastructure (schemas.ts, expand.ts, compiler wiring) |
-| I.2 | I.1 | Uses schemas.ts and expand.ts infrastructure |
-| I.3 | I.1 | Uses schemas.ts and expand.ts infrastructure |
-| I.4 | I.1 | Uses schemas.ts and expand.ts infrastructure |
+| Phase | Depends On | Why                                                                                  |
+| ----- | ---------- | ------------------------------------------------------------------------------------ |
+| I.1   | Nothing    | Creates the preset expansion infrastructure (schemas.ts, expand.ts, compiler wiring) |
+| I.2   | I.1        | Uses schemas.ts and expand.ts infrastructure                                         |
+| I.3   | I.1        | Uses schemas.ts and expand.ts infrastructure                                         |
+| I.4   | I.1        | Uses schemas.ts and expand.ts infrastructure                                         |
 
 I.2, I.3, and I.4 could run in parallel after I.1, but since they modify the same files
 (`schemas.ts`, `expand.ts`, `index.ts`, `types.ts`), sequential execution is safer.

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Fragment,
@@ -201,7 +201,8 @@ function NavEntryBase({
   const isVisible = item.visible !== false;
   if (!isVisible) return null;
 
-  const isActive = item.active ?? (item.path ? matchesPath(currentPath, item.path) : false);
+  const isActive =
+    item.active ?? (item.path ? matchesPath(currentPath, item.path) : false);
   const hasChildren = Boolean(item.children?.length);
   const itemId = item.path ? `${rootId}-${item.path}` : rootId;
 
@@ -212,7 +213,8 @@ function NavEntryBase({
       overflow: "hidden",
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
-      transition: "opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      transition:
+        "opacity var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
       ...(collapsed ? { opacity: 0, width: 0, overflow: "hidden" } : {}),
     },
     componentSurface: slots?.itemLabel,
@@ -229,7 +231,8 @@ function NavEntryBase({
       color: isActive
         ? "var(--sn-color-primary, #2563eb)"
         : "var(--sn-color-muted-foreground, #6b7280)",
-      transition: "color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+      transition:
+        "color var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
     },
     componentSurface: slots?.itemIcon,
   });
@@ -243,7 +246,8 @@ function NavEntryBase({
       height: "1.25rem",
       padding: "0 var(--sn-spacing-xs, 0.25rem)",
       borderRadius: "var(--sn-radius-full, 9999px)",
-      background: "color-mix(in oklch, var(--sn-color-primary, #2563eb) 14%, var(--sn-color-card, #ffffff))",
+      background:
+        "color-mix(in oklch, var(--sn-color-primary, #2563eb) 14%, var(--sn-color-card, #ffffff))",
       color: "var(--sn-color-primary, #2563eb)",
       fontSize: "var(--sn-font-size-xs, 0.75rem)",
       fontWeight: "var(--sn-font-weight-semibold, 600)" as any,
@@ -266,7 +270,13 @@ function NavEntryBase({
         surfaceId={`${itemId}-button`}
         surfaceConfig={slots?.item}
         activeStates={isActive ? ["current"] : []}
-        style={depth > 0 ? { paddingLeft: `calc(var(--sn-spacing-sm, 0.5rem) + ${depth} * var(--sn-spacing-md, 0.75rem))` } : undefined}
+        style={
+          depth > 0
+            ? {
+                paddingLeft: `calc(var(--sn-spacing-sm, 0.5rem) + ${depth} * var(--sn-spacing-md, 0.75rem))`,
+              }
+            : undefined
+        }
       >
         {item.icon ? (
           <span
@@ -300,7 +310,8 @@ function NavEntryBase({
             style={{
               display: "inline-flex",
               color: "var(--sn-color-muted-foreground, #6b7280)",
-              transition: "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
+              transition:
+                "transform var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease)",
             }}
           >
             {renderIcon("chevron-down", 14)}
@@ -461,7 +472,9 @@ export function NavBase({
           },
         },
     componentSurface:
-      className || style ? { className, style: style as Record<string, string | number> } : undefined,
+      className || style
+        ? { className, style: style as Record<string, string | number> }
+        : undefined,
     itemSurface: slots?.root,
   });
   const headerSurface = resolveSurfacePresentation({
@@ -474,9 +487,7 @@ export function NavBase({
         padding: isSidebar
           ? "var(--sn-spacing-xs, 0.25rem) var(--sn-spacing-2xs, 0.125rem)"
           : undefined,
-        marginBottom: isSidebar
-          ? "var(--sn-spacing-xs, 0.25rem)"
-          : undefined,
+        marginBottom: isSidebar ? "var(--sn-spacing-xs, 0.25rem)" : undefined,
         flexShrink: 0,
       },
     },
@@ -501,10 +512,15 @@ export function NavBase({
         className={headerSurface.className}
         style={headerSurface.style}
       >
-        {renderLogo
-          ? renderLogo(logo)
-          : <NavLogoBlock logo={logo} onNavigate={onNavigate} collapsed={isCollapsed} />
-        }
+        {renderLogo ? (
+          renderLogo(logo)
+        ) : (
+          <NavLogoBlock
+            logo={logo}
+            onNavigate={onNavigate}
+            collapsed={isCollapsed}
+          />
+        )}
         {isSidebar && collapsible ? (
           <ButtonControl
             variant="ghost"
@@ -513,7 +529,9 @@ export function NavBase({
             surfaceId={`${rootId}-toggle`}
             surfaceConfig={toggleSurface.resolvedConfigForWrapper}
             activeStates={isCollapsed ? ["active"] : []}
-            ariaLabel={isCollapsed ? "Expand navigation" : "Collapse navigation"}
+            ariaLabel={
+              isCollapsed ? "Expand navigation" : "Collapse navigation"
+            }
             style={{
               width: "var(--sn-nav-toggle-size, 1.75rem)",
               height: "var(--sn-nav-toggle-size, 1.75rem)",

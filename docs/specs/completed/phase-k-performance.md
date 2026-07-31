@@ -2,13 +2,13 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | K.1 | Virtual Lists — IntersectionObserver-based virtualization | Not started | Runtime |
-> | K.2 | Code Splitting by Route — Vite plugin auto-splits pages | Not started | Vite |
-> | K.3 | Image Optimization — lazy loading, placeholders, sizes | Not started | Components |
-> | K.4 | Resource Prefetching — start API calls before page renders | Not started | Runtime |
-> | K.5 | Suspense Boundaries — `suspense` prop on container components | Not started | Runtime |
+> | Phase | Title                                                         | Status      | Track      |
+> | ----- | ------------------------------------------------------------- | ----------- | ---------- |
+> | K.1   | Virtual Lists — IntersectionObserver-based virtualization     | Not started | Runtime    |
+> | K.2   | Code Splitting by Route — Vite plugin auto-splits pages       | Not started | Vite       |
+> | K.3   | Image Optimization — lazy loading, placeholders, sizes        | Not started | Components |
+> | K.4   | Resource Prefetching — start API calls before page renders    | Not started | Runtime    |
+> | K.5   | Suspense Boundaries — `suspense` prop on container components | Not started | Runtime    |
 >
 > **Priority:** P2 — required for production at scale, not blocking core features.
 > **Depends on:** Phase A (CSS Foundation), Phase B (Layout).
@@ -51,35 +51,35 @@ scale (< 100 items, < 10 pages), this works fine. At production scale:
 
 ### Data Table (NO virtualization)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/data/data-table/component.tsx` | ~600 | Renders all rows. Uses `useComponentData` for data fetching. Pagination is client-side offset. No IntersectionObserver. |
-| `src/ui/components/data/data-table/schema.ts` | ~100 | `dataTableConfigSchema`: columns, pagination, actions, searchable, emptyMessage. No `virtualize` prop. |
+| File                                              | Lines | What Exists                                                                                                             |
+| ------------------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/data/data-table/component.tsx` | ~600  | Renders all rows. Uses `useComponentData` for data fetching. Pagination is client-side offset. No IntersectionObserver. |
+| `src/ui/components/data/data-table/schema.ts`     | ~100  | `dataTableConfigSchema`: columns, pagination, actions, searchable, emptyMessage. No `virtualize` prop.                  |
 
 ### Image Component (PARTIAL)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/media/image/schema.ts` | 59 | `snapshotImageSchema`: `src`, `width`, `height`, `quality`, `format`, `sizes`, `priority`, `placeholder` (blur/empty), `alt`. Has `sizes` but no `loading`. |
-| `src/ui/components/media/image/component.tsx` | ~120 | Renders `<img>` with optimization URL. Uses `loading="eager"` when `priority: true`, otherwise no `loading` attribute. |
+| File                                          | Lines | What Exists                                                                                                                                                 |
+| --------------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/media/image/schema.ts`     | 59    | `snapshotImageSchema`: `src`, `width`, `height`, `quality`, `format`, `sizes`, `priority`, `placeholder` (blur/empty), `alt`. Has `sizes` but no `loading`. |
+| `src/ui/components/media/image/component.tsx` | ~120  | Renders `<img>` with optimization URL. Uses `loading="eager"` when `priority: true`, otherwise no `loading` attribute.                                      |
 
 ### Vite Plugin (NO route-level code splitting)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/vite/index.ts` | 995 | `snapshotApp()` creates a single virtual entry point. All component code is in one bundle. `snapshotSsr()` handles asset splitting for SSR but not route-level splitting for SPA. |
-| `src/vite/prefetch.ts` | ~140 | `buildPrefetchManifest()` maps file-system routes to JS/CSS chunks. This is for `<PrefetchLink>` asset prefetching, not API data prefetching. |
+| File                   | Lines | What Exists                                                                                                                                                                       |
+| ---------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/vite/index.ts`    | 995   | `snapshotApp()` creates a single virtual entry point. All component code is in one bundle. `snapshotSsr()` handles asset splitting for SSR but not route-level splitting for SPA. |
+| `src/vite/prefetch.ts` | ~140  | `buildPrefetchManifest()` maps file-system routes to JS/CSS chunks. This is for `<PrefetchLink>` asset prefetching, not API data prefetching.                                     |
 
 ### Route Config (NO prefetch)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/manifest/schema.ts` (routeConfigSchema) | ~50 | Route config has `enter`, `leave`, `guard`, `preload`. `preload` accepts endpoint targets for TanStack Query prefetching. No `prefetch` for pre-navigation API calls. |
+| File                                            | Lines | What Exists                                                                                                                                                           |
+| ----------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/schema.ts` (routeConfigSchema) | ~50   | Route config has `enter`, `leave`, `guard`, `preload`. `preload` accepts endpoint targets for TanStack Query prefetching. No `prefetch` for pre-navigation API calls. |
 
 ### Suspense (NO manifest support)
 
-| File | What |
-|---|---|
+| File                                            | What                                                         |
+| ----------------------------------------------- | ------------------------------------------------------------ |
 | `src/ui/components/_base/component-wrapper.tsx` | Wraps components in an error boundary. No Suspense boundary. |
 
 ---
@@ -98,17 +98,17 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/components/data/data-table/component.tsx` | DataTable component | ~600 |
-| `src/ui/components/data/data-table/schema.ts` | DataTable schema | ~100 |
-| `src/ui/components/media/image/schema.ts` | Image schema | 59 |
-| `src/ui/components/media/image/component.tsx` | Image component | ~120 |
-| `src/vite/index.ts` | Vite plugin | 995 |
-| `src/vite/prefetch.ts` | Prefetch manifest builder | ~140 |
-| `src/ui/manifest/schema.ts` | All manifest schemas | ~1400 |
-| `src/ui/manifest/compiler.ts` | `compileManifest()` | ~600 |
-| `src/ui/components/_base/component-wrapper.tsx` | ComponentWrapper | 181 |
+| Path                                              | What                      | Lines |
+| ------------------------------------------------- | ------------------------- | ----- |
+| `src/ui/components/data/data-table/component.tsx` | DataTable component       | ~600  |
+| `src/ui/components/data/data-table/schema.ts`     | DataTable schema          | ~100  |
+| `src/ui/components/media/image/schema.ts`         | Image schema              | 59    |
+| `src/ui/components/media/image/component.tsx`     | Image component           | ~120  |
+| `src/vite/index.ts`                               | Vite plugin               | 995   |
+| `src/vite/prefetch.ts`                            | Prefetch manifest builder | ~140  |
+| `src/ui/manifest/schema.ts`                       | All manifest schemas      | ~1400 |
+| `src/ui/manifest/compiler.ts`                     | `compileManifest()`       | ~600  |
+| `src/ui/components/_base/component-wrapper.tsx`   | ComponentWrapper          | 181   |
 
 ---
 
@@ -157,7 +157,7 @@ virtualize: z.union([
 **1. Create `src/ui/hooks/use-virtual-list.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
@@ -194,7 +194,9 @@ export interface UseVirtualListResult {
  * @param options - Virtualization configuration
  * @returns Virtual list state for rendering
  */
-export function useVirtualList(options: UseVirtualListOptions): UseVirtualListResult {
+export function useVirtualList(
+  options: UseVirtualListOptions,
+): UseVirtualListResult {
   const { totalCount, itemHeight, overscan } = options;
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
@@ -309,13 +311,13 @@ if (virtualConfig) {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/hooks/use-virtual-list.ts` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `virtualize` prop |
-| Modify | `src/ui/components/data/data-table/component.tsx` — virtual rendering path |
+| Action | Path                                                                         |
+| ------ | ---------------------------------------------------------------------------- |
+| Create | `src/ui/hooks/use-virtual-list.ts`                                           |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `virtualize` prop        |
+| Modify | `src/ui/components/data/data-table/component.tsx` — virtual rendering path   |
 | Modify | `src/ui/components/data/data-table/types.ts` — update `DataTableConfig` type |
-| Modify | `src/ui.ts` — export `useVirtualList` hook and types |
+| Modify | `src/ui.ts` — export `useVirtualList` hook and types                         |
 
 ### Documentation Impact
 
@@ -324,17 +326,17 @@ if (virtualConfig) {
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/hooks/__tests__/use-virtual-list.test.ts` (create) | Tests: calculates correct start/end indices, overscan extends range, empty list returns empty indices, respects container height. |
-| `src/ui/components/data/data-table/__tests__/schema.test.ts` | Add tests: `virtualize: true` accepted, `virtualize: { itemHeight: 60 }` accepted, defaults correct. |
+| File                                                         | What                                                                                                                              |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/hooks/__tests__/use-virtual-list.test.ts` (create)   | Tests: calculates correct start/end indices, overscan extends range, empty list returns empty indices, respects container height. |
+| `src/ui/components/data/data-table/__tests__/schema.test.ts` | Add tests: `virtualize: true` accepted, `virtualize: { itemHeight: 60 }` accepted, defaults correct.                              |
 
 ### Exit Criteria
 
 - [ ] `{ "type": "data-table", "virtualize": true }` renders only visible rows.
 - [ ] `{ "virtualize": { "itemHeight": 60, "overscan": 10 } }` uses custom height and overscan.
 - [ ] Scrolling reveals additional rows dynamically.
-- [ ] Total scroll height matches total item count * item height.
+- [ ] Total scroll height matches total item count \* item height.
 - [ ] `virtualize` defaults to `undefined` (no virtualization — backwards compatible).
 - [ ] SSR render does not throw (IntersectionObserver/ResizeObserver in `useEffect` only).
 - [ ] `bun run typecheck` passes.
@@ -362,7 +364,10 @@ component types each page uses, and generates dynamic imports grouped by route.
 
 ```ts
 // In snapshotApp() plugin, load() hook:
-function generateLazyEntry(manifest: unknown, apiUrlExpression: string): string {
+function generateLazyEntry(
+  manifest: unknown,
+  apiUrlExpression: string,
+): string {
   // Parse manifest to find which component types are used per route
   const routes = extractRouteComponentTypes(manifest);
 
@@ -421,7 +426,8 @@ const loadedTypes = new Set<string>();
 
 const COMPONENT_LOADERS: Record<string, () => Promise<void>> = {
   "data-table": async () => {
-    const { dataTableConfigSchema } = await import("../components/data/data-table/schema");
+    const { dataTableConfigSchema } =
+      await import("../components/data/data-table/schema");
     const { DataTable } = await import("../components/data/data-table/index");
     registerComponent("data-table", DataTable);
     registerComponentSchema("data-table", dataTableConfigSchema);
@@ -445,19 +451,19 @@ export async function ensureComponentsLoaded(types: string[]): Promise<void> {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/lazy-registry.ts` |
-| Modify | `src/vite/index.ts` — generate lazy entry with route analysis |
-| Modify | `src/ui/manifest/app.tsx` — `lazyComponents` prop support |
+| Action | Path                                                                    |
+| ------ | ----------------------------------------------------------------------- |
+| Create | `src/ui/manifest/lazy-registry.ts`                                      |
+| Modify | `src/vite/index.ts` — generate lazy entry with route analysis           |
+| Modify | `src/ui/manifest/app.tsx` — `lazyComponents` prop support               |
 | Modify | `src/ui/manifest/types.ts` — add `lazyComponents` to `ManifestAppProps` |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                       | What                                                                                                                                            |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/lazy-registry.test.ts` (create) | Tests: `ensureComponentsLoaded(["data-table"])` registers the schema, calling twice does not double-register, unknown type is silently skipped. |
-| `src/vite/__tests__/plugin.test.ts` | Add test: `snapshotApp()` with manifest generates valid entry module. |
+| `src/vite/__tests__/plugin.test.ts`                        | Add test: `snapshotApp()` with manifest generates valid entry module.                                                                           |
 
 ### Exit Criteria
 
@@ -488,7 +494,9 @@ export const snapshotImageSchema = z.object({
   width: z.number().int().positive().max(4096),
   height: z.number().int().positive().max(4096).optional(),
   quality: z.number().int().min(1).max(100).default(75),
-  format: z.enum(["avif", "webp", "jpeg", "png", "original"]).default("original"),
+  format: z
+    .enum(["avif", "webp", "jpeg", "png", "original"])
+    .default("original"),
   sizes: z.string().optional(),
   priority: z.boolean().default(false),
   /**
@@ -558,7 +566,8 @@ return (
         width: "100%",
         height: "auto",
         opacity: loaded || config.placeholder === "empty" ? 1 : 0,
-        transition: "opacity var(--sn-duration-normal, 200ms) var(--sn-ease-default, ease)",
+        transition:
+          "opacity var(--sn-duration-normal, 200ms) var(--sn-ease-default, ease)",
       }}
     />
   </div>
@@ -569,26 +578,31 @@ return (
 
 ```css
 @keyframes snapshot-skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                             |
+| ------ | ------------------------------------------------------------------------------------------------ |
 | Modify | `src/ui/components/media/image/schema.ts` — add `loading`, `skeleton` placeholder, `aspectRatio` |
-| Modify | `src/ui/components/media/image/component.tsx` — lazy loading, skeleton placeholder |
-| Modify | `src/ui/components/media/image/types.ts` — type auto-updates |
-| Modify | `src/ui/tokens/resolve.ts` — add skeleton pulse keyframe |
+| Modify | `src/ui/components/media/image/component.tsx` — lazy loading, skeleton placeholder               |
+| Modify | `src/ui/components/media/image/types.ts` — type auto-updates                                     |
+| Modify | `src/ui/tokens/resolve.ts` — add skeleton pulse keyframe                                         |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/media/image/__tests__/schema.test.ts` | Add tests: `loading: "lazy"` accepted, `placeholder: "skeleton"` accepted, `aspectRatio` accepted, `loading` defaults correctly based on `priority`. |
-| `src/ui/components/media/image/__tests__/component.test.tsx` | Add tests: lazy image renders with `loading="lazy"`, skeleton placeholder shown before load, skeleton hidden after onLoad. |
+| File                                                         | What                                                                                                                                                 |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/media/image/__tests__/schema.test.ts`     | Add tests: `loading: "lazy"` accepted, `placeholder: "skeleton"` accepted, `aspectRatio` accepted, `loading` defaults correctly based on `priority`. |
+| `src/ui/components/media/image/__tests__/component.test.tsx` | Add tests: lazy image renders with `loading="lazy"`, skeleton placeholder shown before load, skeleton hidden after onLoad.                           |
 
 ### Exit Criteria
 
@@ -662,7 +676,7 @@ export interface CompiledRoute {
 **4. Create `src/ui/manifest/use-route-prefetch.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import type { EndpointTarget } from "./resources";
@@ -693,20 +707,20 @@ In the router integration, call `useRoutePrefetch(route.prefetch)` when a route 
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/use-route-prefetch.ts` |
-| Modify | `src/ui/manifest/schema.ts` — add `prefetch` to route schema |
-| Modify | `src/ui/manifest/compiler.ts` — include `prefetch` in compiled route |
-| Modify | `src/ui/manifest/types.ts` — add `prefetch` to `CompiledRoute` |
+| Action | Path                                                                      |
+| ------ | ------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/use-route-prefetch.ts`                                   |
+| Modify | `src/ui/manifest/schema.ts` — add `prefetch` to route schema              |
+| Modify | `src/ui/manifest/compiler.ts` — include `prefetch` in compiled route      |
+| Modify | `src/ui/manifest/types.ts` — add `prefetch` to `CompiledRoute`            |
 | Modify | `src/ui/manifest/runtime.tsx` — call `useRoutePrefetch` in route provider |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                         | What                                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------------------ |
 | `src/ui/manifest/__tests__/compiler.test.ts` | Add test: route with `prefetch: ["GET /api/users"]` compiles to route with prefetch. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add test: `prefetch` accepts endpoint target array. |
+| `src/ui/manifest/__tests__/schema.test.ts`   | Add test: `prefetch` accepts endpoint target array.                                  |
 
 ### Exit Criteria
 
@@ -752,7 +766,7 @@ suspense: suspenseFallbackSchema,
 **1. Create `src/ui/components/_base/suspense-wrapper.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import React, { Suspense } from "react";
 
@@ -768,9 +782,17 @@ interface SuspenseWrapperProps {
   children: React.ReactNode;
 }
 
-function SkeletonFallback({ variant, count }: { variant?: string; count?: number }) {
-  const items = count ?? (variant === "list" ? 5 : variant === "table" ? 10 : 1);
-  const height = variant === "card" ? "8rem" : variant === "table" ? "2.5rem" : "1rem";
+function SkeletonFallback({
+  variant,
+  count,
+}: {
+  variant?: string;
+  count?: number;
+}) {
+  const items =
+    count ?? (variant === "list" ? 5 : variant === "table" ? 10 : 1);
+  const height =
+    variant === "card" ? "8rem" : variant === "table" ? "2.5rem" : "1rem";
 
   return (
     <div
@@ -830,7 +852,9 @@ export function SuspenseWrapper({ config, children }: SuspenseWrapperProps) {
   let fallback: React.ReactNode;
   switch (config.type) {
     case "skeleton":
-      fallback = <SkeletonFallback variant={config.variant} count={config.count} />;
+      fallback = (
+        <SkeletonFallback variant={config.variant} count={config.count} />
+      );
       break;
     case "spinner":
       fallback = <SpinnerFallback />;
@@ -881,25 +905,27 @@ import { SuspenseWrapper } from "../../_base/suspense-wrapper";
 
 ```css
 @keyframes snapshot-spinner {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 ```
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/suspense-wrapper.tsx` |
+| Action | Path                                                                                            |
+| ------ | ----------------------------------------------------------------------------------------------- |
+| Create | `src/ui/components/_base/suspense-wrapper.tsx`                                                  |
 | Modify | `src/ui/manifest/schema.ts` — add `suspenseFallbackSchema`, add `suspense` to container schemas |
-| Modify | `src/ui/manifest/structural.tsx` — wrap children in SuspenseWrapper |
-| Modify | `src/ui/tokens/resolve.ts` — add spinner keyframe |
+| Modify | `src/ui/manifest/structural.tsx` — wrap children in SuspenseWrapper                             |
+| Modify | `src/ui/tokens/resolve.ts` — add spinner keyframe                                               |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                   | What                                                                                                                     |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `src/ui/components/_base/__tests__/suspense-wrapper.test.tsx` (create) | Tests: skeleton fallback renders correct number of items, spinner fallback renders, no config renders children directly. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add tests: `suspense` prop accepted on row/card/section/container/grid. |
+| `src/ui/manifest/__tests__/schema.test.ts`                             | Add tests: `suspense` prop accepted on row/card/section/container/grid.                                                  |
 
 ### Exit Criteria
 
@@ -920,11 +946,11 @@ import { SuspenseWrapper } from "../../_base/suspense-wrapper";
 
 Three independent tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| Runtime | K.1, K.4, K.5 | `src/ui/hooks/use-virtual-list.ts`, `src/ui/manifest/use-route-prefetch.ts`, `src/ui/components/_base/suspense-wrapper.tsx` |
-| Vite | K.2 | `src/vite/index.ts`, `src/ui/manifest/lazy-registry.ts` |
-| Components | K.3 | `src/ui/components/media/image/*` |
+| Track      | Phases        | Files Owned                                                                                                                 |
+| ---------- | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Runtime    | K.1, K.4, K.5 | `src/ui/hooks/use-virtual-list.ts`, `src/ui/manifest/use-route-prefetch.ts`, `src/ui/components/_base/suspense-wrapper.tsx` |
+| Vite       | K.2           | `src/vite/index.ts`, `src/ui/manifest/lazy-registry.ts`                                                                     |
+| Components | K.3           | `src/ui/components/media/image/*`                                                                                           |
 
 ### File Conflicts
 

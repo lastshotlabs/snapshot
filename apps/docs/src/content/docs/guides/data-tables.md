@@ -13,7 +13,11 @@ import { useQuery } from "@tanstack/react-query";
 const snap = createSnapshot({ apiUrl: "/api" });
 
 function UsersTable() {
-  const { data: users, isLoading, error } = useQuery<User[]>({
+  const {
+    data: users,
+    isLoading,
+    error,
+  } = useQuery<User[]>({
     queryKey: ["/users"],
     queryFn: () => snap.api.get("/users"),
   });
@@ -24,9 +28,16 @@ function UsersTable() {
       columns={[
         { field: "name", label: "Name", sortable: true },
         { field: "email", label: "Email" },
-        { field: "role", label: "Role", format: "badge", badgeColors: {
-          admin: "blue", member: "gray", owner: "green",
-        }},
+        {
+          field: "role",
+          label: "Role",
+          format: "badge",
+          badgeColors: {
+            admin: "blue",
+            member: "gray",
+            owner: "green",
+          },
+        },
         { field: "createdAt", label: "Joined", format: "date" },
       ]}
       rows={users ?? []}
@@ -34,11 +45,16 @@ function UsersTable() {
       error={error?.message}
       emptyMessage="No users found"
       sort={sort}
-      onSortChange={(col) => setSort((prev) =>
-        prev.column === col
-          ? { column: col, direction: prev.direction === "asc" ? "desc" : "asc" }
-          : { column: col, direction: "asc" }
-      )}
+      onSortChange={(col) =>
+        setSort((prev) =>
+          prev.column === col
+            ? {
+                column: col,
+                direction: prev.direction === "asc" ? "desc" : "asc",
+              }
+            : { column: col, direction: "asc" },
+        )
+      }
       hoverable
       striped
     />
@@ -56,14 +72,38 @@ Feature-rich data table with sorting, pagination, search, selection, and row act
 const columns = [
   { field: "name", label: "Name", sortable: true },
   { field: "email", label: "Email" },
-  { field: "amount", label: "Amount", format: "currency", prefix: "$", divisor: 100 },
-  { field: "status", label: "Status", format: "badge", badgeColors: {
-    active: "green", inactive: "gray", suspended: "red",
-  }},
-  { field: "avatar", label: "", format: "avatar", avatarField: "avatarUrl", width: "48px" },
+  {
+    field: "amount",
+    label: "Amount",
+    format: "currency",
+    prefix: "$",
+    divisor: 100,
+  },
+  {
+    field: "status",
+    label: "Status",
+    format: "badge",
+    badgeColors: {
+      active: "green",
+      inactive: "gray",
+      suspended: "red",
+    },
+  },
+  {
+    field: "avatar",
+    label: "",
+    format: "avatar",
+    avatarField: "avatarUrl",
+    width: "48px",
+  },
   { field: "verified", label: "Verified", format: "boolean" },
   { field: "progress", label: "Progress", format: "progress" },
-  { field: "website", label: "Website", format: "link", linkTextField: "websiteLabel" },
+  {
+    field: "website",
+    label: "Website",
+    format: "link",
+    linkTextField: "websiteLabel",
+  },
 ];
 ```
 
@@ -115,13 +155,20 @@ const [selected, setSelected] = useState(new Set());
     });
   }}
   onToggleAll={(allIds) => {
-    setSelected((prev) => prev.size === allIds.length ? new Set() : new Set(allIds));
+    setSelected((prev) =>
+      prev.size === allIds.length ? new Set() : new Set(allIds),
+    );
   }}
   bulkActions={[
-    { label: "Delete", icon: "trash", variant: "destructive", onAction: (ids) => deleteMany(ids) },
+    {
+      label: "Delete",
+      icon: "trash",
+      variant: "destructive",
+      onAction: (ids) => deleteMany(ids),
+    },
     { label: "Export", icon: "download", onAction: (ids) => exportCsv(ids) },
   ]}
-/>
+/>;
 ```
 
 ### Row actions
@@ -132,7 +179,12 @@ const [selected, setSelected] = useState(new Set());
   rows={users}
   rowActions={[
     { label: "Edit", icon: "edit", onAction: (row) => openEdit(row) },
-    { label: "Delete", icon: "trash", variant: "destructive", onAction: (row) => deleteUser(row.id) },
+    {
+      label: "Delete",
+      icon: "trash",
+      variant: "destructive",
+      onAction: (row) => deleteUser(row.id),
+    },
   ]}
 />
 ```
@@ -159,8 +211,17 @@ You can also provide custom content for each state:
   rows={data ?? []}
   isLoading={isFetching}
   loadingContent={<p>Fetching users...</p>}
-  errorContent={<p>Something went wrong. <button onClick={refetch}>Try again</button></p>}
-  emptyContent={<p>No users match your filters. <button onClick={clearFilters}>Clear filters</button></p>}
+  errorContent={
+    <p>
+      Something went wrong. <button onClick={refetch}>Try again</button>
+    </p>
+  }
+  emptyContent={
+    <p>
+      No users match your filters.{" "}
+      <button onClick={clearFilters}>Clear filters</button>
+    </p>
+  }
 />
 ```
 
@@ -170,7 +231,12 @@ The most common real-world pattern: a table that fetches pages from the server w
 
 ```tsx
 import {
-  DataTableBase, FilterBarBase, ColumnBase, RowBase, ButtonBase, SpacerBase,
+  DataTableBase,
+  FilterBarBase,
+  ColumnBase,
+  RowBase,
+  ButtonBase,
+  SpacerBase,
 } from "@lastshotlabs/snapshot/ui";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -188,7 +254,10 @@ function UsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
-  const [sort, setSort] = useState({ column: "name", direction: "asc" as "asc" | "desc" });
+  const [sort, setSort] = useState({
+    column: "name",
+    direction: "asc" as "asc" | "desc",
+  });
   const pageSize = 20;
 
   // Build query string from all state
@@ -202,8 +271,19 @@ function UsersPage() {
   });
 
   const url = `/users?${params}`;
-  const { data, isLoading, error, refetch } = useQuery<{ items: User[]; total: number }>({
-    queryKey: ["/users", page, pageSize, sort.column, sort.direction, search, filters],
+  const { data, isLoading, error, refetch } = useQuery<{
+    items: User[];
+    total: number;
+  }>({
+    queryKey: [
+      "/users",
+      page,
+      pageSize,
+      sort.column,
+      sort.direction,
+      search,
+      filters,
+    ],
     queryFn: () => snap.api.get(url),
   });
 
@@ -211,21 +291,34 @@ function UsersPage() {
     <ColumnBase gap="md">
       <RowBase justify="between" align="center">
         <h2>Users</h2>
-        <ButtonBase label="Refresh" icon="refresh-cw" variant="outline" onClick={() => refetch()} />
+        <ButtonBase
+          label="Refresh"
+          icon="refresh-cw"
+          variant="outline"
+          onClick={() => refetch()}
+        />
       </RowBase>
 
       <FilterBarBase
         showSearch
         searchPlaceholder="Search by name or email..."
         filters={[
-          { key: "role", label: "Role", options: [
-            { label: "Admin", value: "admin" },
-            { label: "Member", value: "member" },
-          ]},
-          { key: "status", label: "Status", options: [
-            { label: "Active", value: "active" },
-            { label: "Inactive", value: "inactive" },
-          ]},
+          {
+            key: "role",
+            label: "Role",
+            options: [
+              { label: "Admin", value: "admin" },
+              { label: "Member", value: "member" },
+            ],
+          },
+          {
+            key: "status",
+            label: "Status",
+            options: [
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+            ],
+          },
         ]}
         onChange={({ search: s, filters: f }) => {
           setSearch(s ?? "");
@@ -238,20 +331,40 @@ function UsersPage() {
         columns={[
           { field: "name", label: "Name", sortable: true },
           { field: "email", label: "Email", sortable: true },
-          { field: "role", label: "Role", format: "badge", badgeColors: { admin: "blue", member: "gray" } },
-          { field: "status", label: "Status", format: "badge", badgeColors: { active: "green", inactive: "red" } },
-          { field: "createdAt", label: "Joined", format: "date", sortable: true },
+          {
+            field: "role",
+            label: "Role",
+            format: "badge",
+            badgeColors: { admin: "blue", member: "gray" },
+          },
+          {
+            field: "status",
+            label: "Status",
+            format: "badge",
+            badgeColors: { active: "green", inactive: "red" },
+          },
+          {
+            field: "createdAt",
+            label: "Joined",
+            format: "date",
+            sortable: true,
+          },
         ]}
         rows={data?.items ?? []}
         isLoading={isLoading}
         error={error?.message}
         emptyMessage="No users match your filters"
         sort={sort}
-        onSortChange={(col) => setSort((prev) =>
-          prev.column === col
-            ? { column: col, direction: prev.direction === "asc" ? "desc" : "asc" }
-            : { column: col, direction: "asc" }
-        )}
+        onSortChange={(col) =>
+          setSort((prev) =>
+            prev.column === col
+              ? {
+                  column: col,
+                  direction: prev.direction === "asc" ? "desc" : "asc",
+                }
+              : { column: col, direction: "asc" },
+          )
+        }
         pagination={{
           currentPage: page,
           totalPages: Math.ceil((data?.total ?? 0) / pageSize),
@@ -262,8 +375,17 @@ function UsersPage() {
         hoverable
         striped
         rowActions={[
-          { label: "Edit", icon: "edit", onAction: (row) => openEdit(row as User) },
-          { label: "Delete", icon: "trash", variant: "destructive", onAction: (row) => confirmDelete(row as User) },
+          {
+            label: "Edit",
+            icon: "edit",
+            onAction: (row) => openEdit(row as User),
+          },
+          {
+            label: "Delete",
+            icon: "trash",
+            variant: "destructive",
+            onAction: (row) => confirmDelete(row as User),
+          },
         ]}
       />
     </ColumnBase>
@@ -282,13 +404,31 @@ import { ListBase } from "@lastshotlabs/snapshot/ui";
 
 <ListBase
   items={[
-    { id: "1", title: "Getting started", description: "Learn the basics", icon: "book" },
-    { id: "2", title: "API Reference", description: "Full API docs", icon: "code", badge: "New", badgeColor: "blue" },
-    { id: "3", title: "Examples", description: "Real-world examples", icon: "layout", href: "/examples" },
+    {
+      id: "1",
+      title: "Getting started",
+      description: "Learn the basics",
+      icon: "book",
+    },
+    {
+      id: "2",
+      title: "API Reference",
+      description: "Full API docs",
+      icon: "code",
+      badge: "New",
+      badgeColor: "blue",
+    },
+    {
+      id: "3",
+      title: "Examples",
+      description: "Real-world examples",
+      icon: "layout",
+      href: "/examples",
+    },
   ]}
   variant="bordered"
   divider
-/>
+/>;
 ```
 
 **Variants:** `default`, `bordered`, `card`
@@ -316,7 +456,7 @@ import { FeedBase } from "@lastshotlabs/snapshot/ui";
   itemActions={[
     { label: "Reply", icon: "reply", onAction: (item) => reply(item) },
   ]}
-/>
+/>;
 ```
 
 ## ChartBase
@@ -341,7 +481,7 @@ import { ChartBase } from "@lastshotlabs/snapshot/ui";
   height={300}
   legend
   grid
-/>
+/>;
 ```
 
 **Chart types:** `line`, `bar`, `area`, `pie`, `donut`, `radar`, `scatter`, `treemap`, `funnel`, `sparkline`
@@ -363,7 +503,7 @@ import { StatCardBase } from "@lastshotlabs/snapshot/ui";
     percentage: 12.5,
     sentiment: "positive",
   }}
-/>
+/>;
 ```
 
 ## FilterBarBase
@@ -377,20 +517,29 @@ import { FilterBarBase } from "@lastshotlabs/snapshot/ui";
   showSearch
   searchPlaceholder="Search users..."
   filters={[
-    { key: "role", label: "Role", options: [
-      { label: "Admin", value: "admin" },
-      { label: "Member", value: "member" },
-    ]},
-    { key: "status", label: "Status", multiple: true, options: [
-      { label: "Active", value: "active" },
-      { label: "Inactive", value: "inactive" },
-    ]},
+    {
+      key: "role",
+      label: "Role",
+      options: [
+        { label: "Admin", value: "admin" },
+        { label: "Member", value: "member" },
+      ],
+    },
+    {
+      key: "status",
+      label: "Status",
+      multiple: true,
+      options: [
+        { label: "Active", value: "active" },
+        { label: "Inactive", value: "inactive" },
+      ],
+    },
   ]}
   onChange={({ search, filters }) => {
     setQuery(search);
     setFilters(filters);
   }}
-/>
+/>;
 ```
 
 ## DetailCardBase
@@ -405,46 +554,60 @@ import { DetailCardBase } from "@lastshotlabs/snapshot/ui";
   data={user}
   fields={[
     { field: "name", label: "Name", value: user.name },
-    { field: "email", label: "Email", value: user.email, format: "email", copyable: true },
+    {
+      field: "email",
+      label: "Email",
+      value: user.email,
+      format: "email",
+      copyable: true,
+    },
     { field: "role", label: "Role", value: user.role, format: "badge" },
-    { field: "createdAt", label: "Joined", value: user.createdAt, format: "date" },
-    { field: "verified", label: "Verified", value: user.verified, format: "boolean" },
+    {
+      field: "createdAt",
+      label: "Joined",
+      value: user.createdAt,
+      format: "date",
+    },
+    {
+      field: "verified",
+      label: "Verified",
+      value: user.verified,
+      format: "boolean",
+    },
   ]}
-  actions={[
-    { label: "Edit", icon: "edit", onAction: () => openEdit(user) },
-  ]}
-/>
+  actions={[{ label: "Edit", icon: "edit", onAction: () => openEdit(user) }]}
+/>;
 ```
 
 **Field formats:** `text`, `boolean`, `date`, `datetime`, `number`, `currency`, `badge`, `email`, `url`, `link`, `image`, `list`
 
 ## All data components
 
-| Component | Description |
-|-----------|-------------|
-| `DataTableBase` | Full-featured data table |
-| `ListBase` | Vertical item list |
-| `FeedBase` | Activity feed with grouping |
-| `ChartBase` | 10 chart types |
-| `StatCardBase` | Single metric card |
-| `FilterBarBase` | Search and filter controls |
-| `DetailCardBase` | Formatted single-record display |
-| `EntityPickerBase` | Entity selection dropdown |
-| `AlertBase` | Alert/notification banners |
-| `BadgeBase` | Status badges |
-| `AvatarBase` | User avatars |
-| `AvatarGroupBase` | Stacked avatar group |
-| `TooltipBase` | Hover tooltips |
-| `ProgressBase` | Progress bars |
-| `SkeletonBase` | Loading placeholders |
-| `ScrollAreaBase` | Scrollable container |
-| `SeparatorBase` | Visual dividers |
-| `EmptyStateBase` | Empty state messages |
-| `HighlightedTextBase` | Text highlighting |
-| `NotificationBellBase` | Notification indicator |
-| `SaveIndicatorBase` | Save status indicator |
-| `FavoriteButtonBase` | Favorite toggle |
-| `VoteBase` | Upvote/downvote |
+| Component              | Description                     |
+| ---------------------- | ------------------------------- |
+| `DataTableBase`        | Full-featured data table        |
+| `ListBase`             | Vertical item list              |
+| `FeedBase`             | Activity feed with grouping     |
+| `ChartBase`            | 10 chart types                  |
+| `StatCardBase`         | Single metric card              |
+| `FilterBarBase`        | Search and filter controls      |
+| `DetailCardBase`       | Formatted single-record display |
+| `EntityPickerBase`     | Entity selection dropdown       |
+| `AlertBase`            | Alert/notification banners      |
+| `BadgeBase`            | Status badges                   |
+| `AvatarBase`           | User avatars                    |
+| `AvatarGroupBase`      | Stacked avatar group            |
+| `TooltipBase`          | Hover tooltips                  |
+| `ProgressBase`         | Progress bars                   |
+| `SkeletonBase`         | Loading placeholders            |
+| `ScrollAreaBase`       | Scrollable container            |
+| `SeparatorBase`        | Visual dividers                 |
+| `EmptyStateBase`       | Empty state messages            |
+| `HighlightedTextBase`  | Text highlighting               |
+| `NotificationBellBase` | Notification indicator          |
+| `SaveIndicatorBase`    | Save status indicator           |
+| `FavoriteButtonBase`   | Favorite toggle                 |
+| `VoteBase`             | Upvote/downvote                 |
 
 ## Next steps
 

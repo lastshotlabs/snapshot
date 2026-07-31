@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -100,7 +100,8 @@ export function AlertBase({
   }
 
   const colorToken = variantColor(variant);
-  const icon = iconProp === undefined ? (DEFAULT_ICONS[variant] ?? null) : iconProp;
+  const icon =
+    iconProp === undefined ? (DEFAULT_ICONS[variant] ?? null) : iconProp;
   const rootId = id ?? "alert";
 
   const rootSurface = resolveSurfacePresentation({

@@ -9,11 +9,24 @@ A complete admin dashboard with sidebar navigation, live KPI stats, a CRUD data 
 ```tsx
 import { createSnapshot } from "@lastshotlabs/snapshot";
 import {
-  LayoutBase, NavBase, NavUserMenuBase, ContainerBase,
-  GridBase, RowBase, ColumnBase, SpacerBase,
-  StatCardBase, DataTableBase, ButtonBase,
-  ModalBase, DrawerBase, ConfirmDialogBase,
-  InputField, SelectField, AlertBase, SkeletonBase,
+  LayoutBase,
+  NavBase,
+  NavUserMenuBase,
+  ContainerBase,
+  GridBase,
+  RowBase,
+  ColumnBase,
+  SpacerBase,
+  StatCardBase,
+  DataTableBase,
+  ButtonBase,
+  ModalBase,
+  DrawerBase,
+  ConfirmDialogBase,
+  InputField,
+  SelectField,
+  AlertBase,
+  SkeletonBase,
   resolveTokens,
 } from "@lastshotlabs/snapshot/ui";
 import { useState, useEffect } from "react";
@@ -88,7 +101,11 @@ export function AdminApp() {
               userName={user.name}
               userAvatar={user.avatarUrl}
               items={[
-                { label: "Profile", icon: "user", onClick: () => (window.location.href = "/profile") },
+                {
+                  label: "Profile",
+                  icon: "user",
+                  onClick: () => (window.location.href = "/profile"),
+                },
                 { label: "Sign out", icon: "log-out", onClick: () => logout() },
               ]}
             />
@@ -114,7 +131,9 @@ function StatsRow() {
   if (isLoading) {
     return (
       <GridBase columns={4} gap="md">
-        {[1, 2, 3, 4].map((i) => <SkeletonBase key={i} height="120px" />)}
+        {[1, 2, 3, 4].map((i) => (
+          <SkeletonBase key={i} height="120px" />
+        ))}
       </GridBase>
     );
   }
@@ -162,7 +181,8 @@ function StatsRow() {
           direction: (stats?.conversionTrend ?? 0) >= 0 ? "up" : "down",
           value: `${(stats?.conversionTrend ?? 0) >= 0 ? "+" : ""}${stats?.conversionTrend ?? 0}%`,
           percentage: Math.abs(stats?.conversionTrend ?? 0),
-          sentiment: (stats?.conversionTrend ?? 0) >= 0 ? "positive" : "neutral",
+          sentiment:
+            (stats?.conversionTrend ?? 0) >= 0 ? "positive" : "neutral",
         }}
       />
     </GridBase>
@@ -175,15 +195,20 @@ function UsersTable() {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState({ column: "name", direction: "asc" as "asc" | "desc" });
+  const [sort, setSort] = useState({
+    column: "name",
+    direction: "asc" as "asc" | "desc",
+  });
   const pageSize = 10;
 
   // Fetch users with server-side pagination, search, and sorting
   const url = `/users?page=${page}&pageSize=${pageSize}&search=${search}&sort=${sort.column}&order=${sort.direction}`;
-  const { data, isLoading, error } = useQuery<{ items: User[]; total: number }>({
-    queryKey: ["/users", page, pageSize, search, sort.column, sort.direction],
-    queryFn: () => snap.api.get(url),
-  });
+  const { data, isLoading, error } = useQuery<{ items: User[]; total: number }>(
+    {
+      queryKey: ["/users", page, pageSize, search, sort.column, sort.direction],
+      queryFn: () => snap.api.get(url),
+    },
+  );
 
   // Mutations
   const createMutation = useMutation({
@@ -215,17 +240,35 @@ function UsersTable() {
   const columns = [
     { field: "name" as const, label: "Name", sortable: true },
     { field: "email" as const, label: "Email", sortable: true },
-    { field: "role" as const, label: "Role", format: "badge" as const, badgeColors: { admin: "blue", member: "gray" } },
-    { field: "status" as const, label: "Status", format: "badge" as const, badgeColors: { active: "green", inactive: "red" } },
+    {
+      field: "role" as const,
+      label: "Role",
+      format: "badge" as const,
+      badgeColors: { admin: "blue", member: "gray" },
+    },
+    {
+      field: "status" as const,
+      label: "Status",
+      format: "badge" as const,
+      badgeColors: { active: "green", inactive: "red" },
+    },
   ];
 
   return (
     <>
-      {successMsg && <AlertBase severity="success" onClose={() => setSuccessMsg(null)}>{successMsg}</AlertBase>}
+      {successMsg && (
+        <AlertBase severity="success" onClose={() => setSuccessMsg(null)}>
+          {successMsg}
+        </AlertBase>
+      )}
 
       <RowBase justify="between" align="center">
         <h2>Users</h2>
-        <ButtonBase label="Add User" icon="plus" onClick={() => setCreateOpen(true)} />
+        <ButtonBase
+          label="Add User"
+          icon="plus"
+          onClick={() => setCreateOpen(true)}
+        />
       </RowBase>
       <SpacerBase size="md" />
 
@@ -239,11 +282,16 @@ function UsersTable() {
         search={search}
         onSearchChange={setSearch}
         sort={sort}
-        onSortChange={(col) => setSort((prev) =>
-          prev.column === col
-            ? { column: col, direction: prev.direction === "asc" ? "desc" : "asc" }
-            : { column: col, direction: "asc" }
-        )}
+        onSortChange={(col) =>
+          setSort((prev) =>
+            prev.column === col
+              ? {
+                  column: col,
+                  direction: prev.direction === "asc" ? "desc" : "asc",
+                }
+              : { column: col, direction: "asc" },
+          )
+        }
         pagination={{
           currentPage: page,
           totalPages: Math.ceil((data?.total ?? 0) / pageSize),
@@ -254,8 +302,17 @@ function UsersTable() {
         hoverable
         striped
         rowActions={[
-          { label: "Edit", icon: "edit", onAction: (row) => setEditUser(row as User) },
-          { label: "Delete", icon: "trash", variant: "destructive", onAction: (row) => setDeleteUser(row as User) },
+          {
+            label: "Edit",
+            icon: "edit",
+            onAction: (row) => setEditUser(row as User),
+          },
+          {
+            label: "Delete",
+            icon: "trash",
+            variant: "destructive",
+            onAction: (row) => setDeleteUser(row as User),
+          },
         ]}
       />
 
@@ -263,10 +320,16 @@ function UsersTable() {
       <UserFormModal
         title="Create User"
         open={createOpen}
-        onClose={() => { setCreateOpen(false); createMutation.reset(); }}
+        onClose={() => {
+          setCreateOpen(false);
+          createMutation.reset();
+        }}
         onSave={(user) => {
           createMutation.mutate(user, {
-            onSuccess: () => { setCreateOpen(false); showSuccess(`${user.name} created`); },
+            onSuccess: () => {
+              setCreateOpen(false);
+              showSuccess(`${user.name} created`);
+            },
           });
         }}
         isPending={createMutation.isPending}
@@ -276,10 +339,16 @@ function UsersTable() {
       {/* Edit Drawer */}
       <EditUserDrawer
         user={editUser}
-        onClose={() => { setEditUser(null); updateMutation.reset(); }}
+        onClose={() => {
+          setEditUser(null);
+          updateMutation.reset();
+        }}
         onSave={(updated) => {
           updateMutation.mutate(updated, {
-            onSuccess: () => { setEditUser(null); showSuccess(`${updated.name} updated`); },
+            onSuccess: () => {
+              setEditUser(null);
+              showSuccess(`${updated.name} updated`);
+            },
           });
         }}
         isPending={updateMutation.isPending}
@@ -291,7 +360,10 @@ function UsersTable() {
         title="Delete User"
         description={`Are you sure you want to delete ${deleteUser?.name}? This action cannot be undone.`}
         open={deleteUser !== null}
-        onClose={() => { setDeleteUser(null); deleteMutation.reset(); }}
+        onClose={() => {
+          setDeleteUser(null);
+          deleteMutation.reset();
+        }}
         onConfirm={() => {
           if (deleteUser) {
             const name = deleteUser.name;
@@ -310,7 +382,14 @@ function UsersTable() {
 
 // ── Create User Modal ─────────────────────────────────────────────────────
 
-function UserFormModal({ title, open, onClose, onSave, isPending, error }: {
+function UserFormModal({
+  title,
+  open,
+  onClose,
+  onSave,
+  isPending,
+  error,
+}: {
   title: string;
   open: boolean;
   onClose: () => void;
@@ -323,7 +402,9 @@ function UserFormModal({ title, open, onClose, onSave, isPending, error }: {
   const [role, setRole] = useState<"admin" | "member">("member");
 
   const handleClose = () => {
-    setName(""); setEmail(""); setRole("member");
+    setName("");
+    setEmail("");
+    setRole("member");
     onClose();
   };
 
@@ -344,12 +425,21 @@ function UserFormModal({ title, open, onClose, onSave, isPending, error }: {
       <ColumnBase gap="md">
         {error && <AlertBase severity="error">{error}</AlertBase>}
         <InputField label="Name" value={name} onChange={setName} required />
-        <InputField label="Email" type="email" value={email} onChange={setEmail} required />
+        <InputField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          required
+        />
         <SelectField
           label="Role"
           value={role}
           onChange={(v) => setRole(v as "admin" | "member")}
-          options={[{ label: "Admin", value: "admin" }, { label: "Member", value: "member" }]}
+          options={[
+            { label: "Admin", value: "admin" },
+            { label: "Member", value: "member" },
+          ]}
         />
       </ColumnBase>
     </ModalBase>
@@ -358,7 +448,13 @@ function UserFormModal({ title, open, onClose, onSave, isPending, error }: {
 
 // ── Edit User Drawer ──────────────────────────────────────────────────────
 
-function EditUserDrawer({ user, onClose, onSave, isPending, error }: {
+function EditUserDrawer({
+  user,
+  onClose,
+  onSave,
+  isPending,
+  error,
+}: {
   user: User | null;
   onClose: () => void;
   onSave: (user: User) => void;
@@ -380,12 +476,24 @@ function EditUserDrawer({ user, onClose, onSave, isPending, error }: {
       side="right"
       size="md"
       open={user !== null}
-      onClose={() => { setDraft(null); onClose(); }}
+      onClose={() => {
+        setDraft(null);
+        onClose();
+      }}
       footer={[
-        { label: "Cancel", variant: "outline", onClick: () => { setDraft(null); onClose(); } },
+        {
+          label: "Cancel",
+          variant: "outline",
+          onClick: () => {
+            setDraft(null);
+            onClose();
+          },
+        },
         {
           label: isPending ? "Saving..." : "Save",
-          onClick: () => { if (activeUser) onSave(activeUser); },
+          onClick: () => {
+            if (activeUser) onSave(activeUser);
+          },
           disabled: isPending,
         },
       ]}
@@ -393,19 +501,38 @@ function EditUserDrawer({ user, onClose, onSave, isPending, error }: {
       {activeUser && (
         <ColumnBase gap="md">
           {error && <AlertBase severity="error">{error}</AlertBase>}
-          <InputField label="Name" value={activeUser.name} onChange={(v) => setDraft({ ...activeUser, name: v })} />
-          <InputField label="Email" type="email" value={activeUser.email} onChange={(v) => setDraft({ ...activeUser, email: v })} />
+          <InputField
+            label="Name"
+            value={activeUser.name}
+            onChange={(v) => setDraft({ ...activeUser, name: v })}
+          />
+          <InputField
+            label="Email"
+            type="email"
+            value={activeUser.email}
+            onChange={(v) => setDraft({ ...activeUser, email: v })}
+          />
           <SelectField
             label="Role"
             value={activeUser.role}
-            onChange={(v) => setDraft({ ...activeUser, role: v as "admin" | "member" })}
-            options={[{ label: "Admin", value: "admin" }, { label: "Member", value: "member" }]}
+            onChange={(v) =>
+              setDraft({ ...activeUser, role: v as "admin" | "member" })
+            }
+            options={[
+              { label: "Admin", value: "admin" },
+              { label: "Member", value: "member" },
+            ]}
           />
           <SelectField
             label="Status"
             value={activeUser.status}
-            onChange={(v) => setDraft({ ...activeUser, status: v as "active" | "inactive" })}
-            options={[{ label: "Active", value: "active" }, { label: "Inactive", value: "inactive" }]}
+            onChange={(v) =>
+              setDraft({ ...activeUser, status: v as "active" | "inactive" })
+            }
+            options={[
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+            ]}
           />
         </ColumnBase>
       )}
@@ -430,13 +557,13 @@ function EditUserDrawer({ user, onClose, onSave, isPending, error }: {
 
 This recipe expects your Slingshot backend to expose:
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | `/stats/dashboard` | Returns `Stats` object |
-| GET | `/users?page=&pageSize=&search=&sort=&order=` | Returns `{ items: User[], total: number }` |
-| POST | `/users` | Creates a user, returns `User` |
-| PATCH | `/users/:id` | Updates a user, returns `User` |
-| DELETE | `/users/:id` | Deletes a user |
+| Method | Endpoint                                      | Purpose                                    |
+| ------ | --------------------------------------------- | ------------------------------------------ |
+| GET    | `/stats/dashboard`                            | Returns `Stats` object                     |
+| GET    | `/users?page=&pageSize=&search=&sort=&order=` | Returns `{ items: User[], total: number }` |
+| POST   | `/users`                                      | Creates a user, returns `User`             |
+| PATCH  | `/users/:id`                                  | Updates a user, returns `User`             |
+| DELETE | `/users/:id`                                  | Deletes a user                             |
 
 ## Related
 

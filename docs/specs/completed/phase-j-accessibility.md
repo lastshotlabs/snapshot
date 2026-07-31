@@ -2,14 +2,14 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | J.1 | Focus Management — trapping in modals/drawers | Not started | A11y |
-> | J.2 | Skip Links — manifest-driven skip navigation | Not started | A11y |
-> | J.3 | ARIA Labels — props on base component schema | Not started | A11y |
-> | J.4 | Reduced Motion — respect `prefers-reduced-motion` | Not started | A11y |
-> | J.5 | Color Contrast Warnings — dev-mode WCAG AA validator | Not started | A11y |
-> | J.6 | Live Regions — `ariaLive` for dynamic content | Not started | A11y |
+> | Phase | Title                                                | Status      | Track |
+> | ----- | ---------------------------------------------------- | ----------- | ----- |
+> | J.1   | Focus Management — trapping in modals/drawers        | Not started | A11y  |
+> | J.2   | Skip Links — manifest-driven skip navigation         | Not started | A11y  |
+> | J.3   | ARIA Labels — props on base component schema         | Not started | A11y  |
+> | J.4   | Reduced Motion — respect `prefers-reduced-motion`    | Not started | A11y  |
+> | J.5   | Color Contrast Warnings — dev-mode WCAG AA validator | Not started | A11y  |
+> | J.6   | Live Regions — `ariaLive` for dynamic content        | Not started | A11y  |
 >
 > **Priority:** P1 — required for production apps.
 > **Depends on:** Phase A (CSS Foundation), Phase D (Interactivity Engine).
@@ -57,39 +57,39 @@ gaps:
 
 ### Modal Accessibility (PARTIAL)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/overlay/modal/component.tsx` | 350 | `role="dialog"`, `aria-modal="true"`, `aria-label={title}`. Focus: `dialogRef.current.focus()` on open. Escape key handler. No focus trapping — Tab escapes. |
-| `src/ui/components/overlay/modal/schema.ts` | 58 | No `initialFocus`, `returnFocus`, or `trapFocus` props. |
-| `src/ui/components/overlay/drawer/component.tsx` | ~300 | Similar pattern — `role="dialog"`, `aria-modal`, focus on open, Escape closes. No trap. |
+| File                                             | Lines | What Exists                                                                                                                                                  |
+| ------------------------------------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/ui/components/overlay/modal/component.tsx`  | 350   | `role="dialog"`, `aria-modal="true"`, `aria-label={title}`. Focus: `dialogRef.current.focus()` on open. Escape key handler. No focus trapping — Tab escapes. |
+| `src/ui/components/overlay/modal/schema.ts`      | 58    | No `initialFocus`, `returnFocus`, or `trapFocus` props.                                                                                                      |
+| `src/ui/components/overlay/drawer/component.tsx` | ~300  | Similar pattern — `role="dialog"`, `aria-modal`, focus on open, Escape closes. No trap.                                                                      |
 
 ### Base Component Schema (NO a11y props)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/manifest/schema.ts:203-219` | 17 | `baseComponentConfigSchema`: `type`, `id`, `tokens`, `visibleWhen`, `visible`, `className`, `style`, `span`. No `ariaLabel`, `ariaDescribedBy`, `role`. |
+| File                                | Lines | What Exists                                                                                                                                             |
+| ----------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/schema.ts:203-219` | 17    | `baseComponentConfigSchema`: `type`, `id`, `tokens`, `visibleWhen`, `visible`, `className`, `style`, `span`. No `ariaLabel`, `ariaDescribedBy`, `role`. |
 
 ### ManifestApp (NO skip links)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/manifest/app.tsx` | 1764 | Renders providers, token CSS, framework CSS, router. No skip link injection. |
+| File                      | Lines | What Exists                                                                  |
+| ------------------------- | ----- | ---------------------------------------------------------------------------- |
+| `src/ui/manifest/app.tsx` | 1764  | Renders providers, token CSS, framework CSS, router. No skip link injection. |
 
 ### Animations (NO reduced motion)
 
-| File | What |
-|---|---|
-| `src/ui/components/overlay/modal/component.tsx` | Hardcoded 200ms scale/opacity transition. |
-| `src/ui/components/overlay/drawer/component.tsx` | Hardcoded slide transition. |
-| `src/ui/actions/toast.ts` | Toast slide-in animation. |
-| `src/ui/tokens/resolve.ts` | Generates `--sn-duration-*` and `--sn-ease-*` tokens. No reduced motion override. |
+| File                                             | What                                                                              |
+| ------------------------------------------------ | --------------------------------------------------------------------------------- |
+| `src/ui/components/overlay/modal/component.tsx`  | Hardcoded 200ms scale/opacity transition.                                         |
+| `src/ui/components/overlay/drawer/component.tsx` | Hardcoded slide transition.                                                       |
+| `src/ui/actions/toast.ts`                        | Toast slide-in animation.                                                         |
+| `src/ui/tokens/resolve.ts`                       | Generates `--sn-duration-*` and `--sn-ease-*` tokens. No reduced motion override. |
 
 ### Token System (NO contrast validation)
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/tokens/resolve.ts` | 957 | `resolveTokens()` generates CSS vars from theme config. No contrast checking. |
-| `src/ui/tokens/color.ts` | ~200 | Color conversion utilities (hex, hsl, oklch). Has oklch parsing but no contrast ratio calculation. |
+| File                       | Lines | What Exists                                                                                        |
+| -------------------------- | ----- | -------------------------------------------------------------------------------------------------- |
+| `src/ui/tokens/resolve.ts` | 957   | `resolveTokens()` generates CSS vars from theme config. No contrast checking.                      |
+| `src/ui/tokens/color.ts`   | ~200  | Color conversion utilities (hex, hsl, oklch). Has oklch parsing but no contrast ratio calculation. |
 
 ---
 
@@ -107,16 +107,16 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/components/overlay/modal/component.tsx` | Modal component | 350 |
-| `src/ui/components/overlay/modal/schema.ts` | Modal Zod schema | 58 |
-| `src/ui/components/overlay/drawer/component.tsx` | Drawer component | ~300 |
-| `src/ui/manifest/schema.ts` | All manifest schemas inc. `baseComponentConfigSchema` | ~1400 |
-| `src/ui/manifest/app.tsx` | `ManifestApp` root component | 1764 |
-| `src/ui/tokens/resolve.ts` | Token resolution + framework CSS | 957 |
-| `src/ui/tokens/color.ts` | Color conversion utilities | ~200 |
-| `src/ui/components/_base/component-wrapper.tsx` | ComponentWrapper | 181 |
+| Path                                             | What                                                  | Lines |
+| ------------------------------------------------ | ----------------------------------------------------- | ----- |
+| `src/ui/components/overlay/modal/component.tsx`  | Modal component                                       | 350   |
+| `src/ui/components/overlay/modal/schema.ts`      | Modal Zod schema                                      | 58    |
+| `src/ui/components/overlay/drawer/component.tsx` | Drawer component                                      | ~300  |
+| `src/ui/manifest/schema.ts`                      | All manifest schemas inc. `baseComponentConfigSchema` | ~1400 |
+| `src/ui/manifest/app.tsx`                        | `ManifestApp` root component                          | 1764  |
+| `src/ui/tokens/resolve.ts`                       | Token resolution + framework CSS                      | 957   |
+| `src/ui/tokens/color.ts`                         | Color conversion utilities                            | ~200  |
+| `src/ui/components/_base/component-wrapper.tsx`  | ComponentWrapper                                      | 181   |
 
 ---
 
@@ -172,18 +172,18 @@ export const modalConfigSchema = baseComponentConfigSchema.extend({
 **1. Create `src/ui/components/_base/use-focus-trap.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useRef, useCallback } from "react";
 
 const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
   '[tabindex]:not([tabindex="-1"])',
-].join(', ');
+].join(", ");
 
 interface UseFocusTrapOptions {
   /** Whether focus trapping is enabled. */
@@ -206,7 +206,9 @@ interface UseFocusTrapOptions {
  * - On open, focuses initialFocus target or first focusable element.
  * - On close, returns focus to previously focused element (if returnFocus).
  */
-export function useFocusTrap<T extends HTMLElement>(options: UseFocusTrapOptions) {
+export function useFocusTrap<T extends HTMLElement>(
+  options: UseFocusTrapOptions,
+) {
   const containerRef = useRef<T>(null);
   const previousFocusRef = useRef<Element | null>(null);
 
@@ -229,7 +231,8 @@ export function useFocusTrap<T extends HTMLElement>(options: UseFocusTrapOptions
     if (initialTarget) {
       initialTarget.focus();
     } else {
-      const firstFocusable = container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+      const firstFocusable =
+        container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
       if (firstFocusable) {
         firstFocusable.focus();
       } else {
@@ -240,7 +243,11 @@ export function useFocusTrap<T extends HTMLElement>(options: UseFocusTrapOptions
 
   // Return focus on close
   useEffect(() => {
-    if (!options.isOpen && options.returnFocus !== false && previousFocusRef.current) {
+    if (
+      !options.isOpen &&
+      options.returnFocus !== false &&
+      previousFocusRef.current
+    ) {
       const target = previousFocusRef.current as HTMLElement;
       if (typeof target.focus === "function") {
         target.focus();
@@ -256,7 +263,7 @@ export function useFocusTrap<T extends HTMLElement>(options: UseFocusTrapOptions
 
       const container = containerRef.current;
       const focusable = Array.from(
-        container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+        container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
       );
 
       if (focusable.length === 0) {
@@ -298,12 +305,13 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
   const [mounted, setMounted] = useState(false);
   const [animating, setAnimating] = useState(false);
 
-  const { containerRef: dialogRef, handleKeyDown: trapKeyDown } = useFocusTrap<HTMLDivElement>({
-    enabled: config.trapFocus !== false,
-    isOpen: isOpen && animating,
-    initialFocus: config.initialFocus,
-    returnFocus: config.returnFocus !== false,
-  });
+  const { containerRef: dialogRef, handleKeyDown: trapKeyDown } =
+    useFocusTrap<HTMLDivElement>({
+      enabled: config.trapFocus !== false,
+      isOpen: isOpen && animating,
+      initialFocus: config.initialFocus,
+      returnFocus: config.returnFocus !== false,
+    });
 
   // ... mount/unmount animation (unchanged) ...
 
@@ -329,13 +337,13 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/use-focus-trap.ts` |
+| Action | Path                                                                                         |
+| ------ | -------------------------------------------------------------------------------------------- |
+| Create | `src/ui/components/_base/use-focus-trap.ts`                                                  |
 | Modify | `src/ui/components/overlay/modal/schema.ts` — add `trapFocus`, `initialFocus`, `returnFocus` |
-| Modify | `src/ui/components/overlay/modal/component.tsx` — use `useFocusTrap` hook |
-| Modify | `src/ui/components/overlay/drawer/schema.ts` — add same props |
-| Modify | `src/ui/components/overlay/drawer/component.tsx` — use `useFocusTrap` hook |
+| Modify | `src/ui/components/overlay/modal/component.tsx` — use `useFocusTrap` hook                    |
+| Modify | `src/ui/components/overlay/drawer/schema.ts` — add same props                                |
+| Modify | `src/ui/components/overlay/drawer/component.tsx` — use `useFocusTrap` hook                   |
 
 ### Documentation Impact
 
@@ -344,11 +352,11 @@ export function ModalComponent({ config }: { config: ModalConfig }) {
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                | What                                                                                                                                               |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/use-focus-trap.test.ts` (create) | Tests: Tab cycles within container, Shift+Tab wraps backwards, initial focus targets selector, return focus on close, disabled mode does not trap. |
-| `src/ui/components/overlay/modal/__tests__/schema.test.ts` | Add tests: `trapFocus` defaults to true, `initialFocus` accepts selector string, `returnFocus` defaults to true. |
-| `src/ui/components/overlay/modal/__tests__/component.test.tsx` | Add test: Tab key does not escape modal when `trapFocus: true`. |
+| `src/ui/components/overlay/modal/__tests__/schema.test.ts`          | Add tests: `trapFocus` defaults to true, `initialFocus` accepts selector string, `returnFocus` defaults to true.                                   |
+| `src/ui/components/overlay/modal/__tests__/component.test.tsx`      | Add test: Tab key does not escape modal when `trapFocus: true`.                                                                                    |
 
 ### Exit Criteria
 
@@ -397,7 +405,7 @@ a11y: z.object({
 **1. Create `src/ui/components/_base/skip-links.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import React from "react";
 
@@ -487,9 +495,11 @@ Import and render `SkipLinks` at the top of the app tree, reading config from
 import { SkipLinks } from "../components/_base/skip-links";
 
 // Inside ManifestApp render, before the router:
-{compiled.app.a11y?.skipLinks && (
-  <SkipLinks links={compiled.app.a11y.skipLinks} />
-)}
+{
+  compiled.app.a11y?.skipLinks && (
+    <SkipLinks links={compiled.app.a11y.skipLinks} />
+  );
+}
 ```
 
 **3. Add `id="main-content"` to the page content wrapper** in the layout component
@@ -497,19 +507,19 @@ or page renderer so the default skip link target exists.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/skip-links.tsx` |
-| Modify | `src/ui/manifest/schema.ts` — add `a11y` to `appConfigSchema` |
-| Modify | `src/ui/manifest/app.tsx` — render `SkipLinks` |
+| Action | Path                                                                     |
+| ------ | ------------------------------------------------------------------------ |
+| Create | `src/ui/components/_base/skip-links.tsx`                                 |
+| Modify | `src/ui/manifest/schema.ts` — add `a11y` to `appConfigSchema`            |
+| Modify | `src/ui/manifest/app.tsx` — render `SkipLinks`                           |
 | Modify | `src/ui/manifest/renderer.tsx` — add `id="main-content"` to page wrapper |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                             | What                                                                                                                                              |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/skip-links.test.tsx` (create) | Tests: renders links with correct hrefs, links are visually hidden by default, clicking link focuses target element, empty array renders nothing. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add tests: `a11y.skipLinks` defaults, custom skip links accepted, `respectReducedMotion` defaults to true. |
+| `src/ui/manifest/__tests__/schema.test.ts`                       | Add tests: `a11y.skipLinks` defaults, custom skip links accepted, `respectReducedMotion` defaults to true.                                        |
 
 ### Exit Criteria
 
@@ -540,12 +550,14 @@ export const baseComponentConfigSchema = z.object({
   id: z.string().optional(),
   tokens: z.record(z.string()).optional(),
   visibleWhen: z.string().optional(),
-  visible: z.union([
-    z.boolean(),
-    responsiveSchema(z.boolean()),
-    fromRefSchema,
-    policyRefSchema,
-  ]).optional(),
+  visible: z
+    .union([
+      z.boolean(),
+      responsiveSchema(z.boolean()),
+      fromRefSchema,
+      policyRefSchema,
+    ])
+    .optional(),
   className: z.string().optional(),
   style: z.record(z.union([z.string(), z.number()])).optional(),
   span: responsiveSchema(z.number().int().min(1).max(12)).optional(),
@@ -575,17 +587,17 @@ Pass ARIA props through to the wrapper element:
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                    |
+| ------ | --------------------------------------------------------------------------------------- |
 | Modify | `src/ui/manifest/schema.ts` — add `ariaLabel`, `ariaDescribedBy`, `role` to base schema |
-| Modify | `src/ui/components/_base/component-wrapper.tsx` — pass ARIA props to wrapper div |
-| Modify | `src/ui/manifest/types.ts` — `BaseComponentConfig` type auto-updates via `z.infer` |
+| Modify | `src/ui/components/_base/component-wrapper.tsx` — pass ARIA props to wrapper div        |
+| Modify | `src/ui/manifest/types.ts` — `BaseComponentConfig` type auto-updates via `z.infer`      |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/manifest/__tests__/schema.test.ts` | Add tests: `ariaLabel` accepted as string, `ariaDescribedBy` accepted, `role` accepted, all optional. |
+| File                                                                              | What                                                                                                                    |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/manifest/__tests__/schema.test.ts`                                        | Add tests: `ariaLabel` accepted as string, `ariaDescribedBy` accepted, `role` accepted, all optional.                   |
 | `src/ui/components/_base/__tests__/component-wrapper.test.tsx` (create or modify) | Tests: `ariaLabel` renders as `aria-label`, `ariaDescribedBy` renders as `aria-describedby`, `role` renders on wrapper. |
 
 ### Exit Criteria
@@ -665,15 +677,15 @@ export function resolveFrameworkStyles(options?: {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/tokens/resolve.ts` — add reduced motion media query to framework styles |
+| Action | Path                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
+| Modify | `src/ui/tokens/resolve.ts` — add reduced motion media query to framework styles     |
 | Modify | `src/ui/manifest/app.tsx` — pass `respectReducedMotion` to `resolveFrameworkStyles` |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                      | What                                                                                                                         |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/tokens/__tests__/resolve.test.ts` | Add tests: framework styles include `@media (prefers-reduced-motion: reduce)` block, `respectReducedMotion: false` omits it. |
 
 ### Exit Criteria
@@ -729,7 +741,10 @@ export function contrastRatio(hex1: string, hex2: string): number {
 /**
  * Check if a contrast ratio meets WCAG AA requirements.
  */
-export function meetsWcagAA(ratio: number, isLargeText: boolean = false): boolean {
+export function meetsWcagAA(
+  ratio: number,
+  isLargeText: boolean = false,
+): boolean {
   return isLargeText ? ratio >= 3 : ratio >= 4.5;
 }
 ```
@@ -775,9 +790,9 @@ export function validateContrast(colors: ThemeColors): void {
       if (!meetsWcagAA(ratio)) {
         console.warn(
           `[snapshot a11y] Color contrast warning: "${bgName}" / "${fgName}" ` +
-          `has a contrast ratio of ${ratio.toFixed(2)}:1. ` +
-          `WCAG AA requires at least 4.5:1 for normal text. ` +
-          `Consider adjusting your theme colors.`
+            `has a contrast ratio of ${ratio.toFixed(2)}:1. ` +
+            `WCAG AA requires at least 4.5:1 for normal text. ` +
+            `Consider adjusting your theme colors.`,
         );
       }
     } catch {
@@ -800,18 +815,18 @@ if (import.meta.env?.DEV) {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                               |
+| ------ | ---------------------------------------------------------------------------------- |
 | Modify | `src/ui/tokens/color.ts` — add `relativeLuminance`, `contrastRatio`, `meetsWcagAA` |
-| Create | `src/ui/tokens/contrast-checker.ts` |
-| Modify | `src/ui/manifest/app.tsx` — call `validateContrast` in dev mode |
+| Create | `src/ui/tokens/contrast-checker.ts`                                                |
+| Modify | `src/ui/manifest/app.tsx` — call `validateContrast` in dev mode                    |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/tokens/__tests__/color.test.ts` | Add tests: `contrastRatio` returns correct values for known pairs, `meetsWcagAA` returns true/false correctly. |
-| `src/ui/tokens/__tests__/contrast-checker.test.ts` (create) | Tests: warns for low contrast pairs, does not warn for good contrast, does not run in production mode. |
+| File                                                        | What                                                                                                           |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `src/ui/tokens/__tests__/color.test.ts`                     | Add tests: `contrastRatio` returns correct values for known pairs, `meetsWcagAA` returns true/false correctly. |
+| `src/ui/tokens/__tests__/contrast-checker.test.ts` (create) | Tests: warns for low contrast pairs, does not warn for good contrast, does not run in production mode.         |
 
 ### Exit Criteria
 
@@ -868,20 +883,20 @@ ariaLive: z.enum(["polite", "assertive", "off"]).default("polite"),
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/manifest/schema.ts` — add `ariaLive` to `baseComponentConfigSchema` |
-| Modify | `src/ui/components/_base/component-wrapper.tsx` — pass `aria-live` prop |
-| Modify | `src/ui/components/data/stat-card/schema.ts` — default `ariaLive: "polite"` |
+| Action | Path                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
+| Modify | `src/ui/manifest/schema.ts` — add `ariaLive` to `baseComponentConfigSchema`         |
+| Modify | `src/ui/components/_base/component-wrapper.tsx` — pass `aria-live` prop             |
+| Modify | `src/ui/components/data/stat-card/schema.ts` — default `ariaLive: "polite"`         |
 | Modify | `src/ui/components/data/notification-bell/schema.ts` — default `ariaLive: "polite"` |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/manifest/__tests__/schema.test.ts` | Add tests: `ariaLive` accepts "polite", "assertive", "off"; optional. |
-| `src/ui/components/_base/__tests__/component-wrapper.test.tsx` | Add test: `ariaLive: "polite"` renders `aria-live="polite"`. |
-| `src/ui/components/data/stat-card/__tests__/schema.test.ts` | Verify stat-card defaults to `ariaLive: "polite"`. |
+| File                                                           | What                                                                  |
+| -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `src/ui/manifest/__tests__/schema.test.ts`                     | Add tests: `ariaLive` accepts "polite", "assertive", "off"; optional. |
+| `src/ui/components/_base/__tests__/component-wrapper.test.tsx` | Add test: `ariaLive: "polite"` renders `aria-live="polite"`.          |
+| `src/ui/components/data/stat-card/__tests__/schema.test.ts`    | Verify stat-card defaults to `ariaLive: "polite"`.                    |
 
 ### Exit Criteria
 
@@ -903,14 +918,14 @@ Single track — **A11y**. Most phases modify different files but J.3 and J.6 bo
 
 ### Internal Sequencing
 
-| Phase | Depends On | Why |
-|---|---|---|
-| J.1 | Nothing | Standalone — creates `use-focus-trap.ts`, modifies modal/drawer |
-| J.2 | Nothing | Standalone — creates `skip-links.tsx`, modifies app.tsx + schema |
-| J.3 | Nothing | Standalone — modifies base schema + component wrapper |
-| J.4 | Nothing | Standalone — modifies resolve.ts + app.tsx |
-| J.5 | Nothing | Standalone — creates contrast-checker.ts, modifies color.ts |
-| J.6 | J.3 | Must come after J.3 since both modify `baseComponentConfigSchema` |
+| Phase | Depends On | Why                                                               |
+| ----- | ---------- | ----------------------------------------------------------------- |
+| J.1   | Nothing    | Standalone — creates `use-focus-trap.ts`, modifies modal/drawer   |
+| J.2   | Nothing    | Standalone — creates `skip-links.tsx`, modifies app.tsx + schema  |
+| J.3   | Nothing    | Standalone — modifies base schema + component wrapper             |
+| J.4   | Nothing    | Standalone — modifies resolve.ts + app.tsx                        |
+| J.5   | Nothing    | Standalone — creates contrast-checker.ts, modifies color.ts       |
+| J.6   | J.3        | Must come after J.3 since both modify `baseComponentConfigSchema` |
 
 J.1 through J.5 can run in parallel. J.6 runs after J.3.
 

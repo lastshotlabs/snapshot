@@ -44,7 +44,13 @@ export function formatValue(
   format?: "number" | "currency" | "percent" | "compact" | "decimal",
   options: FormatValueOptions = {},
 ): string {
-  const { currency = "USD", decimals, prefix = "", suffix = "", divisor } = options;
+  const {
+    currency = "USD",
+    decimals,
+    prefix = "",
+    suffix = "",
+    divisor,
+  } = options;
   const adjustedValue = divisor && divisor !== 1 ? value / divisor : value;
 
   let formatted: string;

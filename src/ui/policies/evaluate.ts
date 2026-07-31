@@ -91,14 +91,16 @@ function evaluatePolicyExpression(
   if ("equals" in expression) {
     const [left, right] = expression.equals;
     return (
-      resolvePolicyOperand(left, context) === resolvePolicyOperand(right, context)
+      resolvePolicyOperand(left, context) ===
+      resolvePolicyOperand(right, context)
     );
   }
 
   if ("not-equals" in expression) {
     const [left, right] = expression["not-equals"];
     return (
-      resolvePolicyOperand(left, context) !== resolvePolicyOperand(right, context)
+      resolvePolicyOperand(left, context) !==
+      resolvePolicyOperand(right, context)
     );
   }
 

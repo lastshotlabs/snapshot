@@ -5,7 +5,9 @@ const failures: string[] = [];
 
 for (const component of componentDirectories) {
   if (!component.hasComponent) {
-    failures.push(`Missing standalone component entry for "${component.relativeDir}".`);
+    failures.push(
+      `Missing standalone component entry for "${component.relativeDir}".`,
+    );
   }
 }
 

@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Provider as JotaiProvider, createStore } from "jotai";
 import {
   resolveTokens,
@@ -17,10 +23,11 @@ import {
   CardBase,
   InputField,
 } from "@lastshotlabs/snapshot/ui";
-import { tokenStorage, queryClient as snapshotQueryClient } from "./lib/snapshot";
 import {
-  postApiGuestSession,
-} from "./api/guest";
+  tokenStorage,
+  queryClient as snapshotQueryClient,
+} from "./lib/snapshot";
+import { postApiGuestSession } from "./api/guest";
 import {
   getApiLibraryByKind,
   getApiLibraryByKindById,
@@ -32,9 +39,7 @@ import {
   postApiMatchesByIdStart,
   postApiMatchesByIdEnd,
 } from "./api/matches";
-import {
-  getApiJeopardyStatus,
-} from "./api/system";
+import { getApiJeopardyStatus } from "./api/system";
 import { TokenEditorSidebar } from "./token-editor";
 
 const initialCss = resolveTokens({ flavor: "neutral" });
@@ -75,7 +80,9 @@ function useGuestSession() {
       tokenStorage.clear();
     }
 
-    const name = localStorage.getItem("jeopardy_display_name") || `Player${Math.floor(Math.random() * 9000) + 1000}`;
+    const name =
+      localStorage.getItem("jeopardy_display_name") ||
+      `Player${Math.floor(Math.random() * 9000) + 1000}`;
     postApiGuestSession({ displayName: name })
       .then((res) => {
         const token = (res.session as Record<string, unknown>).token as string;
@@ -89,7 +96,12 @@ function useGuestSession() {
         });
       })
       .catch((err) => {
-        setSessionState({ userId: null, displayName: null, ready: false, error: String(err) });
+        setSessionState({
+          userId: null,
+          displayName: null,
+          ready: false,
+          error: String(err),
+        });
       });
   }, []);
 
@@ -109,85 +121,107 @@ function StatusBadge() {
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-      <BadgeBase
-        text={data.phase}
-        color="success"
-        variant="soft"
-        size="sm"
-      />
+      <BadgeBase text={data.phase} color="success" variant="soft" size="sm" />
     </div>
   );
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────
 
-function AppHeader({ darkMode, onToggleDark, displayName }: {
+function AppHeader({
+  darkMode,
+  onToggleDark,
+  displayName,
+}: {
   darkMode: boolean;
   onToggleDark: () => void;
   displayName: string | null;
 }) {
   return (
-    <header style={{
-      background: "var(--sn-color-card, #ffffff)",
-      borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
-      padding: "0 1.5rem",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      height: "64px",
-      position: "sticky",
-      top: 0,
-      zIndex: 10,
-    }}>
+    <header
+      style={{
+        background: "var(--sn-color-card, #ffffff)",
+        borderBottom: "1px solid var(--sn-color-border, #e5e7eb)",
+        padding: "0 1.5rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        height: "64px",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        <div style={{
-          width: "36px",
-          height: "36px",
-          borderRadius: "8px",
-          background: "var(--sn-color-primary, #2563eb)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "20px",
-        }}>🎯</div>
+        <div
+          style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "8px",
+            background: "var(--sn-color-primary, #2563eb)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "20px",
+          }}
+        >
+          🎯
+        </div>
         <div>
-          <div style={{
-            fontWeight: "700",
-            fontSize: "1.125rem",
-            color: "var(--sn-color-foreground, #111827)",
-            lineHeight: 1.1,
-          }}>Jeopardy</div>
-          <div style={{
-            fontSize: "0.6875rem",
-            color: "var(--sn-color-muted-foreground, #6b7280)",
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-          }}>Game Platform</div>
+          <div
+            style={{
+              fontWeight: "700",
+              fontSize: "1.125rem",
+              color: "var(--sn-color-foreground, #111827)",
+              lineHeight: 1.1,
+            }}
+          >
+            Jeopardy
+          </div>
+          <div
+            style={{
+              fontSize: "0.6875rem",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+            }}
+          >
+            Game Platform
+          </div>
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
         <StatusBadge />
         {displayName && (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}>
-            <div style={{
-              width: "30px",
-              height: "30px",
-              borderRadius: "50%",
-              background: "var(--sn-color-primary, #2563eb)",
-              color: "var(--sn-color-primary-foreground, #fff)",
+          <div
+            style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              fontSize: "0.75rem",
-              fontWeight: "700",
-            }}>
+              gap: "0.5rem",
+            }}
+          >
+            <div
+              style={{
+                width: "30px",
+                height: "30px",
+                borderRadius: "50%",
+                background: "var(--sn-color-primary, #2563eb)",
+                color: "var(--sn-color-primary-foreground, #fff)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "0.75rem",
+                fontWeight: "700",
+              }}
+            >
               {displayName.charAt(0).toUpperCase()}
             </div>
-            <span style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground, #6b7280)" }}>
+            <span
+              style={{
+                fontSize: "0.875rem",
+                color: "var(--sn-color-muted-foreground, #6b7280)",
+              }}
+            >
               {displayName}
             </span>
           </div>
@@ -235,20 +269,43 @@ function HomeTab({ userId }: { userId: string | null }) {
   const clueSets = (cluesetsData?.items ?? []) as Record<string, unknown>[];
   const categories = (categoriesData?.items ?? []) as Record<string, unknown>[];
 
-  const activeMatches = matches.filter(m => m.status !== "ended" && m.status !== "archived");
+  const activeMatches = matches.filter(
+    (m) => m.status !== "ended" && m.status !== "archived",
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       <div>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 0.25rem", color: "var(--sn-color-foreground)" }}>
+        <h2
+          style={{
+            fontSize: "1.25rem",
+            fontWeight: "700",
+            margin: "0 0 0.25rem",
+            color: "var(--sn-color-foreground)",
+          }}
+        >
           Dashboard
         </h2>
-        <p style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground)", margin: 0 }}>
-          {statusData ? `${statusData.gameType} · ${statusData.phase}` : "Connecting…"}
+        <p
+          style={{
+            fontSize: "0.875rem",
+            color: "var(--sn-color-muted-foreground)",
+            margin: 0,
+          }}
+        >
+          {statusData
+            ? `${statusData.gameType} · ${statusData.phase}`
+            : "Connecting…"}
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "1rem",
+        }}
+      >
         <StatCardBase
           label="Clue Sets"
           value={cluesetsLoading ? null : String(clueSets.length)}
@@ -283,16 +340,36 @@ function HomeTab({ userId }: { userId: string | null }) {
       {matches.length > 0 && (
         <CardBase>
           <div style={{ padding: "1rem 1.25rem 0.5rem" }}>
-            <h3 style={{ fontSize: "1rem", fontWeight: "600", margin: "0 0 1rem", color: "var(--sn-color-foreground)" }}>
+            <h3
+              style={{
+                fontSize: "1rem",
+                fontWeight: "600",
+                margin: "0 0 1rem",
+                color: "var(--sn-color-foreground)",
+              }}
+            >
               Recent Matches
             </h3>
             <DataTableBase
               columns={[
                 { field: "title", label: "Title" },
-                { field: "status", label: "Status", format: "badge", badgeColors: { active: "success", ended: "muted", draft: "secondary", paused: "warning" } },
+                {
+                  field: "status",
+                  label: "Status",
+                  format: "badge",
+                  badgeColors: {
+                    active: "success",
+                    ended: "muted",
+                    draft: "secondary",
+                    paused: "warning",
+                  },
+                },
                 { field: "createdAt", label: "Created", format: "date" },
               ]}
-              rows={matches.slice(0, 5).map(m => ({ ...m, title: (m.title as string) || "Untitled Match" }))}
+              rows={matches.slice(0, 5).map((m) => ({
+                ...m,
+                title: (m.title as string) || "Untitled Match",
+              }))}
               hoverable
               compact
             />
@@ -316,7 +393,12 @@ function HomeTab({ userId }: { userId: string | null }) {
 
 // ── Library tab ───────────────────────────────────────────────────────────────
 
-function CreateLibraryItemModal({ kind, open, onClose, onCreated }: {
+function CreateLibraryItemModal({
+  kind,
+  open,
+  onClose,
+  onCreated,
+}: {
   kind: "clue-sets" | "categories" | "clues";
   open: boolean;
   onClose: () => void;
@@ -327,7 +409,8 @@ function CreateLibraryItemModal({ kind, open, onClose, onCreated }: {
   const [error, setError] = useState<string | null>(null);
 
   const mutation = useMutation({
-    mutationFn: (data: Record<string, unknown>) => postApiLibraryByKind(kind, data),
+    mutationFn: (data: Record<string, unknown>) =>
+      postApiLibraryByKind(kind, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["library", kind] });
       onCreated();
@@ -339,15 +422,26 @@ function CreateLibraryItemModal({ kind, open, onClose, onCreated }: {
     },
   });
 
-  const kindLabel = kind === "clue-sets" ? "Clue Set" : kind === "categories" ? "Category" : "Clue";
+  const kindLabel =
+    kind === "clue-sets"
+      ? "Clue Set"
+      : kind === "categories"
+        ? "Category"
+        : "Clue";
 
   const handleSubmit = () => {
-    if (!title.trim()) { setError("Title is required"); return; }
+    if (!title.trim()) {
+      setError("Title is required");
+      return;
+    }
     mutation.mutate({ title: title.trim() });
   };
 
   useEffect(() => {
-    if (!open) { setTitle(""); setError(null); }
+    if (!open) {
+      setTitle("");
+      setError(null);
+    }
   }, [open]);
 
   return (
@@ -358,10 +452,20 @@ function CreateLibraryItemModal({ kind, open, onClose, onCreated }: {
       size="sm"
       footer={[
         { label: "Cancel", variant: "outline", onClick: onClose },
-        { label: mutation.isPending ? "Creating…" : "Create", onClick: handleSubmit },
+        {
+          label: mutation.isPending ? "Creating…" : "Create",
+          onClick: handleSubmit,
+        },
       ]}
     >
-      <div style={{ padding: "1rem 1.25rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div
+        style={{
+          padding: "1rem 1.25rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
         {error && (
           <AlertBase variant="destructive" title="Error" description={error} />
         )}
@@ -397,7 +501,11 @@ function LibraryItemPreviewModal({
   const record = (data ?? null) as Record<string, unknown> | null;
   const title = (record?.title as string) || "Preview";
   const kindLabel =
-    kind === "clue-sets" ? "Clue Set" : kind === "categories" ? "Category" : "Clue";
+    kind === "clue-sets"
+      ? "Clue Set"
+      : kind === "categories"
+        ? "Category"
+        : "Clue";
 
   // Pull common clue fields if present.
   const prompt =
@@ -442,7 +550,8 @@ function LibraryItemPreviewModal({
                   <BadgeBase
                     label={workflowStatus}
                     variant={
-                      workflowStatus === "published" || workflowStatus === "approved"
+                      workflowStatus === "published" ||
+                      workflowStatus === "approved"
                         ? "success"
                         : workflowStatus === "rejected"
                           ? "destructive"
@@ -525,7 +634,13 @@ function LibraryItemPreviewModal({
   );
 }
 
-function LibraryKindView({ kind, label }: { kind: "clue-sets" | "categories" | "clues"; label: string }) {
+function LibraryKindView({
+  kind,
+  label,
+}: {
+  kind: "clue-sets" | "categories" | "clues";
+  label: string;
+}) {
   const [createOpen, setCreateOpen] = useState(false);
   const [previewId, setPreviewId] = useState<string | null>(null);
   const qc = useQueryClient();
@@ -535,23 +650,46 @@ function LibraryKindView({ kind, label }: { kind: "clue-sets" | "categories" | "
     queryFn: () => getApiLibraryByKind(kind),
   });
 
-  const items = ((data?.items ?? []) as Record<string, unknown>[]).map(item => ({
-    ...item,
-    title: (item.title as string) || "Untitled",
-    workflowStatus: item.workflowStatus as string,
-    visibility: item.visibility as string,
-    createdAt: item.createdAt as string,
-  }));
+  const items = ((data?.items ?? []) as Record<string, unknown>[]).map(
+    (item) => ({
+      ...item,
+      title: (item.title as string) || "Untitled",
+      workflowStatus: item.workflowStatus as string,
+      visibility: item.visibility as string,
+      createdAt: item.createdAt as string,
+    }),
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <div>
-          <h3 style={{ fontSize: "1rem", fontWeight: "600", margin: "0 0 0.25rem", color: "var(--sn-color-foreground)" }}>
+          <h3
+            style={{
+              fontSize: "1rem",
+              fontWeight: "600",
+              margin: "0 0 0.25rem",
+              color: "var(--sn-color-foreground)",
+            }}
+          >
             {label}
           </h3>
-          <p style={{ fontSize: "0.8125rem", color: "var(--sn-color-muted-foreground)", margin: 0 }}>
-            {isLoading ? "Loading…" : `${items.length} item${items.length !== 1 ? "s" : ""}`}
+          <p
+            style={{
+              fontSize: "0.8125rem",
+              color: "var(--sn-color-muted-foreground)",
+              margin: 0,
+            }}
+          >
+            {isLoading
+              ? "Loading…"
+              : `${items.length} item${items.length !== 1 ? "s" : ""}`}
           </p>
         </div>
         <ButtonBase
@@ -563,13 +701,21 @@ function LibraryKindView({ kind, label }: { kind: "clue-sets" | "categories" | "
       </div>
 
       {isLoading && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          {[1, 2, 3].map(i => <SkeletonBase key={i} height="48px" />)}
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          {[1, 2, 3].map((i) => (
+            <SkeletonBase key={i} height="48px" />
+          ))}
         </div>
       )}
 
       {error && (
-        <AlertBase variant="destructive" title="Failed to load" description={String(error)} />
+        <AlertBase
+          variant="destructive"
+          title="Failed to load"
+          description={String(error)}
+        />
       )}
 
       {!isLoading && !error && items.length === 0 && (
@@ -586,8 +732,25 @@ function LibraryKindView({ kind, label }: { kind: "clue-sets" | "categories" | "
         <DataTableBase
           columns={[
             { field: "title", label: "Title" },
-            { field: "workflowStatus", label: "Status", format: "badge", badgeColors: { draft: "muted", published: "success", submitted: "info", approved: "success", rejected: "destructive", archived: "secondary" } },
-            { field: "visibility", label: "Visibility", format: "badge", badgeColors: { private: "secondary", public: "success" } },
+            {
+              field: "workflowStatus",
+              label: "Status",
+              format: "badge",
+              badgeColors: {
+                draft: "muted",
+                published: "success",
+                submitted: "info",
+                approved: "success",
+                rejected: "destructive",
+                archived: "secondary",
+              },
+            },
+            {
+              field: "visibility",
+              label: "Visibility",
+              format: "badge",
+              badgeColors: { private: "secondary", public: "success" },
+            },
             { field: "createdAt", label: "Created", format: "date" },
           ]}
           rows={items}
@@ -630,10 +793,23 @@ function LibraryTab() {
   return (
     <div>
       <div style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 0.25rem", color: "var(--sn-color-foreground)" }}>
+        <h2
+          style={{
+            fontSize: "1.25rem",
+            fontWeight: "700",
+            margin: "0 0 0.25rem",
+            color: "var(--sn-color-foreground)",
+          }}
+        >
           Library
         </h2>
-        <p style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground)", margin: 0 }}>
+        <p
+          style={{
+            fontSize: "0.875rem",
+            color: "var(--sn-color-muted-foreground)",
+            margin: 0,
+          }}
+        >
           Manage your clue sets, categories, and clues.
         </p>
       </div>
@@ -652,7 +828,13 @@ function LibraryTab() {
 
 // ── Matches tab ───────────────────────────────────────────────────────────────
 
-function CreateMatchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function CreateMatchModal({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -675,11 +857,19 @@ function CreateMatchModal({ open, onClose }: { open: boolean; onClose: () => voi
   });
 
   useEffect(() => {
-    if (!open) { setTitle(""); setError(null); setStep("title"); setMatchId(null); }
+    if (!open) {
+      setTitle("");
+      setError(null);
+      setStep("title");
+      setMatchId(null);
+    }
   }, [open]);
 
   const handleCreate = () => {
-    if (!title.trim()) { setError("Title is required"); return; }
+    if (!title.trim()) {
+      setError("Title is required");
+      return;
+    }
     createMatch.mutate({ title: title.trim() });
   };
 
@@ -691,10 +881,20 @@ function CreateMatchModal({ open, onClose }: { open: boolean; onClose: () => voi
       size="sm"
       footer={[
         { label: "Cancel", variant: "outline", onClick: onClose },
-        { label: createMatch.isPending ? "Creating…" : "Create Match", onClick: handleCreate },
+        {
+          label: createMatch.isPending ? "Creating…" : "Create Match",
+          onClick: handleCreate,
+        },
       ]}
     >
-      <div style={{ padding: "1rem 1.25rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div
+        style={{
+          padding: "1rem 1.25rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
         {error && (
           <AlertBase variant="destructive" title="Error" description={error} />
         )}
@@ -734,20 +934,43 @@ function MatchesTab() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["matches"] }),
   });
 
-  const matches = ((data?.items ?? []) as Record<string, unknown>[]).map(m => ({
-    ...m,
-    title: (m.title as string) || "Untitled Match",
-  }));
+  const matches = ((data?.items ?? []) as Record<string, unknown>[]).map(
+    (m) => ({
+      ...m,
+      title: (m.title as string) || "Untitled Match",
+    }),
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 0.25rem", color: "var(--sn-color-foreground)" }}>
+          <h2
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: "700",
+              margin: "0 0 0.25rem",
+              color: "var(--sn-color-foreground)",
+            }}
+          >
             Matches
           </h2>
-          <p style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground)", margin: 0 }}>
-            {isLoading ? "Loading…" : `${matches.length} match${matches.length !== 1 ? "es" : ""}`}
+          <p
+            style={{
+              fontSize: "0.875rem",
+              color: "var(--sn-color-muted-foreground)",
+              margin: 0,
+            }}
+          >
+            {isLoading
+              ? "Loading…"
+              : `${matches.length} match${matches.length !== 1 ? "es" : ""}`}
           </p>
         </div>
         <ButtonBase
@@ -758,12 +981,20 @@ function MatchesTab() {
       </div>
 
       {error && (
-        <AlertBase variant="destructive" title="Failed to load matches" description={String(error)} />
+        <AlertBase
+          variant="destructive"
+          title="Failed to load matches"
+          description={String(error)}
+        />
       )}
 
       {isLoading && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          {[1, 2, 3].map(i => <SkeletonBase key={i} height="56px" />)}
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          {[1, 2, 3].map((i) => (
+            <SkeletonBase key={i} height="56px" />
+          ))}
         </div>
       )}
 
@@ -781,7 +1012,18 @@ function MatchesTab() {
         <DataTableBase
           columns={[
             { field: "title", label: "Match" },
-            { field: "status", label: "Status", format: "badge", badgeColors: { active: "success", ended: "muted", draft: "secondary", paused: "warning", "in-progress": "info" } },
+            {
+              field: "status",
+              label: "Status",
+              format: "badge",
+              badgeColors: {
+                active: "success",
+                ended: "muted",
+                draft: "secondary",
+                paused: "warning",
+                "in-progress": "info",
+              },
+            },
             { field: "createdAt", label: "Created", format: "date" },
             { field: "updatedAt", label: "Updated", format: "date" },
           ]}
@@ -806,7 +1048,10 @@ function MatchesTab() {
         />
       )}
 
-      <CreateMatchModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      <CreateMatchModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+      />
     </div>
   );
 }
@@ -825,22 +1070,45 @@ function DiscoveryTab() {
   type DiscoverySection = { kind: string; items: Record<string, unknown>[] };
   const dataObj = data as Record<string, unknown> | null | undefined;
   const sections = (dataObj?.sections as DiscoverySection[] | undefined) ?? [];
-  const allItems = sections.flatMap(s => (s.items ?? []).map(item => ({ ...item, kind: s.kind })));
+  const allItems = sections.flatMap((s) =>
+    (s.items ?? []).map((item) => ({ ...item, kind: s.kind })),
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       <div>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 0.25rem", color: "var(--sn-color-foreground)" }}>
+        <h2
+          style={{
+            fontSize: "1.25rem",
+            fontWeight: "700",
+            margin: "0 0 0.25rem",
+            color: "var(--sn-color-foreground)",
+          }}
+        >
           Discovery
         </h2>
-        <p style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground)", margin: 0 }}>
+        <p
+          style={{
+            fontSize: "0.875rem",
+            color: "var(--sn-color-muted-foreground)",
+            margin: 0,
+          }}
+        >
           Browse publicly published content.
         </p>
       </div>
 
       {isLoading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
-          {[1, 2, 3, 4].map(i => <SkeletonBase key={i} height="120px" />)}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: "1rem",
+          }}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonBase key={i} height="120px" />
+          ))}
         </div>
       )}
 
@@ -857,11 +1125,24 @@ function DiscoveryTab() {
         <DataTableBase
           columns={[
             { field: "title", label: "Title" },
-            { field: "kind", label: "Type", format: "badge", badgeColors: { "clue-sets": "info", categories: "success", clues: "secondary", generators: "warning" } },
+            {
+              field: "kind",
+              label: "Type",
+              format: "badge",
+              badgeColors: {
+                "clue-sets": "info",
+                categories: "success",
+                clues: "secondary",
+                generators: "warning",
+              },
+            },
             { field: "ratingAverage", label: "Rating" },
             { field: "createdAt", label: "Published", format: "date" },
           ]}
-          rows={(allItems as Record<string, unknown>[]).map(i => ({ ...i, title: (i.title as string) || "Untitled" }))}
+          rows={(allItems as Record<string, unknown>[]).map((i) => ({
+            ...i,
+            title: (i.title as string) || "Untitled",
+          }))}
           searchable
           searchPlaceholder="Search content…"
           hoverable
@@ -884,30 +1165,48 @@ function JeopardyApp() {
 
   if (!session.ready && !session.error) {
     return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "1rem",
-        background: "var(--sn-color-background, #f9fafb)",
-      }}>
-        <div style={{
-          width: "48px",
-          height: "48px",
-          borderRadius: "12px",
-          background: "var(--sn-color-primary, #2563eb)",
+      <div
+        style={{
+          minHeight: "100vh",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: "28px",
-        }}>🎯</div>
+          gap: "1rem",
+          background: "var(--sn-color-background, #f9fafb)",
+        }}
+      >
+        <div
+          style={{
+            width: "48px",
+            height: "48px",
+            borderRadius: "12px",
+            background: "var(--sn-color-primary, #2563eb)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "28px",
+          }}
+        >
+          🎯
+        </div>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontWeight: "700", fontSize: "1.25rem", color: "var(--sn-color-foreground, #111827)" }}>
+          <div
+            style={{
+              fontWeight: "700",
+              fontSize: "1.25rem",
+              color: "var(--sn-color-foreground, #111827)",
+            }}
+          >
             Jeopardy
           </div>
-          <div style={{ fontSize: "0.875rem", color: "var(--sn-color-muted-foreground, #6b7280)", marginTop: "0.25rem" }}>
+          <div
+            style={{
+              fontSize: "0.875rem",
+              color: "var(--sn-color-muted-foreground, #6b7280)",
+              marginTop: "0.25rem",
+            }}
+          >
             Connecting…
           </div>
         </div>
@@ -918,14 +1217,16 @@ function JeopardyApp() {
 
   if (session.error) {
     return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "2rem",
-        background: "var(--sn-color-background, #f9fafb)",
-      }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
+          background: "var(--sn-color-background, #f9fafb)",
+        }}
+      >
         <AlertBase
           variant="destructive"
           title="Connection failed"
@@ -936,12 +1237,14 @@ function JeopardyApp() {
   }
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "var(--sn-color-background, #f9fafb)",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--sn-color-background, #f9fafb)",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <AppHeader
         darkMode={darkMode}
         onToggleDark={() => setDarkMode(!darkMode)}

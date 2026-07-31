@@ -25,11 +25,13 @@ import {
 
 export { componentAnimationSchema };
 
-export const exitAnimationSchema = upstreamExitAnimationSchema.extend({
-  easing: z
-    .union([z.enum(["default", "in", "out", "in-out", "spring"]), z.string()])
-    .optional(),
-}).strict();
+export const exitAnimationSchema = upstreamExitAnimationSchema
+  .extend({
+    easing: z
+      .union([z.enum(["default", "in", "out", "in-out", "spring"]), z.string()])
+      .optional(),
+  })
+  .strict();
 
 export {
   activeConfigSchema,

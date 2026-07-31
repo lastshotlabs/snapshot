@@ -10,7 +10,10 @@ function StaticWidget({ text }: { text: string }): React.ReactElement {
 }
 
 /** A component that suspends (simulates a dynamic data boundary). */
-function createSuspendingComponent(): { Component: React.ComponentType; resolve: () => void } {
+function createSuspendingComponent(): {
+  Component: React.ComponentType;
+  resolve: () => void;
+} {
   let resolvePromise!: () => void;
   const promise = new Promise<void>((res) => {
     resolvePromise = res;

@@ -107,7 +107,8 @@ export function QuickAddField({
       gap: "sm",
       paddingY: "sm",
       paddingX: "md",
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "lg",
       bg: "var(--sn-color-card, #ffffff)",
     },

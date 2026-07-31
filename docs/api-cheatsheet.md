@@ -14,40 +14,40 @@ const snapshot = createSnapshot({
 
 ### `SnapshotConfig`
 
-| Field | Purpose |
-| --- | --- |
-| `apiUrl` | Required backend base URL |
-| `bearerToken` | Static API credential for trusted server contexts |
-| `auth.session` | Cookie or token session mode, token storage, token key |
-| `auth.contract` | Auth endpoint/header overrides |
-| `auth.providers` | OAuth provider settings |
-| `auth.mfa` | MFA setup defaults |
-| `auth.webauthn` | WebAuthn relying-party settings |
-| `auth.on` | `unauthenticated`, `forbidden`, and `logout` callbacks |
-| `cache` | TanStack Query defaults: `staleTime`, `gcTime`, `retry` |
-| `ws` | WebSocket URL, auth strategy, reconnect behavior, event handlers |
-| `sse` | Server-sent event endpoints and handlers |
-| `loginPath` | Redirect target for auth-required routes |
-| `homePath` | Redirect target for guest-only routes |
-| `mfaPath` | Redirect target when login requires MFA |
+| Field            | Purpose                                                          |
+| ---------------- | ---------------------------------------------------------------- |
+| `apiUrl`         | Required backend base URL                                        |
+| `bearerToken`    | Static API credential for trusted server contexts                |
+| `auth.session`   | Cookie or token session mode, token storage, token key           |
+| `auth.contract`  | Auth endpoint/header overrides                                   |
+| `auth.providers` | OAuth provider settings                                          |
+| `auth.mfa`       | MFA setup defaults                                               |
+| `auth.webauthn`  | WebAuthn relying-party settings                                  |
+| `auth.on`        | `unauthenticated`, `forbidden`, and `logout` callbacks           |
+| `cache`          | TanStack Query defaults: `staleTime`, `gcTime`, `retry`          |
+| `ws`             | WebSocket URL, auth strategy, reconnect behavior, event handlers |
+| `sse`            | Server-sent event endpoints and handlers                         |
+| `loginPath`      | Redirect target for auth-required routes                         |
+| `homePath`       | Redirect target for guest-only routes                            |
+| `mfaPath`        | Redirect target when login requires MFA                          |
 
 ## Runtime Instance
 
 `createSnapshot()` returns a per-app runtime object.
 
-| Area | Surface |
-| --- | --- |
-| Provider | `QueryProvider` |
-| Auth | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword` |
-| Account | `useResetPassword`, `useVerifyEmail`, `useResendVerification`, `useSetPassword`, `useDeleteAccount`, `useCancelDeletion`, `useRefreshToken`, `useSessions`, `useRevokeSession` |
-| MFA | `usePendingMfaChallenge`, `useMfaVerify`, `useMfaSetup`, `useMfaVerifySetup`, `useMfaDisable`, `useMfaRecoveryCodes`, `useMfaEmailOtpEnable`, `useMfaEmailOtpVerifySetup`, `useMfaEmailOtpDisable`, `useMfaResend`, `useMfaMethods`, `isMfaChallenge` |
-| OAuth | `useOAuthExchange`, `useOAuthUnlink`, `getOAuthUrl`, `getLinkUrl` |
-| WebAuthn | `useWebAuthnRegisterOptions`, `useWebAuthnRegister`, `useWebAuthnCredentials`, `useWebAuthnRemoveCredential`, `useWebAuthnDisable`, `usePasskeyLoginOptions`, `usePasskeyLogin` |
-| Realtime | `useSocket`, `useRoom`, `useRoomEvent`, `useSSE`, `useSseEvent`, `onSseEvent`, `useCommunityNotifications` |
-| Community | container, thread, reply, reaction, member, notification, report, ban, and search hooks |
-| Webhooks | endpoint, delivery, and test-delivery hooks |
-| Routing | `protect`, `guest`, `protectedBeforeLoad`, `guestBeforeLoad`, `setNavigator` |
-| Primitives | `api`, `tokenStorage`, `queryClient`, `useWebSocketManager`, `formatAuthError`, `useTheme` |
+| Area       | Surface                                                                                                                                                                                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Provider   | `QueryProvider`                                                                                                                                                                                                                                       |
+| Auth       | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword`                                                                                                                                                                                |
+| Account    | `useResetPassword`, `useVerifyEmail`, `useResendVerification`, `useSetPassword`, `useDeleteAccount`, `useCancelDeletion`, `useRefreshToken`, `useSessions`, `useRevokeSession`                                                                        |
+| MFA        | `usePendingMfaChallenge`, `useMfaVerify`, `useMfaSetup`, `useMfaVerifySetup`, `useMfaDisable`, `useMfaRecoveryCodes`, `useMfaEmailOtpEnable`, `useMfaEmailOtpVerifySetup`, `useMfaEmailOtpDisable`, `useMfaResend`, `useMfaMethods`, `isMfaChallenge` |
+| OAuth      | `useOAuthExchange`, `useOAuthUnlink`, `getOAuthUrl`, `getLinkUrl`                                                                                                                                                                                     |
+| WebAuthn   | `useWebAuthnRegisterOptions`, `useWebAuthnRegister`, `useWebAuthnCredentials`, `useWebAuthnRemoveCredential`, `useWebAuthnDisable`, `usePasskeyLoginOptions`, `usePasskeyLogin`                                                                       |
+| Realtime   | `useSocket`, `useRoom`, `useRoomEvent`, `useSSE`, `useSseEvent`, `onSseEvent`, `useCommunityNotifications`                                                                                                                                            |
+| Community  | container, thread, reply, reaction, member, notification, report, ban, and search hooks                                                                                                                                                               |
+| Webhooks   | endpoint, delivery, and test-delivery hooks                                                                                                                                                                                                           |
+| Routing    | `protect`, `guest`, `protectedBeforeLoad`, `guestBeforeLoad`, `setNavigator`                                                                                                                                                                          |
+| Primitives | `api`, `tokenStorage`, `queryClient`, `useWebSocketManager`, `formatAuthError`, `useTheme`                                                                                                                                                            |
 
 ## Auth Example
 
@@ -155,15 +155,15 @@ import { GifPickerBase } from "@lastshotlabs/snapshot/ui/gif-picker";
 
 Common UI helpers:
 
-| Area | Surface |
-| --- | --- |
-| Actions | `useToastManager`, `ToastContainer`, `useConfirmManager`, `ConfirmDialog`, `useModalManager` |
-| Tokens | `resolveTokens`, `resolveFrameworkStyles`, `useTokenEditor`, `defineFlavor`, `getFlavor`, `getAllFlavors` |
-| Icons | `Icon`, `ICON_PATHS` |
-| Responsive | `useBreakpoint`, `useResponsiveValue`, `resolveResponsiveValue` |
-| Data/loading | `usePoll`, `useInfiniteScroll`, `useComponentData` |
-| Drag and drop | `DndContext`, `SortableContext`, `DragOverlay`, `useSortable`, `arrayMove`, `useDndSensors` |
-| State/context | `AppContextProvider`, `PageContextProvider`, `SnapshotApiProvider`, state persistence helpers |
+| Area          | Surface                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------- |
+| Actions       | `useToastManager`, `ToastContainer`, `useConfirmManager`, `ConfirmDialog`, `useModalManager`              |
+| Tokens        | `resolveTokens`, `resolveFrameworkStyles`, `useTokenEditor`, `defineFlavor`, `getFlavor`, `getAllFlavors` |
+| Icons         | `Icon`, `ICON_PATHS`                                                                                      |
+| Responsive    | `useBreakpoint`, `useResponsiveValue`, `resolveResponsiveValue`                                           |
+| Data/loading  | `usePoll`, `useInfiniteScroll`, `useComponentData`                                                        |
+| Drag and drop | `DndContext`, `SortableContext`, `DragOverlay`, `useSortable`, `arrayMove`, `useDndSensors`               |
+| State/context | `AppContextProvider`, `PageContextProvider`, `SnapshotApiProvider`, state persistence helpers             |
 
 ## Toasts And Confirms
 
@@ -231,10 +231,10 @@ const css = resolveTokens({
 import { snapshotSync, snapshotSsr } from "@lastshotlabs/snapshot/vite";
 ```
 
-| Helper | Purpose |
-| --- | --- |
+| Helper                  | Purpose                                     |
+| ----------------------- | ------------------------------------------- |
 | `snapshotSync(options)` | Runs OpenAPI sync during Vite startup/build |
-| `snapshotSsr(options)` | Adds Snapshot SSR build helpers |
+| `snapshotSsr(options)`  | Adds Snapshot SSR build helpers             |
 
 ## SSR Entry
 
@@ -268,12 +268,12 @@ Common exports:
 
 ## Package Entry Points
 
-| Import | Exposes |
-| --- | --- |
-| `@lastshotlabs/snapshot` | Runtime factory, hooks, API client types, auth/account/community/webhook types |
-| `@lastshotlabs/snapshot/ui` | Standalone UI components, token helpers, actions, icons, hooks |
-| `@lastshotlabs/snapshot/ui/rich-input` | Rich input bundle |
-| `@lastshotlabs/snapshot/ui/emoji-picker` | Emoji picker bundle |
-| `@lastshotlabs/snapshot/ui/gif-picker` | GIF picker bundle |
-| `@lastshotlabs/snapshot/vite` | Vite plugins |
-| `@lastshotlabs/snapshot/ssr` | Server rendering helpers |
+| Import                                   | Exposes                                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `@lastshotlabs/snapshot`                 | Runtime factory, hooks, API client types, auth/account/community/webhook types |
+| `@lastshotlabs/snapshot/ui`              | Standalone UI components, token helpers, actions, icons, hooks                 |
+| `@lastshotlabs/snapshot/ui/rich-input`   | Rich input bundle                                                              |
+| `@lastshotlabs/snapshot/ui/emoji-picker` | Emoji picker bundle                                                            |
+| `@lastshotlabs/snapshot/ui/gif-picker`   | GIF picker bundle                                                              |
+| `@lastshotlabs/snapshot/vite`            | Vite plugins                                                                   |
+| `@lastshotlabs/snapshot/ssr`             | Server rendering helpers                                                       |

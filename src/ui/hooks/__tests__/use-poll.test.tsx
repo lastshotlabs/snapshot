@@ -30,7 +30,10 @@ describe("usePoll", () => {
 
   it("pauses while hidden and refreshes immediately when visible again", () => {
     const onPoll = vi.fn();
-    const hiddenDescriptor = Object.getOwnPropertyDescriptor(document, "hidden");
+    const hiddenDescriptor = Object.getOwnPropertyDescriptor(
+      document,
+      "hidden",
+    );
     let hidden = false;
     Object.defineProperty(document, "hidden", {
       configurable: true,

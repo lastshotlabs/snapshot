@@ -2,17 +2,17 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | 1 | Universal Style Props (hover/focus/active, responsive, token-aware) | Not started | Schema + Wrapper |
-> | 2 | Missing Primitives (box, collapsible, icon-button, hover-card, toggle-group) | Not started | Components |
-> | 3 | Composable Navigation (template system, 6 nav sub-components) | Not started | Components + Schema |
-> | 4 | Nested Layouts & Outlets (parent route persistence) | Not started | Router + App Shell |
-> | 5 | Layout as Component Composition (slot overrides, nav slot) | Not started | Layout + Schema |
-> | 6 | Discriminated Union Schema (per-component intellisense) | Not started | Schema Gen |
-> | 7 | Component Groups (reusable named bundles) | Not started | Schema + Runtime |
-> | 8 | CSS Baseline & Animation Wiring (reset, keyframes, exit animations, visibility) | Not started | Tokens + Wrapper |
-> | 9 | Consumer Extension API (plugins, custom components, schema gen) | Not started | Core + Schema Gen |
+> | Phase | Title                                                                           | Status      | Track               |
+> | ----- | ------------------------------------------------------------------------------- | ----------- | ------------------- |
+> | 1     | Universal Style Props (hover/focus/active, responsive, token-aware)             | Not started | Schema + Wrapper    |
+> | 2     | Missing Primitives (box, collapsible, icon-button, hover-card, toggle-group)    | Not started | Components          |
+> | 3     | Composable Navigation (template system, 6 nav sub-components)                   | Not started | Components + Schema |
+> | 4     | Nested Layouts & Outlets (parent route persistence)                             | Not started | Router + App Shell  |
+> | 5     | Layout as Component Composition (slot overrides, nav slot)                      | Not started | Layout + Schema     |
+> | 6     | Discriminated Union Schema (per-component intellisense)                         | Not started | Schema Gen          |
+> | 7     | Component Groups (reusable named bundles)                                       | Not started | Schema + Runtime    |
+> | 8     | CSS Baseline & Animation Wiring (reset, keyframes, exit animations, visibility) | Not started | Tokens + Wrapper    |
+> | 9     | Consumer Extension API (plugins, custom components, schema gen)                 | Not started | Core + Schema Gen   |
 >
 > **Priority:** P0 — foundational. Everything else builds on this.
 > **Depends on:** Nothing. This IS the foundation.
@@ -66,42 +66,45 @@ fighting the framework's opinions.
 ## What Already Exists on Main
 
 ### Fully Implemented (Audited)
-| System | Files | State |
-|---|---|---|
-| Component Registry | `register.ts` (764 lines) | 76 components registered |
-| Base Schema | `_base/schema.ts` (138 lines) | `animation`, `glass`, `background`, `transition`, `sticky`, `zIndex` defined |
-| ComponentWrapper | `_base/component-wrapper.tsx` (418 lines) | Applies animation, glass, background, transition, sticky, zIndex, tokens |
-| Layout Component | `layout/layout/component.tsx` (492 lines) | 5 variants: sidebar, top-nav, stacked, minimal, full-width |
-| Nav Component | `layout/nav/component.tsx` (~490 lines) | Monolithic: logo + items + user menu hardcoded |
-| Action Executor | `actions/executor.ts` (1,178 lines) | 21 action types, debounce/throttle, chaining |
-| State System | `context/` + `state/` | Two-tier Jotai registries, FromRef binding, 18+ transforms |
-| Token System | `tokens/resolve.ts` (1,443 lines) | Full OKLCH color science, 8 flavors, all token categories |
-| Expression Engine | `expressions/parser.ts` | Full parser with precedence, safe builtins, template interpolation |
-| Workflows | `workflows/engine.ts` | 7 node types: if, wait, parallel, retry, try, assign, capture |
-| Router | `manifest/router.ts` | Path matching, parent chain, active route resolution |
-| Compiler | `manifest/compiler.ts` | Route flattening, parentId assignment, preset expansion |
-| Presets | `presets/` (8 files) | CRUD, dashboard, settings, auth page factories |
-| Resources | `manifest/resources.ts` | Endpoint resolution, caching, polling, optimistic updates |
-| Overlays | `overlay/modal/`, `overlay/drawer/` | Focus trap, URL sync, lifecycle hooks |
-| Shortcuts | `shortcuts/` | Chord parsing, modifier keys, typing context awareness |
-| Drag & Drop | `_base/drag-drop-provider.tsx` | Shared context, cross-container, drop rules |
-| Hooks | `hooks/` | Breakpoint, infinite scroll, polling, virtual list |
+
+| System             | Files                                     | State                                                                        |
+| ------------------ | ----------------------------------------- | ---------------------------------------------------------------------------- |
+| Component Registry | `register.ts` (764 lines)                 | 76 components registered                                                     |
+| Base Schema        | `_base/schema.ts` (138 lines)             | `animation`, `glass`, `background`, `transition`, `sticky`, `zIndex` defined |
+| ComponentWrapper   | `_base/component-wrapper.tsx` (418 lines) | Applies animation, glass, background, transition, sticky, zIndex, tokens     |
+| Layout Component   | `layout/layout/component.tsx` (492 lines) | 5 variants: sidebar, top-nav, stacked, minimal, full-width                   |
+| Nav Component      | `layout/nav/component.tsx` (~490 lines)   | Monolithic: logo + items + user menu hardcoded                               |
+| Action Executor    | `actions/executor.ts` (1,178 lines)       | 21 action types, debounce/throttle, chaining                                 |
+| State System       | `context/` + `state/`                     | Two-tier Jotai registries, FromRef binding, 18+ transforms                   |
+| Token System       | `tokens/resolve.ts` (1,443 lines)         | Full OKLCH color science, 8 flavors, all token categories                    |
+| Expression Engine  | `expressions/parser.ts`                   | Full parser with precedence, safe builtins, template interpolation           |
+| Workflows          | `workflows/engine.ts`                     | 7 node types: if, wait, parallel, retry, try, assign, capture                |
+| Router             | `manifest/router.ts`                      | Path matching, parent chain, active route resolution                         |
+| Compiler           | `manifest/compiler.ts`                    | Route flattening, parentId assignment, preset expansion                      |
+| Presets            | `presets/` (8 files)                      | CRUD, dashboard, settings, auth page factories                               |
+| Resources          | `manifest/resources.ts`                   | Endpoint resolution, caching, polling, optimistic updates                    |
+| Overlays           | `overlay/modal/`, `overlay/drawer/`       | Focus trap, URL sync, lifecycle hooks                                        |
+| Shortcuts          | `shortcuts/`                              | Chord parsing, modifier keys, typing context awareness                       |
+| Drag & Drop        | `_base/drag-drop-provider.tsx`            | Shared context, cross-container, drop rules                                  |
+| Hooks              | `hooks/`                                  | Breakpoint, infinite scroll, polling, virtual list                           |
 
 ### Partially Implemented
-| System | Gap |
-|---|---|
-| Nested Layouts | `match.parents` computed but AppShell renders only root ancestor's page |
-| Nav Composability | Nav is monolithic; no template system |
-| Style Props | `style` escape hatch exists but no token-aware declarative props |
-| CSS Baseline | Keyframes defined in resolve.ts but not all wired through framework styles |
-| Schema Intellisense | Icon/type enums injected; component-specific schemas not discriminated |
+
+| System              | Gap                                                                        |
+| ------------------- | -------------------------------------------------------------------------- |
+| Nested Layouts      | `match.parents` computed but AppShell renders only root ancestor's page    |
+| Nav Composability   | Nav is monolithic; no template system                                      |
+| Style Props         | `style` escape hatch exists but no token-aware declarative props           |
+| CSS Baseline        | Keyframes defined in resolve.ts but not all wired through framework styles |
+| Schema Intellisense | Icon/type enums injected; component-specific schemas not discriminated     |
 
 ### Not Started
-| System | Notes |
-|---|---|
-| Component Groups | No manifest-level named component bundles |
+
+| System                            | Notes                                                                 |
+| --------------------------------- | --------------------------------------------------------------------- |
+| Component Groups                  | No manifest-level named component bundles                             |
 | Layout slot overrides from routes | Schema has `slots` field but rendering doesn't compose parent + child |
-| Universal token-aware style props | Components use raw `style` record, not semantic props |
+| Universal token-aware style props | Components use raw `style` record, not semantic props                 |
 
 ---
 
@@ -253,37 +256,58 @@ const SPACING_MAP: Record<string, string> = {
 };
 
 const RADIUS_MAP: Record<string, string> = {
-  none: "0", xs: "var(--sn-radius-xs)", sm: "var(--sn-radius-sm)",
-  md: "var(--sn-radius-md)", lg: "var(--sn-radius-lg)",
-  xl: "var(--sn-radius-xl)", full: "var(--sn-radius-full)",
+  none: "0",
+  xs: "var(--sn-radius-xs)",
+  sm: "var(--sn-radius-sm)",
+  md: "var(--sn-radius-md)",
+  lg: "var(--sn-radius-lg)",
+  xl: "var(--sn-radius-xl)",
+  full: "var(--sn-radius-full)",
 };
 
 const SHADOW_MAP: Record<string, string> = {
-  none: "none", xs: "var(--sn-shadow-xs)", sm: "var(--sn-shadow-sm)",
-  md: "var(--sn-shadow-md)", lg: "var(--sn-shadow-lg)", xl: "var(--sn-shadow-xl)",
+  none: "none",
+  xs: "var(--sn-shadow-xs)",
+  sm: "var(--sn-shadow-sm)",
+  md: "var(--sn-shadow-md)",
+  lg: "var(--sn-shadow-lg)",
+  xl: "var(--sn-shadow-xl)",
 };
 
 const FONT_SIZE_MAP: Record<string, string> = {
-  xs: "var(--sn-font-size-xs)", sm: "var(--sn-font-size-sm)",
-  base: "var(--sn-font-size-base)", lg: "var(--sn-font-size-lg)",
-  xl: "var(--sn-font-size-xl)", "2xl": "var(--sn-font-size-2xl)",
-  "3xl": "var(--sn-font-size-3xl)", "4xl": "var(--sn-font-size-4xl)",
+  xs: "var(--sn-font-size-xs)",
+  sm: "var(--sn-font-size-sm)",
+  base: "var(--sn-font-size-base)",
+  lg: "var(--sn-font-size-lg)",
+  xl: "var(--sn-font-size-xl)",
+  "2xl": "var(--sn-font-size-2xl)",
+  "3xl": "var(--sn-font-size-3xl)",
+  "4xl": "var(--sn-font-size-4xl)",
 };
 
 const FONT_WEIGHT_MAP: Record<string, string> = {
-  light: "var(--sn-font-weight-light)", normal: "var(--sn-font-weight-normal)",
-  medium: "var(--sn-font-weight-medium)", semibold: "var(--sn-font-weight-semibold)",
+  light: "var(--sn-font-weight-light)",
+  normal: "var(--sn-font-weight-normal)",
+  medium: "var(--sn-font-weight-medium)",
+  semibold: "var(--sn-font-weight-semibold)",
   bold: "var(--sn-font-weight-bold)",
 };
 
 const COLOR_MAP: Record<string, string> = {
-  primary: "var(--sn-color-primary)", secondary: "var(--sn-color-secondary)",
-  accent: "var(--sn-color-accent)", muted: "var(--sn-color-muted)",
-  destructive: "var(--sn-color-destructive)", success: "var(--sn-color-success)",
-  warning: "var(--sn-color-warning)", info: "var(--sn-color-info)",
-  background: "var(--sn-color-background)", foreground: "var(--sn-color-foreground)",
-  card: "var(--sn-color-card)", popover: "var(--sn-color-popover)",
-  border: "var(--sn-color-border)", input: "var(--sn-color-input)",
+  primary: "var(--sn-color-primary)",
+  secondary: "var(--sn-color-secondary)",
+  accent: "var(--sn-color-accent)",
+  muted: "var(--sn-color-muted)",
+  destructive: "var(--sn-color-destructive)",
+  success: "var(--sn-color-success)",
+  warning: "var(--sn-color-warning)",
+  info: "var(--sn-color-info)",
+  background: "var(--sn-color-background)",
+  foreground: "var(--sn-color-foreground)",
+  card: "var(--sn-color-card)",
+  popover: "var(--sn-color-popover)",
+  border: "var(--sn-color-border)",
+  input: "var(--sn-color-input)",
   // Foreground companions
   "primary-foreground": "var(--sn-color-primary-foreground)",
   "secondary-foreground": "var(--sn-color-secondary-foreground)",
@@ -294,48 +318,82 @@ const COLOR_MAP: Record<string, string> = {
 };
 
 const JUSTIFY_MAP: Record<string, string> = {
-  start: "flex-start", center: "center", end: "flex-end",
-  between: "space-between", around: "space-around", evenly: "space-evenly",
+  start: "flex-start",
+  center: "center",
+  end: "flex-end",
+  between: "space-between",
+  around: "space-around",
+  evenly: "space-evenly",
 };
 
 const ALIGN_MAP: Record<string, string> = {
-  start: "flex-start", center: "center", end: "flex-end",
-  stretch: "stretch", baseline: "baseline",
+  start: "flex-start",
+  center: "center",
+  end: "flex-end",
+  stretch: "stretch",
+  baseline: "baseline",
 };
 
-export function resolveStyleProps(config: Record<string, unknown>): React.CSSProperties {
+export function resolveStyleProps(
+  config: Record<string, unknown>,
+): React.CSSProperties {
   const s: React.CSSProperties = {};
-  const resolve = (value: unknown, map: Record<string, string>): string | undefined => {
+  const resolve = (
+    value: unknown,
+    map: Record<string, string>,
+  ): string | undefined => {
     if (value == null) return undefined;
     const v = String(value);
     return map[v] ?? v; // token name → CSS var, or passthrough raw value
   };
 
-  if (config.padding != null) { s.padding = resolve(config.padding, SPACING_MAP); }
+  if (config.padding != null) {
+    s.padding = resolve(config.padding, SPACING_MAP);
+  }
   if (config.paddingX != null) {
     const v = resolve(config.paddingX, SPACING_MAP);
-    s.paddingLeft = v; s.paddingRight = v;
+    s.paddingLeft = v;
+    s.paddingRight = v;
   }
   if (config.paddingY != null) {
     const v = resolve(config.paddingY, SPACING_MAP);
-    s.paddingTop = v; s.paddingBottom = v;
+    s.paddingTop = v;
+    s.paddingBottom = v;
   }
-  if (config.margin != null) { s.margin = resolve(config.margin, SPACING_MAP); }
+  if (config.margin != null) {
+    s.margin = resolve(config.margin, SPACING_MAP);
+  }
   if (config.marginX != null) {
     const v = resolve(config.marginX, SPACING_MAP);
-    s.marginLeft = v; s.marginRight = v;
+    s.marginLeft = v;
+    s.marginRight = v;
   }
   if (config.marginY != null) {
     const v = resolve(config.marginY, SPACING_MAP);
-    s.marginTop = v; s.marginBottom = v;
+    s.marginTop = v;
+    s.marginBottom = v;
   }
-  if (config.gap != null) { s.gap = resolve(config.gap, SPACING_MAP); }
-  if (config.width != null) { s.width = config.width as string; }
-  if (config.minWidth != null) { s.minWidth = config.minWidth as string; }
-  if (config.maxWidth != null) { s.maxWidth = config.maxWidth as string; }
-  if (config.height != null) { s.height = config.height as string; }
-  if (config.minHeight != null) { s.minHeight = config.minHeight as string; }
-  if (config.maxHeight != null) { s.maxHeight = config.maxHeight as string; }
+  if (config.gap != null) {
+    s.gap = resolve(config.gap, SPACING_MAP);
+  }
+  if (config.width != null) {
+    s.width = config.width as string;
+  }
+  if (config.minWidth != null) {
+    s.minWidth = config.minWidth as string;
+  }
+  if (config.maxWidth != null) {
+    s.maxWidth = config.maxWidth as string;
+  }
+  if (config.height != null) {
+    s.height = config.height as string;
+  }
+  if (config.minHeight != null) {
+    s.minHeight = config.minHeight as string;
+  }
+  if (config.maxHeight != null) {
+    s.maxHeight = config.maxHeight as string;
+  }
   if (config.bg != null) {
     const bg = config.bg;
     if (typeof bg === "string") {
@@ -343,34 +401,85 @@ export function resolveStyleProps(config: Record<string, unknown>): React.CSSPro
     }
     // Object backgrounds (gradient, image) handled by existing resolveBackgroundStyle
   }
-  if (config.color != null) { s.color = resolve(config.color, COLOR_MAP); }
-  if (config.borderRadius != null) { s.borderRadius = resolve(config.borderRadius, RADIUS_MAP); }
-  if (config.border != null) { s.border = config.border as string; }
-  if (config.shadow != null) { s.boxShadow = resolve(config.shadow, SHADOW_MAP); }
-  if (config.opacity != null) { s.opacity = config.opacity as number; }
-  if (config.overflow != null) { s.overflow = config.overflow as string; }
-  if (config.cursor != null) { s.cursor = config.cursor as string; }
-  if (config.position != null) { s.position = config.position as React.CSSProperties["position"]; }
-  if (config.inset != null) { s.inset = config.inset as string; }
-  if (config.display != null) { s.display = config.display as string; }
-  if (config.flexDirection != null) { s.flexDirection = config.flexDirection as React.CSSProperties["flexDirection"]; }
-  if (config.alignItems != null) { s.alignItems = resolve(config.alignItems, ALIGN_MAP); }
-  if (config.justifyContent != null) { s.justifyContent = resolve(config.justifyContent, JUSTIFY_MAP); }
-  if (config.flexWrap != null) { s.flexWrap = config.flexWrap as React.CSSProperties["flexWrap"]; }
-  if (config.flex != null) { s.flex = config.flex as string; }
-  if (config.gridTemplateColumns != null) { s.gridTemplateColumns = config.gridTemplateColumns as string; }
-  if (config.gridTemplateRows != null) { s.gridTemplateRows = config.gridTemplateRows as string; }
-  if (config.gridColumn != null) { s.gridColumn = config.gridColumn as string; }
-  if (config.gridRow != null) { s.gridRow = config.gridRow as string; }
-  if (config.textAlign != null) { s.textAlign = config.textAlign as React.CSSProperties["textAlign"]; }
-  if (config.fontSize != null) { s.fontSize = resolve(config.fontSize, FONT_SIZE_MAP); }
-  if (config.fontWeight != null) {
-    s.fontWeight = typeof config.fontWeight === "number"
-      ? config.fontWeight
-      : resolve(config.fontWeight, FONT_WEIGHT_MAP) as React.CSSProperties["fontWeight"];
+  if (config.color != null) {
+    s.color = resolve(config.color, COLOR_MAP);
   }
-  if (config.lineHeight != null) { s.lineHeight = config.lineHeight as string; }
-  if (config.letterSpacing != null) { s.letterSpacing = config.letterSpacing as string; }
+  if (config.borderRadius != null) {
+    s.borderRadius = resolve(config.borderRadius, RADIUS_MAP);
+  }
+  if (config.border != null) {
+    s.border = config.border as string;
+  }
+  if (config.shadow != null) {
+    s.boxShadow = resolve(config.shadow, SHADOW_MAP);
+  }
+  if (config.opacity != null) {
+    s.opacity = config.opacity as number;
+  }
+  if (config.overflow != null) {
+    s.overflow = config.overflow as string;
+  }
+  if (config.cursor != null) {
+    s.cursor = config.cursor as string;
+  }
+  if (config.position != null) {
+    s.position = config.position as React.CSSProperties["position"];
+  }
+  if (config.inset != null) {
+    s.inset = config.inset as string;
+  }
+  if (config.display != null) {
+    s.display = config.display as string;
+  }
+  if (config.flexDirection != null) {
+    s.flexDirection =
+      config.flexDirection as React.CSSProperties["flexDirection"];
+  }
+  if (config.alignItems != null) {
+    s.alignItems = resolve(config.alignItems, ALIGN_MAP);
+  }
+  if (config.justifyContent != null) {
+    s.justifyContent = resolve(config.justifyContent, JUSTIFY_MAP);
+  }
+  if (config.flexWrap != null) {
+    s.flexWrap = config.flexWrap as React.CSSProperties["flexWrap"];
+  }
+  if (config.flex != null) {
+    s.flex = config.flex as string;
+  }
+  if (config.gridTemplateColumns != null) {
+    s.gridTemplateColumns = config.gridTemplateColumns as string;
+  }
+  if (config.gridTemplateRows != null) {
+    s.gridTemplateRows = config.gridTemplateRows as string;
+  }
+  if (config.gridColumn != null) {
+    s.gridColumn = config.gridColumn as string;
+  }
+  if (config.gridRow != null) {
+    s.gridRow = config.gridRow as string;
+  }
+  if (config.textAlign != null) {
+    s.textAlign = config.textAlign as React.CSSProperties["textAlign"];
+  }
+  if (config.fontSize != null) {
+    s.fontSize = resolve(config.fontSize, FONT_SIZE_MAP);
+  }
+  if (config.fontWeight != null) {
+    s.fontWeight =
+      typeof config.fontWeight === "number"
+        ? config.fontWeight
+        : (resolve(
+            config.fontWeight,
+            FONT_WEIGHT_MAP,
+          ) as React.CSSProperties["fontWeight"]);
+  }
+  if (config.lineHeight != null) {
+    s.lineHeight = config.lineHeight as string;
+  }
+  if (config.letterSpacing != null) {
+    s.letterSpacing = config.letterSpacing as string;
+  }
 
   return s;
 }
@@ -381,7 +490,16 @@ export function resolveStyleProps(config: Record<string, unknown>): React.CSSPro
 ```typescript
 // In component-wrapper.tsx, merge style props with existing style resolution:
 const styleProps = resolveStyleProps(config);
-const mergedStyle = { ...styleProps, ...stickyStyle, ...animationStyle, ...glassStyle, ...bgStyle, ...transitionStyle, ...tokenOverrides, ...config.style };
+const mergedStyle = {
+  ...styleProps,
+  ...stickyStyle,
+  ...animationStyle,
+  ...glassStyle,
+  ...bgStyle,
+  ...transitionStyle,
+  ...tokenOverrides,
+  ...config.style,
+};
 ```
 
 Order: style props → feature styles → token overrides → raw `style` escape hatch (highest priority).
@@ -452,8 +570,12 @@ export function resolveInteractiveCSS(
     if (hover.transform) props.push(`transform: ${hover.transform}`);
     if (hover.scale != null) props.push(`transform: scale(${hover.scale})`);
     if (hover.border) props.push(`border: ${hover.border}`);
-    if (hover.borderRadius) props.push(`border-radius: ${resolveRadius(hover.borderRadius)}`);
-    if (props.length) rules.push(`${sel}:hover { ${props.join("; ")}; transition: all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease); }`);
+    if (hover.borderRadius)
+      props.push(`border-radius: ${resolveRadius(hover.borderRadius)}`);
+    if (props.length)
+      rules.push(
+        `${sel}:hover { ${props.join("; ")}; transition: all var(--sn-duration-fast, 150ms) var(--sn-ease-default, ease); }`,
+      );
   }
 
   if (focus) {
@@ -461,10 +583,17 @@ export function resolveInteractiveCSS(
     if (focus.bg) props.push(`background: ${resolveColor(focus.bg)}`);
     if (focus.color) props.push(`color: ${resolveColor(focus.color)}`);
     if (focus.shadow) props.push(`box-shadow: ${resolveShadow(focus.shadow)}`);
-    if (focus.ring === true) props.push(`outline: 2px solid var(--sn-ring-color, var(--sn-color-primary)); outline-offset: var(--sn-ring-offset, 2px)`);
-    else if (typeof focus.ring === "string") props.push(`outline: 2px solid ${resolveColor(focus.ring)}; outline-offset: 2px`);
+    if (focus.ring === true)
+      props.push(
+        `outline: 2px solid var(--sn-ring-color, var(--sn-color-primary)); outline-offset: var(--sn-ring-offset, 2px)`,
+      );
+    else if (typeof focus.ring === "string")
+      props.push(
+        `outline: 2px solid ${resolveColor(focus.ring)}; outline-offset: 2px`,
+      );
     if (focus.outline) props.push(`outline: ${focus.outline}`);
-    if (props.length) rules.push(`${sel}:focus-visible { ${props.join("; ")} }`);
+    if (props.length)
+      rules.push(`${sel}:focus-visible { ${props.join("; ")} }`);
   }
 
   if (active) {
@@ -495,11 +624,12 @@ set. Injects the CSS via a `<style>` element scoped to the wrapper.
   "hover": { "bg": "accent", "shadow": "lg", "scale": 1.02 },
   "focus": { "ring": true },
   "active": { "scale": 0.98 },
-  "children": [{ "type": "text", "value": "Interactive card" }]
+  "children": [{ "type": "text", "value": "Interactive card" }],
 }
 ```
 
 A button with completely custom hover:
+
 ```jsonc
 {
   "type": "button",
@@ -509,7 +639,7 @@ A button with completely custom hover:
   "borderRadius": "full",
   "padding": "md",
   "hover": { "bg": "secondary", "shadow": "xl", "scale": 1.05 },
-  "active": { "scale": 0.95 }
+  "active": { "scale": 0.95 },
 }
 ```
 
@@ -571,7 +701,9 @@ export function resolveResponsiveCSS(
     if (!cssProp) continue;
 
     if (responsive.default) {
-      rules.default.push(`${cssProp}: ${resolveTokenValue(prop, responsive.default)}`);
+      rules.default.push(
+        `${cssProp}: ${resolveTokenValue(prop, responsive.default)}`,
+      );
     }
     for (const [bp, bpValue] of Object.entries(responsive)) {
       if (bp === "default" || !bpValue) continue;
@@ -586,7 +718,10 @@ export function resolveResponsiveCSS(
   for (const [bp, props] of Object.entries(rules)) {
     if (bp === "default" || !props.length) continue;
     const minWidth = BREAKPOINTS[bp as keyof typeof BREAKPOINTS];
-    if (minWidth) css.push(`@media (min-width: ${minWidth}px) { ${sel} { ${props.join("; ")}; } }`);
+    if (minWidth)
+      css.push(
+        `@media (min-width: ${minWidth}px) { ${sel} { ${props.join("; ")}; } }`,
+      );
   }
 
   return css.length ? css.join("\n") : null;
@@ -602,8 +737,12 @@ export function resolveResponsiveCSS(
   "gap": { "default": "sm", "lg": "xl" },
   "flexDirection": { "default": "column", "md": "row" },
   "children": [
-    { "type": "text", "value": "Title", "fontSize": { "default": "lg", "md": "2xl" } }
-  ]
+    {
+      "type": "text",
+      "value": "Title",
+      "fontSize": { "default": "lg", "md": "2xl" },
+    },
+  ],
 }
 ```
 
@@ -624,26 +763,59 @@ A navbar built entirely from primitives and style props — no `nav-*` component
         "height": "3.5rem",
         "width": "100%",
         "children": [
-          { "type": "link", "text": "Budget", "path": "/", "fontWeight": "bold", "fontSize": "lg" },
-          { "type": "link", "text": "Dashboard", "path": "/", "fontSize": "sm",
-            "hover": { "color": "primary" } },
-          { "type": "link", "text": "Transactions", "path": "/transactions", "fontSize": "sm",
-            "hover": { "color": "primary" } },
-          { "type": "popover", "trigger": { "type": "button", "label": "Manage", "variant": "ghost", "icon": "ChevronDown" },
+          {
+            "type": "link",
+            "text": "Budget",
+            "path": "/",
+            "fontWeight": "bold",
+            "fontSize": "lg",
+          },
+          {
+            "type": "link",
+            "text": "Dashboard",
+            "path": "/",
+            "fontSize": "sm",
+            "hover": { "color": "primary" },
+          },
+          {
+            "type": "link",
+            "text": "Transactions",
+            "path": "/transactions",
+            "fontSize": "sm",
+            "hover": { "color": "primary" },
+          },
+          {
+            "type": "popover",
+            "trigger": {
+              "type": "button",
+              "label": "Manage",
+              "variant": "ghost",
+              "icon": "ChevronDown",
+            },
             "content": [
-              { "type": "link", "text": "Categories", "path": "/categories", "padding": "sm",
-                "hover": { "bg": "accent" } },
-              { "type": "link", "text": "Merchants", "path": "/merchants", "padding": "sm",
-                "hover": { "bg": "accent" } }
-            ]
+              {
+                "type": "link",
+                "text": "Categories",
+                "path": "/categories",
+                "padding": "sm",
+                "hover": { "bg": "accent" },
+              },
+              {
+                "type": "link",
+                "text": "Merchants",
+                "path": "/merchants",
+                "padding": "sm",
+                "hover": { "bg": "accent" },
+              },
+            ],
           },
           { "type": "spacer" },
           { "type": "input", "placeholder": "Search...", "maxWidth": "240px" },
-          { "type": "avatar", "size": "sm" }
-        ]
-      }
-    ]
-  }
+          { "type": "avatar", "size": "sm" },
+        ],
+      },
+    ],
+  },
 }
 ```
 
@@ -653,17 +825,17 @@ structural requirements.
 
 ### Files to Create
 
-| File | Purpose |
-|---|---|
+| File                                     | Purpose                                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `src/ui/components/_base/style-props.ts` | `resolveStyleProps()`, `resolveInteractiveCSS()`, `resolveResponsiveCSS()`, all token maps |
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/components/_base/schema.ts` | Add style props, hover/focus/active, responsive wrappers |
+| File                                            | Change                                                                 |
+| ----------------------------------------------- | ---------------------------------------------------------------------- |
+| `src/ui/components/_base/schema.ts`             | Add style props, hover/focus/active, responsive wrappers               |
 | `src/ui/components/_base/component-wrapper.tsx` | Call resolvers, inject scoped `<style>` for interactive/responsive CSS |
-| `src/ui/manifest/schema.ts` | Import updated base schema |
+| `src/ui/manifest/schema.ts`                     | Import updated base schema                                             |
 
 ### Exit Criteria
 
@@ -701,7 +873,19 @@ grid — `box` is just a div that accepts all style props and renders children.
 export const boxConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("box"),
   /** Tag to render. Default: "div". */
-  as: z.enum(["div", "section", "article", "aside", "header", "footer", "main", "nav", "span"]).optional(),
+  as: z
+    .enum([
+      "div",
+      "section",
+      "article",
+      "aside",
+      "header",
+      "footer",
+      "main",
+      "nav",
+      "span",
+    ])
+    .optional(),
   children: z.array(componentConfigSchema).optional(),
 });
 ```
@@ -733,6 +917,7 @@ prop is passed to `ComponentWrapper` to control the rendered HTML element.
 #### Consumer Examples
 
 A card built from scratch:
+
 ```jsonc
 {
   "type": "box",
@@ -744,21 +929,38 @@ A card built from scratch:
   "border": "1px solid var(--sn-color-border)",
   "hover": { "shadow": "xl", "scale": 1.01 },
   "children": [
-    { "type": "text", "value": "Custom Card Title", "fontWeight": "bold", "fontSize": "lg" },
-    { "type": "text", "value": "Some description text.", "color": "muted-foreground", "fontSize": "sm" }
-  ]
+    {
+      "type": "text",
+      "value": "Custom Card Title",
+      "fontWeight": "bold",
+      "fontSize": "lg",
+    },
+    {
+      "type": "text",
+      "value": "Some description text.",
+      "color": "muted-foreground",
+      "fontSize": "sm",
+    },
+  ],
 }
 ```
 
 A full-bleed hero section:
+
 ```jsonc
 {
   "type": "box",
   "as": "section",
-  "bg": { "gradient": { "type": "linear", "direction": "135deg", "stops": [
-    { "color": "var(--sn-color-primary)", "position": "0%" },
-    { "color": "var(--sn-color-accent)", "position": "100%" }
-  ]}},
+  "bg": {
+    "gradient": {
+      "type": "linear",
+      "direction": "135deg",
+      "stops": [
+        { "color": "var(--sn-color-primary)", "position": "0%" },
+        { "color": "var(--sn-color-accent)", "position": "100%" },
+      ],
+    },
+  },
   "padding": { "default": "xl", "lg": "3xl" },
   "minHeight": "80vh",
   "display": "flex",
@@ -766,13 +968,47 @@ A full-bleed hero section:
   "alignItems": "center",
   "justifyContent": "center",
   "children": [
-    { "type": "text", "value": "Ship faster.", "fontSize": { "default": "3xl", "lg": "4xl" }, "fontWeight": "bold", "color": "primary-foreground", "textAlign": "center" },
-    { "type": "text", "value": "Build your entire frontend from a single manifest.", "fontSize": "lg", "color": "primary-foreground", "opacity": 0.8, "textAlign": "center" },
-    { "type": "row", "gap": "md", "margin": "lg", "children": [
-      { "type": "button", "label": "Get Started", "bg": "background", "color": "foreground", "borderRadius": "full", "padding": "md" },
-      { "type": "button", "label": "Docs", "variant": "outline", "borderRadius": "full", "padding": "md", "color": "primary-foreground", "border": "1px solid currentColor" }
-    ]}
-  ]
+    {
+      "type": "text",
+      "value": "Ship faster.",
+      "fontSize": { "default": "3xl", "lg": "4xl" },
+      "fontWeight": "bold",
+      "color": "primary-foreground",
+      "textAlign": "center",
+    },
+    {
+      "type": "text",
+      "value": "Build your entire frontend from a single manifest.",
+      "fontSize": "lg",
+      "color": "primary-foreground",
+      "opacity": 0.8,
+      "textAlign": "center",
+    },
+    {
+      "type": "row",
+      "gap": "md",
+      "margin": "lg",
+      "children": [
+        {
+          "type": "button",
+          "label": "Get Started",
+          "bg": "background",
+          "color": "foreground",
+          "borderRadius": "full",
+          "padding": "md",
+        },
+        {
+          "type": "button",
+          "label": "Docs",
+          "variant": "outline",
+          "borderRadius": "full",
+          "padding": "md",
+          "color": "primary-foreground",
+          "border": "1px solid currentColor",
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -787,7 +1023,9 @@ sidebar sections, details panels, and any show/hide interaction.
 export const collapsibleConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("collapsible"),
   /** Whether the content is expanded. Can be a static boolean, FromRef, or expression. */
-  open: z.union([z.boolean(), fromRefSchema, z.object({ expr: z.string() })]).optional(),
+  open: z
+    .union([z.boolean(), fromRefSchema, z.object({ expr: z.string() })])
+    .optional(),
   /** Default open state when not controlled by `open`. */
   defaultOpen: z.boolean().optional(),
   /** The always-visible trigger element. Clicking it toggles open state. */
@@ -882,45 +1120,82 @@ export function Collapsible({ config }: { config: CollapsibleConfig }) {
 #### Consumer Examples
 
 Expandable search bar (no `nav-search` needed):
+
 ```jsonc
 {
   "type": "collapsible",
   "defaultOpen": false,
   "publishTo": "searchOpen",
-  "trigger": { "type": "button", "icon": "Search", "variant": "ghost", "borderRadius": "full" },
+  "trigger": {
+    "type": "button",
+    "icon": "Search",
+    "variant": "ghost",
+    "borderRadius": "full",
+  },
   "children": [
-    { "type": "input", "placeholder": "Search...", "padding": "sm", "maxWidth": "300px" }
-  ]
+    {
+      "type": "input",
+      "placeholder": "Search...",
+      "padding": "sm",
+      "maxWidth": "300px",
+    },
+  ],
 }
 ```
 
 Collapsible sidebar section:
+
 ```jsonc
 {
   "type": "collapsible",
   "defaultOpen": true,
-  "trigger": { "type": "row", "alignItems": "center", "justifyContent": "between", "padding": "sm", "children": [
-    { "type": "text", "value": "Finance", "fontWeight": "semibold", "fontSize": "xs", "color": "muted-foreground" },
-    { "type": "text", "value": "▾", "fontSize": "xs", "color": "muted-foreground" }
-  ]},
+  "trigger": {
+    "type": "row",
+    "alignItems": "center",
+    "justifyContent": "between",
+    "padding": "sm",
+    "children": [
+      {
+        "type": "text",
+        "value": "Finance",
+        "fontWeight": "semibold",
+        "fontSize": "xs",
+        "color": "muted-foreground",
+      },
+      {
+        "type": "text",
+        "value": "▾",
+        "fontSize": "xs",
+        "color": "muted-foreground",
+      },
+    ],
+  },
   "children": [
     { "type": "link", "text": "Dashboard", "path": "/", "padding": "sm" },
-    { "type": "link", "text": "Transactions", "path": "/transactions", "padding": "sm" }
-  ]
+    {
+      "type": "link",
+      "text": "Transactions",
+      "path": "/transactions",
+      "padding": "sm",
+    },
+  ],
 }
 ```
 
 Details panel:
+
 ```jsonc
 {
   "type": "collapsible",
-  "trigger": { "type": "row", "gap": "sm", "children": [
-    { "type": "text", "value": "Advanced options" },
-    { "type": "text", "value": "›" }
-  ]},
-  "children": [
-    { "type": "auto-form", "fields": ["..."] }
-  ]
+  "trigger": {
+    "type": "row",
+    "gap": "sm",
+    "children": [
+      { "type": "text", "value": "Advanced options" },
+      { "type": "text", "value": "›" },
+    ],
+  },
+  "children": [{ "type": "auto-form", "fields": ["..."] }],
 }
 ```
 
@@ -937,7 +1212,9 @@ export const iconButtonConfigSchema = baseComponentConfigSchema.extend({
   /** Size of the button. Default: "md". */
   size: z.enum(["xs", "sm", "md", "lg"]).optional(),
   /** Visual variant. Default: "ghost". */
-  variant: z.enum(["default", "secondary", "outline", "ghost", "destructive"]).optional(),
+  variant: z
+    .enum(["default", "secondary", "outline", "ghost", "destructive"])
+    .optional(),
   /** Shape. Default: "circle". */
   shape: z.enum(["circle", "square"]).optional(),
   /** Accessible label (required since there's no visible text). */
@@ -950,6 +1227,7 @@ export const iconButtonConfigSchema = baseComponentConfigSchema.extend({
 ```
 
 Size map:
+
 ```typescript
 const SIZE_MAP = { xs: "1.5rem", sm: "2rem", md: "2.5rem", lg: "3rem" };
 const ICON_SIZE_MAP = { xs: 12, sm: 14, md: 16, lg: 20 };
@@ -962,11 +1240,28 @@ const ICON_SIZE_MAP = { xs: 12, sm: 14, md: 16, lg: 20 };
   "type": "row",
   "gap": "xs",
   "children": [
-    { "type": "icon-button", "icon": "Bell", "ariaLabel": "Notifications", "variant": "ghost", "tooltip": "Notifications" },
-    { "type": "icon-button", "icon": "Settings", "ariaLabel": "Settings", "action": { "type": "navigate", "path": "/settings" } },
-    { "type": "icon-button", "icon": "X", "ariaLabel": "Close", "variant": "ghost", "size": "sm",
-      "hover": { "bg": "destructive", "color": "destructive-foreground" } }
-  ]
+    {
+      "type": "icon-button",
+      "icon": "Bell",
+      "ariaLabel": "Notifications",
+      "variant": "ghost",
+      "tooltip": "Notifications",
+    },
+    {
+      "type": "icon-button",
+      "icon": "Settings",
+      "ariaLabel": "Settings",
+      "action": { "type": "navigate", "path": "/settings" },
+    },
+    {
+      "type": "icon-button",
+      "icon": "X",
+      "ariaLabel": "Close",
+      "variant": "ghost",
+      "size": "sm",
+      "hover": { "bg": "destructive", "color": "destructive-foreground" },
+    },
+  ],
 }
 ```
 
@@ -999,25 +1294,64 @@ export const hoverCardConfigSchema = baseComponentConfigSchema.extend({
 #### Consumer Example
 
 User profile hover card (like GitHub):
+
 ```jsonc
 {
   "type": "hover-card",
   "trigger": { "type": "avatar", "size": "sm" },
   "width": "320px",
   "content": [
-    { "type": "row", "gap": "md", "padding": "md", "children": [
-      { "type": "avatar", "size": "lg" },
-      { "type": "box", "children": [
-        { "type": "text", "value": { "from": "global.user.name" }, "fontWeight": "bold" },
-        { "type": "text", "value": { "from": "global.user.email" }, "fontSize": "sm", "color": "muted-foreground" }
-      ]}
-    ]},
+    {
+      "type": "row",
+      "gap": "md",
+      "padding": "md",
+      "children": [
+        { "type": "avatar", "size": "lg" },
+        {
+          "type": "box",
+          "children": [
+            {
+              "type": "text",
+              "value": { "from": "global.user.name" },
+              "fontWeight": "bold",
+            },
+            {
+              "type": "text",
+              "value": { "from": "global.user.email" },
+              "fontSize": "sm",
+              "color": "muted-foreground",
+            },
+          ],
+        },
+      ],
+    },
     { "type": "divider" },
-    { "type": "row", "padding": "sm", "gap": "sm", "children": [
-      { "type": "button", "label": "Profile", "variant": "ghost", "size": "sm", "action": { "type": "navigate", "path": "/profile" } },
-      { "type": "button", "label": "Sign Out", "variant": "ghost", "size": "sm", "action": { "type": "api", "method": "POST", "endpoint": "/api/auth/logout" } }
-    ]}
-  ]
+    {
+      "type": "row",
+      "padding": "sm",
+      "gap": "sm",
+      "children": [
+        {
+          "type": "button",
+          "label": "Profile",
+          "variant": "ghost",
+          "size": "sm",
+          "action": { "type": "navigate", "path": "/profile" },
+        },
+        {
+          "type": "button",
+          "label": "Sign Out",
+          "variant": "ghost",
+          "size": "sm",
+          "action": {
+            "type": "api",
+            "method": "POST",
+            "endpoint": "/api/auth/logout",
+          },
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -1033,12 +1367,16 @@ export const toggleGroupConfigSchema = baseComponentConfigSchema.extend({
   /** Selection mode. Default: "single". */
   mode: z.enum(["single", "multiple"]).optional(),
   /** Items in the group. */
-  items: z.array(z.object({
-    value: z.string(),
-    label: z.string().optional(),
-    icon: z.string().optional(),
-    disabled: z.union([z.boolean(), fromRefSchema]).optional(),
-  }).strict()),
+  items: z.array(
+    z
+      .object({
+        value: z.string(),
+        label: z.string().optional(),
+        icon: z.string().optional(),
+        disabled: z.union([z.boolean(), fromRefSchema]).optional(),
+      })
+      .strict(),
+  ),
   /** Default selected value(s). */
   defaultValue: z.union([z.string(), z.array(z.string())]).optional(),
   /** Controlled value from state. */
@@ -1057,6 +1395,7 @@ export const toggleGroupConfigSchema = baseComponentConfigSchema.extend({
 #### Consumer Example
 
 View mode switcher:
+
 ```jsonc
 {
   "type": "toggle-group",
@@ -1066,40 +1405,40 @@ View mode switcher:
   "items": [
     { "value": "table", "icon": "Table", "label": "Table" },
     { "value": "grid", "icon": "Grid3x3", "label": "Grid" },
-    { "value": "list", "icon": "List", "label": "List" }
-  ]
+    { "value": "list", "icon": "List", "label": "List" },
+  ],
 }
 ```
 
 ### Files to Create
 
-| File | Purpose |
-|---|---|
-| `src/ui/components/layout/box/schema.ts` | Schema |
-| `src/ui/components/layout/box/component.tsx` | Component |
-| `src/ui/components/layout/box/types.ts` | Types |
-| `src/ui/components/layout/box/index.ts` | Exports |
-| `src/ui/components/layout/collapsible/schema.ts` | Schema |
+| File                                                 | Purpose   |
+| ---------------------------------------------------- | --------- |
+| `src/ui/components/layout/box/schema.ts`             | Schema    |
+| `src/ui/components/layout/box/component.tsx`         | Component |
+| `src/ui/components/layout/box/types.ts`              | Types     |
+| `src/ui/components/layout/box/index.ts`              | Exports   |
+| `src/ui/components/layout/collapsible/schema.ts`     | Schema    |
 | `src/ui/components/layout/collapsible/component.tsx` | Component |
-| `src/ui/components/layout/collapsible/types.ts` | Types |
-| `src/ui/components/layout/collapsible/index.ts` | Exports |
-| `src/ui/components/forms/icon-button/schema.ts` | Schema |
-| `src/ui/components/forms/icon-button/component.tsx` | Component |
-| `src/ui/components/forms/icon-button/types.ts` | Types |
-| `src/ui/components/forms/icon-button/index.ts` | Exports |
-| `src/ui/components/overlay/hover-card/schema.ts` | Schema |
+| `src/ui/components/layout/collapsible/types.ts`      | Types     |
+| `src/ui/components/layout/collapsible/index.ts`      | Exports   |
+| `src/ui/components/forms/icon-button/schema.ts`      | Schema    |
+| `src/ui/components/forms/icon-button/component.tsx`  | Component |
+| `src/ui/components/forms/icon-button/types.ts`       | Types     |
+| `src/ui/components/forms/icon-button/index.ts`       | Exports   |
+| `src/ui/components/overlay/hover-card/schema.ts`     | Schema    |
 | `src/ui/components/overlay/hover-card/component.tsx` | Component |
-| `src/ui/components/overlay/hover-card/types.ts` | Types |
-| `src/ui/components/overlay/hover-card/index.ts` | Exports |
-| `src/ui/components/forms/toggle-group/schema.ts` | Schema |
+| `src/ui/components/overlay/hover-card/types.ts`      | Types     |
+| `src/ui/components/overlay/hover-card/index.ts`      | Exports   |
+| `src/ui/components/forms/toggle-group/schema.ts`     | Schema    |
 | `src/ui/components/forms/toggle-group/component.tsx` | Component |
-| `src/ui/components/forms/toggle-group/types.ts` | Types |
-| `src/ui/components/forms/toggle-group/index.ts` | Exports |
+| `src/ui/components/forms/toggle-group/types.ts`      | Types     |
+| `src/ui/components/forms/toggle-group/index.ts`      | Exports   |
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
+| File                            | Change                                                                     |
+| ------------------------------- | -------------------------------------------------------------------------- |
 | `src/ui/components/register.ts` | Register `box`, `collapsible`, `icon-button`, `hover-card`, `toggle-group` |
 
 ### Exit Criteria
@@ -1249,12 +1588,18 @@ export const navUserMenuConfigSchema = baseComponentConfigSchema.extend({
   /** Display mode. "full" = avatar + name + dropdown. "compact" = avatar only + dropdown. */
   mode: z.enum(["full", "compact"]).optional(),
   /** Menu items (dropdown content when clicked). */
-  items: z.array(z.object({
-    label: z.string(),
-    icon: z.string().optional(),
-    action: actionSchema,
-    roles: z.array(z.string()).optional(),
-  }).strict()).optional(),
+  items: z
+    .array(
+      z
+        .object({
+          label: z.string(),
+          icon: z.string().optional(),
+          action: actionSchema,
+          roles: z.array(z.string()).optional(),
+        })
+        .strict(),
+    )
+    .optional(),
 });
 ```
 
@@ -1287,10 +1632,9 @@ export const navigationConfigSchema = z
     userMenu: z.union([z.boolean(), userMenuConfigSchema]).optional(),
   })
   .strict()
-  .refine(
-    (data) => Boolean(data.items?.length || data.template?.length),
-    { message: "Navigation must define either items or template." },
-  );
+  .refine((data) => Boolean(data.items?.length || data.template?.length), {
+    message: "Navigation must define either items or template.",
+  });
 ```
 
 ### Nav Component Rewrite
@@ -1334,6 +1678,7 @@ export function Nav({ config, pathname, onNavigate, variant }: NavComponentProps
 ### Registration
 
 Add to `src/ui/components/register.ts`:
+
 ```typescript
 registerComponent("nav-logo", NavLogo);
 registerComponentSchema("nav-logo", navLogoConfigSchema);
@@ -1357,25 +1702,59 @@ registerComponentSchema("nav-user-menu", navUserMenuConfigSchema);
     "mode": "top-nav",
     "template": [
       { "type": "nav-logo", "text": "Budget", "path": "/" },
-      { "type": "nav-link", "label": "Dashboard", "path": "/", "icon": "LayoutDashboard" },
-      { "type": "nav-link", "label": "Transactions", "path": "/transactions", "icon": "ArrowLeftRight" },
-      { "type": "nav-link", "label": "Accounts", "path": "/accounts", "icon": "Wallet" },
+      {
+        "type": "nav-link",
+        "label": "Dashboard",
+        "path": "/",
+        "icon": "LayoutDashboard",
+      },
+      {
+        "type": "nav-link",
+        "label": "Transactions",
+        "path": "/transactions",
+        "icon": "ArrowLeftRight",
+      },
+      {
+        "type": "nav-link",
+        "label": "Accounts",
+        "path": "/accounts",
+        "icon": "Wallet",
+      },
       {
         "type": "nav-dropdown",
         "label": "Manage",
         "icon": "Settings",
         "items": [
-          { "type": "nav-link", "label": "Categories", "path": "/categories", "icon": "FolderTree" },
-          { "type": "nav-link", "label": "Merchants", "path": "/merchants", "icon": "Store" },
+          {
+            "type": "nav-link",
+            "label": "Categories",
+            "path": "/categories",
+            "icon": "FolderTree",
+          },
+          {
+            "type": "nav-link",
+            "label": "Merchants",
+            "path": "/merchants",
+            "icon": "Store",
+          },
           { "type": "divider" },
-          { "type": "nav-link", "label": "Statements", "path": "/statements", "icon": "FileText" }
-        ]
+          {
+            "type": "nav-link",
+            "label": "Statements",
+            "path": "/statements",
+            "icon": "FileText",
+          },
+        ],
       },
       { "type": "spacer" },
-      { "type": "nav-search", "placeholder": "Search...", "shortcut": "ctrl+k" },
-      { "type": "nav-user-menu", "mode": "compact" }
-    ]
-  }
+      {
+        "type": "nav-search",
+        "placeholder": "Search...",
+        "shortcut": "ctrl+k",
+      },
+      { "type": "nav-user-menu", "mode": "compact" },
+    ],
+  },
 }
 ```
 
@@ -1392,63 +1771,83 @@ Sidebar example with sections:
         "type": "nav-section",
         "label": "Finance",
         "items": [
-          { "type": "nav-link", "label": "Dashboard", "path": "/", "icon": "LayoutDashboard" },
-          { "type": "nav-link", "label": "Transactions", "path": "/transactions", "icon": "ArrowLeftRight" }
-        ]
+          {
+            "type": "nav-link",
+            "label": "Dashboard",
+            "path": "/",
+            "icon": "LayoutDashboard",
+          },
+          {
+            "type": "nav-link",
+            "label": "Transactions",
+            "path": "/transactions",
+            "icon": "ArrowLeftRight",
+          },
+        ],
       },
       {
         "type": "nav-section",
         "label": "Manage",
         "collapsible": true,
         "items": [
-          { "type": "nav-link", "label": "Categories", "path": "/categories", "icon": "FolderTree" },
-          { "type": "nav-link", "label": "Merchants", "path": "/merchants", "icon": "Store" }
-        ]
+          {
+            "type": "nav-link",
+            "label": "Categories",
+            "path": "/categories",
+            "icon": "FolderTree",
+          },
+          {
+            "type": "nav-link",
+            "label": "Merchants",
+            "path": "/merchants",
+            "icon": "Store",
+          },
+        ],
       },
       { "type": "spacer" },
-      { "type": "nav-user-menu", "mode": "full" }
-    ]
-  }
+      { "type": "nav-user-menu", "mode": "full" },
+    ],
+  },
 }
 ```
 
 ### Files to Create
 
-| File | Purpose |
-|---|---|
-| `src/ui/components/layout/nav-logo/schema.ts` | Schema |
-| `src/ui/components/layout/nav-logo/component.tsx` | Component |
-| `src/ui/components/layout/nav-logo/types.ts` | Types |
-| `src/ui/components/layout/nav-logo/index.ts` | Exports |
-| `src/ui/components/layout/nav-link/schema.ts` | Schema |
-| `src/ui/components/layout/nav-link/component.tsx` | Component |
-| `src/ui/components/layout/nav-link/types.ts` | Types |
-| `src/ui/components/layout/nav-link/index.ts` | Exports |
-| `src/ui/components/layout/nav-dropdown/schema.ts` | Schema |
-| `src/ui/components/layout/nav-dropdown/component.tsx` | Component |
-| `src/ui/components/layout/nav-dropdown/types.ts` | Types |
-| `src/ui/components/layout/nav-dropdown/index.ts` | Exports |
-| `src/ui/components/layout/nav-section/schema.ts` | Schema |
-| `src/ui/components/layout/nav-section/component.tsx` | Component |
-| `src/ui/components/layout/nav-section/types.ts` | Types |
-| `src/ui/components/layout/nav-section/index.ts` | Exports |
-| `src/ui/components/layout/nav-search/schema.ts` | Schema |
-| `src/ui/components/layout/nav-search/component.tsx` | Component |
-| `src/ui/components/layout/nav-search/types.ts` | Types |
-| `src/ui/components/layout/nav-search/index.ts` | Exports |
-| `src/ui/components/layout/nav-user-menu/schema.ts` | Schema |
+| File                                                   | Purpose   |
+| ------------------------------------------------------ | --------- |
+| `src/ui/components/layout/nav-logo/schema.ts`          | Schema    |
+| `src/ui/components/layout/nav-logo/component.tsx`      | Component |
+| `src/ui/components/layout/nav-logo/types.ts`           | Types     |
+| `src/ui/components/layout/nav-logo/index.ts`           | Exports   |
+| `src/ui/components/layout/nav-link/schema.ts`          | Schema    |
+| `src/ui/components/layout/nav-link/component.tsx`      | Component |
+| `src/ui/components/layout/nav-link/types.ts`           | Types     |
+| `src/ui/components/layout/nav-link/index.ts`           | Exports   |
+| `src/ui/components/layout/nav-dropdown/schema.ts`      | Schema    |
+| `src/ui/components/layout/nav-dropdown/component.tsx`  | Component |
+| `src/ui/components/layout/nav-dropdown/types.ts`       | Types     |
+| `src/ui/components/layout/nav-dropdown/index.ts`       | Exports   |
+| `src/ui/components/layout/nav-section/schema.ts`       | Schema    |
+| `src/ui/components/layout/nav-section/component.tsx`   | Component |
+| `src/ui/components/layout/nav-section/types.ts`        | Types     |
+| `src/ui/components/layout/nav-section/index.ts`        | Exports   |
+| `src/ui/components/layout/nav-search/schema.ts`        | Schema    |
+| `src/ui/components/layout/nav-search/component.tsx`    | Component |
+| `src/ui/components/layout/nav-search/types.ts`         | Types     |
+| `src/ui/components/layout/nav-search/index.ts`         | Exports   |
+| `src/ui/components/layout/nav-user-menu/schema.ts`     | Schema    |
 | `src/ui/components/layout/nav-user-menu/component.tsx` | Component |
-| `src/ui/components/layout/nav-user-menu/types.ts` | Types |
-| `src/ui/components/layout/nav-user-menu/index.ts` | Exports |
+| `src/ui/components/layout/nav-user-menu/types.ts`      | Types     |
+| `src/ui/components/layout/nav-user-menu/index.ts`      | Exports   |
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/manifest/schema.ts` | Update `navigationConfigSchema` to add `template` |
-| `src/ui/components/layout/nav/component.tsx` | Add template rendering path |
-| `src/ui/components/layout/nav/schema.ts` | Add `template` field |
-| `src/ui/components/register.ts` | Register 6 new components |
+| File                                         | Change                                            |
+| -------------------------------------------- | ------------------------------------------------- |
+| `src/ui/manifest/schema.ts`                  | Update `navigationConfigSchema` to add `template` |
+| `src/ui/components/layout/nav/component.tsx` | Add template rendering path                       |
+| `src/ui/components/layout/nav/schema.ts`     | Add `template` field                              |
+| `src/ui/components/register.ts`              | Register 6 new components                         |
 
 ### Exit Criteria
 
@@ -1477,6 +1876,7 @@ Multi-level nesting is unlimited.
 ### The Problem
 
 Currently in `app.tsx`:
+
 ```typescript
 const renderedRoute = match.activeRoutes[0] ?? route;
 // AppShell renders renderedRoute — the ROOT ancestor, not the leaf
@@ -1504,8 +1904,8 @@ on server and client. Route matching happens at request time (SSR) or on navigat
 ```typescript
 function AppShell({
   manifest,
-  route,           // Leaf route (page content comes from here)
-  parents,         // Ancestor routes (layouts come from here, outermost first)
+  route, // Leaf route (page content comes from here)
+  parents, // Ancestor routes (layouts come from here, outermost first)
   currentPath,
   navigate,
   isPreloading,
@@ -1518,7 +1918,7 @@ function AppShell({
   navigate: (to: string, options?: { replace?: boolean }) => void;
   isPreloading: boolean;
   api: ReturnType<typeof createSnapshot>["api"];
-})
+});
 ```
 
 #### 4.2: Determine Layout Layers
@@ -1532,7 +1932,10 @@ Each route in `[...parents, route]` can contribute layouts. The rule:
   `main` slot directly).
 
 ```typescript
-function hasExplicitLayouts(manifest: CompiledManifest, routeId: string): boolean {
+function hasExplicitLayouts(
+  manifest: CompiledManifest,
+  routeId: string,
+): boolean {
   const route = getRawRouteRecord(manifest, routeId);
   const layouts = route?.["layouts"];
   return Array.isArray(layouts) && layouts.length > 0;
@@ -1648,58 +2051,84 @@ Remove the `renderedRoute` variable entirely.
     "template": [
       { "type": "nav-logo" },
       { "type": "nav-link", "label": "Finance", "path": "/" },
-      { "type": "nav-link", "label": "Settings", "path": "/settings" }
-    ]
+      { "type": "nav-link", "label": "Settings", "path": "/settings" },
+    ],
   },
   "routes": [
     {
       "id": "app",
       "path": "/",
-      "content": [{ "type": "heading", "text": "Dashboard" }]
+      "content": [{ "type": "heading", "text": "Dashboard" }],
     },
     {
       "id": "settings",
       "path": "/settings",
-      "layouts": [{ "type": "sidebar", "slots": [{ "name": "sidebar" }, { "name": "main", "required": true }] }],
+      "layouts": [
+        {
+          "type": "sidebar",
+          "slots": [
+            { "name": "sidebar" },
+            { "name": "main", "required": true },
+          ],
+        },
+      ],
       "slots": {
         "sidebar": [
-          { "type": "nav-link", "label": "Profile", "path": "/settings/profile", "icon": "User" },
-          { "type": "nav-link", "label": "Billing", "path": "/settings/billing", "icon": "CreditCard" }
-        ]
+          {
+            "type": "nav-link",
+            "label": "Profile",
+            "path": "/settings/profile",
+            "icon": "User",
+          },
+          {
+            "type": "nav-link",
+            "label": "Billing",
+            "path": "/settings/billing",
+            "icon": "CreditCard",
+          },
+        ],
       },
       "content": [{ "type": "text", "value": "Select a settings page." }],
       "children": [
         {
           "id": "settings-profile",
           "path": "profile",
-          "content": [{ "type": "heading", "text": "Profile Settings" }, { "type": "auto-form", "fields": ["..."] }]
+          "content": [
+            { "type": "heading", "text": "Profile Settings" },
+            { "type": "auto-form", "fields": ["..."] },
+          ],
         },
         {
           "id": "settings-billing",
           "path": "billing",
-          "content": [{ "type": "heading", "text": "Billing" }, { "type": "data-table", "data": "..." }]
-        }
-      ]
-    }
-  ]
+          "content": [
+            { "type": "heading", "text": "Billing" },
+            { "type": "data-table", "data": "..." },
+          ],
+        },
+      ],
+    },
+  ],
 }
 ```
 
 Navigating to `/settings/profile`:
+
 - Outermost: top-nav layout (from `navigation.mode`) with global nav
 - Inner: sidebar layout (from settings route's `layouts`) with settings nav in sidebar slot
 - Leaf: profile content in main slot
 
 Navigating to `/settings`:
+
 - Same outer layout
 - Settings route IS the leaf — its own `content` renders in its sidebar layout's main slot
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
+| File                      | Change                                                             |
+| ------------------------- | ------------------------------------------------------------------ |
 | `src/ui/manifest/app.tsx` | Rewrite AppShell to compose parent layouts; remove `renderedRoute` |
-| `src/ui/manifest/app.tsx` | Update AppShell call site in ManifestRouter to pass `parents` |
+| `src/ui/manifest/app.tsx` | Update AppShell call site in ManifestRouter to pass `parents`      |
 
 ### Exit Criteria
 
@@ -1739,7 +2168,7 @@ nav area itself. Add a `nav` slot to the built-in slot list:
 function getBuiltInLayoutSlots(type: string): RouteLayoutSlotDeclaration[] {
   if (!SLOT_ENABLED_LAYOUT_TYPES.has(type)) return [];
   return [
-    { name: "nav" },      // ← NEW: override the nav area
+    { name: "nav" }, // ← NEW: override the nav area
     { name: "header" },
     { name: "sidebar" },
     { name: "main", required: true },
@@ -1765,22 +2194,41 @@ Custom nav via slot override:
 
 ```jsonc
 {
-  "routes": [{
-    "id": "landing",
-    "path": "/",
-    "layouts": ["top-nav"],
-    "slots": {
-      "nav": [
-        { "type": "row", "alignItems": "center", "gap": "lg", "padding": "md", "children": [
-          { "type": "nav-logo" },
-          { "type": "spacer" },
-          { "type": "button", "label": "Sign In", "variant": "outline", "action": { "type": "navigate", "path": "/login" } },
-          { "type": "button", "label": "Get Started", "action": { "type": "navigate", "path": "/register" } }
-        ]}
-      ]
+  "routes": [
+    {
+      "id": "landing",
+      "path": "/",
+      "layouts": ["top-nav"],
+      "slots": {
+        "nav": [
+          {
+            "type": "row",
+            "alignItems": "center",
+            "gap": "lg",
+            "padding": "md",
+            "children": [
+              { "type": "nav-logo" },
+              { "type": "spacer" },
+              {
+                "type": "button",
+                "label": "Sign In",
+                "variant": "outline",
+                "action": { "type": "navigate", "path": "/login" },
+              },
+              {
+                "type": "button",
+                "label": "Get Started",
+                "action": { "type": "navigate", "path": "/register" },
+              },
+            ],
+          },
+        ],
+      },
+      "content": [
+        { "type": "section", "height": "screen", "children": ["..."] },
+      ],
     },
-    "content": [{ "type": "section", "height": "screen", "children": ["..."] }]
-  }]
+  ],
 }
 ```
 
@@ -1822,13 +2270,18 @@ const componentSchemas: Record<string, unknown>[] = [];
 for (const [typeName, zodSchema] of registeredSchemas) {
   try {
     const componentJsonSchema = zodToJsonSchema(zodSchema, {
-      $refStrategy: "none",  // Inline everything for component schemas
+      $refStrategy: "none", // Inline everything for component schemas
       errorMessages: false,
     }) as Record<string, unknown>;
 
     // Ensure the type field is a const
-    if (componentJsonSchema.properties && typeof componentJsonSchema.properties === "object") {
-      (componentJsonSchema.properties as Record<string, unknown>)["type"] = { const: typeName };
+    if (
+      componentJsonSchema.properties &&
+      typeof componentJsonSchema.properties === "object"
+    ) {
+      (componentJsonSchema.properties as Record<string, unknown>)["type"] = {
+        const: typeName,
+      };
     }
 
     componentSchemas.push(componentJsonSchema);
@@ -1846,7 +2299,10 @@ const componentConfigUnion = {
 // Replace all occurrences of the generic component config with the union
 function replaceComponentConfigs(node: unknown): void {
   if (!node || typeof node !== "object") return;
-  if (Array.isArray(node)) { node.forEach(replaceComponentConfigs); return; }
+  if (Array.isArray(node)) {
+    node.forEach(replaceComponentConfigs);
+    return;
+  }
   const obj = node as Record<string, unknown>;
 
   // Find properties that look like component config arrays
@@ -1854,7 +2310,11 @@ function replaceComponentConfigs(node: unknown): void {
     if (value && typeof value === "object" && !Array.isArray(value)) {
       const prop = value as Record<string, unknown>;
       // Array of components (content, children, items, template)
-      if (prop.type === "array" && prop.items && typeof prop.items === "object") {
+      if (
+        prop.type === "array" &&
+        prop.items &&
+        typeof prop.items === "object"
+      ) {
         const items = prop.items as Record<string, unknown>;
         // If items is a generic object or has passthrough, replace with union
         if (items.type === "object" && !items.oneOf && !items.discriminator) {
@@ -1892,10 +2352,24 @@ the discriminated union is also available as a TypeScript type:
 ```typescript
 // Auto-generated from the same registry
 export type ComponentConfig =
-  | { type: "button"; label: string; variant?: "default" | "secondary" | "outline" | "ghost" | "destructive"; action?: ActionConfig; /* ...base props */ }
-  | { type: "data-table"; data: DataConfig; columns: ColumnConfig[]; searchable?: boolean; /* ...base props */ }
-  | { type: "box"; as?: string; children?: ComponentConfig[]; /* ...base props */ }
-  // ... all 80+ types
+  | {
+      type: "button";
+      label: string;
+      variant?: "default" | "secondary" | "outline" | "ghost" | "destructive";
+      action?: ActionConfig; /* ...base props */
+    }
+  | {
+      type: "data-table";
+      data: DataConfig;
+      columns: ColumnConfig[];
+      searchable?: boolean; /* ...base props */
+    }
+  | {
+      type: "box";
+      as?: string;
+      children?: ComponentConfig[]; /* ...base props */
+    };
+// ... all 80+ types
 ```
 
 This is generated alongside the JSON Schema by extracting `z.infer<>` from each registered
@@ -1903,8 +2377,8 @@ schema. Consumers get full type safety whether they write JSON or TypeScript.
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
+| File                                  | Change                                                           |
+| ------------------------------------- | ---------------------------------------------------------------- |
 | `scripts/generate-manifest-schema.ts` | Build discriminated union from registry, replace generic configs |
 
 ### Exit Criteria
@@ -1985,18 +2459,42 @@ export function ComponentGroup({ config }: { config: ComponentGroupConfig }) {
     "finance-stats": {
       "description": "Standard financial dashboard stats row",
       "components": [
-        { "type": "stat-card", "id": "balance", "data": { "resource": "account-balance" }, "span": 3 },
-        { "type": "stat-card", "id": "income", "data": { "resource": "monthly-income" }, "span": 3 },
-        { "type": "stat-card", "id": "expenses", "data": { "resource": "monthly-expenses" }, "span": 3 },
-        { "type": "stat-card", "id": "savings", "data": { "resource": "savings-rate" }, "span": 3 }
-      ]
+        {
+          "type": "stat-card",
+          "id": "balance",
+          "data": { "resource": "account-balance" },
+          "span": 3,
+        },
+        {
+          "type": "stat-card",
+          "id": "income",
+          "data": { "resource": "monthly-income" },
+          "span": 3,
+        },
+        {
+          "type": "stat-card",
+          "id": "expenses",
+          "data": { "resource": "monthly-expenses" },
+          "span": 3,
+        },
+        {
+          "type": "stat-card",
+          "id": "savings",
+          "data": { "resource": "savings-rate" },
+          "span": 3,
+        },
+      ],
     },
     "settings-header": {
       "components": [
         { "type": "heading", "text": "Settings", "level": 1 },
-        { "type": "text", "value": "Manage your account preferences.", "color": "muted-foreground" }
-      ]
-    }
+        {
+          "type": "text",
+          "value": "Manage your account preferences.",
+          "color": "muted-foreground",
+        },
+      ],
+    },
   },
   "routes": [
     {
@@ -2004,36 +2502,40 @@ export function ComponentGroup({ config }: { config: ComponentGroupConfig }) {
       "path": "/",
       "content": [
         { "type": "component-group", "group": "finance-stats" },
-        { "type": "chart", "variant": "line", "data": { "resource": "spending-trend" } }
-      ]
+        {
+          "type": "chart",
+          "variant": "line",
+          "data": { "resource": "spending-trend" },
+        },
+      ],
     },
     {
       "id": "settings",
       "path": "/settings",
       "content": [
         { "type": "component-group", "group": "settings-header" },
-        { "type": "auto-form", "fields": ["..."] }
-      ]
-    }
-  ]
+        { "type": "auto-form", "fields": ["..."] },
+      ],
+    },
+  ],
 }
 ```
 
 ### Files to Create
 
-| File | Purpose |
-|---|---|
-| `src/ui/components/_base/component-group/schema.ts` | Schema |
+| File                                                    | Purpose          |
+| ------------------------------------------------------- | ---------------- |
+| `src/ui/components/_base/component-group/schema.ts`     | Schema           |
 | `src/ui/components/_base/component-group/component.tsx` | Runtime renderer |
-| `src/ui/components/_base/component-group/types.ts` | Types |
-| `src/ui/components/_base/component-group/index.ts` | Exports |
+| `src/ui/components/_base/component-group/types.ts`      | Types            |
+| `src/ui/components/_base/component-group/index.ts`      | Exports          |
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/manifest/schema.ts` | Add `componentGroups` to `manifestConfigSchema` |
-| `src/ui/components/register.ts` | Register `component-group` |
+| File                            | Change                                          |
+| ------------------------------- | ----------------------------------------------- |
+| `src/ui/manifest/schema.ts`     | Add `componentGroups` to `manifestConfigSchema` |
+| `src/ui/components/register.ts` | Register `component-group`                      |
 
 ### Exit Criteria
 
@@ -2069,13 +2571,50 @@ correctly out of the box without external CSS.
 Add to `resolveFrameworkStyles()`:
 
 ```css
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; tab-size: 4; font-family: var(--sn-font-sans, system-ui, sans-serif); line-height: 1.5; }
-body { min-height: 100vh; line-height: inherit; -webkit-font-smoothing: antialiased; }
-img, picture, video, canvas, svg { display: block; max-width: 100%; }
-input, button, textarea, select { font: inherit; }
-p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
-#root { isolation: isolate; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: var(--sn-font-sans, system-ui, sans-serif);
+  line-height: 1.5;
+}
+body {
+  min-height: 100vh;
+  line-height: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root {
+  isolation: isolate;
+}
 ```
 
 #### 8.2: Ensure Keyframes Are Always Present
@@ -2088,8 +2627,15 @@ Verify that `ManifestApp` calls `injectStyleSheet` with both `resolveTokens()` A
 
 ```css
 @keyframes sn-bounce {
-  0%, 100% { opacity: 1; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-8px); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-8px);
+  }
 }
 ```
 
@@ -2117,6 +2663,7 @@ visible: z.union([z.boolean(), fromRefSchema, z.object({ expr: z.string() })]).o
 **Implementation in `ComponentWrapper`:**
 
 When `visible` is `false` (or resolves to `false` from a `FromRef`/expression):
+
 1. If `exitAnimation` is set, play the exit animation
 2. After the exit animation completes, set `display: none`
 3. When `visible` becomes `true` again, remove `display: none` and play the entrance `animation`
@@ -2131,7 +2678,8 @@ useEffect(() => {
   if (isVisible === false && shouldRender) {
     if (config.exitAnimation) {
       setIsAnimatingOut(true);
-      const duration = DURATION_MAP[config.exitAnimation.duration ?? "fast"] ?? 150;
+      const duration =
+        DURATION_MAP[config.exitAnimation.duration ?? "fast"] ?? 150;
       const timer = setTimeout(() => {
         setShouldRender(false);
         setIsAnimatingOut(false);
@@ -2150,6 +2698,7 @@ This is SSR-safe: on server render, `visible: false` components render with `dis
 (no animation). On the client, `useEffect` handles the animation lifecycle.
 
 **Consumer Example — search bar that slides in/out:**
+
 ```jsonc
 {
   "type": "input",
@@ -2157,11 +2706,12 @@ This is SSR-safe: on server render, `visible: false` components render with `dis
   "visible": { "from": "searchOpen" },
   "animation": { "preset": "slide-right", "duration": "fast" },
   "exitAnimation": { "preset": "slide-right", "duration": "fast" },
-  "maxWidth": "300px"
+  "maxWidth": "300px",
 }
 ```
 
 **Consumer Example — notification toast that fades:**
+
 ```jsonc
 {
   "type": "box",
@@ -2175,7 +2725,7 @@ This is SSR-safe: on server render, `visible: false` components render with `dis
   "padding": "md",
   "borderRadius": "lg",
   "shadow": "lg",
-  "children": [{ "type": "text", "value": "Saved!" }]
+  "children": [{ "type": "text", "value": "Saved!" }],
 }
 ```
 
@@ -2186,12 +2736,12 @@ Verify `resolveTokens()` generates `.dark { ... }` block with dark mode token ov
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/tokens/resolve.ts` | Add CSS reset to `resolveFrameworkStyles()`, add `sn-bounce` keyframe |
-| `src/ui/components/_base/schema.ts` | Add `exitAnimation` and `visible` to `baseComponentConfigSchema` |
-| `src/ui/components/_base/component-wrapper.tsx` | Add exit animation + visibility lifecycle logic |
-| `src/ui/manifest/app.tsx` | Verify framework styles injection on mount |
+| File                                            | Change                                                                |
+| ----------------------------------------------- | --------------------------------------------------------------------- |
+| `src/ui/tokens/resolve.ts`                      | Add CSS reset to `resolveFrameworkStyles()`, add `sn-bounce` keyframe |
+| `src/ui/components/_base/schema.ts`             | Add `exitAnimation` and `visible` to `baseComponentConfigSchema`      |
+| `src/ui/components/_base/component-wrapper.tsx` | Add exit animation + visibility lifecycle logic                       |
+| `src/ui/manifest/app.tsx`                       | Verify framework styles injection on mount                            |
 
 ### Exit Criteria
 
@@ -2219,7 +2769,7 @@ and runtime rendering. No fork required. No framework internals exposed.
 ### The Problem
 
 Today, the raw registration functions (`registerComponent`, `registerComponentSchema`)
-are exported, and a consumer *can* call them before `createSnapshot()`. But:
+are exported, and a consumer _can_ call them before `createSnapshot()`. But:
 
 1. **No formal shape** — consumers have to know to call two separate functions in the
    right order. Easy to forget the schema, break intellisense, or register after init.
@@ -2261,10 +2811,13 @@ export interface SnapshotPlugin {
    * Merged into manifest.componentGroups at runtime.
    * Consumer manifest groups take precedence on name collision.
    */
-  componentGroups?: Record<string, {
-    description?: string;
-    components: Record<string, unknown>[];
-  }>;
+  componentGroups?: Record<
+    string,
+    {
+      description?: string;
+      components: Record<string, unknown>[];
+    }
+  >;
   /**
    * Called once during createSnapshot(), after all components are registered.
    * Use for: initializing global state atoms, wiring third-party SDKs,
@@ -2277,7 +2830,10 @@ export interface PluginSetupContext {
   /** The compiled manifest (read-only). */
   manifest: CompiledManifest;
   /** Register a custom workflow action type. */
-  registerWorkflowAction: (type: string, handler: WorkflowActionHandler) => void;
+  registerWorkflowAction: (
+    type: string,
+    handler: WorkflowActionHandler,
+  ) => void;
   /** Register a custom route guard. */
   registerGuard: (name: string, guard: GuardFunction) => void;
   /** Publish a value to the global state registry. */
@@ -2350,7 +2906,12 @@ function createSnapshot(config: SnapshotConfig) {
         const result = plugin.setup(setupContext);
         // If setup returns a promise, warn — plugins should be sync where possible
         if (result instanceof Promise) {
-          result.catch((err) => console.error(`[snapshot] Plugin "${plugin.name}" setup failed:`, err));
+          result.catch((err) =>
+            console.error(
+              `[snapshot] Plugin "${plugin.name}" setup failed:`,
+              err,
+            ),
+          );
         }
       }
     }
@@ -2420,6 +2981,7 @@ export function generateManifestSchema(options: {
 ```
 
 **Consumer's `package.json`:**
+
 ```json
 {
   "scripts": {
@@ -2429,12 +2991,15 @@ export function generateManifestSchema(options: {
 ```
 
 **Consumer's `.vscode/settings.json`:**
+
 ```json
 {
-  "json.schemas": [{
-    "fileMatch": ["snapshot.manifest.json"],
-    "url": "./snapshot-schema.json"
-  }]
+  "json.schemas": [
+    {
+      "fileMatch": ["snapshot.manifest.json"],
+      "url": "./snapshot-schema.json"
+    }
+  ]
 }
 ```
 
@@ -2453,12 +3018,14 @@ import type { chartPlugin } from "./plugins/charts";
 
 // The manifest helper is generic over plugins:
 const manifest = createTypedManifest<[typeof chartPlugin]>({
-  routes: [{
-    content: [
-      { type: "revenue-chart", data: { resource: "revenue" } },
-      //       ^ autocomplete works, shows plugin component props
-    ]
-  }]
+  routes: [
+    {
+      content: [
+        { type: "revenue-chart", data: { resource: "revenue" } },
+        //       ^ autocomplete works, shows plugin component props
+      ],
+    },
+  ],
 });
 ```
 
@@ -2467,10 +3034,15 @@ base `ComponentConfig` union:
 
 ```typescript
 // src/types.ts
-type ExtractPluginComponents<P extends SnapshotPlugin> =
-  P extends { components: infer C }
-    ? { [K in keyof C]: C[K] extends { schema: z.ZodType<infer T> } ? T & { type: K } : never }[keyof C]
-    : never;
+type ExtractPluginComponents<P extends SnapshotPlugin> = P extends {
+  components: infer C;
+}
+  ? {
+      [K in keyof C]: C[K] extends { schema: z.ZodType<infer T> }
+        ? T & { type: K }
+        : never;
+    }[keyof C]
+  : never;
 
 type ComponentConfigWithPlugins<Plugins extends SnapshotPlugin[]> =
   | BaseComponentConfig
@@ -2505,11 +3077,13 @@ const funnelChartSchema = baseComponentConfigSchema.extend({
 
 const kpiGridSchema = baseComponentConfigSchema.extend({
   type: z.literal("kpi-grid"),
-  metrics: z.array(z.object({
-    label: z.string(),
-    resource: z.string(),
-    format: z.enum(["number", "currency", "percent"]).optional(),
-  })),
+  metrics: z.array(
+    z.object({
+      label: z.string(),
+      resource: z.string(),
+      format: z.enum(["number", "currency", "percent"]).optional(),
+    }),
+  ),
   columns: z.number().optional(),
 });
 
@@ -2524,13 +3098,24 @@ export const chartPlugin = definePlugin({
     "executive-dashboard": {
       description: "Standard C-suite KPI overview",
       components: [
-        { type: "kpi-grid", metrics: [
-          { label: "Revenue", resource: "total-revenue", format: "currency" },
-          { label: "Users", resource: "active-users", format: "number" },
-          { label: "Churn", resource: "churn-rate", format: "percent" },
-        ]},
-        { type: "revenue-chart", data: { resource: "revenue-trend" }, height: "300px" },
-        { type: "funnel-chart", data: { resource: "conversion-funnel" }, height: "250px" },
+        {
+          type: "kpi-grid",
+          metrics: [
+            { label: "Revenue", resource: "total-revenue", format: "currency" },
+            { label: "Users", resource: "active-users", format: "number" },
+            { label: "Churn", resource: "churn-rate", format: "percent" },
+          ],
+        },
+        {
+          type: "revenue-chart",
+          data: { resource: "revenue-trend" },
+          height: "300px",
+        },
+        {
+          type: "funnel-chart",
+          data: { resource: "conversion-funnel" },
+          height: "250px",
+        },
       ],
     },
   },
@@ -2560,16 +3145,26 @@ const app = createSnapshot({
 
 ```jsonc
 {
-  "routes": [{
-    "id": "dashboard",
-    "path": "/",
-    "content": [
-      { "type": "component-group", "group": "executive-dashboard" },
-      { "type": "revenue-chart", "data": { "resource": "monthly-revenue" },
-        "height": "400px", "showLegend": true, "period": "month",
-        "padding": "lg", "borderRadius": "lg", "bg": "card", "shadow": "md" }
-    ]
-  }]
+  "routes": [
+    {
+      "id": "dashboard",
+      "path": "/",
+      "content": [
+        { "type": "component-group", "group": "executive-dashboard" },
+        {
+          "type": "revenue-chart",
+          "data": { "resource": "monthly-revenue" },
+          "height": "400px",
+          "showLegend": true,
+          "period": "month",
+          "padding": "lg",
+          "borderRadius": "lg",
+          "bg": "card",
+          "shadow": "md",
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -2579,6 +3174,7 @@ it extends `baseComponentConfigSchema`. `padding`, `bg`, `hover`, `animation` �
 ### SSR Consideration
 
 Plugin components follow the same SSR rules as built-in components:
+
 - `'use client'` directive on all component files
 - No browser APIs during render
 - Plugin `setup()` runs on the client only (inside `createSnapshot` which runs client-side)
@@ -2587,18 +3183,18 @@ Plugin components follow the same SSR rules as built-in components:
 
 ### Files to Create
 
-| File | Purpose |
-|---|---|
-| `src/plugin.ts` | `definePlugin()`, `SnapshotPlugin` type, `PluginSetupContext` type |
-| `src/schema-generator.ts` | `generateManifestSchema()` for build-time schema gen with plugins |
+| File                      | Purpose                                                            |
+| ------------------------- | ------------------------------------------------------------------ |
+| `src/plugin.ts`           | `definePlugin()`, `SnapshotPlugin` type, `PluginSetupContext` type |
+| `src/schema-generator.ts` | `generateManifestSchema()` for build-time schema gen with plugins  |
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/create-snapshot.tsx` | Add `plugins` option, register plugin components/groups/setup |
-| `src/index.ts` | Export `definePlugin`, `SnapshotPlugin`, `generateManifestSchema` |
-| `scripts/generate-manifest-schema.ts` | Refactor to use shared `generateManifestSchema()` |
+| File                                  | Change                                                            |
+| ------------------------------------- | ----------------------------------------------------------------- |
+| `src/create-snapshot.tsx`             | Add `plugins` option, register plugin components/groups/setup     |
+| `src/index.ts`                        | Export `definePlugin`, `SnapshotPlugin`, `generateManifestSchema` |
+| `scripts/generate-manifest-schema.ts` | Refactor to use shared `generateManifestSchema()`                 |
 
 ### Exit Criteria
 
@@ -2620,15 +3216,15 @@ Plugin components follow the same SSR rules as built-in components:
 
 ### Track Overview
 
-| Track | Phases | Key Files |
-|---|---|---|
-| **Schema + Wrapper** | 1, 8 | `_base/schema.ts`, `_base/style-props.ts`, `_base/component-wrapper.tsx`, `tokens/resolve.ts` |
-| **Primitives** | 2 | `layout/box/`, `layout/collapsible/`, `forms/icon-button/`, `overlay/hover-card/`, `forms/toggle-group/` |
-| **Nav Components** | 3 | `layout/nav-*/`, `manifest/schema.ts`, `register.ts` |
-| **Router + Shell** | 4, 5 | `manifest/app.tsx` |
-| **Schema Gen** | 6 | `scripts/generate-manifest-schema.ts` |
-| **Component Groups** | 7 | `_base/component-group/`, `manifest/schema.ts` |
-| **Plugin System** | 9 | `src/plugin.ts`, `src/schema-generator.ts`, `src/create-snapshot.tsx` |
+| Track                | Phases | Key Files                                                                                                |
+| -------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| **Schema + Wrapper** | 1, 8   | `_base/schema.ts`, `_base/style-props.ts`, `_base/component-wrapper.tsx`, `tokens/resolve.ts`            |
+| **Primitives**       | 2      | `layout/box/`, `layout/collapsible/`, `forms/icon-button/`, `overlay/hover-card/`, `forms/toggle-group/` |
+| **Nav Components**   | 3      | `layout/nav-*/`, `manifest/schema.ts`, `register.ts`                                                     |
+| **Router + Shell**   | 4, 5   | `manifest/app.tsx`                                                                                       |
+| **Schema Gen**       | 6      | `scripts/generate-manifest-schema.ts`                                                                    |
+| **Component Groups** | 7      | `_base/component-group/`, `manifest/schema.ts`                                                           |
+| **Plugin System**    | 9      | `src/plugin.ts`, `src/schema-generator.ts`, `src/create-snapshot.tsx`                                    |
 
 ### Dependencies
 
@@ -2681,28 +3277,28 @@ Each phase is a separate commit. Build must pass after each commit.
 ### Functional Requirements
 
 - [ ] **Style Props:** Every component accepts `padding`, `bg`, `shadow`, `borderRadius`, etc.
-  with token resolution. Raw CSS values pass through.
+      with token resolution. Raw CSS values pass through.
 - [ ] **Interactive States:** `hover`, `focus`, `active` props generate scoped CSS on any component
 - [ ] **Responsive Props:** Breakpoint maps on spacing/layout/font props generate media queries
 - [ ] **Missing Primitives:** `box`, `collapsible`, `icon-button`, `hover-card`, `toggle-group`
-  registered and functional
+      registered and functional
 - [ ] **Composable Nav:** `navigation.template` renders arbitrary component composition
 - [ ] **Nav Sub-Components:** `nav-logo`, `nav-link`, `nav-dropdown`, `nav-section`,
-  `nav-search`, `nav-user-menu` registered and functional
+      `nav-search`, `nav-user-menu` registered and functional
 - [ ] **Nested Layouts:** Parent route layouts persist, child content fills main slot.
-  3+ levels deep.
+      3+ levels deep.
 - [ ] **Layout Slots:** Any component can fill any layout slot, including `nav` override
 - [ ] **Intellisense:** JSON Schema shows per-component props based on `type` discriminated union
 - [ ] **Component Groups:** Named component bundles defined once, used anywhere, with overrides
 - [ ] **CSS Baseline:** Reset, keyframes, dark mode all working out of the box
 - [ ] **Entrance Animations:** All 7 presets + stagger work (fade, fade-up, fade-down,
-  slide-left, slide-right, scale, bounce)
+      slide-left, slide-right, scale, bounce)
 - [ ] **Exit Animations:** Components animate out when `visible` transitions to false
 - [ ] **Conditional Visibility:** `visible` prop with boolean, FromRef, and expression support
 - [ ] **Plugin System:** `definePlugin()` + `createSnapshot({ plugins })` registers custom
-  components, groups, and setup hooks
+      components, groups, and setup hooks
 - [ ] **Plugin Intellisense:** `generateManifestSchema({ plugins })` includes custom types
-  in discriminated union schema
+      in discriminated union schema
 
 ### Quality Requirements
 
@@ -2712,7 +3308,7 @@ Each phase is a separate commit. Build must pass after each commit.
 - [ ] **Schema valid:** Generated schema provides full discriminated-union intellisense in VSCode
 - [ ] **Budget-FE works:** The budget app manifest renders correctly with all changes
 - [ ] **SSR-safe:** Every component renders identically on server and client. No hydration
-  mismatch warnings. No browser API calls during render. No layout shift on hydration.
+      mismatch warnings. No browser API calls during render. No layout shift on hydration.
 - [ ] **No regressions:** Existing manifests (budget-fe) render without changes
 
 ### The Litmus Test
@@ -2744,82 +3340,242 @@ component groups, interactive states, and responsive layout:
   "componentGroups": {
     "page-header": {
       "components": [
-        { "type": "row", "alignItems": "center", "justifyContent": "between", "marginY": "lg", "children": [
-          { "type": "heading", "id": "page-title", "text": "Page", "level": 1 },
-          { "type": "row", "gap": "sm", "id": "page-actions", "children": [] }
-        ]}
-      ]
-    }
+        {
+          "type": "row",
+          "alignItems": "center",
+          "justifyContent": "between",
+          "marginY": "lg",
+          "children": [
+            {
+              "type": "heading",
+              "id": "page-title",
+              "text": "Page",
+              "level": 1,
+            },
+            {
+              "type": "row",
+              "gap": "sm",
+              "id": "page-actions",
+              "children": [],
+            },
+          ],
+        },
+      ],
+    },
   },
   "navigation": {
     "mode": "top-nav",
     "template": [
-      { "type": "nav-logo", "text": "Acme", "path": "/", "fontWeight": "bold", "fontSize": "lg" },
-      { "type": "nav-link", "label": "Dashboard", "path": "/", "icon": "LayoutDashboard" },
-      { "type": "nav-link", "label": "Projects", "path": "/projects", "icon": "Folder" },
-      { "type": "nav-dropdown", "label": "Admin", "icon": "Shield", "roles": ["admin"],
+      {
+        "type": "nav-logo",
+        "text": "Acme",
+        "path": "/",
+        "fontWeight": "bold",
+        "fontSize": "lg",
+      },
+      {
+        "type": "nav-link",
+        "label": "Dashboard",
+        "path": "/",
+        "icon": "LayoutDashboard",
+      },
+      {
+        "type": "nav-link",
+        "label": "Projects",
+        "path": "/projects",
+        "icon": "Folder",
+      },
+      {
+        "type": "nav-dropdown",
+        "label": "Admin",
+        "icon": "Shield",
+        "roles": ["admin"],
         "items": [
-          { "type": "nav-link", "label": "Users", "path": "/admin/users", "icon": "Users" },
-          { "type": "nav-link", "label": "Billing", "path": "/admin/billing", "icon": "CreditCard" },
+          {
+            "type": "nav-link",
+            "label": "Users",
+            "path": "/admin/users",
+            "icon": "Users",
+          },
+          {
+            "type": "nav-link",
+            "label": "Billing",
+            "path": "/admin/billing",
+            "icon": "CreditCard",
+          },
           { "type": "divider" },
-          { "type": "nav-link", "label": "Audit Log", "path": "/admin/audit", "icon": "FileText" }
-        ]
+          {
+            "type": "nav-link",
+            "label": "Audit Log",
+            "path": "/admin/audit",
+            "icon": "FileText",
+          },
+        ],
       },
       { "type": "spacer" },
-      { "type": "collapsible", "defaultOpen": false, "publishTo": "searchOpen",
-        "trigger": { "type": "icon-button", "icon": "Search", "ariaLabel": "Search", "variant": "ghost" },
-        "children": [{ "type": "input", "placeholder": "Search...", "maxWidth": "240px", "padding": "sm" }]
+      {
+        "type": "collapsible",
+        "defaultOpen": false,
+        "publishTo": "searchOpen",
+        "trigger": {
+          "type": "icon-button",
+          "icon": "Search",
+          "ariaLabel": "Search",
+          "variant": "ghost",
+        },
+        "children": [
+          {
+            "type": "input",
+            "placeholder": "Search...",
+            "maxWidth": "240px",
+            "padding": "sm",
+          },
+        ],
       },
-      { "type": "icon-button", "icon": "Bell", "ariaLabel": "Notifications", "variant": "ghost",
+      {
+        "type": "icon-button",
+        "icon": "Bell",
+        "ariaLabel": "Notifications",
+        "variant": "ghost",
         "hover": { "bg": "accent" },
-        "badge": { "from": "global.unreadCount" } },
-      { "type": "nav-user-menu", "mode": "compact" }
-    ]
+        "badge": { "from": "global.unreadCount" },
+      },
+      { "type": "nav-user-menu", "mode": "compact" },
+    ],
   },
   "routes": [
-    { "id": "dashboard", "path": "/",
+    {
+      "id": "dashboard",
+      "path": "/",
       "content": [
-        { "type": "component-group", "group": "page-header", "overrides": { "page-title": { "text": "Dashboard" } } },
-        { "type": "grid", "columns": 4, "gap": "lg", "children": [
-          { "type": "stat-card", "data": { "resource": "total-revenue" }, "span": 1 },
-          { "type": "stat-card", "data": { "resource": "active-users" }, "span": 1 },
-          { "type": "stat-card", "data": { "resource": "conversion-rate" }, "span": 1 },
-          { "type": "stat-card", "data": { "resource": "avg-order" }, "span": 1 }
-        ]},
-        { "type": "chart", "variant": "area", "data": { "resource": "revenue-trend" }, "height": "300px" }
-      ]
+        {
+          "type": "component-group",
+          "group": "page-header",
+          "overrides": { "page-title": { "text": "Dashboard" } },
+        },
+        {
+          "type": "grid",
+          "columns": 4,
+          "gap": "lg",
+          "children": [
+            {
+              "type": "stat-card",
+              "data": { "resource": "total-revenue" },
+              "span": 1,
+            },
+            {
+              "type": "stat-card",
+              "data": { "resource": "active-users" },
+              "span": 1,
+            },
+            {
+              "type": "stat-card",
+              "data": { "resource": "conversion-rate" },
+              "span": 1,
+            },
+            {
+              "type": "stat-card",
+              "data": { "resource": "avg-order" },
+              "span": 1,
+            },
+          ],
+        },
+        {
+          "type": "chart",
+          "variant": "area",
+          "data": { "resource": "revenue-trend" },
+          "height": "300px",
+        },
+      ],
     },
-    { "id": "settings", "path": "/settings",
+    {
+      "id": "settings",
+      "path": "/settings",
       "layouts": [{ "type": "sidebar" }],
       "slots": {
         "sidebar": [
-          { "type": "text", "value": "Settings", "fontWeight": "bold", "fontSize": "sm", "padding": "md", "color": "muted-foreground" },
-          { "type": "nav-link", "label": "Profile", "path": "/settings/profile", "icon": "User" },
-          { "type": "nav-link", "label": "Team", "path": "/settings/team", "icon": "Users" },
-          { "type": "nav-link", "label": "Billing", "path": "/settings/billing", "icon": "CreditCard" },
-          { "type": "nav-link", "label": "Integrations", "path": "/settings/integrations", "icon": "Plug" }
-        ]
+          {
+            "type": "text",
+            "value": "Settings",
+            "fontWeight": "bold",
+            "fontSize": "sm",
+            "padding": "md",
+            "color": "muted-foreground",
+          },
+          {
+            "type": "nav-link",
+            "label": "Profile",
+            "path": "/settings/profile",
+            "icon": "User",
+          },
+          {
+            "type": "nav-link",
+            "label": "Team",
+            "path": "/settings/team",
+            "icon": "Users",
+          },
+          {
+            "type": "nav-link",
+            "label": "Billing",
+            "path": "/settings/billing",
+            "icon": "CreditCard",
+          },
+          {
+            "type": "nav-link",
+            "label": "Integrations",
+            "path": "/settings/integrations",
+            "icon": "Plug",
+          },
+        ],
       },
       "content": [{ "type": "text", "value": "Select a settings page." }],
       "children": [
-        { "id": "settings-profile", "path": "profile",
+        {
+          "id": "settings-profile",
+          "path": "profile",
           "content": [
-            { "type": "component-group", "group": "page-header", "overrides": { "page-title": { "text": "Profile" } } },
-            { "type": "auto-form", "resource": "user-profile" }
-          ]
+            {
+              "type": "component-group",
+              "group": "page-header",
+              "overrides": { "page-title": { "text": "Profile" } },
+            },
+            { "type": "auto-form", "resource": "user-profile" },
+          ],
         },
-        { "id": "settings-team", "path": "team",
+        {
+          "id": "settings-team",
+          "path": "team",
           "content": [
-            { "type": "component-group", "group": "page-header", "overrides": {
-              "page-title": { "text": "Team" },
-              "page-actions": { "children": [{ "type": "button", "label": "Invite Member", "icon": "UserPlus", "action": { "type": "open-modal", "modal": "invite-member" } }] }
-            }},
-            { "type": "data-table", "data": { "resource": "team-members" }, "searchable": true }
-          ]
-        }
-      ]
-    }
-  ]
+            {
+              "type": "component-group",
+              "group": "page-header",
+              "overrides": {
+                "page-title": { "text": "Team" },
+                "page-actions": {
+                  "children": [
+                    {
+                      "type": "button",
+                      "label": "Invite Member",
+                      "icon": "UserPlus",
+                      "action": {
+                        "type": "open-modal",
+                        "modal": "invite-member",
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              "type": "data-table",
+              "data": { "resource": "team-members" },
+              "searchable": true,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -2831,74 +3587,153 @@ Proves the litmus test — a polished landing page built entirely from primitive
 {
   "app": { "title": "LaunchPad", "home": "/" },
   "theme": { "flavor": "slate" },
-  "routes": [{
-    "id": "landing",
-    "path": "/",
-    "layouts": ["full-width"],
-    "slots": {
-      "nav": [
-        { "type": "row", "alignItems": "center", "gap": "lg",
-          "padding": { "default": "sm", "md": "md" },
-          "height": "4rem", "bg": "background", "shadow": "sm",
-          "position": "sticky", "inset": "0 0 auto 0",
-          "children": [
-            { "type": "text", "value": "🚀 LaunchPad", "fontWeight": "bold", "fontSize": "xl" },
-            { "type": "row", "gap": "md", "display": { "default": "none", "md": "flex" }, "children": [
-              { "type": "link", "text": "Features", "path": "#features", "fontSize": "sm",
-                "hover": { "color": "primary" } },
-              { "type": "link", "text": "Pricing", "path": "#pricing", "fontSize": "sm",
-                "hover": { "color": "primary" } },
-              { "type": "link", "text": "Docs", "path": "/docs", "fontSize": "sm",
-                "hover": { "color": "primary" } }
-            ]},
-            { "type": "spacer" },
-            { "type": "button", "label": "Sign In", "variant": "ghost",
-              "action": { "type": "navigate", "path": "/login" } },
-            { "type": "button", "label": "Get Started",
-              "bg": "primary", "color": "primary-foreground", "borderRadius": "full",
-              "hover": { "shadow": "lg", "scale": 1.03 },
-              "active": { "scale": 0.97 },
-              "action": { "type": "navigate", "path": "/register" } }
-          ]
-        }
-      ]
-    },
-    "content": [
-      { "type": "box", "as": "section",
-        "bg": { "gradient": { "type": "linear", "direction": "135deg", "stops": [
-          { "color": "var(--sn-color-primary)", "position": "0%" },
-          { "color": "var(--sn-color-accent)", "position": "100%" }
-        ]}},
-        "padding": { "default": "2xl", "lg": "3xl" },
-        "minHeight": "80vh", "display": "flex", "flexDirection": "column",
-        "alignItems": "center", "justifyContent": "center", "gap": "lg",
-        "children": [
-          { "type": "text", "value": "Ship 10x Faster",
-            "fontSize": { "default": "3xl", "lg": "4xl" },
-            "fontWeight": "bold", "color": "primary-foreground", "textAlign": "center",
-            "animation": { "preset": "fade-up" } },
-          { "type": "text", "value": "Build your entire frontend from a single manifest file.",
-            "fontSize": { "default": "base", "md": "lg" },
-            "color": "primary-foreground", "opacity": 0.85, "textAlign": "center",
-            "animation": { "preset": "fade-up", "delay": 100 } },
-          { "type": "row", "gap": "md", "animation": { "preset": "fade-up", "delay": 200 },
-            "flexDirection": { "default": "column", "sm": "row" },
+  "routes": [
+    {
+      "id": "landing",
+      "path": "/",
+      "layouts": ["full-width"],
+      "slots": {
+        "nav": [
+          {
+            "type": "row",
+            "alignItems": "center",
+            "gap": "lg",
+            "padding": { "default": "sm", "md": "md" },
+            "height": "4rem",
+            "bg": "background",
+            "shadow": "sm",
+            "position": "sticky",
+            "inset": "0 0 auto 0",
             "children": [
-              { "type": "button", "label": "Start Free Trial",
-                "bg": "background", "color": "foreground", "borderRadius": "full", "padding": "lg",
-                "hover": { "shadow": "xl", "scale": 1.05 },
-                "action": { "type": "navigate", "path": "/register" } },
-              { "type": "button", "label": "Read the Docs", "variant": "outline",
-                "borderRadius": "full", "padding": "lg", "color": "primary-foreground",
-                "border": "1px solid currentColor",
-                "hover": { "bg": "background", "color": "foreground" },
-                "action": { "type": "navigate", "path": "/docs" } }
-            ]
-          }
-        ]
-      }
-    ]
-  }]
+              {
+                "type": "text",
+                "value": "🚀 LaunchPad",
+                "fontWeight": "bold",
+                "fontSize": "xl",
+              },
+              {
+                "type": "row",
+                "gap": "md",
+                "display": { "default": "none", "md": "flex" },
+                "children": [
+                  {
+                    "type": "link",
+                    "text": "Features",
+                    "path": "#features",
+                    "fontSize": "sm",
+                    "hover": { "color": "primary" },
+                  },
+                  {
+                    "type": "link",
+                    "text": "Pricing",
+                    "path": "#pricing",
+                    "fontSize": "sm",
+                    "hover": { "color": "primary" },
+                  },
+                  {
+                    "type": "link",
+                    "text": "Docs",
+                    "path": "/docs",
+                    "fontSize": "sm",
+                    "hover": { "color": "primary" },
+                  },
+                ],
+              },
+              { "type": "spacer" },
+              {
+                "type": "button",
+                "label": "Sign In",
+                "variant": "ghost",
+                "action": { "type": "navigate", "path": "/login" },
+              },
+              {
+                "type": "button",
+                "label": "Get Started",
+                "bg": "primary",
+                "color": "primary-foreground",
+                "borderRadius": "full",
+                "hover": { "shadow": "lg", "scale": 1.03 },
+                "active": { "scale": 0.97 },
+                "action": { "type": "navigate", "path": "/register" },
+              },
+            ],
+          },
+        ],
+      },
+      "content": [
+        {
+          "type": "box",
+          "as": "section",
+          "bg": {
+            "gradient": {
+              "type": "linear",
+              "direction": "135deg",
+              "stops": [
+                { "color": "var(--sn-color-primary)", "position": "0%" },
+                { "color": "var(--sn-color-accent)", "position": "100%" },
+              ],
+            },
+          },
+          "padding": { "default": "2xl", "lg": "3xl" },
+          "minHeight": "80vh",
+          "display": "flex",
+          "flexDirection": "column",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "gap": "lg",
+          "children": [
+            {
+              "type": "text",
+              "value": "Ship 10x Faster",
+              "fontSize": { "default": "3xl", "lg": "4xl" },
+              "fontWeight": "bold",
+              "color": "primary-foreground",
+              "textAlign": "center",
+              "animation": { "preset": "fade-up" },
+            },
+            {
+              "type": "text",
+              "value": "Build your entire frontend from a single manifest file.",
+              "fontSize": { "default": "base", "md": "lg" },
+              "color": "primary-foreground",
+              "opacity": 0.85,
+              "textAlign": "center",
+              "animation": { "preset": "fade-up", "delay": 100 },
+            },
+            {
+              "type": "row",
+              "gap": "md",
+              "animation": { "preset": "fade-up", "delay": 200 },
+              "flexDirection": { "default": "column", "sm": "row" },
+              "children": [
+                {
+                  "type": "button",
+                  "label": "Start Free Trial",
+                  "bg": "background",
+                  "color": "foreground",
+                  "borderRadius": "full",
+                  "padding": "lg",
+                  "hover": { "shadow": "xl", "scale": 1.05 },
+                  "action": { "type": "navigate", "path": "/register" },
+                },
+                {
+                  "type": "button",
+                  "label": "Read the Docs",
+                  "variant": "outline",
+                  "borderRadius": "full",
+                  "padding": "lg",
+                  "color": "primary-foreground",
+                  "border": "1px solid currentColor",
+                  "hover": { "bg": "background", "color": "foreground" },
+                  "action": { "type": "navigate", "path": "/docs" },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -2906,53 +3741,135 @@ Proves the litmus test — a polished landing page built entirely from primitive
 
 ```jsonc
 {
-  "routes": [{
-    "id": "product",
-    "path": "/products/{productId}",
-    "content": [
-      { "type": "row",
-        "flexDirection": { "default": "column", "lg": "row" },
-        "gap": { "default": "lg", "lg": "2xl" },
-        "padding": { "default": "md", "lg": "xl" },
-        "children": [
-          { "type": "box", "flex": "1", "children": [
-            { "type": "image", "src": { "from": "product.image" }, "borderRadius": "lg",
-              "hover": { "scale": 1.02 } },
-            { "type": "row", "gap": "sm", "marginY": "md", "children": [
-              { "type": "image", "src": { "from": "product.thumbnails[0]" }, "width": "80px", "borderRadius": "md", "cursor": "pointer",
-                "hover": { "border": "2px solid var(--sn-color-primary)" } },
-              { "type": "image", "src": { "from": "product.thumbnails[1]" }, "width": "80px", "borderRadius": "md", "cursor": "pointer",
-                "hover": { "border": "2px solid var(--sn-color-primary)" } }
-            ]}
-          ]},
-          { "type": "box", "flex": "1", "children": [
-            { "type": "text", "value": { "from": "product.name" }, "fontSize": "2xl", "fontWeight": "bold" },
-            { "type": "text", "value": { "from": "product.price", "transform": "currency" }, "fontSize": "xl", "color": "primary", "marginY": "sm" },
-            { "type": "text", "value": { "from": "product.description" }, "color": "muted-foreground", "lineHeight": "relaxed" },
-            { "type": "divider", "marginY": "lg" },
-            { "type": "toggle-group", "mode": "single", "defaultValue": "M", "publishTo": "selectedSize",
-              "items": [
-                { "value": "S", "label": "S" }, { "value": "M", "label": "M" },
-                { "value": "L", "label": "L" }, { "value": "XL", "label": "XL" }
-              ]
+  "routes": [
+    {
+      "id": "product",
+      "path": "/products/{productId}",
+      "content": [
+        {
+          "type": "row",
+          "flexDirection": { "default": "column", "lg": "row" },
+          "gap": { "default": "lg", "lg": "2xl" },
+          "padding": { "default": "md", "lg": "xl" },
+          "children": [
+            {
+              "type": "box",
+              "flex": "1",
+              "children": [
+                {
+                  "type": "image",
+                  "src": { "from": "product.image" },
+                  "borderRadius": "lg",
+                  "hover": { "scale": 1.02 },
+                },
+                {
+                  "type": "row",
+                  "gap": "sm",
+                  "marginY": "md",
+                  "children": [
+                    {
+                      "type": "image",
+                      "src": { "from": "product.thumbnails[0]" },
+                      "width": "80px",
+                      "borderRadius": "md",
+                      "cursor": "pointer",
+                      "hover": {
+                        "border": "2px solid var(--sn-color-primary)",
+                      },
+                    },
+                    {
+                      "type": "image",
+                      "src": { "from": "product.thumbnails[1]" },
+                      "width": "80px",
+                      "borderRadius": "md",
+                      "cursor": "pointer",
+                      "hover": {
+                        "border": "2px solid var(--sn-color-primary)",
+                      },
+                    },
+                  ],
+                },
+              ],
             },
-            { "type": "row", "gap": "md", "marginY": "lg", "children": [
-              { "type": "button", "label": "Add to Cart", "bg": "primary", "color": "primary-foreground",
-                "flex": "1", "padding": "lg", "borderRadius": "lg",
-                "hover": { "shadow": "lg", "scale": 1.02 },
-                "active": { "scale": 0.98 },
-                "action": { "type": "api", "method": "POST", "endpoint": "/api/cart", "body": {
-                  "productId": { "from": "route.params.productId" },
-                  "size": { "from": "selectedSize" }
-                }}
-              },
-              { "type": "icon-button", "icon": "Heart", "ariaLabel": "Add to wishlist", "variant": "outline",
-                "hover": { "color": "destructive", "border": "1px solid var(--sn-color-destructive)" } }
-            ]}
-          ]}
-        ]
-      }
-    ]
-  }]
+            {
+              "type": "box",
+              "flex": "1",
+              "children": [
+                {
+                  "type": "text",
+                  "value": { "from": "product.name" },
+                  "fontSize": "2xl",
+                  "fontWeight": "bold",
+                },
+                {
+                  "type": "text",
+                  "value": { "from": "product.price", "transform": "currency" },
+                  "fontSize": "xl",
+                  "color": "primary",
+                  "marginY": "sm",
+                },
+                {
+                  "type": "text",
+                  "value": { "from": "product.description" },
+                  "color": "muted-foreground",
+                  "lineHeight": "relaxed",
+                },
+                { "type": "divider", "marginY": "lg" },
+                {
+                  "type": "toggle-group",
+                  "mode": "single",
+                  "defaultValue": "M",
+                  "publishTo": "selectedSize",
+                  "items": [
+                    { "value": "S", "label": "S" },
+                    { "value": "M", "label": "M" },
+                    { "value": "L", "label": "L" },
+                    { "value": "XL", "label": "XL" },
+                  ],
+                },
+                {
+                  "type": "row",
+                  "gap": "md",
+                  "marginY": "lg",
+                  "children": [
+                    {
+                      "type": "button",
+                      "label": "Add to Cart",
+                      "bg": "primary",
+                      "color": "primary-foreground",
+                      "flex": "1",
+                      "padding": "lg",
+                      "borderRadius": "lg",
+                      "hover": { "shadow": "lg", "scale": 1.02 },
+                      "active": { "scale": 0.98 },
+                      "action": {
+                        "type": "api",
+                        "method": "POST",
+                        "endpoint": "/api/cart",
+                        "body": {
+                          "productId": { "from": "route.params.productId" },
+                          "size": { "from": "selectedSize" },
+                        },
+                      },
+                    },
+                    {
+                      "type": "icon-button",
+                      "icon": "Heart",
+                      "ariaLabel": "Add to wishlist",
+                      "variant": "outline",
+                      "hover": {
+                        "color": "destructive",
+                        "border": "1px solid var(--sn-color-destructive)",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 ```

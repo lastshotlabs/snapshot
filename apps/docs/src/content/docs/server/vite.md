@@ -16,10 +16,7 @@ import react from "@vitejs/plugin-react";
 import { snapshotSync } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    snapshotSync({ file: "./schema.json", zod: true }),
-  ],
+  plugins: [react(), snapshotSync({ file: "./schema.json", zod: true })],
 });
 ```
 

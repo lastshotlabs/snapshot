@@ -1,8 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import type { SlotOverrides } from "../../_base/types";
-import { BUTTON_INTERACTIVE_CSS, getButtonStyle } from "../../_base/button-styles";
+import {
+  BUTTON_INTERACTIVE_CSS,
+  getButtonStyle,
+} from "../../_base/button-styles";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 

@@ -57,7 +57,9 @@ export function resolveComponentBackgroundStyle(
 
   const layers: string[] = [];
   if (background.overlay) {
-    layers.push(`linear-gradient(${background.overlay}, ${background.overlay})`);
+    layers.push(
+      `linear-gradient(${background.overlay}, ${background.overlay})`,
+    );
   }
   if (background.gradient) {
     layers.push(buildGradientCss(background.gradient));
@@ -68,7 +70,8 @@ export function resolveComponentBackgroundStyle(
 
   return {
     ...(layers.length > 0 ? { backgroundImage: layers.join(", ") } : undefined),
-    backgroundPosition: background.position ?? (background.image ? "center" : undefined),
+    backgroundPosition:
+      background.position ?? (background.image ? "center" : undefined),
     backgroundSize: background.size ?? (background.image ? "cover" : undefined),
     backgroundAttachment: background.fixed ? "fixed" : undefined,
   };

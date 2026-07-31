@@ -68,7 +68,7 @@ export interface RscOptions {
  * @param code - Raw source text of the file.
  */
 export function hasUseClientDirective(code: string): boolean {
-  return _hasDirective(code, 'use client');
+  return _hasDirective(code, "use client");
 }
 
 /**
@@ -78,7 +78,7 @@ export function hasUseClientDirective(code: string): boolean {
  * @param code - Raw source text of the file.
  */
 export function hasUseServerDirective(code: string): boolean {
-  return _hasDirective(code, 'use server');
+  return _hasDirective(code, "use server");
 }
 
 /**
@@ -88,14 +88,14 @@ export function hasUseServerDirective(code: string): boolean {
  * @internal
  */
 function _hasDirective(code: string, directive: string): boolean {
-  const lines = code.split('\n');
+  const lines = code.split("\n");
   for (const rawLine of lines) {
     const line = rawLine.trim();
-    if (line === '') continue;
+    if (line === "") continue;
     // Single-line comments — keep scanning.
-    if (line.startsWith('//')) continue;
+    if (line.startsWith("//")) continue;
     // Block comment open — keep scanning (simplified: skip entire line).
-    if (line.startsWith('/*') || line.startsWith('*')) continue;
+    if (line.startsWith("/*") || line.startsWith("*")) continue;
     // Directive match.
     if (line === `'${directive}'` || line === `'${directive}';`) return true;
     if (line === `"${directive}"` || line === `"${directive}";`) return true;

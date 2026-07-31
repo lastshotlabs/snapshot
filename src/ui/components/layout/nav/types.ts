@@ -1,4 +1,3 @@
-
 export interface NavItemConfig extends Record<string, unknown> {
   label: string;
   path?: string;

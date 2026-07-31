@@ -74,7 +74,7 @@ function LiveUserTable() {
   });
 
   snap.useRoomEvent("admin:users", "user:updated", (user) => {
-    setUsers((prev) => prev.map((u) => u.id === user.id ? user : u));
+    setUsers((prev) => prev.map((u) => (u.id === user.id ? user : u)));
   });
 
   snap.useRoomEvent("admin:users", "user:deleted", ({ id }) => {
@@ -148,7 +148,7 @@ function NotificationSettings() {
     <SwitchField
       label="Push notifications"
       checked={state === "subscribed"}
-      onChange={(checked) => checked ? subscribe() : unsubscribe()}
+      onChange={(checked) => (checked ? subscribe() : unsubscribe())}
     />
   );
 }
@@ -186,35 +186,50 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 function ChatRoom({ roomId }: { roomId: string }) {
   const [messages, setMessages] = useState<any[]>([]);
-  const [typingUsers, setTypingUsers] = useState<{ name: string; avatar?: string }[]>([]);
+  const [typingUsers, setTypingUsers] = useState<
+    { name: string; avatar?: string }[]
+  >([]);
   const { send, isConnected } = snap.useSocket();
-  const typingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const typingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(
+    new Map(),
+  );
 
   snap.useRoom(`chat:${roomId}`);
 
-  snap.useRoomEvent(`chat:${roomId}`, "message", useCallback((msg: any) => {
-    setMessages((prev) => [...prev, msg]);
-  }, []));
+  snap.useRoomEvent(
+    `chat:${roomId}`,
+    "message",
+    useCallback((msg: any) => {
+      setMessages((prev) => [...prev, msg]);
+    }, []),
+  );
 
-  snap.useRoomEvent(`chat:${roomId}`, "typing", useCallback(({ user, isTyping }: any) => {
-    // Clear any existing expiry timer for this user
-    const existing = typingTimers.current.get(user.name);
-    if (existing) clearTimeout(existing);
+  snap.useRoomEvent(
+    `chat:${roomId}`,
+    "typing",
+    useCallback(({ user, isTyping }: any) => {
+      // Clear any existing expiry timer for this user
+      const existing = typingTimers.current.get(user.name);
+      if (existing) clearTimeout(existing);
 
-    if (isTyping) {
-      setTypingUsers((prev) =>
-        prev.some((u) => u.name === user.name) ? prev : [...prev, user]
-      );
-      // Auto-expire after 3 seconds
-      typingTimers.current.set(user.name, setTimeout(() => {
+      if (isTyping) {
+        setTypingUsers((prev) =>
+          prev.some((u) => u.name === user.name) ? prev : [...prev, user],
+        );
+        // Auto-expire after 3 seconds
+        typingTimers.current.set(
+          user.name,
+          setTimeout(() => {
+            setTypingUsers((prev) => prev.filter((u) => u.name !== user.name));
+            typingTimers.current.delete(user.name);
+          }, 3000),
+        );
+      } else {
         setTypingUsers((prev) => prev.filter((u) => u.name !== user.name));
         typingTimers.current.delete(user.name);
-      }, 3000));
-    } else {
-      setTypingUsers((prev) => prev.filter((u) => u.name !== user.name));
-      typingTimers.current.delete(user.name);
-    }
-  }, []));
+      }
+    }, []),
+  );
 
   // Cleanup all timers on unmount
   useEffect(() => {
@@ -227,13 +242,24 @@ function ChatRoom({ roomId }: { roomId: string }) {
 
   return (
     <ColumnBase>
-      {!isConnected && <AlertBase severity="warning">Reconnecting...</AlertBase>}
+      {!isConnected && (
+        <AlertBase severity="warning">Reconnecting...</AlertBase>
+      )}
       <ChatWindowBase
         title={`Room: ${roomId}`}
         threadSlot={
-          <MessageThreadBase messages={messages} contentField="body" authorNameField="name" showTimestamps />
+          <MessageThreadBase
+            messages={messages}
+            contentField="body"
+            authorNameField="name"
+            showTimestamps
+          />
         }
-        typingSlot={typingUsers.length > 0 ? <TypingIndicatorBase users={typingUsers} maxDisplay={3} /> : null}
+        typingSlot={
+          typingUsers.length > 0 ? (
+            <TypingIndicatorBase users={typingUsers} maxDisplay={3} />
+          ) : null
+        }
         inputSlot={<ChatInput onSend={sendMessage} disabled={!isConnected} />}
       />
     </ColumnBase>
@@ -253,22 +279,35 @@ function LiveTodoList() {
   snap.useRoom("todos");
 
   // Server confirms the create
-  snap.useRoomEvent("todos", "todo:created", useCallback((todo: any) => {
-    setTodos((prev) => {
-      // Replace optimistic entry (matched by tempId) with server version
-      const without = prev.filter((t) => t.id !== todo.tempId);
-      return [...without, todo];
-    });
-  }, []));
+  snap.useRoomEvent(
+    "todos",
+    "todo:created",
+    useCallback((todo: any) => {
+      setTodos((prev) => {
+        // Replace optimistic entry (matched by tempId) with server version
+        const without = prev.filter((t) => t.id !== todo.tempId);
+        return [...without, todo];
+      });
+    }, []),
+  );
 
-  snap.useRoomEvent("todos", "todo:toggled", useCallback((update: any) => {
-    setTodos((prev) => prev.map((t) => t.id === update.id ? { ...t, done: update.done } : t));
-  }, []));
+  snap.useRoomEvent(
+    "todos",
+    "todo:toggled",
+    useCallback((update: any) => {
+      setTodos((prev) =>
+        prev.map((t) => (t.id === update.id ? { ...t, done: update.done } : t)),
+      );
+    }, []),
+  );
 
   const addTodo = (text: string) => {
     const tempId = crypto.randomUUID();
     // Optimistic: show immediately
-    setTodos((prev) => [...prev, { id: tempId, text, done: false, optimistic: true }]);
+    setTodos((prev) => [
+      ...prev,
+      { id: tempId, text, done: false, optimistic: true },
+    ]);
     // Send to server
     send({ type: "todo:create", text, tempId });
   };

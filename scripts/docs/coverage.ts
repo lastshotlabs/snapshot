@@ -66,15 +66,7 @@ const generatedReferenceDocs = [
     "reference",
     "components.md",
   ),
-  repoPath(
-    "apps",
-    "docs",
-    "src",
-    "content",
-    "docs",
-    "reference",
-    "cli.md",
-  ),
+  repoPath("apps", "docs", "src", "content", "docs", "reference", "cli.md"),
 ];
 
 const configPath = ts.findConfigFile(

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useCallback,
@@ -65,7 +65,9 @@ export function CarouselBase({
 }: CarouselBaseProps) {
   const [current, setCurrent] = useState(0);
   const count = children.length;
-  const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(
+    undefined,
+  );
   const rootId = id ?? "carousel";
 
   const goTo = useCallback(
@@ -110,7 +112,11 @@ export function CarouselBase({
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
-    implementationBase: { position: "relative", width: "100%", display: "block" },
+    implementationBase: {
+      position: "relative",
+      width: "100%",
+      display: "block",
+    },
     componentSurface: className || style ? { className, style } : undefined,
     itemSurface: slots?.root,
   });
@@ -125,7 +131,8 @@ export function CarouselBase({
       display: "flex",
       style: {
         transform: `translateX(-${current * 100}%)`,
-        transition: "transform var(--sn-duration-normal, 300ms) var(--sn-ease-out, ease-out)",
+        transition:
+          "transform var(--sn-duration-normal, 300ms) var(--sn-ease-out, ease-out)",
       },
     },
     componentSurface: slots?.track,
@@ -133,7 +140,12 @@ export function CarouselBase({
   const controlsSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-controls`,
     implementationBase: {
-      position: "absolute", inset: "0", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "sm",
+      position: "absolute",
+      inset: "0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "sm",
       style: { pointerEvents: "none" },
     },
     componentSurface: slots?.controls,
@@ -141,24 +153,39 @@ export function CarouselBase({
   const indicatorSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-indicator`,
     implementationBase: {
-      position: "absolute", display: "flex", gap: "xs",
-      style: { left: "50%", bottom: "var(--sn-spacing-sm, 0.5rem)", transform: "translateX(-50%)" },
+      position: "absolute",
+      display: "flex",
+      gap: "xs",
+      style: {
+        left: "50%",
+        bottom: "var(--sn-spacing-sm, 0.5rem)",
+        transform: "translateX(-50%)",
+      },
     },
     componentSurface: slots?.indicator,
   });
   const prevButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-prev-button`,
     implementationBase: {
-      display: "inline-flex", alignItems: "center", justifyContent: "center",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
       color: "var(--sn-color-background, #ffffff)",
       bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 72%, transparent)",
       borderRadius: "full",
       cursor: count > 1 ? "pointer" : "not-allowed",
       focus: { ring: true },
-      hover: { bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 84%, transparent)" },
+      hover: {
+        bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 84%, transparent)",
+      },
       active: { scale: 0.96 },
       states: { disabled: { opacity: 0.45, cursor: "not-allowed" } },
-      style: { width: "2.5rem", height: "2.5rem", border: "none", pointerEvents: "auto" },
+      style: {
+        width: "2.5rem",
+        height: "2.5rem",
+        border: "none",
+        pointerEvents: "auto",
+      },
     },
     componentSurface: slots?.prevButton,
     activeStates: count > 1 ? [] : ["disabled"],
@@ -166,16 +193,25 @@ export function CarouselBase({
   const nextButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-next-button`,
     implementationBase: {
-      display: "inline-flex", alignItems: "center", justifyContent: "center",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
       color: "var(--sn-color-background, #ffffff)",
       bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 72%, transparent)",
       borderRadius: "full",
       cursor: count > 1 ? "pointer" : "not-allowed",
       focus: { ring: true },
-      hover: { bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 84%, transparent)" },
+      hover: {
+        bg: "color-mix(in oklch, var(--sn-color-foreground, #111827) 84%, transparent)",
+      },
       active: { scale: 0.96 },
       states: { disabled: { opacity: 0.45, cursor: "not-allowed" } },
-      style: { width: "2.5rem", height: "2.5rem", border: "none", pointerEvents: "auto" },
+      style: {
+        width: "2.5rem",
+        height: "2.5rem",
+        border: "none",
+        pointerEvents: "auto",
+      },
     },
     componentSurface: slots?.nextButton,
     activeStates: count > 1 ? [] : ["disabled"],
@@ -188,7 +224,8 @@ export function CarouselBase({
           surfaceId: `${rootId}-slide-${index}`,
           implementationBase: { style: { minWidth: "100%", flexShrink: 0 } },
           componentSurface: slots?.slide,
-          activeStates: index === current ? ["active", "selected", "current"] : [],
+          activeStates:
+            index === current ? ["active", "selected", "current"] : [],
         }),
       ),
     [children, slots?.slide, current, rootId],
@@ -200,16 +237,31 @@ export function CarouselBase({
         resolveSurfacePresentation({
           surfaceId: `${rootId}-indicator-item-${index}`,
           implementationBase: {
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             bg: "color-mix(in oklch, var(--sn-color-background, #ffffff) 48%, transparent)",
-            borderRadius: "full", cursor: "pointer",
-            hover: { bg: "color-mix(in oklch, var(--sn-color-background, #ffffff) 72%, transparent)" },
-            focus: { ring: true }, active: { scale: 0.92 },
-            states: { selected: { bg: "var(--sn-color-primary, #2563eb)" }, current: { bg: "var(--sn-color-primary, #2563eb)" } },
-            style: { width: "0.625rem", height: "0.625rem", border: "none", padding: 0 },
+            borderRadius: "full",
+            cursor: "pointer",
+            hover: {
+              bg: "color-mix(in oklch, var(--sn-color-background, #ffffff) 72%, transparent)",
+            },
+            focus: { ring: true },
+            active: { scale: 0.92 },
+            states: {
+              selected: { bg: "var(--sn-color-primary, #2563eb)" },
+              current: { bg: "var(--sn-color-primary, #2563eb)" },
+            },
+            style: {
+              width: "0.625rem",
+              height: "0.625rem",
+              border: "none",
+              padding: 0,
+            },
           },
           componentSurface: slots?.indicatorItem,
-          activeStates: index === current ? ["active", "selected", "current"] : [],
+          activeStates:
+            index === current ? ["active", "selected", "current"] : [],
         }),
       ),
     [children, slots?.indicatorItem, current, rootId],
@@ -227,13 +279,27 @@ export function CarouselBase({
       onPointerEnter={stopAutoPlay}
       onPointerLeave={startAutoPlay}
       onKeyDown={(e) => {
-        if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
-        if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          prev();
+        }
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          next();
+        }
       }}
       style={rootSurface.style as CSSProperties | undefined}
     >
-      <div data-snapshot-id={`${rootId}-viewport`} className={viewportSurface.className} style={viewportSurface.style}>
-        <div data-snapshot-id={`${rootId}-track`} className={trackSurface.className} style={trackSurface.style}>
+      <div
+        data-snapshot-id={`${rootId}-viewport`}
+        className={viewportSurface.className}
+        style={viewportSurface.style}
+      >
+        <div
+          data-snapshot-id={`${rootId}-track`}
+          className={trackSurface.className}
+          style={trackSurface.style}
+        >
           {children.map((child, index) => (
             <div
               key={`slide-${index}`}
@@ -251,18 +317,30 @@ export function CarouselBase({
       </div>
 
       {showArrows && count > 1 ? (
-        <div data-snapshot-id={`${rootId}-controls`} className={controlsSurface.className} style={controlsSurface.style}>
+        <div
+          data-snapshot-id={`${rootId}-controls`}
+          className={controlsSurface.className}
+          style={controlsSurface.style}
+        >
           <ButtonControl
-            type="button" onClick={prev} ariaLabel="Previous slide"
-            surfaceId={`${rootId}-prev-button`} variant="ghost" size="icon"
+            type="button"
+            onClick={prev}
+            ariaLabel="Previous slide"
+            surfaceId={`${rootId}-prev-button`}
+            variant="ghost"
+            size="icon"
             surfaceConfig={prevButtonSurface.resolvedConfigForWrapper}
             activeStates={count > 1 ? [] : ["disabled"]}
           >
             &#x2039;
           </ButtonControl>
           <ButtonControl
-            type="button" onClick={next} ariaLabel="Next slide"
-            surfaceId={`${rootId}-next-button`} variant="ghost" size="icon"
+            type="button"
+            onClick={next}
+            ariaLabel="Next slide"
+            surfaceId={`${rootId}-next-button`}
+            variant="ghost"
+            size="icon"
             surfaceConfig={nextButtonSurface.resolvedConfigForWrapper}
             activeStates={count > 1 ? [] : ["disabled"]}
           >
@@ -272,14 +350,26 @@ export function CarouselBase({
       ) : null}
 
       {showDots && count > 1 ? (
-        <div data-snapshot-id={`${rootId}-indicator`} className={indicatorSurface.className} style={indicatorSurface.style}>
+        <div
+          data-snapshot-id={`${rootId}-indicator`}
+          className={indicatorSurface.className}
+          style={indicatorSurface.style}
+        >
           {children.map((_, index) => (
             <ButtonControl
-              key={`indicator-${index}`} type="button" onClick={() => goTo(index)}
-              ariaLabel={`Go to slide ${index + 1}`} surfaceId={`${rootId}-indicator-item-${index}`}
-              variant="ghost" size="icon"
-              surfaceConfig={indicatorItemSurfaces[index]?.resolvedConfigForWrapper}
-              activeStates={index === current ? ["active", "selected", "current"] : []}
+              key={`indicator-${index}`}
+              type="button"
+              onClick={() => goTo(index)}
+              ariaLabel={`Go to slide ${index + 1}`}
+              surfaceId={`${rootId}-indicator-item-${index}`}
+              variant="ghost"
+              size="icon"
+              surfaceConfig={
+                indicatorItemSurfaces[index]?.resolvedConfigForWrapper
+              }
+              activeStates={
+                index === current ? ["active", "selected", "current"] : []
+              }
             >
               <span aria-hidden="true" />
             </ButtonControl>

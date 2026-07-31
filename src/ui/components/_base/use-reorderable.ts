@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { arrayMove } from "../../hooks/use-drag-drop";
@@ -16,7 +16,8 @@ function areEntriesEqual<T>(
     previous.length === next.length &&
     previous.every(
       (entry, index) =>
-        entry.id === next[index]?.id && Object.is(entry.item, next[index]?.item),
+        entry.id === next[index]?.id &&
+        Object.is(entry.item, next[index]?.item),
     )
   );
 }
@@ -193,35 +194,29 @@ export function useReorderable<T>({
     () => entries.map((entry) => entry.item),
     [entries],
   );
-  const itemIds = useMemo(
-    () => entries.map((entry) => entry.id),
-    [entries],
-  );
+  const itemIds = useMemo(() => entries.map((entry) => entry.id), [entries]);
 
-  const moveItem = useCallback(
-    async (activeId: string, overId: string) => {
-      const currentEntries = entriesRef.current;
-      const oldIndex = currentEntries.findIndex((entry) => entry.id === activeId);
-      const newIndex = currentEntries.findIndex((entry) => entry.id === overId);
-      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) {
-        return null;
-      }
+  const moveItem = useCallback(async (activeId: string, overId: string) => {
+    const currentEntries = entriesRef.current;
+    const oldIndex = currentEntries.findIndex((entry) => entry.id === activeId);
+    const newIndex = currentEntries.findIndex((entry) => entry.id === overId);
+    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) {
+      return null;
+    }
 
-      const reorderedEntries = arrayMove(currentEntries, oldIndex, newIndex);
-      entriesRef.current = reorderedEntries;
-      setEntries(reorderedEntries);
+    const reorderedEntries = arrayMove(currentEntries, oldIndex, newIndex);
+    entriesRef.current = reorderedEntries;
+    setEntries(reorderedEntries);
 
-      const context = {
-        oldIndex,
-        newIndex,
-        item: currentEntries[oldIndex]!.item,
-        items: reorderedEntries.map((entry) => entry.item),
-      };
-      await onReorderRef.current?.(context);
-      return context;
-    },
-    [],
-  );
+    const context = {
+      oldIndex,
+      newIndex,
+      item: currentEntries[oldIndex]!.item,
+      items: reorderedEntries.map((entry) => entry.item),
+    };
+    await onReorderRef.current?.(context);
+    return context;
+  }, []);
 
   const removeItem = useCallback(
     (itemId: string): RemoveItemResult<T> | null => {

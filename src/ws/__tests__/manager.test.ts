@@ -320,7 +320,11 @@ describe("WebSocketManager input-epoch stamping", () => {
     const { manager, ws } = openManagerWithEpoch(5);
 
     // A late/reordered frame reporting an older epoch must not lower the value.
-    ws.simulateMessage({ type: "game:score.changed", sessionId: "sess-1", epoch: 3 });
+    ws.simulateMessage({
+      type: "game:score.changed",
+      sessionId: "sess-1",
+      epoch: 3,
+    });
 
     manager.send("game:input", {
       type: "game:input",
@@ -361,7 +365,9 @@ describe("WebSocketManager input-epoch stamping", () => {
     });
 
     const input = ws.received.find((m) => m["event"] === "game:input")!;
-    expect((input["payload"] as Record<string, unknown>)["epoch"]).toBeUndefined();
+    expect(
+      (input["payload"] as Record<string, unknown>)["epoch"],
+    ).toBeUndefined();
     manager.disconnect();
   });
 });

@@ -201,7 +201,8 @@ export function DatePickerField({
   const presetButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-presetButton`,
     implementationBase: {
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #d1d5db)",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #d1d5db)",
       bg: "var(--sn-color-card, #ffffff)",
       borderRadius: "sm",
       paddingY: "xs",
@@ -221,7 +222,8 @@ export function DatePickerField({
     paddingY: "sm",
     paddingX: "md",
     borderRadius: "md",
-    border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+    border:
+      "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
     bg: "var(--sn-color-background, #ffffff)",
     fontSize: "sm",
     focus: {
@@ -282,7 +284,8 @@ export function DatePickerField({
   const multipleAddButtonSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-multipleAddButton`,
     implementationBase: {
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #d1d5db)",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #d1d5db)",
       bg: "var(--sn-color-card, #ffffff)",
       borderRadius: "sm",
       paddingY: "sm",
@@ -309,7 +312,8 @@ export function DatePickerField({
   const multipleValueSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-multipleValue`,
     implementationBase: {
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #d1d5db)",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #d1d5db)",
       bg: "var(--sn-color-secondary, #f3f4f6)",
       borderRadius: "full",
       paddingY: "xs",
@@ -373,7 +377,9 @@ export function DatePickerField({
                     return;
                   }
                   if (mode === "multiple") {
-                    const nextValue = [preset.start, preset.end].filter(Boolean);
+                    const nextValue = [preset.start, preset.end].filter(
+                      Boolean,
+                    );
                     setMultipleValue(nextValue);
                     triggerChange(toOutputValue(nextValue, valueFormat));
                     return;
@@ -471,7 +477,9 @@ export function DatePickerField({
               <ButtonControl
                 type="button"
                 surfaceId={`${rootId}-multipleAddButton`}
-                surfaceConfig={multipleAddButtonSurface.resolvedConfigForWrapper}
+                surfaceConfig={
+                  multipleAddButtonSurface.resolvedConfigForWrapper
+                }
                 variant="ghost"
                 size="sm"
                 onClick={() => {
@@ -482,7 +490,9 @@ export function DatePickerField({
                     return;
                   }
                   const nextValue = [...multipleValue, multipleInput]
-                    .filter((value, index, array) => array.indexOf(value) === index)
+                    .filter(
+                      (value, index, array) => array.indexOf(value) === index,
+                    )
                     .sort();
                   setMultipleValue(nextValue);
                   setMultipleInput("");
@@ -506,7 +516,9 @@ export function DatePickerField({
                   variant="ghost"
                   size="sm"
                   onClick={() => {
-                    const nextValue = multipleValue.filter((entry) => entry !== value);
+                    const nextValue = multipleValue.filter(
+                      (entry) => entry !== value,
+                    );
                     setMultipleValue(nextValue);
                     triggerChange(toOutputValue(nextValue, valueFormat));
                   }}

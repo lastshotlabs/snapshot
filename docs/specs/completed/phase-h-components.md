@@ -2,18 +2,18 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | H.1 | Chart Enhancement | Not started | Data |
-> | H.2 | Feed Enhancement | Not started | Data |
-> | H.3 | Wizard Enhancement | Not started | Forms |
-> | H.4 | Command Palette Enhancement | Not started | Overlay |
-> | H.5 | Toast with Undo | Not started | Overlay |
-> | H.6 | Date Picker | Not started | Forms |
-> | H.7 | Slider | Not started | Forms |
-> | H.8 | Color Picker | Not started | Forms |
-> | H.9 | Auto Skeleton Loading | Not started | Data |
-> | H.10 | Auto Empty States | Not started | Data |
+> | Phase | Title                       | Status      | Track   |
+> | ----- | --------------------------- | ----------- | ------- |
+> | H.1   | Chart Enhancement           | Not started | Data    |
+> | H.2   | Feed Enhancement            | Not started | Data    |
+> | H.3   | Wizard Enhancement          | Not started | Forms   |
+> | H.4   | Command Palette Enhancement | Not started | Overlay |
+> | H.5   | Toast with Undo             | Not started | Overlay |
+> | H.6   | Date Picker                 | Not started | Forms   |
+> | H.7   | Slider                      | Not started | Forms   |
+> | H.8   | Color Picker                | Not started | Forms   |
+> | H.9   | Auto Skeleton Loading       | Not started | Data    |
+> | H.10  | Auto Empty States           | Not started | Data    |
 >
 > **Priority:** P2 — extends the component library for production-complete applications.
 > **Depends on:** Phase A (CSS Foundation), Phase D (Interactivity — actions, DnD), Phase E (State — expressions).
@@ -71,48 +71,48 @@ well. But production applications need richer variants and a few missing primiti
 
 ### Chart Component
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/data/chart/schema.ts` | ~120 | `chartConfigSchema`: `variant` (bar, line, pie, donut, area), `data`, `xAxis`, `yAxis`, `legend`, `tooltip`. No sparkline/funnel/radar/treemap/scatter. No `onClick`. No `aspectRatio`. |
-| `src/ui/components/data/chart/component.tsx` | ~300 | Renders charts using canvas or SVG. Supports 5 variants. |
+| File                                         | Lines | What Exists                                                                                                                                                                             |
+| -------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/data/chart/schema.ts`     | ~120  | `chartConfigSchema`: `variant` (bar, line, pie, donut, area), `data`, `xAxis`, `yAxis`, `legend`, `tooltip`. No sparkline/funnel/radar/treemap/scatter. No `onClick`. No `aspectRatio`. |
+| `src/ui/components/data/chart/component.tsx` | ~300  | Renders charts using canvas or SVG. Supports 5 variants.                                                                                                                                |
 
 ### Feed Component
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/data/feed/schema.ts` | ~80 | `feedConfigSchema`: `items`, `timestamp`, `avatar`, `content`. No `infinite`, `groupBy`, `relativeTime`, per-item `actions`. |
-| `src/ui/components/data/feed/component.tsx` | ~200 | Renders feed items chronologically. Absolute timestamps. |
+| File                                        | Lines | What Exists                                                                                                                  |
+| ------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/data/feed/schema.ts`     | ~80   | `feedConfigSchema`: `items`, `timestamp`, `avatar`, `content`. No `infinite`, `groupBy`, `relativeTime`, per-item `actions`. |
+| `src/ui/components/data/feed/component.tsx` | ~200  | Renders feed items chronologically. Absolute timestamps.                                                                     |
 
 ### Wizard Component
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/forms/wizard/schema.ts` | ~100 | `wizardConfigSchema`: `steps` (label, content, icon), `orientation`. No `validate`, `skip`, `asyncValidate`, `actions` per step. |
-| `src/ui/components/forms/wizard/component.tsx` | ~250 | Multi-step form with navigation. No validation before step advance. |
+| File                                           | Lines | What Exists                                                                                                                      |
+| ---------------------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/wizard/schema.ts`     | ~100  | `wizardConfigSchema`: `steps` (label, content, icon), `orientation`. No `validate`, `skip`, `asyncValidate`, `actions` per step. |
+| `src/ui/components/forms/wizard/component.tsx` | ~250  | Multi-step form with navigation. No validation before step advance.                                                              |
 
 ### Command Palette Component
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/components/overlay/command-palette/schema.ts` | ~70 | `commandPaletteConfigSchema`: `items` (label, action, icon, shortcut). Static items only. No `searchEndpoint`, no `recentItems`. |
-| `src/ui/components/overlay/command-palette/component.tsx` | ~200 | Renders searchable command list. Client-side fuzzy filter. |
+| File                                                      | Lines | What Exists                                                                                                                      |
+| --------------------------------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/overlay/command-palette/schema.ts`     | ~70   | `commandPaletteConfigSchema`: `items` (label, action, icon, shortcut). Static items only. No `searchEndpoint`, no `recentItems`. |
+| `src/ui/components/overlay/command-palette/component.tsx` | ~200  | Renders searchable command list. Client-side fuzzy filter.                                                                       |
 
 ### Toast System
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ui/actions/toast.ts` | ~120 | `ToastContainer`, `useToastManager()`. Toast types: success, error, warning, info. Duration-based auto-dismiss. No `undo`. |
+| File                      | Lines | What Exists                                                                                                                |
+| ------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/actions/toast.ts` | ~120  | `ToastContainer`, `useToastManager()`. Toast types: success, error, warning, info. Duration-based auto-dismiss. No `undo`. |
 
 ### Skeleton Component
 
-| File | What |
-|---|---|
+| File                               | What                                                                       |
+| ---------------------------------- | -------------------------------------------------------------------------- |
 | `src/ui/components/data/skeleton/` | Standalone skeleton component. Can be placed manually. Not auto-generated. |
 
 ### Empty State Component
 
-| File | What |
-|---|---|
+| File                                  | What                                                                                                           |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `src/ui/components/data/empty-state/` | Standalone empty-state component with icon, title, description. Not auto-generated from data component config. |
 
 ---
@@ -131,21 +131,21 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ui/components/data/chart/schema.ts` | Chart schema | ~120 |
-| `src/ui/components/data/chart/component.tsx` | Chart component | ~300 |
-| `src/ui/components/data/feed/schema.ts` | Feed schema | ~80 |
-| `src/ui/components/data/feed/component.tsx` | Feed component | ~200 |
-| `src/ui/components/forms/wizard/schema.ts` | Wizard schema | ~100 |
-| `src/ui/components/forms/wizard/component.tsx` | Wizard component | ~250 |
-| `src/ui/components/overlay/command-palette/schema.ts` | Command palette schema | ~70 |
-| `src/ui/components/overlay/command-palette/component.tsx` | Command palette component | ~200 |
-| `src/ui/actions/toast.ts` | Toast system | ~120 |
-| `src/ui/components/data/skeleton/` | Skeleton component | ~60 |
-| `src/ui/components/data/empty-state/` | Empty state component | ~80 |
-| `src/ui/components/_base/use-component-data.ts` | Data fetching hook | ~200 |
-| `src/ui/manifest/schema.ts` | All manifest schemas | ~1400 |
+| Path                                                      | What                      | Lines |
+| --------------------------------------------------------- | ------------------------- | ----- |
+| `src/ui/components/data/chart/schema.ts`                  | Chart schema              | ~120  |
+| `src/ui/components/data/chart/component.tsx`              | Chart component           | ~300  |
+| `src/ui/components/data/feed/schema.ts`                   | Feed schema               | ~80   |
+| `src/ui/components/data/feed/component.tsx`               | Feed component            | ~200  |
+| `src/ui/components/forms/wizard/schema.ts`                | Wizard schema             | ~100  |
+| `src/ui/components/forms/wizard/component.tsx`            | Wizard component          | ~250  |
+| `src/ui/components/overlay/command-palette/schema.ts`     | Command palette schema    | ~70   |
+| `src/ui/components/overlay/command-palette/component.tsx` | Command palette component | ~200  |
+| `src/ui/actions/toast.ts`                                 | Toast system              | ~120  |
+| `src/ui/components/data/skeleton/`                        | Skeleton component        | ~60   |
+| `src/ui/components/data/empty-state/`                     | Empty state component     | ~80   |
+| `src/ui/components/_base/use-component-data.ts`           | Data fetching hook        | ~200  |
+| `src/ui/manifest/schema.ts`                               | All manifest schemas      | ~1400 |
 
 ---
 
@@ -155,7 +155,7 @@ bun test                 # vitest
 2. **No `any`** (Rule: Code Patterns #3) — strict types on all new props and variants.
 3. **SSR safe** (Rule: SSR #3) — no browser APIs in render body.
 4. **Semantic tokens only** (Rule: Component #semantic) — all new UI uses `--sn-*` tokens. Verify every CSS variable against the canonical token list.
-5. **Component file conventions** (Rule: Component File Conventions) — schema.ts, component.tsx, types.ts, index.ts, __tests__/.
+5. **Component file conventions** (Rule: Component File Conventions) — schema.ts, component.tsx, types.ts, index.ts, **tests**/.
 6. **One code path** (Rule: Config-Driven UI #1) — enhance existing components, do not create parallel ones.
 7. **Backwards compatible** — all new props optional, existing configs unchanged.
 8. **Playground integration** — every new variant/component must have playground fixtures.
@@ -182,8 +182,16 @@ export const chartConfigSchema = z.object({
    * New: sparkline, funnel, radar, treemap, scatter.
    */
   variant: z.enum([
-    "bar", "line", "pie", "donut", "area",
-    "sparkline", "funnel", "radar", "treemap", "scatter",
+    "bar",
+    "line",
+    "pie",
+    "donut",
+    "area",
+    "sparkline",
+    "funnel",
+    "radar",
+    "treemap",
+    "scatter",
   ]),
   /**
    * Aspect ratio for the chart container. e.g. "16/9", "4/3", "1/1".
@@ -210,7 +218,10 @@ Each new variant gets a render function in the chart component:
  * Sparkline — minimal inline chart, no axes, no labels.
  * Designed for compact display (e.g., inside a stat-card).
  */
-export function renderSparkline(data: ChartData, config: ChartConfig): ReactNode {
+export function renderSparkline(
+  data: ChartData,
+  config: ChartConfig,
+): ReactNode {
   // SVG path from data points, no axes/legend
   // Uses --sn-color-primary for the line
 }
@@ -252,15 +263,18 @@ export function renderScatter(data: ChartData, config: ChartConfig): ReactNode {
 
 ```tsx
 // In chart component:
-const handleElementClick = useCallback((dataPoint: unknown, index: number) => {
-  if (!config.onClick) return;
-  executeAction(config.onClick, {
-    value: dataPoint,
-    index,
-    label: labels[index],
-    dataPoint,
-  });
-}, [config.onClick, executeAction]);
+const handleElementClick = useCallback(
+  (dataPoint: unknown, index: number) => {
+    if (!config.onClick) return;
+    executeAction(config.onClick, {
+      value: dataPoint,
+      index,
+      label: labels[index],
+      dataPoint,
+    });
+  },
+  [config.onClick, executeAction],
+);
 ```
 
 **3. Add aspect ratio:**
@@ -277,20 +291,21 @@ const handleElementClick = useCallback((dataPoint: unknown, index: number) => {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/data/chart/variants/sparkline.tsx` |
-| Create | `src/ui/components/data/chart/variants/funnel.tsx` |
-| Create | `src/ui/components/data/chart/variants/radar.tsx` |
-| Create | `src/ui/components/data/chart/variants/treemap.tsx` |
-| Create | `src/ui/components/data/chart/variants/scatter.tsx` |
-| Modify | `src/ui/components/data/chart/schema.ts` — add variants, aspectRatio, onClick |
+| Action | Path                                                                                                   |
+| ------ | ------------------------------------------------------------------------------------------------------ |
+| Create | `src/ui/components/data/chart/variants/sparkline.tsx`                                                  |
+| Create | `src/ui/components/data/chart/variants/funnel.tsx`                                                     |
+| Create | `src/ui/components/data/chart/variants/radar.tsx`                                                      |
+| Create | `src/ui/components/data/chart/variants/treemap.tsx`                                                    |
+| Create | `src/ui/components/data/chart/variants/scatter.tsx`                                                    |
+| Modify | `src/ui/components/data/chart/schema.ts` — add variants, aspectRatio, onClick                          |
 | Modify | `src/ui/components/data/chart/component.tsx` — route to variant renderers, click handler, aspect ratio |
-| Modify | `src/ui/components/data/chart/types.ts` — updated types |
+| Modify | `src/ui/components/data/chart/types.ts` — updated types                                                |
 
 ### Playground Integration
 
 Each new variant gets a fixture in the playground:
+
 - Sparkline with random data, small container.
 - Funnel with conversion data (5 stages).
 - Radar with 6-axis skill data.
@@ -300,10 +315,10 @@ Each new variant gets a fixture in the playground:
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/data/chart/__tests__/schema.test.ts` | Add: each new variant accepted, aspectRatio accepted, onClick accepted. |
-| `src/ui/components/data/chart/__tests__/component.test.tsx` | Add: sparkline renders SVG, onClick fires action with data context. |
+| File                                                        | What                                                                    |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `src/ui/components/data/chart/__tests__/schema.test.ts`     | Add: each new variant accepted, aspectRatio accepted, onClick accepted. |
+| `src/ui/components/data/chart/__tests__/component.test.tsx` | Add: sparkline renders SVG, onClick fires action with data context.     |
 
 ### Exit Criteria
 
@@ -348,12 +363,16 @@ export const feedConfigSchema = z.object({
    * Per-item action menu items. Renders a "..." button on each feed item.
    * Context: { item }
    */
-  itemActions: z.array(z.object({
-    label: z.string(),
-    icon: z.string().optional(),
-    action: actionConfigSchema,
-    variant: z.enum(["default", "destructive"]).optional(),
-  })).optional(),
+  itemActions: z
+    .array(
+      z.object({
+        label: z.string(),
+        icon: z.string().optional(),
+        action: actionConfigSchema,
+        variant: z.enum(["default", "destructive"]).optional(),
+      }),
+    )
+    .optional(),
   /**
    * Group feed items by date. Shows date headers between groups.
    * Uses the timestamp field for grouping.
@@ -410,7 +429,10 @@ export function groupByDate(
         key = `Week of ${weekStart.toLocaleDateString()}`;
         break;
       case "month":
-        key = date.toLocaleDateString(undefined, { year: "numeric", month: "long" });
+        key = date.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+        });
         break;
     }
 
@@ -427,12 +449,12 @@ render relative timestamps, show per-item action menus, and group items by date.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/data/feed/relative-time.ts` |
+| Action | Path                                                                                       |
+| ------ | ------------------------------------------------------------------------------------------ |
+| Create | `src/ui/components/data/feed/relative-time.ts`                                             |
 | Modify | `src/ui/components/data/feed/schema.ts` — add infinite, relativeTime, itemActions, groupBy |
-| Modify | `src/ui/components/data/feed/component.tsx` — all enhancements |
-| Modify | `src/ui/components/data/feed/types.ts` — updated types |
+| Modify | `src/ui/components/data/feed/component.tsx` — all enhancements                             |
+| Modify | `src/ui/components/data/feed/types.ts` — updated types                                     |
 
 ### Playground Integration
 
@@ -442,10 +464,10 @@ render relative timestamps, show per-item action menus, and group items by date.
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                   | What                                                                     |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | `src/ui/components/data/feed/__tests__/relative-time.test.ts` (create) | Tests: just now, minutes, hours, days, weeks, groupByDate, groupByMonth. |
-| `src/ui/components/data/feed/__tests__/schema.test.ts` | Add: all new props accepted. |
+| `src/ui/components/data/feed/__tests__/schema.test.ts`                 | Add: all new props accepted.                                             |
 
 ### Exit Criteria
 
@@ -477,12 +499,16 @@ export const wizardStepSchema = z.object({
    * Validation rules for this step. Checked before advancing.
    * If any rule fails, the user cannot proceed.
    */
-  validate: z.array(z.object({
-    /** Field name to validate. */
-    field: z.string(),
-    /** Validation rule (same as Phase D.5 fieldValidationSchema). */
-    rule: fieldValidationSchema,
-  })).optional(),
+  validate: z
+    .array(
+      z.object({
+        /** Field name to validate. */
+        field: z.string(),
+        /** Validation rule (same as Phase D.5 fieldValidationSchema). */
+        rule: fieldValidationSchema,
+      }),
+    )
+    .optional(),
   /**
    * Whether this step can be skipped.
    * Can be boolean or a condition expression.
@@ -492,19 +518,25 @@ export const wizardStepSchema = z.object({
    * Async validation endpoint. Called before advancing.
    * Must return { valid: boolean, errors?: Record<string, string> }.
    */
-  asyncValidate: z.object({
-    endpoint: endpointTargetSchema,
-    /** Request body. Form values available as context. */
-    body: z.record(z.string(), z.unknown()).optional(),
-  }).optional(),
+  asyncValidate: z
+    .object({
+      endpoint: endpointTargetSchema,
+      /** Request body. Form values available as context. */
+      body: z.record(z.string(), z.unknown()).optional(),
+    })
+    .optional(),
   /**
    * Actions to execute when entering this step.
    */
-  onEnter: z.union([actionConfigSchema, z.array(actionConfigSchema)]).optional(),
+  onEnter: z
+    .union([actionConfigSchema, z.array(actionConfigSchema)])
+    .optional(),
   /**
    * Actions to execute when leaving this step (before validation).
    */
-  onLeave: z.union([actionConfigSchema, z.array(actionConfigSchema)]).optional(),
+  onLeave: z
+    .union([actionConfigSchema, z.array(actionConfigSchema)])
+    .optional(),
 });
 ```
 
@@ -574,17 +606,17 @@ async function handleNext() {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                             |
+| ------ | ------------------------------------------------------------------------------------------------ |
 | Modify | `src/ui/components/forms/wizard/schema.ts` — add validate, skip, asyncValidate, onEnter, onLeave |
-| Modify | `src/ui/components/forms/wizard/component.tsx` — validation, skip, async, step actions |
-| Modify | `src/ui/components/forms/wizard/types.ts` — updated types |
+| Modify | `src/ui/components/forms/wizard/component.tsx` — validation, skip, async, step actions           |
+| Modify | `src/ui/components/forms/wizard/types.ts` — updated types                                        |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/forms/wizard/__tests__/schema.test.ts` | Add: validate, skip, asyncValidate, onEnter, onLeave accepted. |
+| File                                                          | What                                                                                   |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/wizard/__tests__/schema.test.ts`     | Add: validate, skip, asyncValidate, onEnter, onLeave accepted.                         |
 | `src/ui/components/forms/wizard/__tests__/component.test.tsx` | Add: blocks advance on validation failure, skips step, async validation loading state. |
 
 ### Exit Criteria
@@ -624,22 +656,26 @@ export const commandPaletteConfigSchema = z.object({
    * Dynamic search endpoint. Called with the search query.
    * Must return { items: CommandItem[] }.
    */
-  searchEndpoint: z.object({
-    endpoint: endpointTargetSchema,
-    /** Debounce search requests by N ms. Default: 300. */
-    debounce: z.number().int().positive().default(300),
-    /** Minimum query length before searching. Default: 2. */
-    minLength: z.number().int().nonnegative().default(2),
-  }).optional(),
+  searchEndpoint: z
+    .object({
+      endpoint: endpointTargetSchema,
+      /** Debounce search requests by N ms. Default: 300. */
+      debounce: z.number().int().positive().default(300),
+      /** Minimum query length before searching. Default: 2. */
+      minLength: z.number().int().nonnegative().default(2),
+    })
+    .optional(),
   /**
    * Show recent items at the top of the palette.
    * Persists to localStorage.
    */
-  recentItems: z.object({
-    enabled: z.boolean().default(false),
-    /** Maximum number of recent items to show. Default: 5. */
-    maxItems: z.number().int().positive().default(5),
-  }).optional(),
+  recentItems: z
+    .object({
+      enabled: z.boolean().default(false),
+      /** Maximum number of recent items to show. Default: 5. */
+      maxItems: z.number().int().positive().default(5),
+    })
+    .optional(),
   /**
    * Keyboard shortcut to open the palette. Default: "ctrl+k".
    */
@@ -673,14 +709,17 @@ const shortcutCommands = useMemo(() => {
 ```ts
 const [searchResults, setSearchResults] = useState<CommandItem[]>([]);
 const debouncedSearch = useMemo(
-  () => debounce(async (query: string) => {
-    if (query.length < (config.searchEndpoint?.minLength ?? 2)) {
-      setSearchResults([]);
-      return;
-    }
-    const response = await api.get(config.searchEndpoint!.endpoint, { params: { q: query } });
-    setSearchResults(response.items);
-  }, config.searchEndpoint?.debounce ?? 300),
+  () =>
+    debounce(async (query: string) => {
+      if (query.length < (config.searchEndpoint?.minLength ?? 2)) {
+        setSearchResults([]);
+        return;
+      }
+      const response = await api.get(config.searchEndpoint!.endpoint, {
+        params: { q: query },
+      });
+      setSearchResults(response.items);
+    }, config.searchEndpoint?.debounce ?? 300),
   [config.searchEndpoint],
 );
 ```
@@ -692,17 +731,17 @@ top of the palette under a "Recent" group header.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                                                                     |
+| ------ | ------------------------------------------------------------------------------------------------------------------------ |
 | Modify | `src/ui/components/overlay/command-palette/schema.ts` — add autoRegisterShortcuts, searchEndpoint, recentItems, shortcut |
-| Modify | `src/ui/components/overlay/command-palette/component.tsx` — auto-register, dynamic search, recent items |
-| Modify | `src/ui/components/overlay/command-palette/types.ts` — updated types |
+| Modify | `src/ui/components/overlay/command-palette/component.tsx` — auto-register, dynamic search, recent items                  |
+| Modify | `src/ui/components/overlay/command-palette/types.ts` — updated types                                                     |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/overlay/command-palette/__tests__/schema.test.ts` | Add: all new props accepted. |
+| File                                                                     | What                                                                                           |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `src/ui/components/overlay/command-palette/__tests__/schema.test.ts`     | Add: all new props accepted.                                                                   |
 | `src/ui/components/overlay/command-palette/__tests__/component.test.tsx` | Add: shortcuts appear as commands, search endpoint called with debounce, recent items persist. |
 
 ### Exit Criteria
@@ -790,7 +829,8 @@ function ToastItem({ toast, onDismiss, executeAction }: ToastItemProps) {
             fontWeight: "var(--sn-font-weight-medium, 500)",
           }}
         >
-          {toast.undo.label ?? "Undo"} {undoTimer !== null ? `(${undoTimer}s)` : ""}
+          {toast.undo.label ?? "Undo"}{" "}
+          {undoTimer !== null ? `(${undoTimer}s)` : ""}
         </button>
       )}
     </div>
@@ -800,15 +840,15 @@ function ToastItem({ toast, onDismiss, executeAction }: ToastItemProps) {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Modify | `src/ui/actions/types.ts` — add `undo` to `ToastAction` |
+| Action | Path                                                         |
+| ------ | ------------------------------------------------------------ |
+| Modify | `src/ui/actions/types.ts` — add `undo` to `ToastAction`      |
 | Modify | `src/ui/actions/toast.ts` — undo button, timer, revert logic |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                     | What                                                                                                               |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `src/ui/actions/__tests__/toast.test.ts` | Add: undo button renders, clicking undo fires revert action, undo timer counts down, toast without undo unchanged. |
 
 ### Exit Criteria
@@ -848,18 +888,26 @@ export const datePickerConfigSchema = baseComponentConfigSchema.extend({
   /** Maximum selectable date (ISO string). */
   max: z.string().optional(),
   /** Disabled date patterns. */
-  disabledDates: z.array(z.union([
-    z.string(), // ISO date string
-    z.object({ dayOfWeek: z.array(z.number().int().min(0).max(6)) }), // e.g. weekends
-  ])).optional(),
+  disabledDates: z
+    .array(
+      z.union([
+        z.string(), // ISO date string
+        z.object({ dayOfWeek: z.array(z.number().int().min(0).max(6)) }), // e.g. weekends
+      ]),
+    )
+    .optional(),
   /** Preset date ranges for quick selection. */
-  presets: z.array(z.object({
-    label: z.string(),
-    /** Start date expression or literal. */
-    start: z.string(),
-    /** End date expression or literal. */
-    end: z.string(),
-  })).optional(),
+  presets: z
+    .array(
+      z.object({
+        label: z.string(),
+        /** Start date expression or literal. */
+        start: z.string(),
+        /** End date expression or literal. */
+        end: z.string(),
+      }),
+    )
+    .optional(),
   /** Date display format. Default: locale default. */
   format: z.string().optional(),
   /** Published value format. Default: ISO string. */
@@ -892,16 +940,16 @@ Key tokens: `--sn-color-primary` (selected), `--sn-color-muted` (disabled), `--s
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/forms/date-picker/schema.ts` |
-| Create | `src/ui/components/forms/date-picker/component.tsx` |
-| Create | `src/ui/components/forms/date-picker/types.ts` |
-| Create | `src/ui/components/forms/date-picker/index.ts` |
-| Create | `src/ui/components/forms/date-picker/__tests__/schema.test.ts` |
+| Action | Path                                                               |
+| ------ | ------------------------------------------------------------------ |
+| Create | `src/ui/components/forms/date-picker/schema.ts`                    |
+| Create | `src/ui/components/forms/date-picker/component.tsx`                |
+| Create | `src/ui/components/forms/date-picker/types.ts`                     |
+| Create | `src/ui/components/forms/date-picker/index.ts`                     |
+| Create | `src/ui/components/forms/date-picker/__tests__/schema.test.ts`     |
 | Create | `src/ui/components/forms/date-picker/__tests__/component.test.tsx` |
-| Modify | `src/ui/manifest/boot-builtins.ts` — register date-picker |
-| Modify | `src/ui/components/register.ts` — add date-picker |
+| Modify | `src/ui/manifest/boot-builtins.ts` — register date-picker          |
+| Modify | `src/ui/components/register.ts` — add date-picker                  |
 
 ### Playground Integration
 
@@ -912,9 +960,9 @@ Key tokens: `--sn-color-primary` (selected), `--sn-color-muted` (disabled), `--s
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/forms/date-picker/__tests__/schema.test.ts` | Tests: each mode accepted, presets validate, min/max validate, disabledDates validate. |
+| File                                                               | What                                                                                                             |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/date-picker/__tests__/schema.test.ts`     | Tests: each mode accepted, presets validate, min/max validate, disabledDates validate.                           |
 | `src/ui/components/forms/date-picker/__tests__/component.test.tsx` | Tests: renders calendar, selects date, range selection, preset applies, disabled dates unclickable, SSR renders. |
 
 ### Exit Criteria
@@ -952,7 +1000,9 @@ export const sliderConfigSchema = baseComponentConfigSchema.extend({
   /** Step increment. */
   step: z.number().positive().default(1),
   /** Default value. Single number or [min, max] for range. */
-  defaultValue: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+  defaultValue: z
+    .union([z.number(), z.tuple([z.number(), z.number()])])
+    .optional(),
   /**
    * Range mode — dual thumbs for selecting a range.
    * When true, value is [min, max].
@@ -995,22 +1045,22 @@ for the empty track.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/forms/slider/schema.ts` |
-| Create | `src/ui/components/forms/slider/component.tsx` |
-| Create | `src/ui/components/forms/slider/types.ts` |
-| Create | `src/ui/components/forms/slider/index.ts` |
-| Create | `src/ui/components/forms/slider/__tests__/schema.test.ts` |
+| Action | Path                                                          |
+| ------ | ------------------------------------------------------------- |
+| Create | `src/ui/components/forms/slider/schema.ts`                    |
+| Create | `src/ui/components/forms/slider/component.tsx`                |
+| Create | `src/ui/components/forms/slider/types.ts`                     |
+| Create | `src/ui/components/forms/slider/index.ts`                     |
+| Create | `src/ui/components/forms/slider/__tests__/schema.test.ts`     |
 | Create | `src/ui/components/forms/slider/__tests__/component.test.tsx` |
-| Modify | `src/ui/manifest/boot-builtins.ts` — register slider |
-| Modify | `src/ui/components/register.ts` — add slider |
+| Modify | `src/ui/manifest/boot-builtins.ts` — register slider          |
+| Modify | `src/ui/components/register.ts` — add slider                  |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/forms/slider/__tests__/schema.test.ts` | Tests: min/max/step accepted, range mode, defaultValue, suffix. |
+| File                                                          | What                                                                                                |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/slider/__tests__/schema.test.ts`     | Tests: min/max/step accepted, range mode, defaultValue, suffix.                                     |
 | `src/ui/components/forms/slider/__tests__/component.test.tsx` | Tests: renders input, publishes value, range mode renders two thumbs, step increments, SSR renders. |
 
 ### Exit Criteria
@@ -1082,22 +1132,22 @@ Tokens: `--sn-radius-sm` (swatch border-radius), `--sn-spacing-xs` (swatch gap),
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/forms/color-picker/schema.ts` |
-| Create | `src/ui/components/forms/color-picker/component.tsx` |
-| Create | `src/ui/components/forms/color-picker/types.ts` |
-| Create | `src/ui/components/forms/color-picker/index.ts` |
-| Create | `src/ui/components/forms/color-picker/__tests__/schema.test.ts` |
+| Action | Path                                                                |
+| ------ | ------------------------------------------------------------------- |
+| Create | `src/ui/components/forms/color-picker/schema.ts`                    |
+| Create | `src/ui/components/forms/color-picker/component.tsx`                |
+| Create | `src/ui/components/forms/color-picker/types.ts`                     |
+| Create | `src/ui/components/forms/color-picker/index.ts`                     |
+| Create | `src/ui/components/forms/color-picker/__tests__/schema.test.ts`     |
 | Create | `src/ui/components/forms/color-picker/__tests__/component.test.tsx` |
-| Modify | `src/ui/manifest/boot-builtins.ts` — register color-picker |
-| Modify | `src/ui/components/register.ts` — add color-picker |
+| Modify | `src/ui/manifest/boot-builtins.ts` — register color-picker          |
+| Modify | `src/ui/components/register.ts` — add color-picker                  |
 
 ### Tests
 
-| File | What |
-|---|---|
-| `src/ui/components/forms/color-picker/__tests__/schema.test.ts` | Tests: each format, swatches array, allowCustom, showAlpha. |
+| File                                                                | What                                                                                                       |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `src/ui/components/forms/color-picker/__tests__/schema.test.ts`     | Tests: each format, swatches array, allowCustom, showAlpha.                                                |
 | `src/ui/components/forms/color-picker/__tests__/component.test.tsx` | Tests: renders swatches, click swatch selects color, custom input updates, format conversion, SSR renders. |
 
 ### Exit Criteria
@@ -1149,7 +1199,7 @@ export const loadingConfigSchema = z.object({
 **1. Create `src/ui/components/_base/auto-skeleton.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import type { ReactNode } from "react";
 
@@ -1161,10 +1211,10 @@ interface AutoSkeletonProps {
 
 const VARIANT_MAP: Record<string, string> = {
   "data-table": "table",
-  "list": "list",
+  list: "list",
   "stat-card": "card",
-  "chart": "chart",
-  "feed": "list",
+  chart: "chart",
+  feed: "list",
   "detail-card": "card",
 };
 
@@ -1172,10 +1222,17 @@ const VARIANT_MAP: Record<string, string> = {
  * Auto-generates a skeleton placeholder that matches the target component's shape.
  * Uses semantic tokens for colors and animations.
  */
-export function AutoSkeleton({ variant, rows, componentType }: AutoSkeletonProps): ReactNode {
-  const resolvedVariant = variant === "auto"
-    ? (componentType ? VARIANT_MAP[componentType] ?? "list" : "list")
-    : variant;
+export function AutoSkeleton({
+  variant,
+  rows,
+  componentType,
+}: AutoSkeletonProps): ReactNode {
+  const resolvedVariant =
+    variant === "auto"
+      ? componentType
+        ? (VARIANT_MAP[componentType] ?? "list")
+        : "list"
+      : variant;
 
   switch (resolvedVariant) {
     case "table":
@@ -1193,18 +1250,57 @@ export function AutoSkeleton({ variant, rows, componentType }: AutoSkeletonProps
 
 function TableSkeleton({ rows }: { rows: number }) {
   return (
-    <div data-snapshot-skeleton="table" style={{ display: "flex", flexDirection: "column", gap: "var(--sn-spacing-xs, 0.25rem)" }}>
+    <div
+      data-snapshot-skeleton="table"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--sn-spacing-xs, 0.25rem)",
+      }}
+    >
       {/* Header */}
-      <div style={{ display: "flex", gap: "var(--sn-spacing-md, 1rem)", padding: "var(--sn-spacing-sm, 0.5rem) 0" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--sn-spacing-md, 1rem)",
+          padding: "var(--sn-spacing-sm, 0.5rem) 0",
+        }}
+      >
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} style={{ flex: 1, height: "1rem", backgroundColor: "var(--sn-color-muted)", borderRadius: "var(--sn-radius-sm, 0.25rem)", animation: "snapshot-skeleton-pulse 2s ease-in-out infinite" }} />
+          <div
+            key={i}
+            style={{
+              flex: 1,
+              height: "1rem",
+              backgroundColor: "var(--sn-color-muted)",
+              borderRadius: "var(--sn-radius-sm, 0.25rem)",
+              animation: "snapshot-skeleton-pulse 2s ease-in-out infinite",
+            }}
+          />
         ))}
       </div>
       {/* Rows */}
       {Array.from({ length: rows }, (_, i) => (
-        <div key={i} style={{ display: "flex", gap: "var(--sn-spacing-md, 1rem)", padding: "var(--sn-spacing-sm, 0.5rem) 0" }}>
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            gap: "var(--sn-spacing-md, 1rem)",
+            padding: "var(--sn-spacing-sm, 0.5rem) 0",
+          }}
+        >
           {[1, 2, 3, 4].map((j) => (
-            <div key={j} style={{ flex: 1, height: "0.875rem", backgroundColor: "var(--sn-color-muted)", borderRadius: "var(--sn-radius-sm, 0.25rem)", animation: "snapshot-skeleton-pulse 2s ease-in-out infinite", animationDelay: `${i * 100}ms` }} />
+            <div
+              key={j}
+              style={{
+                flex: 1,
+                height: "0.875rem",
+                backgroundColor: "var(--sn-color-muted)",
+                borderRadius: "var(--sn-radius-sm, 0.25rem)",
+                animation: "snapshot-skeleton-pulse 2s ease-in-out infinite",
+                animationDelay: `${i * 100}ms`,
+              }}
+            />
           ))}
         </div>
       ))}
@@ -1214,9 +1310,25 @@ function TableSkeleton({ rows }: { rows: number }) {
 
 function ListSkeleton({ rows }: { rows: number }) {
   return (
-    <div data-snapshot-skeleton="list" style={{ display: "flex", flexDirection: "column", gap: "var(--sn-spacing-sm, 0.5rem)" }}>
+    <div
+      data-snapshot-skeleton="list"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--sn-spacing-sm, 0.5rem)",
+      }}
+    >
       {Array.from({ length: rows }, (_, i) => (
-        <div key={i} style={{ height: "2.5rem", backgroundColor: "var(--sn-color-muted)", borderRadius: "var(--sn-radius-sm, 0.25rem)", animation: "snapshot-skeleton-pulse 2s ease-in-out infinite", animationDelay: `${i * 100}ms` }} />
+        <div
+          key={i}
+          style={{
+            height: "2.5rem",
+            backgroundColor: "var(--sn-color-muted)",
+            borderRadius: "var(--sn-radius-sm, 0.25rem)",
+            animation: "snapshot-skeleton-pulse 2s ease-in-out infinite",
+            animationDelay: `${i * 100}ms`,
+          }}
+        />
       ))}
     </div>
   );
@@ -1224,13 +1336,29 @@ function ListSkeleton({ rows }: { rows: number }) {
 
 function CardSkeleton() {
   return (
-    <div data-snapshot-skeleton="card" style={{ height: "8rem", backgroundColor: "var(--sn-color-muted)", borderRadius: "var(--sn-radius-md, 0.5rem)", animation: "snapshot-skeleton-pulse 2s ease-in-out infinite" }} />
+    <div
+      data-snapshot-skeleton="card"
+      style={{
+        height: "8rem",
+        backgroundColor: "var(--sn-color-muted)",
+        borderRadius: "var(--sn-radius-md, 0.5rem)",
+        animation: "snapshot-skeleton-pulse 2s ease-in-out infinite",
+      }}
+    />
   );
 }
 
 function ChartSkeleton() {
   return (
-    <div data-snapshot-skeleton="chart" style={{ height: "12rem", backgroundColor: "var(--sn-color-muted)", borderRadius: "var(--sn-radius-md, 0.5rem)", animation: "snapshot-skeleton-pulse 2s ease-in-out infinite" }} />
+    <div
+      data-snapshot-skeleton="chart"
+      style={{
+        height: "12rem",
+        backgroundColor: "var(--sn-color-muted)",
+        borderRadius: "var(--sn-radius-md, 0.5rem)",
+        animation: "snapshot-skeleton-pulse 2s ease-in-out infinite",
+      }}
+    />
   );
 }
 ```
@@ -1240,21 +1368,21 @@ loading and `loading` config is present.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/auto-skeleton.tsx` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `loading` |
-| Modify | `src/ui/components/data/list/schema.ts` — add `loading` |
-| Modify | `src/ui/components/data/chart/schema.ts` — add `loading` |
-| Modify | `src/ui/components/data/stat-card/schema.ts` — add `loading` |
-| Modify | `src/ui/components/data/feed/schema.ts` — add `loading` |
-| Modify | `src/ui/components/data/detail-card/schema.ts` — add `loading` |
+| Action | Path                                                                     |
+| ------ | ------------------------------------------------------------------------ |
+| Create | `src/ui/components/_base/auto-skeleton.tsx`                              |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `loading`            |
+| Modify | `src/ui/components/data/list/schema.ts` — add `loading`                  |
+| Modify | `src/ui/components/data/chart/schema.ts` — add `loading`                 |
+| Modify | `src/ui/components/data/stat-card/schema.ts` — add `loading`             |
+| Modify | `src/ui/components/data/feed/schema.ts` — add `loading`                  |
+| Modify | `src/ui/components/data/detail-card/schema.ts` — add `loading`           |
 | Modify | `src/ui/components/_base/use-component-data.ts` — integrate AutoSkeleton |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                | What                                                                                                                          |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/auto-skeleton.test.tsx` (create) | Tests: table skeleton renders header + rows, list skeleton renders bars, auto variant infers from componentType, SSR renders. |
 
 ### Exit Criteria
@@ -1294,12 +1422,14 @@ export const emptyStateConfigSchema = z.object({
    * Action button in the empty state.
    * e.g. "Create your first item"
    */
-  action: z.object({
-    label: z.string(),
-    action: actionConfigSchema,
-    icon: z.string().optional(),
-    variant: z.enum(["default", "primary", "outline"]).default("primary"),
-  }).optional(),
+  action: z
+    .object({
+      label: z.string(),
+      action: actionConfigSchema,
+      icon: z.string().optional(),
+      variant: z.enum(["default", "primary", "outline"]).default("primary"),
+    })
+    .optional(),
 });
 ```
 
@@ -1308,7 +1438,7 @@ export const emptyStateConfigSchema = z.object({
 **1. Create `src/ui/components/_base/auto-empty-state.tsx`:**
 
 ```tsx
-'use client';
+"use client";
 
 import type { ReactNode } from "react";
 import { renderIcon } from "../../icons/render";
@@ -1331,7 +1461,11 @@ interface EmptyStateConfig {
  * Auto-generated empty state for data components.
  * Shows an icon, title, description, and optional action button.
  */
-export function AutoEmptyState({ config }: { config: EmptyStateConfig }): ReactNode {
+export function AutoEmptyState({
+  config,
+}: {
+  config: EmptyStateConfig;
+}): ReactNode {
   const executeAction = useActionExecutor();
 
   return (
@@ -1348,29 +1482,35 @@ export function AutoEmptyState({ config }: { config: EmptyStateConfig }): ReactN
       }}
     >
       {config.icon && (
-        <div style={{
-          fontSize: "2.5rem",
-          color: "var(--sn-color-muted-foreground)",
-          opacity: 0.5,
-        }}>
+        <div
+          style={{
+            fontSize: "2.5rem",
+            color: "var(--sn-color-muted-foreground)",
+            opacity: 0.5,
+          }}
+        >
           {renderIcon(config.icon)}
         </div>
       )}
-      <h3 style={{
-        margin: 0,
-        fontSize: "var(--sn-font-size-lg, 1.125rem)",
-        fontWeight: "var(--sn-font-weight-semibold, 600)",
-        color: "var(--sn-color-foreground)",
-      }}>
+      <h3
+        style={{
+          margin: 0,
+          fontSize: "var(--sn-font-size-lg, 1.125rem)",
+          fontWeight: "var(--sn-font-weight-semibold, 600)",
+          color: "var(--sn-color-foreground)",
+        }}
+      >
         {config.title}
       </h3>
       {config.description && (
-        <p style={{
-          margin: 0,
-          fontSize: "var(--sn-font-size-sm, 0.875rem)",
-          color: "var(--sn-color-muted-foreground)",
-          maxWidth: "24rem",
-        }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "var(--sn-font-size-sm, 0.875rem)",
+            color: "var(--sn-color-muted-foreground)",
+            maxWidth: "24rem",
+          }}
+        >
           {config.description}
         </p>
       )}
@@ -1393,15 +1533,15 @@ config is present. Falls back to existing `emptyMessage` text when no `empty` co
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/auto-empty-state.tsx` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `empty` |
-| Modify | `src/ui/components/data/list/schema.ts` — add `empty` |
-| Modify | `src/ui/components/data/chart/schema.ts` — add `empty` |
-| Modify | `src/ui/components/data/stat-card/schema.ts` — add `empty` |
-| Modify | `src/ui/components/data/feed/schema.ts` — add `empty` |
-| Modify | `src/ui/components/data/detail-card/schema.ts` — add `empty` |
+| Action | Path                                                                       |
+| ------ | -------------------------------------------------------------------------- |
+| Create | `src/ui/components/_base/auto-empty-state.tsx`                             |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `empty`                |
+| Modify | `src/ui/components/data/list/schema.ts` — add `empty`                      |
+| Modify | `src/ui/components/data/chart/schema.ts` — add `empty`                     |
+| Modify | `src/ui/components/data/stat-card/schema.ts` — add `empty`                 |
+| Modify | `src/ui/components/data/feed/schema.ts` — add `empty`                      |
+| Modify | `src/ui/components/data/detail-card/schema.ts` — add `empty`               |
 | Modify | `src/ui/components/_base/use-component-data.ts` — integrate AutoEmptyState |
 
 ### Playground Integration
@@ -1412,8 +1552,8 @@ config is present. Falls back to existing `emptyMessage` text when no `empty` co
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                                   | What                                                                                           |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/auto-empty-state.test.tsx` (create) | Tests: renders title, renders icon, renders action button, fires action on click, SSR renders. |
 
 ### Exit Criteria
@@ -1434,11 +1574,11 @@ config is present. Falls back to existing `emptyMessage` text when no `empty` co
 
 Four independent tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| Data | H.1, H.2, H.9, H.10 | Chart variants, feed enhancements, auto-skeleton, auto-empty-state |
-| Forms | H.3, H.6, H.7, H.8 | Wizard enhancements, date-picker, slider, color-picker |
-| Overlay | H.4, H.5 | Command palette enhancements, toast undo |
+| Track   | Phases              | Files Owned                                                        |
+| ------- | ------------------- | ------------------------------------------------------------------ |
+| Data    | H.1, H.2, H.9, H.10 | Chart variants, feed enhancements, auto-skeleton, auto-empty-state |
+| Forms   | H.3, H.6, H.7, H.8  | Wizard enhancements, date-picker, slider, color-picker             |
+| Overlay | H.4, H.5            | Command palette enhancements, toast undo                           |
 
 ### Why Tracks Are Independent
 
@@ -1458,18 +1598,21 @@ Four independent tracks:
 Within each track:
 
 **Data track:**
+
 1. H.9 (auto skeleton — utility for all data components)
 2. H.10 (auto empty state — utility for all data components)
 3. H.1 (chart variants — most variant files)
 4. H.2 (feed enhancements — depends on D.3 infinite scroll)
 
 **Forms track:**
+
 1. H.6 (date picker — new component)
 2. H.7 (slider — new component)
 3. H.8 (color picker — new component)
 4. H.3 (wizard — enhancement, depends on D.5 validation)
 
 **Overlay track:**
+
 1. H.5 (toast undo — simpler)
 2. H.4 (command palette — depends on D.1 shortcuts)
 
@@ -1513,12 +1656,12 @@ phase-h-overlay   (H.4, H.5)
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|---|---|
-| H.1 chart rendering complexity | Start with simplest variants (sparkline, scatter). Use SVG primitives. |
-| H.6 date picker i18n | Use `Intl.DateTimeFormat` for all date formatting. Test with non-US locales. |
-| H.7 range slider touch support | Use standard `<input type="range">` for baseline touch support. |
-| H.9 skeleton flicker | Add a 100ms delay before showing skeleton to avoid flicker on fast loads. |
+| Risk                           | Mitigation                                                                   |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| H.1 chart rendering complexity | Start with simplest variants (sparkline, scatter). Use SVG primitives.       |
+| H.6 date picker i18n           | Use `Intl.DateTimeFormat` for all date formatting. Test with non-US locales. |
+| H.7 range slider touch support | Use standard `<input type="range">` for baseline touch support.              |
+| H.9 skeleton flicker           | Add a 100ms delay before showing skeleton to avoid flicker on fast loads.    |
 
 ---
 

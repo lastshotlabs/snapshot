@@ -2,16 +2,16 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | B.1 | CSS Grid Named Areas | Not started | Components |
-> | B.2 | Container Component | Not started | Components |
-> | B.3 | Section / Hero Component | Not started | Components |
-> | B.4 | Sticky Positioning | Not started | Schema |
-> | B.5 | Spacer Component | Not started | Components |
-> | B.6 | Responsive Visibility Verification | Not started | Runtime |
-> | B.7 | Overflow & Scroll Props | Not started | Schema |
-> | B.8 | Z-Index from Config | Not started | Schema |
+> | Phase | Title                              | Status      | Track      |
+> | ----- | ---------------------------------- | ----------- | ---------- |
+> | B.1   | CSS Grid Named Areas               | Not started | Components |
+> | B.2   | Container Component                | Not started | Components |
+> | B.3   | Section / Hero Component           | Not started | Components |
+> | B.4   | Sticky Positioning                 | Not started | Schema     |
+> | B.5   | Spacer Component                   | Not started | Components |
+> | B.6   | Responsive Visibility Verification | Not started | Runtime    |
+> | B.7   | Overflow & Scroll Props            | Not started | Schema     |
+> | B.8   | Z-Index from Config                | Not started | Schema     |
 >
 > **Priority:** P1 — visual sophistication.
 > **Depends on:** Phase A (CSS Foundation).
@@ -37,20 +37,21 @@ A developer can replicate any marketing site or dashboard layout purely from man
 
 ## What Already Exists on Main
 
-| File | Lines | What It Does |
-|---|---|---|
-| `src/ui/components/layout/layout/component.tsx` | 479 | App shell: sidebar, top-nav, minimal, full-width variants |
-| `src/ui/components/layout/row/component.tsx` | ~80 | Flex row with gap, justify, align, wrap |
-| `src/ui/components/layout/row/schema.ts` | ~30 | `rowConfigSchema`: gap (responsive enum), justify, align, wrap, children |
-| `src/ui/components/layout/stack/component.tsx` | ~60 | Vertical/horizontal stack |
-| `src/ui/components/layout/split-pane/` | ~200 | Resizable split panes |
-| `src/ui/manifest/schema.ts` | 1598 | `baseComponentConfigSchema` with `span` (responsive 1-12) |
-| `src/ui/hooks/use-breakpoint.ts` | ~100 | `useResponsiveValue()`, `useBreakpoint()`, `resolveResponsiveValue()` |
-| `src/ui/components/_base/component-wrapper.tsx` | 181 | Wraps all components, applies grid span |
+| File                                            | Lines | What It Does                                                             |
+| ----------------------------------------------- | ----- | ------------------------------------------------------------------------ |
+| `src/ui/components/layout/layout/component.tsx` | 479   | App shell: sidebar, top-nav, minimal, full-width variants                |
+| `src/ui/components/layout/row/component.tsx`    | ~80   | Flex row with gap, justify, align, wrap                                  |
+| `src/ui/components/layout/row/schema.ts`        | ~30   | `rowConfigSchema`: gap (responsive enum), justify, align, wrap, children |
+| `src/ui/components/layout/stack/component.tsx`  | ~60   | Vertical/horizontal stack                                                |
+| `src/ui/components/layout/split-pane/`          | ~200  | Resizable split panes                                                    |
+| `src/ui/manifest/schema.ts`                     | 1598  | `baseComponentConfigSchema` with `span` (responsive 1-12)                |
+| `src/ui/hooks/use-breakpoint.ts`                | ~100  | `useResponsiveValue()`, `useBreakpoint()`, `resolveResponsiveValue()`    |
+| `src/ui/components/_base/component-wrapper.tsx` | 181   | Wraps all components, applies grid span                                  |
 
 ### Grid System Today
 
 The current 12-column grid uses `span` on individual components:
+
 ```jsonc
 { "type": "stat-card", "span": 3 }          // 3 of 12 columns
 { "type": "stat-card", "span": { "default": 12, "md": 6, "lg": 3 } }  // responsive
@@ -66,11 +67,13 @@ This is applied in `ComponentRenderer` as CSS Grid column span. The parent page 
 ## Developer Context
 
 ### Build & Test Commands
+
 ```sh
 bun run typecheck && bun run format:check && bun run build && bun test
 ```
 
 ### Component File Convention
+
 ```
 src/ui/components/layout/{name}/
   schema.ts        ← Zod config schema
@@ -108,11 +111,17 @@ sizing, and responsive breakpoints.
 ```typescript
 // src/ui/components/layout/grid/schema.ts
 import { z } from "zod";
-import { baseComponentConfigSchema, responsiveSchema, componentConfigSchema } from "../../../manifest/schema";
+import {
+  baseComponentConfigSchema,
+  responsiveSchema,
+  componentConfigSchema,
+} from "../../../manifest/schema";
 
-const gridAreaChildSchema = z.object({
-  area: z.string(),
-}).passthrough();
+const gridAreaChildSchema = z
+  .object({
+    area: z.string(),
+  })
+  .passthrough();
 
 export const gridConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("grid"),
@@ -180,6 +189,7 @@ export function Grid({ config }: { config: GridConfig }) {
 ### Registration
 
 Add to `src/ui/components/register.ts`:
+
 ```typescript
 import { Grid } from "./layout/grid";
 import { gridConfigSchema } from "./layout/grid/schema";
@@ -189,21 +199,21 @@ registerComponentSchema("grid", gridConfigSchema);
 
 ### Files to Create
 
-| File | Purpose |
-|---|---|
-| `src/ui/components/layout/grid/schema.ts` | Zod schema |
-| `src/ui/components/layout/grid/component.tsx` | Implementation |
-| `src/ui/components/layout/grid/types.ts` | Inferred types |
-| `src/ui/components/layout/grid/index.ts` | Barrel exports |
-| `src/ui/components/layout/grid/__tests__/schema.test.ts` | Schema validation |
-| `src/ui/components/layout/grid/__tests__/component.test.tsx` | Render tests |
+| File                                                         | Purpose           |
+| ------------------------------------------------------------ | ----------------- |
+| `src/ui/components/layout/grid/schema.ts`                    | Zod schema        |
+| `src/ui/components/layout/grid/component.tsx`                | Implementation    |
+| `src/ui/components/layout/grid/types.ts`                     | Inferred types    |
+| `src/ui/components/layout/grid/index.ts`                     | Barrel exports    |
+| `src/ui/components/layout/grid/__tests__/schema.test.ts`     | Schema validation |
+| `src/ui/components/layout/grid/__tests__/component.test.tsx` | Render tests      |
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/components/register.ts` | Register grid component + schema |
-| `src/ui/tokens/resolve.ts` | Add `[data-snapshot-component="grid"]` CSS in `resolveFrameworkStyles()` |
+| File                            | Change                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `src/ui/components/register.ts` | Register grid component + schema                                         |
+| `src/ui/tokens/resolve.ts`      | Add `[data-snapshot-component="grid"]` CSS in `resolveFrameworkStyles()` |
 
 ### Framework CSS
 
@@ -240,7 +250,9 @@ describe("gridConfigSchema", () => {
   });
 
   it("requires at least one child", () => {
-    expect(() => gridConfigSchema.parse({ type: "grid", areas: ["main"], children: [] })).toThrow();
+    expect(() =>
+      gridConfigSchema.parse({ type: "grid", areas: ["main"], children: [] }),
+    ).toThrow();
   });
 });
 ```
@@ -268,11 +280,17 @@ describe("gridConfigSchema", () => {
 // src/ui/components/layout/container/schema.ts
 export const containerConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("container"),
-  maxWidth: z.union([
-    z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "full", "prose"]),
-    z.number(),
-  ]).optional().default("xl"),
-  padding: z.enum(["none", "xs", "sm", "md", "lg", "xl"]).optional().default("md"),
+  maxWidth: z
+    .union([
+      z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "full", "prose"]),
+      z.number(),
+    ])
+    .optional()
+    .default("xl"),
+  padding: z
+    .enum(["none", "xs", "sm", "md", "lg", "xl"])
+    .optional()
+    .default("md"),
   center: z.boolean().optional().default(true),
   children: z.array(componentConfigSchema).min(1),
 });
@@ -321,21 +339,29 @@ and vertical centering.
 
 ```typescript
 // src/ui/components/layout/section/schema.ts
-const backgroundConfigSchema = z.object({
-  image: z.string().optional(),
-  overlay: z.string().optional(),       // CSS color value for overlay
-  gradient: z.object({
-    type: z.enum(["linear", "radial", "conic"]).default("linear"),
-    direction: z.string().optional().default("135deg"),
-    stops: z.array(z.object({
-      color: z.string(),
-      position: z.string().optional(),
-    })).min(2),
-  }).optional(),
-  position: z.string().optional().default("center"),
-  size: z.enum(["cover", "contain", "auto"]).optional().default("cover"),
-  fixed: z.boolean().optional(),          // parallax
-}).optional();
+const backgroundConfigSchema = z
+  .object({
+    image: z.string().optional(),
+    overlay: z.string().optional(), // CSS color value for overlay
+    gradient: z
+      .object({
+        type: z.enum(["linear", "radial", "conic"]).default("linear"),
+        direction: z.string().optional().default("135deg"),
+        stops: z
+          .array(
+            z.object({
+              color: z.string(),
+              position: z.string().optional(),
+            }),
+          )
+          .min(2),
+      })
+      .optional(),
+    position: z.string().optional().default("center"),
+    size: z.enum(["cover", "contain", "auto"]).optional().default("cover"),
+    fixed: z.boolean().optional(), // parallax
+  })
+  .optional();
 
 export const sectionConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("section"),
@@ -343,7 +369,7 @@ export const sectionConfigSchema = baseComponentConfigSchema.extend({
   height: z.union([z.string(), z.enum(["screen", "auto"])]).optional(),
   align: z.enum(["start", "center", "end", "stretch"]).optional(),
   justify: z.enum(["start", "center", "end", "between", "around"]).optional(),
-  bleed: z.boolean().optional(),          // break out of parent container padding
+  bleed: z.boolean().optional(), // break out of parent container padding
   children: z.array(componentConfigSchema),
 });
 ```
@@ -455,19 +481,21 @@ const stickyStyle: React.CSSProperties | undefined = config.sticky
   ? {
       position: "sticky",
       top: typeof config.sticky === "object" ? config.sticky.top : "0",
-      zIndex: typeof config.sticky === "object"
-        ? (Z_INDEX_MAP[config.sticky.zIndex as string] ?? config.sticky.zIndex)
-        : "var(--sn-z-index-sticky, 20)",
+      zIndex:
+        typeof config.sticky === "object"
+          ? (Z_INDEX_MAP[config.sticky.zIndex as string] ??
+            config.sticky.zIndex)
+          : "var(--sn-z-index-sticky, 20)",
     }
   : undefined;
 ```
 
 ### Files to Modify
 
-| File | Change |
-|---|---|
-| `src/ui/manifest/schema.ts` | Add `sticky` to `baseComponentConfigSchema` |
-| `src/ui/components/_base/component-wrapper.tsx` | Apply sticky style |
+| File                                            | Change                                      |
+| ----------------------------------------------- | ------------------------------------------- |
+| `src/ui/manifest/schema.ts`                     | Add `sticky` to `baseComponentConfigSchema` |
+| `src/ui/components/_base/component-wrapper.tsx` | Apply sticky style                          |
 
 ### Exit Criteria
 
@@ -488,10 +516,10 @@ const stickyStyle: React.CSSProperties | undefined = config.sticky
 ```typescript
 export const spacerConfigSchema = baseComponentConfigSchema.extend({
   type: z.literal("spacer"),
-  size: z.union([
-    z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "3xl"]),
-    z.string(),
-  ]).optional().default("md"),
+  size: z
+    .union([z.enum(["xs", "sm", "md", "lg", "xl", "2xl", "3xl"]), z.string()])
+    .optional()
+    .default("md"),
   axis: z.enum(["horizontal", "vertical"]).optional().default("vertical"),
 });
 ```
@@ -626,11 +654,11 @@ const Z_INDEX_MAP: Record<string, string> = {
 
 ### Track Overview
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| **Components** | B.1, B.2, B.3, B.5 | `src/ui/components/layout/grid/`, `container/`, `section/`, `spacer/` |
-| **Schema** | B.4, B.7, B.8 | `src/ui/manifest/schema.ts`, `src/ui/components/_base/component-wrapper.tsx` |
-| **Runtime** | B.6 | `src/ui/manifest/renderer.tsx` (verification only) |
+| Track          | Phases             | Files Owned                                                                  |
+| -------------- | ------------------ | ---------------------------------------------------------------------------- |
+| **Components** | B.1, B.2, B.3, B.5 | `src/ui/components/layout/grid/`, `container/`, `section/`, `spacer/`        |
+| **Schema**     | B.4, B.7, B.8      | `src/ui/manifest/schema.ts`, `src/ui/components/_base/component-wrapper.tsx` |
+| **Runtime**    | B.6                | `src/ui/manifest/renderer.tsx` (verification only)                           |
 
 ### Internal Sequencing
 

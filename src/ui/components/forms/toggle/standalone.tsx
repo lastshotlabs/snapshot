@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useCallback, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -73,7 +73,9 @@ export function ToggleField({
   style,
   slots,
 }: ToggleFieldProps) {
-  const [internalPressed, setInternalPressed] = useState(controlledPressed ?? defaultPressed);
+  const [internalPressed, setInternalPressed] = useState(
+    controlledPressed ?? defaultPressed,
+  );
   const pressed = controlledPressed ?? internalPressed;
 
   const handleToggle = useCallback(() => {

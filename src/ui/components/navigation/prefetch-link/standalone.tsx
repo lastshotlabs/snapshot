@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -79,10 +79,7 @@ export function PrefetchLinkBase({
 
   // Viewport prefetch via IntersectionObserver.
   useEffect(() => {
-    if (
-      (prefetch !== "viewport" && prefetch !== "visible") ||
-      !ref.current
-    ) {
+    if ((prefetch !== "viewport" && prefetch !== "visible") || !ref.current) {
       return;
     }
 

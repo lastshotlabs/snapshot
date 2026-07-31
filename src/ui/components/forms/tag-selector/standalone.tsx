@@ -56,7 +56,9 @@ function contrastText(color: string): string {
   const g = parseInt(color.slice(3, 5), 16);
   const b = parseInt(color.slice(5, 7), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.5 ? "var(--sn-color-foreground, #000000)" : "var(--sn-color-primary-foreground, #ffffff)";
+  return luminance > 0.5
+    ? "var(--sn-color-foreground, #000000)"
+    : "var(--sn-color-primary-foreground, #ffffff)";
 }
 
 function StandaloneTagPill({
@@ -286,7 +288,9 @@ export function TagSelectorField({
 
   const [searchText, setSearchText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<string[]>(defaultValue ?? []);
+  const [selectedValues, setSelectedValues] = useState<string[]>(
+    defaultValue ?? [],
+  );
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -312,8 +316,7 @@ export function TagSelectorField({
       (tag) => tag.label.toLowerCase() === searchText.trim().toLowerCase(),
     );
 
-  const atMax =
-    maxTags != null && selectedValues.length >= maxTags;
+  const atMax = maxTags != null && selectedValues.length >= maxTags;
 
   const updateSelection = useCallback(
     (newValues: string[]) => {
@@ -405,7 +408,8 @@ export function TagSelectorField({
       gap: "xs",
       paddingY: "xs",
       paddingX: "sm",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "md",
       bg: "var(--sn-color-input, #ffffff)",
       cursor: "text",
@@ -438,7 +442,8 @@ export function TagSelectorField({
     surfaceId: `${rootId}-dropdown`,
     implementationBase: {
       position: "absolute",
-      border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "md",
       bg: "var(--sn-color-popover, #ffffff)",
       shadow: "md",

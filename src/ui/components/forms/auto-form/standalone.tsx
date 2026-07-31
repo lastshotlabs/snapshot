@@ -149,7 +149,13 @@ export interface AutoFormBaseProps {
   onInlineAction?: (fieldName: string, to: string) => void;
 
   /** Variant for the submit button. */
-  submitVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  submitVariant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   /** Size for the submit button. */
   submitSize?: "sm" | "md" | "lg" | "icon";
   /** Whether the submit button spans the full width. */
@@ -260,7 +266,8 @@ function StandaloneTagInput({
             display: "inline-flex",
             alignItems: "center",
             gap: "var(--sn-spacing-2xs, 0.125rem)",
-            padding: "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
+            padding:
+              "var(--sn-spacing-2xs, 0.125rem) var(--sn-spacing-sm, 0.5rem)",
             borderRadius: "var(--sn-radius-full, 9999px)",
             backgroundColor: "var(--sn-color-primary, #2563eb)",
             color: "var(--sn-color-primary-foreground, #ffffff)",
@@ -468,11 +475,10 @@ function StandaloneFieldRenderer({
 
   const inputWrapperSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-inputWrapper-${field.name}`,
-    implementationBase:
-      ({
-        width: "100%",
-        ...(field.type === "password" ? { position: "relative" } : {}),
-      } as Record<string, unknown>),
+    implementationBase: {
+      width: "100%",
+      ...(field.type === "password" ? { position: "relative" } : {}),
+    } as Record<string, unknown>,
     componentSurface: slots?.inputWrapper,
     itemSurface: field.slots?.inputWrapper,
     activeStates,
@@ -850,7 +856,9 @@ function StandaloneFieldRenderer({
     }
 
     case "tag-input": {
-      const tags = Array.isArray(value) ? (value as string[]).filter(Boolean) : [];
+      const tags = Array.isArray(value)
+        ? (value as string[]).filter(Boolean)
+        : [];
       input = (
         <StandaloneTagInput
           fieldId={fieldId}
@@ -1143,13 +1151,15 @@ function StandaloneFieldRenderer({
           <InputControl
             inputId={fieldId}
             name={field.name}
-            type={(
-              field.type === "password"
-                ? (passwordVisible ? "text" : "password")
+            type={
+              (field.type === "password"
+                ? passwordVisible
+                  ? "text"
+                  : "password"
                 : field.type === "datetime"
                   ? "datetime-local"
-                  : field.type
-            ) as Parameters<typeof InputControl>[0]["type"]}
+                  : field.type) as Parameters<typeof InputControl>[0]["type"]
+            }
             value={(value as string) ?? ""}
             disabled={field.disabled}
             readOnly={field.readOnly}
@@ -1654,7 +1664,7 @@ export function AutoFormBase({
 
   const allFields: AutoFormFieldConfig[] = sections
     ? sections.flatMap((s) => s.fields)
-    : fields ?? [];
+    : (fields ?? []);
 
   const rootSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-root`,
@@ -1740,7 +1750,10 @@ export function AutoFormBase({
               gap: resolvedGap,
               style:
                 layout === "grid"
-                  ? { gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))" }
+                  ? {
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(250px, 1fr))",
+                    }
                   : undefined,
             } as Record<string, unknown>,
             componentSurface: slots?.fields,

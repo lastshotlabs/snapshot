@@ -30,7 +30,10 @@ let hasError = false;
 let documentedComponents = 0;
 
 for (const directory of componentDirectories) {
-  if (directory.hasComponent && !componentDocs.includes(`### \`${directory.relativeDir}\``)) {
+  if (
+    directory.hasComponent &&
+    !componentDocs.includes(`### \`${directory.relativeDir}\``)
+  ) {
     console.error(
       `[components:coverage] Missing component directory doc entry for ${directory.relativeDir}`,
     );

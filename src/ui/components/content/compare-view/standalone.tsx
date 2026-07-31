@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, RefObject } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -66,7 +66,9 @@ const LINE_PREFIX: Record<DiffLine["type"], string> = {
   removed: "-",
 };
 
-function lineStyles(type: DiffLine["type"]): Record<string, string> | undefined {
+function lineStyles(
+  type: DiffLine["type"],
+): Record<string, string> | undefined {
   switch (type) {
     case "removed":
       return {
@@ -304,8 +306,14 @@ export function CompareViewBase({
     () => computeDiff(left ?? "", right ?? ""),
     [left, right],
   );
-  const leftDiff = useMemo(() => diff.filter((d) => d.type !== "added"), [diff]);
-  const rightDiff = useMemo(() => diff.filter((d) => d.type !== "removed"), [diff]);
+  const leftDiff = useMemo(
+    () => diff.filter((d) => d.type !== "added"),
+    [diff],
+  );
+  const rightDiff = useMemo(
+    () => diff.filter((d) => d.type !== "removed"),
+    [diff],
+  );
 
   const handleScroll = useCallback((source: "left" | "right") => {
     if (scrollingRef.current) {
@@ -329,7 +337,8 @@ export function CompareViewBase({
     implementationBase: {
       display: "flex",
       flexDirection: "column",
-      border: "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
+      border:
+        "var(--sn-border-thin, 1px) solid var(--sn-color-border, #e5e7eb)",
       borderRadius: "lg",
       overflow: "hidden",
       bg: "var(--sn-color-card, #ffffff)",

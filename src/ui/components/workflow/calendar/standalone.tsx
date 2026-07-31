@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useCallback,
@@ -64,7 +64,11 @@ export interface CalendarBaseProps {
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function sameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 function isToday(d: Date) {
   return sameDay(d, new Date());
@@ -82,12 +86,15 @@ function weekNumber(d: Date) {
 function monthGrid(year: number, month: number) {
   const first = new Date(year, month, 1);
   const dates: Date[] = [];
-  for (let i = first.getDay() - 1; i >= 0; i -= 1) dates.push(new Date(year, month, -i));
+  for (let i = first.getDay() - 1; i >= 0; i -= 1)
+    dates.push(new Date(year, month, -i));
   const days = new Date(year, month + 1, 0).getDate();
   for (let d = 1; d <= days; d += 1) dates.push(new Date(year, month, d));
   while (dates.length < 42) {
     const last = dates[dates.length - 1]!;
-    dates.push(new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1));
+    dates.push(
+      new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1),
+    );
   }
   return dates;
 }
@@ -105,7 +112,10 @@ function weekDates(d: Date) {
   });
 }
 function monthYear(year: number, month: number) {
-  return new Date(year, month).toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  return new Date(year, month).toLocaleDateString(undefined, {
+    month: "long",
+    year: "numeric",
+  });
 }
 
 // ── EventPill ─────────────────────────────────────────────────────────────────
@@ -132,7 +142,9 @@ function EventPill({
       fontSize: "xs",
       cursor: clickable ? "pointer" : "default",
       hover: clickable ? { opacity: 0.85 } : undefined,
-      focus: clickable ? { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" } : undefined,
+      focus: clickable
+        ? { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" }
+        : undefined,
       style: {
         backgroundColor: `var(--sn-color-${event.color}, var(--sn-color-primary, #2563eb))`,
         color: `var(--sn-color-${event.color}-foreground, #fff)`,
@@ -165,7 +177,13 @@ function EventPill({
       </ButtonControl>
     </div>
   ) : (
-    <div data-calendar-event data-snapshot-id={id} title={event.title} className={surface.className} style={surface.style}>
+    <div
+      data-calendar-event
+      data-snapshot-id={id}
+      title={event.title}
+      className={surface.className}
+      style={surface.style}
+    >
       {event.title}
     </div>
   );
@@ -209,7 +227,9 @@ export function CalendarBase({
   style,
   slots,
 }: CalendarBaseProps) {
-  const [currentDate, setCurrentDate] = useState(() => initialDate ?? new Date());
+  const [currentDate, setCurrentDate] = useState(
+    () => initialDate ?? new Date(),
+  );
   const userNavigatedRef = useRef(false);
   const rootId = id ?? "calendar";
   const initialDateTime = initialDate?.getTime();
@@ -221,20 +241,37 @@ export function CalendarBase({
     setCurrentDate(new Date(initialDateTime));
   }, [initialDateTime]);
 
-  const forDate = useCallback((date: Date) => events.filter((event) => sameDay(event.date, date)), [events]);
-  const dateClick = useCallback((date: Date) => {
-    onDateClick?.(date);
-  }, [onDateClick]);
-  const eventClick = useCallback((event: CalendarEventEntry) => {
-    onEventClick?.(event);
-  }, [onEventClick]);
+  const forDate = useCallback(
+    (date: Date) => events.filter((event) => sameDay(event.date, date)),
+    [events],
+  );
+  const dateClick = useCallback(
+    (date: Date) => {
+      onDateClick?.(date);
+    },
+    [onDateClick],
+  );
+  const eventClick = useCallback(
+    (event: CalendarEventEntry) => {
+      onEventClick?.(event);
+    },
+    [onEventClick],
+  );
   const goPrev = useCallback(() => {
     userNavigatedRef.current = true;
-    setCurrentDate((d) => view === "month" ? new Date(d.getFullYear(), d.getMonth() - 1, 1) : new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7));
+    setCurrentDate((d) =>
+      view === "month"
+        ? new Date(d.getFullYear(), d.getMonth() - 1, 1)
+        : new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7),
+    );
   }, [view]);
   const goNext = useCallback(() => {
     userNavigatedRef.current = true;
-    setCurrentDate((d) => view === "month" ? new Date(d.getFullYear(), d.getMonth() + 1, 1) : new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7));
+    setCurrentDate((d) =>
+      view === "month"
+        ? new Date(d.getFullYear(), d.getMonth() + 1, 1)
+        : new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7),
+    );
   }, [view]);
   const goToday = useCallback(() => {
     userNavigatedRef.current = true;
@@ -242,7 +279,8 @@ export function CalendarBase({
   }, []);
 
   const title = useMemo(() => {
-    if (view === "month") return monthYear(currentDate.getFullYear(), currentDate.getMonth());
+    if (view === "month")
+      return monthYear(currentDate.getFullYear(), currentDate.getMonth());
     const dates = weekDates(currentDate);
     const first = dates[0]!;
     const last = dates[6]!;
@@ -260,12 +298,22 @@ export function CalendarBase({
   });
   const headerSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-header`,
-    implementationBase: { display: "flex", alignItems: "center", justifyContent: "space-between", style: { marginBottom: "var(--sn-spacing-md, 0.75rem)" } },
+    implementationBase: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      style: { marginBottom: "var(--sn-spacing-md, 0.75rem)" },
+    },
     componentSurface: slots?.header,
   });
   const titleSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-title`,
-    implementationBase: { fontSize: "lg", fontWeight: "semibold", color: "var(--sn-color-foreground, #111827)", style: { margin: 0 } },
+    implementationBase: {
+      fontSize: "lg",
+      fontWeight: "semibold",
+      color: "var(--sn-color-foreground, #111827)",
+      style: { margin: 0 },
+    },
     componentSurface: slots?.title,
   });
   const navGroupSurface = resolveSurfacePresentation({
@@ -275,17 +323,32 @@ export function CalendarBase({
   });
   const loadingSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-loadingState`,
-    implementationBase: { padding: "lg", textAlign: "center", fontSize: "sm", color: "var(--sn-color-muted-foreground, #6b7280)" },
+    implementationBase: {
+      padding: "lg",
+      textAlign: "center",
+      fontSize: "sm",
+      color: "var(--sn-color-muted-foreground, #6b7280)",
+    },
     componentSurface: slots?.loadingState,
   });
   const errorSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-errorState`,
-    implementationBase: { padding: "lg", textAlign: "center", fontSize: "sm", color: "var(--sn-color-destructive, #ef4444)" },
+    implementationBase: {
+      padding: "lg",
+      textAlign: "center",
+      fontSize: "sm",
+      color: "var(--sn-color-destructive, #ef4444)",
+    },
     componentSurface: slots?.errorState,
   });
   const frameSurface = resolveSurfacePresentation({
     surfaceId: `${rootId}-frame`,
-    implementationBase: { overflow: "hidden", borderRadius: "md", border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" },
+    implementationBase: {
+      overflow: "hidden",
+      borderRadius: "md",
+      border:
+        "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+    },
     componentSurface: slots?.frame,
   });
   const scrollerSurface = resolveSurfacePresentation({
@@ -294,19 +357,27 @@ export function CalendarBase({
     componentSurface: slots?.scroller,
   });
 
-  const nav = (navId: string, text: string, onClick: () => void, ariaLabel?: string) => {
+  const nav = (
+    navId: string,
+    text: string,
+    onClick: () => void,
+    ariaLabel?: string,
+  ) => {
     const surface = resolveSurfacePresentation({
       surfaceId: `${rootId}-nav-${navId}`,
       implementationBase: {
         paddingY: "xs",
         paddingX: "sm",
         borderRadius: "sm",
-        border: "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
+        border:
+          "var(--sn-border-default, 1px) solid var(--sn-color-border, #d1d5db)",
         bg: "var(--sn-color-card, #fff)",
         cursor: "pointer",
         fontSize: "sm",
         hover: { bg: "var(--sn-color-secondary, #f3f4f6)" },
-        focus: { ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))" },
+        focus: {
+          ring: "var(--sn-ring-color, var(--sn-color-primary, #2563eb))",
+        },
       },
       componentSurface: slots?.navButton,
     });
@@ -338,22 +409,37 @@ export function CalendarBase({
       implementationBase: {
         padding: monthIndex == null ? "sm" : "xs",
         cursor: onDateClick ? "pointer" : "default",
-        hover: { bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 50%, transparent)" },
+        hover: {
+          bg: "color-mix(in oklch, var(--sn-color-accent, #f3f4f6) 50%, transparent)",
+        },
         style: {
           minHeight: monthIndex == null ? "200px" : "80px",
-          backgroundColor: isWeekend(date) ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)" : undefined,
+          backgroundColor: isWeekend(date)
+            ? "color-mix(in oklch, var(--sn-color-muted, #f3f4f6) 30%, transparent)"
+            : undefined,
         },
       },
       componentSurface: slots?.cell,
     });
     const numSurface = resolveSurfacePresentation({
       surfaceId: `${cellId}-num`,
-      implementationBase: { fontSize: monthIndex == null ? "lg" : "sm", color: current ? "var(--sn-color-foreground, #111827)" : "var(--sn-color-muted-foreground, #6b7280)" },
-      componentSurface: isCurrent ? slots?.currentDateNumber : slots?.dateNumber,
+      implementationBase: {
+        fontSize: monthIndex == null ? "lg" : "sm",
+        color: current
+          ? "var(--sn-color-foreground, #111827)"
+          : "var(--sn-color-muted-foreground, #6b7280)",
+      },
+      componentSurface: isCurrent
+        ? slots?.currentDateNumber
+        : slots?.dateNumber,
     });
     const eventsSurface = resolveSurfacePresentation({
       surfaceId: `${cellId}-events`,
-      implementationBase: { display: "flex", flexDirection: "column", gap: monthIndex == null ? "xs" : "2xs" },
+      implementationBase: {
+        display: "flex",
+        flexDirection: "column",
+        gap: monthIndex == null ? "xs" : "2xs",
+      },
       componentSurface: slots?.events,
     });
     const handleCellKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -369,34 +455,75 @@ export function CalendarBase({
         data-snapshot-id={cellId}
         role={onDateClick ? "button" : undefined}
         tabIndex={onDateClick ? 0 : undefined}
-        aria-label={onDateClick ? `Select ${date.toLocaleDateString()}` : undefined}
+        aria-label={
+          onDateClick ? `Select ${date.toLocaleDateString()}` : undefined
+        }
         onClick={() => dateClick(date)}
         onKeyDown={handleCellKeyDown}
         className={cellSurface.className}
         style={cellSurface.style}
       >
-        <div style={monthIndex == null ? { textAlign: "center", marginBottom: "var(--sn-spacing-sm, 0.5rem)" } : { display: "flex", justifyContent: "flex-end", marginBottom: "var(--sn-spacing-xs, 0.25rem)" }}>
+        <div
+          style={
+            monthIndex == null
+              ? {
+                  textAlign: "center",
+                  marginBottom: "var(--sn-spacing-sm, 0.5rem)",
+                }
+              : {
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "var(--sn-spacing-xs, 0.25rem)",
+                }
+          }
+        >
           {monthIndex == null ? (
             <>
               <div
                 data-snapshot-id={`${cellId}-day`}
-                className={resolveSurfacePresentation({
-                  surfaceId: `${cellId}-day`,
-                  implementationBase: { fontSize: "xs", fontWeight: "semibold", color: "var(--sn-color-muted-foreground, #6b7280)" },
-                  componentSurface: slots?.dayHeader,
-                }).className}
-                style={resolveSurfacePresentation({
-                  surfaceId: `${cellId}-day`,
-                  implementationBase: { fontSize: "xs", fontWeight: "semibold", color: "var(--sn-color-muted-foreground, #6b7280)" },
-                  componentSurface: slots?.dayHeader,
-                }).style}
+                className={
+                  resolveSurfacePresentation({
+                    surfaceId: `${cellId}-day`,
+                    implementationBase: {
+                      fontSize: "xs",
+                      fontWeight: "semibold",
+                      color: "var(--sn-color-muted-foreground, #6b7280)",
+                    },
+                    componentSurface: slots?.dayHeader,
+                  }).className
+                }
+                style={
+                  resolveSurfacePresentation({
+                    surfaceId: `${cellId}-day`,
+                    implementationBase: {
+                      fontSize: "xs",
+                      fontWeight: "semibold",
+                      color: "var(--sn-color-muted-foreground, #6b7280)",
+                    },
+                    componentSurface: slots?.dayHeader,
+                  }).style
+                }
               >
                 {DAY_NAMES[date.getDay()]}
               </div>
               <span
                 data-snapshot-id={`${cellId}-num`}
                 className={numSurface.className}
-                style={isCurrent ? { ...(numSurface.style ?? {}), backgroundColor: "var(--sn-color-primary, #2563eb)", color: "var(--sn-color-primary-foreground, #fff)", borderRadius: "var(--sn-radius-full, 9999px)", width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" } : numSurface.style}
+                style={
+                  isCurrent
+                    ? {
+                        ...(numSurface.style ?? {}),
+                        backgroundColor: "var(--sn-color-primary, #2563eb)",
+                        color: "var(--sn-color-primary-foreground, #fff)",
+                        borderRadius: "var(--sn-radius-full, 9999px)",
+                        width: "32px",
+                        height: "32px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }
+                    : numSurface.style
+                }
               >
                 {date.getDate()}
               </span>
@@ -405,29 +532,70 @@ export function CalendarBase({
             <span
               data-snapshot-id={`${cellId}-num`}
               className={numSurface.className}
-              style={isCurrent ? { ...(numSurface.style ?? {}), backgroundColor: "var(--sn-color-primary, #2563eb)", color: "var(--sn-color-primary-foreground, #fff)", borderRadius: "var(--sn-radius-full, 9999px)", width: "24px", height: "24px", display: "inline-flex", alignItems: "center", justifyContent: "center" } : numSurface.style}
+              style={
+                isCurrent
+                  ? {
+                      ...(numSurface.style ?? {}),
+                      backgroundColor: "var(--sn-color-primary, #2563eb)",
+                      color: "var(--sn-color-primary-foreground, #fff)",
+                      borderRadius: "var(--sn-radius-full, 9999px)",
+                      width: "24px",
+                      height: "24px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }
+                  : numSurface.style
+              }
             >
               {date.getDate()}
             </span>
           )}
         </div>
-        <div data-snapshot-id={`${cellId}-events`} className={eventsSurface.className} style={eventsSurface.style}>
-          {(monthIndex == null ? dayEvents : dayEvents.slice(0, 3)).map((event, i) => (
-            <EventPill key={i} id={`${cellId}-event-${i}`} event={event} clickable={Boolean(onEventClick)} onClick={onEventClick ? () => eventClick(event) : undefined} slots={slots} />
-          ))}
+        <div
+          data-snapshot-id={`${cellId}-events`}
+          className={eventsSurface.className}
+          style={eventsSurface.style}
+        >
+          {(monthIndex == null ? dayEvents : dayEvents.slice(0, 3)).map(
+            (event, i) => (
+              <EventPill
+                key={i}
+                id={`${cellId}-event-${i}`}
+                event={event}
+                clickable={Boolean(onEventClick)}
+                onClick={onEventClick ? () => eventClick(event) : undefined}
+                slots={slots}
+              />
+            ),
+          )}
           {monthIndex != null && dayEvents.length > 3 ? (
             <div
               data-snapshot-id={`${cellId}-more`}
-              className={resolveSurfacePresentation({
-                surfaceId: `${cellId}-more`,
-                implementationBase: { paddingX: "xs", fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)", style: { cursor: "pointer" } },
-                componentSurface: slots?.overflowMore,
-              }).className}
-              style={resolveSurfacePresentation({
-                surfaceId: `${cellId}-more`,
-                implementationBase: { paddingX: "xs", fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)", style: { cursor: "pointer" } },
-                componentSurface: slots?.overflowMore,
-              }).style}
+              className={
+                resolveSurfacePresentation({
+                  surfaceId: `${cellId}-more`,
+                  implementationBase: {
+                    paddingX: "xs",
+                    fontSize: "xs",
+                    color: "var(--sn-color-muted-foreground, #6b7280)",
+                    style: { cursor: "pointer" },
+                  },
+                  componentSurface: slots?.overflowMore,
+                }).className
+              }
+              style={
+                resolveSurfacePresentation({
+                  surfaceId: `${cellId}-more`,
+                  implementationBase: {
+                    paddingX: "xs",
+                    fontSize: "xs",
+                    color: "var(--sn-color-muted-foreground, #6b7280)",
+                    style: { cursor: "pointer" },
+                  },
+                  componentSurface: slots?.overflowMore,
+                }).style
+              }
             >
               +{dayEvents.length - 3} more
             </div>
@@ -444,52 +612,119 @@ export function CalendarBase({
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const dates = monthGrid(year, month);
-    const weeks = Array.from({ length: 6 }, (_, i) => dates.slice(i * 7, i * 7 + 7));
+    const weeks = Array.from({ length: 6 }, (_, i) =>
+      dates.slice(i * 7, i * 7 + 7),
+    );
     const rowSurface = resolveSurfacePresentation({
       surfaceId: `${rootId}-dayHeaderRow`,
-      implementationBase: { display: "grid", gap: "2xs", style: { gridTemplateColumns: showWeekNumbers ? "40px repeat(7, 1fr)" : "repeat(7, 1fr)" } },
+      implementationBase: {
+        display: "grid",
+        gap: "2xs",
+        style: {
+          gridTemplateColumns: showWeekNumbers
+            ? "40px repeat(7, 1fr)"
+            : "repeat(7, 1fr)",
+        },
+      },
       componentSurface: slots?.dayHeaderRow,
     });
     return (
       <>
-        <div data-snapshot-id={`${rootId}-dayHeaderRow`} className={rowSurface.className} style={rowSurface.style}>
+        <div
+          data-snapshot-id={`${rootId}-dayHeaderRow`}
+          className={rowSurface.className}
+          style={rowSurface.style}
+        >
           {showWeekNumbers ? <div /> : null}
           {DAY_NAMES.map((name) => {
             const surface = resolveSurfacePresentation({
               surfaceId: `${rootId}-dayHeader-${name}`,
-              implementationBase: { padding: "xs", textAlign: "center", fontSize: "xs", fontWeight: "semibold", color: "var(--sn-color-muted-foreground, #6b7280)" },
+              implementationBase: {
+                padding: "xs",
+                textAlign: "center",
+                fontSize: "xs",
+                fontWeight: "semibold",
+                color: "var(--sn-color-muted-foreground, #6b7280)",
+              },
               componentSurface: slots?.dayHeader,
             });
-            return <div key={name} data-snapshot-id={`${rootId}-dayHeader-${name}`} className={surface.className} style={surface.style}>{name}<SurfaceStyles css={surface.scopedCss} /></div>;
+            return (
+              <div
+                key={name}
+                data-snapshot-id={`${rootId}-dayHeader-${name}`}
+                className={surface.className}
+                style={surface.style}
+              >
+                {name}
+                <SurfaceStyles css={surface.scopedCss} />
+              </div>
+            );
           })}
         </div>
         <SurfaceStyles css={rowSurface.scopedCss} />
         {weeks.map((week, wi) => {
           const weekSurface = resolveSurfacePresentation({
             surfaceId: `${rootId}-weekRow-${wi}`,
-            implementationBase: { display: "grid", gap: "2xs", style: { gridTemplateColumns: showWeekNumbers ? "40px repeat(7, 1fr)" : "repeat(7, 1fr)", borderBottom: "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)" } },
+            implementationBase: {
+              display: "grid",
+              gap: "2xs",
+              style: {
+                gridTemplateColumns: showWeekNumbers
+                  ? "40px repeat(7, 1fr)"
+                  : "repeat(7, 1fr)",
+                borderBottom:
+                  "var(--sn-border-default, 1px) solid var(--sn-color-border, #e5e7eb)",
+              },
+            },
             componentSurface: slots?.weekRow,
           });
           return (
-            <div key={wi} data-snapshot-id={`${rootId}-weekRow-${wi}`} className={weekSurface.className} style={weekSurface.style}>
+            <div
+              key={wi}
+              data-snapshot-id={`${rootId}-weekRow-${wi}`}
+              className={weekSurface.className}
+              style={weekSurface.style}
+            >
               {showWeekNumbers ? (
                 <div
                   data-snapshot-id={`${rootId}-weekNumber-${wi}`}
-                  className={resolveSurfacePresentation({
-                    surfaceId: `${rootId}-weekNumber-${wi}`,
-                    implementationBase: { padding: "xs", display: "flex", alignItems: "start", justifyContent: "center", fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)" },
-                    componentSurface: slots?.weekNumber,
-                  }).className}
-                  style={resolveSurfacePresentation({
-                    surfaceId: `${rootId}-weekNumber-${wi}`,
-                    implementationBase: { padding: "xs", display: "flex", alignItems: "start", justifyContent: "center", fontSize: "xs", color: "var(--sn-color-muted-foreground, #6b7280)" },
-                    componentSurface: slots?.weekNumber,
-                  }).style}
+                  className={
+                    resolveSurfacePresentation({
+                      surfaceId: `${rootId}-weekNumber-${wi}`,
+                      implementationBase: {
+                        padding: "xs",
+                        display: "flex",
+                        alignItems: "start",
+                        justifyContent: "center",
+                        fontSize: "xs",
+                        color: "var(--sn-color-muted-foreground, #6b7280)",
+                      },
+                      componentSurface: slots?.weekNumber,
+                    }).className
+                  }
+                  style={
+                    resolveSurfacePresentation({
+                      surfaceId: `${rootId}-weekNumber-${wi}`,
+                      implementationBase: {
+                        padding: "xs",
+                        display: "flex",
+                        alignItems: "start",
+                        justifyContent: "center",
+                        fontSize: "xs",
+                        color: "var(--sn-color-muted-foreground, #6b7280)",
+                      },
+                      componentSurface: slots?.weekNumber,
+                    }).style
+                  }
                 >
                   {weekNumber(week[0]!)}
                 </div>
               ) : null}
-              {week.map((date, di) => <div key={di}>{cell(date, `${rootId}-cell-${wi}-${di}`, month)}</div>)}
+              {week.map((date, di) => (
+                <div key={di}>
+                  {cell(date, `${rootId}-cell-${wi}-${di}`, month)}
+                </div>
+              ))}
               <SurfaceStyles css={weekSurface.scopedCss} />
             </div>
           );
@@ -502,13 +737,23 @@ export function CalendarBase({
     const dates = weekDates(currentDate);
     const surface = resolveSurfacePresentation({
       surfaceId: `${rootId}-weekGrid`,
-      implementationBase: { display: "grid", gap: "2xs", style: { gridTemplateColumns: "repeat(7, 1fr)" } },
+      implementationBase: {
+        display: "grid",
+        gap: "2xs",
+        style: { gridTemplateColumns: "repeat(7, 1fr)" },
+      },
       componentSurface: slots?.weekRow,
     });
     return (
       <>
-        <div data-snapshot-id={`${rootId}-weekGrid`} className={surface.className} style={surface.style}>
-          {dates.map((date, i) => <div key={i}>{cell(date, `${rootId}-weekCell-${i}`)}</div>)}
+        <div
+          data-snapshot-id={`${rootId}-weekGrid`}
+          className={surface.className}
+          style={surface.style}
+        >
+          {dates.map((date, i) => (
+            <div key={i}>{cell(date, `${rootId}-weekCell-${i}`)}</div>
+          ))}
         </div>
         <SurfaceStyles css={surface.scopedCss} />
       </>
@@ -517,21 +762,78 @@ export function CalendarBase({
 
   return (
     <>
-      <div data-snapshot-component="calendar" data-snapshot-id={rootId} className={rootSurface.className} style={rootSurface.style}>
-        <div data-calendar-header data-snapshot-id={`${rootId}-header`} className={headerSurface.className} style={headerSurface.style}>
-          <h2 data-snapshot-id={`${rootId}-title`} className={titleSurface.className} style={titleSurface.style}>{title}</h2>
-          <div data-snapshot-id={`${rootId}-navGroup`} className={navGroupSurface.className} style={navGroupSurface.style}>
-            {nav("prev", "\u2039", goPrev, view === "month" ? "Previous month" : "Previous week")}
+      <div
+        data-snapshot-component="calendar"
+        data-snapshot-id={rootId}
+        className={rootSurface.className}
+        style={rootSurface.style}
+      >
+        <div
+          data-calendar-header
+          data-snapshot-id={`${rootId}-header`}
+          className={headerSurface.className}
+          style={headerSurface.style}
+        >
+          <h2
+            data-snapshot-id={`${rootId}-title`}
+            className={titleSurface.className}
+            style={titleSurface.style}
+          >
+            {title}
+          </h2>
+          <div
+            data-snapshot-id={`${rootId}-navGroup`}
+            className={navGroupSurface.className}
+            style={navGroupSurface.style}
+          >
+            {nav(
+              "prev",
+              "\u2039",
+              goPrev,
+              view === "month" ? "Previous month" : "Previous week",
+            )}
             {nav("today", todayLabel ?? "Today", goToday)}
-            {nav("next", "\u203A", goNext, view === "month" ? "Next month" : "Next week")}
+            {nav(
+              "next",
+              "\u203A",
+              goNext,
+              view === "month" ? "Next month" : "Next week",
+            )}
           </div>
         </div>
 
-        {loading ? <div data-calendar-loading data-snapshot-id={`${rootId}-loadingState`} className={loadingSurface.className} style={loadingSurface.style}>Loading events...</div> : null}
-        {error ? <div data-calendar-error role="alert" data-snapshot-id={`${rootId}-errorState`} className={errorSurface.className} style={errorSurface.style}>Error: {error.message}</div> : null}
+        {loading ? (
+          <div
+            data-calendar-loading
+            data-snapshot-id={`${rootId}-loadingState`}
+            className={loadingSurface.className}
+            style={loadingSurface.style}
+          >
+            Loading events...
+          </div>
+        ) : null}
+        {error ? (
+          <div
+            data-calendar-error
+            role="alert"
+            data-snapshot-id={`${rootId}-errorState`}
+            className={errorSurface.className}
+            style={errorSurface.style}
+          >
+            Error: {error.message}
+          </div>
+        ) : null}
         {!loading && !error ? (
-          <div data-snapshot-id={`${rootId}-frame`} className={frameSurface.className} style={frameSurface.style}>
-            <div data-snapshot-id={`${rootId}-scroller`} className={scrollerSurface.className} style={scrollerSurface.style}>
+          <div
+            data-snapshot-id={`${rootId}-frame`}
+            className={frameSurface.className}
+            style={frameSurface.style}
+          >
+            <div
+              data-snapshot-id={`${rootId}-scroller`}
+              className={scrollerSurface.className}
+              style={scrollerSurface.style}
+            >
               {view === "month" ? renderMonth() : renderWeek()}
             </div>
           </div>

@@ -52,7 +52,10 @@ export const formEventActionsSchema = z
 export type EventActionConfig = z.input<typeof eventActionSchema>;
 
 export async function executeEventAction(
-  execute: (action: EventActionConfig, payload?: Record<string, unknown>) => Promise<unknown>,
+  execute: (
+    action: EventActionConfig,
+    payload?: Record<string, unknown>,
+  ) => Promise<unknown>,
   action: EventActionConfig | undefined,
   payload?: Record<string, unknown>,
 ): Promise<void> {

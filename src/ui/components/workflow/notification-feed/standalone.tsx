@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useMemo, useCallback, type CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -57,9 +57,7 @@ const typeColorMap: Record<string, string> = {
   error: "var(--sn-color-destructive, #ef4444)",
 };
 
-function asSurfaceConfig(
-  value: unknown,
-): Record<string, unknown> | undefined {
+function asSurfaceConfig(value: unknown): Record<string, unknown> | undefined {
   return value && typeof value === "object"
     ? (value as Record<string, unknown>)
     : undefined;
@@ -503,7 +501,9 @@ export function NotificationFeedBase({
           items.map((item, idx) => {
             const itemId = item.id;
             const itemKey =
-              typeof itemId === "string" || typeof itemId === "number" ? itemId : idx;
+              typeof itemId === "string" || typeof itemId === "number"
+                ? itemId
+                : idx;
             const title = String(item[titleField] ?? "");
             const message = String(item[messageField] ?? "");
             const rawTimestamp = item[timestampField];

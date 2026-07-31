@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useId, type ReactNode } from "react";
 import { SurfaceStyles } from "./surface-styles";
@@ -209,7 +209,14 @@ function ListSkeleton({
             width="2.5rem"
             radius="9999px"
           />
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: "0.375rem" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              gap: "0.375rem",
+            }}
+          >
             <Block
               surfaceId={`${rootId}-block-title-${index}`}
               slot={slots?.block}
@@ -285,7 +292,8 @@ export function AutoSkeleton({
   config?: AutoSkeletonConfig;
 }): ReactNode {
   const generatedId = useId().replace(/:/g, "");
-  const rootId = config?.id ?? `${componentType ?? "auto"}-skeleton-${generatedId}`;
+  const rootId =
+    config?.id ?? `${componentType ?? "auto"}-skeleton-${generatedId}`;
   const variant =
     config?.variant && config.variant !== "auto"
       ? config.variant
@@ -297,7 +305,7 @@ export function AutoSkeleton({
             ? "chart"
             : componentType === "stat-card"
               ? "stat"
-            : "card";
+              : "card";
   const rows = config?.rows ?? config?.count ?? 5;
   const rootSurface = resolveSurfacePresentation({
     surfaceId: rootId,
@@ -348,7 +356,9 @@ export function AutoSkeleton({
         </div>
       ) : null}
       {variant === "stat" ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+        >
           <Block
             surfaceId={`${rootId}-block-label`}
             slot={config?.slots?.block}
@@ -370,7 +380,9 @@ export function AutoSkeleton({
         </div>
       ) : null}
       {variant === "text" ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
           {Array.from({ length: rows }, (_, index) => (
             <Block
               key={index}

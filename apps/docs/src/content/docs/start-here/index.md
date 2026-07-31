@@ -46,7 +46,11 @@ export function LoginPage() {
         }}
       >
         <InputControl value={email} onChangeText={setEmail} type="email" />
-        <InputControl value={password} onChangeText={setPassword} type="password" />
+        <InputControl
+          value={password}
+          onChangeText={setPassword}
+          type="password"
+        />
         <ButtonBase label="Sign in" type="submit" disabled={login.isPending} />
       </form>
     </CardBase>

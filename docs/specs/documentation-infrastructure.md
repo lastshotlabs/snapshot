@@ -2,15 +2,15 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | 1 | Governance, Personas, and Agent Discovery | Completed | A |
-> | 2 | Astro Public Docs App Foundation | Completed | B |
-> | 3 | Source-Backed Reference Generation | Completed | C |
-> | 4 | Capability Map and Core Guides | Completed | B |
-> | 5 | Canonical Examples and Playground Integration | In progress | D |
-> | 6 | Drift Automation and Required CI Path | In progress | E |
-> | 7 | Coverage Hardening and README Reduction | In progress | A + B + C + D + E |
+> | Phase | Title                                         | Status      | Track             |
+> | ----- | --------------------------------------------- | ----------- | ----------------- |
+> | 1     | Governance, Personas, and Agent Discovery     | Completed   | A                 |
+> | 2     | Astro Public Docs App Foundation              | Completed   | B                 |
+> | 3     | Source-Backed Reference Generation            | Completed   | C                 |
+> | 4     | Capability Map and Core Guides                | Completed   | B                 |
+> | 5     | Canonical Examples and Playground Integration | In progress | D                 |
+> | 6     | Drift Automation and Required CI Path         | In progress | E                 |
+> | 7     | Coverage Hardening and README Reduction       | In progress | A + B + C + D + E |
 >
 > **Priority:** P0 for Snapshot maturity.
 > **Depends on:** Nothing external. This is repo-local infrastructure work.
@@ -73,28 +73,28 @@ Agent workflows are a first-class sub-case of persona 4. The system must work fo
 
 ### Strong assets that should be retained
 
-| Surface | Files | Notes |
-|---|---|---|
-| Internal repo rules | `docs/engineering-rules.md`, `docs/spec-process.md`, `CLAUDE.md` | Good contributor guidance, but not enough for docs automation |
-| Public package entrypoints | `src/index.ts`, `src/ui.ts`, `src/ssr/index.ts`, `src/vite/index.ts` | Clear public surfaces, partially documented by JSDoc |
-| Schema generation | `src/schema-generator.ts`, `scripts/generate-manifest-schema.ts` | Existing generation pipeline can anchor manifest reference |
-| Manifest schemas | `src/ui/manifest/schema.ts` | Canonical shape lives here |
-| Component registry | `src/ui/components/**`, `src/ui/manifest/**` | Canonical component catalog is discoverable from source |
-| Playground | `playground/src/showcase.tsx` | Strong visual/example asset, currently disconnected from docs infrastructure |
-| Existing guides | `docs/*.md`, `docs/manifest/*`, `docs/ssr/*` | Useful raw material, but uneven and partly stale |
+| Surface                    | Files                                                                | Notes                                                                        |
+| -------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Internal repo rules        | `docs/engineering-rules.md`, `docs/spec-process.md`, `CLAUDE.md`     | Good contributor guidance, but not enough for docs automation                |
+| Public package entrypoints | `src/index.ts`, `src/ui.ts`, `src/ssr/index.ts`, `src/vite/index.ts` | Clear public surfaces, partially documented by JSDoc                         |
+| Schema generation          | `src/schema-generator.ts`, `scripts/generate-manifest-schema.ts`     | Existing generation pipeline can anchor manifest reference                   |
+| Manifest schemas           | `src/ui/manifest/schema.ts`                                          | Canonical shape lives here                                                   |
+| Component registry         | `src/ui/components/**`, `src/ui/manifest/**`                         | Canonical component catalog is discoverable from source                      |
+| Playground                 | `playground/src/showcase.tsx`                                        | Strong visual/example asset, currently disconnected from docs infrastructure |
+| Existing guides            | `docs/*.md`, `docs/manifest/*`, `docs/ssr/*`                         | Useful raw material, but uneven and partly stale                             |
 
 ### Audited gaps on main
 
-| Gap | Evidence |
-|---|---|
-| No public docs app | No Astro app, no docs-specific package, no docs scripts in `package.json` |
-| Internal and public docs are mixed | `docs/` contains rules/specs alongside user-facing material |
-| No docs automation | `package.json` has `build`, `typecheck`, `test`, `format`, `format:check` only |
-| No explicit docs CI path | No `docs:generate`, `docs:typecheck`, `docs:impact`, `docs:coverage`, or `docs:ci` |
-| No targeted contributor map for agents | Only root `CLAUDE.md`; no `src/ui/CLAUDE.md`, `src/ssr/CLAUDE.md`, `src/cli/CLAUDE.md`, `playground/CLAUDE.md` |
-| Top-level docs understate capabilities | The source contains auth, community, webhooks, SSE, WS, push, manifest UI, presets, plugins, SSR, RSC, Vite transforms, rich content, communication components, and more |
-| Existing guides already drift from schema | `docs/getting-started.md` still documents top-level `nav` and `pages`, while `manifestConfigSchema` on `main` uses `app`, `navigation`, and `routes` |
-| Playground is not treated as canonical docs evidence | `playground/src/showcase.tsx` demonstrates many components but is not linked to structured docs/reference or CI coverage |
+| Gap                                                  | Evidence                                                                                                                                                                 |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| No public docs app                                   | No Astro app, no docs-specific package, no docs scripts in `package.json`                                                                                                |
+| Internal and public docs are mixed                   | `docs/` contains rules/specs alongside user-facing material                                                                                                              |
+| No docs automation                                   | `package.json` has `build`, `typecheck`, `test`, `format`, `format:check` only                                                                                           |
+| No explicit docs CI path                             | No `docs:generate`, `docs:typecheck`, `docs:impact`, `docs:coverage`, or `docs:ci`                                                                                       |
+| No targeted contributor map for agents               | Only root `CLAUDE.md`; no `src/ui/CLAUDE.md`, `src/ssr/CLAUDE.md`, `src/cli/CLAUDE.md`, `playground/CLAUDE.md`                                                           |
+| Top-level docs understate capabilities               | The source contains auth, community, webhooks, SSE, WS, push, manifest UI, presets, plugins, SSR, RSC, Vite transforms, rich content, communication components, and more |
+| Existing guides already drift from schema            | `docs/getting-started.md` still documents top-level `nav` and `pages`, while `manifestConfigSchema` on `main` uses `app`, `navigation`, and `routes`                     |
+| Playground is not treated as canonical docs evidence | `playground/src/showcase.tsx` demonstrates many components but is not linked to structured docs/reference or CI coverage                                                 |
 
 ## Developer Context
 
@@ -109,19 +109,19 @@ bun test
 
 ### Key files
 
-| Path | Why it matters |
-|---|---|
-| `CLAUDE.md` | Current contributor instructions entrypoint |
-| `docs/engineering-rules.md` | Non-negotiable engineering rules |
-| `package.json` | Current script surface; no docs workflow yet |
-| `README.md` | Currently overloaded public entrypoint |
-| `src/index.ts` | Root SDK export surface |
-| `src/ui.ts` | UI/config-driven export surface |
-| `src/ssr/index.ts` | SSR and RSC export surface |
-| `src/vite/index.ts` | Vite plugin export surface |
-| `src/ui/manifest/schema.ts` | Canonical manifest schema |
-| `src/schema-generator.ts` | Existing schema generation pipeline |
-| `playground/src/showcase.tsx` | Largest existing example catalog |
+| Path                          | Why it matters                               |
+| ----------------------------- | -------------------------------------------- |
+| `CLAUDE.md`                   | Current contributor instructions entrypoint  |
+| `docs/engineering-rules.md`   | Non-negotiable engineering rules             |
+| `package.json`                | Current script surface; no docs workflow yet |
+| `README.md`                   | Currently overloaded public entrypoint       |
+| `src/index.ts`                | Root SDK export surface                      |
+| `src/ui.ts`                   | UI/config-driven export surface              |
+| `src/ssr/index.ts`            | SSR and RSC export surface                   |
+| `src/vite/index.ts`           | Vite plugin export surface                   |
+| `src/ui/manifest/schema.ts`   | Canonical manifest schema                    |
+| `src/schema-generator.ts`     | Existing schema generation pipeline          |
+| `playground/src/showcase.tsx` | Largest existing example catalog             |
 
 ## Non-Negotiable Engineering Constraints
 
@@ -209,20 +209,20 @@ Make the contributor workflow explicit, repo-native, and required. Snapshot need
 
 ### Files to create
 
-| File | Purpose |
-|---|---|
-| `docs/documentation-policy.md` | Canonical docs maintenance policy |
-| `src/ui/CLAUDE.md` | UI contributor and agent discovery map |
-| `src/ssr/CLAUDE.md` | SSR/RSC contributor and agent discovery map |
-| `src/cli/CLAUDE.md` | CLI/scaffold/sync contributor and agent discovery map |
-| `playground/CLAUDE.md` | Playground/example rules and canonical showcase guidance |
+| File                           | Purpose                                                  |
+| ------------------------------ | -------------------------------------------------------- |
+| `docs/documentation-policy.md` | Canonical docs maintenance policy                        |
+| `src/ui/CLAUDE.md`             | UI contributor and agent discovery map                   |
+| `src/ssr/CLAUDE.md`            | SSR/RSC contributor and agent discovery map              |
+| `src/cli/CLAUDE.md`            | CLI/scaffold/sync contributor and agent discovery map    |
+| `playground/CLAUDE.md`         | Playground/example rules and canonical showcase guidance |
 
 ### Files to modify
 
-| File | Change |
-|---|---|
-| `CLAUDE.md` | Point contributors to the docs policy and surface CLAUDE files |
-| `docs/engineering-rules.md` | Add the default docs workflow and docs:ci requirement |
+| File                        | Change                                                         |
+| --------------------------- | -------------------------------------------------------------- |
+| `CLAUDE.md`                 | Point contributors to the docs policy and surface CLAUDE files |
+| `docs/engineering-rules.md` | Add the default docs workflow and docs:ci requirement          |
 
 ### Required content
 
@@ -249,22 +249,22 @@ Stand up a public docs product that separates user-facing docs from internal rep
 
 ### Files to create
 
-| File | Purpose |
-|---|---|
-| `apps/docs/package.json` | Docs app package |
-| `apps/docs/astro.config.mjs` | Astro/Starlight config |
-| `apps/docs/tsconfig.json` | Docs app TS config |
-| `apps/docs/src/content.config.ts` | Content collections |
-| `apps/docs/src/content/docs/index.mdx` | Public entry page |
-| `apps/docs/src/content/docs/start-here/index.mdx` | Start-here page by persona |
-| `apps/docs/src/content/docs/contribute/overview.mdx` | Framework contributor landing page |
-| `apps/docs/src/components/*` | Shared docs components for generated reference and example callouts |
-| `apps/docs/CLAUDE.md` | Docs app contribution guidance |
+| File                                                 | Purpose                                                             |
+| ---------------------------------------------------- | ------------------------------------------------------------------- |
+| `apps/docs/package.json`                             | Docs app package                                                    |
+| `apps/docs/astro.config.mjs`                         | Astro/Starlight config                                              |
+| `apps/docs/tsconfig.json`                            | Docs app TS config                                                  |
+| `apps/docs/src/content.config.ts`                    | Content collections                                                 |
+| `apps/docs/src/content/docs/index.mdx`               | Public entry page                                                   |
+| `apps/docs/src/content/docs/start-here/index.mdx`    | Start-here page by persona                                          |
+| `apps/docs/src/content/docs/contribute/overview.mdx` | Framework contributor landing page                                  |
+| `apps/docs/src/components/*`                         | Shared docs components for generated reference and example callouts |
+| `apps/docs/CLAUDE.md`                                | Docs app contribution guidance                                      |
 
 ### Files to modify
 
-| File | Change |
-|---|---|
+| File           | Change                                                |
+| -------------- | ----------------------------------------------------- |
 | `package.json` | Add docs scripts and workspace/package glue as needed |
 
 ### Information architecture
@@ -304,24 +304,24 @@ Replace hand-maintained API/reference sprawl with generated pages and generated 
 
 ### Files to create
 
-| File | Purpose |
-|---|---|
-| `scripts/docs/generate-api-reference.ts` | Extract public exports + JSDoc from entrypoints |
-| `scripts/docs/generate-manifest-reference.ts` | Extract manifest top-level schema, actions, guards, workflows, resources |
-| `scripts/docs/generate-component-reference.ts` | Extract registered component catalog and schema metadata |
-| `scripts/docs/generate-cli-reference.ts` | Extract CLI command metadata from command sources |
-| `scripts/docs/generate-capability-map.ts` | Build source-backed capability inventory for top-level docs |
-| `apps/docs/src/generated/**` | Generated JSON/MDX/TS data consumed by docs pages |
+| File                                           | Purpose                                                                  |
+| ---------------------------------------------- | ------------------------------------------------------------------------ |
+| `scripts/docs/generate-api-reference.ts`       | Extract public exports + JSDoc from entrypoints                          |
+| `scripts/docs/generate-manifest-reference.ts`  | Extract manifest top-level schema, actions, guards, workflows, resources |
+| `scripts/docs/generate-component-reference.ts` | Extract registered component catalog and schema metadata                 |
+| `scripts/docs/generate-cli-reference.ts`       | Extract CLI command metadata from command sources                        |
+| `scripts/docs/generate-capability-map.ts`      | Build source-backed capability inventory for top-level docs              |
+| `apps/docs/src/generated/**`                   | Generated JSON/MDX/TS data consumed by docs pages                        |
 
 ### Files to modify
 
-| File | Change |
-|---|---|
-| `package.json` | Add `docs:generate` |
-| `src/index.ts` | Ensure JSDoc quality is sufficient for root API reference |
-| `src/ui.ts` | Ensure JSDoc quality is sufficient for UI/reference generation |
-| `src/ssr/index.ts` | Ensure JSDoc quality is sufficient for SSR/RSC reference generation |
-| `src/vite/index.ts` | Ensure JSDoc quality is sufficient for Vite reference generation |
+| File                | Change                                                              |
+| ------------------- | ------------------------------------------------------------------- |
+| `package.json`      | Add `docs:generate`                                                 |
+| `src/index.ts`      | Ensure JSDoc quality is sufficient for root API reference           |
+| `src/ui.ts`         | Ensure JSDoc quality is sufficient for UI/reference generation      |
+| `src/ssr/index.ts`  | Ensure JSDoc quality is sufficient for SSR/RSC reference generation |
+| `src/vite/index.ts` | Ensure JSDoc quality is sufficient for Vite reference generation    |
 
 ### Generated outputs
 
@@ -371,15 +371,15 @@ Build the curated public docs layer that explains what Snapshot is, what it can 
 
 ### Files to create
 
-| File | Purpose |
-|---|---|
-| `apps/docs/src/content/docs/start-here/capabilities.mdx` | Source-backed high-level capability map |
-| `apps/docs/src/content/docs/build/manifest-apps.mdx` | Manifest-first app building path |
-| `apps/docs/src/content/docs/build/sdk-apps.mdx` | Custom React / SDK path |
-| `apps/docs/src/content/docs/integrate/ssr-rsc.mdx` | slingshot SSR, manifest renderer, RSC, prefetch |
-| `apps/docs/src/content/docs/integrate/community-and-realtime.mdx` | community, websockets, SSE, push |
-| `apps/docs/src/content/docs/integrate/content-and-media.mdx` | markdown, rich input/editor, file upload, embeds, emoji/gif |
-| `apps/docs/src/content/docs/contribute/agent-flow.mdx` | Contributor/agent implementation flow |
+| File                                                              | Purpose                                                     |
+| ----------------------------------------------------------------- | ----------------------------------------------------------- |
+| `apps/docs/src/content/docs/start-here/capabilities.mdx`          | Source-backed high-level capability map                     |
+| `apps/docs/src/content/docs/build/manifest-apps.mdx`              | Manifest-first app building path                            |
+| `apps/docs/src/content/docs/build/sdk-apps.mdx`                   | Custom React / SDK path                                     |
+| `apps/docs/src/content/docs/integrate/ssr-rsc.mdx`                | slingshot SSR, manifest renderer, RSC, prefetch             |
+| `apps/docs/src/content/docs/integrate/community-and-realtime.mdx` | community, websockets, SSE, push                            |
+| `apps/docs/src/content/docs/integrate/content-and-media.mdx`      | markdown, rich input/editor, file upload, embeds, emoji/gif |
+| `apps/docs/src/content/docs/contribute/agent-flow.mdx`            | Contributor/agent implementation flow                       |
 
 ### Content requirements
 
@@ -415,21 +415,21 @@ Make examples a first-class part of the documentation system rather than inciden
 
 ### Files to create
 
-| File | Purpose |
-|---|---|
-| `examples/registry.ts` | Canonical example registry |
-| `examples/manifest-starter/*` | Minimal manifest-first example |
-| `examples/sdk-auth/*` | SDK/custom React/auth example |
-| `examples/community-realtime/*` | Community/chat/realtime example |
-| `examples/ssr-manifest/*` | slingshot SSR + Snapshot manifest renderer example |
-| `scripts/docs/examples-smoke.ts` | Smoke runner for examples and showcase |
+| File                             | Purpose                                            |
+| -------------------------------- | -------------------------------------------------- |
+| `examples/registry.ts`           | Canonical example registry                         |
+| `examples/manifest-starter/*`    | Minimal manifest-first example                     |
+| `examples/sdk-auth/*`            | SDK/custom React/auth example                      |
+| `examples/community-realtime/*`  | Community/chat/realtime example                    |
+| `examples/ssr-manifest/*`        | slingshot SSR + Snapshot manifest renderer example |
+| `scripts/docs/examples-smoke.ts` | Smoke runner for examples and showcase             |
 
 ### Files to modify
 
-| File | Change |
-|---|---|
+| File                          | Change                                                            |
+| ----------------------------- | ----------------------------------------------------------------- |
 | `playground/src/showcase.tsx` | Register showcase sections in a structured way or export metadata |
-| `package.json` | Add `examples:smoke` and any supporting scripts |
+| `package.json`                | Add `examples:smoke` and any supporting scripts                   |
 
 ### Rules
 
@@ -459,19 +459,19 @@ Make docs upkeep the default contributor path and catch common drift mechanicall
 
 ### Files to create
 
-| File | Purpose |
-|---|---|
-| `scripts/docs/typecheck-docs.ts` | Typecheck code fences and docs-generated examples |
-| `scripts/docs/impact.ts` | Map source changes to required docs/example surfaces |
-| `scripts/docs/coverage.ts` | Check public export/reference/JSDoc coverage |
-| `docs/documentation-impact-map.json` | Source surface to docs/example mappings |
+| File                                 | Purpose                                              |
+| ------------------------------------ | ---------------------------------------------------- |
+| `scripts/docs/typecheck-docs.ts`     | Typecheck code fences and docs-generated examples    |
+| `scripts/docs/impact.ts`             | Map source changes to required docs/example surfaces |
+| `scripts/docs/coverage.ts`           | Check public export/reference/JSDoc coverage         |
+| `docs/documentation-impact-map.json` | Source surface to docs/example mappings              |
 
 ### Files to modify
 
-| File | Change |
-|---|---|
-| `package.json` | Add `docs:typecheck`, `docs:impact`, `docs:coverage`, `docs:ci` |
-| GitHub Actions / CI config | Make `docs:ci` part of required contributor validation |
+| File                       | Change                                                          |
+| -------------------------- | --------------------------------------------------------------- |
+| `package.json`             | Add `docs:typecheck`, `docs:impact`, `docs:coverage`, `docs:ci` |
+| GitHub Actions / CI config | Make `docs:ci` part of required contributor validation          |
 
 ### Required scripts
 
@@ -536,11 +536,11 @@ Close the loop so Snapshot's top-level developer experience stays truthful as th
 
 ### Files to modify
 
-| File | Change |
-|---|---|
-| `README.md` | Reduce to concise overview + install + key links into public docs |
-| `docs/getting-started.md` and old public markdown pages | Either migrate into `apps/docs` or clearly mark/archive them |
-| Generated reference inputs across `src/**` | Raise JSDoc quality where coverage still fails |
+| File                                                    | Change                                                            |
+| ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `README.md`                                             | Reduce to concise overview + install + key links into public docs |
+| `docs/getting-started.md` and old public markdown pages | Either migrate into `apps/docs` or clearly mark/archive them      |
+| Generated reference inputs across `src/**`              | Raise JSDoc quality where coverage still fails                    |
 
 ### Required outcomes
 
@@ -563,13 +563,13 @@ Close the loop so Snapshot's top-level developer experience stays truthful as th
 
 ### Track overview
 
-| Track | Branch | Phases | Owned files |
-|---|---|---|---|
-| A - Governance | `docs/governance` | 1, 7 | `CLAUDE.md`, `docs/documentation-policy.md`, `docs/engineering-rules.md`, surface `CLAUDE.md` files, `README.md` |
-| B - Public Docs App | `docs/public-site` | 2, 4 | `apps/docs/**` |
-| C - Generated Reference | `docs/reference-generation` | 3 | `scripts/docs/generate-*.ts`, generated docs data, JSDoc quality on public entrypoints |
-| D - Examples | `docs/examples` | 5 | `examples/**`, `examples/registry.ts`, `playground/**`, example smoke |
-| E - Automation | `docs/automation` | 6 | docs CI scripts, impact map, package scripts, CI config |
+| Track                   | Branch                      | Phases | Owned files                                                                                                      |
+| ----------------------- | --------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
+| A - Governance          | `docs/governance`           | 1, 7   | `CLAUDE.md`, `docs/documentation-policy.md`, `docs/engineering-rules.md`, surface `CLAUDE.md` files, `README.md` |
+| B - Public Docs App     | `docs/public-site`          | 2, 4   | `apps/docs/**`                                                                                                   |
+| C - Generated Reference | `docs/reference-generation` | 3      | `scripts/docs/generate-*.ts`, generated docs data, JSDoc quality on public entrypoints                           |
+| D - Examples            | `docs/examples`             | 5      | `examples/**`, `examples/registry.ts`, `playground/**`, example smoke                                            |
+| E - Automation          | `docs/automation`           | 6      | docs CI scripts, impact map, package scripts, CI config                                                          |
 
 ### Dependencies
 

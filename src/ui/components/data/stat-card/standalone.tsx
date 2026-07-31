@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -127,7 +127,8 @@ export function StatCardBase({
         borderRadius: "var(--sn-radius-lg, 0.75rem)",
         boxShadow:
           "var(--sn-card-shadow, var(--sn-shadow-sm, 0 1px 3px rgba(0,0,0,0.1)))",
-        border: "var(--sn-card-border, 1px solid var(--sn-color-border, #e5e7eb))",
+        border:
+          "var(--sn-card-border, 1px solid var(--sn-color-border, #e5e7eb))",
         backgroundColor: "var(--sn-color-card, #ffffff)",
       },
     },
@@ -226,7 +227,10 @@ export function StatCardBase({
       onKeyDown={
         onClick
           ? (e) => {
-              if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); }
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick();
+              }
             }
           : undefined
       }

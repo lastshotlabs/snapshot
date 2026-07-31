@@ -160,9 +160,10 @@ async function importConventionComponent(
  *
  * @internal
  */
-async function loadRouteModuleViaSource(
-  match: { filePath: string; loadModule?: () => Promise<unknown> },
-): Promise<Record<string, unknown>> {
+async function loadRouteModuleViaSource(match: {
+  filePath: string;
+  loadModule?: () => Promise<unknown>;
+}): Promise<Record<string, unknown>> {
   if (typeof match.loadModule === "function") {
     return (await match.loadModule()) as Record<string, unknown>;
   }
@@ -292,7 +293,9 @@ function extractRequestHeaders(source: unknown): Headers {
     return headers;
   }
 
-  for (const [key, value] of Object.entries(source as Record<string, unknown>)) {
+  for (const [key, value] of Object.entries(
+    source as Record<string, unknown>,
+  )) {
     if (Array.isArray(value)) {
       headers.set(key, value.map((entry) => String(entry)).join(", "));
       continue;

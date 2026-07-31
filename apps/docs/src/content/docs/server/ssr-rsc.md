@@ -35,7 +35,13 @@ import {
 ```tsx
 import { usePrefetchRoute } from "@lastshotlabs/snapshot/ssr";
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   const prefetch = usePrefetchRoute();
 
   return (
@@ -68,12 +74,12 @@ const response = await renderPprPage({
 
 ## Integration Path
 
-| Scenario | Use |
-| --- | --- |
-| File-based React routes | `createReactRenderer` |
-| RSC detection | `hasUseClientDirective`, `hasUseServerDirective`, `buildComponentId` |
-| Route prefetch | `usePrefetchRoute` |
-| Partial prerendering | `extractPprShell`, `createPprCache`, `renderPprPage` |
+| Scenario                | Use                                                                  |
+| ----------------------- | -------------------------------------------------------------------- |
+| File-based React routes | `createReactRenderer`                                                |
+| RSC detection           | `hasUseClientDirective`, `hasUseServerDirective`, `buildComponentId` |
+| Route prefetch          | `usePrefetchRoute`                                                   |
+| Partial prerendering    | `extractPprShell`, `createPprCache`, `renderPprPage`                 |
 
 ## Next Steps
 

@@ -232,7 +232,9 @@ export function ToggleGroupBase({
   slots,
 }: ToggleGroupBaseProps) {
   const initialValue = defaultValue ?? (mode === "multiple" ? [] : "");
-  const [internalValue, setInternalValue] = useState<string | string[]>(initialValue);
+  const [internalValue, setInternalValue] = useState<string | string[]>(
+    initialValue,
+  );
 
   const currentValue: string | string[] =
     controlledValue !== undefined ? controlledValue : internalValue;

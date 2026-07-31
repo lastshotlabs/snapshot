@@ -156,8 +156,10 @@ export function getButtonStyle(
     boxSizing: "border-box",
     borderRadius: "var(--sn-radius-md, 0.375rem)",
     fontFamily: "var(--sn-font-sans, inherit)",
-    fontWeight: "var(--sn-button-weight, var(--sn-font-weight-medium, 500))" as unknown as CSSProperties["fontWeight"],
-    textTransform: "var(--sn-button-transform, inherit)" as unknown as CSSProperties["textTransform"],
+    fontWeight:
+      "var(--sn-button-weight, var(--sn-font-weight-medium, 500))" as unknown as CSSProperties["fontWeight"],
+    textTransform:
+      "var(--sn-button-transform, inherit)" as unknown as CSSProperties["textTransform"],
     lineHeight: "var(--sn-leading-tight, 1.25)",
     textDecorationThickness: "from-font",
     userSelect: "none",

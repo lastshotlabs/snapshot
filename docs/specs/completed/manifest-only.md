@@ -5,43 +5,43 @@
 > follow-up commits after F3 handled workflow refactoring, ManifestApp test
 > updates for `pushState`, and happy-dom route test fixes.
 >
-> | Phase | Title | Status | Track |
-> | --- | --- | --- | --- |
-> | A1 | Remove auth path inference (route ids only) | Done | A — Hardcoded removal |
-> | A2 | Remove layout fallback (manifest required) | Done | A — Hardcoded removal |
-> | A3 | Replace `"custom"` magic with declared schema | Done | A — Hardcoded removal |
-> | A4 | Replace side-effect registration with explicit boot | Done | A — Hardcoded removal |
-> | A5 | Move hardcoded loading/error UI into manifest | Done | A — Hardcoded removal |
-> | B1 | `{ "env": "..." }` resolver | Done | B — Config collapse |
-> | B2 | `manifest.auth.session` (mode/storage/key) | Done | B — Config collapse |
-> | B3 | `manifest.app.cache` (stale/gc/retry) | Done | B — Config collapse |
-> | B4 | `manifest.auth.contract` + redirects + handlers | Done | B — Config collapse |
-> | B5 | `manifest.realtime.{ws,sse}` (replaces `config.ws`/`config.sse`) | Done | B — Config collapse |
-> | B6 | Collapse `SnapshotConfig` to four fields | Done | B — Config collapse |
-> | C1 | Manifest-side custom-component declarations | Done (via A3) | C — Declarative registries |
-> | C2 | Manifest-side custom-action declarations | Done | C — Declarative registries |
-> | C3 | Manifest-declarable flavors (no `defineFlavor()` required) | Done | C — Declarative registries |
-> | C4 | Boot-time registry construction (no module side-effects) | Done (via A4) | C — Declarative registries |
-> | D1 | `policies` schema, resolver, route guard integration | Done | D — Policies + i18n |
-> | D2 | Component `visible` policy support | Done | D — Policies + i18n |
-> | D3 | `i18n` schema, resolver, `{ "t": "..." }` ref | Done | D — Policies + i18n |
-> | D4 | i18n locale detection + persistence | Done | D — Policies + i18n |
-> | E1 | `clients` block + per-resource client selection | Done | E — Multi-app |
-> | E2 | `subApps` block + sub-manifest mounting | Done | E — Multi-app |
-> | E3 | Sub-manifest theme/i18n/policy inheritance | Done | E — Multi-app |
-> | F1 | Manifest convention routes (loading/error/notFound/offline) | Done | F — Manifest SSR/routing |
-> | F2 | Nested layout declarations in manifest routes | Done | F — Manifest SSR/routing |
-> | F3 | Parallel route slots in manifest | Done | F — Manifest SSR/routing |
-> | F4 | SSR middleware as manifest workflows | Done | F — Manifest SSR/routing |
-> | G1 | WS/SSE event → workflow mapping | Done | G — Realtime + cache |
-> | G2 | Per-resource invalidation rules | Done | G — Realtime + cache |
-> | G3 | Per-resource optimistic update rules | Done | G — Realtime + cache |
-> | G4 | Form submission lifecycle workflows | Done | G — Realtime + cache |
-> | H1 | `manifest.toast` config | Done | H — App-level services |
-> | H2 | `manifest.analytics` + `track` action | Done | H — App-level services |
-> | H3 | `manifest.push` (VAPID, SW path) | Done | H — App-level services |
-> | H4 | `manifest.theme.editor.persist` | Done | H — App-level services |
-> | H5 | OAuth/MFA/WebAuthn full config in `manifest.auth` | Done | H — App-level services |
+> | Phase | Title                                                            | Status        | Track                      |
+> | ----- | ---------------------------------------------------------------- | ------------- | -------------------------- |
+> | A1    | Remove auth path inference (route ids only)                      | Done          | A — Hardcoded removal      |
+> | A2    | Remove layout fallback (manifest required)                       | Done          | A — Hardcoded removal      |
+> | A3    | Replace `"custom"` magic with declared schema                    | Done          | A — Hardcoded removal      |
+> | A4    | Replace side-effect registration with explicit boot              | Done          | A — Hardcoded removal      |
+> | A5    | Move hardcoded loading/error UI into manifest                    | Done          | A — Hardcoded removal      |
+> | B1    | `{ "env": "..." }` resolver                                      | Done          | B — Config collapse        |
+> | B2    | `manifest.auth.session` (mode/storage/key)                       | Done          | B — Config collapse        |
+> | B3    | `manifest.app.cache` (stale/gc/retry)                            | Done          | B — Config collapse        |
+> | B4    | `manifest.auth.contract` + redirects + handlers                  | Done          | B — Config collapse        |
+> | B5    | `manifest.realtime.{ws,sse}` (replaces `config.ws`/`config.sse`) | Done          | B — Config collapse        |
+> | B6    | Collapse `SnapshotConfig` to four fields                         | Done          | B — Config collapse        |
+> | C1    | Manifest-side custom-component declarations                      | Done (via A3) | C — Declarative registries |
+> | C2    | Manifest-side custom-action declarations                         | Done          | C — Declarative registries |
+> | C3    | Manifest-declarable flavors (no `defineFlavor()` required)       | Done          | C — Declarative registries |
+> | C4    | Boot-time registry construction (no module side-effects)         | Done (via A4) | C — Declarative registries |
+> | D1    | `policies` schema, resolver, route guard integration             | Done          | D — Policies + i18n        |
+> | D2    | Component `visible` policy support                               | Done          | D — Policies + i18n        |
+> | D3    | `i18n` schema, resolver, `{ "t": "..." }` ref                    | Done          | D — Policies + i18n        |
+> | D4    | i18n locale detection + persistence                              | Done          | D — Policies + i18n        |
+> | E1    | `clients` block + per-resource client selection                  | Done          | E — Multi-app              |
+> | E2    | `subApps` block + sub-manifest mounting                          | Done          | E — Multi-app              |
+> | E3    | Sub-manifest theme/i18n/policy inheritance                       | Done          | E — Multi-app              |
+> | F1    | Manifest convention routes (loading/error/notFound/offline)      | Done          | F — Manifest SSR/routing   |
+> | F2    | Nested layout declarations in manifest routes                    | Done          | F — Manifest SSR/routing   |
+> | F3    | Parallel route slots in manifest                                 | Done          | F — Manifest SSR/routing   |
+> | F4    | SSR middleware as manifest workflows                             | Done          | F — Manifest SSR/routing   |
+> | G1    | WS/SSE event → workflow mapping                                  | Done          | G — Realtime + cache       |
+> | G2    | Per-resource invalidation rules                                  | Done          | G — Realtime + cache       |
+> | G3    | Per-resource optimistic update rules                             | Done          | G — Realtime + cache       |
+> | G4    | Form submission lifecycle workflows                              | Done          | G — Realtime + cache       |
+> | H1    | `manifest.toast` config                                          | Done          | H — App-level services     |
+> | H2    | `manifest.analytics` + `track` action                            | Done          | H — App-level services     |
+> | H3    | `manifest.push` (VAPID, SW path)                                 | Done          | H — App-level services     |
+> | H4    | `manifest.theme.editor.persist`                                  | Done          | H — App-level services     |
+> | H5    | OAuth/MFA/WebAuthn full config in `manifest.auth`                | Done          | H — App-level services     |
 
 ---
 
@@ -51,8 +51,8 @@
 
 Snapshot is **partially** manifest-driven. Routes, pages, components, themes, overlays,
 resources, workflows, and most of the auth screens already render from JSON. But the
-acceptance test in `vision.md` — *"can a user enable this feature by editing
-`snapshot.manifest.json` with no TypeScript?"* — fails for a long list of features:
+acceptance test in `vision.md` — _"can a user enable this feature by editing
+`snapshot.manifest.json` with no TypeScript?"_ — fails for a long list of features:
 
 1. **`SnapshotConfig` is a second source of truth.** `src/types.ts:304-362` declares 25+
    fields on `SnapshotConfig` covering auth mode, redirects, callbacks, token storage,
@@ -85,7 +85,7 @@ acceptance test in `vision.md` — *"can a user enable this feature by editing
    `src/` finds zero runtime references. Pure shape, no consumer.
 
 7. **Code-registered flavors.** `src/ui/tokens/flavors.ts` defines all flavors via
-   `defineFlavor()` calls. The manifest's `theme` block can override token *values* but
+   `defineFlavor()` calls. The manifest's `theme` block can override token _values_ but
    cannot **declare a new flavor** or compose flavors by extension.
 
 8. **Hardcoded loading/error UI.** `src/ui/manifest/app.tsx:287` and `:611` render
@@ -123,23 +123,23 @@ can read `snapshot.manifest.json` and know the entire shape of the running app.
 
 Audited 2026-04-10. File paths and line numbers are from `origin/main`.
 
-| Area | What's there | What's missing |
-|---|---|---|
-| `manifest.theme` | Full token schema, `resolveTokens()`, `useTokenEditor()`, built-in flavors via `defineFlavor()` (`src/ui/tokens/`) | Manifest cannot **declare** new flavors. Token editor persistence target hardcoded. |
-| `manifest.routes` | Path, id, page, preload, refreshOnEnter, invalidateOnLeave, enter, leave, guard (`src/ui/manifest/schema.ts:386-405`) | No nested layouts. No parallel slots. No convention routes (`loading`, `error`, `notFound`, `offline`). |
-| `manifest.navigation` | Items, mode, collapsible (schema present) | Layout fallback decided in code (`app.tsx:265-268`). |
-| `manifest.auth` | Screens, providers, passkey, branding, redirects, screenOptions, fields, links (`schema.ts:323-367`) | Path inference still hardcoded (`auth.tsx:62-81`). No `session` block (mode/storage/key). No `contract` block. No `errors` block. No per-provider config (client id, scopes, callback). MFA/WebAuthn config not in schema. |
-| `manifest.resources` | Endpoint targets, dependsOn, invalidates, polling, refresh (`src/ui/manifest/resources.ts`) | Per-resource cache override not declared. Optimistic updates not declared. WS/SSE-backed resources have no event-to-workflow mapping. |
-| `manifest.workflows` | Full workflow definition schema with try/catch, retry, capture, assign, conditions (`src/ui/workflows/`) | Custom action registry is side-effect only. Manifest cannot list available custom actions or their schemas. |
-| `manifest.overlays` | Modal + drawer with content, footer, onOpen/onClose (`schema.ts:453-495`) | No toast config. |
-| `manifest.state` | App-scoped + route-scoped state with data + default (`schema.ts:407-413`) | No persistence target declared. |
-| `manifest.policies` | `z.record(z.unknown())` placeholder (`schema.ts:521`) | No runtime. No consumers. Inert. |
-| `manifest.i18n` | `z.record(z.unknown())` placeholder (`schema.ts:522`) | No runtime. No consumers. Inert. |
-| `manifest.ssr` | `rsc` flag, `rscManifestPath` (`schema.ts:430-438`) | No middleware mapping. No head/meta declarations beyond title. |
-| Components | Full component library with schemas, ComponentWrapper, error boundaries, page renderer (`src/ui/components/`, `src/ui/manifest/renderer.tsx`) | `"custom"` type hardcoded as magic string. Custom-component schemas not declared in manifest. |
-| Realtime | `WebSocketManager`, `SseManager`, `useRoomEvent`, `onSseEvent`, registry pattern (`src/ws/`, `src/sse/`) | No manifest field for event-to-workflow mapping. Per-endpoint config in code only. |
-| `SnapshotConfig` | 25+ fields covering bootstrap, auth, callbacks, redirects, storage, contract, sse, ws, errors (`src/types.ts:304-362`) | Almost all of this should be in the manifest. |
-| `ManifestApp` | Reads manifest, composes providers, runs router, dispatches workflows (`src/ui/manifest/app.tsx`) | Receives `snapshotConfig` prop that re-introduces the second source of truth. |
+| Area                  | What's there                                                                                                                                  | What's missing                                                                                                                                                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `manifest.theme`      | Full token schema, `resolveTokens()`, `useTokenEditor()`, built-in flavors via `defineFlavor()` (`src/ui/tokens/`)                            | Manifest cannot **declare** new flavors. Token editor persistence target hardcoded.                                                                                                                                        |
+| `manifest.routes`     | Path, id, page, preload, refreshOnEnter, invalidateOnLeave, enter, leave, guard (`src/ui/manifest/schema.ts:386-405`)                         | No nested layouts. No parallel slots. No convention routes (`loading`, `error`, `notFound`, `offline`).                                                                                                                    |
+| `manifest.navigation` | Items, mode, collapsible (schema present)                                                                                                     | Layout fallback decided in code (`app.tsx:265-268`).                                                                                                                                                                       |
+| `manifest.auth`       | Screens, providers, passkey, branding, redirects, screenOptions, fields, links (`schema.ts:323-367`)                                          | Path inference still hardcoded (`auth.tsx:62-81`). No `session` block (mode/storage/key). No `contract` block. No `errors` block. No per-provider config (client id, scopes, callback). MFA/WebAuthn config not in schema. |
+| `manifest.resources`  | Endpoint targets, dependsOn, invalidates, polling, refresh (`src/ui/manifest/resources.ts`)                                                   | Per-resource cache override not declared. Optimistic updates not declared. WS/SSE-backed resources have no event-to-workflow mapping.                                                                                      |
+| `manifest.workflows`  | Full workflow definition schema with try/catch, retry, capture, assign, conditions (`src/ui/workflows/`)                                      | Custom action registry is side-effect only. Manifest cannot list available custom actions or their schemas.                                                                                                                |
+| `manifest.overlays`   | Modal + drawer with content, footer, onOpen/onClose (`schema.ts:453-495`)                                                                     | No toast config.                                                                                                                                                                                                           |
+| `manifest.state`      | App-scoped + route-scoped state with data + default (`schema.ts:407-413`)                                                                     | No persistence target declared.                                                                                                                                                                                            |
+| `manifest.policies`   | `z.record(z.unknown())` placeholder (`schema.ts:521`)                                                                                         | No runtime. No consumers. Inert.                                                                                                                                                                                           |
+| `manifest.i18n`       | `z.record(z.unknown())` placeholder (`schema.ts:522`)                                                                                         | No runtime. No consumers. Inert.                                                                                                                                                                                           |
+| `manifest.ssr`        | `rsc` flag, `rscManifestPath` (`schema.ts:430-438`)                                                                                           | No middleware mapping. No head/meta declarations beyond title.                                                                                                                                                             |
+| Components            | Full component library with schemas, ComponentWrapper, error boundaries, page renderer (`src/ui/components/`, `src/ui/manifest/renderer.tsx`) | `"custom"` type hardcoded as magic string. Custom-component schemas not declared in manifest.                                                                                                                              |
+| Realtime              | `WebSocketManager`, `SseManager`, `useRoomEvent`, `onSseEvent`, registry pattern (`src/ws/`, `src/sse/`)                                      | No manifest field for event-to-workflow mapping. Per-endpoint config in code only.                                                                                                                                         |
+| `SnapshotConfig`      | 25+ fields covering bootstrap, auth, callbacks, redirects, storage, contract, sse, ws, errors (`src/types.ts:304-362`)                        | Almost all of this should be in the manifest.                                                                                                                                                                              |
+| `ManifestApp`         | Reads manifest, composes providers, runs router, dispatches workflows (`src/ui/manifest/app.tsx`)                                             | Receives `snapshotConfig` prop that re-introduces the second source of truth.                                                                                                                                              |
 
 ---
 
@@ -158,28 +158,28 @@ All four must pass at the end of every phase. No exceptions.
 
 ### Key Files
 
-| Path | What | Lines | Tracks that touch it |
-|---|---|---|---|
-| `src/types.ts` | `SnapshotConfig`, `SnapshotInstance`, all SDK types | ~700 | B |
-| `src/create-snapshot.tsx` | Factory entry point, hook composition | 526 | B, C, G, H |
-| `src/ui/manifest/schema.ts` | Manifest Zod schema (the contract) | ~620 | All |
-| `src/ui/manifest/app.tsx` | `ManifestApp`, routing, lifecycle, layout fallback | 709 | A, F, B |
-| `src/ui/manifest/auth.tsx` | Auth screen rendering, path inference | ~600 | A, B, H |
-| `src/ui/manifest/compiler.ts` | Manifest validation + compilation | — | All |
-| `src/ui/manifest/component-registry.tsx` | Runtime component registry, `"custom"` magic | 76 | A, C |
-| `src/ui/manifest/structural.tsx` | Built-in components, side-effect registration | ~340 | A, C |
-| `src/ui/workflows/registry.ts` | Workflow action registry | 17 | A, C |
-| `src/ui/workflows/types.ts` | Workflow types | — | C, G |
-| `src/ui/tokens/flavors.ts` | Built-in flavors via `defineFlavor()` | ~600 | C |
-| `src/ui/tokens/resolve.ts` | `resolveTokens()` | — | C, H |
-| `src/ui/tokens/editor.ts` | `useTokenEditor()` runtime overrides | — | H |
-| `src/ui/manifest/resources.ts` | Resource schema + endpoint targets | — | E, G |
-| `src/ui/manifest/runtime.tsx` | Resource cache, runtime providers | — | E, G |
-| `src/ui/context/index.ts` | Page/app context atoms | — | D, G |
-| `src/ws/manager.ts`, `src/ws/hook.ts` | WebSocket manager + hooks | — | G |
-| `src/sse/manager.ts` | SSE manager | — | G |
-| `src/auth/contract.ts` | `AuthContract` type + merge | — | B |
-| `src/ssr/manifest-renderer.ts` | Manifest SSR entry | — | F |
+| Path                                     | What                                                | Lines | Tracks that touch it |
+| ---------------------------------------- | --------------------------------------------------- | ----- | -------------------- |
+| `src/types.ts`                           | `SnapshotConfig`, `SnapshotInstance`, all SDK types | ~700  | B                    |
+| `src/create-snapshot.tsx`                | Factory entry point, hook composition               | 526   | B, C, G, H           |
+| `src/ui/manifest/schema.ts`              | Manifest Zod schema (the contract)                  | ~620  | All                  |
+| `src/ui/manifest/app.tsx`                | `ManifestApp`, routing, lifecycle, layout fallback  | 709   | A, F, B              |
+| `src/ui/manifest/auth.tsx`               | Auth screen rendering, path inference               | ~600  | A, B, H              |
+| `src/ui/manifest/compiler.ts`            | Manifest validation + compilation                   | —     | All                  |
+| `src/ui/manifest/component-registry.tsx` | Runtime component registry, `"custom"` magic        | 76    | A, C                 |
+| `src/ui/manifest/structural.tsx`         | Built-in components, side-effect registration       | ~340  | A, C                 |
+| `src/ui/workflows/registry.ts`           | Workflow action registry                            | 17    | A, C                 |
+| `src/ui/workflows/types.ts`              | Workflow types                                      | —     | C, G                 |
+| `src/ui/tokens/flavors.ts`               | Built-in flavors via `defineFlavor()`               | ~600  | C                    |
+| `src/ui/tokens/resolve.ts`               | `resolveTokens()`                                   | —     | C, H                 |
+| `src/ui/tokens/editor.ts`                | `useTokenEditor()` runtime overrides                | —     | H                    |
+| `src/ui/manifest/resources.ts`           | Resource schema + endpoint targets                  | —     | E, G                 |
+| `src/ui/manifest/runtime.tsx`            | Resource cache, runtime providers                   | —     | E, G                 |
+| `src/ui/context/index.ts`                | Page/app context atoms                              | —     | D, G                 |
+| `src/ws/manager.ts`, `src/ws/hook.ts`    | WebSocket manager + hooks                           | —     | G                    |
+| `src/sse/manager.ts`                     | SSE manager                                         | —     | G                    |
+| `src/auth/contract.ts`                   | `AuthContract` type + merge                         | —     | B                    |
+| `src/ssr/manifest-renderer.ts`           | Manifest SSR entry                                  | —     | F                    |
 
 ### Boot Sequence (Current)
 
@@ -244,7 +244,10 @@ want by setting `routes[].id = "login"`.
 
 ```ts
 // BEFORE — src/ui/manifest/auth.tsx:62-81 and src/ui/manifest/app.tsx:106-131
-function inferAuthScreenPath(manifest: CompiledManifest, screen: AuthScreen): string | undefined {
+function inferAuthScreenPath(
+  manifest: CompiledManifest,
+  screen: AuthScreen,
+): string | undefined {
   const routeById = manifest.routes.find((r) => r.id === screen);
   if (routeById) return routeById.path;
   const candidates: Record<AuthScreen, string[]> = {
@@ -337,11 +340,11 @@ up custom components through the same path as built-ins.
       "order-timeline": {
         "props": {
           "orderId": { "type": "string", "required": true },
-          "highlight": { "type": "boolean" }
-        }
-      }
-    }
-  }
+          "highlight": { "type": "boolean" },
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -350,7 +353,7 @@ up custom components through the same path as built-ins.
 ```jsonc
 {
   "type": "order-timeline",
-  "orderId": { "from": "order.id" }
+  "orderId": { "from": "order.id" },
 }
 ```
 
@@ -424,9 +427,12 @@ let booted = false;
 export function bootBuiltins(): void {
   if (booted) return;
   booted = true;
-  for (const [name, c] of Object.entries(STRUCTURAL_COMPONENTS)) registerComponent(name, c);
-  for (const [name, h] of Object.entries(BUILTIN_WORKFLOW_ACTIONS)) registerWorkflowAction(name, h);
-  for (const [name, f] of Object.entries(BUILTIN_FLAVORS)) defineFlavor(name, f);
+  for (const [name, c] of Object.entries(STRUCTURAL_COMPONENTS))
+    registerComponent(name, c);
+  for (const [name, h] of Object.entries(BUILTIN_WORKFLOW_ACTIONS))
+    registerWorkflowAction(name, h);
+  for (const [name, f] of Object.entries(BUILTIN_FLAVORS))
+    defineFlavor(name, f);
 }
 ```
 
@@ -467,10 +473,10 @@ states.
 {
   "app": {
     "loading": { "type": "spinner", "size": "lg" },
-    "error":   { "type": "error-page", "showRetry": true },
+    "error": { "type": "error-page", "showRetry": true },
     "notFound": "/404",
-    "offline":  { "type": "offline-banner" }
-  }
+    "offline": { "type": "offline-banner" },
+  },
 }
 ```
 
@@ -517,12 +523,19 @@ The resolver reads from a per-`createSnapshot` env source. The default source re
 export type EnvRef = { env: string; default?: string };
 
 export function isEnvRef(value: unknown): value is EnvRef {
-  return typeof value === "object" && value !== null && "env" in value
-    && typeof (value as { env: unknown }).env === "string";
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "env" in value &&
+    typeof (value as { env: unknown }).env === "string"
+  );
 }
 
 /** Resolve an EnvRef using the configured env source. Returns the default if missing. */
-export function resolveEnvRef(ref: EnvRef, env: Record<string, string | undefined>): string | undefined {
+export function resolveEnvRef(
+  ref: EnvRef,
+  env: Record<string, string | undefined>,
+): string | undefined {
   return env[ref.env] ?? ref.default;
 }
 ```
@@ -530,7 +543,9 @@ export function resolveEnvRef(ref: EnvRef, env: Record<string, string | undefine
 **Schema helper.**
 
 ```ts
-const envRefSchema = z.object({ env: z.string().min(1), default: z.string().optional() }).strict();
+const envRefSchema = z
+  .object({ env: z.string().min(1), default: z.string().optional() })
+  .strict();
 const stringOrEnvRef = z.union([z.string(), envRefSchema]);
 ```
 
@@ -566,11 +581,15 @@ B6 adds this argument.
 **Schema.**
 
 ```ts
-export const authSessionSchema = z.object({
-  mode: z.enum(["cookie", "token"]).default("cookie"),
-  storage: z.enum(["localStorage", "sessionStorage", "memory"]).default("sessionStorage"),
-  key: z.string().default("snapshot.token"),
-}).strict();
+export const authSessionSchema = z
+  .object({
+    mode: z.enum(["cookie", "token"]).default("cookie"),
+    storage: z
+      .enum(["localStorage", "sessionStorage", "memory"])
+      .default("sessionStorage"),
+    key: z.string().default("snapshot.token"),
+  })
+  .strict();
 ```
 
 Added to `authScreenConfigSchema` as `session: authSessionSchema.optional()`. Default
@@ -599,11 +618,21 @@ reads `compiled.auth.session` (after Track B6 makes the manifest the source of t
 **Schema.**
 
 ```ts
-export const appCacheSchema = z.object({
-  staleTime: z.number().int().nonnegative().default(5 * 60 * 1000),
-  gcTime:    z.number().int().nonnegative().default(10 * 60 * 1000),
-  retry:     z.number().int().nonnegative().default(1),
-}).strict();
+export const appCacheSchema = z
+  .object({
+    staleTime: z
+      .number()
+      .int()
+      .nonnegative()
+      .default(5 * 60 * 1000),
+    gcTime: z
+      .number()
+      .int()
+      .nonnegative()
+      .default(10 * 60 * 1000),
+    retry: z.number().int().nonnegative().default(1),
+  })
+  .strict();
 ```
 
 Added to `appConfigSchema` as `cache: appCacheSchema.optional()`. Defaults match the
@@ -639,9 +668,9 @@ current `createSnapshot` defaults.
     "on": {
       "unauthenticated": "redirect-to-login",
       "forbidden": "show-forbidden-toast",
-      "logout": "clear-cart-and-redirect"
-    }
-  }
+      "logout": "clear-cart-and-redirect",
+    },
+  },
 }
 ```
 
@@ -673,38 +702,53 @@ just relocates the existing options.
 **Schema.**
 
 ```ts
-export const realtimeWsSchema = z.object({
-  url: stringOrEnvRef.optional(),
-  autoReconnect: z.boolean().default(true),
-  reconnectOnLogin: z.boolean().default(true),
-  reconnectOnFocus: z.boolean().default(true),
-  maxReconnectAttempts: z.number().int().nonnegative().optional(),
-  reconnectBaseDelay: z.number().int().nonnegative().optional(),
-  reconnectMaxDelay: z.number().int().nonnegative().optional(),
-  on: z.object({
-    connected: z.string().optional(),
-    disconnected: z.string().optional(),
-    reconnecting: z.string().optional(),
-    reconnectFailed: z.string().optional(),
-  }).strict().optional(),
-}).strict();
-
-export const realtimeSseEndpointSchema = z.object({
-  withCredentials: z.boolean().optional(),
-  on: z.object({
-    connected: z.string().optional(),
-    error: z.string().optional(),
-    closed: z.string().optional(),
-  }).strict().optional(),
-}).strict();
-
-export const realtimeConfigSchema = z.object({
-  ws: realtimeWsSchema.optional(),
-  sse: z.object({
-    endpoints: z.record(realtimeSseEndpointSchema),
+export const realtimeWsSchema = z
+  .object({
+    url: stringOrEnvRef.optional(),
+    autoReconnect: z.boolean().default(true),
     reconnectOnLogin: z.boolean().default(true),
-  }).strict().optional(),
-}).strict();
+    reconnectOnFocus: z.boolean().default(true),
+    maxReconnectAttempts: z.number().int().nonnegative().optional(),
+    reconnectBaseDelay: z.number().int().nonnegative().optional(),
+    reconnectMaxDelay: z.number().int().nonnegative().optional(),
+    on: z
+      .object({
+        connected: z.string().optional(),
+        disconnected: z.string().optional(),
+        reconnecting: z.string().optional(),
+        reconnectFailed: z.string().optional(),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
+
+export const realtimeSseEndpointSchema = z
+  .object({
+    withCredentials: z.boolean().optional(),
+    on: z
+      .object({
+        connected: z.string().optional(),
+        error: z.string().optional(),
+        closed: z.string().optional(),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
+
+export const realtimeConfigSchema = z
+  .object({
+    ws: realtimeWsSchema.optional(),
+    sse: z
+      .object({
+        endpoints: z.record(realtimeSseEndpointSchema),
+        reconnectOnLogin: z.boolean().default(true),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
 ```
 
 `url` defaults to deriving from `apiUrl` (auto `http→ws`, `https→wss`).
@@ -804,19 +848,23 @@ Already specified in Phase A3. C1 is the cross-track dependency marker — Track
         "send-to-slack": {
           "input": {
             "channel": { "type": "string", "required": true },
-            "message": { "type": "string", "required": true }
-          }
-        }
-      }
+            "message": { "type": "string", "required": true },
+          },
+        },
+      },
     },
     "definitions": {
       "notify-slack": {
         "steps": [
-          { "action": "send-to-slack", "channel": "#alerts", "message": "{from:event.summary}" }
-        ]
-      }
-    }
-  }
+          {
+            "action": "send-to-slack",
+            "channel": "#alerts",
+            "message": "{from:event.summary}",
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -829,7 +877,7 @@ validate it without loading the handler.
 - Edit `src/ui/manifest/schema.ts` — add `workflows.actions.custom` block
 - Edit `src/ui/workflows/registry.ts` — add `getDeclaredCustomActionSchema(name)`
 - Edit `src/ui/manifest/compiler.ts` — validate workflow steps against built-in actions
-  + declared custom actions
+  - declared custom actions
 
 **Exit criteria.**
 
@@ -857,10 +905,10 @@ becomes one of several sources, not the only source.
         "darkColors": { "primary": "0.65 0.2 25" },
         "radius": "md",
         "spacing": "default",
-        "font": {}
-      }
-    }
-  }
+        "font": {},
+      },
+    },
+  },
 }
 ```
 
@@ -884,11 +932,11 @@ export function defineFlavorWithExtension(
 
   const merged: FlavorConfig = {
     displayName: overrides.displayName ?? parent.displayName,
-    colors:      { ...parent.colors,      ...overrides.colors },
-    darkColors:  deriveDarkColors(parent, overrides),
-    radius:      overrides.radius  ?? parent.radius,
-    spacing:     overrides.spacing ?? parent.spacing,
-    font:        { ...parent.font, ...overrides.font },
+    colors: { ...parent.colors, ...overrides.colors },
+    darkColors: deriveDarkColors(parent, overrides),
+    radius: overrides.radius ?? parent.radius,
+    spacing: overrides.spacing ?? parent.spacing,
+    font: { ...parent.font, ...overrides.font },
   };
 
   defineFlavor(name, merged);
@@ -957,21 +1005,24 @@ expression schema, a runtime resolver, and integration with route guards.
 /** A boolean policy expression — JSON Logic-style with named refs. */
 export const policyExprSchema: z.ZodType = z.lazy(() =>
   z.union([
-    z.string(),                                                // ref to another policy by name
-    z.object({ all: z.array(policyExprSchema) }).strict(),     // AND
-    z.object({ any: z.array(policyExprSchema) }).strict(),     // OR
-    z.object({ not: policyExprSchema }).strict(),              // NOT
+    z.string(), // ref to another policy by name
+    z.object({ all: z.array(policyExprSchema) }).strict(), // AND
+    z.object({ any: z.array(policyExprSchema) }).strict(), // OR
+    z.object({ not: policyExprSchema }).strict(), // NOT
     z.object({ equals: z.tuple([refOrLiteral, refOrLiteral]) }).strict(),
     z.object({ "not-equals": z.tuple([refOrLiteral, refOrLiteral]) }).strict(),
     z.object({ exists: refOrLiteral }).strict(),
     z.object({ truthy: refOrLiteral }).strict(),
     z.object({ falsy: refOrLiteral }).strict(),
     z.object({ in: z.tuple([refOrLiteral, z.array(refOrLiteral)]) }).strict(),
-  ])
+  ]),
 );
 
 const refOrLiteral = z.union([
-  z.string(), z.number(), z.boolean(), z.null(),
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.null(),
   fromRefSchema,
   envRefSchema,
 ]);
@@ -988,7 +1039,7 @@ export const policiesSchema = z.record(policyExprSchema);
 {
   "id": "admin",
   "path": "/admin",
-  "guard": { "policy": "is-admin" }
+  "guard": { "policy": "is-admin" },
 }
 ```
 
@@ -1050,15 +1101,21 @@ boolean / responsive / from-ref form.
 **Schema.**
 
 ```ts
-export const i18nConfigSchema = z.object({
-  default: z.string().min(1),
-  locales: z.array(z.string().min(1)).min(1),
-  strings: z.record(z.union([
-    z.string(),                                                // path to JSON file
-    z.record(z.union([z.string(), z.record(z.string())])),     // inline strings
-  ])),
-  detect: z.array(z.enum(["state", "navigator", "default", "header"])).optional(),
-}).strict();
+export const i18nConfigSchema = z
+  .object({
+    default: z.string().min(1),
+    locales: z.array(z.string().min(1)).min(1),
+    strings: z.record(
+      z.union([
+        z.string(), // path to JSON file
+        z.record(z.union([z.string(), z.record(z.string())])), // inline strings
+      ]),
+    ),
+    detect: z
+      .array(z.enum(["state", "navigator", "default", "header"]))
+      .optional(),
+  })
+  .strict();
 ```
 
 **Resolver.** `useT(key, vars?)` hook + `resolveTRef(ref, locale, strings)` non-hook
@@ -1130,12 +1187,14 @@ client it uses.
 **Schema.**
 
 ```ts
-export const clientConfigSchema = z.object({
-  apiUrl: stringOrEnvRef,
-  contract: authContractConfigSchema.optional(),
-  /** Custom client implementation, registered in code by name. Escape hatch #3. */
-  custom: z.string().optional(),
-}).strict();
+export const clientConfigSchema = z
+  .object({
+    apiUrl: stringOrEnvRef,
+    contract: authContractConfigSchema.optional(),
+    /** Custom client implementation, registered in code by name. Escape hatch #3. */
+    custom: z.string().optional(),
+  })
+  .strict();
 
 export const clientsSchema = z.record(clientConfigSchema);
 ```
@@ -1143,13 +1202,17 @@ export const clientsSchema = z.record(clientConfigSchema);
 ```jsonc
 {
   "clients": {
-    "main":    { "apiUrl": { "env": "API_URL" } },
-    "billing": { "apiUrl": { "env": "BILLING_API_URL" } }
+    "main": { "apiUrl": { "env": "API_URL" } },
+    "billing": { "apiUrl": { "env": "BILLING_API_URL" } },
   },
   "resources": {
-    "users":    { "kind": "rest", "client": "main",    "endpoint": "/users" },
-    "invoices": { "kind": "rest", "client": "billing", "endpoint": "/invoices" }
-  }
+    "users": { "kind": "rest", "client": "main", "endpoint": "/users" },
+    "invoices": {
+      "kind": "rest",
+      "client": "billing",
+      "endpoint": "/invoices",
+    },
+  },
 }
 ```
 
@@ -1208,19 +1271,24 @@ its own routes, components, overlays, and workflows.
 **Schema.**
 
 ```ts
-export const subAppConfigSchema = z.object({
-  mountPath: z.string().startsWith("/"),
-  manifest: z.union([
-    z.string(),       // path to a manifest file (loaded at compile time)
-    manifestConfigSchema,  // inline manifest object
-  ]),
-  inherit: z.object({
-    theme:    z.boolean().default(true),
-    i18n:     z.boolean().default(true),
-    policies: z.boolean().default(true),
-    state:    z.boolean().default(false),
-  }).strict().optional(),
-}).strict();
+export const subAppConfigSchema = z
+  .object({
+    mountPath: z.string().startsWith("/"),
+    manifest: z.union([
+      z.string(), // path to a manifest file (loaded at compile time)
+      manifestConfigSchema, // inline manifest object
+    ]),
+    inherit: z
+      .object({
+        theme: z.boolean().default(true),
+        i18n: z.boolean().default(true),
+        policies: z.boolean().default(true),
+        state: z.boolean().default(false),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
 
 export const subAppsSchema = z.record(subAppConfigSchema);
 ```
@@ -1230,9 +1298,9 @@ export const subAppsSchema = z.record(subAppConfigSchema);
   "subApps": {
     "admin": {
       "mountPath": "/admin",
-      "manifest": "./manifests/admin.json"
-    }
-  }
+      "manifest": "./manifests/admin.json",
+    },
+  },
 }
 ```
 
@@ -1314,15 +1382,17 @@ parent-to-child. Replaces the existing single `route.page.layout` with a layout 
 
 ```ts
 export const routeLayoutSchema = z.union([
-  z.string(),                                       // layout name (built-in or custom component)
-  z.object({
-    type: z.string(),
-    props: z.record(z.unknown()).optional(),
-  }).strict(),
+  z.string(), // layout name (built-in or custom component)
+  z
+    .object({
+      type: z.string(),
+      props: z.record(z.unknown()).optional(),
+    })
+    .strict(),
 ]);
 
 routeConfigSchema.extend({
-  layouts: z.array(routeLayoutSchema).optional(),  // outermost first
+  layouts: z.array(routeLayoutSchema).optional(), // outermost first
 });
 ```
 
@@ -1373,11 +1443,15 @@ routeConfigSchema.extend({
 
 // Layout side — layouts that accept slots declare them in their config
 layoutConfigSchema.extend({
-  slots: z.array(z.object({
-    name:     z.string().min(1),
-    required: z.boolean().default(false),
-    fallback: componentConfigSchema.optional(),  // rendered if slot is empty
-  })).optional(),
+  slots: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        required: z.boolean().default(false),
+        fallback: componentConfigSchema.optional(), // rendered if slot is empty
+      }),
+    )
+    .optional(),
 });
 ```
 
@@ -1428,12 +1502,16 @@ steps are workflows referenced by name from `manifest.ssr.middleware`.
 
 ```ts
 manifestSsrConfigSchema.extend({
-  middleware: z.array(z.object({
-    /** Path pattern. Supports `*` and `:param` segments. Omit to match all. */
-    match: z.string().optional(),
-    /** Workflow name from manifest.workflows. */
-    workflow: z.string(),
-  })).optional(),
+  middleware: z
+    .array(
+      z.object({
+        /** Path pattern. Supports `*` and `:param` segments. Omit to match all. */
+        match: z.string().optional(),
+        /** Workflow name from manifest.workflows. */
+        workflow: z.string(),
+      }),
+    )
+    .optional(),
 });
 ```
 
@@ -1445,12 +1523,12 @@ receive a typed context object via the workflow input. The shape is:
 export interface SSRMiddlewareContext {
   /** Read-only request information. */
   readonly request: {
-    url: string;                            // full URL
-    pathname: string;                       // pathname only
+    url: string; // full URL
+    pathname: string; // pathname only
     method: string;
     headers: Readonly<Record<string, string>>;
     cookies: Readonly<Record<string, string>>;
-    params: Readonly<Record<string, string>>;  // matched route params
+    params: Readonly<Record<string, string>>; // matched route params
     query: Readonly<Record<string, string>>;
   };
 
@@ -1479,7 +1557,10 @@ workflow input (i.e., called from a non-SSR context).
 
 ```ts
 // src/ui/workflows/builtins/ssr-middleware.ts
-type SSRAction<C> = (config: C, ctx: { input: { ssr?: SSRMiddlewareContext } }) => void;
+type SSRAction<C> = (
+  config: C,
+  ctx: { input: { ssr?: SSRMiddlewareContext } },
+) => void;
 
 export const setStatus: SSRAction<{ status: number }>;
 // { "action": "set-status", "status": 401 }
@@ -1507,7 +1588,7 @@ after each middleware workflow returns and decides whether to short-circuit.
    a. If `match` is set and doesn't match `request.pathname`, skip.
    b. Run the workflow with `input.ssr = context`.
    c. After return: if `response.halt`, `response.redirect`, or `response.rewrite` is
-      set, stop the chain. Renderer handles the result.
+   set, stop the chain. Renderer handles the result.
 2. If the chain completes without halting, render the route normally with the mutated
    response (status + headers).
 
@@ -1558,7 +1639,7 @@ dispatches.
 
 ```ts
 realtimeWsSchema.extend({
-  events: z.record(z.string()).optional(),  // event name → workflow name
+  events: z.record(z.string()).optional(), // event name → workflow name
 });
 
 realtimeSseEndpointSchema.extend({
@@ -1588,10 +1669,14 @@ own data mutates. Replaces ad-hoc `queryClient.invalidateQueries(...)` calls in 
 
 ```ts
 resourceConfigSchema.extend({
-  invalidates: z.array(z.union([
-    z.string(),                                // other resource name
-    z.object({ key: z.array(z.string()) }),    // explicit query key
-  ])).optional(),
+  invalidates: z
+    .array(
+      z.union([
+        z.string(), // other resource name
+        z.object({ key: z.array(z.string()) }), // explicit query key
+      ]),
+    )
+    .optional(),
 });
 ```
 
@@ -1620,26 +1705,31 @@ restores it on error.
 ```ts
 /** A reference to another resource by name, optionally narrowed by query key params. */
 export const optimisticTargetSchema = z.union([
-  z.string(),                                   // resource name
-  z.object({
-    resource: z.string(),
-    params:   z.record(z.unknown()).optional(), // narrows to a specific cached query
-  }).strict(),
+  z.string(), // resource name
+  z
+    .object({
+      resource: z.string(),
+      params: z.record(z.unknown()).optional(), // narrows to a specific cached query
+    })
+    .strict(),
 ]);
 
-export const optimisticConfigSchema = z.object({
-  target: optimisticTargetSchema,
-  merge:  z.enum(["append", "prepend", "replace", "patch", "remove"]),
-  /** Required for replace/patch/remove. The field on each item that identifies it. */
-  idField: z.string().optional(),
-}).strict().superRefine((val, ctx) => {
-  if (["replace", "patch", "remove"].includes(val.merge) && !val.idField) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `optimistic.idField is required when merge is "${val.merge}"`,
-    });
-  }
-});
+export const optimisticConfigSchema = z
+  .object({
+    target: optimisticTargetSchema,
+    merge: z.enum(["append", "prepend", "replace", "patch", "remove"]),
+    /** Required for replace/patch/remove. The field on each item that identifies it. */
+    idField: z.string().optional(),
+  })
+  .strict()
+  .superRefine((val, ctx) => {
+    if (["replace", "patch", "remove"].includes(val.merge) && !val.idField) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `optimistic.idField is required when merge is "${val.merge}"`,
+      });
+    }
+  });
 
 resourceConfigSchema.extend({
   optimistic: optimisticConfigSchema.optional(),
@@ -1650,13 +1740,13 @@ resourceConfigSchema.extend({
 data, which is always treated as an array of items (lists) or a single object (detail).
 The mutation's request body is `payload`.
 
-| `merge`  | List target                                       | Detail target                  |
-|---|---|---|
-| `append`  | `[...cached, payload]`                           | error: append requires a list  |
-| `prepend` | `[payload, ...cached]`                           | error: prepend requires a list |
-| `replace` | replace item where `item[idField] === payload[idField]` | replace whole object        |
-| `patch`   | `{...item, ...payload}` for matching item        | `{...cached, ...payload}`      |
-| `remove`  | filter out item where `item[idField] === payload[idField]` | set to `null`         |
+| `merge`   | List target                                                | Detail target                  |
+| --------- | ---------------------------------------------------------- | ------------------------------ |
+| `append`  | `[...cached, payload]`                                     | error: append requires a list  |
+| `prepend` | `[payload, ...cached]`                                     | error: prepend requires a list |
+| `replace` | replace item where `item[idField] === payload[idField]`    | replace whole object           |
+| `patch`   | `{...item, ...payload}` for matching item                  | `{...cached, ...payload}`      |
+| `remove`  | filter out item where `item[idField] === payload[idField]` | set to `null`                  |
 
 If the cached shape doesn't match (e.g. `append` against an object), the runtime logs a
 dev warning, skips the optimistic update, and proceeds with the request.
@@ -1667,14 +1757,17 @@ the loading flicker the optimistic update was meant to avoid.
 ```ts
 async function mutateWithOptimistic(resource, payload) {
   const queryKey = resolveTargetQueryKey(resource.optimistic.target);
-  const previous = queryClient.getQueryData(queryKey);          // snapshot
-  queryClient.setQueryData(queryKey, applyMerge(previous, payload, resource.optimistic));
+  const previous = queryClient.getQueryData(queryKey); // snapshot
+  queryClient.setQueryData(
+    queryKey,
+    applyMerge(previous, payload, resource.optimistic),
+  );
   try {
     const result = await sendMutation(resource, payload);
-    queryClient.invalidateQueries({ queryKey });                // refetch on success
+    queryClient.invalidateQueries({ queryKey }); // refetch on success
     return result;
   } catch (err) {
-    queryClient.setQueryData(queryKey, previous);               // restore on error
+    queryClient.setQueryData(queryKey, previous); // restore on error
     throw err;
   }
 }
@@ -1748,15 +1841,30 @@ manifest.
 **Schema.**
 
 ```ts
-export const toastConfigSchema = z.object({
-  position: z.enum(["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"]).default("bottom-right"),
-  duration: z.number().int().nonnegative().default(4000),
-  variants: z.record(z.object({
-    icon: z.string().optional(),
-    color: z.string().optional(),
-    duration: z.number().int().nonnegative().optional(),
-  })).optional(),
-}).strict();
+export const toastConfigSchema = z
+  .object({
+    position: z
+      .enum([
+        "top-left",
+        "top-center",
+        "top-right",
+        "bottom-left",
+        "bottom-center",
+        "bottom-right",
+      ])
+      .default("bottom-right"),
+    duration: z.number().int().nonnegative().default(4000),
+    variants: z
+      .record(
+        z.object({
+          icon: z.string().optional(),
+          color: z.string().optional(),
+          duration: z.number().int().nonnegative().optional(),
+        }),
+      )
+      .optional(),
+  })
+  .strict();
 ```
 
 Added to top-level manifest as `toast: toastConfigSchema.optional()`.
@@ -1780,21 +1888,29 @@ vocabulary.
 **Schema.**
 
 ```ts
-export const analyticsProviderSchema = z.object({
-  type: z.enum(["ga4", "posthog", "plausible", "custom"]),
-  apiKey: stringOrEnvRef.optional(),
-  config: z.record(z.unknown()).optional(),
-}).strict();
+export const analyticsProviderSchema = z
+  .object({
+    type: z.enum(["ga4", "posthog", "plausible", "custom"]),
+    apiKey: stringOrEnvRef.optional(),
+    config: z.record(z.unknown()).optional(),
+  })
+  .strict();
 
-export const analyticsConfigSchema = z.object({
-  providers: z.record(analyticsProviderSchema),
-}).strict();
+export const analyticsConfigSchema = z
+  .object({
+    providers: z.record(analyticsProviderSchema),
+  })
+  .strict();
 ```
 
 **`track` action.**
 
 ```jsonc
-{ "action": "track", "event": "user.signup", "props": { "plan": { "from": "form.plan" } } }
+{
+  "action": "track",
+  "event": "user.signup",
+  "props": { "plan": { "from": "form.plan" } },
+}
 ```
 
 Dispatches to all configured providers.
@@ -1803,11 +1919,14 @@ Dispatches to all configured providers.
 
 ```ts
 export interface AnalyticsProvider {
-  init(config: { apiKey?: string; config?: Record<string, unknown> }): void | Promise<void>;
+  init(config: {
+    apiKey?: string;
+    config?: Record<string, unknown>;
+  }): void | Promise<void>;
   track(event: string, props?: Record<string, unknown>): void;
   identify?(userId: string, traits?: Record<string, unknown>): void;
   page?(name: string, props?: Record<string, unknown>): void;
-  reset?(): void;  // called on logout
+  reset?(): void; // called on logout
 }
 ```
 
@@ -1821,8 +1940,13 @@ and `registerWorkflowAction`:
 // src/ui/analytics/registry.ts
 export type AnalyticsProviderFactory = () => AnalyticsProvider;
 
-export function registerAnalyticsProvider(name: string, factory: AnalyticsProviderFactory): void;
-export function getRegisteredAnalyticsProvider(name: string): AnalyticsProviderFactory | undefined;
+export function registerAnalyticsProvider(
+  name: string,
+  factory: AnalyticsProviderFactory,
+): void;
+export function getRegisteredAnalyticsProvider(
+  name: string,
+): AnalyticsProviderFactory | undefined;
 ```
 
 A manifest references custom providers via `type: "custom"` plus a `name` field:
@@ -1831,9 +1955,13 @@ A manifest references custom providers via `type: "custom"` plus a `name` field:
 {
   "analytics": {
     "providers": {
-      "internal": { "type": "custom", "name": "my-tracker", "config": { "endpoint": "/track" } }
-    }
-  }
+      "internal": {
+        "type": "custom",
+        "name": "my-tracker",
+        "config": { "endpoint": "/track" },
+      },
+    },
+  },
 }
 ```
 
@@ -1872,11 +2000,13 @@ hooks read from there.
 **Schema.**
 
 ```ts
-export const pushConfigSchema = z.object({
-  vapidPublicKey: stringOrEnvRef,
-  serviceWorkerPath: z.string().default("/sw.js"),
-  applicationServerKey: stringOrEnvRef.optional(),
-}).strict();
+export const pushConfigSchema = z
+  .object({
+    vapidPublicKey: stringOrEnvRef,
+    serviceWorkerPath: z.string().default("/sw.js"),
+    applicationServerKey: stringOrEnvRef.optional(),
+  })
+  .strict();
 ```
 
 **Files.**
@@ -1897,14 +2027,19 @@ export const pushConfigSchema = z.object({
 
 ```ts
 themeConfigSchema.extend({
-  editor: z.object({
-    persist: z.union([
-      z.literal("none"),
-      z.literal("localStorage"),
-      z.literal("sessionStorage"),
-      z.object({ resource: z.string() }).strict(),  // persist to a resource (e.g. user prefs)
-    ]).default("localStorage"),
-  }).strict().optional(),
+  editor: z
+    .object({
+      persist: z
+        .union([
+          z.literal("none"),
+          z.literal("localStorage"),
+          z.literal("sessionStorage"),
+          z.object({ resource: z.string() }).strict(), // persist to a resource (e.g. user prefs)
+        ])
+        .default("localStorage"),
+    })
+    .strict()
+    .optional(),
 });
 ```
 
@@ -1942,17 +2077,17 @@ name. This is the standard "declare once, reference by name" pattern.
         "type": "google",
         "clientId": { "env": "GOOGLE_ID" },
         "scopes": ["openid", "email"],
-        "callbackPath": "/auth/callback/google"
+        "callbackPath": "/auth/callback/google",
       },
-      "github": { "type": "github", "clientId": { "env": "GH_ID" } }
+      "github": { "type": "github", "clientId": { "env": "GH_ID" } },
     },
     "screens": {
       "login": {
         // CHANGED — was full provider configs, now string refs into auth.providers
-        "providers": ["google", "github"]
-      }
-    }
-  }
+        "providers": ["google", "github"],
+      },
+    },
+  },
 }
 ```
 
@@ -1960,41 +2095,61 @@ name. This is the standard "declare once, reference by name" pattern.
 
 ```ts
 // NEW — declared at the auth level, not per-screen
-export const authProviderSchema = z.object({
-  type: z.enum(["google", "github", "microsoft", "apple", "facebook", "discord", "custom"]),
-  clientId: stringOrEnvRef.optional(),
-  clientSecret: stringOrEnvRef.optional(),  // server-side only; ignored in browser bundles
-  scopes: z.array(z.string()).optional(),
-  callbackPath: z.string().optional(),
-  label: z.string().optional(),
-  description: z.string().optional(),
-  autoRedirect: z.boolean().optional(),
-  /** For type: "custom" — name of a registered custom OAuth provider. */
-  name: z.string().optional(),
-}).strict().superRefine((val, ctx) => {
-  if (val.type === "custom" && !val.name) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Custom OAuth providers require a name field" });
-  }
-});
+export const authProviderSchema = z
+  .object({
+    type: z.enum([
+      "google",
+      "github",
+      "microsoft",
+      "apple",
+      "facebook",
+      "discord",
+      "custom",
+    ]),
+    clientId: stringOrEnvRef.optional(),
+    clientSecret: stringOrEnvRef.optional(), // server-side only; ignored in browser bundles
+    scopes: z.array(z.string()).optional(),
+    callbackPath: z.string().optional(),
+    label: z.string().optional(),
+    description: z.string().optional(),
+    autoRedirect: z.boolean().optional(),
+    /** For type: "custom" — name of a registered custom OAuth provider. */
+    name: z.string().optional(),
+  })
+  .strict()
+  .superRefine((val, ctx) => {
+    if (val.type === "custom" && !val.name) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Custom OAuth providers require a name field",
+      });
+    }
+  });
 
 // EXTENSION on existing top-level authConfigSchema (NOT authScreenConfigSchema)
 authConfigSchema.extend({
   providers: z.record(authProviderSchema).optional(),
-  mfa: z.object({
-    issuer: z.string().optional(),
-    period: z.number().int().positive().default(30),
-    methods: z.array(z.enum(["totp", "email", "sms", "webauthn"])).optional(),
-  }).strict().optional(),
-  webauthn: z.object({
-    rpId: z.string().optional(),
-    rpName: z.string().optional(),
-    attestation: z.enum(["none", "indirect", "direct"]).default("none"),
-  }).strict().optional(),
+  mfa: z
+    .object({
+      issuer: z.string().optional(),
+      period: z.number().int().positive().default(30),
+      methods: z.array(z.enum(["totp", "email", "sms", "webauthn"])).optional(),
+    })
+    .strict()
+    .optional(),
+  webauthn: z
+    .object({
+      rpId: z.string().optional(),
+      rpName: z.string().optional(),
+      attestation: z.enum(["none", "indirect", "direct"]).default("none"),
+    })
+    .strict()
+    .optional(),
 });
 
 // CHANGE on authScreenConfigSchema — providers becomes a list of name refs
 authScreenConfigSchema.extend({
-  providers: z.array(z.string()).optional(),  // refs into auth.providers
+  providers: z.array(z.string()).optional(), // refs into auth.providers
 });
 ```
 
@@ -2058,15 +2213,15 @@ A — Hardcoded removal       (foundation)         A1, A2, A3, A4, A5
 
 ### Why Tracks Are Independent
 
-| Track | Owns (file paths) |
-|---|---|
-| **A** | `auth.tsx`, `app.tsx` (lifecycle/layout sections), `component-registry.tsx`, `structural.tsx`, `workflows/registry.ts`, `tokens/flavors.ts`, new `boot-builtins.ts`, new `auth-routes.ts`, `components/feedback/*` |
-| **B** | `types.ts`, `create-snapshot.tsx`, `schema.ts` (auth.session, app.cache, auth.contract, auth.on, realtime.*), new `env.ts` |
-| **C** | `schema.ts` (components.custom, workflows.actions.custom, theme.flavors), `component-registry.tsx`, `workflows/registry.ts`, `tokens/flavors.ts` (additions only) |
-| **D** | `schema.ts` (policies, i18n), new `policies/`, new `i18n/` |
-| **E** | `schema.ts` (clients, subApps), `runtime.tsx`, `app.tsx` (router section), `compiler.ts` (sub-manifest recursion) |
-| **F** | `schema.ts` (routes.layouts, routes.slots, ssr.middleware), `ssr/manifest-renderer.ts`, `ssr/render.ts`, `app.tsx` (AppShell composition) |
-| **G** | `schema.ts` (realtime.events, resources.invalidates extension, resources.optimistic), `resources.ts`, `runtime.tsx`, new `realtime-bridge.ts`, `auto-form/component.tsx` |
+| Track | Owns (file paths)                                                                                                                                                                                                            |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A** | `auth.tsx`, `app.tsx` (lifecycle/layout sections), `component-registry.tsx`, `structural.tsx`, `workflows/registry.ts`, `tokens/flavors.ts`, new `boot-builtins.ts`, new `auth-routes.ts`, `components/feedback/*`           |
+| **B** | `types.ts`, `create-snapshot.tsx`, `schema.ts` (auth.session, app.cache, auth.contract, auth.on, realtime.\*), new `env.ts`                                                                                                  |
+| **C** | `schema.ts` (components.custom, workflows.actions.custom, theme.flavors), `component-registry.tsx`, `workflows/registry.ts`, `tokens/flavors.ts` (additions only)                                                            |
+| **D** | `schema.ts` (policies, i18n), new `policies/`, new `i18n/`                                                                                                                                                                   |
+| **E** | `schema.ts` (clients, subApps), `runtime.tsx`, `app.tsx` (router section), `compiler.ts` (sub-manifest recursion)                                                                                                            |
+| **F** | `schema.ts` (routes.layouts, routes.slots, ssr.middleware), `ssr/manifest-renderer.ts`, `ssr/render.ts`, `app.tsx` (AppShell composition)                                                                                    |
+| **G** | `schema.ts` (realtime.events, resources.invalidates extension, resources.optimistic), `resources.ts`, `runtime.tsx`, new `realtime-bridge.ts`, `auto-form/component.tsx`                                                     |
 | **H** | `schema.ts` (toast, analytics, push, theme.editor.persist, auth.providers, auth.mfa, auth.webauthn), `analytics/`, `push/hooks.ts`, `tokens/editor.ts`, `auth/oauth-hooks.ts`, `auth/mfa-hooks.ts`, `auth/webauthn-hooks.ts` |
 
 **Schema overlap.** Multiple tracks add fields to `schema.ts`. Each track owns its **own
@@ -2152,16 +2307,16 @@ For each track, the executing agent:
 This spec touches almost every public surface. The implementing agent for each track
 must update the following docs as part of the same commits:
 
-| Track | Docs to update |
-|---|---|
-| **A** | `customization.md` (escape hatch story), `components.md` (custom component declaration) |
+| Track | Docs to update                                                                                                                           |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **A** | `customization.md` (escape hatch story), `components.md` (custom component declaration)                                                  |
 | **B** | `getting-started.md` (the four-line entry point), new `docs/manifest/bootstrap.md`, `docs/manifest/auth.md`, `docs/manifest/realtime.md` |
-| **C** | `customization.md` (custom action declaration), `tokens.md` (manifest-declared flavors) |
-| **D** | New `docs/manifest/policies.md`, new `docs/manifest/i18n.md` |
-| **E** | New `docs/manifest/multi-app.md` |
-| **F** | `ssr/` pages — manifest middleware, layouts, parallel routes, conventions |
-| **G** | `data-binding.md` (event-to-workflow), new `docs/manifest/cache.md`, `actions.md` |
-| **H** | New `docs/manifest/analytics.md`, `actions.md` (`track`), `docs/manifest/auth.md` (providers, mfa, webauthn), `docs/manifest/push.md` |
+| **C** | `customization.md` (custom action declaration), `tokens.md` (manifest-declared flavors)                                                  |
+| **D** | New `docs/manifest/policies.md`, new `docs/manifest/i18n.md`                                                                             |
+| **E** | New `docs/manifest/multi-app.md`                                                                                                         |
+| **F** | `ssr/` pages — manifest middleware, layouts, parallel routes, conventions                                                                |
+| **G** | `data-binding.md` (event-to-workflow), new `docs/manifest/cache.md`, `actions.md`                                                        |
+| **H** | New `docs/manifest/analytics.md`, `actions.md` (`track`), `docs/manifest/auth.md` (providers, mfa, webauthn), `docs/manifest/push.md`    |
 
 JSDoc must be updated on:
 

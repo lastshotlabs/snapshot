@@ -24,10 +24,7 @@ const builtInFlavorNames = new Set<string>();
  * @param config - Flavor configuration (colors, radius, spacing, font, components)
  * @returns The registered Flavor object
  */
-export function defineFlavor(
-  name: string,
-  config: FlavorConfig,
-): Flavor {
+export function defineFlavor(name: string, config: FlavorConfig): Flavor {
   const flavor: Flavor = { name, ...config };
   flavorRegistry.set(name, flavor);
   return flavor;

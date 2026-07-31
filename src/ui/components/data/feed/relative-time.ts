@@ -1,7 +1,10 @@
-'use client';
+"use client";
 
 function getFormatter(): Intl.RelativeTimeFormat | null {
-  if (typeof Intl === "undefined" || typeof Intl.RelativeTimeFormat !== "function") {
+  if (
+    typeof Intl === "undefined" ||
+    typeof Intl.RelativeTimeFormat !== "function"
+  ) {
     return null;
   }
 

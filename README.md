@@ -66,6 +66,27 @@ bun add -d vite
 bun add react-server-dom-webpack
 ```
 
+The 0.3 package boundary keeps editor, markdown, drag-and-drop, and CLI
+libraries out of a basic install. Add the matching optional peers when you use
+one of these UI surfaces:
+
+| Surface                                 | Install                                                                                                                                                                                        |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rich-input`                            | `bun add @tiptap/core @tiptap/extension-link @tiptap/extension-mention @tiptap/extension-placeholder @tiptap/extension-underline @tiptap/pm @tiptap/react @tiptap/starter-kit tiptap-markdown` |
+| `rich-text-editor`                      | `bun add @codemirror/commands @codemirror/lang-markdown @codemirror/language @codemirror/language-data @codemirror/state @codemirror/view`                                                     |
+| Drag-and-drop surfaces such as `kanban` | `bun add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities`                                                                                                                                   |
+| `markdown`                              | `bun add react-markdown rehype-highlight remark-gfm highlight.js`                                                                                                                              |
+| `code-block`                            | `bun add highlight.js`                                                                                                                                                                         |
+| `snapshot` CLI                          | `bun add @oclif/core @clack/prompts`                                                                                                                                                           |
+| `snapshot/vite` sync plugin             | `bun add -d vite @clack/prompts`                                                                                                                                                               |
+
+The CLI packages are optional too, so apps that only import Snapshot runtime or
+UI code do not install them.
+
+Use focused `@lastshotlabs/snapshot/ui/<name>` imports for the minimal
+dependency path. The compatibility `@lastshotlabs/snapshot/ui` barrel
+re-exports the whole catalog and therefore requires every optional UI peer.
+
 ## Runtime Setup
 
 Create a single Snapshot runtime and import it anywhere your app needs hooks or
@@ -152,18 +173,18 @@ export function LoginForm() {
 
 Common runtime hooks include:
 
-| Area | Hooks and helpers |
-| --- | --- |
-| Auth | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword` |
-| Account | `useResetPassword`, `useVerifyEmail`, `useSetPassword`, `useDeleteAccount`, `useSessions` |
-| MFA | `usePendingMfaChallenge`, `useMfaVerify`, `useMfaSetup`, `useMfaMethods` |
-| OAuth | `getOAuthUrl`, `getLinkUrl`, `useOAuthExchange`, `useOAuthUnlink` |
-| WebAuthn | `useWebAuthnRegisterOptions`, `useWebAuthnRegister`, `usePasskeyLogin` |
-| Realtime | `useSocket`, `useRoom`, `useRoomEvent`, `useSSE`, `useSseEvent` |
-| Community | container, thread, reply, reaction, moderation, notification, and search hooks |
-| Webhooks | endpoint, delivery, and test-delivery hooks |
-| Routing | `protect`, `guest`, `protectedBeforeLoad`, `guestBeforeLoad`, `setNavigator` |
-| Primitives | `api`, `queryClient`, `tokenStorage`, `useWebSocketManager` |
+| Area       | Hooks and helpers                                                                         |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| Auth       | `useUser`, `useLogin`, `useLogout`, `useRegister`, `useForgotPassword`                    |
+| Account    | `useResetPassword`, `useVerifyEmail`, `useSetPassword`, `useDeleteAccount`, `useSessions` |
+| MFA        | `usePendingMfaChallenge`, `useMfaVerify`, `useMfaSetup`, `useMfaMethods`                  |
+| OAuth      | `getOAuthUrl`, `getLinkUrl`, `useOAuthExchange`, `useOAuthUnlink`                         |
+| WebAuthn   | `useWebAuthnRegisterOptions`, `useWebAuthnRegister`, `usePasskeyLogin`                    |
+| Realtime   | `useSocket`, `useRoom`, `useRoomEvent`, `useSSE`, `useSseEvent`                           |
+| Community  | container, thread, reply, reaction, moderation, notification, and search hooks            |
+| Webhooks   | endpoint, delivery, and test-delivery hooks                                               |
+| Routing    | `protect`, `guest`, `protectedBeforeLoad`, `guestBeforeLoad`, `setNavigator`              |
+| Primitives | `api`, `queryClient`, `tokenStorage`, `useWebSocketManager`                               |
 
 ## Route Guards
 
@@ -220,25 +241,20 @@ import react from "@vitejs/plugin-react";
 import { snapshotSync } from "@lastshotlabs/snapshot/vite";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    snapshotSync({ file: "./schema.json", zod: true }),
-  ],
+  plugins: [react(), snapshotSync({ file: "./schema.json", zod: true })],
 });
 ```
 
 ## Standalone UI
 
-UI components are plain React components. Import the full barrel or focused
-subpaths for larger pieces.
+UI components are plain React components. Import each component from its
+focused subpath so unused component families and optional peers stay out of the
+module graph.
 
 ```tsx
-import {
-  ButtonBase,
-  CardBase,
-  RichInputBase,
-  ToastContainer,
-} from "@lastshotlabs/snapshot/ui";
+import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { CardBase } from "@lastshotlabs/snapshot/ui/card";
+import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
 
 export function Composer() {
   return (
@@ -251,13 +267,12 @@ export function Composer() {
         }}
       />
       <ButtonBase label="Publish" icon="send" />
-      <ToastContainer />
     </CardBase>
   );
 }
 ```
 
-Focused UI subpaths:
+Every catalog component follows the same subpath convention:
 
 ```ts
 import { RichInputBase } from "@lastshotlabs/snapshot/ui/rich-input";
@@ -270,7 +285,7 @@ import { GifPickerBase } from "@lastshotlabs/snapshot/ui/gif-picker";
 Snapshot UI uses CSS custom properties with optional token helpers.
 
 ```tsx
-import { resolveTokens } from "@lastshotlabs/snapshot/ui";
+import { resolveTokens } from "@lastshotlabs/snapshot/ui/tokens";
 
 const css = resolveTokens({
   flavor: "neutral",
@@ -344,19 +359,19 @@ export default defineConfig({
 
 ## CLI
 
-| Command | Purpose |
-| --- | --- |
-| `snapshot init` | Scaffold a new code-first Snapshot application |
+| Command         | Purpose                                             |
+| --------------- | --------------------------------------------------- |
+| `snapshot init` | Scaffold a new code-first Snapshot application      |
 | `snapshot sync` | Generate API types and hooks from an OpenAPI schema |
 
 ## Package Entry Points
 
-| Import | Purpose |
-| --- | --- |
-| `@lastshotlabs/snapshot` | `createSnapshot`, runtime hooks, auth/account/community/webhook types |
-| `@lastshotlabs/snapshot/ui` | Standalone UI components, tokens, actions, hooks, icons |
-| `@lastshotlabs/snapshot/ui/rich-input` | Focused rich input component bundle |
-| `@lastshotlabs/snapshot/ui/emoji-picker` | Focused emoji picker component bundle |
-| `@lastshotlabs/snapshot/ui/gif-picker` | Focused GIF picker component bundle |
-| `@lastshotlabs/snapshot/vite` | `snapshotSync`, `snapshotSsr` |
-| `@lastshotlabs/snapshot/ssr` | React SSR, RSC, PPR, cache, and prefetch helpers |
+| Import                                   | Purpose                                                               |
+| ---------------------------------------- | --------------------------------------------------------------------- |
+| `@lastshotlabs/snapshot`                 | `createSnapshot`, runtime hooks, auth/account/community/webhook types |
+| `@lastshotlabs/snapshot/ui`              | Standalone UI components, tokens, actions, hooks, icons               |
+| `@lastshotlabs/snapshot/ui/rich-input`   | Focused rich input component bundle                                   |
+| `@lastshotlabs/snapshot/ui/emoji-picker` | Focused emoji picker component bundle                                 |
+| `@lastshotlabs/snapshot/ui/gif-picker`   | Focused GIF picker component bundle                                   |
+| `@lastshotlabs/snapshot/vite`            | `snapshotSync`, `snapshotSsr`                                         |
+| `@lastshotlabs/snapshot/ssr`             | React SSR, RSC, PPR, cache, and prefetch helpers                      |

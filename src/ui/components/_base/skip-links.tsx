@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useCallback } from "react";
 import type { MouseEvent } from "react";
@@ -44,7 +44,8 @@ export function SkipLinks({
             top: "var(--sn-spacing-sm, 0.5rem)",
             left: "var(--sn-spacing-sm, 0.5rem)",
             transform: "translateY(calc(-100% - var(--sn-spacing-sm, 0.5rem)))",
-            padding: "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
+            padding:
+              "var(--sn-spacing-sm, 0.5rem) var(--sn-spacing-md, 0.75rem)",
             borderRadius: "var(--sn-radius-md, 0.375rem)",
             backgroundColor: "var(--sn-color-primary, #2563eb)",
             color: "var(--sn-color-primary-foreground, #ffffff)",

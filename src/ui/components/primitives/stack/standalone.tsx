@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { CSSProperties, ReactNode } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -112,11 +112,11 @@ export function StackBase({
       alignItems: ALIGN_MAP[align] ?? align,
       justifyContent: JUSTIFY_MAP[justify] ?? justify,
       width: "100%",
-      maxWidth: maxWidth ? MAX_WIDTH_MAP[maxWidth] ?? maxWidth : undefined,
+      maxWidth: maxWidth ? (MAX_WIDTH_MAP[maxWidth] ?? maxWidth) : undefined,
       overflow,
       maxHeight,
       style: {
-        padding: padding ? PADDING_MAP[padding] ?? padding : undefined,
+        padding: padding ? (PADDING_MAP[padding] ?? padding) : undefined,
         marginInline: maxWidth ? "auto" : undefined,
       },
     },

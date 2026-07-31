@@ -5,9 +5,7 @@ import { cleanup, render } from "@testing-library/react";
 import { useInfiniteScroll } from "../use-infinite-scroll";
 
 class MockIntersectionObserver {
-  static callback:
-    | IntersectionObserverCallback
-    | undefined;
+  static callback: IntersectionObserverCallback | undefined;
 
   constructor(callback: IntersectionObserverCallback) {
     MockIntersectionObserver.callback = callback;

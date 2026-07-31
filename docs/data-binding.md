@@ -10,7 +10,10 @@ Use `AppContextProvider` for app-wide values and `PageContextProvider` for
 values that should reset when a route unmounts.
 
 ```tsx
-import { AppContextProvider, PageContextProvider } from "@lastshotlabs/snapshot/ui";
+import {
+  AppContextProvider,
+  PageContextProvider,
+} from "@lastshotlabs/snapshot/ui";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -33,10 +36,7 @@ function UsersTable({ rows }: { rows: User[] }) {
     <table>
       <tbody>
         {rows.map((row) => (
-          <tr
-            key={row.id}
-            onClick={() => publish({ selected: row })}
-          >
+          <tr key={row.id} onClick={() => publish({ selected: row })}>
             <td>{row.email}</td>
           </tr>
         ))}

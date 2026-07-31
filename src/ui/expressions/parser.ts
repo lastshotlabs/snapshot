@@ -628,12 +628,16 @@ function evaluateAst(node: AstNode, context: ExpressionContext): unknown {
       );
     case "binary": {
       if (node.operator === "||") {
-        return Boolean(evaluateAst(node.left, context)) ||
-          Boolean(evaluateAst(node.right, context));
+        return (
+          Boolean(evaluateAst(node.left, context)) ||
+          Boolean(evaluateAst(node.right, context))
+        );
       }
       if (node.operator === "&&") {
-        return Boolean(evaluateAst(node.left, context)) &&
-          Boolean(evaluateAst(node.right, context));
+        return (
+          Boolean(evaluateAst(node.left, context)) &&
+          Boolean(evaluateAst(node.right, context))
+        );
       }
 
       const left = evaluateAst(node.left, context);

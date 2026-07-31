@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback, useEffect, useRef } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -141,11 +141,10 @@ export function DrawerBase({
     };
   }, [open]);
 
-  useFocusTrap(
-    open && animating && trapFocus,
-    panelRef,
-    { initialFocus, returnFocus },
-  );
+  useFocusTrap(open && animating && trapFocus, panelRef, {
+    initialFocus,
+    returnFocus,
+  });
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
@@ -196,7 +195,8 @@ export function DrawerBase({
     implementationBase: {
       position: "fixed",
       inset: 0,
-      backgroundColor: "var(--sn-modal-overlay, color-mix(in oklch, var(--sn-color-foreground, #111827) 40%, transparent))",
+      backgroundColor:
+        "var(--sn-modal-overlay, color-mix(in oklch, var(--sn-color-foreground, #111827) 40%, transparent))",
       style: {
         opacity: animating ? 1 : 0,
         transition: `opacity var(--sn-duration-normal, ${ANIMATION_DURATION}ms) var(--sn-ease-default, ease)`,

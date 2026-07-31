@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Configured Tiptap Mention extension for `RichInputBase`.
@@ -21,15 +21,15 @@
  * content-token grammar).
  */
 
-import Mention from '@tiptap/extension-mention';
-import { ReactRenderer } from '@tiptap/react';
+import Mention from "@tiptap/extension-mention";
+import { ReactRenderer } from "@tiptap/react";
 import {
   DefaultMentionList,
   type MentionListHandle,
   type MentionListProps,
   type MentionSuggestion,
-} from './mention-list';
-import type { ComponentType } from 'react';
+} from "./mention-list";
+import type { ComponentType } from "react";
 
 export interface BuildMentionOptions {
   /** Search callback. Required. */
@@ -41,7 +41,9 @@ export interface BuildMentionOptions {
    * default list does; should expose `onKeyDown(props: { event })` via
    * `forwardRef` so arrow-key + Enter handling works.
    */
-  renderList?: ComponentType<MentionListProps & React.RefAttributes<MentionListHandle>>;
+  renderList?: ComponentType<
+    MentionListProps & React.RefAttributes<MentionListHandle>
+  >;
   /**
    * Override the mention serialization format. Default is slingshot's
    * `<@<id>>` token format. Used by `renderText` (plain-text projection)
@@ -50,7 +52,8 @@ export interface BuildMentionOptions {
   serializeMention?: (attrs: { id: string; label: string }) => string;
 }
 
-const DEFAULT_SERIALIZE = (attrs: { id: string; label: string }): string => `<@${attrs.id}>`;
+const DEFAULT_SERIALIZE = (attrs: { id: string; label: string }): string =>
+  `<@${attrs.id}>`;
 
 export function buildMentionExtension(opts: BuildMentionOptions): unknown {
   const serialize = opts.serializeMention ?? DEFAULT_SERIALIZE;
@@ -68,7 +71,8 @@ export function buildMentionExtension(opts: BuildMentionOptions): unknown {
      * decide how each node serializes when `getMarkdown()` is called.
      */
     addStorage() {
-      const parent = (this.parent as (() => Record<string, unknown>) | undefined)?.() ?? {};
+      const parent =
+        (this.parent as (() => Record<string, unknown>) | undefined)?.() ?? {};
       return {
         ...parent,
         markdown: {
@@ -76,7 +80,9 @@ export function buildMentionExtension(opts: BuildMentionOptions): unknown {
             state: { write: (s: string) => void },
             node: { attrs: { id: string; label: string } },
           ) {
-            state.write(serialize({ id: node.attrs.id, label: node.attrs.label }));
+            state.write(
+              serialize({ id: node.attrs.id, label: node.attrs.label }),
+            );
           },
           parse: { setup() {} },
         },
@@ -85,24 +91,29 @@ export function buildMentionExtension(opts: BuildMentionOptions): unknown {
   });
 
   const configured = ext.configure({
-    HTMLAttributes: { class: 'mention' },
+    HTMLAttributes: { class: "mention" },
     /**
      * Plain-text projection. `editor.getText()` calls this so the body we
      * hand to plain-text consumers (search snippets, push body preview)
      * already has the slingshot token format.
      */
     renderText: (props: unknown) => {
-      const { node } = props as { node: { attrs: { id: string; label: string } } };
+      const { node } = props as {
+        node: { attrs: { id: string; label: string } };
+      };
       return serialize({ id: node.attrs.id, label: node.attrs.label });
     },
     suggestion: {
-      char: '@',
+      char: "@",
       items: async ({ query }: { query: string }) => {
         const results = await opts.onSearch(query);
         return Array.from(results);
       },
       render: () => {
-        let component: ReactRenderer<MentionListHandle, MentionListProps> | null = null;
+        let component: ReactRenderer<
+          MentionListHandle,
+          MentionListProps
+        > | null = null;
         let popup: HTMLDivElement | null = null;
 
         const positionPopup = (rect: DOMRect | null): void => {
@@ -125,14 +136,18 @@ export function buildMentionExtension(opts: BuildMentionOptions): unknown {
             component = new ReactRenderer<MentionListHandle, MentionListProps>(
               ListComponent as unknown as ComponentType<MentionListProps>,
               {
-                props: { items: props.items, command: props.command, query: props.query },
+                props: {
+                  items: props.items,
+                  command: props.command,
+                  query: props.query,
+                },
                 editor: props.editor as never,
               },
             );
-            popup = document.createElement('div');
-            popup.style.position = 'fixed';
-            popup.style.zIndex = '50';
-            popup.style.pointerEvents = 'auto';
+            popup = document.createElement("div");
+            popup.style.position = "fixed";
+            popup.style.zIndex = "50";
+            popup.style.pointerEvents = "auto";
             popup.appendChild(component.element);
             document.body.appendChild(popup);
             positionPopup(props.clientRect?.() ?? null);
@@ -151,7 +166,7 @@ export function buildMentionExtension(opts: BuildMentionOptions): unknown {
             positionPopup(props.clientRect?.() ?? null);
           },
           onKeyDown(props: { event: KeyboardEvent }) {
-            if (props.event.key === 'Escape') {
+            if (props.event.key === "Escape") {
               popup?.remove();
               component?.destroy();
               popup = null;

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -299,11 +299,12 @@ function TreeNode({
     if (isDisabled) return;
     const key = event.key;
     const focusSibling = (direction: 1 | -1) => {
-      const root = (event.currentTarget.closest('[role="tree"]') ?? document) as
-        | HTMLElement
-        | Document;
+      const root = (event.currentTarget.closest('[role="tree"]') ??
+        document) as HTMLElement | Document;
       const buttons = Array.from(
-        root.querySelectorAll<HTMLButtonElement>('[data-testid="tree-node-row"]'),
+        root.querySelectorAll<HTMLButtonElement>(
+          '[data-testid="tree-node-row"]',
+        ),
       ).filter((b) => !b.disabled);
       const ordinal = buttons.indexOf(event.currentTarget);
       if (ordinal === -1) return;
@@ -338,9 +339,8 @@ function TreeNode({
       return;
     }
     if (key === "Home") {
-      const root = (event.currentTarget.closest('[role="tree"]') ?? document) as
-        | HTMLElement
-        | Document;
+      const root = (event.currentTarget.closest('[role="tree"]') ??
+        document) as HTMLElement | Document;
       const first = root.querySelector<HTMLButtonElement>(
         '[data-testid="tree-node-row"]:not([disabled])',
       );
@@ -351,9 +351,8 @@ function TreeNode({
       return;
     }
     if (key === "End") {
-      const root = (event.currentTarget.closest('[role="tree"]') ?? document) as
-        | HTMLElement
-        | Document;
+      const root = (event.currentTarget.closest('[role="tree"]') ??
+        document) as HTMLElement | Document;
       const all = root.querySelectorAll<HTMLButtonElement>(
         '[data-testid="tree-node-row"]:not([disabled])',
       );
@@ -679,7 +678,8 @@ export function TreeViewBase({
             });
             const loadingLabelSecondaryRowSurface = resolveSurfacePresentation({
               surfaceId: `${rootId}-loading-label-secondary-${index}`,
-              implementationBase: loadingLabelSecondarySurface.resolvedConfigForWrapper,
+              implementationBase:
+                loadingLabelSecondarySurface.resolvedConfigForWrapper,
               itemSurface: {
                 width: `${55 + index * 10}%`,
                 style: {
@@ -712,7 +712,9 @@ export function TreeViewBase({
                 />
                 <SurfaceStyles css={loadingItemRowSurface.scopedCss} />
                 <SurfaceStyles css={loadingLabelRowSurface.scopedCss} />
-                <SurfaceStyles css={loadingLabelSecondaryRowSurface.scopedCss} />
+                <SurfaceStyles
+                  css={loadingLabelSecondaryRowSurface.scopedCss}
+                />
               </div>
             );
           })}

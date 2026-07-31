@@ -2,14 +2,14 @@
 
 > **Status**
 >
-> | Phase | Title | Status | Track |
-> |---|---|---|---|
-> | F.1 | WebSocket Connection | Not started | WS |
-> | F.2 | Event-to-Action Mapping | Not started | WS |
-> | F.3 | WS Send Action | Not started | WS |
-> | F.4 | Server-Sent Events | Not started | SSE |
-> | F.5 | Presence | Not started | WS |
-> | F.6 | Live Data Binding | Not started | Data |
+> | Phase | Title                   | Status      | Track |
+> | ----- | ----------------------- | ----------- | ----- |
+> | F.1   | WebSocket Connection    | Not started | WS    |
+> | F.2   | Event-to-Action Mapping | Not started | WS    |
+> | F.3   | WS Send Action          | Not started | WS    |
+> | F.4   | Server-Sent Events      | Not started | SSE   |
+> | F.5   | Presence                | Not started | WS    |
+> | F.6   | Live Data Binding       | Not started | Data  |
 >
 > **Priority:** P1 — enables real-time collaborative and live-updating applications.
 > **Depends on:** Phase A (CSS Foundation), Phase D (Interactivity — action executor).
@@ -57,41 +57,41 @@ UI layer does not expose real-time features to consumers:
 
 ### WebSocket Manager
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/ws/manager.ts` | ~200 | `WsManager` class: `connect(url, options)`, `disconnect()`, `send(event, data)`, `on(event, handler)`, `off(event, handler)`. Handles reconnection with exponential backoff. |
-| `src/ws/atom.ts` | ~20 | Jotai atom storing the `WsManager` instance. |
-| `src/ws/hook.ts` | ~40 | `useWs()` hook — returns the WsManager from the atom. |
-| `src/ws/manager.d.ts` | ~30 | Type declarations for WsManager. |
+| File                  | Lines | What Exists                                                                                                                                                                  |
+| --------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ws/manager.ts`   | ~200  | `WsManager` class: `connect(url, options)`, `disconnect()`, `send(event, data)`, `on(event, handler)`, `off(event, handler)`. Handles reconnection with exponential backoff. |
+| `src/ws/atom.ts`      | ~20   | Jotai atom storing the `WsManager` instance.                                                                                                                                 |
+| `src/ws/hook.ts`      | ~40   | `useWs()` hook — returns the WsManager from the atom.                                                                                                                        |
+| `src/ws/manager.d.ts` | ~30   | Type declarations for WsManager.                                                                                                                                             |
 
 ### SSE Manager
 
-| File | Lines | What Exists |
-|---|---|---|
-| `src/sse/manager.ts` | ~150 | `SseManager` class: `connect(url)`, `close()`, `on(event, handler)`, `off(event, handler)`. Uses `EventSource` API. |
-| `src/sse/atom.ts` | ~20 | Jotai atom storing SseManager instances (registry pattern — one per endpoint). |
-| `src/sse/hook.ts` | ~40 | `useSse()` hook — returns the SseManager from the atom. |
-| `src/sse/manager.d.ts` | ~30 | Type declarations for SseManager. |
+| File                   | Lines | What Exists                                                                                                         |
+| ---------------------- | ----- | ------------------------------------------------------------------------------------------------------------------- |
+| `src/sse/manager.ts`   | ~150  | `SseManager` class: `connect(url)`, `close()`, `on(event, handler)`, `off(event, handler)`. Uses `EventSource` API. |
+| `src/sse/atom.ts`      | ~20   | Jotai atom storing SseManager instances (registry pattern — one per endpoint).                                      |
+| `src/sse/hook.ts`      | ~40   | `useSse()` hook — returns the SseManager from the atom.                                                             |
+| `src/sse/manager.d.ts` | ~30   | Type declarations for SseManager.                                                                                   |
 
 ### Workflow Bridge
 
-| File | What |
-|---|---|
-| `src/ui/manifest/app.tsx` (import) | Imports workflow engine. ManifestApp integrates workflow execution. |
-| `src/ui/workflows/engine.ts` | `runWorkflow()` — executes workflow steps. Can be triggered by events. |
+| File                               | What                                                                   |
+| ---------------------------------- | ---------------------------------------------------------------------- |
+| `src/ui/manifest/app.tsx` (import) | Imports workflow engine. ManifestApp integrates workflow execution.    |
+| `src/ui/workflows/engine.ts`       | `runWorkflow()` — executes workflow steps. Can be triggered by events. |
 
 ### Presence Indicator Component
 
-| File | What |
-|---|---|
+| File                                                  | What                                                                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `src/ui/components/communication/presence-indicator/` | Registered component with schema. Renders presence dots. Currently requires manual data — no WS integration. |
 
 ### Action Executor
 
-| File | What |
-|---|---|
-| `src/ui/actions/executor.ts` | 17 action types. No `ws-send`. |
-| `src/ui/actions/types.ts` | `ACTION_TYPES` array. No WS-related types. |
+| File                         | What                                       |
+| ---------------------------- | ------------------------------------------ |
+| `src/ui/actions/executor.ts` | 17 action types. No `ws-send`.             |
+| `src/ui/actions/types.ts`    | `ACTION_TYPES` array. No WS-related types. |
 
 ---
 
@@ -109,21 +109,21 @@ bun test                 # vitest
 
 ### Key Files
 
-| Path | What | Lines |
-|---|---|---|
-| `src/ws/manager.ts` | WebSocket manager | ~200 |
-| `src/ws/atom.ts` | WS Jotai atom | ~20 |
-| `src/ws/hook.ts` | `useWs()` hook | ~40 |
-| `src/sse/manager.ts` | SSE manager | ~150 |
-| `src/sse/atom.ts` | SSE Jotai atom | ~20 |
-| `src/sse/hook.ts` | `useSse()` hook | ~40 |
-| `src/ui/actions/executor.ts` | Action executor | ~400 |
-| `src/ui/actions/types.ts` | Action type definitions | ~200 |
-| `src/ui/manifest/app.tsx` | ManifestApp | ~600 |
-| `src/ui/manifest/schema.ts` | Manifest schemas | ~1400 |
-| `src/ui/manifest/runtime.tsx` | Runtime providers | ~300 |
-| `src/ui/workflows/engine.ts` | Workflow engine | ~300 |
-| `src/ui/components/communication/presence-indicator/` | Presence UI component | ~100 |
+| Path                                                  | What                    | Lines |
+| ----------------------------------------------------- | ----------------------- | ----- |
+| `src/ws/manager.ts`                                   | WebSocket manager       | ~200  |
+| `src/ws/atom.ts`                                      | WS Jotai atom           | ~20   |
+| `src/ws/hook.ts`                                      | `useWs()` hook          | ~40   |
+| `src/sse/manager.ts`                                  | SSE manager             | ~150  |
+| `src/sse/atom.ts`                                     | SSE Jotai atom          | ~20   |
+| `src/sse/hook.ts`                                     | `useSse()` hook         | ~40   |
+| `src/ui/actions/executor.ts`                          | Action executor         | ~400  |
+| `src/ui/actions/types.ts`                             | Action type definitions | ~200  |
+| `src/ui/manifest/app.tsx`                             | ManifestApp             | ~600  |
+| `src/ui/manifest/schema.ts`                           | Manifest schemas        | ~1400 |
+| `src/ui/manifest/runtime.tsx`                         | Runtime providers       | ~300  |
+| `src/ui/workflows/engine.ts`                          | Workflow engine         | ~300  |
+| `src/ui/components/communication/presence-indicator/` | Presence UI component   | ~100  |
 
 ---
 
@@ -164,32 +164,38 @@ export const wsConfigSchema = z.object({
    * - "token" — sends auth token as a query parameter or in first message.
    * - "header" — not supported by browser WebSocket API, use "token".
    */
-  auth: z.object({
-    /** How to send the auth token. */
-    strategy: z.enum(["query-param", "first-message"]),
-    /** Query parameter name (for strategy: "query-param"). */
-    paramName: z.string().default("token"),
-  }).optional(),
+  auth: z
+    .object({
+      /** How to send the auth token. */
+      strategy: z.enum(["query-param", "first-message"]),
+      /** Query parameter name (for strategy: "query-param"). */
+      paramName: z.string().default("token"),
+    })
+    .optional(),
   /** Reconnection configuration. */
-  reconnect: z.object({
-    /** Enable automatic reconnection. Default: true. */
-    enabled: z.boolean().default(true),
-    /** Maximum number of reconnection attempts. Default: 10. */
-    maxAttempts: z.number().int().positive().default(10),
-    /** Base delay in ms for exponential backoff. Default: 1000. */
-    baseDelay: z.number().int().positive().default(1000),
-    /** Maximum delay in ms. Default: 30000. */
-    maxDelay: z.number().int().positive().default(30000),
-  }).optional(),
+  reconnect: z
+    .object({
+      /** Enable automatic reconnection. Default: true. */
+      enabled: z.boolean().default(true),
+      /** Maximum number of reconnection attempts. Default: 10. */
+      maxAttempts: z.number().int().positive().default(10),
+      /** Base delay in ms for exponential backoff. Default: 1000. */
+      baseDelay: z.number().int().positive().default(1000),
+      /** Maximum delay in ms. Default: 30000. */
+      maxDelay: z.number().int().positive().default(30000),
+    })
+    .optional(),
   /** Heartbeat/ping configuration to keep the connection alive. */
-  heartbeat: z.object({
-    /** Enable heartbeat pings. */
-    enabled: z.boolean().default(false),
-    /** Interval in ms between pings. Default: 30000. */
-    interval: z.number().int().positive().default(30000),
-    /** The message to send as a ping. Default: "ping". */
-    message: z.string().default("ping"),
-  }).optional(),
+  heartbeat: z
+    .object({
+      /** Enable heartbeat pings. */
+      enabled: z.boolean().default(false),
+      /** Interval in ms between pings. Default: 30000. */
+      interval: z.number().int().positive().default(30000),
+      /** The message to send as a ping. Default: "ping". */
+      message: z.string().default("ping"),
+    })
+    .optional(),
 });
 
 /** Real-time configuration section of the manifest. */
@@ -214,6 +220,7 @@ export const manifestSchema = z.object({
 **1. Verify `WsManager` supports all options:**
 
 Audit `src/ws/manager.ts` to confirm it handles:
+
 - URL with query params for auth
 - Reconnection with backoff
 - Heartbeat ping
@@ -224,7 +231,7 @@ If any are missing, extend the manager.
 **2. Create `src/ui/manifest/realtime.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
@@ -306,13 +313,13 @@ const wsManager = useManifestWs(wsConfig, authToken);
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/realtime.ts` |
+| Action | Path                                                                                                   |
+| ------ | ------------------------------------------------------------------------------------------------------ |
+| Create | `src/ui/manifest/realtime.ts`                                                                          |
 | Modify | `src/ui/manifest/schema.ts` — add `wsConfigSchema`, `realtimeConfigSchema`, add `realtime` to manifest |
-| Modify | `src/ui/manifest/types.ts` — add `realtime` to `CompiledManifest` |
-| Modify | `src/ui/manifest/app.tsx` — call `useManifestWs` |
-| Modify | `src/ws/manager.ts` — extend if heartbeat/auth options are missing |
+| Modify | `src/ui/manifest/types.ts` — add `realtime` to `CompiledManifest`                                      |
+| Modify | `src/ui/manifest/app.tsx` — call `useManifestWs`                                                       |
+| Modify | `src/ws/manager.ts` — extend if heartbeat/auth options are missing                                     |
 
 ### Documentation Impact
 
@@ -321,10 +328,10 @@ const wsManager = useManifestWs(wsConfig, authToken);
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                  | What                                                                                                  |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/realtime.test.ts` (create) | Tests: WS connects with URL, auth query param appended, heartbeat config passed, cleanup disconnects. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `realtime.ws` config validates, missing fields use defaults. |
+| `src/ui/manifest/__tests__/schema.test.ts`            | Add: `realtime.ws` config validates, missing fields use defaults.                                     |
 
 ### Exit Criteria
 
@@ -384,7 +391,7 @@ export const routeConfigSchema = z.object({
 **1. Create `src/ui/manifest/event-bridge.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import type { WsManager } from "../../ws/manager";
@@ -411,7 +418,9 @@ export function useEventBridge(
     for (const [eventName, actionConfig] of Object.entries(events)) {
       const handler = (payload: unknown) => {
         const context = { event: payload, eventName };
-        const actions = Array.isArray(actionConfig) ? actionConfig : [actionConfig];
+        const actions = Array.isArray(actionConfig)
+          ? actionConfig
+          : [actionConfig];
         for (const action of actions) {
           executeAction(action, context);
         }
@@ -432,20 +441,20 @@ export function useEventBridge(
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/event-bridge.ts` |
+| Action | Path                                                                                                 |
+| ------ | ---------------------------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/event-bridge.ts`                                                                    |
 | Modify | `src/ui/manifest/schema.ts` — add `eventActionMapSchema`, add `events` to WS config and route config |
-| Modify | `src/ui/manifest/app.tsx` — call `useEventBridge` for app-level events |
-| Modify | `src/ui/manifest/runtime.tsx` — call `useEventBridge` for route-scoped events |
-| Modify | `src/ui/manifest/types.ts` — add `events` to compiled types |
+| Modify | `src/ui/manifest/app.tsx` — call `useEventBridge` for app-level events                               |
+| Modify | `src/ui/manifest/runtime.tsx` — call `useEventBridge` for route-scoped events                        |
+| Modify | `src/ui/manifest/types.ts` — add `events` to compiled types                                          |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                      | What                                                                                                   |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `src/ui/manifest/__tests__/event-bridge.test.ts` (create) | Tests: subscribes to events, executes action on event, provides {event} context, cleans up on unmount. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `events` map validates. |
+| `src/ui/manifest/__tests__/schema.test.ts`                | Add: `events` map validates.                                                                           |
 
 ### Exit Criteria
 
@@ -507,15 +516,15 @@ case "ws-send": {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
+| Action | Path                                                                              |
+| ------ | --------------------------------------------------------------------------------- |
 | Modify | `src/ui/actions/types.ts` — add `WsSendAction`, add `"ws-send"` to `ACTION_TYPES` |
-| Modify | `src/ui/actions/executor.ts` — handle `ws-send` |
+| Modify | `src/ui/actions/executor.ts` — handle `ws-send`                                   |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                        | What                                                                                                |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `src/ui/actions/__tests__/executor.test.ts` | Add: ws-send calls manager.send, ws-send with FromRef data resolves, ws-send without manager warns. |
 
 ### Exit Criteria
@@ -568,7 +577,7 @@ export const realtimeConfigSchema = z.object({
 **1. Create `src/ui/manifest/realtime-sse.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import { SseManager } from "../../sse/manager";
@@ -603,7 +612,9 @@ export function useManifestSse(
       for (const [eventName, actionConfig] of Object.entries(config.events)) {
         const handler = (data: unknown) => {
           const context = { event: data, eventName };
-          const actions = Array.isArray(actionConfig) ? actionConfig : [actionConfig];
+          const actions = Array.isArray(actionConfig)
+            ? actionConfig
+            : [actionConfig];
           for (const action of actions) {
             executeAction(action, context);
           }
@@ -631,18 +642,18 @@ useManifestSse(sseConfig, executeAction);
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/realtime-sse.ts` |
+| Action | Path                                                                               |
+| ------ | ---------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/realtime-sse.ts`                                                  |
 | Modify | `src/ui/manifest/schema.ts` — add `sseConfigSchema`, update `realtimeConfigSchema` |
-| Modify | `src/ui/manifest/app.tsx` — call `useManifestSse` |
+| Modify | `src/ui/manifest/app.tsx` — call `useManifestSse`                                  |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                      | What                                                                               |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/realtime-sse.test.ts` (create) | Tests: SSE connects with URL, events mapped to actions, cleanup closes connection. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `realtime.sse` config validates. |
+| `src/ui/manifest/__tests__/schema.test.ts`                | Add: `realtime.sse` config validates.                                              |
 
 ### Exit Criteria
 
@@ -688,7 +699,7 @@ export const presenceConfigSchema = z.object({
 **1. Create `src/ui/manifest/presence.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useCallback, useMemo, useState } from "react";
 import type { WsManager } from "../../ws/manager";
@@ -745,7 +756,11 @@ export function usePresence(
 
     // Listen for presence updates
     const handlePresenceUpdate = (payload: unknown) => {
-      if (typeof payload === "object" && payload !== null && "users" in payload) {
+      if (
+        typeof payload === "object" &&
+        payload !== null &&
+        "users" in payload
+      ) {
         setUsers((payload as { users: PresenceUser[] }).users);
       }
     };
@@ -770,17 +785,16 @@ export function usePresence(
     const pruneTimer = setInterval(() => {
       const now = Date.now();
       setUsers((prev) =>
-        prev.filter((user) => now - user.lastSeen < (config?.offlineThreshold ?? 30000)),
+        prev.filter(
+          (user) => now - user.lastSeen < (config?.offlineThreshold ?? 30000),
+        ),
       );
     }, 5000);
 
     return () => clearInterval(pruneTimer);
   }, [config?.enabled, config?.offlineThreshold]);
 
-  return useMemo(
-    () => ({ users, isConnected }),
-    [users, isConnected],
-  );
+  return useMemo(() => ({ users, isConnected }), [users, isConnected]);
 }
 ```
 
@@ -791,20 +805,20 @@ when no explicit `users` data is provided.
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/manifest/presence.ts` |
-| Modify | `src/ui/manifest/schema.ts` — add `presenceConfigSchema`, update `realtimeConfigSchema` |
-| Modify | `src/ui/manifest/app.tsx` — call `usePresence`, store in atom |
-| Modify | `src/ui/components/communication/presence-indicator/component.tsx` — read from presence atom |
+| Action | Path                                                                                                 |
+| ------ | ---------------------------------------------------------------------------------------------------- |
+| Create | `src/ui/manifest/presence.ts`                                                                        |
+| Modify | `src/ui/manifest/schema.ts` — add `presenceConfigSchema`, update `realtimeConfigSchema`              |
+| Modify | `src/ui/manifest/app.tsx` — call `usePresence`, store in atom                                        |
+| Modify | `src/ui/components/communication/presence-indicator/component.tsx` — read from presence atom         |
 | Modify | `src/ui/components/communication/presence-indicator/schema.ts` — add `channel` prop for auto-connect |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                  | What                                                                                            |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `src/ui/manifest/__tests__/presence.test.ts` (create) | Tests: sends heartbeat on mount, sends at interval, prunes stale users, sends leave on unmount. |
-| `src/ui/manifest/__tests__/schema.test.ts` | Add: `realtime.presence` config validates. |
+| `src/ui/manifest/__tests__/schema.test.ts`            | Add: `realtime.presence` config validates.                                                      |
 
 ### Exit Criteria
 
@@ -858,7 +872,7 @@ export const liveConfigSchema = z.union([
 **1. Create `src/ui/components/_base/use-live-data.ts`:**
 
 ```ts
-'use client';
+"use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { WsManager } from "../../../ws/manager";
@@ -886,7 +900,14 @@ export interface UseLiveDataResult {
 }
 
 export function useLiveData(options: UseLiveDataOptions): UseLiveDataResult {
-  const { event, onRefresh, debounce, indicator = false, wsManager, enabled } = options;
+  const {
+    event,
+    onRefresh,
+    debounce,
+    indicator = false,
+    wsManager,
+    enabled,
+  } = options;
   const [hasNewData, setHasNewData] = useState(false);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onRefreshRef = useRef(onRefresh);
@@ -933,21 +954,21 @@ export function useLiveData(options: UseLiveDataOptions): UseLiveDataResult {
 
 ### Files to Create/Modify
 
-| Action | Path |
-|---|---|
-| Create | `src/ui/components/_base/use-live-data.ts` |
-| Modify | `src/ui/components/data/data-table/schema.ts` — add `live` |
+| Action | Path                                                                   |
+| ------ | ---------------------------------------------------------------------- |
+| Create | `src/ui/components/_base/use-live-data.ts`                             |
+| Modify | `src/ui/components/data/data-table/schema.ts` — add `live`             |
 | Modify | `src/ui/components/data/data-table/component.tsx` — wire `useLiveData` |
-| Modify | `src/ui/components/data/list/schema.ts` — add `live` |
-| Modify | `src/ui/components/data/list/component.tsx` — wire `useLiveData` |
-| Modify | `src/ui/components/data/chart/schema.ts` — add `live` |
-| Modify | `src/ui/components/data/stat-card/schema.ts` — add `live` |
-| Modify | `src/ui/components/data/feed/schema.ts` — add `live` |
+| Modify | `src/ui/components/data/list/schema.ts` — add `live`                   |
+| Modify | `src/ui/components/data/list/component.tsx` — wire `useLiveData`       |
+| Modify | `src/ui/components/data/chart/schema.ts` — add `live`                  |
+| Modify | `src/ui/components/data/stat-card/schema.ts` — add `live`              |
+| Modify | `src/ui/components/data/feed/schema.ts` — add `live`                   |
 
 ### Tests
 
-| File | What |
-|---|---|
+| File                                                               | What                                                                                                                             |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | `src/ui/components/_base/__tests__/use-live-data.test.ts` (create) | Tests: auto-refreshes on event, debounces rapid events, indicator mode sets flag without refreshing, manual refresh clears flag. |
 
 ### Exit Criteria
@@ -969,11 +990,11 @@ export function useLiveData(options: UseLiveDataOptions): UseLiveDataResult {
 
 Three tracks:
 
-| Track | Phases | Files Owned |
-|---|---|---|
-| WS | F.1, F.2, F.3, F.5 | `src/ui/manifest/realtime.ts`, `src/ui/manifest/event-bridge.ts`, `src/ui/manifest/presence.ts`, `src/ws/manager.ts` |
-| SSE | F.4 | `src/ui/manifest/realtime-sse.ts` |
-| Data | F.6 | `src/ui/components/_base/use-live-data.ts`, data component schemas |
+| Track | Phases             | Files Owned                                                                                                          |
+| ----- | ------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| WS    | F.1, F.2, F.3, F.5 | `src/ui/manifest/realtime.ts`, `src/ui/manifest/event-bridge.ts`, `src/ui/manifest/presence.ts`, `src/ws/manager.ts` |
+| SSE   | F.4                | `src/ui/manifest/realtime-sse.ts`                                                                                    |
+| Data  | F.6                | `src/ui/components/_base/use-live-data.ts`, data component schemas                                                   |
 
 ### Why Tracks Are Independent
 
@@ -1025,11 +1046,11 @@ base: main
 
 ### Risk Mitigation
 
-| Risk | Mitigation |
-|---|---|
-| WS reconnection storms | Exponential backoff with max delay. Test with mock disconnections. |
-| Event handler memory leaks | All handlers cleaned up in useEffect return. |
-| Presence stale state | Client-side pruning timer. Server is source of truth. |
+| Risk                           | Mitigation                                                                       |
+| ------------------------------ | -------------------------------------------------------------------------------- |
+| WS reconnection storms         | Exponential backoff with max delay. Test with mock disconnections.               |
+| Event handler memory leaks     | All handlers cleaned up in useEffect return.                                     |
+| Presence stale state           | Client-side pruning timer. Server is source of truth.                            |
 | SSE EventSource browser compat | EventSource is supported in all modern browsers. Provide clear error if missing. |
 
 ---

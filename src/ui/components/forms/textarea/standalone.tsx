@@ -1,9 +1,14 @@
-'use client';
+"use client";
 
 import { useCallback, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { useSnapshotId } from "../../_base/use-snapshot-id";
-import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler } from "react";
+import type {
+  CSSProperties,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  MouseEventHandler,
+} from "react";
 import { SurfaceStyles } from "../../_base/surface-styles";
 import { resolveSurfacePresentation } from "../../_base/style-surfaces";
 import { TextareaControl } from "./control";
@@ -273,7 +278,7 @@ export function TextareaField({
         activeStates={resolvedStates}
       />
 
-      {(helperText || errorMessage || maxLength !== undefined) ? (
+      {helperText || errorMessage || maxLength !== undefined ? (
         <div
           data-snapshot-id={`${rootId}-meta`}
           className={metaSurface.className}

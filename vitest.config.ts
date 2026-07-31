@@ -23,7 +23,11 @@ export default defineConfig({
           name: "node",
           environment: "node",
           include: ["**/*.test.{ts,tsx}"],
-          exclude: ["**/node_modules/**", "**/.claude/worktrees/**", "**/ui/**/*.test.{ts,tsx}"],
+          exclude: [
+            "**/node_modules/**",
+            "**/.claude/worktrees/**",
+            "**/ui/**/*.test.{ts,tsx}",
+          ],
         },
       }),
       defineProject({

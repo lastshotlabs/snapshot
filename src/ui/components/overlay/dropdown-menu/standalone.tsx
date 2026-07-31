@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useCallback, useRef, useState } from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -150,7 +150,10 @@ export function DropdownMenuBase({
 
   const actionableIndices = items
     .map((item, index) =>
-      (item.type === undefined || item.type === "item") && !(item as DropdownMenuBaseItem).disabled ? index : -1,
+      (item.type === undefined || item.type === "item") &&
+      !(item as DropdownMenuBaseItem).disabled
+        ? index
+        : -1,
     )
     .filter((index) => index !== -1);
 
@@ -167,7 +170,11 @@ export function DropdownMenuBase({
   const handleItemClick = useCallback(
     (index: number) => {
       const item = items[index];
-      if (!item || (item.type !== undefined && item.type !== "item") || (item as DropdownMenuBaseItem).disabled) {
+      if (
+        !item ||
+        (item.type !== undefined && item.type !== "item") ||
+        (item as DropdownMenuBaseItem).disabled
+      ) {
         return;
       }
 
@@ -180,7 +187,11 @@ export function DropdownMenuBase({
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
       if (!isOpen) {
-        if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+        if (
+          event.key === "ArrowDown" ||
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
           event.preventDefault();
           open();
         }
@@ -191,7 +202,9 @@ export function DropdownMenuBase({
         event.preventDefault();
         const currentPosition = actionableIndices.indexOf(focusedIndex);
         const nextPosition =
-          currentPosition < actionableIndices.length - 1 ? currentPosition + 1 : 0;
+          currentPosition < actionableIndices.length - 1
+            ? currentPosition + 1
+            : 0;
         setFocusedIndex(actionableIndices[nextPosition] ?? 0);
         return;
       }
@@ -200,7 +213,9 @@ export function DropdownMenuBase({
         event.preventDefault();
         const currentPosition = actionableIndices.indexOf(focusedIndex);
         const previousPosition =
-          currentPosition > 0 ? currentPosition - 1 : actionableIndices.length - 1;
+          currentPosition > 0
+            ? currentPosition - 1
+            : actionableIndices.length - 1;
         setFocusedIndex(actionableIndices[previousPosition] ?? 0);
         return;
       }

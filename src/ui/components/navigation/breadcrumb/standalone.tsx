@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import type { SlotOverrides } from "../../_base/types";
@@ -30,7 +30,10 @@ export interface BreadcrumbBaseProps {
   /** Maximum visible items — remainder are collapsed. */
   maxItems?: number;
   /** Called when a breadcrumb link is clicked. Receives the item. */
-  onNavigate?: (item: BreadcrumbBaseItem, event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onNavigate?: (
+    item: BreadcrumbBaseItem,
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => void;
 
   // ── Style / Slot overrides ───────────────────────────────────────────────
   /** className applied to the root wrapper. */
@@ -226,7 +229,10 @@ export function BreadcrumbBase({
                 ) : null}
 
                 {isCollapsed ? (
-                  <span className={linkSurface.className} style={linkSurface.style}>
+                  <span
+                    className={linkSurface.className}
+                    style={linkSurface.style}
+                  >
                     ...
                   </span>
                 ) : isLast ? (

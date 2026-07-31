@@ -1,10 +1,6 @@
-'use client';
+"use client";
 
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { atom } from "jotai";
 import { useAtomValue, useStore } from "jotai/react";
 import {
@@ -75,14 +71,11 @@ function isDropAllowed(
   return !target.dropTargets?.length && target.dragGroup === source.dragGroup;
 }
 
-function getTargetContainerId(
-  event: DragEndEvent,
-): string | null {
-  const overData =
-    event.over?.data.current as
-      | SharedDragDropItemData
-      | SharedDragDropContainerData
-      | undefined;
+function getTargetContainerId(event: DragEndEvent): string | null {
+  const overData = event.over?.data.current as
+    | SharedDragDropItemData
+    | SharedDragDropContainerData
+    | undefined;
   if (!event.over || !overData) {
     return null;
   }
@@ -113,81 +106,86 @@ export function SnapshotDragDropProvider({
   const store = useStore();
   const lastValueRef = useRef<SharedDragDropContextValue | null>(null);
 
-  const registerContainer = useCallback((container: SharedDragDropContainer) => {
-    containersRef.current.set(container.id, container);
-    return () => {
-      const current = containersRef.current.get(container.id);
-      if (current === container) {
-        containersRef.current.delete(container.id);
-      }
-    };
-  }, []);
-
-  const handleDragEnd = useCallback(
-    async (event: DragEndEvent) => {
-      const activeData =
-        event.active.data.current as SharedDragDropItemData | undefined;
-      if (!event.over || !activeData || activeData.kind !== "snapshot-shared-dnd-item") {
-        return;
-      }
-
-      const source = containersRef.current.get(activeData.containerId);
-      const targetContainerId = getTargetContainerId(event);
-      const target = targetContainerId
-        ? containersRef.current.get(targetContainerId)
-        : null;
-      if (!source || !target) {
-        return;
-      }
-
-      const activeId = String(event.active.id);
-      const overId =
-        event.over.data.current &&
-        (event.over.data.current as SharedDragDropItemData | SharedDragDropContainerData)
-          .kind === "snapshot-shared-dnd-item"
-          ? String(event.over.id)
-          : null;
-
-      if (source.id === target.id) {
-        if (overId) {
-          await source.moveItem(activeId, overId);
+  const registerContainer = useCallback(
+    (container: SharedDragDropContainer) => {
+      containersRef.current.set(container.id, container);
+      return () => {
+        const current = containersRef.current.get(container.id);
+        if (current === container) {
+          containersRef.current.delete(container.id);
         }
-        return;
-      }
-
-      if (!isDropAllowed(source, target)) {
-        return;
-      }
-
-      const removed = source.removeItem(activeId);
-      if (!removed) {
-        return;
-      }
-
-      const inserted = target.insertItem(removed.item, {
-        itemId: removed.id,
-        overId,
-      });
-      if (!inserted) {
-        source.insertItem(removed.item, { itemId: removed.id });
-        return;
-      }
-
-      await target.onDrop?.({
-        item: removed.item,
-        source: { containerId: source.id, dragGroup: source.dragGroup },
-        target: { containerId: target.id, dragGroup: target.dragGroup },
-        index: inserted.index,
-        items: inserted.items,
-      });
+      };
     },
     [],
   );
 
-  const value = useMemo(
-    () => ({ registerContainer }),
-    [registerContainer],
-  );
+  const handleDragEnd = useCallback(async (event: DragEndEvent) => {
+    const activeData = event.active.data.current as
+      | SharedDragDropItemData
+      | undefined;
+    if (
+      !event.over ||
+      !activeData ||
+      activeData.kind !== "snapshot-shared-dnd-item"
+    ) {
+      return;
+    }
+
+    const source = containersRef.current.get(activeData.containerId);
+    const targetContainerId = getTargetContainerId(event);
+    const target = targetContainerId
+      ? containersRef.current.get(targetContainerId)
+      : null;
+    if (!source || !target) {
+      return;
+    }
+
+    const activeId = String(event.active.id);
+    const overId =
+      event.over.data.current &&
+      (
+        event.over.data.current as
+          | SharedDragDropItemData
+          | SharedDragDropContainerData
+      ).kind === "snapshot-shared-dnd-item"
+        ? String(event.over.id)
+        : null;
+
+    if (source.id === target.id) {
+      if (overId) {
+        await source.moveItem(activeId, overId);
+      }
+      return;
+    }
+
+    if (!isDropAllowed(source, target)) {
+      return;
+    }
+
+    const removed = source.removeItem(activeId);
+    if (!removed) {
+      return;
+    }
+
+    const inserted = target.insertItem(removed.item, {
+      itemId: removed.id,
+      overId,
+    });
+    if (!inserted) {
+      source.insertItem(removed.item, { itemId: removed.id });
+      return;
+    }
+
+    await target.onDrop?.({
+      item: removed.item,
+      source: { containerId: source.id, dragGroup: source.dragGroup },
+      target: { containerId: target.id, dragGroup: target.dragGroup },
+      index: inserted.index,
+      items: inserted.items,
+    });
+  }, []);
+
+  const value = useMemo(() => ({ registerContainer }), [registerContainer]);
 
   if (lastValueRef.current !== value) {
     store.set(sharedDragDropAtom, value);

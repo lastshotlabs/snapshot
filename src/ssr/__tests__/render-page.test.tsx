@@ -19,17 +19,19 @@ describe("entity page SSR rendering", () => {
     });
 
     await expect(
-      renderer.renderPage({
-        declaration: {
+      renderer.renderPage(
+        {
           declaration: {
-            type: "list",
-            path: "/posts",
+            declaration: {
+              type: "list",
+              path: "/posts",
+            },
           },
         },
-      }, emptyShell, {}),
-    ).rejects.toThrow(
-      "Config-driven entity page rendering was removed",
-    );
+        emptyShell,
+        {},
+      ),
+    ).rejects.toThrow("Config-driven entity page rendering was removed");
   });
 
   it("createReactRenderer.renderPage() delegates custom pages to the route renderer", async () => {
@@ -68,5 +70,4 @@ describe("entity page SSR rendering", () => {
 
     expect(html).toContain("Custom Route");
   });
-
 });
