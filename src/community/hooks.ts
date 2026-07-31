@@ -310,10 +310,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(communityContract.lockThread.path, {
-          id: threadId,
-          locked: true,
-        }),
+        api.request<ThreadResponse>(
+          communityContract.lockThread.method,
+          communityContract.lockThread.path,
+          {
+            id: threadId,
+            locked: true,
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -334,10 +338,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(communityContract.unlockThread.path, {
-          id: threadId,
-          locked: false,
-        }),
+        api.request<ThreadResponse>(
+          communityContract.unlockThread.method,
+          communityContract.unlockThread.path,
+          {
+            id: threadId,
+            locked: false,
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -358,10 +366,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(communityContract.pinThread.path, {
-          id: threadId,
-          pinned: true,
-        }),
+        api.request<ThreadResponse>(
+          communityContract.pinThread.method,
+          communityContract.pinThread.path,
+          {
+            id: threadId,
+            pinned: true,
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -382,10 +394,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(communityContract.unpinThread.path, {
-          id: threadId,
-          pinned: false,
-        }),
+        api.request<ThreadResponse>(
+          communityContract.unpinThread.method,
+          communityContract.unpinThread.path,
+          {
+            id: threadId,
+            pinned: false,
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),

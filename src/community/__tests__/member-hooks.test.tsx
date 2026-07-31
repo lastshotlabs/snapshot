@@ -28,6 +28,10 @@ const memberRow = {
 };
 
 const api = {
+  request: vi.fn(async (method: string, path: string, body?: unknown) => {
+    calls.push({ method, path, body });
+    return {};
+  }),
   get: vi.fn(async (path: string) => {
     calls.push({ method: "GET", path });
     return { items: [memberRow], hasMore: false };
@@ -260,11 +264,10 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
     );
   });
 
-  // NOTE: this test previously asserted POST for pin/unlock and so locked in a
-  // real bug. `pin`/`unpin`/`lock`/`unlock` are op.fieldUpdate, which generates
-  // PATCH (slingshot-entity/src/generators/routes.ts:562); only `publish`, an
-  // op.transition, is POST (:517). Method coverage for all five now lives in
-  // pagination-search-ban-hooks.test.tsx.
+  // slingshot-community's config-driven runtime mounts every named moderation
+  // operation as POST. The source-route generator's PATCH mapping is a
+  // separate path and does not describe these live routes. Full method coverage
+  // lives in pagination-search-ban-hooks.test.tsx.
   it("thread moderation ops hit the flat named-op routes", async () => {
     const pin = renderHook(() => hooks.usePinThread(), { wrapper });
     await runMutation(() =>
@@ -272,7 +275,7 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
         .mutateAsync({ threadId: "t1", containerId: "c1" })
         .catch(() => undefined),
     );
-    expect(calls[0]?.method).toBe("PATCH");
+    expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/community/threads/pin");
     expect(calls[0]?.body).toEqual({ id: "t1", pinned: true });
 
@@ -283,7 +286,7 @@ describe("community thread/reply/reaction hooks — route correctness", () => {
         .mutateAsync({ threadId: "t1", containerId: "c1" })
         .catch(() => undefined),
     );
-    expect(calls[0]?.method).toBe("PATCH");
+    expect(calls[0]?.method).toBe("POST");
     expect(calls[0]?.path).toBe("/community/threads/unlock");
     expect(calls[0]?.body).toEqual({ id: "t1", locked: false });
 

@@ -16,9 +16,12 @@ describe("communityContract", () => {
       path: "/community/threads/publish",
     });
     expect(communityContract.lockThread).toEqual({
-      method: "PATCH",
+      method: "POST",
       path: "/community/threads/lock",
     });
+    expect(communityContract.unlockThread.method).toBe("POST");
+    expect(communityContract.pinThread.method).toBe("POST");
+    expect(communityContract.unpinThread.method).toBe("POST");
     expect(communityContract.listReplies).toEqual({
       method: "GET",
       path: "/community/replies/list-by-thread/:threadId",

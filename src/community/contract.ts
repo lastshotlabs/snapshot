@@ -31,10 +31,10 @@ export const communityContract = {
   updateThread: { method: "PATCH", path: "/community/threads/:threadId" },
   deleteThread: { method: "DELETE", path: "/community/threads/:threadId" },
   publishThread: { method: "POST", path: "/community/threads/publish" },
-  lockThread: { method: "PATCH", path: "/community/threads/lock" },
-  unlockThread: { method: "PATCH", path: "/community/threads/unlock" },
-  pinThread: { method: "PATCH", path: "/community/threads/pin" },
-  unpinThread: { method: "PATCH", path: "/community/threads/unpin" },
+  lockThread: { method: "POST", path: "/community/threads/lock" },
+  unlockThread: { method: "POST", path: "/community/threads/unlock" },
+  pinThread: { method: "POST", path: "/community/threads/pin" },
+  unpinThread: { method: "POST", path: "/community/threads/unpin" },
 
   // ── Replies ─────────────────────────────────────────────────────────────────
   listReplies: {
