@@ -2,6 +2,6 @@
   "name": "snapshot-example-settings",
   "private": true,
   "dependencies": {
-    "@lastshotlabs/snapshot": "^0.3.1"
+    "@lastshotlabs/snapshot": "^0.4.0"
   }
 }
