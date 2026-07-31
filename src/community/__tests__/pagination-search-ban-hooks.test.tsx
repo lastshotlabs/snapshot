@@ -179,11 +179,11 @@ describe("community search hooks — route correctness", () => {
 });
 
 describe("thread moderation — HTTP method correctness", () => {
-  // `publish` is op.transition (POST), but lock/unlock/pin/unpin are
-  // op.fieldUpdate, which generates PATCH /{basePath}/{op} with the match
-  // params and set fields in the BODY (slingshot-entity/src/generators/
-  // routes.ts:557-567 vs :517). Snapshot POSTed all five, so the four
-  // fieldUpdate routes never matched.
+  // slingshot-community mounts all five named operations through the
+  // config-driven runtime as POST. Its source-route generator emits PATCH for
+  // fieldUpdate, but that generator is a separate path and does not describe
+  // the live community routes. Measured on both 0.2.x and 3.1.4: POST succeeds;
+  // PATCH and PUT return 404.
   it("publishes with POST — publish is a transition", async () => {
     const { result } = renderHook(() => hooks.usePublishThread(), { wrapper });
     result.current.mutate({ threadId: "t1", containerId: "c1" });
@@ -201,7 +201,7 @@ describe("thread moderation — HTTP method correctness", () => {
     ["usePinThread", "pin", { pinned: true }],
     ["useUnpinThread", "unpin", { pinned: false }],
   ])(
-    "%s uses PATCH — fieldUpdate ops are not POST",
+    "%s uses POST with the target id and field in the body",
     async (hook, op, patchBody) => {
       const useHook = hooks[hook as keyof typeof hooks] as () => {
         mutate: (v: { threadId: string; containerId: string }) => void;
@@ -210,7 +210,7 @@ describe("thread moderation — HTTP method correctness", () => {
       result.current.mutate({ threadId: "t1", containerId: "c1" });
       await waitFor(() => expect(calls).toHaveLength(1));
       expect(calls[0]).toMatchObject({
-        method: "PATCH",
+        method: "POST",
         path: `/community/threads/${op}`,
         body: { id: "t1", ...patchBody },
       });

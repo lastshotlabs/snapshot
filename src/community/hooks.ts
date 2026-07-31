@@ -294,7 +294,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/lock`, {
+        api.post<ThreadResponse>(`/community/threads/lock`, {
           id: threadId,
           locked: true,
         }),
@@ -318,7 +318,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/unlock`, {
+        api.post<ThreadResponse>(`/community/threads/unlock`, {
           id: threadId,
           locked: false,
         }),
@@ -342,7 +342,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/pin`, {
+        api.post<ThreadResponse>(`/community/threads/pin`, {
           id: threadId,
           pinned: true,
         }),
@@ -366,7 +366,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.patch<ThreadResponse>(`/community/threads/unpin`, {
+        api.post<ThreadResponse>(`/community/threads/unpin`, {
           id: threadId,
           pinned: false,
         }),
