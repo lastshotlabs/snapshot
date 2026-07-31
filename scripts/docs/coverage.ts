@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import * as ts from "typescript";
 import { repoPath } from "./_common.ts";
@@ -68,6 +68,22 @@ const generatedReferenceDocs = [
   ),
   repoPath("apps", "docs", "src", "content", "docs", "reference", "cli.md"),
 ];
+const fallbackBaselinePath = repoPath(
+  "scripts",
+  "docs",
+  "fallback-baseline.json",
+);
+const writeFallbackBaseline = process.argv.includes(
+  "--write-fallback-baseline",
+);
+const fallbackBaseline = JSON.parse(
+  readFileSync(fallbackBaselinePath, "utf8"),
+) as string[];
+const fallbackBaselineSet = new Set(fallbackBaseline);
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 const configPath = ts.findConfigFile(
   repoPath(),
@@ -94,6 +110,7 @@ let hasError = false;
 let verifiedExports = 0;
 let generatedFallbackExports = 0;
 let referenceCoveredExports = 0;
+const generatedFallbackKeys: string[] = [];
 
 for (const entrypoint of entrypoints) {
   const sourceFile = program.getSourceFile(entrypoint.source);
@@ -146,11 +163,12 @@ for (const entrypoint of entrypoints) {
       continue;
     }
 
-    if (
-      referenceDoc &&
-      !referenceDoc.includes(`| \`${symbol.getName()}\` |`) &&
-      !referenceDoc.includes(`#### \`${symbol.getName()}`)
-    ) {
+    const escapedSymbolName = escapeRegExp(symbol.getName());
+    const hasReferenceEntry =
+      new RegExp(`^\\|\\s*\\\`${escapedSymbolName}\\\`\\s*\\|`, "m").test(
+        referenceDoc,
+      ) || referenceDoc.includes(`#### \`${symbol.getName()}`);
+    if (referenceDoc && !hasReferenceEntry) {
       console.error(
         `[docs:coverage] Missing generated reference entry for ${symbol.getName()} exported from ${path.relative(repoPath(), entrypoint.source).replace(/\\/g, "/")}`,
       );
@@ -169,6 +187,9 @@ for (const entrypoint of entrypoints) {
         declarationRel.startsWith("src/ui/components/")
       ) {
         generatedFallbackExports += 1;
+        generatedFallbackKeys.push(
+          `${path.relative(repoPath(), entrypoint.source).replace(/\\/g, "/")}:${symbol.getName()}:${declarationRel}`,
+        );
         continue;
       }
 
@@ -203,10 +224,46 @@ for (const docPath of generatedReferenceDocs) {
   }
 }
 
+const currentFallbackSet = new Set(generatedFallbackKeys);
+if (writeFallbackBaseline) {
+  writeFileSync(
+    fallbackBaselinePath,
+    `${JSON.stringify([...currentFallbackSet].sort(), null, 2)}\n`,
+  );
+  console.log(
+    `[docs:coverage] Wrote ${currentFallbackSet.size} fallback entries to ${path.relative(repoPath(), fallbackBaselinePath).replace(/\\/g, "/")}.`,
+  );
+} else {
+  if (fallbackBaselineSet.size !== fallbackBaseline.length) {
+    console.error(
+      "[docs:coverage] Fallback baseline contains duplicate entries.",
+    );
+    hasError = true;
+  }
+
+  const addedFallbacks = [...currentFallbackSet].filter(
+    (key) => !fallbackBaselineSet.has(key),
+  );
+  const removedFallbacks = fallbackBaseline.filter(
+    (key) => !currentFallbackSet.has(key),
+  );
+
+  for (const key of addedFallbacks) {
+    console.error(`[docs:coverage] New generated fallback description: ${key}`);
+    hasError = true;
+  }
+  if (removedFallbacks.length > 0) {
+    console.error(
+      `[docs:coverage] ${removedFallbacks.length} fallback description(s) were removed. Ratchet the baseline with npm run docs:coverage:baseline.`,
+    );
+    hasError = true;
+  }
+}
+
 if (hasError) {
   process.exit(1);
 }
 
 console.log(
-  `[docs:coverage] Verified ${referenceCoveredExports} generated reference entries, ${verifiedExports} JSDoc-backed exports, and ${generatedFallbackExports} generated component fallback descriptions across ${entrypoints.length} entrypoints.`,
+  `[docs:coverage] Verified ${referenceCoveredExports} generated reference entries, ${verifiedExports} JSDoc-backed exports, and ${generatedFallbackExports} baseline-locked component fallback descriptions across ${entrypoints.length} entrypoints.`,
 );

@@ -28,6 +28,10 @@ const memberRow = {
 };
 
 const api = {
+  request: vi.fn(async (method: string, path: string, body?: unknown) => {
+    calls.push({ method, path, body });
+    return {};
+  }),
   get: vi.fn(async (path: string) => {
     calls.push({ method: "GET", path });
     return { items: [memberRow], hasMore: false };

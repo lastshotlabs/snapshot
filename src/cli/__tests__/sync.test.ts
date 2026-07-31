@@ -137,6 +137,124 @@ describe("runSync integration", () => {
     }
   });
 
+  it("derives cursor pagination from the OpenAPI envelope and query parameters", async () => {
+    const tmpDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), "snapshot-sync-cursor-test-"),
+    );
+    const schemaPath = path.join(tmpDir, "openapi.json");
+    const schema = {
+      openapi: "3.0.0",
+      info: { title: "Cursor API", version: "1.0.0" },
+      paths: {
+        "/community/threads": {
+          get: {
+            operationId: "listThreads",
+            tags: ["community"],
+            parameters: [
+              {
+                name: "limit",
+                in: "query",
+                schema: { type: "integer" },
+              },
+              {
+                name: "cursor",
+                in: "query",
+                schema: { type: "string" },
+              },
+              {
+                name: "sortDir",
+                in: "query",
+                schema: { type: "string", enum: ["asc", "desc"] },
+              },
+            ],
+            responses: {
+              "200": {
+                description: "Thread page",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      required: ["items", "hasMore"],
+                      properties: {
+                        items: {
+                          type: "array",
+                          items: { $ref: "#/components/schemas/Thread" },
+                        },
+                        nextCursor: { type: "string", nullable: true },
+                        hasMore: { type: "boolean" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      components: {
+        schemas: {
+          Thread: {
+            type: "object",
+            required: ["id"],
+            properties: { id: { type: "string" } },
+          },
+        },
+      },
+    };
+
+    try {
+      await fs.writeFile(schemaPath, JSON.stringify(schema), "utf8");
+      await runSync({
+        filePath: schemaPath,
+        cwd: tmpDir,
+        logger: {
+          info: () => {},
+          success: () => {},
+          warn: () => {},
+          error: () => {},
+        },
+      });
+
+      const apiContent = await fs.readFile(
+        path.join(tmpDir, "src/api/community.ts"),
+        "utf8",
+      );
+      const hooksContent = await fs.readFile(
+        path.join(tmpDir, "src/hooks/api/community.ts"),
+        "utf8",
+      );
+      const typesContent = await fs.readFile(
+        path.join(tmpDir, "src/types/api.ts"),
+        "utf8",
+      );
+
+      expect(apiContent).toContain(
+        "listThreads = (limit?: number, cursor?: string, sortDir?: 'asc' | 'desc')",
+      );
+      expect(apiContent).toContain("_q.set('limit', String(limit))");
+      expect(apiContent).toContain("_q.set('cursor', String(cursor))");
+      expect(apiContent).toContain("_q.set('sortDir', String(sortDir))");
+      expect(apiContent).toContain("Promise<PaginatedResponse<Thread>>");
+      expect(hooksContent).toContain(
+        "params: { limit?: number; cursor?: string; sortDir?: 'asc' | 'desc' } = {}",
+      );
+      expect(hooksContent).toContain(
+        "queryKey: ['community', 'threads', params.limit, params.cursor, params.sortDir]",
+      );
+      expect(typesContent).toContain("items: T[]");
+      expect(typesContent).toContain("nextCursor?: string");
+      expect(typesContent).toContain("hasMore?: boolean");
+
+      for (const content of [apiContent, hooksContent, typesContent]) {
+        expect(content).not.toMatch(/\bperPage\b/);
+        expect(content).not.toMatch(/\btotal\b/);
+        expect(content).not.toMatch(/\bpage\b/);
+      }
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it("generates valid identifiers and URLs for colon-style path params", async () => {
     const tmpDir = await fs.mkdtemp(
       path.join(os.tmpdir(), "snapshot-sync-colon-test-"),

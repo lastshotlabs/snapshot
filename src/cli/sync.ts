@@ -399,10 +399,10 @@ function generateTypesContent(
 
   if (hasPaginated) {
     lines.push(`export interface PaginatedResponse<T> {`);
-    lines.push(`  data: T[]`);
-    lines.push(`  total: number`);
-    lines.push(`  page: number`);
-    lines.push(`  perPage: number`);
+    lines.push(`  items: T[]`);
+    lines.push(`  cursor?: string`);
+    lines.push(`  nextCursor?: string`);
+    lines.push(`  hasMore?: boolean`);
     lines.push(`}`);
     lines.push("");
   }
@@ -614,18 +614,6 @@ function rawPathTemplate(pathStr: string, pathParams: Parameter[]): string {
   return `\`${tpl}\``;
 }
 
-/** URL template with pagination query string appended (always a template literal) */
-function paginatedUrlTemplate(
-  pathStr: string,
-  pathParams: Parameter[],
-): string {
-  if (pathParams.length === 0) {
-    return `\`${pathStr}?page=\${page}&perPage=\${perPage}\``;
-  }
-  const tpl = pathToTemplate(pathStr);
-  return `\`${tpl}?page=\${page}&perPage=\${perPage}\``;
-}
-
 function queryKey(pathStr: string, queryParams: Parameter[] = []): string {
   const parts = queryKeyPathParts(pathStr, "params.");
   for (const p of queryParams) {
@@ -638,17 +626,16 @@ function paramType(p: Parameter): string {
   return schemaToTs(p.schema ?? { type: "string" });
 }
 
-/** Detects slingshot's pagination envelope: { data: T[], total: number, ... } */
+/** Detects Slingshot's cursor envelope: { items: T[], nextCursor?, hasMore? }. */
 function isPaginatedSchema(
   schema: SchemaObject,
 ): { itemSchema: SchemaObject } | null {
   if (!schema.properties) return null;
-  const { data, total } = schema.properties;
+  const { items, nextCursor, hasMore } = schema.properties;
   // Accept array type OR items presence (handles $ref-typed arrays without explicit type)
-  if (!data || (!data.items && data.type !== "array")) return null;
-  if (!total || !["integer", "number"].includes(total.type as string))
-    return null;
-  const itemSchema = data.items ?? {}; // empty schema → schemaToTs returns 'unknown'
+  if (!items || (!items.items && items.type !== "array")) return null;
+  if (!nextCursor && !hasMore) return null;
+  const itemSchema = items.items ?? {}; // empty schema → schemaToTs returns 'unknown'
   return { itemSchema };
 }
 
@@ -727,54 +714,6 @@ function generateOperation(
     );
   const jsdoc =
     jsdocParts.length > 0 ? `/** ${jsdocParts.join(" — ")} */\n` : "";
-
-  // ── Paginated GET ─────────────────────────────────────────────────────────
-  if (isPaginated) {
-    const pathArgsStr = pathParams
-      .map((p) => `${p.name}: ${paramType(p)}`)
-      .join(", ");
-    const pathArgsWithComma = pathArgsStr ? `${pathArgsStr}, ` : "";
-    const paginatedUrl = paginatedUrlTemplate(pathStr, pathParams);
-
-    const plainFn =
-      `${jsdoc}export const ${fnName} = (${pathArgsWithComma}page = 1, perPage = 20): Promise<${respType}> =>\n` +
-      `  api.get<${respType}>(${paginatedUrl})`;
-
-    const pathKeyParts = queryKeyPathParts(pathStr, "params.");
-    const paginatedQueryKey = `[${[...pathKeyParts, "params.page ?? 1", "params.perPage ?? 20"].join(", ")}]`;
-
-    const paramsType = hasPathParams
-      ? `{ ${pathParams.map((p) => `${p.name}: ${paramType(p)}`).join("; ")}; page?: number; perPage?: number }`
-      : `{ page?: number; perPage?: number }`;
-
-    const callPathArgs = pathParams.map((p) => `params.${p.name}`).join(", ");
-    const callAllArgs = callPathArgs
-      ? `${callPathArgs}, params.page ?? 1, params.perPage ?? 20`
-      : `params.page ?? 1, params.perPage ?? 20`;
-
-    const hookLines: string[] = [];
-    if (jsdocParts.length > 0)
-      hookLines.push(`/** ${jsdocParts.join(" — ")} */`);
-    hookLines.push(`export function ${name}(`);
-    hookLines.push(`  params: ${paramsType} = {},`);
-    hookLines.push(
-      `  options?: Omit<UseQueryOptions<${respType}, ApiError>, 'queryKey' | 'queryFn'>`,
-    );
-    hookLines.push(`) {`);
-    hookLines.push(`  return useQuery({`);
-    hookLines.push(`    queryKey: ${paginatedQueryKey},`);
-    hookLines.push(`    queryFn: () => ${fnName}(${callAllArgs}),`);
-    hookLines.push(`    ...options,`);
-    hookLines.push(`  })`);
-    hookLines.push(`}`);
-
-    return {
-      apiCode: plainFn,
-      hookCode: hookLines.join("\n"),
-      fnNames: [fnName],
-      isPaginated: true,
-    };
-  }
 
   // ── Plain function (layer 1) ──────────────────────────────────────────────
   const fnArgParts = [
@@ -930,7 +869,7 @@ function generateOperation(
     apiCode: apiParts.join("\n\n"),
     hookCode: lines.join("\n"),
     fnNames: [fnName],
-    isPaginated: false,
+    isPaginated,
   };
 }
 
