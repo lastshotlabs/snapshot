@@ -3,6 +3,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { ApiClient } from "../api/client";
 import type { ApiError } from "../api/error";
 import { ApiError as MemberApiError } from "../api/error";
+import { communityContract, communityPath } from "./contract";
 import type {
   ContainerResponse,
   CreateContainerBody,
@@ -114,7 +115,7 @@ export function createCommunityHooks({
       queryKey: keys.containers(),
       queryFn: () =>
         api.get<PaginatedResponse<ContainerResponse>>(
-          `/community/containers${query}`,
+          `${communityContract.listContainers.path}${query}`,
         ),
     });
   }
@@ -124,7 +125,9 @@ export function createCommunityHooks({
     return useQuery<ContainerResponse, ApiError>({
       queryKey: keys.container(containerId),
       queryFn: () =>
-        api.get<ContainerResponse>(`/community/containers/${containerId}`),
+        api.get<ContainerResponse>(
+          communityPath(communityContract.getContainer, { containerId }),
+        ),
       enabled: !!containerId,
     });
   }
@@ -134,7 +137,10 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<ContainerResponse, ApiError, CreateContainerBody>({
       mutationFn: (body) =>
-        api.post<ContainerResponse>("/community/containers", body),
+        api.post<ContainerResponse>(
+          communityContract.createContainer.path,
+          body,
+        ),
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.containers() });
       },
@@ -151,7 +157,7 @@ export function createCommunityHooks({
     >({
       mutationFn: ({ containerId, ...body }) =>
         api.patch<ContainerResponse>(
-          `/community/containers/${containerId}`,
+          communityPath(communityContract.updateContainer, { containerId }),
           body,
         ),
       onSuccess: (_data, { containerId }) => {
@@ -168,7 +174,9 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { containerId: string }>({
       mutationFn: ({ containerId }) =>
-        api.delete<void>(`/community/containers/${containerId}`),
+        api.delete<void>(
+          communityPath(communityContract.deleteContainer, { containerId }),
+        ),
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.containers() });
       },
@@ -184,7 +192,7 @@ export function createCommunityHooks({
       queryKey: keys.threads(containerId),
       queryFn: () =>
         api.get<PaginatedResponse<ThreadResponse>>(
-          `/community/threads/list-by-container/${containerId}${query}`,
+          `${communityPath(communityContract.listThreads, { containerId })}${query}`,
         ),
       enabled: !!containerId,
     });
@@ -194,7 +202,10 @@ export function createCommunityHooks({
   function useContainerThread(threadId: string) {
     return useQuery<ThreadResponse, ApiError>({
       queryKey: keys.threadDetail(threadId),
-      queryFn: () => api.get<ThreadResponse>(`/community/threads/${threadId}`),
+      queryFn: () =>
+        api.get<ThreadResponse>(
+          communityPath(communityContract.getThread, { threadId }),
+        ),
       enabled: !!threadId,
     });
   }
@@ -208,7 +219,7 @@ export function createCommunityHooks({
       { containerId: string } & CreateThreadBody
     >({
       mutationFn: ({ containerId, ...body }) =>
-        api.post<ThreadResponse>(`/community/threads`, {
+        api.post<ThreadResponse>(communityContract.createThread.path, {
           containerId,
           ...body,
         }),
@@ -230,7 +241,10 @@ export function createCommunityHooks({
       { threadId: string; containerId: string } & UpdateThreadBody
     >({
       mutationFn: ({ threadId, containerId: _cid, ...body }) =>
-        api.patch<ThreadResponse>(`/community/threads/${threadId}`, body),
+        api.patch<ThreadResponse>(
+          communityPath(communityContract.updateThread, { threadId }),
+          body,
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -252,7 +266,9 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.delete<void>(`/community/threads/${threadId}`),
+        api.delete<void>(
+          communityPath(communityContract.deleteThread, { threadId }),
+        ),
       onSuccess: (_data, { containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threads(containerId),
@@ -271,7 +287,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/publish`, {
+        api.post<ThreadResponse>(communityContract.publishThread.path, {
           id: threadId,
         }),
       onSuccess: (_data, { threadId, containerId }) => {
@@ -294,10 +310,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/lock`, {
+        api.request<ThreadResponse>(
+          communityContract.lockThread.method,
+          communityContract.lockThread.path,
+          {
           id: threadId,
           locked: true,
-        }),
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -318,10 +338,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/unlock`, {
+        api.request<ThreadResponse>(
+          communityContract.unlockThread.method,
+          communityContract.unlockThread.path,
+          {
           id: threadId,
           locked: false,
-        }),
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -342,10 +366,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/pin`, {
+        api.request<ThreadResponse>(
+          communityContract.pinThread.method,
+          communityContract.pinThread.path,
+          {
           id: threadId,
           pinned: true,
-        }),
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -366,10 +394,14 @@ export function createCommunityHooks({
       { threadId: string; containerId: string }
     >({
       mutationFn: ({ threadId }) =>
-        api.post<ThreadResponse>(`/community/threads/unpin`, {
+        api.request<ThreadResponse>(
+          communityContract.unpinThread.method,
+          communityContract.unpinThread.path,
+          {
           id: threadId,
           pinned: false,
-        }),
+          },
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.threadDetail(threadId),
@@ -390,7 +422,7 @@ export function createCommunityHooks({
       queryKey: keys.replies(threadId),
       queryFn: () =>
         api.get<PaginatedResponse<ReplyResponse>>(
-          `/community/replies/list-by-thread/${threadId}${query}`,
+          `${communityPath(communityContract.listReplies, { threadId })}${query}`,
         ),
       enabled: !!threadId,
     });
@@ -400,7 +432,10 @@ export function createCommunityHooks({
   function useReply(replyId: string) {
     return useQuery<ReplyResponse, ApiError>({
       queryKey: keys.replyDetail(replyId),
-      queryFn: () => api.get<ReplyResponse>(`/community/replies/${replyId}`),
+      queryFn: () =>
+        api.get<ReplyResponse>(
+          communityPath(communityContract.getReply, { replyId }),
+        ),
       enabled: !!replyId,
     });
   }
@@ -414,7 +449,10 @@ export function createCommunityHooks({
       { threadId: string } & CreateReplyBody
     >({
       mutationFn: ({ threadId, ...body }) =>
-        api.post<ReplyResponse>(`/community/replies`, { threadId, ...body }),
+        api.post<ReplyResponse>(communityContract.createReply.path, {
+          threadId,
+          ...body,
+        }),
       onSuccess: (_data, { threadId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.replies(threadId),
@@ -433,7 +471,10 @@ export function createCommunityHooks({
       { replyId: string; threadId: string } & UpdateReplyBody
     >({
       mutationFn: ({ replyId, threadId: _tid, ...body }) =>
-        api.patch<ReplyResponse>(`/community/replies/${replyId}`, body),
+        api.patch<ReplyResponse>(
+          communityPath(communityContract.updateReply, { replyId }),
+          body,
+        ),
       onSuccess: (_data, { replyId, threadId }) => {
         void queryClient.invalidateQueries({
           queryKey: ["community", "reply-reactions", replyId],
@@ -454,7 +495,9 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { replyId: string; threadId: string }>({
       mutationFn: ({ replyId }) =>
-        api.delete<void>(`/community/replies/${replyId}`),
+        api.delete<void>(
+          communityPath(communityContract.deleteReply, { replyId }),
+        ),
       onSuccess: (_data, { threadId }) => {
         void queryClient.invalidateQueries({
           queryKey: keys.replies(threadId),
@@ -472,7 +515,7 @@ export function createCommunityHooks({
       queryKey: ["community", "thread-reactions", threadId] as const,
       queryFn: async () => {
         const res = await api.get<{ items: ReactionResponse[] }>(
-          `/community/reactions/list-by-target/${threadId}/thread`,
+          communityPath(communityContract.threadReactions, { threadId }),
         );
         return res.items;
       },
@@ -489,7 +532,7 @@ export function createCommunityHooks({
       { threadId: string; containerId: string } & ReactionBody
     >({
       mutationFn: ({ threadId, containerId, ...body }) =>
-        api.post<void>(`/community/reactions`, {
+        api.post<void>(communityContract.addThreadReaction.path, {
           targetId: threadId,
           targetType: "thread",
           containerId,
@@ -519,7 +562,11 @@ export function createCommunityHooks({
       { reactionId: string; threadId: string; containerId: string }
     >({
       mutationFn: ({ reactionId }) =>
-        api.delete<void>(`/community/reactions/${reactionId}`),
+        api.delete<void>(
+          communityPath(communityContract.removeThreadReaction, {
+            reactionId,
+          }),
+        ),
       onSuccess: (_data, { threadId, containerId }) => {
         void queryClient.invalidateQueries({
           queryKey: ["community", "thread-reactions", threadId],
@@ -542,7 +589,7 @@ export function createCommunityHooks({
       queryKey: ["community", "reply-reactions", replyId] as const,
       queryFn: async () => {
         const res = await api.get<{ items: ReactionResponse[] }>(
-          `/community/reactions/list-by-target/${replyId}/reply`,
+          communityPath(communityContract.replyReactions, { replyId }),
         );
         return res.items;
       },
@@ -559,7 +606,7 @@ export function createCommunityHooks({
       { replyId: string; threadId: string; containerId: string } & ReactionBody
     >({
       mutationFn: ({ replyId, containerId, threadId: _tid, ...body }) =>
-        api.post<void>(`/community/reactions`, {
+        api.post<void>(communityContract.addReplyReaction.path, {
           targetId: replyId,
           targetType: "reply",
           containerId,
@@ -590,7 +637,11 @@ export function createCommunityHooks({
       { reactionId: string; replyId: string; threadId: string }
     >({
       mutationFn: ({ reactionId }) =>
-        api.delete<void>(`/community/reactions/${reactionId}`),
+        api.delete<void>(
+          communityPath(communityContract.removeReplyReaction, {
+            reactionId,
+          }),
+        ),
       onSuccess: (_data, { replyId, threadId }) => {
         void queryClient.invalidateQueries({
           queryKey: ["community", "reply-reactions", replyId],
@@ -621,7 +672,7 @@ export function createCommunityHooks({
   function memberList(containerId: string, params?: ListParams) {
     const limit = params?.limit ?? 20;
     return api.get<MemberListResponse>(
-      `/community/container-members?containerId=${encodeURIComponent(containerId)}&limit=${limit}`,
+      `${communityContract.listMembers.path}?containerId=${encodeURIComponent(containerId)}&limit=${limit}`,
     );
   }
 
@@ -631,22 +682,27 @@ export function createCommunityHooks({
     params?: ListParams,
   ) {
     const limit = params?.limit ?? 20;
+    const route =
+      role === "moderator"
+        ? communityContract.listModerators
+        : communityContract.listOwners;
     return api.get<MemberListResponse>(
-      `/community/container-members/list-by-role/${containerId}/${role}?limit=${limit}`,
+      `${communityPath(route, { containerId })}?limit=${limit}`,
     );
   }
 
   /** Upsert a membership row's role (gated on container manage upstream). */
   function assignRole(
+    route:
+      | typeof communityContract.assignModerator
+      | typeof communityContract.removeModerator
+      | typeof communityContract.assignOwner
+      | typeof communityContract.removeOwner,
     containerId: string,
     userId: string,
     role: "member" | "moderator" | "owner",
   ) {
-    return api.post<MemberRecord>(`/community/container-members/assign-role`, {
-      containerId,
-      userId,
-      role,
-    });
+    return api.post<MemberRecord>(route.path, { containerId, userId, role });
   }
 
   /**
@@ -659,7 +715,7 @@ export function createCommunityHooks({
     userId: string,
   ): Promise<string> {
     const res = await api.get<MemberListResponse>(
-      `/community/container-members?containerId=${encodeURIComponent(containerId)}&userId=${encodeURIComponent(userId)}&limit=1`,
+      `${communityContract.listMembers.path}?containerId=${encodeURIComponent(containerId)}&userId=${encodeURIComponent(userId)}&limit=1`,
     );
     const row = res.items[0];
     if (!row) {
@@ -715,7 +771,7 @@ export function createCommunityHooks({
       { containerId: string; userId: string }
     >({
       mutationFn: ({ containerId, userId }) =>
-        api.post<MemberRecord>(`/community/container-members`, {
+        api.post<MemberRecord>(communityContract.addMember.path, {
           containerId,
           userId,
         }),
@@ -735,7 +791,7 @@ export function createCommunityHooks({
         mutationFn: async ({ containerId, userId }) => {
           const membershipId = await findMembershipId(containerId, userId);
           await api.delete<void>(
-            `/community/container-members/${membershipId}`,
+            communityPath(communityContract.removeMember, { membershipId }),
           );
         },
         onSuccess: (_data, { containerId }) => {
@@ -753,7 +809,12 @@ export function createCommunityHooks({
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
         mutationFn: async ({ containerId, userId }) => {
-          await assignRole(containerId, userId, "moderator");
+          await assignRole(
+            communityContract.assignModerator,
+            containerId,
+            userId,
+            "moderator",
+          );
         },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
@@ -773,7 +834,12 @@ export function createCommunityHooks({
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
         mutationFn: async ({ containerId, userId }) => {
-          await assignRole(containerId, userId, "member");
+          await assignRole(
+            communityContract.removeModerator,
+            containerId,
+            userId,
+            "member",
+          );
         },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
@@ -793,7 +859,12 @@ export function createCommunityHooks({
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
         mutationFn: async ({ containerId, userId }) => {
-          await assignRole(containerId, userId, "owner");
+          await assignRole(
+            communityContract.assignOwner,
+            containerId,
+            userId,
+            "owner",
+          );
         },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
@@ -813,7 +884,12 @@ export function createCommunityHooks({
     return useMutation<void, ApiError, { containerId: string; userId: string }>(
       {
         mutationFn: async ({ containerId, userId }) => {
-          await assignRole(containerId, userId, "member");
+          await assignRole(
+            communityContract.removeOwner,
+            containerId,
+            userId,
+            "member",
+          );
         },
         onSuccess: (_data, { containerId }) => {
           void queryClient.invalidateQueries({
@@ -842,7 +918,7 @@ export function createCommunityHooks({
       queryKey: keys.notifications(),
       queryFn: () =>
         api.get<PaginatedResponse<NotificationResponse>>(
-          `/notifications/notifications?limit=${limit}&sortDir=desc`,
+          `${communityContract.listNotifications.path}?limit=${limit}&sortDir=desc`,
         ),
     });
   }
@@ -853,7 +929,7 @@ export function createCommunityHooks({
       queryKey: keys.notificationsUnread(),
       queryFn: () =>
         api.post<{ count: number }>(
-          "/notifications/notifications/unseen-count",
+          communityContract.getNotificationsUnreadCount.path,
           {},
         ),
     });
@@ -864,7 +940,7 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, void>({
       mutationFn: async () => {
-        await api.post("/notifications/notifications/mark-all-seen", {});
+        await api.post(communityContract.markAllNotificationsSeen.path, {});
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
@@ -880,7 +956,7 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { notificationId: string }>({
       mutationFn: async ({ notificationId }) => {
-        await api.post(`/notifications/notifications/mark-read`, {
+        await api.post(communityContract.markNotificationRead.path, {
           id: notificationId,
           read: true,
           // AN ISO STRING, NOT `Date.now()`. `readAt` is a timestamp column,
@@ -905,7 +981,7 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, void>({
       mutationFn: async () => {
-        await api.post("/notifications/notifications/mark-all-read", {});
+        await api.post(communityContract.markAllNotificationsRead.path, {});
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
@@ -921,7 +997,11 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { notificationId: string }>({
       mutationFn: async ({ notificationId }) => {
-        await api.delete(`/notifications/notifications/${notificationId}`);
+        await api.delete(
+          communityPath(communityContract.dismissNotification, {
+            notificationId,
+          }),
+        );
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.notifications() });
@@ -941,7 +1021,7 @@ export function createCommunityHooks({
       queryKey: keys.reports(),
       queryFn: () =>
         api.get<PaginatedResponse<ReportResponse>>(
-          `/community/reports${query}`,
+          `${communityContract.listReports.path}${query}`,
         ),
     });
   }
@@ -950,7 +1030,10 @@ export function createCommunityHooks({
   function useReport(reportId: string) {
     return useQuery<ReportResponse, ApiError>({
       queryKey: keys.report(reportId),
-      queryFn: () => api.get<ReportResponse>(`/community/reports/${reportId}`),
+      queryFn: () =>
+        api.get<ReportResponse>(
+          communityPath(communityContract.getReport, { reportId }),
+        ),
       enabled: !!reportId,
     });
   }
@@ -960,7 +1043,7 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<ReportResponse, ApiError, ReportBody>({
       mutationFn: (body) =>
-        api.post<ReportResponse>("/community/reports", body),
+        api.post<ReportResponse>(communityContract.createReport.path, body),
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: keys.reports() });
       },
@@ -977,7 +1060,7 @@ export function createCommunityHooks({
     >({
       mutationFn: ({ reportId, ...body }) =>
         api.post<ReportResponse>(
-          `/community/reports/${reportId}/resolve`,
+          communityPath(communityContract.resolveReport, { reportId }),
           body,
         ),
       onSuccess: (_data, { reportId }) => {
@@ -992,7 +1075,10 @@ export function createCommunityHooks({
     const queryClient = useQueryClient();
     return useMutation<ReportResponse, ApiError, { reportId: string }>({
       mutationFn: ({ reportId }) =>
-        api.post<ReportResponse>(`/community/reports/${reportId}/dismiss`, {}),
+        api.post<ReportResponse>(
+          communityPath(communityContract.dismissReport, { reportId }),
+          {},
+        ),
       onSuccess: (_data, { reportId }) => {
         void queryClient.invalidateQueries({ queryKey: keys.reports() });
         void queryClient.invalidateQueries({ queryKey: keys.report(reportId) });
@@ -1008,7 +1094,9 @@ export function createCommunityHooks({
     return useQuery<PaginatedResponse<BanResponse>, ApiError>({
       queryKey: keys.bans(),
       queryFn: () =>
-        api.get<PaginatedResponse<BanResponse>>(`/community/bans${query}`),
+        api.get<PaginatedResponse<BanResponse>>(
+          `${communityContract.listBans.path}${query}`,
+        ),
     });
   }
 
@@ -1028,7 +1116,7 @@ export function createCommunityHooks({
       queryKey: keys.banCheck(userId, containerId),
       queryFn: async () => {
         const res = await api.get<PaginatedResponse<BanResponse>>(
-          `/community/bans?${query.toString()}`,
+          `${communityContract.checkBan.path}?${query.toString()}`,
         );
         const now = Date.now();
         const ban = res.items.find(
@@ -1046,7 +1134,8 @@ export function createCommunityHooks({
   function useCreateBan() {
     const queryClient = useQueryClient();
     return useMutation<BanResponse, ApiError, BanBody>({
-      mutationFn: (body) => api.post<BanResponse>("/community/bans", body),
+      mutationFn: (body) =>
+        api.post<BanResponse>(communityContract.createBan.path, body),
       onSuccess: (_data, { userId }) => {
         void queryClient.invalidateQueries({ queryKey: keys.bans() });
         void queryClient.invalidateQueries({
@@ -1060,7 +1149,8 @@ export function createCommunityHooks({
   function useRemoveBan() {
     const queryClient = useQueryClient();
     return useMutation<void, ApiError, { banId: string; userId: string }>({
-      mutationFn: ({ banId }) => api.delete<void>(`/community/bans/${banId}`),
+      mutationFn: ({ banId }) =>
+        api.delete<void>(communityPath(communityContract.deleteBan, { banId })),
       onSuccess: (_data, { userId }) => {
         void queryClient.invalidateQueries({ queryKey: keys.bans() });
         void queryClient.invalidateQueries({
@@ -1089,7 +1179,7 @@ export function createCommunityHooks({
       queryKey: [...keys.searchThreads(), params] as const,
       queryFn: () =>
         api.get<SearchResponse<ThreadResponse>>(
-          `/community/threads/search?${qs.toString()}`,
+          `${communityContract.searchThreads.path}?${qs.toString()}`,
         ),
       enabled: !!params.q,
     });
@@ -1111,7 +1201,7 @@ export function createCommunityHooks({
       queryKey: [...keys.searchReplies(), params] as const,
       queryFn: () =>
         api.get<SearchResponse<ReplyResponse>>(
-          `/community/replies/search?${qs.toString()}`,
+          `${communityContract.searchReplies.path}?${qs.toString()}`,
         ),
       enabled: !!params.q,
     });
