@@ -17,6 +17,22 @@ bun add -d vite
 bun add react-server-dom-webpack
 ```
 
+Snapshot keeps editor, markdown, drag-and-drop, and CLI libraries out of a
+basic install. Add optional peers only for the UI surfaces you use:
+
+| Surface                                 | Install                                                                                                                                                                                        |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rich-input`                            | `bun add @tiptap/core @tiptap/extension-link @tiptap/extension-mention @tiptap/extension-placeholder @tiptap/extension-underline @tiptap/pm @tiptap/react @tiptap/starter-kit tiptap-markdown` |
+| `rich-text-editor`                      | `bun add @codemirror/commands @codemirror/lang-markdown @codemirror/language @codemirror/language-data @codemirror/state @codemirror/view`                                                     |
+| Drag-and-drop surfaces such as `kanban` | `bun add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities`                                                                                                                                   |
+| `markdown`                              | `bun add react-markdown rehype-highlight remark-gfm highlight.js`                                                                                                                              |
+| `code-block`                            | `bun add highlight.js`                                                                                                                                                                         |
+| `snapshot` CLI                          | `bun add @oclif/core @clack/prompts`                                                                                                                                                           |
+| `snapshot/vite` sync plugin             | `bun add -d vite @clack/prompts`                                                                                                                                                               |
+
+The CLI packages are optional too, so apps that only import Snapshot runtime or
+UI code do not install either package.
+
 ## Create A Runtime
 
 ```tsx

@@ -10,6 +10,21 @@ helpers anywhere inside the app.
 bun add @lastshotlabs/snapshot @tanstack/react-query @tanstack/react-router jotai react react-dom
 ```
 
+Editor, markdown, and drag-and-drop libraries are optional peers. Install them
+only for the matching component:
+
+| Surface                                 | Install                                                                                                                                                                                        |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rich-input`                            | `bun add @tiptap/core @tiptap/extension-link @tiptap/extension-mention @tiptap/extension-placeholder @tiptap/extension-underline @tiptap/pm @tiptap/react @tiptap/starter-kit tiptap-markdown` |
+| `rich-text-editor`                      | `bun add @codemirror/commands @codemirror/lang-markdown @codemirror/language @codemirror/language-data @codemirror/state @codemirror/view`                                                     |
+| Drag-and-drop surfaces such as `kanban` | `bun add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities`                                                                                                                                   |
+| `markdown`                              | `bun add react-markdown rehype-highlight remark-gfm highlight.js`                                                                                                                              |
+| `code-block`                            | `bun add highlight.js`                                                                                                                                                                         |
+| `snapshot` CLI                          | `bun add @oclif/core @clack/prompts`                                                                                                                                                           |
+| `snapshot/vite` sync plugin             | `bun add -d vite @clack/prompts`                                                                                                                                                               |
+
+Apps that do not use the CLI do not install its oclif or prompt runtime.
+
 ## Create A Runtime
 
 ```ts

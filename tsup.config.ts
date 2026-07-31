@@ -70,6 +70,7 @@ export default defineConfig([
     bundle: true,
     noExternal: [],
     external: [
+      "@clack/prompts",
       "@oclif/core",
       "node:fs",
       "node:fs/promises",
@@ -100,8 +101,9 @@ export default defineConfig([
     target: "node20",
     platform: "node",
     bundle: true,
-    noExternal: ["@clack/prompts"],
+    noExternal: [],
     external: [
+      "@clack/prompts",
       "@oclif/core",
       "node:fs",
       "node:fs/promises",
@@ -151,8 +153,9 @@ export default defineConfig([
     target: "node20",
     platform: "node",
     bundle: true,
-    noExternal: ["@clack/prompts"],
+    noExternal: [],
     external: [
+      "@clack/prompts",
       "@tailwindcss/vite",
       "vite",
       "node:fs",

@@ -115,7 +115,12 @@ try {
 
   console.log("• bare Node ESM consumer");
   const nodeConsumer = createConsumer("node-esm-consumer");
-  install(nodeConsumer, [tarball, tool("typescript"), tool("@types/node")]);
+  install(nodeConsumer, [
+    tarball,
+    tool("typescript"),
+    tool("@types/node"),
+    tool("@types/react"),
+  ]);
   writeFileSync(
     join(nodeConsumer, "index.mjs"),
     `import { createSnapshot } from "@lastshotlabs/snapshot";
@@ -192,6 +197,81 @@ void snapshotFactory;
   }
   console.log(
     `  ✓ ${componentExports.length} component export maps have shipped import, require, and type targets`,
+  );
+
+  const packagesExcludedFromMinimalInstall = [
+    "@clack/prompts",
+    "@codemirror/commands",
+    "@codemirror/lang-markdown",
+    "@codemirror/language",
+    "@codemirror/language-data",
+    "@codemirror/state",
+    "@codemirror/view",
+    "@dnd-kit/core",
+    "@dnd-kit/sortable",
+    "@dnd-kit/utilities",
+    "@oclif/core",
+    "@tiptap/core",
+    "@tiptap/extension-link",
+    "@tiptap/extension-mention",
+    "@tiptap/extension-placeholder",
+    "@tiptap/extension-underline",
+    "@tiptap/pm",
+    "@tiptap/react",
+    "@tiptap/starter-kit",
+    "highlight.js",
+    "react-markdown",
+    "rehype-highlight",
+    "remark-gfm",
+    "tiptap-markdown",
+  ];
+  const unexpectedlyInstalled = packagesExcludedFromMinimalInstall.filter(
+    (name) => existsSync(join(nodeConsumer, "node_modules", name)),
+  );
+  if (unexpectedlyInstalled.length > 0) {
+    fail(
+      `minimal consumer unexpectedly installed optional UI/CLI packages: ${unexpectedlyInstalled.join(", ")}`,
+    );
+  } else {
+    console.log(
+      `  ✓ minimal install excludes ${packagesExcludedFromMinimalInstall.length} optional UI/CLI packages`,
+    );
+  }
+
+  console.log("• CLI consumer");
+  const cliConsumer = createConsumer("cli-consumer");
+  install(cliConsumer, [
+    tarball,
+    tool("@oclif/core"),
+    tool("@clack/prompts"),
+    tool("vite"),
+  ]);
+  runStep(
+    "run CLI with its optional peers",
+    "node",
+    [
+      join(
+        cliConsumer,
+        "node_modules",
+        "@lastshotlabs",
+        "snapshot",
+        "dist",
+        "cli",
+        "index.js",
+      ),
+      "--help",
+    ],
+    cliConsumer,
+  );
+  runStep(
+    "import Vite plugin with its optional peers",
+    "node",
+    [
+      "--input-type=module",
+      "--eval",
+      'const plugin = await import("@lastshotlabs/snapshot/vite"); if (typeof plugin.snapshotSync !== "function") throw new TypeError("missing snapshotSync");',
+    ],
+    cliConsumer,
   );
 
   console.log("• Vite + React consumer");
