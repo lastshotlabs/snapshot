@@ -645,6 +645,7 @@
     "docs:typecheck": "node --experimental-strip-types scripts/docs/typecheck-docs.ts",
     "docs:impact": "node --experimental-strip-types scripts/docs/impact.ts",
     "docs:coverage": "node --experimental-strip-types scripts/docs/coverage.ts",
+    "docs:coverage:baseline": "node --experimental-strip-types scripts/docs/coverage.ts --write-fallback-baseline",
     "components:coverage": "node --experimental-strip-types scripts/docs/component-coverage.ts",
     "components:test-coverage": "node scripts/check-component-tests.mjs",
     "components:exports:sync": "node scripts/sync-component-exports.mjs --write && prettier --write package.json",
