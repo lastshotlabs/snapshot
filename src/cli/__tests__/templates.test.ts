@@ -21,6 +21,12 @@ describe("auth-passkey-manage", () => {
 // ── auth-mfa-verify ────────────────────────────────────────────────────────────
 
 import { generateMfaVerifyPageComponent } from "../templates/pages/auth-mfa-verify";
+import {
+  generateAuditLogPageComponent,
+  generateUserAuditLogPageComponent,
+  generateUsersPageComponent,
+} from "../templates/admin/pages";
+import { generateTypesApi } from "../templates/types-api";
 import type { ScaffoldConfig } from "../types";
 
 describe("auth-mfa-verify", () => {
@@ -45,6 +51,32 @@ describe("auth-mfa-verify", () => {
   it("checks for emailOtp (not bare email)", () => {
     const output = generateMfaVerifyPageComponent(config);
     expect(output).toMatch(/includes\('emailOtp'\)/);
+  });
+});
+
+describe("cursor pagination templates", () => {
+  it("scaffolds the shared API envelope with cursor fields", () => {
+    const output = generateTypesApi();
+    expect(output).toContain("items: T[]");
+    expect(output).toContain("nextCursor?: string");
+    expect(output).toContain("hasMore?: boolean");
+    expect(output).not.toMatch(/\bperPage\b/);
+    expect(output).not.toMatch(/\btotal\b/);
+  });
+
+  it.each([
+    ["users", generateUsersPageComponent],
+    ["user audit log", generateUserAuditLogPageComponent],
+    ["audit log", generateAuditLogPageComponent],
+  ])("scaffolds %s with opaque cursor navigation", (_name, generate) => {
+    const output = generate();
+    expect(output).toContain("params.set('cursor', cursor)");
+    expect(output).toContain("nextCursor");
+    expect(output).toContain("hasMore");
+    expect(output).toContain("setCursorHistory");
+    expect(output).not.toContain("params.set('offset'");
+    expect(output).not.toMatch(/\btotalPages\b/);
+    expect(output).not.toMatch(/\bperPage\b/);
   });
 });
 
