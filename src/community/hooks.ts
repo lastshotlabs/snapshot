@@ -314,8 +314,8 @@ export function createCommunityHooks({
           communityContract.lockThread.method,
           communityContract.lockThread.path,
           {
-          id: threadId,
-          locked: true,
+            id: threadId,
+            locked: true,
           },
         ),
       onSuccess: (_data, { threadId, containerId }) => {
@@ -342,8 +342,8 @@ export function createCommunityHooks({
           communityContract.unlockThread.method,
           communityContract.unlockThread.path,
           {
-          id: threadId,
-          locked: false,
+            id: threadId,
+            locked: false,
           },
         ),
       onSuccess: (_data, { threadId, containerId }) => {
@@ -370,8 +370,8 @@ export function createCommunityHooks({
           communityContract.pinThread.method,
           communityContract.pinThread.path,
           {
-          id: threadId,
-          pinned: true,
+            id: threadId,
+            pinned: true,
           },
         ),
       onSuccess: (_data, { threadId, containerId }) => {
@@ -398,8 +398,8 @@ export function createCommunityHooks({
           communityContract.unpinThread.method,
           communityContract.unpinThread.path,
           {
-          id: threadId,
-          pinned: false,
+            id: threadId,
+            pinned: false,
           },
         ),
       onSuccess: (_data, { threadId, containerId }) => {

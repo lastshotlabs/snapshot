@@ -33,6 +33,10 @@ const calls: { method: string; path: string; body?: unknown }[] = [];
 let getPayload: unknown = { items: [], hasMore: false };
 
 const api = {
+  request: vi.fn(async (method: string, path: string, body?: unknown) => {
+    calls.push({ method, path, body });
+    return {};
+  }),
   get: vi.fn(async (path: string) => {
     calls.push({ method: "GET", path });
     return getPayload;
