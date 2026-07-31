@@ -762,6 +762,9 @@
     "@tiptap/starter-kit": {
       "optional": true
     },
+    "@unhead/react": {
+      "optional": true
+    },
     "react-server-dom-webpack": {
       "optional": true
     },
@@ -769,6 +772,9 @@
       "optional": true
     },
     "react-markdown": {
+      "optional": true
+    },
+    "recharts": {
       "optional": true
     },
     "rehype-highlight": {

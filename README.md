@@ -77,6 +77,7 @@ one of these UI surfaces:
 | Drag-and-drop surfaces such as `kanban` | `bun add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities`                                                                                                                                   |
 | `markdown`                              | `bun add react-markdown rehype-highlight remark-gfm highlight.js`                                                                                                                              |
 | `code-block`                            | `bun add highlight.js`                                                                                                                                                                         |
+| `chart`                                 | `bun add recharts`                                                                                                                                                                             |
 | `snapshot` CLI                          | `bun add @oclif/core @clack/prompts`                                                                                                                                                           |
 | `snapshot/vite` sync plugin             | `bun add -d vite @clack/prompts`                                                                                                                                                               |
 
