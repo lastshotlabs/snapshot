@@ -12,6 +12,10 @@ const baselinePath = join(
 );
 const baseline = JSON.parse(readFileSync(baselinePath, "utf8"));
 const minimum = 40;
+// The ratchet starts after the one-time repository formatting sweep and the
+// initial executable baseline landed. Earlier component diffs are deliberately
+// outside the "every component touched from now on" rule.
+const ratchetStart = "9382a47";
 const errors = [];
 
 if (!Array.isArray(baseline)) {
@@ -52,11 +56,22 @@ function hasColocatedTest(componentPath) {
 
 const base = process.env.COMPONENT_TEST_BASE?.trim();
 if (base && !/^0+$/.test(base)) {
+  let comparisonBase = base;
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", base, ratchetStart], {
+      cwd: repoRoot,
+      stdio: "ignore",
+    });
+    comparisonBase = ratchetStart;
+  } catch {
+    // The supplied base is already at or after the ratchet start.
+  }
+
   let changed = [];
   try {
     changed = execFileSync(
       "git",
-      ["diff", "--name-only", "--diff-filter=ACMR", base, "HEAD"],
+      ["diff", "--name-only", "--diff-filter=ACMR", comparisonBase, "HEAD"],
       { cwd: repoRoot, encoding: "utf8" },
     )
       .trim()
@@ -64,7 +79,7 @@ if (base && !/^0+$/.test(base)) {
       .filter(Boolean);
   } catch (error) {
     errors.push(
-      `could not compare component changes with ${base}: ${error.stderr || error.message}`,
+      `could not compare component changes with ${comparisonBase}: ${error.stderr || error.message}`,
     );
   }
 
@@ -89,5 +104,7 @@ console.log(
   `Component test coverage: ${baseline.length} catalog components (minimum ${minimum})`,
 );
 if (base) {
-  console.log(`Changed-component ratchet checked against ${base}`);
+  console.log(
+    `Changed-component ratchet checked for CI base ${base} (introduced at ${ratchetStart})`,
+  );
 }
