@@ -41,4 +41,9 @@ export type {
 } from "./types";
 export type { ModalManager } from "./modal-manager";
 export type { ToastItem, ShowToastOptions, ToastManager } from "./toast";
-export type { ConfirmRequest, ConfirmOptions, ConfirmManager } from "./confirm";
+export type {
+  ConfirmDialogProps,
+  ConfirmRequest,
+  ConfirmOptions,
+  ConfirmManager,
+} from "./confirm";

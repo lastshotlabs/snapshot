@@ -19,6 +19,7 @@
     "src/ui/link-embed.ts",
     "src/ui/button.ts",
     "src/ui/card.ts",
+    "src/ui/confirm.ts",
     "src/ui/input.ts",
     "src/ui/icon.ts",
     "src/ui/tokens/index.ts"

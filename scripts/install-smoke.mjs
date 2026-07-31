@@ -197,7 +197,7 @@ void snapshotFactory;
     }
   }
   console.log(
-    `  ✓ ${componentExports.length} component export maps have shipped import, require, and type targets`,
+    `  ✓ ${componentExports.length} UI export maps have shipped import, require, and type targets`,
   );
 
   const packagesExcludedFromMinimalInstall = [
@@ -283,6 +283,7 @@ void snapshotFactory;
     tool("typescript"),
     tool("vite"),
     tool("@vitejs/plugin-react"),
+    tool("jotai"),
   ]);
   mkdirSync(join(viteConsumer, "src"));
   writeFileSync(
@@ -294,6 +295,7 @@ void snapshotFactory;
     `import React from "react";
 import { createRoot } from "react-dom/client";
 import { ButtonBase } from "@lastshotlabs/snapshot/ui/button";
+import { ConfirmDialog } from "@lastshotlabs/snapshot/ui/confirm";
 import { resolveTokens } from "@lastshotlabs/snapshot/ui/tokens";
 
 const tokens = resolveTokens({ flavor: "neutral" });
@@ -301,6 +303,7 @@ createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <style>{tokens}</style>
     <ButtonBase>Installed Snapshot</ButtonBase>
+    <ConfirmDialog />
   </React.StrictMode>,
 );
 `,

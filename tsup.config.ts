@@ -36,6 +36,7 @@ export default defineConfig([
     entry: {
       ui: "src/ui.ts",
       ...componentTsupEntries(),
+      "ui/confirm": "src/ui/confirm.ts",
       "ui/icon": "src/ui/icon.ts",
       "ui/tokens": "src/ui/tokens/index.ts",
     },

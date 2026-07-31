@@ -98,6 +98,7 @@ export type {
   ToastItem,
   ShowToastOptions,
   ToastManager,
+  ConfirmDialogProps,
   ConfirmRequest,
   ConfirmOptions,
   ConfirmManager,

@@ -24,6 +24,11 @@ manifest.exports = {
   ".": current["."],
   "./ui": current["./ui"],
   ...generated,
+  "./ui/confirm": {
+    types: "./dist-types/ui/confirm.d.ts",
+    import: "./dist/ui/confirm.js",
+    require: "./dist/ui/confirm.cjs",
+  },
   "./ui/icon": current["./ui/icon"],
   "./ui/tokens": current["./ui/tokens"],
   "./vite": current["./vite"],
