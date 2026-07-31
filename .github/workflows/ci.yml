@@ -37,6 +37,9 @@ jobs:
         env:
           COMPONENT_TEST_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
 
+      - name: Check generated component exports
+        run: npm run components:exports:check
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -59,6 +62,9 @@ jobs:
 
       - name: Build packed artifacts
         run: npm run build
+
+      - name: Check component size budgets
+        run: npm run components:size-check
 
       - name: Verify clean installed consumers
         run: npm run install:smoke

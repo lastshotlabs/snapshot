@@ -16,6 +16,7 @@
 
 import { execFileSync } from "node:child_process";
 import {
+  existsSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -163,6 +164,35 @@ void snapshotFactory;
       fail(`${pkg} is missing from the consumer's node_modules after install`);
     }
   }
+
+  const installedSnapshotRoot = join(
+    nodeConsumer,
+    "node_modules",
+    "@lastshotlabs",
+    "snapshot",
+  );
+  const installedManifest = JSON.parse(
+    readFileSync(join(installedSnapshotRoot, "package.json"), "utf8"),
+  );
+  const componentExports = Object.entries(installedManifest.exports).filter(
+    ([key]) => key.startsWith("./ui/") && key !== "./ui/icon",
+  );
+  for (const [key, conditions] of componentExports) {
+    for (const [condition, target] of Object.entries(conditions)) {
+      const installedTarget = join(
+        installedSnapshotRoot,
+        target.replace(/^\.\//, ""),
+      );
+      if (!existsSync(installedTarget)) {
+        fail(
+          `${key} ${condition} target is missing from the tarball: ${target}`,
+        );
+      }
+    }
+  }
+  console.log(
+    `  ✓ ${componentExports.length} component export maps have shipped import, require, and type targets`,
+  );
 
   console.log("• Vite + React consumer");
   const viteConsumer = createConsumer("vite-react-consumer");
