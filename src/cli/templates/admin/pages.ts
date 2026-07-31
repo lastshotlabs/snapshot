@@ -88,7 +88,7 @@ import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@lib/snapshot'
 
-const PAGE_SIZE = 50
+const PAGE_LIMIT = 50
 
 type StatusFilter = 'all' | 'active' | 'suspended'
 
@@ -105,16 +105,17 @@ function useDebounce<T>(value: T, delay = 300): T {
 export function UsersPage() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<StatusFilter>('all')
-  const [page, setPage] = useState(0)
+  const [cursorHistory, setCursorHistory] = useState<string[]>([])
+  const cursor = cursorHistory[cursorHistory.length - 1]
   const debouncedSearch = useDebounce(search)
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'users', { search: debouncedSearch, status, page }],
+    queryKey: ['admin', 'users', { search: debouncedSearch, status, cursor }],
     queryFn: () => {
       const params = new URLSearchParams({
-        limit: String(PAGE_SIZE),
-        offset: String(page * PAGE_SIZE),
+        limit: String(PAGE_LIMIT),
       })
+      if (cursor) params.set('cursor', cursor)
       if (debouncedSearch) params.set('search', debouncedSearch)
       if (status !== 'all') params.set('status', status)
       return api.get(\`/admin/users?\${params.toString()}\`)
@@ -127,9 +128,11 @@ export function UsersPage() {
     displayName?: string
     status: string
     roles: string[]
-  }> = (data as { users?: unknown[] })?.users ?? []
-  const total: number = (data as { total?: number })?.total ?? 0
-  const totalPages = Math.ceil(total / PAGE_SIZE)
+  }> = (data as { items?: unknown[]; users?: unknown[] })?.items
+    ?? (data as { users?: unknown[] })?.users
+    ?? []
+  const nextCursor = (data as { nextCursor?: string })?.nextCursor
+  const hasMore = (data as { hasMore?: boolean })?.hasMore ?? Boolean(nextCursor)
 
   return (
     <div className="space-y-4">
@@ -142,12 +145,12 @@ export function UsersPage() {
           type="search"
           placeholder="Search by email or name…"
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(0) }}
+          onChange={(e) => { setSearch(e.target.value); setCursorHistory([]) }}
           className="border border-border rounded-md px-3 py-1.5 text-sm bg-background w-64"
         />
         <select
           value={status}
-          onChange={(e) => { setStatus(e.target.value as StatusFilter); setPage(0) }}
+          onChange={(e) => { setStatus(e.target.value as StatusFilter); setCursorHistory([]) }}
           className="border border-border rounded-md px-3 py-1.5 text-sm bg-background"
         >
           <option value="all">All</option>
@@ -212,21 +215,21 @@ export function UsersPage() {
         </div>
       )}
 
-      {totalPages > 1 && (
+      {(cursorHistory.length > 0 || hasMore) && (
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
+            onClick={() => setCursorHistory((history) => history.slice(0, -1))}
+            disabled={cursorHistory.length === 0}
             className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Previous
           </button>
           <span className="text-sm text-muted-foreground">
-            Page {page + 1} of {totalPages}
+            Page {cursorHistory.length + 1}
           </span>
           <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
+            onClick={() => nextCursor && setCursorHistory((history) => [...history, nextCursor])}
+            disabled={!hasMore || !nextCursor}
             className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Next
@@ -567,21 +570,22 @@ import { useParams } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@lib/snapshot'
 
-const PAGE_SIZE = 50
+const PAGE_LIMIT = 50
 
 export function UserAuditLogPage() {
   const { userId } = useParams({ from: '/_authenticated/users/\$userId/audit-log' })
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
-  const [page, setPage] = useState(0)
+  const [cursorHistory, setCursorHistory] = useState<string[]>([])
+  const cursor = cursorHistory[cursorHistory.length - 1]
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'users', userId, 'audit-log', { from, to, page }],
+    queryKey: ['admin', 'users', userId, 'audit-log', { from, to, cursor }],
     queryFn: () => {
       const params = new URLSearchParams({
-        limit: String(PAGE_SIZE),
-        offset: String(page * PAGE_SIZE),
+        limit: String(PAGE_LIMIT),
       })
+      if (cursor) params.set('cursor', cursor)
       if (from) params.set('from', from)
       if (to) params.set('to', to)
       return api.get(\`/admin/users/\${userId}/audit-log?\${params.toString()}\`)
@@ -596,9 +600,11 @@ export function UserAuditLogPage() {
     status: number
     ip?: string
     action?: string
-  }> = (data as { entries?: unknown[] })?.entries ?? []
-  const total: number = (data as { total?: number })?.total ?? 0
-  const totalPages = Math.ceil(total / PAGE_SIZE)
+  }> = (data as { items?: unknown[]; entries?: unknown[] })?.items
+    ?? (data as { entries?: unknown[] })?.entries
+    ?? []
+  const nextCursor = (data as { nextCursor?: string })?.nextCursor
+  const hasMore = (data as { hasMore?: boolean })?.hasMore ?? Boolean(nextCursor)
 
   return (
     <div className="space-y-4">
@@ -610,7 +616,7 @@ export function UserAuditLogPage() {
           <input
             type="date"
             value={from}
-            onChange={(e) => { setFrom(e.target.value); setPage(0) }}
+            onChange={(e) => { setFrom(e.target.value); setCursorHistory([]) }}
             className="ml-2 border border-border rounded px-2 py-1 text-sm bg-background"
           />
         </label>
@@ -619,7 +625,7 @@ export function UserAuditLogPage() {
           <input
             type="date"
             value={to}
-            onChange={(e) => { setTo(e.target.value); setPage(0) }}
+            onChange={(e) => { setTo(e.target.value); setCursorHistory([]) }}
             className="ml-2 border border-border rounded px-2 py-1 text-sm bg-background"
           />
         </label>
@@ -673,21 +679,21 @@ export function UserAuditLogPage() {
         </div>
       )}
 
-      {totalPages > 1 && (
+      {(cursorHistory.length > 0 || hasMore) && (
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
+            onClick={() => setCursorHistory((history) => history.slice(0, -1))}
+            disabled={cursorHistory.length === 0}
             className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Previous
           </button>
           <span className="text-sm text-muted-foreground">
-            Page {page + 1} of {totalPages}
+            Page {cursorHistory.length + 1}
           </span>
           <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
+            onClick={() => nextCursor && setCursorHistory((history) => [...history, nextCursor])}
+            disabled={!hasMore || !nextCursor}
             className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Next
@@ -705,21 +711,22 @@ export function generateAuditLogPageComponent(): string {
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@lib/snapshot'
 
-const PAGE_SIZE = 50
+const PAGE_LIMIT = 50
 
 export function AuditLogPage() {
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [userId, setUserId] = useState('')
-  const [page, setPage] = useState(0)
+  const [cursorHistory, setCursorHistory] = useState<string[]>([])
+  const cursor = cursorHistory[cursorHistory.length - 1]
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'audit-log', { from, to, userId, page }],
+    queryKey: ['admin', 'audit-log', { from, to, userId, cursor }],
     queryFn: () => {
       const params = new URLSearchParams({
-        limit: String(PAGE_SIZE),
-        offset: String(page * PAGE_SIZE),
+        limit: String(PAGE_LIMIT),
       })
+      if (cursor) params.set('cursor', cursor)
       if (from) params.set('from', from)
       if (to) params.set('to', to)
       if (userId) params.set('userId', userId)
@@ -736,9 +743,11 @@ export function AuditLogPage() {
     ip?: string
     action?: string
     userId?: string
-  }> = (data as { entries?: unknown[] })?.entries ?? []
-  const total: number = (data as { total?: number })?.total ?? 0
-  const totalPages = Math.ceil(total / PAGE_SIZE)
+  }> = (data as { items?: unknown[]; entries?: unknown[] })?.items
+    ?? (data as { entries?: unknown[] })?.entries
+    ?? []
+  const nextCursor = (data as { nextCursor?: string })?.nextCursor
+  const hasMore = (data as { hasMore?: boolean })?.hasMore ?? Boolean(nextCursor)
 
   return (
     <div className="space-y-4">
@@ -750,7 +759,7 @@ export function AuditLogPage() {
           <input
             type="date"
             value={from}
-            onChange={(e) => { setFrom(e.target.value); setPage(0) }}
+            onChange={(e) => { setFrom(e.target.value); setCursorHistory([]) }}
             className="ml-2 border border-border rounded px-2 py-1 text-sm bg-background"
           />
         </label>
@@ -759,7 +768,7 @@ export function AuditLogPage() {
           <input
             type="date"
             value={to}
-            onChange={(e) => { setTo(e.target.value); setPage(0) }}
+            onChange={(e) => { setTo(e.target.value); setCursorHistory([]) }}
             className="ml-2 border border-border rounded px-2 py-1 text-sm bg-background"
           />
         </label>
@@ -767,7 +776,7 @@ export function AuditLogPage() {
           type="text"
           placeholder="Filter by user ID…"
           value={userId}
-          onChange={(e) => { setUserId(e.target.value); setPage(0) }}
+          onChange={(e) => { setUserId(e.target.value); setCursorHistory([]) }}
           className="border border-border rounded px-2 py-1 text-sm bg-background w-56"
         />
       </div>
@@ -822,21 +831,21 @@ export function AuditLogPage() {
         </div>
       )}
 
-      {totalPages > 1 && (
+      {(cursorHistory.length > 0 || hasMore) && (
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
+            onClick={() => setCursorHistory((history) => history.slice(0, -1))}
+            disabled={cursorHistory.length === 0}
             className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Previous
           </button>
           <span className="text-sm text-muted-foreground">
-            Page {page + 1} of {totalPages}
+            Page {cursorHistory.length + 1}
           </span>
           <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
+            onClick={() => nextCursor && setCursorHistory((history) => [...history, nextCursor])}
+            disabled={!hasMore || !nextCursor}
             className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Next
