@@ -3,6 +3,25 @@
 All notable changes to Snapshot are recorded here. Release Please updates this
 file from conventional commits through a reviewed release pull request.
 
+## [0.4.0](https://github.com/lastshotlabs/snapshot/compare/v0.3.1...v0.4.0) (2026-07-31)
+
+
+### Features
+
+* **cli:** complete the 0.4 adoptability toolchain ([1711546](https://github.com/lastshotlabs/snapshot/commit/1711546333812d90f18b5db344a66a539cb79331))
+* **cli:** complete the 0.4 adoptability toolchain ([fd4da5d](https://github.com/lastshotlabs/snapshot/commit/fd4da5d1b2568e65ef69efd792e6f31a132f3d1f))
+* **ui:** make managed confirmations adoptable ([223ed2b](https://github.com/lastshotlabs/snapshot/commit/223ed2b3387ac75da6ccdb202fe1dbfa409d4f23))
+* **ui:** make managed confirmations adoptable ([253f75b](https://github.com/lastshotlabs/snapshot/commit/253f75b9caadb65a166ea54d5c31ad293e6be0f5))
+
+
+### Bug Fixes
+
+* **cli:** generate cursor pagination from OpenAPI ([d7c2fc4](https://github.com/lastshotlabs/snapshot/commit/d7c2fc43f4da8c429685fbe4a919a0ed11c819f1))
+* **community:** make route contract authoritative ([168f7c3](https://github.com/lastshotlabs/snapshot/commit/168f7c366b75a3e4d557b9e5489601818cc44021))
+* **community:** restore moderation POST contract ([044c204](https://github.com/lastshotlabs/snapshot/commit/044c2041b248d69349fae26967def437ece8fc64))
+* **release:** keep surface-only peers optional ([5acbf84](https://github.com/lastshotlabs/snapshot/commit/5acbf84118d9128b78c028f804981b7cbd2130e1))
+* **release:** keep surface-only peers optional ([f3fadc2](https://github.com/lastshotlabs/snapshot/commit/f3fadc2bd9ca8d2765008fbd35251763508415ec))
+
 ## [0.3.1](https://github.com/lastshotlabs/snapshot/releases/tag/v0.3.1) (2026-07-31)
 
 ### Bug Fixes

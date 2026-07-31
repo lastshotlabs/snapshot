@@ -25,6 +25,7 @@ for (const required of [
   "id-token: write",
   "googleapis/release-please-action@v4",
   "npm run release:check",
+  "secrets.NPM_TOKEN",
   "--provenance",
   "registry=https://registry.npmjs.org",
 ]) {
@@ -34,10 +35,6 @@ for (const required of [
     );
   }
 }
-if (/NPM_TOKEN/.test(release)) {
-  errors.push("release.yml must not use a long-lived public npm token");
-}
-
 const manifest = JSON.parse(
   readFileSync(path.join(repoRoot, "package.json"), "utf8"),
 );
@@ -55,4 +52,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log("[release:config] Release PR + OIDC publishing path is locked.");
+console.log("[release:config] Release PR + CI-only publishing path is locked.");
