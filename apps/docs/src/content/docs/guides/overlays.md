@@ -95,6 +95,94 @@ import { DrawerBase } from "@lastshotlabs/snapshot/ui";
 
 **Sizes:** `sm`, `md`, `lg`, `xl`, `full`
 
+## Managed confirmations
+
+Use the promise-based manager for application actions instead of
+`window.confirm()`, `window.alert()`, or `window.prompt()`. Mount one
+`ConfirmDialog` near the app root, then call `confirm.show()` where the action
+happens. The focused entrypoint needs React and Snapshot's `jotai` optional
+peer, but does not load the full `./ui` barrel.
+
+```bash
+npm install jotai
+```
+
+```tsx
+import {
+  ConfirmDialog,
+  useConfirmManager,
+} from "@lastshotlabs/snapshot/ui/confirm";
+
+function DeleteAccountButton() {
+  const confirm = useConfirmManager();
+
+  async function removeAccount() {
+    const accepted = await confirm.show({
+      title: "Delete account?",
+      description: "This permanently removes your account and its data.",
+      confirmLabel: "Delete account",
+      variant: "destructive",
+      requireInput: "DELETE",
+    });
+
+    if (!accepted) return;
+    await deleteAccount();
+  }
+
+  return <button onClick={() => void removeAccount()}>Delete account</button>;
+}
+
+export function AppChrome({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {children}
+      <ConfirmDialog />
+    </>
+  );
+}
+```
+
+`ConfirmDialog` uses `role="alertdialog"`, resolves the manager promise on both
+actions, and gives its buttons a minimum 46px height. For a product-owned
+palette, use slots instead of defining Snapshot tokens:
+
+```tsx
+<ConfirmDialog
+  slots={{
+    overlay: {
+      style: {
+        background: "color-mix(in srgb, var(--ht-ink) 72%, transparent)",
+      },
+    },
+    dialog: {
+      style: {
+        background: "var(--ht-panel)",
+        color: "var(--ht-text)",
+        border: "1px solid var(--ht-border)",
+        borderRadius: "18px",
+      },
+    },
+    description: { style: { color: "var(--ht-muted)" } },
+    cancelButton: {
+      style: {
+        background: "var(--ht-secondary)",
+        color: "var(--ht-text)",
+      },
+    },
+    confirmButton: {
+      style: {
+        background: "var(--ht-danger)",
+        color: "var(--ht-danger-text)",
+      },
+    },
+  }}
+/>
+```
+
+To keep native dialogs from creeping back in, add ESLint
+`no-restricted-globals` entries for `confirm`, `alert`, and `prompt`, plus
+`no-restricted-properties` entries for the same properties on `window`.
+
 ## ConfirmDialogBase
 
 Simple confirmation dialog for destructive actions.

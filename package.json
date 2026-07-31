@@ -595,6 +595,11 @@
       "import": "./dist/ui/wizard.js",
       "require": "./dist/ui/wizard.cjs"
     },
+    "./ui/confirm": {
+      "types": "./dist-types/ui/confirm.d.ts",
+      "import": "./dist/ui/confirm.js",
+      "require": "./dist/ui/confirm.cjs"
+    },
     "./ui/icon": {
       "types": "./dist-types/ui/icon.d.ts",
       "import": "./dist/ui/icon.js",

@@ -10,8 +10,9 @@ import {
 } from "@testing-library/react";
 import { Provider } from "jotai/react";
 import { ConfirmDialog, useConfirmManager } from "../confirm";
+import type { ConfirmDialogProps } from "../confirm";
 
-function Harness() {
+function Harness({ dialogProps }: { dialogProps?: ConfirmDialogProps }) {
   const confirm = useConfirmManager();
   const [result, setResult] = useState<string>("pending");
 
@@ -35,7 +36,7 @@ function Harness() {
         Open
       </button>
       <div data-testid="result">{result}</div>
-      <ConfirmDialog />
+      <ConfirmDialog {...dialogProps} />
     </>
   );
 }
@@ -70,5 +71,63 @@ describe("ConfirmDialog", () => {
     await waitFor(() =>
       expect(screen.getByTestId("result").textContent).toBe("confirmed"),
     );
+  });
+
+  it("accepts a non-Snapshot palette and keeps both actions above 44px", () => {
+    render(
+      <Provider>
+        <Harness
+          dialogProps={{
+            slots: {
+              overlay: {
+                style: { background: "var(--app-overlay)" },
+              },
+              dialog: {
+                style: {
+                  background: "var(--app-panel)",
+                  color: "var(--app-text)",
+                  border: "1px solid var(--app-border)",
+                },
+              },
+              description: {
+                style: { color: "var(--app-muted)" },
+              },
+              cancelButton: {
+                style: {
+                  background: "var(--app-secondary)",
+                  color: "var(--app-text)",
+                },
+              },
+              confirmButton: {
+                style: {
+                  background: "var(--app-danger)",
+                  color: "var(--app-danger-text)",
+                },
+              },
+            },
+          }}
+        />
+      </Provider>,
+    );
+
+    fireEvent.click(screen.getByText("Open"));
+
+    expect(
+      document
+        .querySelector('[data-snapshot-id="snapshot-confirm-overlay"]')
+        ?.getAttribute("style"),
+    ).toContain("var(--app-overlay)");
+    expect(
+      document
+        .querySelector('[data-snapshot-id="snapshot-confirm-dialog"]')
+        ?.getAttribute("style"),
+    ).toContain("var(--app-panel)");
+
+    const cancel = screen.getByText("Keep it");
+    const confirm = screen.getByText("Yes, delete");
+    expect(cancel.getAttribute("style")).toContain("var(--app-secondary)");
+    expect(confirm.getAttribute("style")).toContain("var(--app-danger)");
+    expect(cancel.getAttribute("style")).toContain("min-height: 2.875rem");
+    expect(confirm.getAttribute("style")).toContain("min-height: 2.875rem");
   });
 });
