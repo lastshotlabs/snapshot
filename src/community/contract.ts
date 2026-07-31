@@ -1,212 +1,175 @@
 /**
  * Built-in route contract for Snapshot community APIs.
+ *
+ * The hooks consume this object directly, so the exported contract and the
+ * requests sent by Snapshot cannot drift independently.
  */
 export const communityContract = {
   // ── Containers ──────────────────────────────────────────────────────────────
-  listContainers: {
-    method: "GET" as const,
-    path: "/community/containers",
-  },
+  listContainers: { method: "GET", path: "/community/containers" },
   getContainer: {
-    method: "GET" as const,
+    method: "GET",
     path: "/community/containers/:containerId",
   },
-  createContainer: {
-    method: "POST" as const,
-    path: "/community/containers",
-  },
+  createContainer: { method: "POST", path: "/community/containers" },
   updateContainer: {
-    method: "PATCH" as const,
+    method: "PATCH",
     path: "/community/containers/:containerId",
   },
   deleteContainer: {
-    method: "DELETE" as const,
+    method: "DELETE",
     path: "/community/containers/:containerId",
   },
+
   // ── Threads ─────────────────────────────────────────────────────────────────
   listThreads: {
-    method: "GET" as const,
-    path: "/community/containers/:containerId/threads",
+    method: "GET",
+    path: "/community/threads/list-by-container/:containerId",
   },
-  getThread: {
-    method: "GET" as const,
-    path: "/community/threads/:threadId",
-  },
-  createThread: {
-    method: "POST" as const,
-    path: "/community/containers/:containerId/threads",
-  },
-  updateThread: {
-    method: "PATCH" as const,
-    path: "/community/threads/:threadId",
-  },
-  deleteThread: {
-    method: "DELETE" as const,
-    path: "/community/threads/:threadId",
-  },
+  getThread: { method: "GET", path: "/community/threads/:threadId" },
+  createThread: { method: "POST", path: "/community/threads" },
+  updateThread: { method: "PATCH", path: "/community/threads/:threadId" },
+  deleteThread: { method: "DELETE", path: "/community/threads/:threadId" },
+  publishThread: { method: "POST", path: "/community/threads/publish" },
+  lockThread: { method: "PATCH", path: "/community/threads/lock" },
+  unlockThread: { method: "PATCH", path: "/community/threads/unlock" },
+  pinThread: { method: "PATCH", path: "/community/threads/pin" },
+  unpinThread: { method: "PATCH", path: "/community/threads/unpin" },
+
   // ── Replies ─────────────────────────────────────────────────────────────────
   listReplies: {
-    method: "GET" as const,
-    path: "/community/threads/:threadId/replies",
+    method: "GET",
+    path: "/community/replies/list-by-thread/:threadId",
   },
-  getReply: {
-    method: "GET" as const,
-    path: "/community/replies/:replyId",
-  },
-  createReply: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/replies",
-  },
-  updateReply: {
-    method: "PATCH" as const,
-    path: "/community/replies/:replyId",
-  },
-  deleteReply: {
-    method: "DELETE" as const,
-    path: "/community/replies/:replyId",
-  },
-  // ── Thread Reactions ────────────────────────────────────────────────────────
-  addThreadReaction: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/reactions",
-  },
-  removeThreadReaction: {
-    method: "DELETE" as const,
-    path: "/community/threads/:threadId/reactions/:emoji",
-  },
-  // ── Reply Reactions ─────────────────────────────────────────────────────────
-  addReplyReaction: {
-    method: "POST" as const,
-    path: "/community/replies/:replyId/reactions",
-  },
-  removeReplyReaction: {
-    method: "DELETE" as const,
-    path: "/community/replies/:replyId/reactions/:emoji",
-  },
+  getReply: { method: "GET", path: "/community/replies/:replyId" },
+  createReply: { method: "POST", path: "/community/replies" },
+  updateReply: { method: "PATCH", path: "/community/replies/:replyId" },
+  deleteReply: { method: "DELETE", path: "/community/replies/:replyId" },
+
+  // ── Reactions ───────────────────────────────────────────────────────────────
   threadReactions: {
-    method: "GET" as const,
-    path: "/community/threads/:threadId/reactions",
+    method: "GET",
+    path: "/community/reactions/list-by-target/:threadId/thread",
   },
   replyReactions: {
-    method: "GET" as const,
-    path: "/community/replies/:replyId/reactions",
+    method: "GET",
+    path: "/community/reactions/list-by-target/:replyId/reply",
   },
+  addThreadReaction: { method: "POST", path: "/community/reactions" },
+  addReplyReaction: { method: "POST", path: "/community/reactions" },
+  removeThreadReaction: {
+    method: "DELETE",
+    path: "/community/reactions/:reactionId",
+  },
+  removeReplyReaction: {
+    method: "DELETE",
+    path: "/community/reactions/:reactionId",
+  },
+
+  // ── Members / Roles ─────────────────────────────────────────────────────────
+  listMembers: { method: "GET", path: "/community/container-members" },
+  addMember: { method: "POST", path: "/community/container-members" },
+  removeMember: {
+    method: "DELETE",
+    path: "/community/container-members/:membershipId",
+  },
+  listModerators: {
+    method: "GET",
+    path: "/community/container-members/list-by-role/:containerId/moderator",
+  },
+  listOwners: {
+    method: "GET",
+    path: "/community/container-members/list-by-role/:containerId/owner",
+  },
+  assignModerator: {
+    method: "POST",
+    path: "/community/container-members/assign-role",
+  },
+  removeModerator: {
+    method: "POST",
+    path: "/community/container-members/assign-role",
+  },
+  assignOwner: {
+    method: "POST",
+    path: "/community/container-members/assign-role",
+  },
+  removeOwner: {
+    method: "POST",
+    path: "/community/container-members/assign-role",
+  },
+
+  // ── Notifications ───────────────────────────────────────────────────────────
+  listNotifications: {
+    method: "GET",
+    path: "/notifications/notifications",
+  },
+  getNotificationsUnreadCount: {
+    method: "POST",
+    path: "/notifications/notifications/unseen-count",
+  },
+  markAllNotificationsSeen: {
+    method: "POST",
+    path: "/notifications/notifications/mark-all-seen",
+  },
+  markNotificationRead: {
+    method: "POST",
+    path: "/notifications/notifications/mark-read",
+  },
+  markAllNotificationsRead: {
+    method: "POST",
+    path: "/notifications/notifications/mark-all-read",
+  },
+  dismissNotification: {
+    method: "DELETE",
+    path: "/notifications/notifications/:notificationId",
+  },
+
   // ── Reports ─────────────────────────────────────────────────────────────────
-  listReports: {
-    method: "GET" as const,
-    path: "/community/reports",
-  },
-  getReport: {
-    method: "GET" as const,
-    path: "/community/reports/:reportId",
-  },
-  createReport: {
-    method: "POST" as const,
-    path: "/community/reports",
-  },
+  listReports: { method: "GET", path: "/community/reports" },
+  getReport: { method: "GET", path: "/community/reports/:reportId" },
+  createReport: { method: "POST", path: "/community/reports" },
   resolveReport: {
-    method: "POST" as const,
+    method: "POST",
     path: "/community/reports/:reportId/resolve",
   },
   dismissReport: {
-    method: "POST" as const,
+    method: "POST",
     path: "/community/reports/:reportId/dismiss",
   },
+
   // ── Bans ────────────────────────────────────────────────────────────────────
-  listBans: {
-    method: "GET" as const,
-    path: "/community/bans",
-  },
-  checkBan: {
-    method: "GET" as const,
-    path: "/community/bans/check",
-  },
-  createBan: {
-    method: "POST" as const,
-    path: "/community/bans",
-  },
-  deleteBan: {
-    method: "DELETE" as const,
-    path: "/community/bans/:banId",
-  },
-  // ── Notifications ────────────────────────────────────────────────────────────
-  listNotifications: {
-    method: "GET" as const,
-    path: "/community/notifications",
-  },
-  markNotificationRead: {
-    method: "PATCH" as const,
-    path: "/community/notifications/:notificationId/read",
-  },
-  markAllNotificationsRead: {
-    method: "POST" as const,
-    path: "/community/notifications/read-all",
-  },
-  // ── Members / Roles ──────────────────────────────────────────────────────────
-  listMembers: {
-    method: "GET" as const,
-    path: "/community/containers/:containerId/members",
-  },
-  addMember: {
-    method: "POST" as const,
-    path: "/community/containers/:containerId/members",
-  },
-  removeMember: {
-    method: "DELETE" as const,
-    path: "/community/containers/:containerId/members/:userId",
-  },
-  listModerators: {
-    method: "GET" as const,
-    path: "/community/containers/:containerId/moderators",
-  },
-  assignModerator: {
-    method: "POST" as const,
-    path: "/community/containers/:containerId/moderators",
-  },
-  removeModerator: {
-    method: "DELETE" as const,
-    path: "/community/containers/:containerId/moderators/:userId",
-  },
-  listOwners: {
-    method: "GET" as const,
-    path: "/community/containers/:containerId/owners",
-  },
-  assignOwner: {
-    method: "POST" as const,
-    path: "/community/containers/:containerId/owners",
-  },
-  removeOwner: {
-    method: "DELETE" as const,
-    path: "/community/containers/:containerId/owners/:userId",
-  },
-  // ── Thread moderation ────────────────────────────────────────────────────────
-  publishThread: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/publish",
-  },
-  lockThread: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/lock",
-  },
-  unlockThread: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/unlock",
-  },
-  pinThread: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/pin",
-  },
-  unpinThread: {
-    method: "POST" as const,
-    path: "/community/threads/:threadId/unpin",
-  },
-  // ── Search ───────────────────────────────────────────────────────────────────
-  searchThreads: {
-    method: "GET" as const,
-    path: "/community/search/threads",
-  },
-  searchReplies: {
-    method: "GET" as const,
-    path: "/community/search/replies",
-  },
+  listBans: { method: "GET", path: "/community/bans" },
+  // Ban checks are derived client-side from a filtered list because the
+  // backend's dedicated check operation is disabled.
+  checkBan: { method: "GET", path: "/community/bans" },
+  createBan: { method: "POST", path: "/community/bans" },
+  deleteBan: { method: "DELETE", path: "/community/bans/:banId" },
+
+  // ── Search ──────────────────────────────────────────────────────────────────
+  searchThreads: { method: "GET", path: "/community/threads/search" },
+  searchReplies: { method: "GET", path: "/community/replies/search" },
 } as const;
+
+type CommunityRoute =
+  (typeof communityContract)[keyof typeof communityContract];
+
+/**
+ * Resolve a community contract path template with URL-encoded path params.
+ *
+ * @param route - One route entry from {@link communityContract}.
+ * @param params - Values for every `:param` segment in the route path.
+ * @returns The resolved request path.
+ * @throws When a required path parameter is missing.
+ */
+export function communityPath(
+  route: CommunityRoute,
+  params: Readonly<Record<string, string>> = {},
+): string {
+  return route.path.replace(/:([A-Za-z][A-Za-z0-9_]*)/g, (_match, name) => {
+    const value = params[name];
+    if (value === undefined) {
+      throw new Error(`Missing community route parameter: ${name}`);
+    }
+    return encodeURIComponent(value);
+  });
+}

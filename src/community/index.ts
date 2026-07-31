@@ -1,6 +1,6 @@
 export { createCommunityHooks, communityKeys } from "./hooks";
 export type { CommunityHooks } from "./hooks";
-export { communityContract } from "./contract";
+export { communityContract, communityPath } from "./contract";
 export type {
   ContainerResponse,
   CreateContainerBody,
