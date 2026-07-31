@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  packages: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release-created: ${{ steps.release.outputs.release_created }}
+      tag-name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    needs: release-please
+    if: needs.release-please.outputs.release-created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout released tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release-please.outputs.tag-name }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+
+      - name: Use npm 11
+        run: npm install -g npm@^11.10.0
+
+      - name: Configure GitHub Packages install access
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > "$HOME/.npmrc"
+          echo "@lastshotlabs:registry=https://npm.pkg.github.com" >> "$HOME/.npmrc"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install snapshot dependencies
+        run: npm ci --no-legacy-peer-deps
+
+      - name: Verify tag matches package version
+        env:
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag-name }}
+        run: |
+          node -e 'const pkg = require("./package.json"); const expected = "v" + pkg.version; const actual = process.env.RELEASE_TAG; if (actual !== expected) { console.error("Tag " + actual + " does not match package version " + expected); process.exit(1); }'
+
+      - name: Check snapshot release
+        run: npm run release:check
+
+      - name: Publish snapshot to GitHub Packages
+        run: npm publish --registry=https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish snapshot to public npm with OIDC
+        run: |
+          rm -f "$HOME/.npmrc"
+          npm publish --access public --provenance --registry=https://registry.npmjs.org

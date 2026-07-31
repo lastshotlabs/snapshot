@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./auth" },
+    { "path": "./settings" },
+    { "path": "./community-chat" },
+    { "path": "./admin" },
+    { "path": "./ssr" }
+  ]
+}

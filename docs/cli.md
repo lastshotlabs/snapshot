@@ -173,6 +173,41 @@ feature selection prompts. Generates the same core structure with an admin-focus
 
 ---
 
+## `snapshot doctor`
+
+Checks the consumer project for the environment failures that are easy to
+misdiagnose as application bugs:
+
+```sh
+snapshot doctor
+snapshot doctor --json
+snapshot doctor --cwd ./apps/web
+```
+
+The command fails when it finds dangling links under `node_modules`, an
+unauthenticated GitHub Packages scope mapping, missing required Snapshot peers,
+mismatched React/React DOM majors, or `legacy-peer-deps=true`.
+
+---
+
+## `snapshot add`
+
+Copies a catalog component and its transitive Snapshot source files into the
+application. The copied files are application-owned and may be edited freely.
+
+```sh
+snapshot add --list
+snapshot add button
+snapshot add confirm-dialog --path src/ui/snapshot
+snapshot add button --dry-run
+```
+
+Existing files are never replaced unless `--overwrite` is passed. The command
+also prints external packages imported by the copied source graph so optional
+peers remain explicit.
+
+---
+
 ## `snapshot sync`
 
 Reads your slingshot backend's OpenAPI schema and generates typed TypeScript types and

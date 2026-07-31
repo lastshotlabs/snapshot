@@ -93,6 +93,8 @@ export default defineConfig([
   // CLI commands
   {
     entry: {
+      "cli/commands/add": "src/cli/commands/add.ts",
+      "cli/commands/doctor": "src/cli/commands/doctor.ts",
       "cli/commands/init": "src/cli/commands/init.ts",
       "cli/commands/sync": "src/cli/commands/sync.ts",
     },

@@ -6,6 +6,7 @@ src/**/*.d.ts
 storybook-static/
 apps/docs/.astro/
 *.log
+*.tsbuildinfo
 .env
 .env.*
 .claude/worktrees/

@@ -8,6 +8,13 @@ Snapshot examples are ordinary React apps built around one `createSnapshot`
 runtime. Use the recipes when you want a complete page, or copy the smaller
 patterns below into an existing app.
 
+The repository also carries five compile-checked applications under
+`examples/`: auth, settings, community/chat, admin, and SSR. Each declares
+`@lastshotlabs/snapshot` with a registry version (never a workspace, file, or
+sibling-source alias). `npm run examples:smoke` performs a clean npm install and
+builds all five, so the examples fail with the release when published types or
+entrypoints drift.
+
 ## Runtime
 
 ```ts
@@ -130,3 +137,9 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
 - [Admin Dashboard](/recipes/admin-dashboard/)
 - [Chat Application](/recipes/chat-app/)
 - [Settings Page](/recipes/settings-page/)
+
+To verify the source-backed example matrix locally:
+
+```sh
+npm run examples:smoke
+```
