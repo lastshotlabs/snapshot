@@ -1,0 +1,28 @@
+{
+  "name": "snapshot-registry-examples",
+  "private": true,
+  "workspaces": [
+    "auth",
+    "settings",
+    "community-chat",
+    "admin",
+    "ssr"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.0",
+    "@tanstack/react-router": "^1.130.0",
+    "@unhead/react": "^2.0.0",
+    "jotai": "^2.15.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "recharts": "^3.8.0"
+  }
+}

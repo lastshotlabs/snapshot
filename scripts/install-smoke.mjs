@@ -264,6 +264,30 @@ void snapshotFactory;
     ],
     cliConsumer,
   );
+  const cliPath = join(
+    cliConsumer,
+    "node_modules",
+    "@lastshotlabs",
+    "snapshot",
+    "dist",
+    "cli",
+    "index.js",
+  );
+  runStep(
+    "run doctor against the clean installed consumer",
+    "node",
+    [cliPath, "doctor", "--json"],
+    cliConsumer,
+  );
+  runStep(
+    "eject a component from the packed source registry",
+    "node",
+    [cliPath, "add", "button", "--path", "src/ejected"],
+    cliConsumer,
+  );
+  if (!existsSync(join(cliConsumer, "src", "ejected", "button.ts"))) {
+    fail("snapshot add did not copy the component entry source");
+  }
   runStep(
     "import Vite plugin with its optional peers",
     "node",

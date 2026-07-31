@@ -1,0 +1,7 @@
+{
+  "name": "snapshot-example-auth",
+  "private": true,
+  "dependencies": {
+    "@lastshotlabs/snapshot": "^0.3.1"
+  }
+}

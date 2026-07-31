@@ -33,6 +33,12 @@ basic install. Add optional peers only for the UI surfaces you use:
 The CLI packages are optional too, so apps that only import Snapshot runtime or
 UI code do not install either package.
 
+Once the CLI peers are installed, run `snapshot doctor` from the consumer root
+to check registry authentication, dangling package links, required peers, and
+`legacy-peer-deps` lockfile configuration. Use `snapshot add <component>` when
+you want an application-owned copy of a catalog component instead of a package
+import.
+
 Use focused `@lastshotlabs/snapshot/ui/<name>` imports for the minimal
 dependency path. The compatibility `@lastshotlabs/snapshot/ui` barrel
 re-exports the whole catalog and therefore requires every optional UI peer.

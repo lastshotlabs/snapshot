@@ -40,6 +40,9 @@ jobs:
       - name: Check generated component exports
         run: npm run components:exports:check
 
+      - name: Check release publishing controls
+        run: npm run release:config:check
+
       - name: Typecheck
         run: npm run typecheck
 

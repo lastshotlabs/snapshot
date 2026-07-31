@@ -1,5 +1,94 @@
 {
   "commands": {
+    "add": {
+      "aliases": [],
+      "args": {
+        "component": {
+          "description": "Component subpath name",
+          "name": "component"
+        }
+      },
+      "description": "Copy a Snapshot component and its source dependencies into your app",
+      "examples": [
+        "<%= config.bin %> add button",
+        "<%= config.bin %> add confirm-dialog --path src/ui/snapshot",
+        "<%= config.bin %> add --list"
+      ],
+      "flags": {
+        "path": {
+          "description": "Destination directory",
+          "name": "path",
+          "default": "src/components/snapshot",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "overwrite": {
+          "description": "Replace existing files",
+          "name": "overwrite",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "dry-run": {
+          "description": "List files without writing",
+          "name": "dry-run",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "list": {
+          "description": "List available components",
+          "name": "list",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "add",
+      "pluginAlias": "@lastshotlabs/snapshot",
+      "pluginName": "@lastshotlabs/snapshot",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": ["dist", "cli", "commands", "add.js"]
+    },
+    "doctor": {
+      "aliases": [],
+      "args": {},
+      "description": "Diagnose Snapshot links, registry authentication, peers, and lockfile configuration",
+      "examples": [
+        "<%= config.bin %> doctor",
+        "<%= config.bin %> doctor --json",
+        "<%= config.bin %> doctor --cwd ./apps/web"
+      ],
+      "flags": {
+        "cwd": {
+          "description": "Consumer project directory",
+          "name": "cwd",
+          "default": ".",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "json": {
+          "description": "Print machine-readable JSON",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "doctor",
+      "pluginAlias": "@lastshotlabs/snapshot",
+      "pluginName": "@lastshotlabs/snapshot",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": ["dist", "cli", "commands", "doctor.js"]
+    },
     "init": {
       "aliases": [],
       "args": {
