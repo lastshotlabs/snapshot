@@ -3,6 +3,20 @@
 All notable changes to Snapshot are recorded here. Release Please updates this
 file from conventional commits through a reviewed release pull request.
 
+## [0.5.0](https://github.com/lastshotlabs/snapshot/compare/v0.4.0...v0.5.0) (2026-08-02)
+
+
+### Features
+
+* **ui:** render custom emoji in rich input ([dd41b0d](https://github.com/lastshotlabs/snapshot/commit/dd41b0d4e746d79ba7413f88096708bbc50c1626))
+* **ui:** render custom emoji in rich input ([9e98e84](https://github.com/lastshotlabs/snapshot/commit/9e98e844eb74d190e5917863646829f3fcc18762))
+
+
+### Bug Fixes
+
+* **ui:** allow markdown URL transforms ([e1daa8c](https://github.com/lastshotlabs/snapshot/commit/e1daa8c23a4c569394abccaa54c4dc7b2d9db055))
+* **ui:** allow markdown URL transforms ([abc12a0](https://github.com/lastshotlabs/snapshot/commit/abc12a0b6e1989fd751ebde37da20a4f23343010))
+
 ## [0.4.0](https://github.com/lastshotlabs/snapshot/compare/v0.3.1...v0.4.0) (2026-07-31)
 
 
