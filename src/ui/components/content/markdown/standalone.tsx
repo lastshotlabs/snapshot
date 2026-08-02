@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import type { CSSProperties } from "react";
 import ReactMarkdown from "react-markdown";
-import type { Components } from "react-markdown";
+import type { Components, UrlTransform } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import { SurfaceStyles } from "../../_base/surface-styles";
@@ -57,6 +57,12 @@ export interface MarkdownBaseProps {
   content: string;
   /** Maximum height of the container (CSS value). */
   maxHeight?: string;
+  /**
+   * Transform link and image URLs before rendering. Defaults to
+   * react-markdown's safe URL policy. Pass an explicit transform to allow
+   * additional protocols such as trusted `data:` image URLs.
+   */
+  urlTransform?: UrlTransform;
 
   // ── Style / Slot overrides ───────────────────────────────────────────────
   /** className applied to the root element. */
@@ -82,6 +88,7 @@ export function MarkdownBase({
   id,
   content,
   maxHeight,
+  urlTransform,
   className,
   style,
   slots,
@@ -556,6 +563,7 @@ export function MarkdownBase({
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeHighlight]}
             components={markdownComponents}
+            urlTransform={urlTransform}
           >
             {content}
           </ReactMarkdown>

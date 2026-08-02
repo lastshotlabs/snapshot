@@ -421,6 +421,27 @@ import { MarkdownBase } from "@lastshotlabs/snapshot/ui";
 <MarkdownBase content={markdownString} maxHeight="400px" />;
 ```
 
+`MarkdownBase` keeps react-markdown's safe URL policy by default. If your app
+owns trusted inline image data, opt into that protocol explicitly while
+preserving the default policy for every other link and image:
+
+```tsx
+import { MarkdownBase } from "@lastshotlabs/snapshot/ui/markdown";
+import { defaultUrlTransform } from "react-markdown";
+
+<MarkdownBase
+  content={markdownString}
+  urlTransform={(url, key) =>
+    key === "src" && url.startsWith("data:image/")
+      ? url
+      : defaultUrlTransform(url)
+  }
+/>;
+```
+
+Only allow data you trust; a custom transform replaces the default URL policy
+for both links and images.
+
 ### CodeBlockBase
 
 Syntax-highlighted code block with copy button and line numbers:

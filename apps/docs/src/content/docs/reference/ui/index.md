@@ -2490,7 +2490,7 @@ Works with plain React props.
 
 ---
 
-#### `MarkdownBase({ id, content, maxHeight, className, style, slots, }: MarkdownBaseProps) => Element`
+#### `MarkdownBase({ id, content, maxHeight, urlTransform, className, style, slots, }: MarkdownBaseProps) => Element`
 
 Standalone Markdown — renders markdown content with syntax highlighting
 and Snapshot design tokens. Works with plain React props.
