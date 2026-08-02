@@ -460,10 +460,26 @@ export interface SnapshotWebSocketConfig {
     strategy: "query-param" | "first-message";
     paramName?: string;
   };
+  /**
+   * Client-sent keepalive.
+   *
+   * `message` is written to the socket verbatim every `interval` ms. It
+   * defaults to the raw string `"ping"`, which is NOT JSON — a server that
+   * parses incoming frames as JSON will not recognise it, so set `message` to
+   * something your endpoint tolerates.
+   *
+   * On its own this is keepalive traffic only; nothing reads the result. Set
+   * `timeoutMs` to make it a liveness check: if NO frame of any kind arrives
+   * within that many ms of a beat going out, the socket is treated as dead and
+   * reconnected. Only enable it when the server answers the heartbeat (or
+   * otherwise sends something regularly) — on a server that stays silent, a
+   * healthy idle connection would reconnect on every beat.
+   */
   heartbeat?: {
     enabled?: boolean;
     interval?: number;
     message?: string;
+    timeoutMs?: number;
   };
   onConnected?: () => void;
   onDisconnected?: () => void;

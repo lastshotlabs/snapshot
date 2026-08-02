@@ -62,6 +62,41 @@ if (!isConnected) {
 }
 ```
 
+### Keepalive and detecting a dead connection
+
+`heartbeat` writes `message` (default: the raw string `"ping"`, which is **not** JSON) to
+the socket every `interval` ms. On its own that is keepalive traffic — it stops idle
+connections being reaped by NAT devices, and nothing reads the result.
+
+`timeoutMs` turns it into a liveness check. If **no frame of any kind** arrives within that
+window of a beat going out, the socket is treated as dead and reconnected:
+
+```tsx
+const snap = createSnapshot({
+  apiUrl: "/api",
+  ws: {
+    url: "wss://api.example.com/ws",
+    heartbeat: {
+      enabled: true,
+      interval: 25_000,
+      timeoutMs: 10_000,
+      message: "ping",
+    },
+  },
+});
+```
+
+Why this exists: when a network drops a connection silently, the close frame may never
+reach the browser. `readyState` stays `OPEN`, `isConnected` stays `true`, and
+`reconnectOnFocus` — which only fires when disconnected — never runs. The socket satisfies
+every liveness check available while carrying nothing, and an unanswered beat is the only
+observable symptom.
+
+Only set `timeoutMs` when the server sends something in response to the heartbeat, or sends
+traffic regularly on its own. Against a server that stays silent on an idle connection, a
+healthy socket would be reconnected on every beat. If your server ignores unrecognised
+frames, prefer an application message it _does_ answer, and set `message` to that.
+
 ### Live-updating table
 
 ```tsx
