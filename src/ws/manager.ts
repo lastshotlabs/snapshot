@@ -11,10 +11,17 @@ interface WsConfig {
     paramName?: string;
     token?: string | null | (() => string | null | undefined);
   };
+  /** See `SnapshotWebSocketConfig['heartbeat']` in src/types.ts. */
   heartbeat?: {
     enabled?: boolean;
     interval?: number;
     message?: string;
+    /**
+     * Treat the connection as dead when no inbound frame of any kind arrives
+     * within this many ms of a beat going out. `0` (the default) is keepalive
+     * traffic only — nothing reads the result.
+     */
+    timeoutMs?: number;
   };
   onConnected?: () => void;
   onDisconnected?: () => void;
@@ -82,6 +89,12 @@ export class WebSocketManager<
   private reconnectAttempts = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+  /**
+   * When a beat went out that nothing has answered yet, in epoch ms. `null`
+   * when no beat is outstanding — any inbound frame clears it, because ANY
+   * traffic from the server proves the connection is carrying data.
+   */
+  private heartbeatPendingSince: number | null = null;
   private destroyed = false;
 
   private readonly url: string;
@@ -112,7 +125,14 @@ export class WebSocketManager<
     this.heartbeat = {
       enabled: config.heartbeat?.enabled ?? false,
       interval: config.heartbeat?.interval ?? 30000,
+      // A raw string, and deliberately unchanged: it is what existing servers
+      // already receive. It is NOT JSON, so an endpoint that parses frames will
+      // fall through to whatever handles unparseable input — configure
+      // `message` if that matters to your server.
       message: config.heartbeat?.message ?? "ping",
+      // 0 = off. Without it the heartbeat is keepalive traffic and nothing
+      // more: it cannot notice a connection that has stopped carrying data.
+      timeoutMs: config.heartbeat?.timeoutMs ?? 0,
     };
 
     this.connect();
@@ -183,6 +203,7 @@ export class WebSocketManager<
       clearInterval(this.heartbeatTimer);
       this.heartbeatTimer = null;
     }
+    this.heartbeatPendingSince = null;
   }
 
   private startHeartbeat(): void {
@@ -192,8 +213,32 @@ export class WebSocketManager<
     }
 
     this.heartbeatTimer = setInterval(() => {
-      if (this.ws?.readyState === WebSocket.OPEN) {
-        this.ws.send(this.heartbeat.message);
+      if (this.ws?.readyState !== WebSocket.OPEN) return;
+
+      // A beat that went unanswered past the timeout means the socket is open
+      // and carrying nothing — the shape a connection takes when the network
+      // drops it silently and the close frame never arrives, which leaves
+      // `readyState` OPEN and `isConnected` true forever. Rebuilding it is the
+      // only way out, and is the whole reason `timeoutMs` exists: without it
+      // this timer only produces traffic and reads nothing back.
+      if (
+        this.heartbeat.timeoutMs > 0 &&
+        this.heartbeatPendingSince !== null &&
+        Date.now() - this.heartbeatPendingSince >= this.heartbeat.timeoutMs
+      ) {
+        this.heartbeatPendingSince = null;
+        this.reconnect();
+        return;
+      }
+
+      // Beats keep going out even while one is unanswered: they are keepalive
+      // traffic as much as a probe, and stopping would let a NAT reap a
+      // connection that was merely quiet.
+      this.ws.send(this.heartbeat.message);
+      // The DEADLINE, though, is measured from the first unanswered beat — it
+      // must not slide forward on every tick, or it could never be reached.
+      if (this.heartbeat.timeoutMs > 0 && this.heartbeatPendingSince === null) {
+        this.heartbeatPendingSince = Date.now();
       }
     }, this.heartbeat.interval);
   }
@@ -244,6 +289,9 @@ export class WebSocketManager<
     };
 
     this.ws.onmessage = (event: MessageEvent) => {
+      // Any inbound frame — heartbeat reply, broadcast, ack — proves the
+      // connection is still carrying data, so it answers the outstanding beat.
+      this.heartbeatPendingSince = null;
       try {
         const message = JSON.parse(event.data as string) as {
           type?: string;

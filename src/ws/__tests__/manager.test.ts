@@ -371,3 +371,89 @@ describe("WebSocketManager input-epoch stamping", () => {
     manager.disconnect();
   });
 });
+
+describe("WebSocketManager heartbeat", () => {
+  it("sends keepalive traffic on an interval, and reads nothing back by default", () => {
+    // The default is traffic only. That is a legitimate configuration — it is
+    // what keeps a NAT mapping alive — but it must not be mistaken for a
+    // liveness check, so nothing here reconnects.
+    const manager = new WebSocketManager({
+      url: "/game",
+      heartbeat: { enabled: true, interval: 1000 },
+    });
+    const ws = firstSocket();
+    ws.simulateOpen();
+
+    vi.advanceTimersByTime(3500);
+
+    // Raw string, not JSON — documented, and asserted so a change to the
+    // default is a deliberate one rather than a silent wire change.
+    expect(ws.sentRaw.filter((f) => f === "ping")).toHaveLength(3);
+    // No reconnect: the manager opened exactly one socket.
+    expect(MockWebSocket.instances).toHaveLength(1);
+
+    manager.disconnect();
+  });
+
+  it("reconnects when a beat goes unanswered past timeoutMs", () => {
+    // THE POINT OF THE FIX. A connection the network dropped silently leaves
+    // readyState OPEN forever, so `isConnected` stays true and reconnectOnFocus
+    // never fires — the socket satisfies every check the class used to make
+    // while carrying nothing. An unanswered beat is the one observable signal.
+    const manager = new WebSocketManager({
+      url: "/game",
+      heartbeat: { enabled: true, interval: 1000, timeoutMs: 1500 },
+    });
+    const ws = firstSocket();
+    ws.simulateOpen();
+    expect(manager.isConnected).toBe(true);
+
+    // Beat at 1000 goes out; nothing answers. Beats keep going out — they are
+    // keepalive traffic as well as a probe — but the DEADLINE is measured from
+    // the first unanswered one, so at 3000 it is 2000ms overdue.
+    vi.advanceTimersByTime(3000);
+
+    expect(ws.sentRaw.filter((f) => f === "ping")).toHaveLength(2);
+    expect(MockWebSocket.instances.length).toBeGreaterThan(1);
+
+    manager.disconnect();
+  });
+
+  it("treats ANY inbound frame as the answer, so a busy connection is never torn down", () => {
+    // The server need not reply to the heartbeat itself. A broadcast, an ack —
+    // anything arriving proves the socket is carrying data.
+    const manager = new WebSocketManager({
+      url: "/game",
+      heartbeat: { enabled: true, interval: 1000, timeoutMs: 1500 },
+    });
+    const ws = firstSocket();
+    ws.simulateOpen();
+
+    for (let i = 0; i < 5; i++) {
+      vi.advanceTimersByTime(1000);
+      ws.simulateMessage({ type: "game:state.updated", tick: i });
+    }
+
+    expect(MockWebSocket.instances).toHaveLength(1);
+    expect(manager.isConnected).toBe(true);
+
+    manager.disconnect();
+  });
+
+  it("does not reconnect on an unanswered beat when timeoutMs is not set", () => {
+    // Opting in matters: on a server that never sends anything unprompted, a
+    // liveness check would tear down a perfectly healthy idle connection.
+    const manager = new WebSocketManager({
+      url: "/game",
+      heartbeat: { enabled: true, interval: 1000 },
+    });
+    const ws = firstSocket();
+    ws.simulateOpen();
+
+    vi.advanceTimersByTime(10_000);
+
+    expect(MockWebSocket.instances).toHaveLength(1);
+
+    manager.disconnect();
+  });
+});
