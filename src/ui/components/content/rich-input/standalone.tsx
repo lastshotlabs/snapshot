@@ -15,6 +15,8 @@ import { Extension } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
+import { buildEmojiExtension } from "./emoji-extension";
+import type { RichInputEmoji } from "./emoji-extension";
 import { buildMentionExtension } from "./mention-extension";
 import type {
   MentionListHandle,
@@ -71,6 +73,17 @@ const ALL_TOOLBAR_ITEMS: ToolbarItem[] = [
   },
   { name: "link", icon: "link", label: "Insert link", action: "setLink" },
 ];
+
+const CUSTOM_EMOJI_CSS = `
+.sn-rich-input-emoji {
+  display: inline-block;
+  width: 1.375em;
+  height: 1.375em;
+  vertical-align: -0.3em;
+  object-fit: contain;
+  margin: 0 0.05em;
+}
+`;
 
 /**
  * Read the markdown projection from a Tiptap editor instance, defensively
@@ -181,6 +194,14 @@ export interface RichInputBaseProps {
    */
   serializeMention?: (attrs: { id: string; label: string }) => string;
 
+  /**
+   * Resolve `:shortcode:` text into an inline image atom inside the editor.
+   * The resolver is synchronous and should read from a consumer-owned emoji
+   * map. Resolved atoms serialize back to the original shortcode in both the
+   * plain-text and markdown projections. Unknown shortcodes stay literal.
+   */
+  resolveEmoji?: (shortcode: string) => RichInputEmoji | null;
+
   /** Called when the send button is pressed or Enter is pressed (if sendOnEnter). */
   onSend?: (data: { html: string; text: string; markdown?: string }) => void;
   /** Called on every content change. */
@@ -271,6 +292,7 @@ export const RichInputBase = forwardRef<
     onMentionSearch,
     renderMentionList,
     serializeMention,
+    resolveEmoji,
     onSend,
     onChange,
     className,
@@ -302,6 +324,8 @@ export const RichInputBase = forwardRef<
   const linkInputRef = useRef<HTMLInputElement>(null);
   const linkFocusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sendRef = useRef<() => void>(() => {});
+  const resolveEmojiRef = useRef(resolveEmoji);
+  resolveEmojiRef.current = resolveEmoji;
   const rootId = id ?? "rich-input";
 
   useEffect(() => {
@@ -329,6 +353,21 @@ export const RichInputBase = forwardRef<
         : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [Boolean(onMentionSearch)],
+  );
+
+  const emojiExtension = useMemo(
+    () =>
+      resolveEmoji
+        ? buildEmojiExtension({
+            // The extension instance stays stable while this indirection
+            // picks up a newly loaded or replaced consumer emoji map.
+            resolveEmoji: (shortcode) =>
+              resolveEmojiRef.current?.(shortcode) ?? null,
+          })
+        : null,
+    // Like mentions, the resolver is configuration-locked at editor init.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [Boolean(resolveEmoji)],
   );
 
   const extensions = [
@@ -363,6 +402,7 @@ export const RichInputBase = forwardRef<
       ? [Markdown.configure({ html: false, transformPastedText: true })]
       : []),
     ...(mentionExtension ? [mentionExtension] : []),
+    ...(emojiExtension ? [emojiExtension] : []),
     ...(sendOnEnter && onSend
       ? [createSendOnEnterExtension(() => sendRef.current())]
       : []),
@@ -955,6 +995,9 @@ export const RichInputBase = forwardRef<
       <SurfaceStyles css={formattingGroupSurface.scopedCss} />
       <SurfaceStyles css={statusGroupSurface.scopedCss} />
       <SurfaceStyles css={counterSurface.scopedCss} />
+      {emojiExtension ? <SurfaceStyles css={CUSTOM_EMOJI_CSS} /> : null}
     </>
   );
 });
+
+export type { RichInputEmoji } from "./emoji-extension";

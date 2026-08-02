@@ -9,6 +9,7 @@ import {
   EmptyStateBase,
   GridBase,
   InputField,
+  RichInputBase,
   RowBase,
   StatCardBase,
   TabsBase,
@@ -64,6 +65,20 @@ const rows = [
     status: "pending",
   },
 ];
+
+const scoreboardImage = `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+    <rect width="48" height="48" rx="8" fill="#172033"/>
+    <rect x="5" y="9" width="38" height="30" rx="4" fill="#f8c146"/>
+    <text x="24" y="30" text-anchor="middle" font-family="monospace" font-size="16" font-weight="700" fill="#172033">7:3</text>
+  </svg>
+`)}`;
+
+function resolveShowcaseEmoji(shortcode: string) {
+  return shortcode === "scoreboard"
+    ? { src: scoreboardImage, name: "Scoreboard" }
+    : null;
+}
 
 function ShowcaseSection({
   title,
@@ -217,6 +232,7 @@ function FormsPage() {
   const [email, setEmail] = useState("ada@example.com");
   const [name, setName] = useState("Ada Lovelace");
   const [saved, setSaved] = useState(false);
+  const [sentMessage, setSentMessage] = useState("");
 
   return (
     <div className="showcase">
@@ -253,6 +269,25 @@ function FormsPage() {
             </ColumnBase>
           </form>
         </CardBase>
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Custom Emoji Composer">
+        <ColumnBase gap="sm">
+          <p>
+            Type <code>:scoreboard:</code> to see a shortcode render as an
+            inline atom while the submitted value stays text.
+          </p>
+          <RichInputBase
+            defaultValue="Final score :scoreboard:"
+            emitMarkdown
+            resolveEmoji={resolveShowcaseEmoji}
+            showSendButton
+            onSend={({ markdown, text }) => setSentMessage(markdown ?? text)}
+          />
+          {sentMessage ? (
+            <AlertBase severity="success">Sent: {sentMessage}</AlertBase>
+          ) : null}
+        </ColumnBase>
       </ShowcaseSection>
     </div>
   );

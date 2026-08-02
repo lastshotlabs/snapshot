@@ -5,6 +5,7 @@ export { DefaultMentionList } from "./components/content/rich-input/mention-list
 export type {
   RichInputBaseProps,
   RichInputBaseHandle,
+  RichInputEmoji,
 } from "./components/content/rich-input/standalone";
 export type {
   MentionSuggestion,
