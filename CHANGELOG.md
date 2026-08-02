@@ -3,6 +3,13 @@
 All notable changes to Snapshot are recorded here. Release Please updates this
 file from conventional commits through a reviewed release pull request.
 
+## [0.6.0](https://github.com/lastshotlabs/snapshot/compare/v0.5.0...v0.6.0) (2026-08-02)
+
+
+### Features
+
+* **ws:** make the heartbeat able to detect a dead connection ([#16](https://github.com/lastshotlabs/snapshot/issues/16)) ([3e9078c](https://github.com/lastshotlabs/snapshot/commit/3e9078c37420d676b883e079a8da5163c133013f))
+
 ## [0.5.0](https://github.com/lastshotlabs/snapshot/compare/v0.4.0...v0.5.0) (2026-08-02)
 
 
