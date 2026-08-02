@@ -439,6 +439,58 @@ import { EmojiPickerBase } from "@lastshotlabs/snapshot/ui";
 />;
 ```
 
+### Custom emoji in a composer
+
+Connect the picker's shortcode output to `RichInputBase` through its existing
+imperative handle. `resolveEmoji` turns known shortcodes into inline atoms in
+the editor; send payloads still contain `:shortcode:` in both `text` and
+`markdown`:
+
+```tsx
+import {
+  EmojiPickerBase,
+  RichInputBase,
+  buildEmojiMap,
+  type CustomEmoji,
+  type RichInputBaseHandle,
+} from "@lastshotlabs/snapshot/ui";
+import { useCallback, useMemo, useRef } from "react";
+
+function Composer({ customEmojis }: { customEmojis: CustomEmoji[] }) {
+  const editorRef = useRef<RichInputBaseHandle>(null);
+  const emojiByShortcode = useMemo(
+    () => buildEmojiMap(customEmojis),
+    [customEmojis],
+  );
+  const resolveEmoji = useCallback(
+    (shortcode: string) => {
+      const emoji = emojiByShortcode.get(shortcode);
+      return emoji ? { src: emoji.url, name: emoji.name } : null;
+    },
+    [emojiByShortcode],
+  );
+
+  return (
+    <>
+      <RichInputBase
+        ref={editorRef}
+        emitMarkdown
+        resolveEmoji={resolveEmoji}
+        onSend={({ markdown }) => sendMessage(markdown ?? "")}
+      />
+      <EmojiPickerBase
+        customEmojis={customEmojis}
+        onSelect={({ emoji }) => editorRef.current?.insertText(emoji)}
+      />
+    </>
+  );
+}
+```
+
+The resolver may return trusted `data:image/` URLs for application-owned inline
+SVG packs. Unknown shortcodes and shortcodes inside inline or block code remain
+literal text.
+
 ## Moderation
 
 ### Reports
