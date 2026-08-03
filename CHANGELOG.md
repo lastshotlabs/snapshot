@@ -3,6 +3,13 @@
 All notable changes to Snapshot are recorded here. Release Please updates this
 file from conventional commits through a reviewed release pull request.
 
+## [0.7.0](https://github.com/lastshotlabs/snapshot/compare/v0.6.0...v0.7.0) (2026-08-03)
+
+
+### Features
+
+* **rich-input:** render consumer tokens as inline chips ([#18](https://github.com/lastshotlabs/snapshot/issues/18)) ([c408071](https://github.com/lastshotlabs/snapshot/commit/c4080718ac6273bc6cbf97778229fd805965b34e))
+
 ## [0.6.0](https://github.com/lastshotlabs/snapshot/compare/v0.5.0...v0.6.0) (2026-08-02)
 
 
