@@ -6,6 +6,7 @@ export type {
   RichInputBaseProps,
   RichInputBaseHandle,
   RichInputEmoji,
+  RichInputToken,
 } from "./components/content/rich-input/standalone";
 export type {
   MentionSuggestion,

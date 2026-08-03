@@ -16,6 +16,9 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { buildEmojiExtension } from "./emoji-extension";
+import { buildTokenExtension } from "./token-extension";
+import type { RichInputToken } from "./token-extension";
+export type { RichInputToken } from "./token-extension";
 import type { RichInputEmoji } from "./emoji-extension";
 import { buildMentionExtension } from "./mention-extension";
 import type {
@@ -73,6 +76,34 @@ const ALL_TOOLBAR_ITEMS: ToolbarItem[] = [
   },
   { name: "link", icon: "link", label: "Insert link", action: "setLink" },
 ];
+
+const CUSTOM_TOKEN_CSS = `
+.sn-rich-input-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  max-width: 100%;
+  padding: 0.05em 0.45em;
+  border-radius: 0.4em;
+  font-size: 0.92em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: baseline;
+  cursor: default;
+  background: var(--sn-color-secondary, #ede9fe);
+  color: var(--sn-color-foreground, #111827);
+}
+.sn-rich-input-token[data-kind] {
+  background: var(--sn-color-primary-soft, var(--sn-color-secondary, #ede9fe));
+}
+.ProseMirror-selectednode.sn-rich-input-token {
+  outline: 2px solid var(--sn-ring-color, var(--sn-color-primary, #2563eb));
+  outline-offset: 1px;
+}
+`;
 
 const CUSTOM_EMOJI_CSS = `
 .sn-rich-input-emoji {
@@ -202,6 +233,29 @@ export interface RichInputBaseProps {
    */
   resolveEmoji?: (shortcode: string) => RichInputEmoji | null;
 
+  /**
+   * What a consumer TOKEN looks like in the text. Used with `resolveToken`.
+   *
+   * Must be a global regex; the whole match becomes one chip and serializes
+   * back to exactly the matched text, so the consumer's stored format is
+   * untouched.
+   */
+  tokenPattern?: RegExp;
+
+  /**
+   * Resolve a matched token into an inline CHIP inside the editor.
+   *
+   * `resolveEmoji` covers `:shortcode:` becoming a line-sized image. This
+   * covers the other shape every real composer needs: content the author
+   * placed in the body that is too big, too structured or too remote to draw
+   * inline — a GIF, an upload, a quoted post, a link embed. Without it those
+   * arrive in the editor as the raw token text, which is the one surface that
+   * shows a reader the plumbing.
+   *
+   * Return null to leave the text alone.
+   */
+  resolveToken?: (raw: string) => RichInputToken | null;
+
   /** Called when the send button is pressed or Enter is pressed (if sendOnEnter). */
   onSend?: (data: { html: string; text: string; markdown?: string }) => void;
   /** Called on every content change. */
@@ -293,6 +347,8 @@ export const RichInputBase = forwardRef<
     renderMentionList,
     serializeMention,
     resolveEmoji,
+    tokenPattern,
+    resolveToken,
     onSend,
     onChange,
     className,
@@ -326,6 +382,8 @@ export const RichInputBase = forwardRef<
   const sendRef = useRef<() => void>(() => {});
   const resolveEmojiRef = useRef(resolveEmoji);
   resolveEmojiRef.current = resolveEmoji;
+  const resolveTokenRef = useRef(resolveToken);
+  resolveTokenRef.current = resolveToken;
   const rootId = id ?? "rich-input";
 
   useEffect(() => {
@@ -370,6 +428,21 @@ export const RichInputBase = forwardRef<
     [Boolean(resolveEmoji)],
   );
 
+  const tokenExtension = useMemo(
+    () =>
+      resolveToken && tokenPattern
+        ? buildTokenExtension({
+            pattern: tokenPattern,
+            // Same indirection as emoji: the extension instance stays stable
+            // while a newly loaded consumer resolver is picked up.
+            resolveToken: (raw) => resolveTokenRef.current?.(raw) ?? null,
+          })
+        : null,
+    // Configuration-locked at editor init, like mentions and emoji.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [Boolean(resolveToken), tokenPattern?.source, tokenPattern?.flags],
+  );
+
   const extensions = [
     // StarterKit (tiptap v3) already ships Link and Underline — configure
     // them here rather than registering the standalone extensions a second
@@ -403,6 +476,7 @@ export const RichInputBase = forwardRef<
       : []),
     ...(mentionExtension ? [mentionExtension] : []),
     ...(emojiExtension ? [emojiExtension] : []),
+    ...(tokenExtension ? [tokenExtension] : []),
     ...(sendOnEnter && onSend
       ? [createSendOnEnterExtension(() => sendRef.current())]
       : []),
@@ -996,6 +1070,7 @@ export const RichInputBase = forwardRef<
       <SurfaceStyles css={statusGroupSurface.scopedCss} />
       <SurfaceStyles css={counterSurface.scopedCss} />
       {emojiExtension ? <SurfaceStyles css={CUSTOM_EMOJI_CSS} /> : null}
+      {tokenExtension ? <SurfaceStyles css={CUSTOM_TOKEN_CSS} /> : null}
     </>
   );
 });
