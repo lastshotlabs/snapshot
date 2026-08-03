@@ -80,6 +80,19 @@ function resolveShowcaseEmoji(shortcode: string) {
     : null;
 }
 
+/**
+ * A media token the way a real app stores one: a label and a url the author
+ * never sees. `resolveToken` turns it into a chip; the submitted value keeps
+ * the raw token.
+ */
+const SHOWCASE_TOKEN = /%%media:[^|]*?\|https?:\/\/.+?%%/g;
+
+function resolveShowcaseToken(raw: string) {
+  const match = /%%media:([^|]*?)\|(https?:\/\/.+?)%%/.exec(raw);
+  if (!match) return null;
+  return { label: match[1] || "Media", icon: "🖼", kind: "media" };
+}
+
 function ShowcaseSection({
   title,
   children,
@@ -233,6 +246,7 @@ function FormsPage() {
   const [name, setName] = useState("Ada Lovelace");
   const [saved, setSaved] = useState(false);
   const [sentMessage, setSentMessage] = useState("");
+  const [sentTokens, setSentTokens] = useState("");
 
   return (
     <div className="showcase">
@@ -286,6 +300,27 @@ function FormsPage() {
           />
           {sentMessage ? (
             <AlertBase severity="success">Sent: {sentMessage}</AlertBase>
+          ) : null}
+        </ColumnBase>
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Token Chips Composer">
+        <ColumnBase gap="sm">
+          <p>
+            A GIF, an upload or a quote is stored as an application token. It
+            renders as a chip here, and the submitted value is still the raw
+            token — select a chip and press Backspace to remove it whole.
+          </p>
+          <RichInputBase
+            defaultValue="Look at this %%media:Good Morning GIF|https://cdn.example/a.gif%% and this %%media:report.png|https://cdn.example/report.png%%"
+            emitMarkdown
+            tokenPattern={SHOWCASE_TOKEN}
+            resolveToken={resolveShowcaseToken}
+            showSendButton
+            onSend={({ markdown, text }) => setSentTokens(markdown ?? text)}
+          />
+          {sentTokens ? (
+            <AlertBase severity="success">Sent: {sentTokens}</AlertBase>
           ) : null}
         </ColumnBase>
       </ShowcaseSection>
