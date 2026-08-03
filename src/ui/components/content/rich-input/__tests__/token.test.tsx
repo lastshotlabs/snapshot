@@ -32,7 +32,11 @@ const resolve = (raw: string) => {
   return { label: match[1] || "Media", icon: "🖼", kind: "media" };
 };
 
-function TokenHarness({ onSend }: { onSend?: (d: { text: string; markdown?: string }) => void }) {
+function TokenHarness({
+  onSend,
+}: {
+  onSend?: (d: { text: string; markdown?: string }) => void;
+}) {
   const ref = useRef<RichInputBaseHandle>(null);
   return (
     <>
@@ -46,7 +50,11 @@ function TokenHarness({ onSend }: { onSend?: (d: { text: string; markdown?: stri
       />
       <button
         type="button"
-        onClick={() => ref.current?.insertText("%%media:Good Morning GIF|https://cdn.test/a.gif%%")}
+        onClick={() =>
+          ref.current?.insertText(
+            "%%media:Good Morning GIF|https://cdn.test/a.gif%%",
+          )
+        }
       >
         Insert token
       </button>
@@ -73,7 +81,9 @@ describe("RichInputBase custom tokens", () => {
       expect(chip?.getAttribute("data-kind")).toBe("media");
     });
     // THE RAW TOKEN MUST NOT BE VISIBLE. This is the whole complaint.
-    expect(document.querySelector(".ProseMirror")?.textContent).not.toContain("%%media:");
+    expect(document.querySelector(".ProseMirror")?.textContent).not.toContain(
+      "%%media:",
+    );
   });
 
   it("serializes back to the ORIGINAL raw token in text and markdown", async () => {
@@ -82,7 +92,9 @@ describe("RichInputBase custom tokens", () => {
     render(<TokenHarness onSend={onSend} />);
     await user.click(screen.getByRole("button", { name: "Insert token" }));
     await waitFor(() => {
-      expect(document.querySelector('span[data-type="custom-token"]')).not.toBeNull();
+      expect(
+        document.querySelector('span[data-type="custom-token"]'),
+      ).not.toBeNull();
     });
     await user.click(screen.getByRole("button", { name: "Send" }));
 
@@ -90,8 +102,12 @@ describe("RichInputBase custom tokens", () => {
     const payload = onSend.mock.calls[0]?.[0];
     // Byte for byte — a chip that serialized to its LABEL would quietly
     // destroy the url, and the post would render as the word "GIF".
-    expect(payload.text).toContain("%%media:Good Morning GIF|https://cdn.test/a.gif%%");
-    expect(payload.markdown).toContain("%%media:Good Morning GIF|https://cdn.test/a.gif%%");
+    expect(payload.text).toContain(
+      "%%media:Good Morning GIF|https://cdn.test/a.gif%%",
+    );
+    expect(payload.markdown).toContain(
+      "%%media:Good Morning GIF|https://cdn.test/a.gif%%",
+    );
   });
 
   it("converts tokens already present in the initial value", async () => {
@@ -109,11 +125,17 @@ describe("RichInputBase custom tokens", () => {
     // the DOM on the same tick as render.
     await waitFor(() =>
       expect(
-        document.querySelector('span[data-type="custom-token"]')?.getAttribute("data-label"),
+        document
+          .querySelector('span[data-type="custom-token"]')
+          ?.getAttribute("data-label"),
       ).toBe("One"),
     );
-    expect(document.querySelector(".ProseMirror")?.textContent).toContain("before");
-    expect(document.querySelector(".ProseMirror")?.textContent).toContain("after");
+    expect(document.querySelector(".ProseMirror")?.textContent).toContain(
+      "before",
+    );
+    expect(document.querySelector(".ProseMirror")?.textContent).toContain(
+      "after",
+    );
   });
 
   it("converts EVERY token in a line, not just the first", async () => {
@@ -128,7 +150,9 @@ describe("RichInputBase custom tokens", () => {
       />,
     );
     await waitFor(() =>
-      expect(document.querySelectorAll('span[data-type="custom-token"]').length).toBe(2),
+      expect(
+        document.querySelectorAll('span[data-type="custom-token"]').length,
+      ).toBe(2),
     );
     const chips = document.querySelectorAll('span[data-type="custom-token"]');
     expect(chips[0]?.getAttribute("data-label")).toBe("One");
@@ -147,7 +171,9 @@ describe("RichInputBase custom tokens", () => {
       />,
     );
     expect(document.querySelector('span[data-type="custom-token"]')).toBeNull();
-    expect(document.querySelector(".ProseMirror")?.textContent).toContain("%%media:");
+    expect(document.querySelector(".ProseMirror")?.textContent).toContain(
+      "%%media:",
+    );
   });
 
   it("leaves tokens inside code alone", () => {
@@ -167,7 +193,12 @@ describe("RichInputBase custom tokens", () => {
   it("does nothing at all when the consumer supplies no resolver", () => {
     // The extension must stay entirely off by default — no chip, no CSS, no
     // behaviour change for every existing consumer.
-    render(<RichInputBase defaultValue="%%media:One|https://cdn.test/1.gif%%" features={[]} />);
+    render(
+      <RichInputBase
+        defaultValue="%%media:One|https://cdn.test/1.gif%%"
+        features={[]}
+      />,
+    );
     expect(document.querySelector('span[data-type="custom-token"]')).toBeNull();
   });
 });

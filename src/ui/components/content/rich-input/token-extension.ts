@@ -71,7 +71,12 @@ function createTokenTransaction(
 
     // `lastIndex` is per-regex state, and a global regex reused across calls
     // would resume mid-string and silently skip the first token in a document.
-    const pattern = new RegExp(opts.pattern.source, opts.pattern.flags.includes("g") ? opts.pattern.flags : `${opts.pattern.flags}g`);
+    const pattern = new RegExp(
+      opts.pattern.source,
+      opts.pattern.flags.includes("g")
+        ? opts.pattern.flags
+        : `${opts.pattern.flags}g`,
+    );
 
     for (const match of node.text.matchAll(pattern)) {
       const raw = match[0];
@@ -146,11 +151,13 @@ export function buildTokenExtension(opts: BuildTokenOptions): Node {
         },
         icon: {
           default: null,
-          parseHTML: (element: HTMLElement) => element.getAttribute("data-icon"),
+          parseHTML: (element: HTMLElement) =>
+            element.getAttribute("data-icon"),
         },
         kind: {
           default: null,
-          parseHTML: (element: HTMLElement) => element.getAttribute("data-kind"),
+          parseHTML: (element: HTMLElement) =>
+            element.getAttribute("data-kind"),
         },
       };
     },
