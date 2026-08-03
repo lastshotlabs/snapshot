@@ -491,6 +491,63 @@ The resolver may return trusted `data:image/` URLs for application-owned inline
 SVG packs. Unknown shortcodes and shortcodes inside inline or block code remain
 literal text.
 
+### GIFs, uploads and quotes as inline chips
+
+`resolveEmoji` covers one shape: a `:shortcode:` becoming a line-sized image.
+It does not cover the other shape a composer needs — content the author placed
+in the body that is too big, too structured or too remote to draw inline. A
+GIF, an uploaded image, a quoted post, a link embed.
+
+Applications store those as a token of their own. Without a seam, that token is
+what the AUTHOR sees mid-sentence while typing:
+
+```text
+Look at this %%media:Good Morning GIF|https://cdn.example/a.gif%% then this
+```
+
+`tokenPattern` + `resolveToken` render each match as a compact chip instead:
+
+```tsx
+import { RichInputBase } from "@lastshotlabs/snapshot/ui";
+
+const MEDIA_TOKEN = /%%media:[^|]*?\|https?:\/\/.+?%%/g;
+
+function Composer() {
+  return (
+    <RichInputBase
+      emitMarkdown
+      tokenPattern={MEDIA_TOKEN}
+      resolveToken={(raw) => {
+        const match = /%%media:([^|]*?)\|(https?:\/\/.+?)%%/.exec(raw);
+        if (!match) return null; // leave it as plain text
+        return { label: match[1] || "Media", icon: "🖼", kind: "media" };
+      }}
+      onSend={({ markdown }) => post(markdown ?? "")}
+    />
+  );
+}
+```
+
+**The document keeps your token, not the chip.** `renderText` and the markdown
+serializer both emit the original raw match, so send payloads are byte-for-byte
+what you would have stored without this feature. A chip that serialized to its
+label would destroy the URL inside it.
+
+Four things worth knowing:
+
+- **Return `null` to decline.** An unresolved match stays plain text, so a
+  malformed or untrusted token is never laundered into a chip that looks
+  legitimate.
+- **`tokenPattern` must be global.** It is used with `matchAll`.
+- **Tokens inside inline or block code stay literal**, like shortcodes —
+  someone documenting your token format is showing source, not placing media.
+- **Chips are selectable.** A chip stands for a whole piece of content, so
+  selecting it before deleting is the expected gesture.
+
+Style them with the `.sn-rich-input-token` class; `data-kind` carries whatever
+`kind` your resolver returned, so different token types can look different
+without this component knowing what any of them mean.
+
 ## Moderation
 
 ### Reports
