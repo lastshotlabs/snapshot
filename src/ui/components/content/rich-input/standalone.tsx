@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import type { SlotOverrides } from "../../_base/types";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Extension } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -170,6 +170,32 @@ export interface RichInputBaseProps {
   readonly?: boolean;
   /** Enabled formatting features. */
   features?: string[];
+  /**
+   * Host controls pinned to the START of the toolbar row, before the
+   * formatting buttons.
+   *
+   * Every real composer has affordances this editor does not own — attach,
+   * emoji, GIFs, stickers, a slash-command trigger. Without a seam they can
+   * only be rendered as a SECOND ROW beneath the toolbar, which is how
+   * sgforum's reply box ended up two rows tall in a small card: formatting on
+   * one line, `+` and the expressive picker on another.
+   *
+   * These sit OUTSIDE the horizontally-scrolling formatting group on purpose.
+   * The formatting strip scrolls under a mask on narrow screens; an attach
+   * button that scrolled out of reach with it would be a worse bug than the
+   * extra row. Persistent affordances stay pinned, `B`/`I`/`U` scroll.
+   *
+   * Render only the CONTROLS here, not their popovers. The toolbar is inside
+   * the editor's own stacking and overflow context, so a menu parented here
+   * would be clipped by the strip it sits in — keep the popover in the host's
+   * positioning context and let it read the same state.
+   */
+  toolbarLeading?: ReactNode;
+  /**
+   * Host controls pinned to the END of the toolbar row, beside the character
+   * counter and send button. Same rules as {@link toolbarLeading}.
+   */
+  toolbarTrailing?: ReactNode;
   /** Whether pressing Enter sends (vs. newline). Default: true. */
   sendOnEnter?: boolean;
   /** Maximum character count. */
@@ -342,6 +368,8 @@ export const RichInputBase = forwardRef<
     minHeight,
     maxHeight,
     showSendButton = false,
+    toolbarLeading,
+    toolbarTrailing,
     emitMarkdown = false,
     onMentionSearch,
     renderMentionList,
@@ -938,7 +966,10 @@ export const RichInputBase = forwardRef<
           </div>
         ) : null}
 
-        {toolbarItems.length > 0 || showSendButton ? (
+        {toolbarItems.length > 0 ||
+        showSendButton ||
+        toolbarLeading ||
+        toolbarTrailing ? (
           <div
             role="toolbar"
             data-testid="rich-input-toolbar"
@@ -946,6 +977,9 @@ export const RichInputBase = forwardRef<
             className={toolbarSurface.className}
             style={toolbarSurface.style}
           >
+            {/* Pinned host controls. Deliberately OUTSIDE the scrolling
+                formatting group below — see `toolbarLeading`'s docs. */}
+            {toolbarLeading}
             <div
               ref={formattingScrollRef}
               data-snapshot-id={`${rootId}-formattingGroup`}
@@ -1034,6 +1068,7 @@ export const RichInputBase = forwardRef<
               className={statusGroupSurface.className}
               style={statusGroupSurface.style}
             >
+              {toolbarTrailing}
               {maxLength !== undefined ? (
                 <span
                   data-snapshot-id={`${rootId}-counter`}
