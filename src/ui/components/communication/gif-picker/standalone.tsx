@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 import type { SlotOverrides } from "../../_base/types";
 import { Icon } from "../../../icons/icon";
@@ -26,8 +27,17 @@ export interface GifPickerBaseProps {
   maxHeight?: string;
   /** Placeholder text for the search input. */
   placeholder?: string;
-  /** Attribution text shown at the bottom. */
-  attribution?: string;
+  /**
+   * Attribution shown at the bottom, above a separating hairline.
+   *
+   * Accepts any node, not just a string: every GIF provider worth integrating
+   * requires attribution as a LINKED LOGO rather than as words — KLIPY and
+   * Giphy both ask for the wordmark plus a link back. This was typed `string`
+   * while the implementation already rendered it as children, so the correct
+   * markup was a type error and integrators rendered their own sibling element
+   * outside the picker instead, losing the attribution surface's styling.
+   */
+  attribution?: ReactNode;
   /** Static GIF entries. When provided, remote endpoints are not used. */
   gifs?: GifEntry[];
   /** Loading state. */
