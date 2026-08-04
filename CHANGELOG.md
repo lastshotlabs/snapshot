@@ -3,6 +3,19 @@
 All notable changes to Snapshot are recorded here. Release Please updates this
 file from conventional commits through a reviewed release pull request.
 
+## [0.8.0](https://github.com/lastshotlabs/snapshot/compare/v0.7.0...v0.8.0) (2026-08-04)
+
+
+### Features
+
+* **rich-input:** toolbar slots for host controls ([#22](https://github.com/lastshotlabs/snapshot/issues/22)) ([a0ffda7](https://github.com/lastshotlabs/snapshot/commit/a0ffda78f04ee56970d48a1147525d941651505f))
+
+
+### Bug Fixes
+
+* **gif-picker:** attribution accepts a node, not just a string ([#21](https://github.com/lastshotlabs/snapshot/issues/21)) ([f421f73](https://github.com/lastshotlabs/snapshot/commit/f421f734fbcb30285048385f713780a29cc98575))
+* **rich-input:** let the link bar's glyph clear the input's focus ring ([#20](https://github.com/lastshotlabs/snapshot/issues/20)) ([fcf1487](https://github.com/lastshotlabs/snapshot/commit/fcf1487ee8b642e74363adb05864b83223d4d7f6))
+
 ## [0.7.0](https://github.com/lastshotlabs/snapshot/compare/v0.6.0...v0.7.0) (2026-08-03)
 
 
