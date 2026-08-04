@@ -691,7 +691,10 @@ export const RichInputBase = forwardRef<
     implementationBase: {
       display: "flex",
       alignItems: "center",
-      gap: "xs",
+      // `xs` put the link glyph inside the input's FOCUS RING, which draws
+      // outward from the field's edge — so focusing the URL box made the icon
+      // look welded to it. The gap has to clear the ring, not just the border.
+      gap: "sm",
       paddingY: "xs",
       paddingX: "sm",
       bg: "var(--sn-color-secondary, #f9fafb)",
