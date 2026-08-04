@@ -324,6 +324,48 @@ function FormsPage() {
           ) : null}
         </ColumnBase>
       </ShowcaseSection>
+
+      <ShowcaseSection title="Toolbar Slots">
+        <ColumnBase gap="sm">
+          <p>
+            Host controls the editor does not own — attach, emoji, GIFs — sit in
+            the toolbar row itself rather than in a second row beneath it.
+            Narrow the window until the formatting buttons start to scroll:{" "}
+            <code>toolbarLeading</code> stays pinned while <code>B</code>/
+            <code>I</code>/<code>U</code> slide away, which is the whole reason
+            it renders outside that group.
+          </p>
+          <RichInputBase
+            placeholder="Type a message…"
+            showSendButton
+            toolbarLeading={
+              <>
+                <button type="button" aria-label="Attach">
+                  ＋
+                </button>
+                <button type="button" aria-label="Emoji and GIFs">
+                  😀
+                </button>
+              </>
+            }
+          />
+          <p>
+            The same slot with <code>features={"{[]}"}</code> — a chat-style
+            composer with no formatting at all. The toolbar still renders,
+            because it now has host content to hold.
+          </p>
+          <RichInputBase
+            features={[]}
+            placeholder="No formatting, just controls…"
+            showSendButton
+            toolbarLeading={
+              <button type="button" aria-label="Attach">
+                ＋
+              </button>
+            }
+          />
+        </ColumnBase>
+      </ShowcaseSection>
     </div>
   );
 }
